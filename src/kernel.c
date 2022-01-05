@@ -108,9 +108,13 @@ void _start(void)
 
     exitApp = false;
 
+    char* fsPos = (char*)0x7c00 + 0x2;
 
+    char* fsName = *(char**)(0x7c00 + 0x6);
 
+    fsName += 0x400;
 
+    sprint(black,white,fsName+'\0');
 
     while(1)
     {

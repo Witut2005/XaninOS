@@ -2,10 +2,16 @@
 [org 0x7c00] ;there we start execution
 [bits 16]; <-- 16bit real mode
 
+;BIOS PARAMETER BLOCK 
 
-cli
+
 jmp _loadSector
 
+db "OFF",0x0
+
+FILE_SYSTEM_DATA:               ;this filed is not used by ustar 
+
+USTAR_START: dd 0x0000          ;this filed is created to handle easier fs 
 
 _loadSector:
 

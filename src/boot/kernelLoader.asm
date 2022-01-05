@@ -101,6 +101,7 @@ push 0x33333333
 ;%include "keyboard.asm"
 
 
+;https://www.youtube.com/watch?v=EbTNacDhqbA <-- GYNVAEL OSDEV VIDEO #3
 
 loader:
   mov esi, [kernel + 0x1C] ;phofff point to header table
@@ -161,16 +162,9 @@ loader:
 
   call eax
 
+jmp $ 
 
-
-nop
-nop
-nop
-
-jmp $ ; EBFE
-
-
-times (32 - ( $ - $$ ) % 32 ) db 0x90
+times (32 - ( $ - $$ ) % 32 ) db 0x00
 
 _GDT_ADDR:
     ;podajemy poczatek i rozmiar
@@ -210,19 +204,14 @@ _GDT:
     db 10010110b
     db 11000000b
     db 1b
-    ;dw 0
-    ;dw 0
-    ;db 0    
-    ;db 10010110b
-    ;db 11000000b    
-    ;db 0xff
+
 
 
 _GDT_END:
 
 
 
-times(512 - ( $ - $$ ) % 512) db 0x90
+times(512 - ( $ - $$ ) % 512) db 0x0
 
 
 kernel:
