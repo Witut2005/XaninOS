@@ -8,8 +8,8 @@
 //#include "./floppyDriver/floppyDriver.c"
 #include "./terminal/interpreter.c"
 #include "./lib/math.h"
+#include "./ustar/ustar.c"
 
-uint16_t keyStatus;
 
 char* tmpStr;
 
@@ -106,15 +106,14 @@ void _start(void)
     sprint(white,black,"press enter to start:");
 
 
+
     exitApp = false;
 
-    char* fsPos = (char*)0x7c00 + 0x2;
+    ustarInit();
 
-    char* fsName = *(char**)(0x7c00 + 0x6);
+    
 
-    fsName += 0x400;
 
-    sprint(black,white,fsName+'\0');
 
     while(1)
     {
@@ -122,6 +121,13 @@ void _start(void)
 
         if(exitApp)
             {exitApp = false;goto tuiInit;}
+
+        /*
+        if(terminalAppExit)
+        {
+            terminalAppExit = false;
+        }
+        */
 
         if(scanCode == ENTER)
         {

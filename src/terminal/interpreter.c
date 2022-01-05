@@ -1,10 +1,16 @@
 
 #include "./interpreter.h"
 
+void no_keyboard_input()
+{
+    asm("nop");
+}
 
 void scan(void)
 {
 
+    
+    KEYBOARD_SIG_ON(no_keyboard_input);
 
 
     if(cmpstr(COMMAND,"petris"))
@@ -52,28 +58,17 @@ void scan(void)
         exitApp = true;
     }
 
-    /*
-    else if(cmpstr(COMMAND,"space"))
-    {
-        initSpace();
-        while(1);
-    }
 
-    else if(cmpstr(COMMAND,"calc") || cmpstr(COMMAND,"xcalc"))
+    else if(cmpstr(COMMAND,"ls") || cmpstr(COMMAND,"dir"))
     {
-        clearScr();
-        calc();
-        
+        ls();
+        terminalAppExit = true;
     }
-
-    else if(cmpstr(COMMAND,"runner"))
-    {
-        //runner();
-    }
-
-    */
 
     for(int i = 0; i < 7;i++)
         COMMAND[i] = i;
+
+    
+    KEYBOARD_SIG_OFF()
 
 }

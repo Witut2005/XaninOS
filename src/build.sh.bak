@@ -41,8 +41,9 @@ cat ./boot/boot ./boot/kernelLoader kernel.bin ./boot/locateFS files.tar > xanin
 dd if=xanin.bin of=xanin.img
 mv xanin.img -f /mnt/c/Users/wiktor/Desktop/xaninOS/bin
 cd /mnt/c/Users/wiktor/Desktop/xaninOS/bin
-./a.out
-cd /mnt/c/Users/wiktor/Desktop/xaninOS/bin
+make
+./detectUstar
+cd /mnt/c/Users/wiktor/Desktop/xaninOS/src
 
 #CLEANING SRC
 rm xanin.bin

@@ -7,6 +7,7 @@
 #include "../terminal/vty.c"
 #include "../headers/macros.h"
 #include "../keyboard/keyMap.h"
+#include "./handlers.h"
 
 #define PIC1_COMMAND_REG 0x20
 #define PIC1_STATUS_REG 0x20
@@ -56,14 +57,15 @@ void divError(void)
 }
 
 
-static BYTE scanCode;
+uint8_t scanCode;
 
-volatile bool pitActive = false; 
+bool pitActive = false; 
 
 void pitHandler(void)
 {
     pitActive = true;
 }
+
 
 
 void keyboardHandler(void)
@@ -73,7 +75,7 @@ void keyboardHandler(void)
     uint32_t zero = 0;
 
 
-    uint8_t keyStatus = inbIO(KEYBOARD_STATUS_REG); // if status & 1 (ON)
+    keyStatus = inbIO(KEYBOARD_STATUS_REG); // if status & 1 (ON)
     scanCode = inbIO(KEYBOARD_DATA_REG); // get scanCode
     
 
@@ -94,73 +96,19 @@ void keyboardHandler(void)
     else
     {
 
-    if(keyStatus & 1)
-    {
-
-        if(scanCode < 0 || scanCode >= 128 )
-            return;
-        
-        else
+        if(keyStatus & 1)
         {
 
-
-
-            input = keyboard_map[scanCode];
-
-            terminalKeyboard(scanCode);
-
-            /*uint16_t* ptr;
-            
-    
-            ptr = (unsigned short*)(0xb8000 + x) +  ((80)*y);
-
-            if(scanCode == BSPC)
-            {
-
-                if(x == 0x2)
-                    return;
-
-                x -= 0x2;
-                ptr = (unsigned short*)(0xb8000 + x) +  ((80)*y);
-                *ptr = (uint16_t)input | (((black << 4) | black) << 8); 
-                
-                if(index != 0)
-                    index--;
-            }
-
-            else if(scanCode == ENTER)
-            {
-
-                
-                y++;
-                x = 0x0;
-                sprint(black,white,">");
-                x = 0x2;
-                y--;
-
-                
-
-                index = 0x0;
-
-            }
-
+            if(scanCode < 0 || scanCode >= 128 )
+                return;
+        
             else
             {
-                if(index == 0x0)
-                {
-                    for(int i = 0; i < 7;i++)
-                        COMMAND[i] = 0x0;
-                }
-                
-                *ptr = (uint16_t)input | (((black << 4) | white) << 8);
-                COMMAND[index] = input;
-                index++;
-                x += 2;
+                input = keyboard_map[scanCode];
+                terminalKeyboard(scanCode);
             }
-        */
-        }
 
-    }
+        }
     
     return;
 
@@ -173,9 +121,6 @@ void keyboardHandler(void)
 
 void kbInit() 
 {
-    // irq sa active low tzn 0 = true
-
-	outbIO(0x64, 0xAE); // klawa wlaczona
-    outbIO(PIC1_DATA_REG, 0xFD); // 11111101 <-- irq1 wlaczone 
-    //sprint(red,white,Ncum);
+	outbIO(0x64, 0xAE);             // KEYBOARD ON
+    outbIO(PIC1_DATA_REG, 0xFD);    // 11111101 <-- irq1 ON 
 }

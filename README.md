@@ -3,6 +3,7 @@
 32-bit protected mode operating system made for educational purposes
 
 Features:
+
 - own bootloader
 - interrupt descriptor table
 - configurated PIC
@@ -10,8 +11,7 @@ Features:
 - pong game
 - petris (paint and tetris in one :b)
 - recreated some parts of C libaries
-
+- USTAR filesystem
 
 Command to run xaninOS on bochs emulator:
 bochs.exe -f ./osdev.bochsrc
-

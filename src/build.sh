@@ -18,7 +18,6 @@ sudo cp keyboard -r /usr/local/i386elfgcc/bin
 sudo cp handlers -r /usr/local/i386elfgcc/bin
 sudo cp xaninApps -r /usr/local/i386elfgcc/bin
 sudo cp xaninGraphics -r /usr/local/i386elfgcc/bin
-sudo cp spaceInv -r /usr/local/i386elfgcc/bin
 sudo cp pong -r /usr/local/i386elfgcc/bin
 sudo cp ustar -r /usr/local/i386elfgcc/bin
 sudo cp kernel.c /usr/local/i386elfgcc/bin
@@ -41,7 +40,8 @@ cat ./boot/boot ./boot/kernelLoader kernel.bin ./boot/locateFS files.tar > xanin
 dd if=xanin.bin of=xanin.img
 mv xanin.img -f /mnt/c/Users/wiktor/Desktop/xaninOS/bin
 cd /mnt/c/Users/wiktor/Desktop/xaninOS/bin
-./a.out
+make
+./detectUstar
 cd /mnt/c/Users/wiktor/Desktop/xaninOS/src
 
 #CLEANING SRC
