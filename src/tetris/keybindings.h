@@ -1,8 +1,9 @@
 #pragma once
 
+#include <stdint.h>
 #include "../headers/macros.h"
 #include "../headers/colors.h"
-#include "../headers/inttypes.h"
+
 
 uint16_t buf;
 uint8_t colorTetris = 0x1;

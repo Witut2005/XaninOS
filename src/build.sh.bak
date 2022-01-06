@@ -28,7 +28,7 @@ sudo cp kernel.c /usr/local/i386elfgcc/bin
 
 #COMPILE
 cd /usr/local/i386elfgcc/bin
-sudo ./i386-elf-gcc -O0 -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function kernel.c ./handlers/keyboard.o ./pit/pit.o -o kernel.bin
+sudo ./i386-elf-gcc -O0 -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -freestanding -Wno-unused-function kernel.c ./handlers/keyboard.o ./pit/pit.o -o kernel.bin
 cp kernel.bin /mnt/c/Users/wiktor/Desktop/xaninOS/src
 cd /mnt/c/Users/wiktor/Desktop/xaninOS/src
 cat ./boot/boot ./boot/kernelLoader kernel.bin ./boot/locateFS files.tar > xanin.bin

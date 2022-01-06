@@ -2,7 +2,7 @@
 #pragma once
 
 #include "../lib/hal.h"
-#include "../headers/inttypes.h"
+#include <stdint.h>
 
 #define PIT_CHANNEL0 0x40
 #define PIT_CHANNEL1 0x41
@@ -22,8 +22,8 @@ void setDivisor(uint16_t newDivisorVal)
 
     divisor = newDivisorVal;
 
-    outbIO(PIT_CHANNEL0,(UBYTE)(divisor & 0x00ff));
-    outbIO(PIT_CHANNEL0,(UBYTE)((divisor & 0x00ff) >> 8));
+    outbIO(PIT_CHANNEL0,(uint8_t)(divisor & 0x00ff));
+    outbIO(PIT_CHANNEL0,(uint8_t)((divisor & 0x00ff) >> 8));
 
 }
 

@@ -6,7 +6,6 @@
 #include "../pit/pit.c"
 #include "../terminal/vty.h"
 #include "../headers/colors.h"
-#include "../headers/inttypes.h"
 
 
 struct TIME

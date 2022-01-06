@@ -3,7 +3,7 @@
 #ifndef HAL_H
 #define HAL_H
 
-#include "../headers/inttypes.h"
+#include <stdint.h>
 #include "../headers/macros.h"
 
 void outbIO(uint16_t port,uint8_t al)

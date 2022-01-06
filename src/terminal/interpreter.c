@@ -43,6 +43,8 @@ void scan(void)
             updatePong();
         }   
         
+        
+
        
     }
 
@@ -66,6 +68,6 @@ void scan(void)
         COMMAND[i] = i;
 
     
-    KEYBOARD_SIG_OFF()
+    KEYBOARD_SIG_OFF();
 
 }

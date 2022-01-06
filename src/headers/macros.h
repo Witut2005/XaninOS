@@ -1,6 +1,7 @@
 #pragma once
 
-#include "./inttypes.h"
+#include <stdint.h>
+#include <stdbool.h>
 
 #define incArr(arr,ctr,plus)\
     for(uint8_t i = 0; i < ctr; i++)\

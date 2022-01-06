@@ -3,7 +3,8 @@
 #ifndef IOSTD_H
 #define IOSTD_H
 
-#include "../headers/inttypes.h"
+#include <stdarg.h>
+#include <stdint.h>
 #include "../headers/colors.h"
 #include "../headers/macros.h"
 #include "../terminal/vty.h"
@@ -32,7 +33,7 @@ void clearScr(void)
 }
 
 
-//small print
+/* small print */
 void sprint(uint8_t backColor,uint8_t colors,char* str)
 {
 
@@ -131,10 +132,17 @@ void printBCD(uint8_t x)
 }
 
 
-
+/*
 //extended print :))
-void xprint(char* str, uint8_t format)
+void xprint(uint32_t num, ... )
 {
+
+    va_list args;
+
+    va_start(args,num);
+
+
+
     if(format == dec)
     {
 
@@ -158,5 +166,6 @@ void xprint(char* str, uint8_t format)
 
 
 }
+*/
 
 #endif

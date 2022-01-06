@@ -286,7 +286,7 @@ void initPong()
 void updatePong(void)
 {
     if(input == 'q')
-        {exitApp = true;KEYBOARD_SIG_OFF();}
+        {exitApp = true;}
     resetBall();
     moveBall();
     chgRelativeLocationY(1,2);

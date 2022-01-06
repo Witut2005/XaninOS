@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../headers/inttypes.h"
+#include <stdint.h>
 #include "../lib/string.h"
 
 

@@ -1,7 +1,7 @@
 #pragma once
 
+#include <stdint.h>
 #include "./xaninGraphics.h"
-#include "../headers/inttypes.h"
 #include "../headers/colors.h"
 
 void drawLineX(uint8_t startx, uint8_t endx,uint8_t starty,uint8_t lineColor)

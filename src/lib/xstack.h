@@ -1,4 +1,4 @@
-#include "../headers/inttypes.h"
+#include <stdint.h>
 
 struct STACK
 {

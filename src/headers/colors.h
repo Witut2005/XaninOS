@@ -1,6 +1,7 @@
 
 #pragma once
 
+/* BIOS colors enum */
 enum colors{
 
     black = 0x0,

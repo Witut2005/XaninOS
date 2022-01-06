@@ -1,14 +1,12 @@
 
-
+#include <stdint.h>
 #include "./pit/pit.c"
 #include "./IDT/idt.c"
 #include "./lib/stdlibx.h"
 #include "./terminal/vty.c"
-#include "./headers/inttypes.h"
 #include "./terminal/interpreter.c"
 #include "./lib/math.h"
 #include "./ustar/ustar.c"
-
 
 char* tmpStr;
 
@@ -18,7 +16,9 @@ static uint32_t foo;
 
 //wesolego nowego roku :))
 //niech xanin rośnie i rośnie 
-// ja, rok 2021, 31 grudzień, 22:52:35 
+// ja, rok 2021, 31 grudzień, 23:52:35 
+
+
 
 void _start(void)
 {
@@ -37,9 +37,6 @@ void _start(void)
     clearScr();
 
     disableCursor();
-
-
-
 
    
     getCpuSpeed();

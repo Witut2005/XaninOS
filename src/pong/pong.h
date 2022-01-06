@@ -1,9 +1,9 @@
 
 #pragma once
 
+#include <stdint.h>
 #include "../lib/signal.h"
 #include "../headers/colors.h"
-#include "../headers/inttypes.h"
 #include "../lib/stdlibx.h"
 #include "../lib/stdiox.h"
 
