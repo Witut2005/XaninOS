@@ -11,7 +11,7 @@ Features:
 - pong game
 - petris (paint and tetris in one :b)
 - recreated some parts of C libaries
-- USTAR filesystem
+- basic implementation of USTAR filesystem
 
 Command to run xaninOS on bochs emulator:
 bochs.exe -f ./osdev.bochsrc
