@@ -5,7 +5,6 @@
 #include "./lib/stdlibx.h"
 #include "./terminal/vty.c"
 #include "./headers/inttypes.h"
-//#include "./floppyDriver/floppyDriver.c"
 #include "./terminal/interpreter.c"
 #include "./lib/math.h"
 #include "./ustar/ustar.c"
@@ -13,20 +12,6 @@
 
 char* tmpStr;
 
-static char* floppyType[8] = 
-{
-
-    "error",
-    "360kb",
-    "1.2mb",
-    "740kb",
-
-    "1.44mb",
-    "2.88mb",
-    "undefined",
-    "undefined"
-
-};
 
 static char* pw= "wiktoro";
 static uint32_t foo;
@@ -38,13 +23,7 @@ static uint32_t foo;
 void _start(void)
 {
 
-
-
-    //asm("cli");
-
-    //DETECT FLOPPY TYPE
-    //http://bos.asmhackers.net/docs/floppy/docs/detecting_floppy_drives.php.htm
-
+    asm("cli");
     
     clearScr();
 
@@ -69,6 +48,7 @@ void _start(void)
 
     srand(time.seconds);
 
+
     //outbIO(PIC1_DATA_REG, 0xFD); //mask pit ints
 
     bool KEYBOARD_TEST_STATUS = keyboardSelfTest();
@@ -76,13 +56,13 @@ void _start(void)
 
     if(KEYBOARD_TEST_STATUS == 0xfc) 
     {
-        sprint(red,white,"keyboard self test failed. Halting execution");
+        sprint(red,white,"keyboard self test failed. Halting execution\n");
         asm("cli");
         asm("hlt");
     }
 
     else if(KEYBOARD_TEST_STATUS == 0x55)
-        sprint(black,white,"keyboard self test passed :))");
+        sprint(black,white,"keyboard self test passed :))\n");
 
 
 
@@ -95,7 +75,7 @@ void _start(void)
 
     x = 0;y = 0;
 
-    sprint(black,white,"xaninOS version 0.1v");
+    sprint(black,white,"xaninOS version 22.01v\n");
 
 
     sprint(black,white,"weekday:");
@@ -103,8 +83,7 @@ void _start(void)
     sprint(black,white,weekDaysLUT[time.weekDay]);
 
 
-    sprint(white,black,"press enter to start:");
-
+    sprint(white,black,"press enter to start:\n");
 
 
     exitApp = false;
@@ -122,13 +101,7 @@ void _start(void)
         if(exitApp)
             {exitApp = false;goto tuiInit;}
 
-        /*
-        if(terminalAppExit)
-        {
-            terminalAppExit = false;
-        }
-        */
-
+      
         if(scanCode == ENTER)
         {
             scan();

@@ -251,7 +251,7 @@ void initPong()
 //        int32_63 = 0x2;
       //signal.appHandler = &keyControlPong;
 
-        IRQ1_ON(keyControlPong);
+        KEYBOARD_SIG_ON(keyControlPong);
         
         clearScr();
 
@@ -286,7 +286,7 @@ void initPong()
 void updatePong(void)
 {
     if(input == 'q')
-        exitApp = true;
+        {exitApp = true;KEYBOARD_SIG_OFF();}
     resetBall();
     moveBall();
     chgRelativeLocationY(1,2);

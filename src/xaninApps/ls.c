@@ -12,12 +12,11 @@ void ls()
 
 
     for(int i=0; i < sizeof(fileTable) / sizeof(fileTable[0]); i++)
-        sprint(black,white, fileTable[i]);
+        sprint(red,white, fileTable[i]);
 
     sprint(black,white,"press 'q' key to continue...");
     
-    keyStatus = 0x0;
-
+    
     while(1)
     {
         if(input == 'q')

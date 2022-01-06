@@ -36,15 +36,21 @@ void clearScr(void)
 void sprint(uint8_t backColor,uint8_t colors,char* str)
 {
 
-uint16_t* ptr;
-ptr = (unsigned short*)(0xb8000) + ((80)*y);
+cursor = (unsigned short*)(0xb8000) + ((80)*y);
 
-for (int i = 0; str[i] != '\0'; i++)
+    for (int i = 0; str[i] != '\0'; i++)
     {
-        ptr[i] = (uint16_t) str[i] + (((backColor << 4) | colors) << 8);
+        if(str[i] == '\n')
+        {
+            y++;
+            cursor = (unsigned short*)(0xb8000) + ((80)*y) - 1;
+            continue;
+        }
+
+        cursor[i] = (uint16_t) (str[i] + (((backColor << 4) | colors) << 8));
     }
 
-   y++;
+    y++;
 
 }
 

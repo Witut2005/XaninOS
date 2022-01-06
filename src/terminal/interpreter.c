@@ -43,10 +43,7 @@ void scan(void)
             updatePong();
         }   
         
-        IRQ1_OFF();
-        signal.appHandler = nullptr;
-
-        
+       
     }
 
 
