@@ -10,13 +10,12 @@
 
 char* tmpStr;
 
+/*--------------------------------------/
+|wesolego nowego roku :))               |
+|niech xanin rośnie i rośnie            |
+|ja, rok 2021, 31 grudzień, 23:52:35    |     
+/--------------------------------------*/
 
-static char* pw= "wiktoro";
-static uint32_t foo;
-
-//wesolego nowego roku :))
-//niech xanin rośnie i rośnie 
-// ja, rok 2021, 31 grudzień, 23:52:35 
 
 
 
@@ -25,29 +24,16 @@ void _start(void)
 
     asm("cli");
     
-    clearScr();
-
     kbInit();
     setPit();
-
     setIdt();
-
-
+    ustarInit();
 
     clearScr();
 
-    disableCursor();
-
-   
-    getCpuSpeed();
-
-    getTime();
-
-    srand(time.seconds);
 
 
-    //outbIO(PIC1_DATA_REG, 0xFD); //mask pit ints
-
+    
     bool KEYBOARD_TEST_STATUS = keyboardSelfTest();
 
 
@@ -62,6 +48,22 @@ void _start(void)
         sprint(black,white,"keyboard self test passed :))\n");
 
 
+    clearScr();
+
+    disableCursor();
+
+   
+    getCpuSpeed();
+
+    getTime();
+
+    srand(time.seconds);
+
+
+
+
+
+
 
     tuiInit:
 
@@ -72,24 +74,21 @@ void _start(void)
 
     x = 0;y = 0;
 
-    sprint(black,white,"xaninOS version 22.01v\n");
+    xprintf("xaninOS\n");
+    xprintf("version 22.01v\n");
+    //xprintf("xaninOS version 22.01v\n");
 
-
-    sprint(black,white,"weekday:");
     getTime();
-    sprint(black,white,weekDaysLUT[time.weekDay]);
+    xprintf("weekday: ");
+    xprintf(weekDaysLUT[time.weekDay]);
 
+    xprintf("\n");
 
-    sprint(white,black,"press enter to start:\n");
+    xprintf("press enter to start:\n");
 
 
     exitApp = false;
-
-    ustarInit();
-
     
-
-
 
     while(1)
     {

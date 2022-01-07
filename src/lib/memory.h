@@ -1,5 +1,5 @@
 
-#include "../headers/inttypes.h"
+#include <stdint.h>
 
 void memcpy(uint8_t *dst, uint8_t* src, size_t size)
 {

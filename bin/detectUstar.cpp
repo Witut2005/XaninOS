@@ -74,7 +74,7 @@ int main(void)
     const char* ptr = (char*)&offset;
 
 
-    file.seekg(6,ios::beg);
+    file.seekg(5,ios::beg);
 
     file.write(ptr,sizeof(uint32_t));
 

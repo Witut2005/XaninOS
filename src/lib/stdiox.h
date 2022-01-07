@@ -56,6 +56,7 @@ cursor = (unsigned short*)(0xb8000) + ((80)*y);
 }
 
 
+/* put character */
 void putch(char c)
 {
     uint16_t* ptr;
@@ -65,8 +66,6 @@ void putch(char c)
     x++;
 
     return;
-
-
 }
 
 
@@ -132,40 +131,76 @@ void printBCD(uint8_t x)
 }
 
 
-/*
-//extended print :))
-void xprint(uint32_t num, ... )
+
+
+void xprintf(char* str, ... )
 {
 
+    char tmp[20];
+    char* tmpPtr = tmp;
+    uint32_t number;
+
     va_list args;
+    va_start(args,str);
 
-    va_start(args,num);
+    
 
+    uint32_t strCounter = 0;
+    uint32_t bufCounter = 0;
 
+    cursor = (unsigned short*)(0xb8000) + x +  ((80)*y);
 
-    if(format == dec)
+    while(str[strCounter])
     {
+        if(str[strCounter] == '%')
+        {
+            
+            strCounter++;
+            switch(str[strCounter])
+            {
+                case 'd':
+                {
+                    number = va_arg(args,int);
+
+                    int_to_str(number,tmpPtr);
+
+                    for(int i = 0; tmpPtr[i] != '\0'; i++)
+                    {
+                        cursor[bufCounter] = (uint16_t) (tmpPtr[i] + (((black << 4) | white) << 8));
+                        bufCounter++;
+                        x++;
+                    }
+
+                }
+                
+            }
+            strCounter++;
+        }
+
+        else if(str[strCounter] == '\n')
+        {
+            y++;
+            x = 0;
+            cursor = (unsigned short*)(0xb8000) + ((80)*y);
+            strCounter++;   
+            bufCounter++;
+        }
+
+        else 
+        {
+            cursor[bufCounter] = (uint16_t) (str[strCounter] + (((black << 4) | white) << 8));
+            strCounter++;   
+            bufCounter++;
+            x++;
+        }
+
+       
 
     }
-
-    else if(format == hex)
-    {
-
-    }
-
-    else if(format == bin)
-    {
-        
-    }
-
-    else
-    {
-
-    }
-
-
+    
+    va_end(args);
 
 }
-*/
+
 
 #endif

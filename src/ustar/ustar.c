@@ -2,10 +2,7 @@
 #include "./ustar.h"
 
 
-#define FS_START_OFFSET 0x7c06
 
-#define FILE_ENTRIES sizeof(fileTable) / sizeof(fileTable[0])
-#define FILE_DATA_ENTRIES sizeof(fileData) / sizeof(fileData[0])
 
 
 void ustarInit()

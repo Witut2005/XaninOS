@@ -11,11 +11,11 @@ void ls()
 {
 
 
-    for(int i=0; i < sizeof(fileTable) / sizeof(fileTable[0]); i++)
+    for(int i=0; i < FILE_ENTRIES; i++)
     {
         sprint(red,white, fileTable[i]);
-        sprint(red,white, "\n");
     }
+
 
     sprint(black,white,"press 'q' key to continue...");
     

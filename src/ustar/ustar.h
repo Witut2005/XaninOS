@@ -7,6 +7,18 @@
 #include <stdint.h>
 
 
+char* fileTable[2];
+char* fileData[2];
+
+
+#define FS_START_OFFSET 0x7c05
+
+
+const uint32_t FILE_ENTRIES = sizeof(fileTable) / sizeof(fileTable[0]);
+
+//#define FILE_ENTRIES sizeof(fileTable) / sizeof(fileTable[0])
+#define FILE_DATA_ENTRIES sizeof(fileData) / sizeof(fileData[0])
+
 
 
 typedef struct 
@@ -38,6 +50,4 @@ typedef struct
 
 fileMetadata* fileMeta[2];
 
-char* fileTable[2];
-char* fileData[2];
 

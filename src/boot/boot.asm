@@ -7,11 +7,11 @@
 
 jmp _loadSector
 
-db "OFF",0x0
-
-FILE_SYSTEM_DATA:               ;this filed is not used by ustar 
-
-USTAR_START: dd 0x0000          ;this filed is created to handle easier fs 
+db "OFF"
+                                ;/------------------------------------------/
+FILE_SYSTEM_DATA:               ;|this filed is not used by ustar           |
+USTAR_START: dd 0x0000          ;|this filed is created to handle easier fs |
+                                ;/------------------------------------------/
 
 _loadSector:
  
@@ -21,7 +21,7 @@ mov ax,0x2000
 mov es,ax    
  
 mov ah,0x2 
-mov al,0x20 
+mov al,0x30 
 mov ch,0x0
 mov cl,0x2 ; we dont want to copy first sector
 mov dh,0x0  

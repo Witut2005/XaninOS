@@ -29,8 +29,8 @@ mov es,eax
 mov ds,eax
 
 
-mov eax,STACK_SEGMENT
-mov ss,eax
+mov ax,DATA_SEGMENT
+mov ss,ax
 
 
 
@@ -160,22 +160,19 @@ loader:
   mov dword eax, [kernel + 0x18]
 
 
-  call eax
+  jmp eax
 
 jmp $ 
 
 times (32 - ( $ - $$ ) % 32 ) db 0x00
 
 _GDT_ADDR:
-    ;podajemy poczatek i rozmiar
-    dw (_GDT_END - _GDT) - 1 ; rozmiar
-    dd _GDT ; pocztek GDT
+    dw (_GDT_END - _GDT) - 1 ; size of GDT
+    dd _GDT                  ; GDT beginning
 
-;GLOBAL DESCRIPTOR LOADER 
 _GDT:
 
     ;null segment
-    ;jesli jakis srejestr nie jest ustawiony na jakis segment powiniene wskazywac na null segmetnt
     ;---------
     dd 0x0
     dd 0x0
@@ -184,14 +181,14 @@ _GDT:
 
     ;code segment
     ;should work :))
-    dd 0x0000ffff ;little endian ?
+    dd 0x0000ffff 
     db 0x0
     db 10011010b
     db 11001111b
     db 0x0
 
     ;data segment
-    dd 0x0000ffff ;little endian ?
+    dd 0x0000ffff 
     db 0x0
     db 10010010b
     db 11001111b
@@ -199,13 +196,11 @@ _GDT:
 
     ;stack segment
     dw 0
-    dw 0xff00   
+    dw 0xffff   
     db 0
     db 10010110b
-    db 11000000b
-    db 1b
-
-
+    db 01000000b
+    db 0xff
 
 _GDT_END:
 

@@ -1,8 +1,9 @@
 
 #pragma once
 
-#include "../lib/hal.h"
 #include <stdint.h>
+#include "../lib/hal.h"
+
 
 #define PIT_CHANNEL0 0x40
 #define PIT_CHANNEL1 0x41

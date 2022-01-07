@@ -11,26 +11,34 @@ uint32_t strlen(char* a)
         length++;
     }
 
+
     return length;
 
 
 }
 
-void reverseStr(char* str)
+char* reverseStr(char* str)
 {
 
 
+    uint8_t length = strlen(str);
+
     char buf;
-    char* ptr = str + strlen(str) - 1;
+    char* end = str + strlen(str) - 1;
 
 
     for(int i = 0; i < (strlen(str) / 2); i++)
     {
         buf = str[i];
-        str[i] = *ptr;
-        *ptr = buf;
-        ptr--;
+        str[i] = *end;
+        *end = buf;
+        end--;
     }
+
+    
+    *(str + length) = '\0';
+    
+    return str;
 
 }
 
@@ -65,5 +73,39 @@ void printNum32(uint32_t x)
         strNum[i] = x % 10;
         x = x / 10;
     }
+
+}
+
+char* int_to_str(int x, char* buf)
+{
+
+    int i = 0;
+
+    for(i = 0; x != 0; i++)
+    {
+        buf[i] = (x % 10) + 48;
+        x = x / 10;
+    }
+
+    *(buf + i + 1) = '\0';
+
+    buf = reverseStr(buf);
+    
+    return buf;
+
+}
+
+
+char* strcpy(char* dest, char* src)
+{
+    while(*src)
+    {
+        *dest = *src;
+        dest++;
+        src++;
+    }
+
+    *(++dest) = '\0';
+    return dest;
 
 }
