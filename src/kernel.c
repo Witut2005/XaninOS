@@ -76,7 +76,6 @@ void _start(void)
 
     xprintf("xaninOS\n");
     xprintf("version 22.01v\n");
-    //xprintf("xaninOS version 22.01v\n");
 
     getTime();
     xprintf("weekday: ");
