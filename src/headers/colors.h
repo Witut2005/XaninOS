@@ -22,3 +22,6 @@ enum colors{
     white = 0xf
 
 };
+
+
+#define getColors(x,y) (x << 4 | y)

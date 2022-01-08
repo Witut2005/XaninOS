@@ -18,7 +18,6 @@ char* tmpStr;
 
 
 
-
 void _start(void)
 {
 
@@ -30,8 +29,6 @@ void _start(void)
     ustarInit();
 
     clearScr();
-
-
 
     
     bool KEYBOARD_TEST_STATUS = keyboardSelfTest();
@@ -67,9 +64,6 @@ void _start(void)
 
     tuiInit:
 
-    COMMAND[0] = 'g';
-    index++;
-
     clearScr();
 
     x = 0;y = 0;
@@ -80,11 +74,14 @@ void _start(void)
     getTime();
     xprintf("weekday: ");
     xprintf(weekDaysLUT[time.weekDay]);
+            
+    xprintf("\n\n");
 
-    xprintf("\n");
+    y++;
 
-    xprintf("press enter to start:\n");
-
+    *cursor = (uint16_t)('>' | ((black << 4) | white) << 8); 
+    cursor++;
+    x++;
 
     exitApp = false;
     

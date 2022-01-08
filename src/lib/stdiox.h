@@ -139,6 +139,8 @@ void xprintf(char* str, ... )
     char tmp[20];
     char* tmpPtr = tmp;
     uint32_t number;
+    
+    char* stringPtr;
 
     va_list args;
     va_start(args,str);
@@ -147,6 +149,9 @@ void xprintf(char* str, ... )
 
     uint32_t strCounter = 0;
     uint32_t bufCounter = 0;
+
+    uint8_t backgroundColor = black;
+    uint8_t fontColor = white;
 
     cursor = (unsigned short*)(0xb8000) + x +  ((80)*y);
 
@@ -166,14 +171,41 @@ void xprintf(char* str, ... )
 
                     for(int i = 0; tmpPtr[i] != '\0'; i++)
                     {
-                        cursor[bufCounter] = (uint16_t) (tmpPtr[i] + (((black << 4) | white) << 8));
+                        cursor[bufCounter] = (uint16_t) (tmpPtr[i] + (((backgroundColor << 4) | fontColor) << 8));
                         bufCounter++;
                         x++;
                     }
 
+                    break;
                 }
+
+                case 's':
+                {    
+                
+                    stringPtr = va_arg(args,char*);
+                    
+                    for(int i = 0; stringPtr[i] != '\0'; i++)
+                    {
+                        cursor[bufCounter] = (uint16_t) (stringPtr[i] + (((backgroundColor << 4) | fontColor) << 8));
+                        bufCounter++;
+                        x++;
+                    }
+
+                    break;
+                    
+                }
+
+                case 'z':
+                {
+                    fontColor = (uint8_t)va_arg(args,int);
+                    backgroundColor = (fontColor & 0xf0) >> 4;
+                    fontColor = fontColor & 0x0f;
+                    break;
+                }
+
                 
             }
+
             strCounter++;
         }
 
@@ -183,12 +215,18 @@ void xprintf(char* str, ... )
             x = 0;
             cursor = (unsigned short*)(0xb8000) + ((80)*y);
             strCounter++;   
-            bufCounter++;
+        }
+
+        else if(str[strCounter] == '\r')
+        {
+            x = 0;
+            cursor = (unsigned short*)(0xb8000) + ((80)*y);
+            strCounter++;
         }
 
         else 
         {
-            cursor[bufCounter] = (uint16_t) (str[strCounter] + (((black << 4) | white) << 8));
+            cursor[bufCounter] = (uint16_t) (str[strCounter] + (((backgroundColor << 4) | fontColor) << 8));
             strCounter++;   
             bufCounter++;
             x++;

@@ -49,8 +49,6 @@ void scan(void)
     }
 
 
- 
-
     else if(cmpstr(COMMAND,"cls") || cmpstr(COMMAND,"clear"))
     {
         clearScr();
@@ -59,9 +57,12 @@ void scan(void)
 
 
     else if(cmpstr(COMMAND,"ls") || cmpstr(COMMAND,"dir"))
-    {
         ls();
-        terminalAppExit = true;
+    
+
+    else if(cmpstr(COMMAND,"type"))
+    {
+        type();
     }
 
     for(int i = 0; i < 7;i++)

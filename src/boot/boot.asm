@@ -7,16 +7,22 @@
 
 jmp _loadSector
 
+
+;/------------------------------------------/
+;|this filed is not used by ustar           |
+;|this filed is created to handle easier fs |
+;/------------------------------------------/
+
+USTAR_START:
 db "OFF"
-                                ;/------------------------------------------/
-FILE_SYSTEM_DATA:               ;|this filed is not used by ustar           |
-USTAR_START: dd 0x0000          ;|this filed is created to handle easier fs |
-                                ;/------------------------------------------/
+dd 0x0000
+
+USTAR_FILE_ENTRIES:
+db "ENTR"
+db 0x2
 
 _loadSector:
  
-;https://en.wikipedia.org/wiki/INT_13H#INT_13h_AH=02h:_Read_Sectors_From_Drive
-
 mov ax,0x2000
 mov es,ax    
  

@@ -12,12 +12,17 @@ char* fileData[2];
 
 
 #define FS_START_OFFSET 0x7c05
+#define FILE_ENTRIES_NUMBER 0x7c0d
 
-
-const uint32_t FILE_ENTRIES = sizeof(fileTable) / sizeof(fileTable[0]);
-
-//#define FILE_ENTRIES sizeof(fileTable) / sizeof(fileTable[0])
+#define FILE_ENTRIES sizeof(fileTable) / sizeof(fileTable[0])
 #define FILE_DATA_ENTRIES sizeof(fileData) / sizeof(fileData[0])
+
+
+struct 
+{
+    uint8_t file_entries_number;
+    char* file_system_start;
+}fileSystem;
 
 
 

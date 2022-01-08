@@ -6,6 +6,7 @@
 #include "../lib/stdiox.h"
 #include "../headers/colors.h"
 #include "../xaninApps/ls.c"
+#include "../xaninApps/type.c"
 
 void scan(void);
 

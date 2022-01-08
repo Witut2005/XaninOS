@@ -42,7 +42,7 @@ void terminalKeyboard(uint8_t scanCode)
             index--;
 
         cursor--;
-        *cursor = 0x0; //delete character
+        *cursor = 0x0; /* delete character */
     }
 
     else if(scanCode == ENTER)
@@ -50,12 +50,14 @@ void terminalKeyboard(uint8_t scanCode)
 
         if(strlen(COMMAND) != 0)
         {
-
+            y++;
+            x = 0;
             cursor = (uint16_t*)VRAM;
             add_y(y);
 
             *cursor = (uint16_t)('>' | ((black << 4) | white) << 8); 
             cursor++;
+            x++;
 
             
         }
@@ -70,6 +72,7 @@ void terminalKeyboard(uint8_t scanCode)
         COMMAND[index] = key;
         index++;
         cursor++;
+        x++;
     }
 
 
