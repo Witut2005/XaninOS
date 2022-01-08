@@ -32,6 +32,8 @@ void _start(void)
 
     clearScr();
 
+
+    while(1);
     
     bool KEYBOARD_TEST_STATUS = keyboardSelfTest();
 

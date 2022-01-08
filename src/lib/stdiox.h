@@ -206,6 +206,20 @@ void xprintf(char* str, ... )
                     break;
                 }
 
+                case 'x':
+                {
+                    number = va_arg(args,int);
+                    int_to_hex_str(number,tmpPtr);
+
+                    for(int i = 0; tmpPtr[i] != '\0'; i++)
+                    {
+                        cursor[bufCounter] = (uint16_t) (tmpPtr[i] + (((backgroundColor << 4) | fontColor) << 8));
+                        bufCounter++;
+                        x++;
+                    }
+
+                }
+
                 
             }
 
@@ -224,6 +238,13 @@ void xprintf(char* str, ... )
         {
             x = 0;
             cursor = (unsigned short*)(0xb8000) + ((80)*y);
+            strCounter++;
+        }
+
+        else if(str[strCounter] == '\t')
+        {
+            x += 3;
+            cursor += 3;
             strCounter++;
         }
 
