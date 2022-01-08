@@ -63,6 +63,7 @@ void scan(void)
     else if(cmpstr(COMMAND,"type"))
     {
         type();
+        KEYBOARD_SIG_ON(no_keyboard_input);
     }
 
     for(int i = 0; i < 7;i++)

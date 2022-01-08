@@ -30,6 +30,7 @@ void add_x(uint8_t xadd);
 
 void add_y(uint8_t yadd);
 
+bool no_enter = false;
 
 bool terminalAppExit = false;
 

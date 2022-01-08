@@ -42,24 +42,24 @@ char* reverseStr(char* str)
 
 }
 
-bool cmpstr(char* a,char* b)
+uint32_t cmpstr(char* a,char* b)
 {
 
     uint32_t lengtha = strlen(a);
     uint32_t lengthb = strlen(b);
     
     if(lengtha != lengthb)
-        return false;
+        return 0;
 
     for(char* i = a; *i != '\0' ;i++)
     {
         if(*a != *b)
-            return false;
+            return 0;
         a++;
         b++;
     }
 
-    return true;		
+    return 1;		
 }
 
 

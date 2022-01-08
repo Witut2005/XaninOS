@@ -25,10 +25,10 @@ void terminalKeyboard(uint8_t scanCode)
 {
 
 
-    if(index == 0x0)
+    if(!index)
     {
-        for(int i = 0; i < 7;i++)
-            COMMAND[i] = 0x0;
+        for(int i = 0; i < 30;i++)
+            COMMAND[i] = '\0';
     }
 
     uint8_t key = keyboard_map[scanCode];
@@ -55,10 +55,12 @@ void terminalKeyboard(uint8_t scanCode)
             cursor = (uint16_t*)VRAM;
             add_y(y);
 
-            *cursor = (uint16_t)('>' | ((black << 4) | white) << 8); 
-            cursor++;
-            x++;
-
+            if(!no_enter)
+            {
+                *cursor = (uint16_t)('>' | ((black << 4) | white) << 8); 
+                cursor++;
+                x++;
+            }
             
         }
 

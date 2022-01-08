@@ -22,6 +22,8 @@ void _start(void)
 {
 
     asm("cli");
+
+    COMMAND = comBuf;
     
     kbInit();
     setPit();
@@ -72,12 +74,8 @@ void _start(void)
     xprintf("version 22.01v\n");
 
     getTime();
-    xprintf("weekday: ");
-    xprintf(weekDaysLUT[time.weekDay]);
-            
-    xprintf("\n\n");
+    xprintf("weekday: %s\n\n",weekDaysLUT[time.weekDay]);
 
-    y++;
 
     *cursor = (uint16_t)('>' | ((black << 4) | white) << 8); 
     cursor++;
@@ -91,11 +89,17 @@ void _start(void)
 
 
         if(exitApp)
-            {exitApp = false;goto tuiInit;}
+        {
+            exitApp = false;
+            for(int i = 0; i < sizeof(comBuf); i++)
+                COMMAND[i] = '\0';
+            goto tuiInit;
+        }
 
       
         if(scanCode == ENTER)
         {
+            xprintf("%z%s",getColors(blue,white),COMMAND);
             scan();
         }
 
