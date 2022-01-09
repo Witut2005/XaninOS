@@ -13,5 +13,16 @@ Features:
 - recreated some parts of C libaries
 - basic implementation of USTAR filesystem
 
+---
+
+Command to list all available commands within xaninOS:
+
+```
+"help" or "h"
+```
+
 Command to run xaninOS on bochs emulator:
+
+```
 bochs.exe -f ./osdev.bochsrc
+```

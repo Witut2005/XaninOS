@@ -1,13 +1,13 @@
 
 #include <stdint.h>
-#include "./pit/pit.c"
-#include "./IDT/idt.c"
-#include "./lib/stdlibx.h"
-#include "./terminal/vty.c"
-#include "./terminal/interpreter.c"
-#include "./lib/math.h"
-#include "./fs/ustar.c"
-#include "./keyboard/keyboardInit.c"
+#include <pit/pit.c>
+#include <IDT/idt.c>
+#include <lib/stdlibx.h>
+#include <terminal/vty.c>
+#include <terminal/interpreter.c>
+#include <lib/math.h>
+#include <fs/ustar.c>
+#include <keyboard/keyboardInit.c>
 
 
 char* tmpStr;
@@ -53,6 +53,7 @@ void _start(void)
     clearScr();
 
     x = 0;y = 0;
+
 
     xprintf("xaninOS\n");
     xprintf("version 22.01v\n");

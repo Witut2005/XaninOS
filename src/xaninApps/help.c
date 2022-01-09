@@ -6,24 +6,28 @@
 void help(void)
 {
 
-    sprint(black,white,"AVAILABLE COMMANDS:");
-    sprint(black,white,"petris");
-    //sprint(black,white,"calc");
-    sprint(black,white,"pong");
-    sprint(black,white,"cls");
-    //sprint(black,white,"pit_test");
-    //sprint(black,white,"spaceAx");
-    //sprint(black,white,"xnote");
+    no_enter = true;
+    
+    xprintf("AVAILABLE COMMANDS:\n");
+    xprintf("petris\n");
+    xprintf("pong\n");
+    xprintf("cls\n");
+    xprintf("ls\n");
+    xprintf("type\n");
 
 
-    for(int i = 0; i < 30000;i++)
+
+    xprintf("press 'q' to continue...\n");
+    
+    while(1)
     {
-        for(int j = 0; j < cpu_mhz;j++)
+        
+        if(keyboard_input == 'q')
         {
-            asm("nop");
+            app_exited = true;
         }
+    
     }
 
-    app_exited = true;
-    
+
 }

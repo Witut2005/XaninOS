@@ -13,14 +13,14 @@ nasm -f elf32 keyboard.asm -o keyboard.o
 cd ..
 
 
-cd ./handlers/pit
+cd ./pit
 nasm -f elf32 pit.asm -o pit.o
 cd ..
-cd ..
+
 
 
 #COMPILE
-i386-elf-gcc -O0 -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function kernel.c ./handlers/keyboard.o ./pit/pit.o -o kernel.bin
+i386-elf-gcc -O0 -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -I /mnt/c/Users/wiktor/Desktop/xaninOS/src/pwio kernel.c ./handlers/keyboard.o ./pit/pit.o -o kernel.bin
 cat ./boot/boot ./boot/kernelLoader kernel.bin ./boot/locateFS files.tar > xanin.bin
 
 
