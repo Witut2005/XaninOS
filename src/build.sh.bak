@@ -13,10 +13,10 @@ nasm -f elf32 keyboard.asm -o keyboard.o
 cd ..
 
 
-cd ./pit
+cd ./handlers/pit
 nasm -f elf32 pit.asm -o pit.o
 cd ..
-
+cd ..
 
 
 #COMPILE

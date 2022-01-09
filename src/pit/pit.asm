@@ -1,13 +1,13 @@
 [bits 32]
 
-global pitHandlerInit
+global pit_handler_init
 
-extern pitHandler
+extern pit_handler
 
-pitHandlerInit:
+pit_handler_init:
     pushad
 	cld
-	call pitHandler
+	call pit_handler
 	popad
 	mov al,0x20
 	out 0x20,al ; SEND EOI TO PIC1

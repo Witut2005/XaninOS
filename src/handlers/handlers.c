@@ -12,11 +12,12 @@
 
 
 
-extern void pitHandlerInit(void);
-extern void keyboardHandlerInit(void);
+extern void pit_handler_init(void);
+extern void keyboard_handler_init(void);
 
 
-void floppyIrq(void)
+
+void floppy_interrupt(void)
 {
     sprint(red,white,"FLOPPY ERROR");
     
@@ -24,33 +25,33 @@ void floppyIrq(void)
     asm("hlt");
 }
 
-void invalidOpcode(void)
+void invalid_opcode(void)
 {
-    xprintf("\n%zINVALID OPCODE",getColors(red,white));
+    xprintf("\n%zINVALID OPCODE",set_output_color(red,white));
     asm("cli");
     asm("hlt");
 }
 
-void divError(void)
+void divide_by_zero_exception(void)
 {
-    xprintf("\n%zPIT IRQ",getColors(red,white));
+    xprintf("\n%zPIT IRQ",set_output_color(red,white));
     asm("cli");
     asm("hlt");
 }
 
 
-uint8_t scanCode;
+uint8_t keyboard_scan_code;
 
 bool pitActive = false; 
 
-void pitHandler(void)
+void pit_handler(void)
 {
     pitActive = true;
 }
 
 
 
-void keyboardHandler(void)
+void keyboard_handler(void)
 {
 
 
@@ -58,14 +59,14 @@ void keyboardHandler(void)
 
 
     keyStatus = inbIO(KEYBOARD_STATUS_REG); // if status & 1 (ON)
-    scanCode = inbIO(KEYBOARD_DATA_REG); // get scanCode
+    keyboard_scan_code = inbIO(KEYBOARD_DATA_REG); // get keyboard_scan_code
     
 
     //HANDLE KEYBOARD APP SIGNAL 
     if(int32_63 & 0x2)
     {
         if(keyStatus & 1)
-            input = keyboard_map[scanCode];
+            keyboard_input = keyboard_map[keyboard_scan_code];
 
         signal.appHandler();
         return;
@@ -81,13 +82,13 @@ void keyboardHandler(void)
         if(keyStatus & 1)
         {
 
-            if(scanCode < 0 || scanCode >= 128 )
+            if(keyboard_scan_code < 0 || keyboard_scan_code >= 128 )
                 return;
         
             else
             {
-                input = keyboard_map[scanCode];
-                terminalKeyboard(scanCode);
+                keyboard_input = keyboard_map[keyboard_scan_code];
+                terminalKeyboard(keyboard_scan_code);
             }
 
         }

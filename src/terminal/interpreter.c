@@ -38,7 +38,7 @@ void scan(void)
 
         initPong();
 
-        while(!exitApp)
+        while(!app_exited)
         {
             updatePong();
         }   
@@ -52,7 +52,7 @@ void scan(void)
     else if(cmpstr(COMMAND,"cls") || cmpstr(COMMAND,"clear"))
     {
         clearScr();
-        exitApp = true;
+        app_exited = true;
     }
 
 

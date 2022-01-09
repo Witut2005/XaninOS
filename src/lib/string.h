@@ -17,7 +17,7 @@ uint32_t strlen(char* a)
 
 }
 
-char* reverseStr(char* str)
+char* reverse_string(char* str)
 {
 
 
@@ -63,18 +63,7 @@ uint32_t cmpstr(char* a,char* b)
 }
 
 
-void printNum32(uint32_t x)
-{
 
-    static char strNum[10];
-
-    for(int i = 10; i >= 10; i++)
-    {
-        strNum[i] = x % 10;
-        x = x / 10;
-    }
-
-}
 
 char* int_to_str(int x, char* buf)
 {
@@ -89,7 +78,7 @@ char* int_to_str(int x, char* buf)
 
     *(buf + i + 1) = '\0';
 
-    buf = reverseStr(buf);
+    buf = reverse_string(buf);
     
     return buf;
 
@@ -137,7 +126,7 @@ char* int_to_hex_str(int x, char* buf)
 
     *(buf + i + 1) = '\0';
 
-    buf = reverseStr(buf);
+    buf = reverse_string(buf);
     
     return buf;
 
@@ -155,7 +144,7 @@ char* int_to_oct_str(int x, char* buf)
 
     *(buf + i + 1) = '\0';
 
-    buf = reverseStr(buf);
+    buf = reverse_string(buf);
     
     return buf;
 }

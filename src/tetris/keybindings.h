@@ -8,53 +8,56 @@
 uint16_t buf;
 uint8_t colorTetris = 0x1;
 
-void inputTetris()
+uint16_t* petris_cursor = (uint16_t*)VGA_TEXT_MEMORY;
+
+
+void tetris_input()
 {
 
     asm("int 0x21");
 
-    if(input == 'a')
-        petrisCursor--;
+    if(keyboard_input == 'a')
+        petris_cursor--;
 
-    else if(input == 'd')
-        petrisCursor++;    
+    else if(keyboard_input == 'd')
+        petris_cursor++;    
 
-    else if(input == '0')
+    else if(keyboard_input == '0')
         colorTetris = white;
 
-    else if(input == '1')
+    else if(keyboard_input == '1')
         colorTetris = blue;
 
-    else if(input == '2')
+    else if(keyboard_input == '2')
         colorTetris = green;
 
-    else if(input == '3')
+    else if(keyboard_input == '3')
         colorTetris = cyan;
         
-    else if(input == '4')
+    else if(keyboard_input == '4')
         colorTetris = red;
 
-    else if(input == '5')
+    else if(keyboard_input == '5')
         colorTetris = brown;
 
-    else if(input == '6')
+    else if(keyboard_input == '6')
         colorTetris = lblue;
         
-    else if(input == '7')
+    else if(keyboard_input == '7')
         colorTetris = yellow;
 
-    else if(input == '8')
+    else if(keyboard_input == '8')
         colorTetris = magenta;
 
-    else if(input == '9')
+    else if(keyboard_input == '9')
         colorTetris = lgray;
 
-    if(input == 'p')
+    if(keyboard_input == 'p')
     {
-        *petrisCursor = buf;
-        while(input == 'p');
+        *petris_cursor = buf;
+        while(keyboard_input == 'p');
 
-        *petrisCursor = 0x0;
+        *petris_cursor = 0x0;
     }
 
         

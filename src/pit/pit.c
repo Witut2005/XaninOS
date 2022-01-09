@@ -16,7 +16,7 @@
 
 uint16_t divisor;
 
-void setDivisor(uint16_t newDivisorVal)
+void set_pit_divisor(uint16_t newDivisorVal)
 {
     if(newDivisorVal < 250)
         newDivisorVal = 250;
@@ -31,7 +31,7 @@ void setDivisor(uint16_t newDivisorVal)
 
 
 
-void setPit()
+void set_pit()
 {
     outbIO(PIC1_DATA_REG, 0xFC); // pit irq on
     outbIO(PIT_MODE_COMMAND_REGISTER,0x30);

@@ -9,8 +9,8 @@ void tetris(void)
     while(1)
     {
         update();
-        if(input == 'q')
-            {exitApp = true;return;}
+        if(keyboard_input == 'q')
+            {app_exited = true;return;}
     }
 
 }

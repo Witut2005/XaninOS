@@ -79,7 +79,7 @@ void getTime()
 
 void getCpuSpeed()
 {
-    setDivisor(0x0);
+    set_pit_divisor(0x0);
 
     while(!pitActive)
         cpu_mhz++;

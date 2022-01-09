@@ -2,7 +2,7 @@
 #pragma once
 
 /* BIOS colors enum */
-enum colors{
+enum Colors{
 
     black = 0x0,
     blue = 0x1,
@@ -24,4 +24,3 @@ enum colors{
 };
 
 
-#define getColors(x,y) (x << 4 | y)

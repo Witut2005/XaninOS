@@ -1,6 +1,6 @@
 
 #include "../terminal/vty.h"
-#include "../ustar/ustar.h"
+#include "../fs/ustar.h"
 #include "../lib/stdiox.h"
 #include "../handlers/handlers.h"
 #include "../lib/signal.h"
@@ -22,9 +22,9 @@ void ls()
     
     while(1)
     {
-        if(input == 'q')
+        if(keyboard_input == 'q')
         {
-            {exitApp = true;break;}
+            {app_exited = true;break;}
         }
     }
 

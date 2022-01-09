@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "../ustar/ustar.h"
+#include "../fs/ustar.h"
 #include "../headers/colors.h"
 #include "../handlers/handlers.c"
 
@@ -16,12 +16,12 @@ void type()
 
     no_enter = true;
 
-    scanCode = 0x0;
+    keyboard_scan_code = 0x0;
 
     while(1)
     {
 
-        if(!index && scanCode == ENTER)
+        if(!index && keyboard_scan_code == ENTER)
         {
         
             for(int i = 0; i < fileSystem.file_entries_number; i++)
@@ -41,8 +41,8 @@ void type()
     }
 
     error:
-    xprintf("\r%z%s\n",getColors(red,white),COMMAND);
-    xprintf("\r%z%s\n",getColors(red,white),"NO SUCH FILE OR DIRECTORY");
+    xprintf("\r%z%s\n",set_output_color(red,white),COMMAND);
+    xprintf("\r%z%s\n",set_output_color(red,white),"NO SUCH FILE OR DIRECTORY");
 
 
     end:
@@ -56,13 +56,13 @@ void type()
 
     while(1)
     {
-        if(input == 'q')
+        if(keyboard_input == 'q')
         {
             for(int i = 0; i < sizeof(comBuf);i++)
                 COMMAND[i] = '\0';
 
-            index = 0x0; /* some problems with keyboard input when index is no reseted */
-            exitApp = true; no_enter = false;break;
+            index = 0x0; /* some problems with keyboard keyboard_input when index is no reseted */
+            app_exited = true; no_enter = false;break;
         }
     }
 

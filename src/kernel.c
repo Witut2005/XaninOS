@@ -6,7 +6,7 @@
 #include "./terminal/vty.c"
 #include "./terminal/interpreter.c"
 #include "./lib/math.h"
-#include "./ustar/ustar.c"
+#include "./fs/ustar.c"
 #include "./keyboard/keyboardInit.c"
 
 
@@ -28,10 +28,10 @@ void _start(void)
 
     COMMAND = comBuf;
     
-    kbInit();
-    setPit();
-    setIdt();
-    ustarInit();
+    keyboard_init();
+    set_pit();
+    set_idt();
+    file_system_init();
 
     clearScr();
 
@@ -46,11 +46,6 @@ void _start(void)
     getTime();
 
     srand(time.seconds);
-
-
-
-
-
 
 
     tuiInit:
@@ -70,25 +65,24 @@ void _start(void)
     cursor++;
     x++;
 
-    exitApp = false;
+    app_exited = false;
     
 
     while(1)
     {
 
 
-        if(exitApp)
+        if(app_exited)
         {
-            exitApp = false;
+            app_exited = false;
             for(int i = 0; i < sizeof(comBuf); i++)
                 COMMAND[i] = '\0';
             goto tuiInit;
         }
 
       
-        if(scanCode == ENTER)
+        if(keyboard_scan_code == ENTER)
         {
-            xprintf("%z%s",getColors(blue,white),COMMAND);
             scan();
         }
 

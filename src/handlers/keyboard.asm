@@ -1,14 +1,14 @@
 [bits 32]
 
-global keyboardHandlerInit
+global keyboard_handler_init
 
 
-extern keyboardHandler
+extern keyboard_handler
 
-keyboardHandlerInit:
+keyboard_handler_init:
     pushad
 	cld
-	call keyboardHandler
+	call keyboard_handler
 	popad
 	mov al,0x20
 	out 0x20,al ; SEND EOI TO PIC1

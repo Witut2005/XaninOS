@@ -5,7 +5,7 @@
 
 
 
-void ustarInit()
+void file_system_init()
 {    
 
     fileSystem.file_entries_number = *(uint8_t*)FILE_ENTRIES_NUMBER;

@@ -24,6 +24,6 @@ void help(void)
         }
     }
 
-    exitApp = true;
+    app_exited = true;
     
 }

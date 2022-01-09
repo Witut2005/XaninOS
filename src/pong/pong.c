@@ -46,7 +46,7 @@ void createRectanglePong(uint8_t ySize,uint8_t xwhere,uint8_t ywhere,uint8_t id)
 
 void resetBall(void)
 {
-    if(input == 'r')
+    if(keyboard_input == 'r')
     {
         vector = 0x0;
         *ball = 0x0;
@@ -61,19 +61,19 @@ void chgRelativeLocationY(uint8_t ynew,uint8_t id)
 
     if(id == 1)
     {
-        player1Buf = input;
+        player1Buf = keyboard_input;
         pixel = pixels1;
     }
     
     else if(id == 2)
     {
-        player2Buf = input;
+        player2Buf = keyboard_input;
         pixel = pixels2;
     }
 
     //asm("int 0x21");
 
-    if((input == player1[0] && id == 1)|| (input == player2[0] && id == 2))
+    if((keyboard_input == player1[0] && id == 1)|| (keyboard_input == player2[0] && id == 2))
     {
         
         uint32_t* tmp = pixel[0];
@@ -95,7 +95,7 @@ void chgRelativeLocationY(uint8_t ynew,uint8_t id)
     
     }
 
-   if((input == player1[1] && id == 1)|| (input == player2[1] && id == 2))
+   if((keyboard_input == player1[1] && id == 1)|| (keyboard_input == player2[1] && id == 2))
     {
 
         uint32_t* tmp = pixel[4];
@@ -149,7 +149,7 @@ bool detectColission(void)
 
     if(*tmp == (uint16_t)(( 0x0 | (((red << 4) | white) << 8))))
     {
-        exitApp = true;
+        app_exited = true;
     }
 
 
@@ -284,8 +284,8 @@ void initPong()
 
 void updatePong(void)
 {
-    if(input == 'q')
-        {exitApp = true;}
+    if(keyboard_input == 'q')
+        {app_exited = true;}
     resetBall();
     moveBall();
     chgRelativeLocationY(1,2);

@@ -12,7 +12,7 @@
 #define CODE_SEGMENT 0x8
 
 
-#define confIDT(idt_entry,off,seg)\
+#define configure_idt_entry(idt_entry,off,seg)\
     idtEntries[idt_entry].off_0_15 = (uint16_t)(((uint32_t)&off & 0x0000ffff));\
     idtEntries[idt_entry].off_16_31 = (uint16_t)((uint32_t)&off >> 16);\
     idtEntries[idt_entry].segment = seg;\
@@ -20,7 +20,7 @@
     idtEntries[idt_entry].P_DPL = 0x8e
 
 
-extern void keyboardHandlerInit();
+
 
     /* IDT Register */
     struct idtReg
@@ -30,33 +30,30 @@ extern void keyboardHandlerInit();
     }__attribute__((packed));
     
     /* IDT entry structure */
-    struct IDT
+    typedef struct 
     {
         uint16_t off_0_15;
         uint16_t segment;
         uint8_t res;
         uint8_t P_DPL;
         uint16_t off_16_31;
-    }__attribute__((packed));
+    }__attribute__((packed)) IDT;
 
-    __attribute__((aligned(0x8)))
-    typedef struct IDT IDT;
     
-    IDT idtEntries[IDT_HANDLERS];
+    __attribute__((aligned(0x8))) IDT idtEntries[IDT_HANDLERS];
 
 
 
-void setIdt(void)
+void set_idt(void)
 {
 
 
-
     /* configure IDT entries*/
-    confIDT(0x6,invalidOpcode,CODE_SEGMENT);
-    confIDT(0x0,divError,CODE_SEGMENT);
-    confIDT(0x20,pitHandlerInit,CODE_SEGMENT);
-    confIDT(0x21,keyboardHandlerInit,CODE_SEGMENT);
-    confIDT(0x26,floppyIrq,CODE_SEGMENT);
+    configure_idt_entry(0x0,divide_by_zero_exception,CODE_SEGMENT);
+    configure_idt_entry(0x6,invalid_opcode,CODE_SEGMENT);
+    configure_idt_entry(0x20,pit_handler_init,CODE_SEGMENT);
+    configure_idt_entry(0x21,keyboard_handler_init,CODE_SEGMENT);
+    configure_idt_entry(0x26,floppy_interrupt,CODE_SEGMENT);
 
 
     

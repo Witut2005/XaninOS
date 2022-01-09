@@ -12,6 +12,7 @@
 
 
 
+#define set_output_color(x,y) (x << 4 | y)
 #define VRAM VGA_TEXT_MEMORY
 
 
@@ -87,7 +88,7 @@ void printNum(uint8_t x)
     arr[0] = x % 10;
 
 
-    incArr(arr,3,48);
+    increment_array(arr,3,48);
 
     bool notZero;
 
@@ -106,7 +107,7 @@ void printNum(uint8_t x)
 
 }
 
-void printHex(uint8_t x)
+void print_hex_number(uint8_t x)
 {
     char* mystr;
     putch(HEX_LUT[(x & 0xF0) >> 4]);
@@ -114,7 +115,7 @@ void printHex(uint8_t x)
 
 }
  
-void printBCD(uint8_t x)
+void print_bcd_number(uint8_t x)
 {
 
     uint16_t* ptr;

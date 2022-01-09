@@ -1,6 +1,6 @@
 #include <stdint.h>
 
-struct STACK
+struct stack
 {
     void(*popPtr)(void);
 };
