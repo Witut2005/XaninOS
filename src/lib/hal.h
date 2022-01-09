@@ -51,11 +51,6 @@ void disableCursor()
 	outbIO(0x3D5, 0x20);
 }
 
-uint8_t keyboardSelfTest()
-{
-    outbIO(0x64,0xaa);
-    return inbIO(0x60);
-}
 
 
 

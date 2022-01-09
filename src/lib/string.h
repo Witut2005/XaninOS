@@ -143,6 +143,22 @@ char* int_to_hex_str(int x, char* buf)
 
 }
 
+char* int_to_oct_str(int x, char* buf)
+{
+    int i = 0;
+
+    for(i = 0; x != 0; i++)
+    {
+        buf[i] = (x % 8) + 48;
+        x = x / 8;
+    }
+
+    *(buf + i + 1) = '\0';
+
+    buf = reverseStr(buf);
+    
+    return buf;
+}
 
 char* strcpy(char* dest, char* src)
 {

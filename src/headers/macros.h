@@ -3,6 +3,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#define VGA_TEXT_MEMORY 0xb8000
+
 #define incArr(arr,ctr,plus)\
     for(uint8_t i = 0; i < ctr; i++)\
     {\
@@ -16,7 +18,7 @@
     }
 
 
-uint16_t* scrPtr = (uint16_t*)0xb8000;
+uint16_t* petrisCursor = (uint16_t*)VGA_TEXT_MEMORY;
 static uint8_t x;
 static uint8_t y;
 

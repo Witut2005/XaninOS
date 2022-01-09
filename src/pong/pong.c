@@ -3,7 +3,6 @@
 #include "../lib/xstack.h"
 #include "../xaninGraphics/xaninGraphics.c"
 
-#define changeDirection dest.changeDirection 
 
 
 
@@ -17,7 +16,7 @@ void keyControlPong(void)
 
 void createRectanglePong(uint8_t ySize,uint8_t xwhere,uint8_t ywhere,uint8_t id)
 {   
-    uint32_t* lineCreator = (uint32_t*)0xb8000 + xwhere + (ywhere * 40);
+    uint32_t* lineCreator = (uint32_t*)VGA_TEXT_MEMORY + xwhere + (ywhere * 40);
 
 
     uint32_t* buf = lineCreator;
@@ -51,7 +50,7 @@ void resetBall(void)
     {
         vector = 0x0;
         *ball = 0x0;
-        ball = (uint16_t*)0xb8000 + 40 + (80 * 12);
+        ball = (uint16_t*)VGA_TEXT_MEMORY + 40 + (80 * 12);
     }
 }
 
@@ -134,7 +133,7 @@ bool detectColission(void)
 
     uint16_t* tmp = ball;
 
-    if(changeDirection)
+    if(dest.changeDirection)
         tmp++;
 
     else 
@@ -143,7 +142,7 @@ bool detectColission(void)
 
     if(*tmp == (uint16_t)(( 0x0 | (((white << 4) | white) << 8))))
     {
-        changeDirection = !changeDirection;
+        dest.changeDirection = !dest.changeDirection;
         getTime();
         vector = time.seconds % 3;
     }
@@ -154,7 +153,7 @@ bool detectColission(void)
     }
 
 
-    if(changeDirection)
+    if(dest.changeDirection)
     {
 
         tmp = ball;
@@ -211,7 +210,7 @@ void moveBall(void)
 
         *ball = 0x0;
         
-        if(changeDirection)
+        if(dest.changeDirection)
             ball = ball + velocity;
 
         else 
@@ -230,7 +229,7 @@ void moveBall(void)
 
         *ball = 0x0;
 
-        if(changeDirection)
+        if(dest.changeDirection)
             ball = ball + velocity + (int16_t)80;
 
         else 
@@ -256,12 +255,12 @@ void initPong()
         clearScr();
 
 
-        ball  = (uint16_t*)0xb8000 + 40 + (80 * 12);    
+        ball  = (uint16_t*)VGA_TEXT_MEMORY + 40 + (80 * 12);    
         
 
         velocity = 0x1;
         vector = 0x0;
-        changeDirection = 0x1;
+        dest.changeDirection = 0x1;
 
     
         drawLineY(1,23,0,red);

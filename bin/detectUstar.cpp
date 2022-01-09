@@ -78,6 +78,9 @@ int main(void)
 
     file.write(ptr,sizeof(uint32_t));
 
+    file.seekg(0,ios::end);
+
+
     file.close();
 
 }

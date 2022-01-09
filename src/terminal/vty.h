@@ -13,9 +13,9 @@
 #define SCREEN_HEIGHT 80
 #define SCREEN_RESOLUTION (25 * 80)
 
-#define VRAM 0xb8000
+#define VGA_TEXT_MEMORY 0xb8000
 
-uint16_t* cursor = (uint16_t*)VRAM + (4*80);
+uint16_t* cursor = (uint16_t*)VGA_TEXT_MEMORY + (4*80);
 
 static uint8_t y,x;
 

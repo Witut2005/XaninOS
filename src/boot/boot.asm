@@ -21,8 +21,12 @@ USTAR_FILE_ENTRIES:
 db "ENTR"
 db 0x2
 
+
+
 _loadSector:
- 
+
+
+
 mov ax,0x2000
 mov es,ax    
  

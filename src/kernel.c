@@ -7,8 +7,11 @@
 #include "./terminal/interpreter.c"
 #include "./lib/math.h"
 #include "./ustar/ustar.c"
+#include "./keyboard/keyboardInit.c"
+
 
 char* tmpStr;
+
 
 /*--------------------------------------/
 |wesolego nowego roku :))               |
@@ -31,22 +34,6 @@ void _start(void)
     ustarInit();
 
     clearScr();
-
-
-    while(1);
-    
-    bool KEYBOARD_TEST_STATUS = keyboardSelfTest();
-
-
-    if(KEYBOARD_TEST_STATUS == 0xfc) 
-    {
-        sprint(red,white,"keyboard self test failed. Halting execution\n");
-        asm("cli");
-        asm("hlt");
-    }
-
-    else if(KEYBOARD_TEST_STATUS == 0x55)
-        sprint(black,white,"keyboard self test passed :))\n");
 
 
     clearScr();

@@ -12,7 +12,7 @@
 
 
 
-#define VRAM 0xb8000
+#define VRAM VGA_TEXT_MEMORY
 
 
 static char* keyString = "keyboard initalized succed :))\n";
@@ -40,14 +40,14 @@ void clearScr(void)
 void sprint(uint8_t backColor,uint8_t colors,char* str)
 {
 
-cursor = (unsigned short*)(0xb8000) + ((80)*y);
+cursor = (unsigned short*)(VGA_TEXT_MEMORY) + ((80)*y);
 
     for (int i = 0; str[i] != '\0'; i++)
     {
         if(str[i] == '\n')
         {
             y++;
-            cursor = (unsigned short*)(0xb8000) + ((80)*y) - 1;
+            cursor = (unsigned short*)(VGA_TEXT_MEMORY) + ((80)*y) - 1;
             continue;
         }
 
@@ -63,7 +63,7 @@ cursor = (unsigned short*)(0xb8000) + ((80)*y);
 void putch(char c)
 {
     uint16_t* ptr;
-    ptr = (unsigned short*)(0xb8000) + (x*2) +((80)*y);
+    ptr = (unsigned short*)(VGA_TEXT_MEMORY) + (x*2) +((80)*y);
     *ptr = (uint16_t)c | (((black << 4) | white) << 8); 
     
     x++;
@@ -119,11 +119,11 @@ void printBCD(uint8_t x)
 
     uint16_t* ptr;
 
-    ptr = (unsigned short*)(0xb8000) + x +  ((80)*y);
+    ptr = (unsigned short*)(VGA_TEXT_MEMORY) + x +  ((80)*y);
     *ptr = (uint16_t)( (((x & 0xf0) >> 4) + 48)  | (((red << 4) | white) << 8)); 
     x += 0x2;
 
-    ptr = (unsigned short*)(0xb8000) + x +  ((80)*y);
+    ptr = (unsigned short*)(VGA_TEXT_MEMORY) + x +  ((80)*y);
     *ptr = (uint16_t)(((x & 0x0f) + 48)  | (((red << 4) | white) << 8)); 
     x += 0x2;
 
@@ -156,7 +156,7 @@ void xprintf(char* str, ... )
     uint8_t backgroundColor = black;
     uint8_t fontColor = white;
 
-    cursor = (unsigned short*)(0xb8000) + x +  ((80)*y);
+    cursor = (unsigned short*)(VGA_TEXT_MEMORY) + x +  ((80)*y);
 
     while(str[strCounter])
     {
@@ -220,6 +220,20 @@ void xprintf(char* str, ... )
 
                 }
 
+                case 'o':
+                {
+                    number = va_arg(args,int);
+                    int_to_oct_str(number,tmpPtr);
+
+                    for(int i = 0; tmpPtr[i] != '\0'; i++)
+                    {
+                        cursor[bufCounter] = (uint16_t) (tmpPtr[i] + (((backgroundColor << 4) | fontColor) << 8));
+                        bufCounter++;
+                        x++;
+                    }
+                }
+        
+
                 
             }
 
@@ -230,14 +244,14 @@ void xprintf(char* str, ... )
         {
             y++;
             x = 0;
-            cursor = (unsigned short*)(0xb8000) + ((80)*y);
+            cursor = (unsigned short*)(VGA_TEXT_MEMORY) + ((80)*y);
             strCounter++;   
         }
 
         else if(str[strCounter] == '\r')
         {
             x = 0;
-            cursor = (unsigned short*)(0xb8000) + ((80)*y);
+            cursor = (unsigned short*)(VGA_TEXT_MEMORY) + ((80)*y);
             strCounter++;
         }
 

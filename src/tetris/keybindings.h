@@ -14,10 +14,10 @@ void inputTetris()
     asm("int 0x21");
 
     if(input == 'a')
-        scrPtr--;
+        petrisCursor--;
 
     else if(input == 'd')
-        scrPtr++;    
+        petrisCursor++;    
 
     else if(input == '0')
         colorTetris = white;
@@ -51,10 +51,10 @@ void inputTetris()
 
     if(input == 'p')
     {
-        *scrPtr = buf;
+        *petrisCursor = buf;
         while(input == 'p');
 
-        *scrPtr = 0x0;
+        *petrisCursor = 0x0;
     }
 
         

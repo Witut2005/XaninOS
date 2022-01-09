@@ -47,8 +47,9 @@ void type()
 
     end:
 
-    xprintf("\n");
-    xprintf("\npress 'q' key to continue...");
+    
+
+    xprintf("\n\npress 'q' key to continue...");
     
     
     
