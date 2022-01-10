@@ -2,7 +2,7 @@
 #pragma once
 
 #include <stdint.h>
-#include "../lib/hal.h"
+#include <lib/hal.h>
 
 
 #define PIT_CHANNEL0 0x40

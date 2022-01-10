@@ -5,10 +5,10 @@
 
 #include <stdarg.h>
 #include <stdint.h>
-#include "../headers/colors.h"
-#include "../headers/macros.h"
-#include "../terminal/vty.h"
-#include "../tetris/tetris.c"
+#include <headers/colors.h>
+#include <headers/macros.h>
+#include <terminal/vty.h>
+#include <tetris/tetris.c>
 
 
 

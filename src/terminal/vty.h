@@ -3,11 +3,11 @@
 #ifndef VTY_H
 #define VTY_H
 
-#include "../headers/macros.h"
-#include "../headers/colors.h"
-#include "../keyboard/keyMap.h"
-#include "../lib/stdiox.h"
-#include "../lib/string.h"
+#include <headers/macros.h>
+#include <headers/colors.h>
+#include <keyboard/keyMap.h>
+#include <lib/stdiox.h>
+#include <lib/string.h>
 
 #define SCREEN_WIDTH 25
 #define SCREEN_HEIGHT 80

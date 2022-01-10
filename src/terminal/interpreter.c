@@ -1,5 +1,5 @@
 
-#include "./interpreter.h"
+#include <terminal/interpreter.h>
 
 void no_keyboard_input()
 {

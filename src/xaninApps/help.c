@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "../lib/stdiox.h"
+#include <lib/stdiox.h>
 
 void help(void)
 {
@@ -25,6 +25,7 @@ void help(void)
         if(keyboard_input == 'q')
         {
             app_exited = true;
+            break;
         }
     
     }

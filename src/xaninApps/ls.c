@@ -1,9 +1,9 @@
 
-#include "../terminal/vty.h"
-#include "../fs/ustar.h"
-#include "../lib/stdiox.h"
-#include "../handlers/handlers.h"
-#include "../lib/signal.h"
+#include <terminal/vty.h>
+#include <fs/ustar.h>
+#include <lib/stdiox.h>
+#include <handlers/handlers.h>
+#include <lib/signal.h>
 
 
 
@@ -17,7 +17,7 @@ void ls()
     }
 
 
-    sprint(black,white,"press 'q' key to continue...");
+    xprintf("press 'q' key to continue...");
     
     
     while(1)

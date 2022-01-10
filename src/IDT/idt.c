@@ -1,9 +1,9 @@
 #pragma once
 
 #include <stdint.h>
-#include "../lib/hal.h"
-#include "../handlers/handlers.c"
-#include "../keyboard/keyMap.h"
+#include <lib/hal.h>
+#include <handlers/handlers.c>
+#include <keyboard/keyMap.h>
 
 
 #define IDT_HANDLERS 256

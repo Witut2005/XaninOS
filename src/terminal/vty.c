@@ -2,10 +2,10 @@
 #pragma once
 
 
-#include "./vty.h"
-#include "../tetris/tetris.c"
-#include "../xaninApps/help.c"
-#include "../lib/signal.h"
+#include <terminal/vty.h>
+#include <tetris/tetris.c>
+#include <xaninApps/help.c>
+#include <lib/signal.h>
 
 void add_y(uint8_t yadd)
 {

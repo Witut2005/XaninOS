@@ -1,8 +1,8 @@
-#include "../lib/math.h"
-#include "../lib/string.h"
-#include "../lib/stdiox.h"
-#include "../lib/signal.h"
-#include "../headers/macros.h"
+#include <lib/math.h>
+#include <lib/string.h>
+#include <lib/stdiox.h>
+#include <lib/signal.h>
+#include <headers/macros.h>
 
 static uint8_t calcCom[11];
 static uint8_t indexCalc = 0;

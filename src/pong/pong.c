@@ -1,7 +1,7 @@
 
-#include "./pong.h"
-#include "../lib/xstack.h"
-#include "../xaninGraphics/xaninGraphics.c"
+#include <pong/pong.h>
+#include <lib/xstack.h>
+#include <xaninGraphics/xaninGraphics.c>
 
 
 

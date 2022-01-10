@@ -1,13 +1,13 @@
 
 #pragma once
 
-#include "../lib/signal.h"
-#include "../lib/hal.h"
-#include "../lib/stdiox.h"
-#include "../terminal/vty.c"
-#include "../headers/macros.h"
-#include "../keyboard/keyMap.h"
-#include "./handlers.h"
+#include <lib/signal.h>
+#include <lib/hal.h>
+#include <lib/stdiox.h>
+#include <terminal/vty.c>
+#include <headers/macros.h>
+#include <keyboard/keyMap.h>
+#include <handlers/handlers.h>
 
 
 

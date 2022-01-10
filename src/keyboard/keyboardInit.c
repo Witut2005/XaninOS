@@ -3,7 +3,7 @@
 #define KEYBOARD_TEST_SUCCESS 0x55
 
 
-#include "../lib/hal.h" 
+#include <lib/hal.h>
 
 
 uint8_t keyboard_self_test()

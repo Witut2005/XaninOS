@@ -1,8 +1,8 @@
 #pragma once
 
 #include <stdint.h>
-#include "../headers/macros.h"
-#include "../headers/colors.h"
+#include <headers/macros.h>
+#include <headers/colors.h>
 
 
 uint16_t buf;

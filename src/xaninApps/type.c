@@ -1,9 +1,9 @@
 
 #pragma once
 
-#include "../fs/ustar.h"
-#include "../headers/colors.h"
-#include "../handlers/handlers.c"
+#include <fs/ustar.h>
+#include <headers/colors.h>
+#include <handlers/handlers.c>
 
 /* INTERRUPT */
 

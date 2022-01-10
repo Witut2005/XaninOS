@@ -2,10 +2,10 @@
 #pragma once
 
 #include <stdint.h>
-#include "../lib/signal.h"
-#include "../headers/colors.h"
-#include "../lib/stdlibx.h"
-#include "../lib/stdiox.h"
+#include <lib/signal.h>
+#include <headers/colors.h>
+#include <lib/stdlibx.h>
+#include <lib/stdiox.h>
 
 uint16_t* pongCur[8];
 

@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "./keybindings.h"
+#include <tetris/keybindings.h>
 
 
 #define BLANK 0xa
