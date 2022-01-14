@@ -25,6 +25,11 @@ db 0x2
 
 _loadSector:
 
+;change text mode resolution
+;mov ax,0x1111
+;int 0x10
+
+;load sectors
 mov ax,0x2000
 mov es,ax    
  

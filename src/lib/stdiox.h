@@ -34,6 +34,11 @@ void clearScr(void)
         *ptrTmp = 0x0;
         ptrTmp++;
     }
+
+    x = 0;
+    y = 0;
+    
+
 }
 
 

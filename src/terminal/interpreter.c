@@ -59,6 +59,11 @@ void scan(void)
     else if(cmpstr(COMMAND,"ls") || cmpstr(COMMAND,"dir"))
         ls();
     
+    else if(cmpstr(COMMAND,"nano"))
+    {
+        nano();
+        KEYBOARD_SIG_ON(no_keyboard_input);
+    }
 
     else if(cmpstr(COMMAND,"type"))
     {

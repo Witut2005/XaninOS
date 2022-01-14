@@ -4,7 +4,8 @@
 #include <lib/stdiox.h>
 #include <handlers/handlers.h>
 #include <lib/signal.h>
-
+#include <headers/colors.h>
+#include <lib/stdiox.h>
 
 
 void ls()
@@ -12,9 +13,8 @@ void ls()
 
 
     for(int i=0; i < FILE_ENTRIES; i++)
-    {
-        sprint(red,white, fileTable[i]);
-    }
+        xprintf("%z%s",set_output_color(black,white),fileTable[i]);
+    
 
 
     xprintf("press 'q' key to continue...");
