@@ -13,7 +13,7 @@ void ls()
 
 
     for(int i=0; i < FILE_ENTRIES; i++)
-        xprintf("%z%s",set_output_color(black,white),fileTable[i]);
+        xprintf("\r%z%s\n",set_output_color(black,white),fileTable[i]);
     
 
 

@@ -10,7 +10,7 @@ jmp _loadSector
 
 ;/------------------------------------------/
 ;|this filed is not used by ustar           |
-;|this filed is created to handle easier fs |
+;|this filed is created to handle easier FS |
 ;/------------------------------------------/
 
 USTAR_START:
@@ -26,15 +26,18 @@ db 0x2
 _loadSector:
 
 ;change text mode resolution
-;mov ax,0x1111
+
+;mov ah,0x0
+;mov al,12h
 ;int 0x10
+
 
 ;load sectors
 mov ax,0x2000
 mov es,ax    
  
 mov ah,0x2 
-mov al,0x40 
+mov al,0x30 
 mov ch,0x0
 mov cl,0x2 ; we dont want to copy first sector
 mov dh,0x0  

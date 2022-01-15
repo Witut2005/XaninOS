@@ -98,69 +98,72 @@ push 0x22222222
 push 0x33333333
 
 
-;%include "keyboard.asm"
-
-
 ;https://www.youtube.com/watch?v=EbTNacDhqbA <-- GYNVAEL OSDEV VIDEO #3
 
 loader:
-  mov esi, [kernel + 0x1C] ;phofff point to header table
-  add esi, kernel ; offset from begin + begin of kernel
 
-  movzx ecx, word [kernel + 0x2C] ; pnum contains number of entries in header table
+mov word si, [kernel + 0x12]  ;machine type
+cmp si, 0x3
+je machine_good
 
-  cld ; used to  inc addresses
+cli
+hlt
 
-  ; Assumes that the linker always stores ELF header at
+machine_good:
+mov esi, [kernel + 0x1C]  ;phofff point to header table
+add esi, kernel           ; offset from begin + begin of kernel
+
+movzx ecx, word [kernel + 0x2C] ; pnum contains number of entries in header table
+
+cld 
+
   ; first p_vaddr.
-  xor ebp,ebp ; First PT_LOAD p_vaddr
+xor ebp,ebp ; First PT_LOAD p_vaddr
 
-  .ph_loop:
-  mov eax, [esi + 0]
-  cmp eax, 1  ; If it's not PT_LOAD, ignore.
-  jne .next
+.ph_loop:
+mov eax, [esi + 0]
+cmp eax, 1  ; If it's not PT_LOAD, ignore.
+jne .next
 
-  push dword [esi + 0x4] ; p_offset GIT
-  push dword [esi + 0x8] ; p_vaddr GIT
-  push dword [esi + 0x10] ; p_filesz
-  push dword [esi + 0x14] ; p_memsz
+push dword [esi + 0x4]    ; p_offset GIT
+push dword [esi + 0x8]    ; p_vaddr GIT
+push dword [esi + 0x10]   ; p_filesz
+push dword [esi + 0x14]   ; p_memsz
 
-  test ebp,ebp
-  jnz .skip
-  mov ebp, [esp + 0x8]
-  .skip:
+test ebp,ebp
+jnz .skip
+mov ebp, [esp + 0x8]
+.skip:
 
-  ; Backup
-  mov ebx, esi
-  mov edx, ecx
+; Backup
+mov ebx, esi
+mov edx, ecx
 
-  ; Zero memory
-  mov edi, [esp + 0x8]
-  mov ecx, [esp]
-  xor al, al
-  rep stosb
+; Zero memory
+mov edi, [esp + 0x8]
+mov ecx, [esp]
+xor al, al
+rep stosb
 
-  ; Copy segment
+; Copy segment
 
-  mov esi,[esp + 0xc]
-  lea esi,[kernel + esi]
-  mov edi, [esp + 0x8]
-  mov ecx, [esp + 0x4]
-  rep movsb
+mov esi,[esp + 0xc]
+lea esi,[kernel + esi]
+mov edi, [esp + 0x8]
+mov ecx, [esp + 0x4]
+rep movsb
 
-  ; Restore
-  mov ecx, edx
-  mov esi, ebx
-  .next:
-  add esi, 0x20
-  loop .ph_loop
+; Restore
+mov ecx, edx
+mov esi, ebx
+.next:
+add esi, 0x20
+loop .ph_loop
 
+mov edi, ebp
+mov dword eax, [kernel + 0x18]
 
-  mov edi, ebp
-  mov dword eax, [kernel + 0x18]
-
-
-  jmp eax
+jmp eax
 
 jmp $ 
 

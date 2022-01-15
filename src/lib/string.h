@@ -124,9 +124,9 @@ char* int_to_hex_str(int x, char* buf)
         x = x / 16;
     }
 
-    *(buf + i + 1) = '\0';
 
     buf = reverse_string(buf);
+    *(buf + i + 1) = '\0';
     
     return buf;
 

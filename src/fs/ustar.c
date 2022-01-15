@@ -2,7 +2,23 @@
 #include <fs/ustar.h>
 
 
+uint32_t file_get_size(char* str)
+{
 
+
+    uint32_t result = 0x0;
+
+    for(int i = 0; i < BYTES_PER_FILE_SIZE_FIELD && *str != '\0'; i++)
+    {
+        result = (result * 8) + ((*str) - '0');
+        str++;
+    }   
+
+
+    
+    return result;
+
+}
 
 
 void file_system_init()

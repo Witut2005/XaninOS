@@ -8,7 +8,7 @@
 #include <lib/math.h>
 #include <fs/ustar.c>
 #include <keyboard/keyboardInit.c>
-
+#include <devices/DMA/dma.c>
 
 char* tmpStr;
 
@@ -27,10 +27,12 @@ void _start(void)
     asm("cli");
 
     COMMAND = comBuf;
-    
+
+
     keyboard_init();
     set_pit();
     set_idt();
+    dma_controller_reset();
     file_system_init();
 
     clearScr();

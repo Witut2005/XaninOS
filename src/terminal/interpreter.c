@@ -19,6 +19,13 @@ void scan(void)
         tetris();
     }
 
+    /*
+    else if(cmpstr(COMMAND,"hexview"))
+    {
+        hexview();
+        KEYBOARD_SIG_ON(no_keyboard_input);
+    }
+    */
 
 
     else if(cmpstr(COMMAND,"help") || cmpstr(COMMAND,"h"))
@@ -28,7 +35,7 @@ void scan(void)
         x = 0;
 
         help();   
-   }
+    }
 
 
     else if(cmpstr(COMMAND,"pong"))

@@ -17,6 +17,7 @@ char* fileData[2];
 #define FILE_ENTRIES sizeof(fileTable) / sizeof(fileTable[0])
 #define FILE_DATA_ENTRIES sizeof(fileData) / sizeof(fileData[0])
 
+#define BYTES_PER_FILE_SIZE_FIELD 12
 
 struct 
 {
