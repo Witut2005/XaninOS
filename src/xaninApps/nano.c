@@ -26,7 +26,7 @@ void nano()
         if(!index && keyboard_scan_code == ENTER)
         {
         
-            for(int i = 0; i < fileSystem.file_entries_number; i++)
+            for(int i = 0; i < FileSystem.file_entries_number; i++)
             {
                 if(cmpstr(COMMAND,fileTable[i]))
                 {

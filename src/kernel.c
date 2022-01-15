@@ -8,7 +8,7 @@
 #include <lib/math.h>
 #include <fs/ustar.c>
 #include <keyboard/keyboardInit.c>
-#include <devices/DMA/dma.c>
+//#include <devices/DMA/dma.c>
 
 char* tmpStr;
 
@@ -32,9 +32,8 @@ void _start(void)
     keyboard_init();
     set_pit();
     set_idt();
-    dma_controller_reset();
-    file_system_init();
-
+    //dma_controller_reset();
+    
     clearScr();
 
 
@@ -49,10 +48,14 @@ void _start(void)
 
     srand(time.seconds);
 
+    file_system_init();
+
 
     tuiInit:
 
     clearScr();
+    
+
 
     x = 0;y = 0;
 
@@ -70,6 +73,8 @@ void _start(void)
 
     app_exited = false;
     
+
+
 
     while(1)
     {

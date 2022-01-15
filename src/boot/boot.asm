@@ -37,7 +37,7 @@ mov ax,0x2000
 mov es,ax    
  
 mov ah,0x2 
-mov al,0x30 
+mov al,0x30
 mov ch,0x0
 mov cl,0x2 ; we dont want to copy first sector
 mov dh,0x0  

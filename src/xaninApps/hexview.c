@@ -1,4 +1,4 @@
-
+/*
 #include <lib/stdiox.h>
 #include <lib/math.h>
 
@@ -29,3 +29,4 @@ void hexview(void)
     }
 
 }
+*/

@@ -19,41 +19,31 @@ char* fileData[2];
 
 #define BYTES_PER_FILE_SIZE_FIELD 12
 
+#define USTAR_SECTOR_SIZE 512
+
 struct 
 {
     uint8_t file_entries_number;
     char* file_system_start;
-}fileSystem;
+}FileSystem;
 
 
-
-typedef struct 
+struct FileSystemEntryStruct
 {
+    char* entry_name;
+    char* entry_size_pointer;
+    char* entry_data_pointer;
 
-    uint64_t fileMode;
-    uint64_t ownerID;
-    uint64_t groupID;
+    uint32_t entry_size;
+    uint32_t owner;
+    uint32_t group;
 
-    uint32_t fileSize[3];
-    
-    uint32_t lastModification[3];
-    uint64_t checksum;
-
-    uint8_t typeflag;
-
-    /* --------------------------------------------------/
-    |file name is in fileTable array                     |
-    |Ustar string field doesnt matter                    |
-    |UStar version field doesnt matter                   |           
-    |                                                    |
-    |fileName prefix is data stored in file.             |
-    |This data is pointer by fileData array of pointer   |
-    /---------------------------------------------------*/
+    struct FileSystemEntryStruct* sub_entries;
 
 
-}__attribute__((packed)) fileMetadata;
+}__attribute__((packed));
 
+typedef struct FileSystemEntryStruct FileSystemEntryStruct;
 
-fileMetadata* fileMeta[2];
-
+static FileSystemEntryStruct fs_entry[2];
 

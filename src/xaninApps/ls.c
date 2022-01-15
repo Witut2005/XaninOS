@@ -6,15 +6,14 @@
 #include <lib/signal.h>
 #include <headers/colors.h>
 #include <lib/stdiox.h>
+#include <lib/string.h>
 
 
 void ls()
 {
 
-
-    for(int i=0; i < FILE_ENTRIES; i++)
-        xprintf("\r%z%s\n",set_output_color(black,white),fileTable[i]);
-    
+    for(int i=0; i < 2; i++)
+        xprintf("\r%s %dbytes\n",fs_entry[i].entry_name, fs_entry[i].entry_size);
 
 
     xprintf("press 'q' key to continue...");

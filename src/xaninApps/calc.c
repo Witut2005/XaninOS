@@ -1,3 +1,5 @@
+
+/*
 #include <lib/math.h>
 #include <lib/string.h>
 #include <lib/stdiox.h>
@@ -37,3 +39,6 @@ void calc()
 
 
 }
+
+
+*/

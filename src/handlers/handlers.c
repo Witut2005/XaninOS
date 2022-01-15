@@ -8,7 +8,7 @@
 #include <headers/macros.h>
 #include <keyboard/keyMap.h>
 #include <handlers/handlers.h>
-#include <devices/DMA/dma.c>
+//#include <devices/DMA/dma.c>
 
 
 
@@ -34,7 +34,7 @@ void invalid_opcode(void)
 
 void divide_by_zero_exception(void)
 {
-    xprintf("\n%zPIT IRQ",set_output_color(red,white));
+    xprintf("\n%DIVIDE BY ZERO ERROR",set_output_color(red,white));
     asm("cli");
     asm("hlt");
 }
