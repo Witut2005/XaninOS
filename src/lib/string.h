@@ -69,19 +69,17 @@ char* int_to_str(int x, char* buf)
 {
 
     int i = 0;
-    
-    if(x == 0)
-        buf[i] = '0';
+
 
     for(i = 0; x != 0; i++)
     {
-        buf[i] = (x % 10) + 48;
+        buf[i] = (x % 10) + '0';
         x = x / 10;
     }
 
 
     buf = reverse_string(buf);
-    *(buf + i + 1) = '\0';
+    *(buf + i) = '\0';
     
     return buf;
 

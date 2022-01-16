@@ -1,7 +1,6 @@
 
 
-#ifndef IOSTD_H
-#define IOSTD_H
+#pragma once
 
 #include <stdarg.h>
 #include <stdint.h>
@@ -146,6 +145,10 @@ void xprintf(char* str, ... )
 {
 
     char tmp[20];
+
+    for(int i = 0; i < 20; i++)
+        tmp[i] = '\0';
+
     char* tmpPtr = tmp;
     uint32_t number;
     
@@ -284,5 +287,3 @@ void xprintf(char* str, ... )
 
 }
 
-
-#endif

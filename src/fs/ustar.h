@@ -41,13 +41,11 @@ struct FileSystemEntryStruct
     char* entry_data_pointer;
 
     struct FileSystemEntryStruct* sub_entries;
-
-
 };
 
 typedef struct FileSystemEntryStruct FileSystemEntryStruct;
 
-static FileSystemEntryStruct fs_entry[2];
+FileSystemEntryStruct fs_entry[2];
 
 
 enum ustar_entry_types
@@ -59,5 +57,4 @@ enum ustar_entry_types
     BLOCK_DEVICE = '4',
     DIRECTORY = '5',
     FIFO = '6'
-
 };

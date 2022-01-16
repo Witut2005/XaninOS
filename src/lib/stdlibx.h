@@ -1,6 +1,5 @@
-#ifndef STDLIB_H
-#define STDLIB_H
 
+#pragma once
 
 #include <lib/hal.h>
 #include <pit/pit.c>
@@ -102,5 +101,3 @@ uint32_t rand()
 {
     return (((randomizer = randomizer * 214013 + 2531011) >> 16) & 0x7fff);
 }
-
-#endif
