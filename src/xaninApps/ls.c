@@ -13,7 +13,7 @@ void ls()
 {
 
     for(int i=0; i < 2; i++)
-        xprintf("\r%s %dbytes\n",fs_entry[i].entry_name, fs_entry[i].entry_size);
+        xprintf("\r%s\n",fs_entry[i].entry_name);
 
 
     xprintf("press 'q' key to continue...");

@@ -34,8 +34,6 @@ void _start(void)
     set_idt();
     //dma_controller_reset();
     
-    clearScr();
-
 
     clearScr();
 
@@ -47,8 +45,10 @@ void _start(void)
     getTime();
 
     srand(time.seconds);
+    clearScr();
 
     file_system_init();
+
 
 
     tuiInit:

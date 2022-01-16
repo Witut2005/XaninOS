@@ -30,20 +30,34 @@ struct
 
 struct FileSystemEntryStruct
 {
-    char* entry_name;
-    char* entry_size_pointer;
-    char* entry_data_pointer;
-
+    char entry_type;
+    
     uint32_t entry_size;
     uint32_t owner;
     uint32_t group;
 
+    char* entry_name;
+    char* entry_size_pointer;
+    char* entry_data_pointer;
+
     struct FileSystemEntryStruct* sub_entries;
 
 
-}__attribute__((packed));
+};
 
 typedef struct FileSystemEntryStruct FileSystemEntryStruct;
 
 static FileSystemEntryStruct fs_entry[2];
 
+
+enum ustar_entry_types
+{
+    FILE = '0',
+    HARD_LINK = '1',
+    SOFT_LINK = '2',
+    DEVICE = '3',
+    BLOCK_DEVICE = '4',
+    DIRECTORY = '5',
+    FIFO = '6'
+
+};

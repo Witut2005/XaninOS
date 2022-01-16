@@ -30,7 +30,7 @@ uint8_t screen_color;
 uint8_t keyboard_input;
 ```
 
-~~Bad~~:
+Bad:
 
 ```c
 uint8_t color_screen;
@@ -41,9 +41,16 @@ uint8_t input_keyboard;
 
 ### Constants and macros
 
-Names of constants and macros should be written using UPPERCASE letters:
+Names of constants and macros should be written using UPPERCASE letters with underscores separating words from each other:
+
+Good:
 
 ```c
 #define KEYBOARD_SIG_OFF()
 const uint32_t FILE_SYSTEM_ENTRY_OFFSET;
+```
+Bad:
+```c
+#define keyboard_sig_off()
+const uint32_t fileSystemEntryOffset
 ```

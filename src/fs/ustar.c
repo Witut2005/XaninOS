@@ -6,7 +6,7 @@ uint32_t file_get_size(char* size_field)
 {
     uint32_t result = 0x0;
 
-    for(int i = 0;  *size_field != '\0'; i++)
+    while(*size_field != '\0')
     {
         result = (result * 8) + ((*size_field) - '0');
         size_field++;
@@ -24,21 +24,25 @@ void file_system_init()
 
     
 
-    char* file_system_initalizer = *(char**)FS_START_OFFSET;
+    char* file_system_initializer = *(char**)FS_START_OFFSET;
 
-    for(int i = 0; i < 2; i++)
+    for(int i = 0; i < FileSystem.file_entries_number; i++)
     {
-        fs_entry[i].entry_name =  file_system_initalizer;
-        fs_entry[i].entry_size_pointer = file_system_initalizer + 0x7c;
+        fs_entry[i].entry_name =  file_system_initializer;
+        fs_entry[i].entry_size_pointer = file_system_initializer + 0x7c;
         fs_entry[i].entry_size = file_get_size(fs_entry[i].entry_size_pointer);
+        fs_entry[i].entry_type = *(file_system_initializer + 0x9C);
         fs_entry[i].sub_entries = 0x0;
         fs_entry[i].owner = 0x0;
         fs_entry[i].group = 0x0;
 
-        file_system_initalizer += 0x200;
-        fs_entry[i].entry_data_pointer = file_system_initalizer;
+        file_system_initializer += USTAR_SECTOR_SIZE;
+    
         
-        file_system_initalizer += 0x200 * ((fs_entry[i].entry_size / USTAR_SECTOR_SIZE) + 1);
+        fs_entry[i].entry_data_pointer = file_system_initializer;
+        
+        file_system_initializer += USTAR_SECTOR_SIZE * ((fs_entry[i].entry_size / USTAR_SECTOR_SIZE));
+        file_system_initializer += (fs_entry[i].entry_size % USTAR_SECTOR_SIZE == 0) ? 0 : USTAR_SECTOR_SIZE;
 
     }    
 
@@ -60,5 +64,6 @@ void file_system_init()
         fileData[i] = addr;
         addr += 0x400;
     }
+
 
 }
