@@ -11,6 +11,7 @@
 #include <xaninApps/note.c>
 #include <xaninApps/hexview.c>
 #include <xaninApps/execute.c>
+#include <xaninApps/cd.c>
 
 void scan(void);
 

@@ -40,6 +40,8 @@ void _start(void)
 
     clearScr();
 
+
+
     disableCursor();
 
    
@@ -51,7 +53,6 @@ void _start(void)
     clearScr();
 
     file_system_init();
-    
 
     tuiInit:
 

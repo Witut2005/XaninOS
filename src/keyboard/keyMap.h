@@ -11,6 +11,7 @@
 #define BSPC 0x0E
 #define ENTER 0x1C
 
+uint8_t keyboard_scan_code;
 
 uint8_t keyboard_map[128] = {
   // -------- 0 to 9 --------

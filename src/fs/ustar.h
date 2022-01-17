@@ -3,7 +3,7 @@
 #pragma once
 
 
-
+#include <lib/string.h>
 #include <stdint.h>
 
 
@@ -20,6 +20,14 @@ char* fileData[2];
 #define BYTES_PER_FILE_SIZE_FIELD 12
 
 #define USTAR_SECTOR_SIZE 512
+
+
+
+
+char* set_current_directory(char*);
+char* get_current_directory(void);
+char* get_current_path(void);
+
 
 struct 
 {
@@ -46,6 +54,14 @@ struct FileSystemEntryStruct
 typedef struct FileSystemEntryStruct FileSystemEntryStruct;
 
 FileSystemEntryStruct fs_entry[10];
+
+char current_directory_buffer[30]; 
+char current_path_buffer[50];
+char file_name_buffer[30];
+
+char* current_directory;
+char* current_path;
+char* file_name;
 
 
 enum ustar_entry_types

@@ -40,7 +40,7 @@ void divide_by_zero_exception(void)
 }
 
 
-uint8_t keyboard_scan_code;
+
 
 bool pitActive = false; 
 
@@ -98,11 +98,5 @@ void keyboard_handler(void)
     }
 }
  
-void syscall(void)
-{
-    
-}
-
-
 
 

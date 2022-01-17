@@ -287,3 +287,51 @@ void xprintf(char* str, ... )
 
 }
 
+void xscanf(char* str, ... )
+{
+    no_enter = true;
+    keyboard_scan_code = 0x0;
+
+    uint32_t str_counter = 0;
+
+
+    char* string_pointer;
+
+    va_list args;
+    va_start(args, str);
+
+    while(1)
+    {
+        if(keyboard_scan_code == ENTER)
+        {
+            while(str[str_counter] != '\0')
+            {
+                if(str[str_counter] == '%')
+                {
+                    str_counter++;
+                    switch(str[str_counter]) 
+                    {
+                        case 's':
+                        {
+                            string_pointer = va_arg(args, char*);
+                            erase_spaces(COMMAND);
+                            for(int i = 0; COMMAND[i] != '\0'; i++)
+                            {
+                                string_pointer[i] = COMMAND[i];
+                            }
+                            
+                        }
+                    }      
+                
+                str_counter++;
+
+                }
+
+            }
+        
+        return;
+        
+        }
+    }
+
+}

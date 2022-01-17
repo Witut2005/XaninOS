@@ -14,14 +14,12 @@ void execute()
     while(1)
     {
 
-        if(!index && keyboard_scan_code == ENTER)
-        {
+            xscanf("%s",file_name);
             
-            erase_spaces(COMMAND);
 
             for(int i = 0; i < FileSystem.file_entries_number; i++)
             {
-                if(cmpstr(COMMAND,fs_entry[i].entry_name))
+                if(cmpstr(get_current_path(),fs_entry[i].entry_name))
                 {
                     if(fs_entry[i].entry_type == DIRECTORY)
                     {
@@ -31,20 +29,21 @@ void execute()
                     void(*executable_program)(void) = (void(*)(void))fs_entry[i].entry_data_pointer;
                     asm("mov esi, ebx" :: "b"(fs_entry[i].entry_data_pointer));
                     executable_program(); /* calle must exectute RET instruction */
+                    xprintf("%zprogram succefully returned. Press 'q' to exit\n",set_output_color(green,white));
                     goto finish;
                 }
             }
 
             xprintf("%zNO SUCH FILE\n",set_output_color(red,white));
-            break;
+            goto finish;
 
-        }
+        
 
     }
 
     finish:
 
-    xprintf("%zprogram succefully returned. Press 'q' to exit\n",set_output_color(green,white));
+
 
     while(1)
     {

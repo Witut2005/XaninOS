@@ -27,6 +27,11 @@ void scan(void)
         KEYBOARD_SIG_ON(no_keyboard_input);
     }
     */
+   else if(cmpstr(COMMAND,"cd"))
+   {
+        cd();
+        KEYBOARD_SIG_ON(no_keyboard_input);
+   }
 
 
     else if(cmpstr(COMMAND,"help") || cmpstr(COMMAND,"h"))

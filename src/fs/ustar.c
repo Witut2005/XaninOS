@@ -17,14 +17,43 @@ uint32_t file_get_size(char* size_field)
     return result;
 }
 
+char* set_current_directory(char* directory)
+{
+    for(int i = 0; directory[i] != '\0'; i++)
+        current_directory[i] = directory[i];
+}
 
-void file_system_init()
+char* get_current_directory(void)
+{
+
+    for(int i = 0; fs_entry[0].entry_name[i] != '\0'; i++)
+        current_directory[i] = fs_entry[0].entry_name[i];
+
+    return current_directory;
+}
+
+char* get_current_path(void)
+{
+
+    int i = 0x0;
+    for(i = 0; current_directory[i] != '\0'; i++)
+        current_path[i] = current_directory[i];
+
+    for(int pos = 0x0; file_name[pos] != '\0'; i++, pos++)
+        current_path[i] = file_name[pos];
+
+    return current_path;
+}
+
+void file_system_init(void)
 {    
 
     FileSystem.file_entries_number = *(uint8_t*)FILE_ENTRIES_NUMBER;
     FileSystem.file_system_start = *(char**)FS_START_OFFSET;
 
-
+    current_directory = current_directory_buffer;
+    current_path = current_path_buffer;
+    file_name = file_name_buffer;
 
     char* file_system_initializer = *(char**)FS_START_OFFSET;
 
