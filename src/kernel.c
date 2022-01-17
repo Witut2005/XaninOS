@@ -23,15 +23,18 @@ char* tmpStr;
 
 void _start(void)
 {
-
+    clearScr();
     asm("cli");
 
     COMMAND = comBuf;
 
 
+    set_idt();
+
     keyboard_init();
     set_pit();
-    set_idt();
+
+
     //dma_controller_reset();
     
 

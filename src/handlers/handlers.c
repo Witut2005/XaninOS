@@ -98,6 +98,10 @@ void keyboard_handler(void)
     }
 }
  
+void syscall(void)
+{
+    
+}
 
 
 

@@ -20,7 +20,7 @@
     idtEntries[idt_entry].P_DPL = 0x8e
 
 
-
+extern void _syscall(void);
 
     /* IDT Register */
     struct idtReg
@@ -54,6 +54,8 @@ void set_idt(void)
     configure_idt_entry(0x20,pit_handler_init,CODE_SEGMENT);
     configure_idt_entry(0x21,keyboard_handler_init,CODE_SEGMENT);
     configure_idt_entry(0x26,floppy_interrupt,CODE_SEGMENT);
+    configure_idt_entry(0x80,_syscall,CODE_SEGMENT);
+
 
 
     

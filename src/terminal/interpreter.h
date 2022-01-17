@@ -10,6 +10,7 @@
 #include <xaninApps/regDump.c>
 #include <xaninApps/note.c>
 #include <xaninApps/hexview.c>
+#include <xaninApps/execute.c>
 
 void scan(void);
 

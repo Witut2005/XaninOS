@@ -56,6 +56,11 @@ void scan(void)
        
     }
 
+    else if(cmpstr(COMMAND,"execute"))
+    {
+        execute();
+        KEYBOARD_SIG_ON(no_keyboard_input);
+    }
 
     else if(cmpstr(COMMAND,"cls") || cmpstr(COMMAND,"clear"))
     {
