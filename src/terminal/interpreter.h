@@ -8,7 +8,7 @@
 #include <xaninApps/ls.c>
 #include <xaninApps/type.c>
 #include <xaninApps/regDump.c>
-#include <xaninApps/nano.c>
+#include <xaninApps/note.c>
 #include <xaninApps/hexview.c>
 
 void scan(void);

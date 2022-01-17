@@ -26,13 +26,23 @@ void nano()
         if(!index && keyboard_scan_code == ENTER)
         {
         
+            erase_spaces(COMMAND);
+
             for(int i = 0; i < FileSystem.file_entries_number; i++)
             {
-                if(cmpstr(COMMAND,fileTable[i]))
+                if(cmpstr(COMMAND,fs_entry[i].entry_name))
                 {
                     clearScr();
-                    xprintf("%s\r",fileData[i]);
-                    file_descriptor = fileData[i];
+                    if(fs_entry[i].entry_type == DIRECTORY)
+                    {
+                        xprintf("%zyou cant edit directory\n",set_output_color(red,white));
+                        xprintf("%zuse F4 key to exit\n",set_output_color(red,white));
+                        while(keyboard_scan_code != F4_KEY);
+                        goto end;
+                    }
+
+                    xprintf("%s\r",fs_entry[i].entry_data_pointer);
+                    file_descriptor = fs_entry[i].entry_data_pointer;
                     goto edit;
                 }
             }
@@ -57,6 +67,7 @@ void nano()
         file_descriptor[file_data_counter] = *i;
 
     
+    end:
     
     for(int i = 0; i < sizeof(comBuf);i++)
         COMMAND[i] = '\0';

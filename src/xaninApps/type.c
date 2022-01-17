@@ -23,13 +23,19 @@ void type()
 
         if(!index && keyboard_scan_code == ENTER)
         {
-        
+            
+            erase_spaces(COMMAND);
+
             for(int i = 0; i < FileSystem.file_entries_number; i++)
             {
-                if(cmpstr(COMMAND,fileTable[i]))
+                if(cmpstr(COMMAND,fs_entry[i].entry_name))
                 {
-
-                    xprintf("%s\n",fileData[i]);
+                    if(fs_entry[i].entry_type == DIRECTORY)
+                    {
+                        xprintf("%zYOU CANT DISPLAY DIRECTORY DATA\n",set_output_color(red,white));
+                        goto end;
+                    }
+                    xprintf("%s\n",fs_entry[i].entry_data_pointer);
                     goto end;
                 }
             }

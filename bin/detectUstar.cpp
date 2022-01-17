@@ -2,6 +2,8 @@
 #include <iostream>
 #include <fstream>
 #include <inttypes.h>
+#include <algorithm>
+#include <cstring>
 
 using namespace std;
 
@@ -10,10 +12,23 @@ using namespace std;
 
 fstream file;
 bool ustar = false;
-uint8_t buf[0x30 * 512];
+static uint8_t buf[0x30 * 512];
+char* buf_ptr = (char*)buf;
 uint64_t fileSize;
 uint32_t offset;
 
+char entries_counter = 0x0;
+
+
+void find_ustar(char* x)
+{
+    for(int i = 0; i < 0x2f * 512 - 1; i++)
+    {
+        if(strcmp(&x[i],"ustar  ") == 0)
+            entries_counter++;
+    }
+
+}
 
 int main(void)
 {
@@ -75,9 +90,21 @@ int main(void)
 
     file.write((char*)&offset,sizeof(uint32_t));
 
-    file.seekg(0,ios::end);
-
-
     file.close();
+
+    file.open("xanin.img",ios::binary | ios::in | ios::out); 
+    file.seekg(0,ios::beg);
+
+    file.read((char*)buf,fileSize);
+
+
+    find_ustar((char*)buf);
+    file.seekg(0xd,ios::beg);
+
+    printf("XANIN HAS %d FILE SYSTEM ENTRIES\n",entries_counter);
+
+    file << entries_counter;
+
+
 
 }

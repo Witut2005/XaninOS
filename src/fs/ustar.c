@@ -24,7 +24,7 @@ void file_system_init()
     FileSystem.file_entries_number = *(uint8_t*)FILE_ENTRIES_NUMBER;
     FileSystem.file_system_start = *(char**)FS_START_OFFSET;
 
-    
+
 
     char* file_system_initializer = *(char**)FS_START_OFFSET;
 
@@ -40,15 +40,13 @@ void file_system_init()
 
         file_system_initializer += USTAR_SECTOR_SIZE;
     
-        
-        fs_entry[i].entry_data_pointer = file_system_initializer;
-        
-        file_system_initializer += USTAR_SECTOR_SIZE * ((fs_entry[i].entry_size / USTAR_SECTOR_SIZE));
-        file_system_initializer += (fs_entry[i].entry_size % USTAR_SECTOR_SIZE == 0) ? 0 : USTAR_SECTOR_SIZE;
-
+        if(fs_entry[i].entry_type != DIRECTORY)
+        {
+            fs_entry[i].entry_data_pointer = file_system_initializer;
+            file_system_initializer += USTAR_SECTOR_SIZE * ((fs_entry[i].entry_size / USTAR_SECTOR_SIZE));
+            file_system_initializer += (fs_entry[i].entry_size % USTAR_SECTOR_SIZE == 0) ? 0 : USTAR_SECTOR_SIZE;
+        }
     }    
-
-
 
     char* addr = *(char**)FS_START_OFFSET;
 

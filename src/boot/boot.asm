@@ -19,7 +19,7 @@ dd 0x0000
 
 USTAR_FILE_ENTRIES:
 db "ENTR"
-db 0x2
+db 0x0
 
 
 

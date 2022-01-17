@@ -90,6 +90,7 @@ void _start(void)
       
         if(keyboard_scan_code == ENTER)
         {
+            erase_spaces(COMMAND);
             scan();
         }
 

@@ -25,7 +25,7 @@ struct
 {
     uint8_t file_entries_number;
     char* file_system_start;
-}FileSystem;
+}static FileSystem;
 
 
 struct FileSystemEntryStruct
@@ -45,7 +45,7 @@ struct FileSystemEntryStruct
 
 typedef struct FileSystemEntryStruct FileSystemEntryStruct;
 
-FileSystemEntryStruct fs_entry[2];
+FileSystemEntryStruct fs_entry[10];
 
 
 enum ustar_entry_types
