@@ -26,7 +26,7 @@ char* fileData[2];
 
 char* set_current_directory(char*);
 char* get_current_directory(void);
-char* get_current_path(void);
+char* get_current_path(char*);
 
 
 struct 
@@ -57,11 +57,10 @@ FileSystemEntryStruct fs_entry[10];
 
 char current_directory_buffer[30]; 
 char current_path_buffer[50];
-char file_name_buffer[30];
+
 
 char* current_directory;
-char* current_path;
-char* file_name;
+char* current_file_path;
 
 
 enum ustar_entry_types

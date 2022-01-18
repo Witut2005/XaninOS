@@ -44,7 +44,7 @@
 00000000000i[USBCTL] Pluggable USB devices
 00000000000i[USBCTL]   floppy mouse tablet keypad keyboard hub disk cdrom
 00000000000i[USBCTL]   printer
-00000000000i[MEM0  ] allocated memory at 000001B33BE79040. after alignment, vector=000001B33BE7A000
+00000000000i[MEM0  ] allocated memory at 00000249931C0040. after alignment, vector=00000249931C1000
 00000000000i[MEM0  ] 512,00MB
 00000000000i[MEM0  ] mem block size = 0x00020000, blocks=4096
 00000000000i[MEM0  ] rom at 0xfffe0000/131072 ('D:\Bochs-2.7/BIOS-bochs-latest')
@@ -55,7 +55,7 @@
 00000000000i[DEV   ] PIIX3 PCI-to-ISA bridge present at device 1, function 0
 00000000000i[PLUGIN] init_dev of 'cmos' plugin device by virtual method
 00000000000i[CMOS  ] Using local time for initial clock
-00000000000i[CMOS  ] Setting initial clock to: Tue Jan 18 18:47:39 2022 (time0=1642528059)
+00000000000i[CMOS  ] Setting initial clock to: Tue Jan 18 21:11:40 2022 (time0=1642536700)
 00000000000i[PLUGIN] init_dev of 'dma' plugin device by virtual method
 00000000000i[DMA   ] channel 4 used by cascade
 00000000000i[PLUGIN] init_dev of 'pic' plugin device by virtual method
@@ -279,35 +279,34 @@
 00005365376i[BXVGA ] VBE known Display Interface b0c0
 00005365395i[BXVGA ] VBE known Display Interface b0c5
 00005368036i[VBIOS ] VBE Bios $Id: vbe.c 292 2021-06-03 12:24:22Z vruppert $
-00039450000i[WINGUI] dimension update x=720 y=400 fontheight=16 fontwidth=9 bpp=8
+00039360000i[WINGUI] dimension update x=720 y=400 fontheight=16 fontwidth=9 bpp=8
 00766023560i[BIOS  ] Booting from 0000:7c00
-00879912178i[FLOPPY] partial read() on floppy image returns 280/512
-00882689931i[FLOPPY] read() on floppy image returns 0
+00882689931i[FLOPPY] partial read() on floppy image returns 76/512
 00885467684i[FLOPPY] read() on floppy image returns 0
 00888245437i[FLOPPY] read() on floppy image returns 0
 00891023190i[FLOPPY] read() on floppy image returns 0
 00893800942i[FLOPPY] read() on floppy image returns 0
 00896578695i[FLOPPY] read() on floppy image returns 0
-15458000000p[WINGUI] >>PANIC<< POWER button turned off.
-15458000000i[CPU0  ] CPU is in protected mode (active)
-15458000000i[CPU0  ] CS.mode = 32 bit
-15458000000i[CPU0  ] SS.mode = 32 bit
-15458000000i[CPU0  ] EFER   = 0x00000000
-15458000000i[CPU0  ] | EAX=0804b100  EBX=00020254  ECX=000b8160  EDX=0804b100
-15458000000i[CPU0  ] | ESP=00ffff34  EBP=00ffff94  ESI=00020274  EDI=08048000
-15458000000i[CPU0  ] | IOPL=0 id vip vif ac vm rf nt of df IF tf SF zf AF PF CF
-15458000000i[CPU0  ] | SEG sltr(index|ti|rpl)     base    limit G D
-15458000000i[CPU0  ] |  CS:0008( 0001| 0|  0) 00000000 ffffffff 1 1
-15458000000i[CPU0  ] |  DS:0010( 0002| 0|  0) 00000000 ffffffff 1 1
-15458000000i[CPU0  ] |  SS:0010( 0002| 0|  0) 00000000 ffffffff 1 1
-15458000000i[CPU0  ] |  ES:0010( 0002| 0|  0) 00000000 ffffffff 1 1
-15458000000i[CPU0  ] |  FS:0000( 0005| 0|  0) 00000000 0000ffff 0 0
-15458000000i[CPU0  ] |  GS:0000( 0005| 0|  0) 00000000 0000ffff 0 0
-15458000000i[CPU0  ] | EIP=08048f57 (08048f57)
-15458000000i[CPU0  ] | CR0=0x60000011 CR2=0x00000000
-15458000000i[CPU0  ] | CR3=0x00000000 CR4=0x00000000
-15458000000i[CPU0  ] 0x0000000008048f57>> mov al, byte ptr ds:0x0804b0f8 : A0F8B00408
-15458000000d[PCI   ] Exit
-15458000000i[CMOS  ] Last time is 1642528120 (Tue Jan 18 18:48:40 2022)
-15458000000i[      ] restoring default signal behavior
-15458000000i[SIM   ] quit_sim called with exit code 1
+05749250000p[WINGUI] >>PANIC<< POWER button turned off.
+05749250000i[CPU0  ] CPU is in protected mode (active)
+05749250000i[CPU0  ] CS.mode = 32 bit
+05749250000i[CPU0  ] SS.mode = 32 bit
+05749250000i[CPU0  ] EFER   = 0x00000000
+05749250000i[CPU0  ] | EAX=0804c290  EBX=00020254  ECX=000b8160  EDX=0804c260
+05749250000i[CPU0  ] | ESP=00ffff34  EBP=00ffff94  ESI=00024a5a  EDI=08048000
+05749250000i[CPU0  ] | IOPL=0 id vip vif ac vm rf nt OF df IF tf sf zf AF PF cf
+05749250000i[CPU0  ] | SEG sltr(index|ti|rpl)     base    limit G D
+05749250000i[CPU0  ] |  CS:0008( 0001| 0|  0) 00000000 ffffffff 1 1
+05749250000i[CPU0  ] |  DS:0010( 0002| 0|  0) 00000000 ffffffff 1 1
+05749250000i[CPU0  ] |  SS:0010( 0002| 0|  0) 00000000 ffffffff 1 1
+05749250000i[CPU0  ] |  ES:0010( 0002| 0|  0) 00000000 ffffffff 1 1
+05749250000i[CPU0  ] |  FS:0000( 0005| 0|  0) 00000000 0000ffff 0 0
+05749250000i[CPU0  ] |  GS:0000( 0005| 0|  0) 00000000 0000ffff 0 0
+05749250000i[CPU0  ] | EIP=08048f57 (08048f57)
+05749250000i[CPU0  ] | CR0=0x60000011 CR2=0x00000000
+05749250000i[CPU0  ] | CR3=0x00000000 CR4=0x00000000
+05749250000i[CPU0  ] 0x0000000008048f57>> mov al, byte ptr ds:0x0804c258 : A058C20408
+05749250000d[PCI   ] Exit
+05749250000i[CMOS  ] Last time is 1642536722 (Tue Jan 18 21:12:02 2022)
+05749250000i[      ] restoring default signal behavior
+05749250000i[SIM   ] quit_sim called with exit code 1

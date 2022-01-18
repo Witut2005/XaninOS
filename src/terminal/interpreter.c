@@ -23,7 +23,7 @@ void scan(void)
     KEYBOARD_SIG_ON(no_keyboard_input);
 
     
-    if(cmpstr(COMMAND,"petris"))
+    if(cmpstr(program_name,"petris"))
     {
         clearScr();
         tetris();

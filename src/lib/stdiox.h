@@ -330,12 +330,12 @@ void xscanf(char* str, ... )
     no_enter = true;
     keyboard_scan_code = 0x0;
 
-    uint32_t str_counter = 0;
-
+    uint32_t str_counter = 0x0;
+    uint32_t counter = 0x0;
 
     char* string_pointer;
 
-    int counter = 0x0;
+
 
     va_list args;
     va_start(args, str);
@@ -349,9 +349,6 @@ void xscanf(char* str, ... )
     {
         if(keyboard_scan_code == ENTER)
         {
- 
-
-
             while(str[str_counter] != '\0')
             {
                 
@@ -377,7 +374,7 @@ void xscanf(char* str, ... )
 
                             for(int i = 0; buffer[i] != '\0' && buffer[i] != ' '; i++)
                             {
-                                if((buffer[i] > 127) || (buffer[i] < 0))
+                                if((buffer[i] > 127) || (buffer[i] < 0x20))
                                 {
                                     string_pointer[i] = '\0';
                                     goto end;
@@ -410,6 +407,9 @@ void xscanf(char* str, ... )
         for(int i = 0; i < sizeof(comBuf);i++)
             comBuf[i] = '\0';
 
+        for(int i = 0x0; i < 50;i++)
+            buffer[i] = 0x0;
+        
         return;
         
         }
