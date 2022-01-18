@@ -24,7 +24,6 @@ static uint8_t index = 0x0;
 void terminalKeyboard(uint8_t scanCode)
 {
 
-
     if(!index)
     {
         for(int i = 0; i < 30;i++)
@@ -42,7 +41,7 @@ void terminalKeyboard(uint8_t scanCode)
             index--;
 
         cursor--;
-        *cursor = 0x0; /* delete character */
+        *cursor = '\0'; /* delete character */
     }
 
     else if(scanCode == ENTER)

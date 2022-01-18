@@ -50,9 +50,12 @@ void _start(void)
     getTime();
 
     srand(time.seconds);
-    clearScr();
+
 
     file_system_init();
+    
+    clearScr();
+
 
     tuiInit:
 
@@ -90,13 +93,14 @@ void _start(void)
                 COMMAND[i] = '\0';
             goto tuiInit;
         }
+ 
+        index = 0x0;
+        for(int i = 0; i < sizeof(comBuf); i++)
+            COMMAND[i] = '\0';
 
-      
-        if(keyboard_scan_code == ENTER)
-        {
-            erase_spaces(COMMAND);
-            scan();
-        }
+        xscanf("%s %s",program_name, program_parameters);
+        scan();
+
 
     }
     

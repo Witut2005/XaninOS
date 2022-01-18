@@ -18,7 +18,7 @@
 static char* keyString = "keyboard initalized succed :))\n";
 static char HEX_LUT[16] = {'0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f'};
 
-char comBuf[30];
+char comBuf[50];
 char* COMMAND;
 
 
@@ -196,6 +196,7 @@ void xprintf(char* str, ... )
                 
                     stringPtr = va_arg(args,char*);
                     
+                    
                     for(int i = 0; stringPtr[i] != '\0'; i++)
                     {
                         cursor[bufCounter] = (uint16_t) (stringPtr[i] + (((backgroundColor << 4) | fontColor) << 8));
@@ -287,6 +288,43 @@ void xprintf(char* str, ... )
 
 }
 
+
+char program_parameters[50];
+char program_name[50];
+
+/*
+char* get_program_name(void)
+{
+
+    char* program_name_pointer = program_name;
+
+    uint32_t i = 0x0;
+
+    while(COMMAND[i] != 0x20)
+    {
+        program_name_pointer[i] = COMMAND[i];
+        i++;
+    }
+
+    program_name_pointer[i] = '\0';
+
+    char* parameter_pointer = program_parameters;
+
+    i++;
+
+    while(COMMAND[i] != 0x20)
+    {
+        parameter_pointer[i] = COMMAND[i];
+        i++;
+    }
+
+    parameter_pointer[i] = '\0';
+    return parameter_pointer;
+
+}
+*/
+
+
 void xscanf(char* str, ... )
 {
     no_enter = true;
@@ -297,15 +335,25 @@ void xscanf(char* str, ... )
 
     char* string_pointer;
 
+    int counter = 0x0;
+
     va_list args;
     va_start(args, str);
+
+    char buffer[50];
 
     while(1)
     {
         if(keyboard_scan_code == ENTER)
         {
+ 
+
+
             while(str[str_counter] != '\0')
             {
+                
+
+
                 if(str[str_counter] == '%')
                 {
                     str_counter++;
@@ -314,12 +362,25 @@ void xscanf(char* str, ... )
                         case 's':
                         {
                             string_pointer = va_arg(args, char*);
-                            erase_spaces(COMMAND);
-                            for(int i = 0; COMMAND[i] != '\0'; i++)
-                            {
-                                string_pointer[i] = COMMAND[i];
-                            }
                             
+                            for(int i = 0; string_pointer[i] != '\0'; i++)
+                                string_pointer[i] = '\0';
+
+                            for(int i = 0x0; COMMAND[counter] != '\0' && COMMAND[counter] != ' '; i++)
+                            {
+                                buffer[i] = COMMAND[counter];
+                                counter++;                        
+                            }
+
+                            for(int i = 0; buffer[i] != '\0' && buffer[i] != ' '; i++)
+                                string_pointer[i] = buffer[i];
+
+                            erase_spaces(string_pointer);
+    
+                            for(int i = 0x0; i < sizeof(buffer);i++)
+                                buffer[i] = 0x0;
+
+                            counter++;
                         }
                     }      
                 
@@ -327,8 +388,16 @@ void xscanf(char* str, ... )
 
                 }
 
+                else
+                {
+                    str_counter++;
+                }
+
             }
         
+        for(int i = 0; i < sizeof(comBuf);i++)
+            comBuf[i] = '\0';
+
         return;
         
         }

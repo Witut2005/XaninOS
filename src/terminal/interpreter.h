@@ -12,6 +12,7 @@
 #include <xaninApps/hexview.c>
 #include <xaninApps/execute.c>
 #include <xaninApps/cd.c>
+#include <xaninApps/pwd.c>
 
 void scan(void);
 

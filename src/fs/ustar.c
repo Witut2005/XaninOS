@@ -57,6 +57,8 @@ void file_system_init(void)
 
     char* file_system_initializer = *(char**)FS_START_OFFSET;
 
+    //current_directory = "home/";
+
     for(int i = 0; i < FileSystem.file_entries_number; i++)
     {
         fs_entry[i].entry_name =  file_system_initializer;

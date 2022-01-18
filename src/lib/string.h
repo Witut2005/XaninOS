@@ -95,9 +95,9 @@ void erase_spaces(char* buf)
 {
     for(int i = 0; buf[i] != '\0'; i++)
     {
-        if(buf[i] == 0x20)
+        if(buf[i] == ' ')
         {
-            buf[i] = 0x0;
+            buf[i] = '\0';
         }
     }
 }

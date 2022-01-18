@@ -3,6 +3,8 @@
 void execute()
 {
 
+    clearScr();
+
     xprintf("\rplease type name file which you want to execute\n");
     
     KEYBOARD_SIG_OFF();

@@ -4,43 +4,33 @@
 void cd()
 {
 
-    xprintf("\rplease type path\n");
-    
-    KEYBOARD_SIG_OFF();
 
     no_enter = true;
-    keyboard_scan_code = 0x0;
 
-    while(1)
-    {
 
-        if(!index && keyboard_scan_code == ENTER)
+    xprintf("Entering...\n");
+
+    for(int i = 0; i < FileSystem.file_entries_number; i++)
+    {   
+        if(cmpstr(program_parameters,fs_entry[i].entry_name))
         {
+            if(fs_entry[i].entry_type != DIRECTORY)
+                xprintf("%zYOU CAN CHANGE ONLY YOUR DIRECTORY\n",set_output_color(red,white));
             
-            erase_spaces(COMMAND);
-
-            for(int i = 0; i < FileSystem.file_entries_number; i++)
+            else
             {
-                if(cmpstr(COMMAND,fs_entry[i].entry_name))
-                {
-                    if(fs_entry[i].entry_type != DIRECTORY)
-                        xprintf("%zYOU CAN CHANGE ONLY YOUR DIRECTORY\n",set_output_color(red,white));
-                    else
-                    {
-                        set_current_directory(COMMAND);
-                        xprintf("%zyour new directory: %s\n",set_output_color(green,white),current_directory);
-                    }
-
-                    goto finish;
-                }
+                set_current_directory(program_parameters);
+                xprintf("your new directory: %s\n", program_parameters);
             }
 
-            xprintf("%zNO SUCH DIRECTORY\n",set_output_color(red,white));
             goto finish;
-
         }
 
     }
+
+    xprintf("%zNO SUCH DIRECTORY\n",set_output_color(red,white));
+
+    
 
     finish:
 
