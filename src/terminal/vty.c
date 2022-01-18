@@ -26,7 +26,7 @@ void terminalKeyboard(uint8_t scanCode)
 
     if(!index)
     {
-        for(int i = 0; i < 30;i++)
+        for(int i = 0; i < 50;i++)
             COMMAND[i] = '\0';
     }
 

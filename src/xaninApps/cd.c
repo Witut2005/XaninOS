@@ -39,7 +39,7 @@ void cd()
     {
         if(keyboard_input == 'q')
         {
-            for(int i = 0; i < sizeof(comBuf);i++)
+            for(int i = 0; i < 50; i++)
                 COMMAND[i] = '\0';
 
             index = 0x0; /* some problems with keyboard keyboard_input when index is no reseted */

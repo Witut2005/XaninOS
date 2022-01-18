@@ -3,25 +3,19 @@
 void execute()
 {
 
-    clearScr();
 
-    xprintf("\rplease type name file which you want to execute\n");
-    
+
     KEYBOARD_SIG_OFF();
 
     no_enter = true;
 
     keyboard_scan_code = 0x0;
 
-    while(1)
-    {
 
-            xscanf("%s",file_name);
-            
 
             for(int i = 0; i < FileSystem.file_entries_number; i++)
             {
-                if(cmpstr(get_current_path(),fs_entry[i].entry_name))
+                if(cmpstr(program_parameters,fs_entry[i].entry_name))
                 {
                     if(fs_entry[i].entry_type == DIRECTORY)
                     {
@@ -37,11 +31,7 @@ void execute()
             }
 
             xprintf("%zNO SUCH FILE\n",set_output_color(red,white));
-            goto finish;
 
-        
-
-    }
 
     finish:
 

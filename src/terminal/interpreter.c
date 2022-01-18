@@ -10,10 +10,12 @@ void no_keyboard_input()
 void scan(void)
 {
 
+
+    xscanf("%s %s",program_name, program_parameters);
+    //xscanf("%s",program_name)
     erase_spaces(program_name);
     erase_spaces(program_parameters);
 
-    clearScr();
     xprintf("%z%s\n",set_output_color(blue,white),program_name);
 
 

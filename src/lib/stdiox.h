@@ -342,6 +342,9 @@ void xscanf(char* str, ... )
 
     char buffer[50];
 
+    for(int i = 0; i < 50;i++)
+        comBuf[i] = '\0';
+
     while(1)
     {
         if(keyboard_scan_code == ENTER)
@@ -373,11 +376,20 @@ void xscanf(char* str, ... )
                             }
 
                             for(int i = 0; buffer[i] != '\0' && buffer[i] != ' '; i++)
+                            {
+                                if((buffer[i] > 127) || (buffer[i] < 0))
+                                {
+                                    string_pointer[i] = '\0';
+                                    goto end;
+                                }
+
                                 string_pointer[i] = buffer[i];
+                            }
+
+                            end:
 
                             erase_spaces(string_pointer);
-    
-                            for(int i = 0x0; i < sizeof(buffer);i++)
+                            for(int i = 0x0; i < 50;i++)
                                 buffer[i] = 0x0;
 
                             counter++;

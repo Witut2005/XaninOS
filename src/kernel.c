@@ -98,7 +98,6 @@ void _start(void)
         for(int i = 0; i < sizeof(comBuf); i++)
             COMMAND[i] = '\0';
 
-        xscanf("%s %s",program_name, program_parameters);
         scan();
 
 
