@@ -27,7 +27,7 @@ void terminalKeyboard(uint8_t scanCode)
     if(!index)
     {
         for(int i = 0; i < 50;i++)
-            COMMAND[i] = '\0';
+            keyboard_command[i] = '\0';
     }
 
     uint8_t key = keyboard_map[scanCode];
@@ -47,7 +47,7 @@ void terminalKeyboard(uint8_t scanCode)
     else if(scanCode == ENTER)
     {
 
-        if(strlen(COMMAND) != 0)
+        if(strlen(keyboard_command) != 0)
         {
             y++;
             x = 0;
@@ -70,7 +70,7 @@ void terminalKeyboard(uint8_t scanCode)
     else
     {
         *cursor = (uint16_t)(key | ((black << 4) | white) << 8); 
-        COMMAND[index] = key;
+        keyboard_command[index] = key;
         index++;
         cursor++;
         x++;

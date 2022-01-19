@@ -105,6 +105,12 @@ int main(void)
 
     file << entries_counter;
 
+    file.close();
 
+    file.open("xanin.img", ios::out | ios::app); 
+
+
+    while((file.tellg() % 512) != 0)
+        file << ' ';    
 
 }

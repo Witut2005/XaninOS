@@ -31,10 +31,6 @@ char* set_current_directory(char* directory)
 
 char* get_current_directory(void)
 {
-
-    for(int i = 0; fs_entry[0].entry_name[i] != '\0'; i++)
-        current_directory[i] = fs_entry[0].entry_name[i];
-
     return current_directory;
 }
 

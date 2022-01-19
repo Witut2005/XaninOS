@@ -437,6 +437,7 @@ vgaromimage: file=$BXSHARE/VGABIOS-lgpl-latest
 # write protect switch. By default it is turned off.
 #=======================================================================
 #floppya: 1_44=/dev/fd0, status=inserted
+usb_uhci: port2=disk, options2=""path:xanin.img, sect_size:1024"
 floppya: 1_44=xanin.img, status=inserted
 #floppya: 1_44=/dev/fd0H1440, status=inserted
 #floppya: 1_2=../1_2, status=inserted

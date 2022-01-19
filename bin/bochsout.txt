@@ -44,7 +44,7 @@
 00000000000i[USBCTL] Pluggable USB devices
 00000000000i[USBCTL]   floppy mouse tablet keypad keyboard hub disk cdrom
 00000000000i[USBCTL]   printer
-00000000000i[MEM0  ] allocated memory at 000001EE8000B040. after alignment, vector=000001EE8000C000
+00000000000i[MEM0  ] allocated memory at 000001E4BDEF6040. after alignment, vector=000001E4BDEF7000
 00000000000i[MEM0  ] 512,00MB
 00000000000i[MEM0  ] mem block size = 0x00020000, blocks=4096
 00000000000i[MEM0  ] rom at 0xfffe0000/131072 ('D:\Bochs-2.7/BIOS-bochs-latest')
@@ -55,7 +55,7 @@
 00000000000i[DEV   ] PIIX3 PCI-to-ISA bridge present at device 1, function 0
 00000000000i[PLUGIN] init_dev of 'cmos' plugin device by virtual method
 00000000000i[CMOS  ] Using local time for initial clock
-00000000000i[CMOS  ] Setting initial clock to: Wed Jan 19 10:25:29 2022 (time0=1642584329)
+00000000000i[CMOS  ] Setting initial clock to: Thu Jan 20 00:01:57 2022 (time0=1642633317)
 00000000000i[PLUGIN] init_dev of 'dma' plugin device by virtual method
 00000000000i[DMA   ] channel 4 used by cascade
 00000000000i[PLUGIN] init_dev of 'pic' plugin device by virtual method
@@ -191,6 +191,9 @@
 00000000000i[PLUGIN] reset of 'serial' plugin device by virtual method
 00000000000i[PLUGIN] reset of 'gameport' plugin device by virtual method
 00000000000i[PLUGIN] reset of 'usb_uhci' plugin device by virtual method
+00000000000e[USBMSD] could not open hard drive image file 'xanin.img'
+00000000000e[UHCI  ] port #2: connect failed
+00000000000i[UHCI  ] port #2: device disconnect
 00000004635i[BIOS  ] $Revision: 14314 $ $Date: 2021-07-14 18:10:19 +0200 (Wed, 14 Jul 2021) $
 00000437555i[KBD   ] reset-disable command received
 00000563230i[BIOS  ] Starting rombios32
@@ -279,51 +282,94 @@
 00005365376i[BXVGA ] VBE known Display Interface b0c0
 00005365395i[BXVGA ] VBE known Display Interface b0c5
 00005368036i[VBIOS ] VBE Bios $Id: vbe.c 292 2021-06-03 12:24:22Z vruppert $
-00039405250i[WINGUI] dimension update x=720 y=400 fontheight=16 fontwidth=9 bpp=8
+00039238500i[WINGUI] dimension update x=720 y=400 fontheight=16 fontwidth=9 bpp=8
 00766023560i[BIOS  ] Booting from 0000:7c00
-00879912178i[FLOPPY] partial read() on floppy image returns 412/512
-00882689931i[FLOPPY] read() on floppy image returns 0
-00885467684i[FLOPPY] read() on floppy image returns 0
-00888245437i[FLOPPY] read() on floppy image returns 0
-00891023190i[FLOPPY] read() on floppy image returns 0
-00893800942i[FLOPPY] read() on floppy image returns 0
-00896578695i[FLOPPY] read() on floppy image returns 0
-00899356448i[FLOPPY] read() on floppy image returns 0
-00902134201i[FLOPPY] read() on floppy image returns 0
-00904911954i[FLOPPY] read() on floppy image returns 0
-00907689705i[FLOPPY] read() on floppy image returns 0
-00910467458i[FLOPPY] read() on floppy image returns 0
-00913245211i[FLOPPY] read() on floppy image returns 0
-00916022964i[FLOPPY] read() on floppy image returns 0
-00918800717i[FLOPPY] read() on floppy image returns 0
-00921578469i[FLOPPY] read() on floppy image returns 0
-00924356222i[FLOPPY] read() on floppy image returns 0
-00927133975i[FLOPPY] read() on floppy image returns 0
-00929911728i[FLOPPY] read() on floppy image returns 0
-00932689481i[FLOPPY] read() on floppy image returns 0
-00935467232i[FLOPPY] read() on floppy image returns 0
-00938244985i[FLOPPY] read() on floppy image returns 0
-00941022738i[FLOPPY] read() on floppy image returns 0
-06879000000p[WINGUI] >>PANIC<< POWER button turned off.
-06879000000i[CPU0  ] CPU is in protected mode (active)
-06879000000i[CPU0  ] CS.mode = 32 bit
-06879000000i[CPU0  ] SS.mode = 32 bit
-06879000000i[CPU0  ] EFER   = 0x00000000
-06879000000i[CPU0  ] | EAX=00ffff90  EBX=00020254  ECX=000b8162  EDX=00ffff22
-06879000000i[CPU0  ] | ESP=00ffff14  EBP=00ffff84  ESI=000249aa  EDI=08048000
-06879000000i[CPU0  ] | IOPL=0 id vip vif ac vm rf nt OF df IF tf sf zf AF PF cf
-06879000000i[CPU0  ] | SEG sltr(index|ti|rpl)     base    limit G D
-06879000000i[CPU0  ] |  CS:0008( 0001| 0|  0) 00000000 ffffffff 1 1
-06879000000i[CPU0  ] |  DS:0010( 0002| 0|  0) 00000000 ffffffff 1 1
-06879000000i[CPU0  ] |  SS:0010( 0002| 0|  0) 00000000 ffffffff 1 1
-06879000000i[CPU0  ] |  ES:0010( 0002| 0|  0) 00000000 ffffffff 1 1
-06879000000i[CPU0  ] |  FS:0000( 0005| 0|  0) 00000000 0000ffff 0 0
-06879000000i[CPU0  ] |  GS:0000( 0005| 0|  0) 00000000 0000ffff 0 0
-06879000000i[CPU0  ] | EIP=08048fa1 (08048fa1)
-06879000000i[CPU0  ] | CR0=0x60000011 CR2=0x00000000
-06879000000i[CPU0  ] | CR3=0x00000000 CR4=0x00000000
-06879000000i[CPU0  ] 0x0000000008048fa1>> mov al, byte ptr ds:0x0804c178 : A078C10408
-06879000000d[PCI   ] Exit
-06879000000i[CMOS  ] Last time is 1642584356 (Wed Jan 19 10:25:56 2022)
-06879000000i[      ] restoring default signal behavior
-06879000000i[SIM   ] quit_sim called with exit code 1
+00882689933i[FLOPPY] read() on floppy image returns 0
+00885467686i[FLOPPY] read() on floppy image returns 0
+00888245439i[FLOPPY] read() on floppy image returns 0
+00891023192i[FLOPPY] read() on floppy image returns 0
+00893800944i[FLOPPY] read() on floppy image returns 0
+00896578697i[FLOPPY] read() on floppy image returns 0
+00899356450i[FLOPPY] read() on floppy image returns 0
+00902134203i[FLOPPY] read() on floppy image returns 0
+00904911956i[FLOPPY] read() on floppy image returns 0
+00907689707i[FLOPPY] read() on floppy image returns 0
+00910467460i[FLOPPY] read() on floppy image returns 0
+00913245213i[FLOPPY] read() on floppy image returns 0
+00916022966i[FLOPPY] read() on floppy image returns 0
+00918800719i[FLOPPY] read() on floppy image returns 0
+00921578471i[FLOPPY] read() on floppy image returns 0
+00924356224i[FLOPPY] read() on floppy image returns 0
+00927133977i[FLOPPY] read() on floppy image returns 0
+00929911730i[FLOPPY] read() on floppy image returns 0
+00932689483i[FLOPPY] read() on floppy image returns 0
+00935467234i[FLOPPY] read() on floppy image returns 0
+00938244987i[FLOPPY] read() on floppy image returns 0
+00941022740i[FLOPPY] read() on floppy image returns 0
+01060467041i[FLOPPY] read() on floppy image returns 0
+01063244794i[FLOPPY] read() on floppy image returns 0
+01066022547i[FLOPPY] read() on floppy image returns 0
+01068800300i[FLOPPY] read() on floppy image returns 0
+01071578052i[FLOPPY] read() on floppy image returns 0
+01074355805i[FLOPPY] read() on floppy image returns 0
+01077133558i[FLOPPY] read() on floppy image returns 0
+01079911311i[FLOPPY] read() on floppy image returns 0
+01082689064i[FLOPPY] read() on floppy image returns 0
+01085466815i[FLOPPY] read() on floppy image returns 0
+01088244568i[FLOPPY] read() on floppy image returns 0
+01091022321i[FLOPPY] read() on floppy image returns 0
+01093800074i[FLOPPY] read() on floppy image returns 0
+01096577827i[FLOPPY] read() on floppy image returns 0
+01099355579i[FLOPPY] read() on floppy image returns 0
+01102133332i[FLOPPY] read() on floppy image returns 0
+01104911085i[FLOPPY] read() on floppy image returns 0
+01107688838i[FLOPPY] read() on floppy image returns 0
+01110466591i[FLOPPY] read() on floppy image returns 0
+01113244342i[FLOPPY] read() on floppy image returns 0
+01116022095i[FLOPPY] read() on floppy image returns 0
+01118799848i[FLOPPY] read() on floppy image returns 0
+01238244149i[FLOPPY] read() on floppy image returns 0
+01241021902i[FLOPPY] read() on floppy image returns 0
+01243799655i[FLOPPY] read() on floppy image returns 0
+01246577408i[FLOPPY] read() on floppy image returns 0
+01249355161i[FLOPPY] read() on floppy image returns 0
+01252132913i[FLOPPY] read() on floppy image returns 0
+01254910666i[FLOPPY] read() on floppy image returns 0
+01257688419i[FLOPPY] read() on floppy image returns 0
+01260466172i[FLOPPY] read() on floppy image returns 0
+01263243925i[FLOPPY] read() on floppy image returns 0
+01266021676i[FLOPPY] read() on floppy image returns 0
+01268799429i[FLOPPY] read() on floppy image returns 0
+01271577182i[FLOPPY] read() on floppy image returns 0
+01274354935i[FLOPPY] read() on floppy image returns 0
+01277132687i[FLOPPY] read() on floppy image returns 0
+01279910440i[FLOPPY] read() on floppy image returns 0
+01282688193i[FLOPPY] read() on floppy image returns 0
+01285465946i[FLOPPY] read() on floppy image returns 0
+01288243699i[FLOPPY] read() on floppy image returns 0
+01291021450i[FLOPPY] read() on floppy image returns 0
+01293799203i[FLOPPY] read() on floppy image returns 0
+01296576956i[FLOPPY] read() on floppy image returns 0
+01973250000p[WINGUI] >>PANIC<< POWER button turned off.
+01973250000i[CPU0  ] CPU is in protected mode (active)
+01973250000i[CPU0  ] CS.mode = 32 bit
+01973250000i[CPU0  ] SS.mode = 32 bit
+01973250000i[CPU0  ] EFER   = 0x00000000
+01973250000i[CPU0  ] | EAX=00ffff90  EBX=00020254  ECX=000b8160  EDX=00ffff12
+01973250000i[CPU0  ] | ESP=00ffff04  EBP=00ffff74  ESI=00020274  EDI=08048000
+01973250000i[CPU0  ] | IOPL=0 id vip vif ac vm rf nt OF df IF tf sf zf AF PF cf
+01973250000i[CPU0  ] | SEG sltr(index|ti|rpl)     base    limit G D
+01973250000i[CPU0  ] |  CS:0008( 0001| 0|  0) 00000000 ffffffff 1 1
+01973250000i[CPU0  ] |  DS:0010( 0002| 0|  0) 00000000 ffffffff 1 1
+01973250000i[CPU0  ] |  SS:0010( 0002| 0|  0) 00000000 ffffffff 1 1
+01973250000i[CPU0  ] |  ES:0010( 0002| 0|  0) 00000000 ffffffff 1 1
+01973250000i[CPU0  ] |  FS:0000( 0005| 0|  0) 00000000 0000ffff 0 0
+01973250000i[CPU0  ] |  GS:0000( 0005| 0|  0) 00000000 0000ffff 0 0
+01973250000i[CPU0  ] | EIP=08048fa4 (08048fa4)
+01973250000i[CPU0  ] | CR0=0x60000011 CR2=0x00000000
+01973250000i[CPU0  ] | CR3=0x00000000 CR4=0x00000000
+01973250000i[CPU0  ] 0x0000000008048fa4>> mov al, byte ptr ds:0x0804c1b8 : A0B8C10408
+01973250000d[PCI   ] Exit
+01973250000i[CMOS  ] Last time is 1642633324 (Thu Jan 20 00:02:04 2022)
+01973250000i[      ] restoring default signal behavior
+01973250000i[SIM   ] quit_sim called with exit code 1

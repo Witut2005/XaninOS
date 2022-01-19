@@ -9,9 +9,10 @@
 #define IDT_HANDLERS 256
 #define IDT_SIZE 256 * 8 - 1
 
+
 #define CODE_SEGMENT 0x8
 
-
+/* configure interrupt descriptor table entry */
 #define configure_idt_entry(idt_entry,off,seg)\
     idtEntries[idt_entry].off_0_15 = (uint16_t)(((uint32_t)&off & 0x0000ffff));\
     idtEntries[idt_entry].off_16_31 = (uint16_t)((uint32_t)&off >> 16);\
@@ -28,9 +29,9 @@ extern void _syscall(void);
         uint16_t limit;
         uint32_t base;
     }__attribute__((packed));
-    
+
     /* IDT entry structure */
-    typedef struct 
+    typedef struct
     {
         uint16_t off_0_15;
         uint16_t segment;
@@ -39,7 +40,7 @@ extern void _syscall(void);
         uint16_t off_16_31;
     }__attribute__((packed)) IDT;
 
-    
+
     __attribute__((aligned(0x8))) IDT idtEntries[IDT_HANDLERS];
 
 
@@ -58,13 +59,13 @@ void set_idt(void)
 
 
 
-    
+
     struct idtReg idtr = {
         IDT_SIZE,
         (uint32_t)&idtEntries
     };
-    
-    /* loading IDT Register */
+
+    /* load IDT Register with proper struct */
     asm("sti");
     asm("lidt %0" : : "m"(idtr));
 

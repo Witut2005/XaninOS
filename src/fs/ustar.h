@@ -24,9 +24,7 @@ char* fileData[2];
 #define nullptr 0x0
 
 
-char* set_current_directory(char*);
-char* get_current_directory(void);
-char* get_current_path(char*);
+
 
 
 struct 
@@ -73,3 +71,9 @@ enum ustar_entry_types
     DIRECTORY = '5',
     FIFO = '6'
 };
+
+
+FileSystemEntryStruct* find_fs_entry(char*);
+char* set_current_directory(char*);
+char* get_current_directory(void);
+char* get_current_path(char*);

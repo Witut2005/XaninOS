@@ -8,6 +8,7 @@
 #include <lib/math.h>
 #include <fs/ustar.c>
 #include <keyboard/keyboardInit.c>
+#include <devices/PCI/pci.c>
 //#include <devices/DMA/dma.c>
 
 char* tmpStr;
@@ -16,17 +17,23 @@ char* tmpStr;
 /*--------------------------------------/
 |wesolego nowego roku :))               |
 |niech xanin rośnie i rośnie            |
-|ja, rok 2021, 31 grudzień, 23:52:35    |     
+|ja, rok 2021, 31 grudzień, 23:52:35    |
 /--------------------------------------*/
 
 
 
 void _start(void)
 {
+
+
+    disable_cursor();
+
     clearScr();
     asm("cli");
 
-    COMMAND = comBuf;
+
+
+    keyboard_command = comBuf;
 
 
     set_idt();
@@ -36,15 +43,13 @@ void _start(void)
 
 
     //dma_controller_reset();
-    
+
 
     clearScr();
 
+    //disable_cursor();
+    //enable_cursor(0x0,0x0);
 
-
-    disableCursor();
-
-   
     getCpuSpeed();
 
     getTime();
@@ -53,14 +58,21 @@ void _start(void)
 
 
     file_system_init();
-    
+
     clearScr();
+
+    int px = 0x0;
+    int py = 0x0;
+    int pz = 0x0;
+    int mz = 0x0;
+
+
 
 
     tuiInit:
 
     clearScr();
-    
+
 
 
     x = 0;y = 0;
@@ -73,12 +85,12 @@ void _start(void)
     xprintf("weekday: %s\n\n",weekDaysLUT[time.weekDay]);
 
 
-    *cursor = (uint16_t)('>' | ((black << 4) | white) << 8); 
+    *cursor = (uint16_t)('>' | ((black << 4) | white) << 8);
     cursor++;
     x++;
 
     app_exited = false;
-    
+
 
 
 
@@ -90,16 +102,16 @@ void _start(void)
         {
             app_exited = false;
             for(int i = 0; i < sizeof(comBuf); i++)
-                COMMAND[i] = '\0';
+                keyboard_command[i] = '\0';
             goto tuiInit;
         }
- 
+
         index = 0x0;
         for(int i = 0; i < sizeof(comBuf); i++)
-            COMMAND[i] = '\0';
+            keyboard_command[i] = '\0';
 
         scan();
 
     }
-    
+
 }

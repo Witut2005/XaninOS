@@ -15,6 +15,15 @@ Features:
 
 ---
 
+## DIRECTORIES
+
+```
+bin/ - binary files
+src/ - source files
+```
+
+---
+
 Command to list all available commands within xaninOS:
 
 ```

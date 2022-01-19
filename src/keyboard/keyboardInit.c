@@ -13,15 +13,15 @@ uint8_t keyboard_self_test()
 }
 
 
-uint8_t keyboard_init() 
+uint8_t keyboard_init()
 {
 
     uint8_t KEYBOARD_TEST_STATUS = keyboard_self_test();
 
-	outbIO(0x64, 0xAE);             // KEYBOARD ON
-    outbIO(PIC1_DATA_REG, 0xFD);    // 11111101 <-- irq1 ON 
+	  outbIO(0x64, 0xAE);             // KEYBOARD ON
+    outbIO(PIC1_DATA_REG, 0xFD);    // 11111101 <-- irq1 ON
 
-    if(KEYBOARD_TEST_STATUS == KEYBOARD_TEST_FAILURE) 
+    if(KEYBOARD_TEST_STATUS == KEYBOARD_TEST_FAILURE)
     {
         sprint(red,white,"keyboard self test failed. Halting execution\n");
         asm("cli");
@@ -31,7 +31,7 @@ uint8_t keyboard_init()
     else if(KEYBOARD_TEST_STATUS == KEYBOARD_TEST_SUCCESS)
         sprint(black,white,"keyboard self test passed :))\n");
 
-    
+
     return KEYBOARD_TEST_STATUS;
 
 }

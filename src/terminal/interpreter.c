@@ -30,7 +30,7 @@ void scan(void)
     }
 
     /*
-    else if(cmpstr(COMMAND,"hexview"))
+    else if(cmpstr(keyboard_command,"hexview"))
     {
         hexview();
         KEYBOARD_SIG_ON(no_keyboard_input);
@@ -114,7 +114,7 @@ void scan(void)
             if(keyboard_input == 'q')
             {
                 for(int i = 0; i < 50; i++)
-                    COMMAND[i] = '\0';
+                    keyboard_command[i] = '\0';
 
                 index = 0x0; /* some problems with keyboard keyboard_input when index is no reseted */
                 app_exited = true; no_enter = false;break;

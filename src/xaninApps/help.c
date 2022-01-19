@@ -14,7 +14,10 @@ void help(void)
     xprintf("cls\n");
     xprintf("ls\n");
     xprintf("type\n");
-
+    xprintf("cd\n");
+    xprintf("pwd\n");
+    xprintf("execute\n");
+    xprintf("note\n");
 
 
     xprintf("press 'q' to continue...\n");

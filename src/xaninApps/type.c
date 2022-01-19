@@ -24,11 +24,11 @@ void type()
         if(!index && keyboard_scan_code == ENTER)
         {
             
-            erase_spaces(COMMAND);
+            erase_spaces(keyboard_command);
 
             for(int i = 0; i < FileSystem.file_entries_number; i++)
             {
-                if(cmpstr(COMMAND,fs_entry[i].entry_name))
+                if(cmpstr(keyboard_command,fs_entry[i].entry_name))
                 {
                     if(fs_entry[i].entry_type == DIRECTORY)
                     {
@@ -47,7 +47,7 @@ void type()
     }
 
     error:
-    xprintf("\r%z%s\n",set_output_color(red,white),COMMAND);
+    xprintf("\r%z%s\n",set_output_color(red,white),keyboard_command);
     xprintf("\r%z%s\n",set_output_color(red,white),"NO SUCH FILE OR DIRECTORY");
 
 
@@ -65,7 +65,7 @@ void type()
         if(keyboard_input == 'q')
         {
             for(int i = 0; i < sizeof(comBuf);i++)
-                COMMAND[i] = '\0';
+                keyboard_command[i] = '\0';
 
             index = 0x0; /* some problems with keyboard keyboard_input when index is no reseted */
             app_exited = true; no_enter = false;break;

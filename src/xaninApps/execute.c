@@ -36,7 +36,7 @@ void execute()
         if(keyboard_input == 'q')
         {
             for(int i = 0; i < sizeof(comBuf);i++)
-                COMMAND[i] = '\0';
+                keyboard_command[i] = '\0';
 
             index = 0x0; /* some problems with keyboard keyboard_input when index is no reseted */
             app_exited = true; no_enter = false;break;

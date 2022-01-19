@@ -19,24 +19,21 @@ static char* keyString = "keyboard initalized succed :))\n";
 static char HEX_LUT[16] = {'0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f'};
 
 char comBuf[50];
-char* COMMAND;
+char* keyboard_command;
 
-
-
-static char znakk;
 
 void clearScr(void)
 {
-    char* ptrTmp = (char*)VRAM;
-    for(int i = 0; i < SCREEN_RESOLUTION*2; i++)
+    uint16_t* ptrTmp = (uint16_t*)VRAM;
+    for(int i = 0; i < (80 * 25); i++)
     {
-        *ptrTmp = 0x0;
+        *ptrTmp = '\0';
         ptrTmp++;
     }
 
     x = 0;
     y = 0;
-    
+
 
 }
 
@@ -69,8 +66,8 @@ void putch(char c)
 {
     uint16_t* ptr;
     ptr = (unsigned short*)(VGA_TEXT_MEMORY) + (x*2) +((80)*y);
-    *ptr = (uint16_t)c | (((black << 4) | white) << 8); 
-    
+    *ptr = (uint16_t)c | (((black << 4) | white) << 8);
+
     x++;
 
     return;
@@ -85,10 +82,10 @@ void printNum(uint8_t x)
 
     arr[2] = x % 10;
     x = x / 10;
-    
+
     arr[1] = x % 10;
     x = x / 10;
-    
+
     arr[0] = x % 10;
 
 
@@ -97,7 +94,7 @@ void printNum(uint8_t x)
     bool notZero;
 
     uint16_t* ptr;
-    
+
 
     for(uint8_t i = 0; i < 3; i++)
     {
@@ -105,7 +102,7 @@ void printNum(uint8_t x)
         notZero = true;
         putch(charakter);
     }
-    
+
     y++;
     x = 0;
 
@@ -118,18 +115,18 @@ void print_hex_number(uint8_t x)
     putch(HEX_LUT[x & 0x0F]);
 
 }
- 
+
 void print_bcd_number(uint8_t x)
 {
 
     uint16_t* ptr;
 
     ptr = (unsigned short*)(VGA_TEXT_MEMORY) + x +  ((80)*y);
-    *ptr = (uint16_t)( (((x & 0xf0) >> 4) + 48)  | (((red << 4) | white) << 8)); 
+    *ptr = (uint16_t)( (((x & 0xf0) >> 4) + 48)  | (((red << 4) | white) << 8));
     x += 0x2;
 
     ptr = (unsigned short*)(VGA_TEXT_MEMORY) + x +  ((80)*y);
-    *ptr = (uint16_t)(((x & 0x0f) + 48)  | (((red << 4) | white) << 8)); 
+    *ptr = (uint16_t)(((x & 0x0f) + 48)  | (((red << 4) | white) << 8));
     x += 0x2;
 
     y++;
@@ -151,13 +148,13 @@ void xprintf(char* str, ... )
 
     char* tmpPtr = tmp;
     uint32_t number;
-    
+
     char* stringPtr;
 
     va_list args;
     va_start(args,str);
 
-    
+
 
     uint32_t strCounter = 0;
     uint32_t bufCounter = 0;
@@ -171,7 +168,7 @@ void xprintf(char* str, ... )
     {
         if(str[strCounter] == '%')
         {
-            
+
             strCounter++;
             switch(str[strCounter])
             {
@@ -192,11 +189,11 @@ void xprintf(char* str, ... )
                 }
 
                 case 's':
-                {    
-                
+                {
+
                     stringPtr = va_arg(args,char*);
-                    
-                    
+
+
                     for(int i = 0; stringPtr[i] != '\0'; i++)
                     {
                         cursor[bufCounter] = (uint16_t) (stringPtr[i] + (((backgroundColor << 4) | fontColor) << 8));
@@ -205,7 +202,7 @@ void xprintf(char* str, ... )
                     }
 
                     break;
-                    
+
                 }
 
                 case 'z':
@@ -242,9 +239,9 @@ void xprintf(char* str, ... )
                         x++;
                     }
                 }
-        
 
-                
+
+
             }
 
             strCounter++;
@@ -255,7 +252,7 @@ void xprintf(char* str, ... )
             y++;
             x = 0;
             cursor = (unsigned short*)(VGA_TEXT_MEMORY) + ((80)*y);
-            strCounter++;   
+            strCounter++;
         }
 
         else if(str[strCounter] == '\r')
@@ -272,18 +269,18 @@ void xprintf(char* str, ... )
             strCounter++;
         }
 
-        else 
+        else
         {
             cursor[bufCounter] = (uint16_t) (str[strCounter] + (((backgroundColor << 4) | fontColor) << 8));
-            strCounter++;   
+            strCounter++;
             bufCounter++;
             x++;
         }
 
-       
+
 
     }
-    
+
     va_end(args);
 
 }
@@ -300,9 +297,9 @@ char* get_program_name(void)
 
     uint32_t i = 0x0;
 
-    while(COMMAND[i] != 0x20)
+    while(keyboard_command[i] != 0x20)
     {
-        program_name_pointer[i] = COMMAND[i];
+        program_name_pointer[i] = keyboard_command[i];
         i++;
     }
 
@@ -312,9 +309,9 @@ char* get_program_name(void)
 
     i++;
 
-    while(COMMAND[i] != 0x20)
+    while(keyboard_command[i] != 0x20)
     {
-        parameter_pointer[i] = COMMAND[i];
+        parameter_pointer[i] = keyboard_command[i];
         i++;
     }
 
@@ -363,25 +360,25 @@ void xscanf(char* str, ... )
         {
             while(str[str_counter] != '\0')
             {
-                
+
 
 
                 if(str[str_counter] == '%')
                 {
                     str_counter++;
-                    switch(str[str_counter]) 
+                    switch(str[str_counter])
                     {
                         case 's':
                         {
                             string_pointer = va_arg(args, char*);
-                            
+
                             for(int i = 0; string_pointer[i] != '\0'; i++)
                                 string_pointer[i] = '\0';
 
-                            for(int i = 0x0; COMMAND[counter] != '\0' && COMMAND[counter] != ' '; i++)
+                            for(int i = 0x0; keyboard_command[counter] != '\0' && keyboard_command[counter] != ' '; i++)
                             {
-                                buffer[i] = COMMAND[counter];
-                                counter++;                        
+                                buffer[i] = keyboard_command[counter];
+                                counter++;
                             }
 
                             for(int i = 0; buffer[i] != '\0' && buffer[i] != ' '; i++)
@@ -396,14 +393,14 @@ void xscanf(char* str, ... )
                             }
 
                             end:
-                            
+
                             for(int i = 0x0; i < 50;i++)
                                 buffer[i] = '\0';
 
                             counter++;
                         }
-                    }      
-                
+                    }
+
                 str_counter++;
 
                 }
@@ -414,18 +411,18 @@ void xscanf(char* str, ... )
                 }
 
             }
-        
+
         for(int i = 0; i < 50;i++)
-            COMMAND[i] = '\0';
+            keyboard_command[i] = '\0';
 
 
         for(int i = 0x0; i < 50;i++)
             buffer[i] = 0x0;
-        
+
 
 
         return;
-        
+
         }
     }
 

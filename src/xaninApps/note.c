@@ -15,47 +15,34 @@ void nano()
 
     no_enter = true;
 
-    xprintf("\rwhich file do you want to edit:\n");
-
     keyboard_scan_code = 0x0;
-    char* file_descriptor;
 
-    while(1)
+    FileSystemEntryStruct* file_descriptor = find_fs_entry(program_parameters);
+
+    if(file_descriptor != nullptr)
     {
-
-        if(!index && keyboard_scan_code == ENTER)
+        if(cmpstr(program_parameters,file_descriptor->entry_name))
         {
-        
-            erase_spaces(COMMAND);
-
-            for(int i = 0; i < FileSystem.file_entries_number; i++)
-            {
-                if(cmpstr(COMMAND,fs_entry[i].entry_name))
+                clearScr();
+                if(file_descriptor->entry_type == DIRECTORY)
                 {
-                    clearScr();
-                    if(fs_entry[i].entry_type == DIRECTORY)
-                    {
-                        xprintf("%zyou cant edit directory\n",set_output_color(red,white));
-                        xprintf("%zuse F4 key to exit\n",set_output_color(red,white));
-                        while(keyboard_scan_code != F4_KEY);
-                        goto end;
-                    }
-
-                    xprintf("%s\r",fs_entry[i].entry_data_pointer);
-                    file_descriptor = fs_entry[i].entry_data_pointer;
-                    goto edit;
+                    xprintf("%zyou cant edit directory\n",set_output_color(red,white));
+                    xprintf("%zuse F4 key to exit\n",set_output_color(red,white));
+                    while(keyboard_scan_code != F4_KEY);
+                    goto end;
                 }
-            }
-            
-            goto error;
 
+            xprintf("%s\r",file_descriptor->entry_data_pointer);
+            //file_descriptor = file_descriptor->entry_data_pointer;
+            goto edit;
         }
-
     }
+
 
     error:
 
-    xprintf("%zno such file or directory\n",set_output_color(red,white));
+    xprintf("%zno such file or directory %s\n",set_output_color(red,white),program_parameters);
+
 
     edit:
     y = 0;
@@ -63,14 +50,16 @@ void nano()
 
 
     uint32_t file_data_counter = 0x0;
-    for(char* i = (char*)VGA_TEXT_MEMORY; i < (char*)(VGA_TEXT_MEMORY + 80 * 5 * 2); i+=2, file_data_counter++)
-        file_descriptor[file_data_counter] = *i;
+    for(char* i = (char*)VGA_TEXT_MEMORY; *i != '\0'; i+=2, file_data_counter++)
+        file_descriptor->entry_data_pointer[file_data_counter] = *i;
+    
+    file_descriptor->entry_size = file_data_counter;
 
     
     end:
     
     for(int i = 0; i < sizeof(comBuf);i++)
-        COMMAND[i] = '\0';
+        keyboard_command[i] = '\0';
 
     index = 0x0; /* some problems with keyboard keyboard_input when index is no reseted */
     app_exited = true; 
