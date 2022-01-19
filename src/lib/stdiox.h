@@ -324,6 +324,15 @@ char* get_program_name(void)
 }
 */
 
+char putchar(char c)
+{
+    *cursor = (set_output_color(black, white) << 8) | c;
+    x++;
+
+    return c;
+}
+
+
 
 void xscanf(char* str, ... )
 {
@@ -344,6 +353,9 @@ void xscanf(char* str, ... )
 
     for(int i = 0; i < 50;i++)
         comBuf[i] = '\0';
+
+    for(int i = 0; i < 50;i++)
+        buffer[i] = '\0';
 
     while(1)
     {
@@ -384,10 +396,9 @@ void xscanf(char* str, ... )
                             }
 
                             end:
-
-                            erase_spaces(string_pointer);
+                            
                             for(int i = 0x0; i < 50;i++)
-                                buffer[i] = 0x0;
+                                buffer[i] = '\0';
 
                             counter++;
                         }
@@ -404,12 +415,15 @@ void xscanf(char* str, ... )
 
             }
         
-        for(int i = 0; i < sizeof(comBuf);i++)
-            comBuf[i] = '\0';
+        for(int i = 0; i < 50;i++)
+            COMMAND[i] = '\0';
+
 
         for(int i = 0x0; i < 50;i++)
             buffer[i] = 0x0;
         
+
+
         return;
         
         }

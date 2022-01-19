@@ -107,3 +107,23 @@ void file_system_init(void)
 
 
 }
+
+FileSystemEntryStruct* find_fs_entry(char* entry_name)
+{
+    for(int i = 0; i < FileSystem.file_entries_number; i++)
+    {
+        if(cmpstr(entry_name,fs_entry[i].entry_name))     
+            return &fs_entry[i];      
+    }
+
+    for(int i = 0; i < FileSystem.file_entries_number; i++)
+    {
+        get_current_path(entry_name);
+
+        if(cmpstr(current_file_path,fs_entry[i].entry_name))     
+            return &fs_entry[i];  
+    }
+
+    return nullptr;
+
+}

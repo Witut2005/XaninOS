@@ -21,7 +21,7 @@ char* fileData[2];
 
 #define USTAR_SECTOR_SIZE 512
 
-
+#define nullptr 0x0
 
 
 char* set_current_directory(char*);

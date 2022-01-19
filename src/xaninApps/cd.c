@@ -1,5 +1,5 @@
 
-#include <fs/ustar.h>
+#include <fs/ustar.c>
 
 void cd()
 {
@@ -7,25 +7,20 @@ void cd()
 
     no_enter = true;
 
+    FileSystemEntryStruct* file_descriptor = find_fs_entry(program_parameters);
 
-    xprintf("Entering...\n");
+    if(file_descriptor != nullptr)
+    {
+        if(file_descriptor->entry_type != DIRECTORY)
+            xprintf("%zYOU CAN CHANGE ONLY YOUR DIRECTORY\n",set_output_color(red,white));
 
-    for(int i = 0; i < FileSystem.file_entries_number; i++)
-    {   
-        if(cmpstr(program_parameters,fs_entry[i].entry_name))
+        else
         {
-            if(fs_entry[i].entry_type != DIRECTORY)
-                xprintf("%zYOU CAN CHANGE ONLY YOUR DIRECTORY\n",set_output_color(red,white));
-            
-            else
-            {
-                set_current_directory(program_parameters);
-                xprintf("your new directory: %s\n", program_parameters);
-            }
-
-            goto finish;
+            set_current_directory(program_parameters);
+            xprintf("your new directory: %s\n", program_parameters);
         }
 
+        goto finish;
     }
 
     xprintf("%zNO SUCH DIRECTORY\n",set_output_color(red,white));

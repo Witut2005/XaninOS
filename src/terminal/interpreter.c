@@ -16,7 +16,7 @@ void scan(void)
     erase_spaces(program_name);
     erase_spaces(program_parameters);
 
-    xprintf("%z%s\n",set_output_color(blue,white),program_name);
+//    xprintf("%z%s\n",set_output_color(blue,white),program_name);
 
 
 
@@ -106,9 +106,20 @@ void scan(void)
         KEYBOARD_SIG_ON(no_keyboard_input);
     }
 
-    else 
+    else
     {
-        xprintf("%z%s: unknown command\n",set_output_color(red,white),program_name);
+        xprintf("%zunknown command",set_output_color(red,white));
+        while(1)
+        {
+            if(keyboard_input == 'q')
+            {
+                for(int i = 0; i < 50; i++)
+                    COMMAND[i] = '\0';
+
+                index = 0x0; /* some problems with keyboard keyboard_input when index is no reseted */
+                app_exited = true; no_enter = false;break;
+            }
+        }
     }
     
     KEYBOARD_SIG_OFF();

@@ -1,4 +1,5 @@
 
+#include <fs/ustar.c>
 
 void execute()
 {
@@ -12,50 +13,19 @@ void execute()
     keyboard_scan_code = 0x0;
 
     xprintf("\n");
+    
+    FileSystemEntryStruct* file_descriptor = find_fs_entry(program_parameters);
 
-    for(int i = 0; i < FileSystem.file_entries_number; i++)
+    if(file_descriptor != nullptr)
     {
-        if(cmpstr(program_parameters,fs_entry[i].entry_name))
-        {
-            if(fs_entry[i].entry_type == DIRECTORY)
-            {   
-                xprintf("%zYOU CANT EXECUTE DIRECTORY\n",set_output_color(red,white));
-                break;
-            }
-        
-        void(*executable_program)(void) = (void(*)(void))fs_entry[i].entry_data_pointer;
-        asm("mov esi, ebx" :: "b"(fs_entry[i].entry_data_pointer));
-        executable_program(); /* calle must exectute RET instruction */
-        xprintf("%zprogram succefully returned. Press 'q' to exit\n",set_output_color(green,white));
-        goto finish;
-        
-        }
-            
-
-    }
-
-    xprintf("currently executing: %s\n",get_current_path(program_parameters));
-
-    for(int i = 0; i < FileSystem.file_entries_number; i++)
-    {
-        if(cmpstr(current_file_path,fs_entry[i].entry_name))
-        {
-            if(fs_entry[i].entry_type == DIRECTORY)
-            {   
-                xprintf("%zYOU CANT EXECUTE DIRECTORY\n",set_output_color(red,white));
-                break;
-            }
-        
-        void(*executable_program)(void) = (void(*)(void))fs_entry[i].entry_data_pointer;
-        asm("mov esi, ebx" :: "b"(fs_entry[i].entry_data_pointer));
+        void(*executable_program)(void) = (void(*)(void))file_descriptor->entry_data_pointer;
+        asm("mov esi, ebx" :: "b"(file_descriptor->entry_data_pointer));
         executable_program(); /* calle must execute RET instruction */
         xprintf("\n%zprogram succefully returned. Press 'q' to exit\n\n",set_output_color(green,white));
         goto finish;
-        
-        }
     }
 
-    xprintf("%zNO SUCH FILE\n",set_output_color(red,white));
+    xprintf("%zNO SUCH FILE: %s\n",set_output_color(red,white), file_descriptor->entry_name);
 
     finish:
 
