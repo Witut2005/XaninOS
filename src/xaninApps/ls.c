@@ -14,7 +14,6 @@ void ls()
     for(int i=0; i < FileSystem.file_entries_number; i++)
         xprintf("\r%s %dbytes\n",fs_entry[i].entry_name,fs_entry[i].entry_size);
 
-
     xprintf("press 'q' key to continue...");
     
     

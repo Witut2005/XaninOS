@@ -13,6 +13,8 @@
 #include <xaninApps/execute.c>
 #include <xaninApps/cd.c>
 #include <xaninApps/pwd.c>
+#include <xaninApps/md.c>
+#include <xaninApps/rd.c>
 
 void scan(void);
 

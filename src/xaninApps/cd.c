@@ -1,7 +1,7 @@
 
 #include <fs/ustar.c>
 
-void cd()
+void cd(void)
 {
 
 
@@ -20,16 +20,13 @@ void cd()
             xprintf("your new directory: %s\n", program_parameters);
         }
 
-        goto finish;
     }
 
-    xprintf("%zNO SUCH DIRECTORY\n",set_output_color(red,white));
+    else
+        xprintf("%zNO SUCH DIRECTORY\n",set_output_color(red,white));
 
     
-
-    finish:
-
-    
+   
     while(1)
     {
         if(keyboard_input == 'q')

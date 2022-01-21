@@ -38,7 +38,7 @@ _loadSector:
 ;load sectors
 ;please read "notes" section from Ralf Brown article about int 0x13
 
-mov bp, 3
+;mov bp, 3
 int13_read:
 
 mov ah,0x0
@@ -52,9 +52,9 @@ mov cl,0x2 ; we dont want to copy first sector
 mov dh,0x0
 mov bx,0x0
 int 0x13
-dec bp
-cmp bp,0
-jne int13_read
+;dec bp
+;cmp bp,0
+;jne int13_read
 
 mov ah,0xe
 mov si,str

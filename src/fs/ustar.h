@@ -45,8 +45,9 @@ struct FileSystemEntryStruct
     char* entry_name;
     char* entry_size_pointer;
     char* entry_data_pointer;
+    char* end_of_entry;
 
-    struct FileSystemEntryStruct* sub_entries;
+    struct FileSystemEntryStruct* next_entry;
 };
 
 typedef struct FileSystemEntryStruct FileSystemEntryStruct;

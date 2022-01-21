@@ -61,12 +61,22 @@ void _start(void)
 
     clearScr();
 
-    int px = 0x0;
-    int py = 0x0;
-    int pz = 0x0;
-    int mz = 0x0;
 
 
+    /*
+    
+    Detect USB devices 
+
+    uint32_t pci_address_selector = 0x0;
+
+    do
+    {
+        pci_get_vendor_id();
+        pci_address_selector++
+    }   while(pci_address_selector);
+
+
+    */
 
 
     tuiInit:

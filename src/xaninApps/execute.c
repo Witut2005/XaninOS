@@ -22,14 +22,10 @@ void execute()
         asm("mov esi, ebx" :: "b"(file_descriptor->entry_data_pointer));
         executable_program(); /* calle must execute RET instruction */
         xprintf("\n%zprogram succefully returned. Press 'q' to exit\n\n",set_output_color(green,white));
-        goto finish;
     }
 
-    xprintf("%zNO SUCH FILE: %s\n",set_output_color(red,white), file_descriptor->entry_name);
-
-    finish:
-
-
+    else
+        xprintf("%zNO SUCH FILE: %s\n",set_output_color(red,white), file_descriptor->entry_name);
 
     while(1)
     {

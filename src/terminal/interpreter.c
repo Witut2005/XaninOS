@@ -29,6 +29,17 @@ void scan(void)
         tetris();
     }
 
+    else if(cmpstr(program_name,"md"))
+    {
+        md();
+    }
+
+    else if(cmpstr(program_name,"rd"))
+    {
+        rd();
+    }
+
+
     /*
     else if(cmpstr(keyboard_command,"hexview"))
     {

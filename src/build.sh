@@ -23,7 +23,7 @@ cd ..
 
 
 #COMPILE																										 HERE YOU MUST PUT PATH TO SRC DIRECTORY
-i386-elf-gcc -O0 -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -I /mnt/c/Users/wiktor/Desktop/xaninOS/src kernel.c ./handlers/keyboard.o ./pit/pit.o ./syscall/syscall.o -o kernel.bin
+i386-elf-gcc -O0 -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -I /mnt/c/Users/Witut/Desktop/xaninOS/src kernel.c ./handlers/keyboard.o ./pit/pit.o ./syscall/syscall.o -o kernel.bin
 cat ./boot/boot ./boot/kernelLoader kernel.bin ./boot/locateFS home.tar > xanin.bin
 
 
