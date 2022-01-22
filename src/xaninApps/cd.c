@@ -16,7 +16,7 @@ void cd(void)
 
         else
         {
-            set_current_directory(program_parameters);
+            set_current_directory(get_current_path(program_parameters));
             xprintf("your new directory: %s\n", program_parameters);
         }
 

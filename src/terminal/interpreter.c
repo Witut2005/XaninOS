@@ -83,10 +83,6 @@ void scan(void)
         {
             updatePong();
         }   
-        
-        
-
-       
     }
 
     else if(cmpstr(program_name,"execute"))
@@ -132,7 +128,10 @@ void scan(void)
             }
         }
     }
-    
+
+//    for(int i = 0; i < 50; i++)
+//        program_parameters[i] = '\0';
+
     KEYBOARD_SIG_OFF();
 
 }

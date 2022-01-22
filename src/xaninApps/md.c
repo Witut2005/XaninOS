@@ -11,8 +11,9 @@ void md(void)
     FileSystemEntryStruct* file_descriptor = &fs_entry[FileSystem.file_entries_number];
 
 
-    if(program_parameters[strlen(program_parameters)] != '/')
+    if(program_parameters[strlen(program_parameters)-1] != '/')
         program_parameters[strlen(program_parameters)] = '/';        
+
 
     file_descriptor->entry_name = get_current_path(program_parameters);
     file_descriptor->entry_size = 0x0;

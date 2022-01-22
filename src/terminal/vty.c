@@ -37,8 +37,12 @@ void terminalKeyboard(uint8_t scanCode)
         if(*(cursor-1) == (uint16_t)('>' | ((black << 4) | white) << 8))
             return;
 
+
+
         if(index != 0)
             index--;
+
+        comBuf[index] = '\0';
 
         cursor--;
         *cursor = '\0'; /* delete character */

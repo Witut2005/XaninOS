@@ -360,9 +360,6 @@ void xscanf(char* str, ... )
         {
             while(str[str_counter] != '\0')
             {
-
-
-
                 if(str[str_counter] == '%')
                 {
                     str_counter++;
