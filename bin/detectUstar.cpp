@@ -22,7 +22,7 @@ char entries_counter = 0x0;
 
 void find_ustar(char* x)
 {
-    for(int i = 0; i < 0x2f * 512 - 1; i++)
+    for(int i = 0; i < 50 * 512 - 1; i++)
     {
         if(strcmp(&x[i],"ustar  ") == 0)
             entries_counter++;

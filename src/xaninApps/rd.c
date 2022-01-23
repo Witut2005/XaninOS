@@ -24,7 +24,6 @@ void rd(void)
     file_descriptor->entry_type = nullptr;
     file_descriptor->owner = nullptr;
     file_descriptor->group = nullptr;
-    file_descriptor->end_of_entry = nullptr;
   
     FileSystem.file_entries_number--;
 

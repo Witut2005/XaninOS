@@ -31,11 +31,17 @@ char* set_current_directory(char* directory)
 
 char* get_current_directory(void)
 {
+    for(int i = 0; i < sizeof(current_directory_buffer); i++)
+        current_directory_buffer[i] = '\0';
+        
     return current_directory;
 }
 
 char* get_current_path(char* file_name)
 {
+
+    for(int j = 0; j < 50; j++)
+        current_file_path[j] = '\0';
 
     int i = 0x0;
     for(i = 0; current_directory[i] != '\0'; i++)
@@ -77,20 +83,14 @@ void file_system_init(void)
         file_system_initializer += USTAR_SECTOR_SIZE;
     
 
-        if(fs_entry[i].entry_type == DIRECTORY)
-        {
-            fs_entry[i].end_of_entry = file_system_initializer;
-        }
 
-        else
+        if(fs_entry[i].entry_type != DIRECTORY)
         {
             fs_entry[i].entry_data_pointer = file_system_initializer;
             file_system_initializer += USTAR_SECTOR_SIZE * ((fs_entry[i].entry_size / USTAR_SECTOR_SIZE));
             file_system_initializer += (fs_entry[i].entry_size % USTAR_SECTOR_SIZE == 0) ? 0 : USTAR_SECTOR_SIZE;
-            fs_entry[i].end_of_entry = file_system_initializer;            
         }
 
-        fs_entry[i].next_entry = (FileSystemEntryStruct*)fs_entry[i].end_of_entry;
 
     }    
 
@@ -119,16 +119,25 @@ FileSystemEntryStruct* find_fs_entry(char* entry_name)
     for(int i = 0; i < FileSystem.file_entries_number; i++)
     {
         if(cmpstr(entry_name,fs_entry[i].entry_name))     
+        {
+            xprintf("ENTRY NUM: %d\n",i);
             return &fs_entry[i];      
+        }
     }
 
     for(int i = 0; i < FileSystem.file_entries_number; i++)
     {
         get_current_path(entry_name);
 
-        if(cmpstr(current_file_path,fs_entry[i].entry_name))     
+        if(cmpstr(current_file_path,fs_entry[i].entry_name))  
+        {   
+            xprintf("ENTRY NUM: %d\n",i);
             return &fs_entry[i];  
+    
+        }
     }
+
+
 
     return nullptr;
 
