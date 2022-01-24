@@ -1,4 +1,4 @@
-
+#UBUNTU TEST
 #add 32-bit gcc cross-compiler to your $PATH variable
 
 
