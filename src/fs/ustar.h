@@ -4,6 +4,7 @@
 
 
 #include <lib/string.h>
+#include <lib/stdiox.h>
 #include <stdint.h>
 
 

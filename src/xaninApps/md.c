@@ -17,6 +17,7 @@ void md(void)
 
     file_descriptor->entry_name = get_current_path(program_parameters);
     file_descriptor->entry_size = 0x0;
+    file_descriptor->entry_size_pointer = file_descriptor->entry_size_pointer;
     file_descriptor->entry_type = DIRECTORY;
     file_descriptor->owner = 0x0;
     file_descriptor->group = 0x0;

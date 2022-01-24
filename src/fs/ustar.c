@@ -20,25 +20,24 @@ uint32_t file_get_size(char* size_field)
 char* set_current_directory(char* directory)
 {
 
-    int i = 0x0;
-
-    for(i; directory[i] != '\0'; i++)
-        current_directory[i] = directory[i];
-    
-    for(i; i < sizeof(current_directory_buffer); i++)
+    for(int i = 0; i < sizeof(current_directory_buffer); i++)
         current_directory[i] = '\0';
+    
+    for(int i = 0; directory[i] != '\0'; i++)
+        current_directory[i] = directory[i];
+        
 }
 
 char* get_current_directory(void)
 {
-    for(int i = 0; i < sizeof(current_directory_buffer); i++)
-        current_directory_buffer[i] = '\0';
-        
     return current_directory;
 }
 
 char* get_current_path(char* file_name)
 {
+
+    xprintf("BREAK\n");
+            
 
     for(int j = 0; j < 50; j++)
         current_file_path[j] = '\0';
@@ -49,9 +48,6 @@ char* get_current_path(char* file_name)
 
     for(int pos = 0x0; file_name[pos] != '\0'; i++, pos++)
         current_file_path[i] = file_name[pos];
-
-    for(i; i < sizeof(current_path_buffer); i++)
-        current_file_path[i] = '\0';
 
     return current_file_path;
 }
@@ -116,29 +112,35 @@ void file_system_init(void)
 
 FileSystemEntryStruct* find_fs_entry(char* entry_name)
 {
-    for(int i = 0; i < FileSystem.file_entries_number; i++)
+    int i;
+
+    for(i = 0; i < FileSystem.file_entries_number; i++)
     {
         if(cmpstr(entry_name,fs_entry[i].entry_name))     
         {
             xprintf("ENTRY NUM: %d\n",i);
-            return &fs_entry[i];      
+            xprintf("last: %s",fs_entry[FileSystem.file_entries_number-1].entry_name);
+            goto good;
         }
     }
 
-    for(int i = 0; i < FileSystem.file_entries_number; i++)
-    {
-        get_current_path(entry_name);
+    get_current_path(entry_name);
 
+    for(i = 0; i < FileSystem.file_entries_number; i++)
+    {
         if(cmpstr(current_file_path,fs_entry[i].entry_name))  
         {   
             xprintf("ENTRY NUM: %d\n",i);
-            return &fs_entry[i];  
-    
+            xprintf("last: %s\n",fs_entry[FileSystem.file_entries_number-1].entry_name);
+            goto good;
         }
     }
 
+    goto bad;
 
+    good:
+    return &fs_entry[i];     
 
+    bad:
     return nullptr;
-
 }
