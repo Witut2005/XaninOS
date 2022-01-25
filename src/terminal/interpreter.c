@@ -27,7 +27,8 @@ void scan(void)
         touch();
     }
 
-    if(cmpstr(program_name,"petris"))
+
+    else if(cmpstr(program_name,"petris"))
     {
         clearScr();
         tetris();

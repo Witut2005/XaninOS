@@ -30,24 +30,6 @@ dq 0x0
 
 _loadSector:
 
-;change text mode resolution
-
-mov ax, 0x0
-mov ds, ax
-
-
-mov ax, 0x4200
-mov si, DAP
-
-
-int 0x13
-
-
-jmp word 0x2000:0000
-
-;mov ax,0003h
-;int 10h
-
 
 ;mov ax,1111h
 ;xor bl,bl

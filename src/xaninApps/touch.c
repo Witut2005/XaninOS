@@ -8,10 +8,6 @@ void touch(void)
     FileSystemEntryStruct* file_descriptor = &fs_entry[FileSystem.file_entries_number];
 
 
-    if(program_parameters[strlen(program_parameters)-1] != '/')
-        program_parameters[strlen(program_parameters)] = '/';        
-
-
     file_descriptor->entry_name = get_current_path(program_parameters);
     file_descriptor->entry_size = 0x0;
     file_descriptor->entry_size_pointer = (char*)(file_descriptor) + 0x9c;

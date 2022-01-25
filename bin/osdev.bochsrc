@@ -441,9 +441,9 @@ vgaromimage: file=$BXSHARE/VGABIOS-lgpl-latest
 #=======================================================================
 #floppya: 1_44=/dev/fd0, status=inserted
 
-usb_uhci: enabled=1, port1=disk:"/home/witut/Desktop/xaninOS/bin/xanin.bin"
+#usb_uhci: enabled=1, port1=disk:"/home/witut/Desktop/xaninOS/bin/xanin.bin"
 
-floppya: 2_88=xanin.img, status=inserted
+floppya: 1_44=xanin.img, status=inserted
 #floppya: 1_44=/dev/fd0H1440, status=inserted
 #floppya: 1_2=../1_2, status=inserted
 #floppya: 1_44=a:, status=inserted

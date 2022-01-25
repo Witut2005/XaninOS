@@ -112,7 +112,7 @@ int main(void)
 
     append:
 
-    while((file.tellg() % 1440256) != 0)
+    while((file.tellg() % 512) != 0)
         file << ' ';    
         
     file.close();

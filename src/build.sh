@@ -25,21 +25,26 @@ cd ..
 #COMPILE																										 HERE YOU MUST PUT PATH TO SRC DIRECTORY
 i386-elf-gcc -O0 -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -I /home/witut/Desktop/xaninOS/src kernel.c ./handlers/keyboard.o ./pit/pit.o ./syscall/syscall.o -o kernel.bin
 
-cat ./boot/boot ./boot/kernelLoader kernel.bin ./boot/locateFS home.tar > xanin.bin
+#dd if=/dev/zero of=zero.img bs=512 count=2024
 
+cat ./boot/boot ./boot/kernelLoader kernel.bin ./boot/locateFS home.tar > xanin.bin
 
 
 
 #MOV XANIN.img to BIN
 
+
 dd if=xanin.bin of=xanin.img
 mv xanin.img -f ../bin
+mv xanin.bin -f ../bin
 cd ../bin
 make
 ./detectUstar
+
+cp xanin.img xanin.bin
+
 cd ../src
 
-#CLEANING SRC
-rm xanin.bin
+
 
 
