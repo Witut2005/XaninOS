@@ -15,6 +15,7 @@
 #include <xaninApps/pwd.c>
 #include <xaninApps/md.c>
 #include <xaninApps/rd.c>
+#include <xaninApps/touch.c>
 
 void scan(void);
 

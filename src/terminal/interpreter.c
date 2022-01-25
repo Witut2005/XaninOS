@@ -22,7 +22,11 @@ void scan(void)
 
     KEYBOARD_SIG_ON(no_keyboard_input);
 
-    
+    if(cmpstr(program_name,"touch"))
+    {
+        touch();
+    }
+
     if(cmpstr(program_name,"petris"))
     {
         clearScr();

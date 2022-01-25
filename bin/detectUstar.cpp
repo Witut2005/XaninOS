@@ -110,7 +110,11 @@ int main(void)
     file.open("xanin.img", ios::out | ios::app); 
 
 
-    while((file.tellg() % 512) != 0)
+    append:
+
+    while((file.tellg() % 1440256) != 0)
         file << ' ';    
+        
+    file.close();
 
 }

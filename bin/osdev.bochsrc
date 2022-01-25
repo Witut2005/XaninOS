@@ -102,7 +102,11 @@
 # now supported, but we still recommend to use the BIOS distributed with
 # Bochs. The start address optional, since it can be calculated from image size.
 #=======================================================================
-romimage: file=$BXSHARE/BIOS-bochs-latest 
+
+#romimage: file=$BXSHARE/BIOS-bochs-latest 
+
+romimage: file=$BXSHARE/bios.bin
+
 #romimage: file=bios/seabios-1.6.3.bin
 #romimage: file=mybios.bin, address=0xfff80000 # 512k at memory top
 
@@ -436,8 +440,10 @@ vgaromimage: file=$BXSHARE/VGABIOS-lgpl-latest
 # write protect switch. By default it is turned off.
 #=======================================================================
 #floppya: 1_44=/dev/fd0, status=inserted
-usb_uhci: port2=disk, options2=""path:xanin.img"
-floppya: 1_44=xanin.img, status=inserted
+
+usb_uhci: enabled=1, port1=disk:"/home/witut/Desktop/xaninOS/bin/xanin.bin"
+
+floppya: 2_88=xanin.img, status=inserted
 #floppya: 1_44=/dev/fd0H1440, status=inserted
 #floppya: 1_2=../1_2, status=inserted
 #floppya: 1_44=a:, status=inserted
@@ -538,13 +544,13 @@ ata3: enabled=0, ioaddr1=0x168, ioaddr2=0x360, irq=9
 # which can be 'floppy', 'disk', 'cdrom' or 'network' (boot ROM).
 # Legacy 'a' and 'c' are also supported.
 # Examples:
-#   boot: floppy
+   boot: floppy
 #   boot: cdrom, disk
 #   boot: network, disk
 #   boot: cdrom, floppy, disk
 #=======================================================================
 
-boot: floppy
+#boot: floppy
 #boot: disk
 
 #=======================================================================
@@ -974,7 +980,7 @@ private_colormap: enabled=0
 # Example:
 #   pci: enabled=1, chipset=i440fx, slot1=pcivga, slot2=ne2k
 #=======================================================================
-pci: enabled=1, chipset=i440fx
+pci: enabled=1, chipset=i440fx, slot1=pcivga
 
 #=======================================================================
 # USB_UHCI:
