@@ -36,9 +36,6 @@ char* get_current_directory(void)
 char* get_current_path(char* file_name)
 {
 
-    xprintf("BREAK\n");
-            
-
     for(int j = 0; j < 50; j++)
         current_file_path[j] = '\0';
 
@@ -128,9 +125,7 @@ FileSystemEntryStruct* find_fs_entry(char* entry_name)
     {
         if(cmpstr(entry_name,fs_entry[i].entry_name))     
         {
-            xprintf("ENTRY NUM: %d\n",i);
-            xprintf("last: %s",fs_entry[FileSystem.file_entries_number-1].entry_name);
-            goto good;
+            return &fs_entry[i];
         }
     }
 
@@ -140,17 +135,10 @@ FileSystemEntryStruct* find_fs_entry(char* entry_name)
     {
         if(cmpstr(current_file_path,fs_entry[i].entry_name))  
         {   
-            xprintf("ENTRY NUM: %d\n",i);
-            xprintf("last: %s\n",fs_entry[FileSystem.file_entries_number-1].entry_name);
-            goto good;
+            return &fs_entry[i];    
         }
     }
 
-    goto bad;
-
-    good:
-    return &fs_entry[i];     
-
-    bad:
     return nullptr;
+
 }

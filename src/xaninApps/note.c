@@ -21,21 +21,19 @@ void nano()
 
     if(file_descriptor != nullptr)
     {
-        if(cmpstr(program_parameters,file_descriptor->entry_name))
-        {
-                clearScr();
-                if(file_descriptor->entry_type == DIRECTORY)
-                {
-                    xprintf("%zyou cant edit directory\n",set_output_color(red,white));
-                    xprintf("%zuse F4 key to exit\n",set_output_color(red,white));
-                    while(keyboard_scan_code != F4_KEY);
-                    goto end;
-                }
 
-            xprintf("%s\r",file_descriptor->entry_data_pointer);
-            //file_descriptor = file_descriptor->entry_data_pointer;
-            goto edit;
+        clearScr();
+        if(file_descriptor->entry_type == DIRECTORY)
+        {
+            xprintf("%zyou cant edit directory\n",set_output_color(red,white));
+            xprintf("%zuse F4 key to exit\n",set_output_color(red,white));
+            while(keyboard_scan_code != F4_KEY);
+            goto end;
         }
+
+        xprintf("%s\r",file_descriptor->entry_data_pointer);
+        goto edit;
+        
     }
 
 
