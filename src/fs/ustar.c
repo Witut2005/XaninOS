@@ -68,12 +68,22 @@ void file_system_init(void)
 
     for(int i = 0; i < FileSystem.file_entries_number; i++)
     {
-        fs_entry[i].entry_name =  file_system_initializer;
+
+
+        //fs_entry[i].entry_name =  file_system_initializer;\
+
+        fs_entry[i].entry_name_pointer =  file_system_initializer;
         fs_entry[i].entry_size_pointer = file_system_initializer + 0x7c;
         fs_entry[i].entry_size = file_get_size(fs_entry[i].entry_size_pointer);
         fs_entry[i].entry_type = *(file_system_initializer + 0x9C);
         fs_entry[i].owner = 0x0;
         fs_entry[i].group = 0x0;
+
+
+        for(int j = 0; fs_entry[i].entry_name_pointer[j] != '\0'; j++)
+        {
+            fs_entry[i].entry_name[j] = fs_entry[i].entry_name_pointer[j];
+        }
 
 
         file_system_initializer += USTAR_SECTOR_SIZE;

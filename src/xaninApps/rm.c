@@ -12,7 +12,7 @@ void rd(void)
 
     FileSystemEntryStruct* file_descriptor = find_fs_entry(program_parameters);
 
-    if(file_descriptor == nullptr || file_descriptor->entry_type != DIRECTORY)
+    if(file_descriptor == nullptr || file_descriptor->entry_type != FILE)
     {
         xprintf("%zNO SUCH DIRECTORY\n",set_output_color(white,red));
 
@@ -45,8 +45,7 @@ void rd(void)
 
     xprintf("%zdirectory deleted: %s", set_output_color(green,white),file_descriptor->entry_name);
 
-    //file_descriptor->entry_name = NULL;
-    
+    file_descriptor->entry_name = NULL;
     }
 
 

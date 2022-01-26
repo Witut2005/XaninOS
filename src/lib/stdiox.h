@@ -286,9 +286,6 @@ void xprintf(char* str, ... )
 }
 
 
-char program_parameters[50];
-char program_name[50];
-
 /*
 char* get_program_name(void)
 {

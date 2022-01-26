@@ -40,8 +40,8 @@ void nano()
 
 
     error:
-
     xprintf("%zno such file or directory %s\n",set_output_color(red,white),program_parameters);
+    goto end;
 
 
     edit:

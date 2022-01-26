@@ -2,10 +2,10 @@
 
 #pragma once
 
-
+#include <stdint.h>
 #include <lib/string.h>
 #include <lib/stdiox.h>
-#include <stdint.h>
+#include <lib/parameter.h>
 
 
 char* fileTable[2];
@@ -43,9 +43,10 @@ struct FileSystemEntryStruct
     uint32_t owner;
     uint32_t group;
 
-    char* entry_name;
+    char entry_name[30];
     char* entry_size_pointer;
     char* entry_data_pointer;
+    char* entry_name_pointer;
 
 };
 
