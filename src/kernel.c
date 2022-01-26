@@ -9,6 +9,8 @@
 #include <fs/ustar.c>
 #include <keyboard/keyboardInit.c>
 #include <devices/PCI/pci.c>
+#include <devices/ACPI/ACPI.c>
+
 //#include <devices/DMA/dma.c>
 
 char* tmpStr;
@@ -61,20 +63,53 @@ void _start(void)
 
     clearScr();
 
+    xprintf("%s\n",get_acpi_address_base());
 
 
-    /*
     
-    Detect USB devices 
-
+    /*    Detect USB devices    
     uint32_t pci_address_selector = 0x0;
 
     do
     {
-        pci_get_vendor_id();
-        pci_address_selector++
-    }   while(pci_address_selector);
 
+
+
+
+        
+            1111 1111
+            pic_address_selector & 0xff <-- register offset
+            USED 0-7
+
+            111 0000 0000
+            ((pic_address_selector & 0x700) >> 8) <-- function number
+            USED 8-10
+
+            1111 1000 0000 0000
+            ((pic_address_selector & 0xf800) >> 11) <-- device number
+            USED 11-15
+
+            1111 1111 0000 0000 0000 0000
+            ((pic_address_selector & 0xff0000) >> 16) <- bus num
+            
+
+        
+
+         PCI NOT PIC 
+
+        uint16_t var = pci_get_vendor_id(((pci_address_selector & 0xff0000) >> 16),
+                            ((pci_address_selector & 0xf800) >> 11),
+                            ((pci_address_selector & 0x700) >> 8),
+                            pci_address_selector & 0xff);
+
+        if((var && 0xff000000) >> 24 == 0x0C)
+            xprintf("DETECTED USB DEVICE");
+
+        pci_address_selector++;
+
+    }   while(!pci_address_selector);
+
+    asm("jmp $");
 
     */
 

@@ -71,7 +71,6 @@ void chgRelativeLocationY(uint8_t ynew,uint8_t id)
         pixel = pixels2;
     }
 
-    //asm("int 0x21");
 
     if((keyboard_input == player1[0] && id == 1)|| (keyboard_input == player2[0] && id == 2))
     {

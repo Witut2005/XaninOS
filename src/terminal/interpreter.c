@@ -27,6 +27,17 @@ void scan(void)
         touch();
     }
 
+    else if(cmpstr(program_name,"reboot")) 
+    {
+        reboot();
+    }
+
+
+    else if(cmpstr(program_name,"shoutdown"))
+    {
+        shoutdown();
+    }
+
 
     else if(cmpstr(program_name,"petris"))
     {

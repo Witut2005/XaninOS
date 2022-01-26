@@ -1,6 +1,8 @@
 
 #pragma once
 
+#include <stddef.h>
+
 #include <fs/ustar.h>
 #include <headers/colors.h>
 #include <handlers/handlers.c>
@@ -10,66 +12,41 @@
 void type()
 {
 
-    xprintf("\rplease type name file which you want to use\n");
-    
-    KEYBOARD_SIG_OFF();
+    FileSystemEntryStruct* file_descriptor = find_fs_entry(program_parameters);
 
-    no_enter = true;
 
-    keyboard_scan_code = 0x0;
+    if(file_descriptor == nullptr)
+        xprintf("%zno such file or directory %s\n",set_output_color(red,white),program_parameters);
 
-    while(1)
+    else
     {
+        if(file_descriptor->entry_type == FILE)
+            xprintf("%s\n",file_descriptor->entry_data_pointer);
 
-        if(!index && keyboard_scan_code == ENTER)
-        {
-            
-            erase_spaces(keyboard_command);
-
-            for(int i = 0; i < FileSystem.file_entries_number; i++)
-            {
-                if(cmpstr(keyboard_command,fs_entry[i].entry_name))
-                {
-                    if(fs_entry[i].entry_type == DIRECTORY)
-                    {
-                        xprintf("%zYOU CANT DISPLAY DIRECTORY DATA\n",set_output_color(red,white));
-                        goto end;
-                    }
-                    xprintf("%s\n",fs_entry[i].entry_data_pointer);
-                    goto end;
-                }
-            }
-            
-            goto error;
-
-        }
-
+        else
+            xprintf("%zYOU CAN ONLY DISPLAY FILE DATA\n",set_output_color(red,white));
     }
 
-    error:
-    xprintf("\r%z%s\n",set_output_color(red,white),keyboard_command);
-    xprintf("\r%z%s\n",set_output_color(red,white),"NO SUCH FILE OR DIRECTORY");
 
-
-    end:
-
-    
-
-    xprintf("\n\npress 'q' key to continue...");
-    
-    
-    
+    keyboard_scan_code = NULL;
 
     while(1)
     {
-        if(keyboard_input == 'q')
+
+
+        if(keyboard_scan_code == ENTER)
         {
-            for(int i = 0; i < sizeof(comBuf);i++)
+            for(int i = 0; i < 50; i++)
                 keyboard_command[i] = '\0';
 
             index = 0x0; /* some problems with keyboard keyboard_input when index is no reseted */
-            app_exited = true; no_enter = false;break;
+            app_exited = true; 
+    
+            return;
         }
-    }
+
+    }   
+
+
 
 }
