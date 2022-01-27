@@ -1,4 +1,5 @@
 
+#include <limits.h>
 #include <stdint.h>
 #include <pit/pit.c>
 #include <IDT/idt.c>
@@ -63,65 +64,60 @@ void _start(void)
 
     clearScr();
 
+    
+
+
     xprintf("%s\n",get_acpi_address_base());
 
 
     
-    /*    Detect USB devices    
-    uint32_t pci_address_selector = 0x0;
+    volatile uint32_t pci_address_selector = 0x0;
 
-    do
+    xprintf("DETECTING USB DEVICES CONNECTED TO PC. PLEASE WAIT...\n");
+
+    for(pci_address_selector = 0x0; pci_address_selector < 2500000; pci_address_selector+=0x4) 
     {
 
+        static uint32_t var, tmp; 
+        tmp = var;
 
 
+    /*
+    var = pci_get_device_data(((pci_address_selector & 0xff0000) >> 16), 
+                                ((pci_address_selector & 0xF800) >> 11) ,
+                                ((pci_address_selector & 0x700) >> 8),0x8);
 
-        
-            1111 1111
-            pic_address_selector & 0xff <-- register offset
-            USED 0-7
 
-            111 0000 0000
-            ((pic_address_selector & 0x700) >> 8) <-- function number
-            USED 8-10
+    */                            
 
-            1111 1000 0000 0000
-            ((pic_address_selector & 0xf800) >> 11) <-- device number
-            USED 11-15
-
-            1111 1111 0000 0000 0000 0000
-            ((pic_address_selector & 0xff0000) >> 16) <- bus num
-            
+    var = pci_get_device_class(((pci_address_selector & 0xff0000) >> 16), 
+                                ((pci_address_selector & 0xF800) >> 11) ,
+                                ((pci_address_selector & 0x700) >> 8));
 
         
+        if(var == 0x0c03 && tmp != var)
+        {
+            xprintf("%zUSB DEVICE DETECTED VENDOR ID: ",set_output_color(green,white));
+            xprintf("%z%d",set_output_color(green,white),
+                                            pci_get_vendor_id(
+                                            ((pci_address_selector & 0xff0000) >> 16),
+                                            ((pci_address_selector & 0xF800) >> 11), 
+                                            ((pci_address_selector & 0x700) >> 8)));
+        }
 
-         PCI NOT PIC 
+        for(int i = 0; i < 0xFF; i++)
+            asm("nop");
 
-        uint16_t var = pci_get_vendor_id(((pci_address_selector & 0xff0000) >> 16),
-                            ((pci_address_selector & 0xf800) >> 11),
-                            ((pci_address_selector & 0x700) >> 8),
-                            pci_address_selector & 0xff);
+    
+    }
 
-        if((var && 0xff000000) >> 24 == 0x0C)
-            xprintf("DETECTED USB DEVICE");
-
-        pci_address_selector++;
-
-    }   while(!pci_address_selector);
-
-    asm("jmp $");
-
-    */
 
 
     tuiInit:
 
     clearScr();
 
-
-
     x = 0;y = 0;
-
 
     xprintf("xaninOS\n");
     xprintf("version 22.01v\n");

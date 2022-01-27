@@ -18,6 +18,8 @@
 #include <xaninApps/touch.c>
 #include <xaninApps/shoutdown.c>
 #include <xaninApps/reboot.c>
+#include <xaninApps/device_info.c>
+
 
 void scan(void);
 

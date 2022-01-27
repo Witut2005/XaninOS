@@ -27,6 +27,11 @@ void scan(void)
         touch();
     }
 
+    else if(cmpstr(program_name,"dev-info"))
+    {
+        get_device_info();
+    }
+
     else if(cmpstr(program_name,"reboot")) 
     {
         reboot();
