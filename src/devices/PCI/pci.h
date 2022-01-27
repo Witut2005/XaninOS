@@ -6,11 +6,34 @@
 
 #define ENABLE_CONFIGURATION_SPACE_MAPPING 0x80000000
 
+
+
+ 
+
+struct pci_config_register
+{
+
+    uint8_t pci_bus_number;
+    uint8_t pci_device_number;
+    uint8_t pci_function_number;
+    uint8_t pci_register_offset;
+
+}pci_config_address;
+
+typedef struct pic_config_register pci_config_register;
+
+
+#define pci_set_parameters(config_register, parameter) \
+    config_register.pci_bus_number = (parameter & 0xFF0000) >> 16;\
+    config_register.pci_device_number = (parameter & 0xF800) >> 11;\
+    config_register.pci_function_number = (parameter & 0x700) >> 8;\
+    config_register.pci_register_offset = (parameter & 0xFF)
+
 enum PCI_DEVICES
 {
    USB_CLASS_CONTROLLER_CODE = 0x0C,
    USB_SUBCLASS_CONTROLLER_CODE = 0x03,
-
+ 
    NETWORK_CLASS_CONTROLLER_CODE = 0x2,
    ETHERNET_SUBCLASS_CONTROLLER_CODE = 0x0
 };

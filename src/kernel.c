@@ -11,6 +11,7 @@
 #include <keyboard/keyboardInit.c>
 #include <devices/PCI/pci.c>
 #include <devices/ACPI/ACPI.c>
+#include <devices/USB/usb.c>
 
 //#include <devices/DMA/dma.c>
 
@@ -90,23 +91,25 @@ void _start(void)
 
     */                            
 
-    var = pci_get_device_class(((pci_address_selector & 0xff0000) >> 16), 
+    /* 
+        var = pci_get_device_class(((pci_address_selector & 0xff0000) >> 16), 
                                 ((pci_address_selector & 0xF800) >> 11) ,
                                 ((pci_address_selector & 0x700) >> 8));
 
-        
+   */
+        pci_set_parameters(pci_config_address, pci_address_selector);
+
+        var = pci_get_device_class(pci_address_selector);
+
+
+
         if(var == 0x0c03 && tmp != var)
         {
-            xprintf("%zUSB DEVICE DETECTED VENDOR ID: ",set_output_color(green,white));
-            xprintf("%z%d",set_output_color(green,white),
-                                            pci_get_vendor_id(
-                                            ((pci_address_selector & 0xff0000) >> 16),
-                                            ((pci_address_selector & 0xF800) >> 11), 
-                                            ((pci_address_selector & 0x700) >> 8)));
-        }
 
-        for(int i = 0; i < 0xFF; i++)
-            asm("nop");
+            xprintf("%zUSB DEVICE DETECTED VENDOR ID: ",set_output_color(green,white));
+            xprintf("%z%d",set_output_color(green,white), pci_get_vendor_id(pci_address_selector));          
+        }
+           
 
     
     }
