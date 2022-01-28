@@ -74,7 +74,7 @@ void _start(void)
     
     volatile uint32_t pci_address_selector = 0x0;
 
-    xprintf("DETECTING USB DEVICES CONNECTED TO PC. PLEASE WAIT...\n");
+    xprintf("DETECTING USB CONTROLLERS. PLEASE WAIT...\n");
 
     for(pci_address_selector = 0x0; pci_address_selector < 2500000; pci_address_selector+=0x4) 
     {
@@ -93,15 +93,15 @@ void _start(void)
         if(var == 0x0c03 && tmp != var)
         {
 
-            xprintf("USB DEVICE DETECTED VENDOR ID: ");
+            xprintf("USB CONTROLLER DETECTED VENDOR ID: ");
             xprintf("%d\n",pci_get_vendor_id(pci_address_selector));          
             
-            xprintf("HEADER TYPE: %d\n",pci_get_data8(pci_address_selector, 0xC, 0x2));
+            //xprintf("HEADER TYPE: %d\n",pci_get_data8(pci_address_selector, 0xC, 0x2));
 
             xprintf("USB CONTROLLER TYPE: %s\n", 
                     usb_controller_names[usb_controller_get_type(pci_address_selector) / 0x10]);
 
-            xprintf("USB CONTROLLER BASE ADDRES %x\n", pci_get_data32(pci_address_selector,0x20));  
+            xprintf("USB CONTROLLER BASE ADDRES %x\n\n", pci_get_data32(pci_address_selector,0x20));  
 
         }
            

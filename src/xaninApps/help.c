@@ -13,25 +13,17 @@ void help(void)
     xprintf("pong\n");
     xprintf("cls\n");
     xprintf("ls\n");
-    xprintf("type\n");
-    xprintf("cd\n");
+    xprintf("type file_name\n"); 
+    xprintf("execute file_name\n");
+    xprintf("note file_name\n");
+    xprintf("touch file_name\n");
+    xprintf("md directory_name\n");
+    xprintf("cd directory_name\n");
     xprintf("pwd\n");
-    xprintf("execute\n");
-    xprintf("note\n");
 
+    xscanf("%d",app_exited);
 
-    xprintf("press 'q' to continue...\n");
-    
-    while(1)
-    {
-        
-        if(keyboard_input == 'q')
-        {
-            app_exited = true;
-            break;
-        }
-    
-    }
-
+    app_exited = true;
+      
 
 }

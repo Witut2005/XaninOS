@@ -7,14 +7,11 @@ void rd(void)
 
     no_enter = true;
 
-    if(program_parameters[strlen(program_parameters)] != '/')
-        program_parameters[strlen(program_parameters)] = '/';        
-
     FileSystemEntryStruct* file_descriptor = find_fs_entry(program_parameters);
 
     if(file_descriptor == nullptr || file_descriptor->entry_type != DIRECTORY)
     {
-        xprintf("%zNO SUCH DIRECTORY\n",set_output_color(white,red));
+        xprintf("%zNO SUCH DIRECTORY\n",set_output_color(red,white));
 
         keyboard_scan_code = NULL;
 
