@@ -106,15 +106,26 @@ void _start(void)
         if(var == 0x0c03 && tmp != var)
         {
 
-            xprintf("%zUSB DEVICE DETECTED VENDOR ID: ",set_output_color(green,white));
-            xprintf("%z%d",set_output_color(green,white), pci_get_vendor_id(pci_address_selector));          
+            xprintf("USB DEVICE DETECTED VENDOR ID: ");
+            xprintf("%d\n",pci_get_vendor_id(pci_address_selector));          
+            
+            xprintf("HEADER TYPE: %d\n",pci_get_data8(pci_address_selector, 0x8, 0x2));
+
+            xprintf("YOU USB CONTROLLER TYPE: %s\n", 
+                    usb_controller_names[usb_controller_get_type(pci_address_selector) / 0x10]);
+
+            //xprintf("USB CONTROLLER BASE ADDRES %x\n", pci_get_bar(pci_address_selector));
+
+            
+
         }
            
-
-    
     }
 
+    xprintf("\n\n%zUSB DETECTION TEST ENDED. PRESS ENTER TO START XANIN OS\n",
+            set_output_color(green,white));
 
+    xscanf("%d",x);
 
     tuiInit:
 
