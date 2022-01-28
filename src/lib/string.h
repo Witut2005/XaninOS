@@ -35,9 +35,6 @@ char* reverse_string(char* str)
         end--;
     }
 
-    
-    *(str + length) = '\0';
-    
     return str;
 
 }
@@ -137,18 +134,29 @@ char* int_to_hex_str(int x, char* buf)
 
     int i = 0;
 
-    if(x == 0)
-        buf[i] = '0';
+    if(!x)
+    {
+        buf[0] = '0';
+        buf[1] = '\0';
+        return buf;
+    }
+    
+    //uint16_t* debug_cursor = (uint16_t*)0xb8000;
 
     for(i = 0; x != 0; i++)
     {
-        buf[i] = hex_values[x % 16];
+        buf[i] = hex_values[x % 16]; 
         x = x / 16;
+
+    
     }
 
 
     buf = reverse_string(buf);
-    *(buf + i + 1) = '\0';
+    
+    //debug_cursor[10] = (uint16_t)((0x0f << 8) + buf[i-1]); 
+
+    *(buf + i) = '\0';
     
     return buf;
 

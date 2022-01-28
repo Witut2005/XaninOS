@@ -83,40 +83,25 @@ void _start(void)
         tmp = var;
 
 
-    /*
-    var = pci_get_device_data(((pci_address_selector & 0xff0000) >> 16), 
-                                ((pci_address_selector & 0xF800) >> 11) ,
-                                ((pci_address_selector & 0x700) >> 8),0x8);
-
-
-    */                            
-
-    /* 
-        var = pci_get_device_class(((pci_address_selector & 0xff0000) >> 16), 
-                                ((pci_address_selector & 0xF800) >> 11) ,
-                                ((pci_address_selector & 0x700) >> 8));
-
-   */
         pci_set_parameters(pci_config_address, pci_address_selector);
 
         var = pci_get_device_class(pci_address_selector);
 
 
 
+ 
         if(var == 0x0c03 && tmp != var)
         {
 
             xprintf("USB DEVICE DETECTED VENDOR ID: ");
             xprintf("%d\n",pci_get_vendor_id(pci_address_selector));          
             
-            xprintf("HEADER TYPE: %d\n",pci_get_data8(pci_address_selector, 0x8, 0x2));
+            xprintf("HEADER TYPE: %d\n",pci_get_data8(pci_address_selector, 0xC, 0x2));
 
-            xprintf("YOU USB CONTROLLER TYPE: %s\n", 
+            xprintf("USB CONTROLLER TYPE: %s\n", 
                     usb_controller_names[usb_controller_get_type(pci_address_selector) / 0x10]);
 
-            //xprintf("USB CONTROLLER BASE ADDRES %x\n", pci_get_bar(pci_address_selector));
-
-            
+            xprintf("USB CONTROLLER BASE ADDRES %x\n", pci_get_data32(pci_address_selector,0x20));  
 
         }
            
@@ -126,6 +111,7 @@ void _start(void)
             set_output_color(green,white));
 
     xscanf("%d",x);
+
 
     tuiInit:
 

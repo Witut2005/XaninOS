@@ -224,7 +224,7 @@ void xprintf(char* str, ... )
                         bufCounter++;
                         x++;
                     }
-
+                    break;
                 }
 
                 case 'o':
