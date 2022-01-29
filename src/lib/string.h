@@ -83,7 +83,6 @@ char* int_to_str(int x, char* buf)
 
 
     buf = reverse_string(buf);
-    *(buf + i) = '\0';
     
     return buf;
 
@@ -165,6 +164,15 @@ char* int_to_hex_str(int x, char* buf)
 char* int_to_oct_str(int x, char* buf)
 {
     int i = 0;
+
+    
+    if(!x)
+    {
+        buf[0] = '0';
+        buf[1] = '\0';
+        return buf;
+    }
+
 
     for(i = 0; x != 0; i++)
     {

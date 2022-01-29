@@ -141,9 +141,9 @@ void print_bcd_number(uint8_t x)
 void xprintf(char* str, ... )
 {
 
-    char tmp[20];
+    char tmp[30];
 
-    for(int i = 0; i < 20; i++)
+    for(int i = 0; i < 30; i++)
         tmp[i] = '\0';
 
     char* tmpPtr = tmp;

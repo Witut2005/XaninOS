@@ -66,27 +66,12 @@ je jmp_ker_load
 int 0x10
 jmp print_msg
 
-
-
 jmp_ker_load:
 jmp word 0x2000:0000
 
 
 disk_num: dw 0x0
 str: db "ERROR your computer doesnt support fully int13 xaninOS cant be loaded",0
-
-regs_90x60:
-; MISC
-	db 0E7h
-; SEQuencer
-	db 03h, 01h, 03h, 00h, 02h
-; CRTC
-	db  6Bh, 59h,  5Ah, 82h, 60h,  8Dh, 0Bh,  3Eh,
-	db  00h, 47h,  06h, 07h, 00h,  00h, 00h,  00h,
-	db 0EAh, 0Ch, 0DFh, 2Dh, 08h, 0E8h, 05h, 0A3h,
-	db 0FFh
-; GC (no)
-; AC (no)
 
 times 510 - ($-$$) db 0x0
 

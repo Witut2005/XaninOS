@@ -35,7 +35,32 @@ char* usb_controller_names[4] =
 };
 
 
+void uhci_init(uint32_t configuration_address, uint8_t controller_type)
+{
 
+    pci_set_parameters(pci_config_address, configuration_address);
+
+    uint32_t address;
+
+    address = (uint32_t)((pci_config_address.pci_bus_number << 16) | 
+                        (pci_config_address.pci_device_number << 11) |
+                        (pci_config_address.pci_function_number << 8)|
+                        (0x0 & 0xFC));
+
+
+    if(controller_type != UHCI)
+        return;
+    else
+    {
+        pci_write_data32(configuration_address, 0x34, (uint32_t)0x0);
+        pci_write_data32(configuration_address, 0x38, (uint32_t)0x0);
+    
+
+
+    }
+
+
+}
 
 
 

@@ -96,12 +96,25 @@ void _start(void)
             xprintf("USB CONTROLLER DETECTED VENDOR ID: ");
             xprintf("%d\n",pci_get_vendor_id(pci_address_selector));          
             
-            //xprintf("HEADER TYPE: %d\n",pci_get_data8(pci_address_selector, 0xC, 0x2));
-
             xprintf("USB CONTROLLER TYPE: %s\n", 
                     usb_controller_names[usb_controller_get_type(pci_address_selector) / 0x10]);
 
-            xprintf("USB CONTROLLER BASE ADDRES %x\n\n", pci_get_data32(pci_address_selector,0x20));  
+            xprintf("USB CONTROLLER BASE ADDRES 0x%x\n",pci_get_data32(pci_address_selector,0x20));  
+            
+
+        /*
+            xprintf("USB CONTROLLER INT LINE: %d\n", pci_get_data8(pci_address_selector,
+                                                                            0x0 ,0x3C));
+     
+            xprintf("WRITE TEST %x\n", pci_write_test8(pci_address_selector, 
+                                                                0x4, 0, 0x0));
+       
+       
+            xprintf("write test %d", (uint16_t)pci_write_data32(pci_address_selector, 
+                                                                            0x8, 0x0));  
+        */
+          
+
 
         }
            

@@ -1,4 +1,3 @@
-
 #include <fs/ustar.c>
 #include <stddef.h>
 
@@ -42,11 +41,8 @@ void rd(void)
 
     xprintf("%zdirectory deleted: %s", set_output_color(green,white),file_descriptor->entry_name);
 
+
     //file_descriptor->entry_name = NULL;
     
     }
-
-
-
-
 }
