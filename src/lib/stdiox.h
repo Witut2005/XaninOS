@@ -141,9 +141,9 @@ void print_bcd_number(uint8_t x)
 void xprintf(char* str, ... )
 {
 
-    char tmp[30];
+    char tmp[32];
 
-    for(int i = 0; i < 30; i++)
+    for(int i = 0; i < sizeof(tmp); i++)
         tmp[i] = '\0';
 
     char* tmpPtr = tmp;
@@ -187,6 +187,24 @@ void xprintf(char* str, ... )
 
                     break;
                 }
+
+                case 'b':
+                {
+                    number = va_arg(args,int);
+
+                    bin_to_str(number,tmpPtr);
+
+                    for(int i = 0; tmpPtr[i] != '\0'; i++)
+                    {
+                        cursor[bufCounter] = (uint16_t) (tmpPtr[i] + (((backgroundColor << 4) | fontColor) << 8));
+                        bufCounter++;
+                        x++;
+                    }
+
+                    break;
+                }
+
+                
 
                 case 's':
                 {

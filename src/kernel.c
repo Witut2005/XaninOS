@@ -98,6 +98,10 @@ void _start(void)
             
             xprintf("USB CONTROLLER TYPE: %s\n", 
                     usb_controller_names[usb_controller_get_type(pci_address_selector) / 0x10]);
+            
+            
+            //xprintf("USB CONTROLLER TYPE: 0x%b\n", usb_controller_get_type(pci_address_selector));
+
 
             xprintf("USB CONTROLLER BASE ADDRES 0x%x\n",pci_get_data32(pci_address_selector,0x20));  
             

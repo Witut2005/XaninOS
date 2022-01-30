@@ -88,6 +88,32 @@ char* int_to_str(int x, char* buf)
 
 }
 
+
+char* bin_to_str(int x, char* buf)
+{
+
+    int i = 0;
+
+    if(!x)
+    {
+        buf[0] = '0';
+        buf[1] = '\0';
+        return buf;
+    }
+
+    for(i = 0; x != 0; i++)
+    {
+        buf[i] = (x % 2) + '0';
+        x = x >> 1;
+    }
+
+
+    buf = reverse_string(buf);
+    
+    return buf;
+
+}
+
 void erase_spaces(char* buf)
 {
     for(int i = 0; buf[i] != '\0'; i++)

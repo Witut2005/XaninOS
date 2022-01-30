@@ -30,15 +30,14 @@ dq 0x0
 
 _loadSector:
 
+mov ax, 0x3
+int 0x10
 
-;mov ax,1111h
-;xor bl,bl
-;int 10h
+mov ax,1111h
+xor bl,bl
+int 10h
 
-;load sectors
-;please read "notes" section from Ralf Brown article about int 0x13
 
-;mov bp, 3
 int13_read:
 
 mov ah,0x0
