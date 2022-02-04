@@ -1,46 +1,33 @@
-
 #pragma once
 
-#include <stdint.h>
-#include <lib/signal.h>
 #include <headers/colors.h>
-#include <lib/stdlibx.h>
-#include <lib/stdiox.h>
-
-uint16_t* pongCur[8];
-
-void createRectangle(uint8_t xSize, uint8_t ySize,uint8_t xwhere,uint8_t ywhere,uint8_t id);
-void update(void);
-void drawLineX(uint8_t startx, uint8_t endx,uint8_t starty,uint8_t lineColor);
-void drawLineY(uint8_t starty, uint8_t endy,uint8_t startx,uint8_t lineColor);
-void keyControlPong(void);
-void initPong(void);
-void updatePong(void);
+#include <xaninGraphics/xaninGraphics.h>
 
 
-uint16_t figureField;
+void create_rectangle(uint8_t x_size, uint8_t y_size, uint8_t x_position, uint8_t y_position);
 
-uint32_t* pixels1[20]; // must be higher 
-uint32_t* pixels2[20]; // must be higher 
+/*
 
-uint8_t player1Buf;
-uint8_t player2Buf;
+uint32_t* pixels1[4];
+uint32_t* pixels2[4];
 
-uint8_t player1[3] = {'w','s','d'};
-uint8_t player2[3] = {'8','2','4'};
+char player1_key[] = {'w','d'};
+char player1_key[] = {'8','4'};
 
-uint16_t* ball;
+*/
 
-uint8_t vector;
-    
-int16_t velocity = 1;
+void update_screen(void);
+void pong_app_init(void);
 
-struct destination
+
+struct ball_info
 {
 
-    bool changeDirection:1;
+    uint16_t* ball_pointer;
+    uint8_t velocity;
+    uint8_t ball_destination;
 
-}dest;
+}ball_t;
 
 
 

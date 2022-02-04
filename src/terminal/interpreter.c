@@ -92,19 +92,22 @@ void scan(void)
         help();   
     }
 
+    /*
 
     else if(cmpstr(program_name,"pong"))
     {
 
         pongStart:
 
-        initPong();
+        pong_app_init();
 
         while(!app_exited)
         {
-            updatePong();
+            pong_update_screen();
         }   
     }
+
+    */
 
     else if(cmpstr(program_name,"execute"))
     {

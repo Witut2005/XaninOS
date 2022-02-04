@@ -68,7 +68,7 @@ void _start(void)
     
 
 
-    xprintf("%s\n",get_acpi_address_base());
+    //xprintf("%s\n",get_acpi_address_base());
 
 
     
@@ -87,8 +87,6 @@ void _start(void)
 
         var = pci_get_device_class(pci_address_selector);
 
-
-
  
         if(var == 0x0c03 && tmp != var)
         {
@@ -99,26 +97,18 @@ void _start(void)
             xprintf("USB CONTROLLER TYPE: %s\n", 
                     usb_controller_names[usb_controller_get_type(pci_address_selector) / 0x10]);
             
+      
+
+            /*
+
+            xprintf("write test %d\n", (uint8_t)pci_write_data8(pci_address_selector, 
+                                                                            0x20, 0x0, 0x0));  
             
-            //xprintf("USB CONTROLLER TYPE: 0x%b\n", usb_controller_get_type(pci_address_selector));
+            */
 
 
+            xprintf("write test: %d ", (uint16_t)pci_write_data32(pci_address_selector, 0x34, 0x0));
             xprintf("USB CONTROLLER BASE ADDRES 0x%x\n",pci_get_data32(pci_address_selector,0x20));  
-            
-
-        /*
-            xprintf("USB CONTROLLER INT LINE: %d\n", pci_get_data8(pci_address_selector,
-                                                                            0x0 ,0x3C));
-     
-            xprintf("WRITE TEST %x\n", pci_write_test8(pci_address_selector, 
-                                                                0x4, 0, 0x0));
-       
-       
-            xprintf("write test %d", (uint16_t)pci_write_data32(pci_address_selector, 
-                                                                            0x8, 0x0));  
-        */
-          
-
 
         }
            
@@ -129,6 +119,8 @@ void _start(void)
 
     xscanf("%d",x);
 
+
+    file_system_init();
 
     tuiInit:
 

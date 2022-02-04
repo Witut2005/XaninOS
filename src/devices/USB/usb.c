@@ -54,7 +54,11 @@ void uhci_init(uint32_t configuration_address, uint8_t controller_type)
     {
         pci_write_data32(configuration_address, 0x34, (uint32_t)0x0);
         pci_write_data32(configuration_address, 0x38, (uint32_t)0x0);
-    
+        pci_write_data8(configuration_address, 0x3C, 0x0, 0x23);
+        pci_write_data16(configuration_address, 0x4, 0x0, 0x5);
+        pci_write_data16(configuration_address, 0xC, 0x0, 0x8F00);
+
+
 
 
     }
