@@ -182,30 +182,20 @@ uint16_t pci_get_data8(uint32_t configuration_address, uint8_t register_id,
 
 }
 
-
-
-uint32_t pci_write_data32(uint32_t configuration_address, uint8_t register_id, uint32_t value)
+void pci_write_data32(uint32_t configuration_address, uint8_t register_id, uint32_t value)
 {
 
     pci_set_parameters(pci_config_address, configuration_address);
 
     uint32_t address; 
-    uint32_t ret;
      
     address = (uint32_t)((pci_config_address.pci_bus_number << 16) | 
                         (pci_config_address.pci_device_number << 11) |
                         (pci_config_address.pci_function_number << 8)|
-                        (register_id & 0xFC));
-
+                        (register_id & 0xFC));// | (uint32_t)ENABLE_CONFIGURATION_SPACE_MAPPING);
 
     outddIO(PCI_ADDRESS_PORT, address);
     outddIO(PCI_DATA_PORT,value);
-    //ret = inddIO(PCI_DATA_PORT);
-
-    ret = inddIO(PCI_DATA_PORT);
-
-    return ret;
-
 }
 
 

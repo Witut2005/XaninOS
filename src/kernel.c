@@ -91,23 +91,18 @@ void _start(void)
         if(var == 0x0c03 && tmp != var)
         {
 
+
             xprintf("USB CONTROLLER DETECTED VENDOR ID: ");
-            xprintf("%d\n",pci_get_vendor_id(pci_address_selector));          
+            xprintf("0x%x\n",pci_get_vendor_id(pci_address_selector));          
             
             xprintf("USB CONTROLLER TYPE: %s\n", 
                     usb_controller_names[usb_controller_get_type(pci_address_selector) / 0x10]);
             
       
 
-            /*
-
-            xprintf("write test %d\n", (uint8_t)pci_write_data8(pci_address_selector, 
-                                                                            0x20, 0x0, 0x0));  
+            //xprintf("write test: %d ", (uint16_t)pci_write_data32(pci_address_selector, 0x34, 0x0));
             
-            */
 
-
-            xprintf("write test: %d ", (uint16_t)pci_write_data32(pci_address_selector, 0x34, 0x0));
             xprintf("USB CONTROLLER BASE ADDRES 0x%x\n",pci_get_data32(pci_address_selector,0x20));  
 
         }
@@ -129,7 +124,7 @@ void _start(void)
     x = 0;y = 0;
 
     xprintf("xaninOS\n");
-    xprintf("version 22.01v\n");
+    xprintf("version 22.02v\n");
 
     getTime();
     xprintf("weekday: %s\n\n",weekDaysLUT[time.weekDay]);

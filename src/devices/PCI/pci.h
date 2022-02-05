@@ -57,7 +57,7 @@ char* pci_device_name[15] =
 
 };
 
-uint32_t pci_write_data32(uint32_t configuration_address, uint8_t register_id, uint32_t value);
+void pci_write_data32(uint32_t configuration_address, uint8_t register_id, uint32_t value);
 
 
 
