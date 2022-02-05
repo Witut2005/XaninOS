@@ -192,7 +192,7 @@ void pci_write_data32(uint32_t configuration_address, uint8_t register_id, uint3
     address = (uint32_t)((pci_config_address.pci_bus_number << 16) | 
                         (pci_config_address.pci_device_number << 11) |
                         (pci_config_address.pci_function_number << 8)|
-                        (register_id & 0xFC));// | (uint32_t)ENABLE_CONFIGURATION_SPACE_MAPPING);
+                        (register_id & 0xFC) | (uint32_t)ENABLE_CONFIGURATION_SPACE_MAPPING);
 
     outddIO(PCI_ADDRESS_PORT, address);
     outddIO(PCI_DATA_PORT,value);
