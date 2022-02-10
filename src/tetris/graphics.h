@@ -52,13 +52,17 @@ void update(void)
     buf = (uint16_t)((buf & 0x00ff) | (((colorTetris << 4) | colorTetris) << 8));  
     *petris_cursor = buf;    
 
-
+	//sleep(1);
+	
+	
+	
     for(int i = 0; i < 300;i++)
     {
         for(int j = 0; j < cpu_mhz;j++)
             asm("nop");
     }
 
+	
 
 
 }

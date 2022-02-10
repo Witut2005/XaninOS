@@ -47,6 +47,9 @@ bool pitActive = false;
 void pit_handler(void)
 {
     pitActive = true;
+
+    pit_current_time++;
+
 }
 
 

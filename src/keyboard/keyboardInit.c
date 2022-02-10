@@ -28,9 +28,7 @@ uint8_t keyboard_init()
         asm("hlt");
     }
 
-    else if(KEYBOARD_TEST_STATUS == KEYBOARD_TEST_SUCCESS)
-        sprint(black,white,"keyboard self test passed :))\n");
-
+    
 
     return KEYBOARD_TEST_STATUS;
 

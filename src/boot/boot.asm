@@ -20,6 +20,9 @@ USTAR_FILE_ENTRIES:
 db "ENTR"
 db 0x0
 
+BOOT_DISK_NUMBER:
+db 0x0
+
 DAP:
 db 0x10
 db 0x0
@@ -29,6 +32,8 @@ dq 0x0
 
 
 _loadSector:
+
+mov [BOOT_DISK_NUMBER], dl
 
 mov ax, 0x3
 int 0x10

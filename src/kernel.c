@@ -42,37 +42,9 @@ void _start(void)
 
     set_idt();
 
-    keyboard_init();
-    set_pit();
-
-
-    //dma_controller_reset();
-
-
-    clearScr();
-
-    //disable_cursor();
-    //enable_cursor(0x0,0x0);
-
-    getCpuSpeed();
-
-    getTime();
-
-    srand(time.seconds);
-
-
-    file_system_init();
-
-    clearScr();
 
     
-
-
-    //xprintf("%s\n",get_acpi_address_base());
-
-
-    
-    volatile uint32_t pci_address_selector = 0x0;
+    uint32_t pci_address_selector = 0x0;
 
     xprintf("DETECTING USB CONTROLLERS. PLEASE WAIT...\n");
 
@@ -107,15 +79,53 @@ void _start(void)
 
         }
            
+        if((var >> 8) == 0xC && tmp != var)
+        {
+        
+            xprintf("HARD DISK DETECTED\n");
+            
+        }
+    
+
     }
 
     xprintf("\n\n%zUSB DETECTION TEST ENDED. PRESS ENTER TO START XANIN OS\n",
             set_output_color(green,white));
+ 
+   
 
+    keyboard_init();
+    set_pit();
+
+ 
     xscanf("%d",x);
 
+    //dma_controller_reset();
+
+    clearScr();
+
+    //disable_cursor();
+    //enable_cursor(0x0,0x0);
+
+    getCpuSpeed();
+
+    getTime();
+
+    srand(time.seconds);
 
     file_system_init();
+
+    clearScr();   
+
+
+	
+    file_system_init();
+
+
+    while(1)
+    { 
+        sleep(1);
+    } 
 
     tuiInit:
 
@@ -141,7 +151,6 @@ void _start(void)
 
     while(1)
     {
-
 
         if(app_exited)
         {
