@@ -1,5 +1,8 @@
+#include <lib/stdiox.h>
 
+#define SECTOR_SIZE 0x200
 
+/* all ports all 8bit with exeception of DATA_REGISTER (16bit) */
 
 enum AtaRegisters
 {
@@ -16,12 +19,11 @@ enum AtaRegisters
     ATA_SECTOR_NUMBER_MID = 0x1F4,
     ATA_SECTOR_NUMBER_HIGH = 0x1F5,
 
-    ATA_HEAD_REGISTER = 0x1F6,
+    ATA_DRIVE_REGISTER = 0x1F6,
     ATA_STATUS_REGISTER = 0x1F7,
     ATA_COMMAND_REGISTER = 0x1F7
     
-
-}
+};
 
 void init_disk(void);
  

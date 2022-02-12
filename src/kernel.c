@@ -12,6 +12,8 @@
 #include <devices/PCI/pci.c>
 #include <devices/ACPI/ACPI.c>
 #include <devices/USB/usb.c>
+#include <devices/HARD_DISK/disk.c>
+
 
 //#include <devices/DMA/dma.c>
 
@@ -79,7 +81,7 @@ void _start(void)
 
         }
            
-        if((var >> 8) == 0xC && tmp != var)
+        if(var == 0x0106 && tmp != var)
         {
         
             xprintf("HARD DISK DETECTED\n");
@@ -121,6 +123,11 @@ void _start(void)
 	
     file_system_init();
 
+    clearScr();
+
+    init_disk();
+
+    while(1);
 
     tuiInit:
 
