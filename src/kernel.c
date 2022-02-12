@@ -122,11 +122,6 @@ void _start(void)
     file_system_init();
 
 
-    while(1)
-    { 
-        sleep(1);
-    } 
-
     tuiInit:
 
     clearScr();
