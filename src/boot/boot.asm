@@ -32,7 +32,6 @@ dq 0x0
 
 
 _loadSector:
-
 mov [BOOT_DISK_NUMBER], dl
 
 mov ax, 0x3

@@ -60,17 +60,22 @@ cursor = (unsigned short*)(VGA_TEXT_MEMORY) + ((80)*y);
 
 }
 
+uint8_t x_putch = 0x0;
 
 /* put character */
 void putch(char c)
 {
+
+    
+
     uint16_t* ptr;
-    ptr = (unsigned short*)(VGA_TEXT_MEMORY) + (x*2) +((80)*y);
-    *ptr = (uint16_t)c | (((black << 4) | white) << 8);
+    
+    ptr = (unsigned short*)(VGA_TEXT_MEMORY + x_putch);
+    *ptr = (uint16_t) c + (((black << 4) | white) << 8);
 
-    x++;
+    x_putch+=2;
 
-    return;
+
 }
 
 

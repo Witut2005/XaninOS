@@ -125,9 +125,21 @@ void _start(void)
 
     clearScr();
 
-    init_disk();
+    x = 0x0;
+    y = 0x0;
+
+    init_disk(ATA_MASTER_BASE);
+    disk_read(ATA_MASTER_BASE, 0x0, 100);
+
+    //init_disk(ATA_SLAVE_BASE);
+    //disk_read(ATA_SLAVE_BASE, 0x0);
 
     while(1);
+
+    //init_disk(ATA_SLAVE_BASE);
+
+
+   
 
     tuiInit:
 
