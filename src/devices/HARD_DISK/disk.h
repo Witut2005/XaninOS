@@ -10,8 +10,12 @@ enum AtaRegisters
 
 
     
-    ATA_MASTER_BASE = 0x1F0,
-    ATA_SLAVE_BASE = 0x170,
+    ATA_MASTER = 0x1,
+    ATA_SLAVE = 0x0,
+
+    ATA_FIRST_BUS = 0x1F0,
+    ATA_SECONDARY_BUS = 0x170,
+        
 
     ATA_DATA_REGISTER = 0x0,
 
@@ -37,10 +41,11 @@ enum AtaRegisters
 enum AtaCommands
 {
 
+    ATA_IDENTIFY = 0xEC,
     ATA_READ = 0x20 
 
 };
 
-void init_disk(uint16_t base);
-void disk_read(uint16_t base, uint32_t sector_number, uint32_t bytes_number); 
+void init_disk(uint16_t base, uint8_t master);
+void disk_read(uint16_t base, uint8_t master, uint32_t sector_number, uint32_t bytes_number, uint16_t* where); 
 	

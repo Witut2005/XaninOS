@@ -22,7 +22,7 @@ void outddIO(uint16_t port,uint32_t eax)
 }
 
 
-uint32_t inbIO(uint16_t port)
+uint8_t inbIO(uint16_t port)
 {
     asm("in al,dx" :: "d" (port));
 
@@ -30,9 +30,12 @@ uint32_t inbIO(uint16_t port)
     return retVal;
 }
 
-uint32_t indwIO(uint16_t port)
+uint16_t indwIO(uint16_t port)
 {
     asm("in ax,dx" :: "d" (port));
+
+    register uint16_t retVal asm("ax");
+    return retVal;
 }
 
 

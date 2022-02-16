@@ -128,13 +128,20 @@ void _start(void)
     x = 0x0;
     y = 0x0;
 
-    init_disk(ATA_MASTER_BASE);
-    disk_read(ATA_MASTER_BASE, 0x0, 100);
+    
+    //init_disk(ATA_SLAVE);
+    //disk_read(ATA_SLAVE, 0x0,250, 0x7c00);
+   
+    init_disk(ATA_FIRST_BUS, ATA_MASTER);
+    disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x2, 512, 0x7c00);
+    
+    clearScr();
 
-    //init_disk(ATA_SLAVE_BASE);
-    //disk_read(ATA_SLAVE_BASE, 0x0);
+    uint16_t* tmp = (uint16_t*)0x7c00;
+    
+    for(int i = 0; i < 50; i++)
+    	xprintf("%x %x ", tmp[i] & 0xFF, (tmp[i] >> 8) & 0xFF);
 
-    while(1);
 
     //init_disk(ATA_SLAVE_BASE);
 

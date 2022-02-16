@@ -1,18 +1,17 @@
 #include <devices/HARD_DISK/disk.h>
 
-void init_disk(uint16_t base)
+void init_disk(uint16_t base, uint8_t master)
 {
 
     uint8_t disk_status;
 
+    
+    outbIO(base + ATA_DRIVE_REGISTER, master == ATA_MASTER ? 0xA0 : 0xB0);
+    outbIO(base + ATA_CONTROL_REGISTER, 0x0); 
 
-    outbIO(base + ATA_DRIVE_REGISTER, base == ATA_MASTER_BASE ? 0xA0 : 0xB0);
-    outbIO(ATA_COMMAND_REGISTER, 0x0);
 
 
-
-    outbIO(base + ATA_DRIVE_REGISTER, base == ATA_MASTER_BASE ? 0xA0 : 0xB0);
-
+    outbIO(base + ATA_DRIVE_REGISTER, master == ATA_MASTER ? 0xA0 : 0xB0);
     disk_status = inbIO(ATA_COMMAND_REGISTER);
 
     if(disk_status == 0xFF)
@@ -21,37 +20,36 @@ void init_disk(uint16_t base)
         return;
     }
 
-	  outbIO(base + ATA_SECTOR_COUNT_REGISTER, 0x1);
+    outbIO(base + ATA_DRIVE_REGISTER, master == ATA_MASTER ? 0xA0 : 0xB0);
+	  outbIO(base + ATA_SECTOR_COUNT_REGISTER, 0x0);
 	  outbIO(base + ATA_SECTOR_NUMBER_LOW, 0x0);
 	  outbIO(base + ATA_SECTOR_NUMBER_MID, 0x0);
 	  outbIO(base + ATA_SECTOR_NUMBER_HIGH, 0x0);
-
-    disk_status = inbIO(base + ATA_COMMAND_REGISTER);
-
-
 	  
-	  outbIO(base + ATA_COMMAND_REGISTER, 0xEC);
+	  outbIO(base + ATA_COMMAND_REGISTER, ATA_IDENTIFY);
 	 
-
-        
-    while(((disk_status & 0x80) == 0x80)
-       && ((disk_status & 0x01) != 0x01))
-        disk_status = inbIO(base + ATA_COMMAND_REGISTER);
-        
-
+    disk_status = inbIO(base + ATA_COMMAND_REGISTER);
+	  
+    while(disk_status & 0x81 == 80)
+		    disk_status = inbIO(base + ATA_COMMAND_REGISTER);  
+    
+    for(int i = 0; i < 256; i++)
+        indwIO(base + ATA_DATA_REGISTER);    
 
 }
 
 
 
-void disk_read(uint16_t base, uint32_t sector_number, uint32_t bytes_number)
+void disk_read(uint16_t base, uint8_t master, uint32_t sector_number, 
+                                uint32_t bytes_number, uint16_t* where)
 {
+
 
     uint8_t disk_status;
 
 
-    outbIO(base + ATA_DRIVE_REGISTER, (base == ATA_MASTER_BASE ? 0xE0 : 0xF0) | 
-                                        ((sector_number >> 24) & 0x0F) | 0x40);
+    outbIO(base + ATA_DRIVE_REGISTER, ((master == ATA_MASTER ? 0xE0 : 0xF0) | 
+                                        ((sector_number >> 24) & 0x0F) | 0x40));
 
     outbIO(base + ATA_ERROR_REGISTER, 0x0);
 	  outbIO(base + ATA_SECTOR_COUNT_REGISTER, 0x1);
@@ -65,24 +63,37 @@ void disk_read(uint16_t base, uint32_t sector_number, uint32_t bytes_number)
 
 
     while((disk_status & 0x81) == 0x80)
-        disk_status = inbIO(base + ATA_COMMAND_REGISTER);
+        disk_status = inbIO(base + ATA_STATUS_REGISTER);
 
+
+    /*
 
     for(uint32_t i = 0x0; i < 0x1FFFFFF; i++)
         asm("nop");
 
-    bytes_number = bytes_number / 2;
+    */
 
-	uint16_t* print_data = VGA_TEXT_MEMORY;
+    for(int i = 0; i < 4; i++)
+        inbIO(base + ATA_STATUS_REGISTER);
 
-    for(int i = 0; i < bytes_number; i++)
+    for(int i = 0; i < 0xFFFFFFF; i++)
+        asm("nop");
+
+    bytes_number = bytes_number / 2;	
+
+    for(int i = 0; i < 256; i++)
     {
         uint16_t readed_data = indwIO(base + ATA_DATA_REGISTER);
         
-        //xprintf("%x %x", readed_data & 0xFF, (readed_data >> 8) & 0xFF);
-        xprintf("%x %x ",(readed_data >> 8) & 0xFF, readed_data & 0xFF);
+      	*where = readed_data;
+      	where++;
+        
     }
     
+    //disk_status = inbIO(base + ATA_STATUS_REGISTER);
+    
+    if(disk_status & 0x1 == 1)
+    	xprintf("%zDISK ERROR", set_output_color(red,white));
 
 
     xprintf("\n\n\n");
