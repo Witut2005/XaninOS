@@ -114,7 +114,11 @@ int main(void)
 
     while((file.tellg() % 512) != 0)
         file << 0;    
-        
+
+
+    for(int i = 0; i < 512; i++)
+        file << "test";
+
     file.close();
 
 }
