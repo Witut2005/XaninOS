@@ -40,6 +40,14 @@ int main(void)
     file.open("xanin.img",ios::binary | ios::in | ios::out); 
 
 
+/*    
+    file.seekg(ios::beg + 0x400 + 0x18);
+    uint32_t elf_load_addr;
+    file.read((char*)&elf_load_addr, sizeof(uint32_t));
+
+    file.seekg(ios::beg + 0x200 + 0x2);
+    file.write((char*)&elf_load_addr, sizeof(uint32_t));
+    */
 
     //GET FILE SIZE
     file.seekg(0,ios::end);

@@ -12,6 +12,21 @@ jmp _loadSector
 ;|this filed is created to handle easier FS |
 ;/------------------------------------------/
 
+
+bios_parameter_block:
+oem_id: dq "00000000"
+bytes_per_sector: dw 0x200
+sectors_per_cluster: db 0x1
+reserved_sectors: dw 0x0
+fats_number: db 0x2
+root_directories_number: db 0x1
+total_sectors: dw 0xFFFF
+sectors_per_track: dw 80
+number_of_heads: dw 1
+hidden_sectors: dd 0x0
+large_sector_count: dd 0x0
+
+
 USTAR_START:
 db "OFF"
 dd 0x0000
@@ -23,12 +38,6 @@ db 0x0
 BOOT_DISK_NUMBER:
 db 0x0
 
-DAP:
-db 0x10
-db 0x0
-dw 0x30
-dd 0x2000
-dq 0x0
 
 
 _loadSector:

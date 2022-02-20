@@ -135,9 +135,14 @@ void _start(void)
     init_disk(ATA_FIRST_BUS, ATA_MASTER);
 
 
-   
+    xprintf("%x", *(uint32_t*)0x20002);
+        
     for(int i = 0; i < 100; i++)
-        disk_read(ATA_FIRST_BUS, ATA_MASTER, i+2, 512, 0x804b570 + (i * 512));
+        disk_read(ATA_FIRST_BUS, ATA_MASTER, i+2, 512, *(uint32_t*)0x20002 + (i * 512));
+    
+   
+    //xprintf("%zugabuga\n", set_output_color(green, white));
+    
     
 
 

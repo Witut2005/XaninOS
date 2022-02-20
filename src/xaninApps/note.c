@@ -63,7 +63,7 @@ void nano()
 
 
         uint32_t file_data_counter = 0x0;
-        for(char* i = (char*)VGA_TEXT_MEMORY; *i != '\0' && *i > 0; i+=2, file_data_counter++)
+        for(char* i = (char*)VGA_TEXT_MEMORY; *i >= 0x20; i+=2, file_data_counter++)
             file_descriptor->entry_data_pointer[file_data_counter] = *i;
 
         file_descriptor->entry_size = file_data_counter;

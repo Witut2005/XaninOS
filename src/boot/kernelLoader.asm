@@ -2,6 +2,11 @@
 [org 0x20000]
 [bits 16]
 
+jmp enter_32
+
+elf_load_address: dd 0x90909090
+
+enter_32:
 mov ax, 0x2000
 mov ds, ax
 mov es, ax
@@ -110,6 +115,8 @@ cli
 hlt
 
 machine_good:
+mov esi, [kernel + 0x18]
+mov dword [elf_load_address], esi
 mov esi, [kernel + 0x1C]  ;phofff point to header table
 add esi, kernel           ; offset from begin + begin of kernel
 
@@ -227,4 +234,5 @@ kernel:
 
     KEYBOARD_ENCODER equ 0x60
     ONBOARD_KEY_CONTROLLER equ 0x64
+
 
