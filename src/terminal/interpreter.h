@@ -16,7 +16,7 @@
 #include <xaninApps/md.c>
 #include <xaninApps/rd.c>
 #include <xaninApps/touch.c>
-#include <xaninApps/shoutdown.c>
+#include <xaninApps/shutdown.c>
 #include <xaninApps/reboot.c>
 #include <xaninApps/device_info.c>
 

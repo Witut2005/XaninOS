@@ -38,9 +38,9 @@ void scan(void)
     }
 
 
-    else if(cmpstr(program_name,"shoutdown"))
+    else if(cmpstr(program_name,"shutdown"))
     {
-        shoutdown();
+        shutdown();
     }
 
 

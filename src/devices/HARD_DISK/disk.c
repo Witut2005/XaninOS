@@ -1,6 +1,6 @@
 #include <devices/HARD_DISK/disk.h>
 
-void init_disk(uint16_t base, uint8_t master)
+__attribute__((section("disk_drvr"))) void init_disk(uint16_t base, uint8_t master)
 {
 
     uint8_t disk_status;

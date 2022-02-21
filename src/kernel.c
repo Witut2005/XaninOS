@@ -14,6 +14,9 @@
 #include <devices/USB/usb.c>
 #include <devices/HARD_DISK/disk.c>
 
+//extern void init_disk(uint16_t base, uint8_t master);
+//extern void disk_read(uint16_t base, uint8_t master, uint32_t sector_number, uint32_t bytes_number, uint16_t* where);
+
 
 //#include <devices/DMA/dma.c>
 
@@ -134,27 +137,20 @@ void _start(void)
    
     init_disk(ATA_FIRST_BUS, ATA_MASTER);
 
-
-    xprintf("%x", *(uint32_t*)0x20002);
-        
-    for(int i = 0; i < 100; i++)
-        disk_read(ATA_FIRST_BUS, ATA_MASTER, i+2, 512, *(uint32_t*)0x20002 + (i * 512));
     
+        
+    xprintf("elf address: 0x%x", *(uint32_t*)0x20002);
+      
+    
+    for(int i = 0; i < 60; i++)
+        disk_read(ATA_FIRST_BUS, ATA_MASTER, i+2, 512, *(uint32_t*)0x20002 + (i * 512));
    
     //xprintf("%zugabuga\n", set_output_color(green, white));
-    
-    
-
-
+        
     clearScr();
 
-    
-
-
     //init_disk(ATA_SLAVE_BASE);
-
-
-   
+ 
 
     tuiInit:
 

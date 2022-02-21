@@ -3,7 +3,7 @@
 
 
 
-void shoutdown(void)
+void shutdown(void)
 {
     outdwIO(0x604, 0x2000);  /* QEMU */
     outdwIO(0xB004, 0x2000); /* BOCHS AND OLD QEMU */
