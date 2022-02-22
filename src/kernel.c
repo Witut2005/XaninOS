@@ -75,11 +75,6 @@ void _start(void)
             xprintf("USB CONTROLLER TYPE: %s\n", 
                     usb_controller_names[usb_controller_get_type(pci_address_selector) / 0x10]);
             
-      
-
-            //xprintf("write test: %d ", (uint16_t)pci_write_data32(pci_address_selector, 0x34, 0x0));
-            
-
             xprintf("USB CONTROLLER BASE ADDRES 0x%x\n",pci_get_data32(pci_address_selector,0x20));  
 
         }
@@ -108,28 +103,12 @@ void _start(void)
     //dma_controller_reset();
 
     clearScr();
-
-    //disable_cursor();
-    //enable_cursor(0x0,0x0);
-
     getCpuSpeed();
-
     getTime();
-
     srand(time.seconds);
-
     file_system_init();
-
     clearScr();   
-
-
 	
-    file_system_init();
-
-    clearScr();
-
-    x = 0x0;
-    y = 0x0;
 
     
     //init_disk(ATA_SLAVE);
@@ -137,27 +116,29 @@ void _start(void)
    
     init_disk(ATA_FIRST_BUS, ATA_MASTER);
 
-    
         
-    xprintf("elf address: 0x%x", *(uint32_t*)0x20002);
+    xprintf("elf load address: 0x%x", *(uint32_t*)0x20002);
       
-    
+   /*
+
     for(int i = 0; i < 60; i++)
         disk_read(ATA_FIRST_BUS, ATA_MASTER, i+2, 512, *(uint32_t*)0x20002 + (i * 512));
    
-    //xprintf("%zugabuga\n", set_output_color(green, white));
+    */
         
     clearScr();
 
-    //init_disk(ATA_SLAVE_BASE);
- 
+    /*
+    xprintf("%zatoi test\n", set_output_color(green, white));
+    xprintf("%d\n", atoi("1234"));
+    while(1);
+    */ 
 
     tuiInit:
 
     clearScr();
 
-    x = 0;y = 0;
-
+   
     xprintf("xaninOS\n");
     xprintf("version 22.02v\n");
 
@@ -170,9 +151,6 @@ void _start(void)
     x++;
 
     app_exited = false;
-
-
-
 
     while(1)
     {

@@ -415,7 +415,17 @@ void xscanf(char* str, ... )
                                 buffer[i] = '\0';
 
                             counter++;
+                            break;
                         }
+
+
+                        case 'd'
+                        {
+
+                            
+                            break;
+                        }
+
                     }
 
                 str_counter++;
