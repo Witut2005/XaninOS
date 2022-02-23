@@ -230,13 +230,13 @@ char* strcpy(char* dest, char* src)
 uint32_t atoi(char* str)
 {
     
-    uint8_t digit_counter = strlen(str);
-    uint32_t sum = 0x0;
+    
+    uint32_t sum = 0;
 
-    for(int i = 0; i < digit_counter; i++)
+    for(int i = 0; i < strlen(str); i++)
     {
-        sum += str[i] - 48; 
         sum *= 10;
+        sum += str[i] - 48;  
     }
     
     return sum;

@@ -419,7 +419,7 @@ void xscanf(char* str, ... )
                         }
 
 
-                        case 'd'
+                        case 'd':
                         {
 
                             

@@ -119,20 +119,21 @@ void _start(void)
         
     xprintf("elf load address: 0x%x", *(uint32_t*)0x20002);
       
-   /*
+  
+    /*
+  
 
     for(int i = 0; i < 60; i++)
-        disk_read(ATA_FIRST_BUS, ATA_MASTER, i+2, 512, *(uint32_t*)0x20002 + (i * 512));
+        disk_read(ATA_FIRST_BUS, ATA_MASTER, i+2, 512, 
+                (uint16_t*)(*(uint32_t*)0x20002 + (i * 512)));
    
-    */
+   */
+   
         
-    clearScr();
+    clearScr(); 
+    
+    
 
-    /*
-    xprintf("%zatoi test\n", set_output_color(green, white));
-    xprintf("%d\n", atoi("1234"));
-    while(1);
-    */ 
 
     tuiInit:
 

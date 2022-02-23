@@ -38,7 +38,14 @@ db 0x0
 BOOT_DISK_NUMBER:
 db 0x0
 
-
+DAP:
+size_of_packer: db 0x10
+reserved: db 0x0
+how_many_sectors: dw 0x35
+offset: dw 0x0
+segment_num: dw 0x2000
+lba: dd 0x1
+lba48: dd 0x0
 
 _loadSector:
 mov [BOOT_DISK_NUMBER], dl
@@ -53,17 +60,40 @@ int 10h
 
 int13_read:
 
-mov ah,0x0
-mov ax,0x2000
-mov es,ax
 
-mov ah,0x2
-mov al,0x40
-mov ch,0x0
-mov cl,0x2 ; we dont want to copy first sector
-mov dh,0x0
-mov bx,0x0
+mov ax, 0x0
+mov ds, ax
+mov bx, 0x35
+mov cx, 0x3
+
+reading_disk:
+
+mov si, DAP
+mov ah, 0x42
+mov dl, [BOOT_DISK_NUMBER]
 int 0x13
+
+mov word [lba], 0x1 + 0x35
+mov word [offset], 0x35 * 0x200
+
+mov si, DAP
+mov ah, 0x42
+mov dl, [BOOT_DISK_NUMBER]
+int 0x13
+
+read_ok: 
+
+;mov ah,0x0
+;mov ax,0x2000
+;mov es,ax
+
+;mov ah,0x2
+;mov al,0x40
+;mov ch,0x0
+;mov cl,0x2 ; we dont want to copy first sector
+;mov dh,0x0
+;mov bx,0x0
+;int 0x13
 ;dec bp
 ;cmp bp,0
 ;jne int13_read
