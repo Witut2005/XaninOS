@@ -245,7 +245,7 @@ uint32_t atoi(char* str)
 
 
 
-uint32_t str_to_int(char* str, uint8_t format)
+uint32_t strtoi(char* str, uint8_t format)
 {
 
     uint32_t sum = 0;
@@ -253,7 +253,10 @@ uint32_t str_to_int(char* str, uint8_t format)
     if(format > 16) 
         format = 16;
 
-    for(int i = 0; i < strlen(str); i++)
+    uint16_t* tmp_text = VGA_TEXT_MEMORY;
+    uint8_t digit_counter = strlen(str);
+
+    for(int i = 0; i < digit_counter; i++)
     {
     
         sum *= format;
@@ -262,10 +265,10 @@ uint32_t str_to_int(char* str, uint8_t format)
             str[i] = str[i] - '0';
 
         else if(str[i] >= 'a' && str[i] <= 'f')
-            str[i] = str[i] - 'a' + 10;
+            str[i] = str[i] - 'a' + 0xa;
         
         else
-            i++;
+            continue;
 
         sum += str[i];        
     }

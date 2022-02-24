@@ -117,7 +117,7 @@ void _start(void)
     init_disk(ATA_FIRST_BUS, ATA_MASTER);
 
         
-    xprintf("elf load address: 0x%x", *(uint32_t*)0x20002);
+    xprintf("elf load address: 0x%x\n", *(uint32_t*)0x20002);
       
   
     /*
@@ -128,8 +128,9 @@ void _start(void)
                 (uint16_t*)(*(uint32_t*)0x20002 + (i * 512)));
    
    */
-   
-      
+  
+        
+
     tuiInit:
 
     clearScr();
