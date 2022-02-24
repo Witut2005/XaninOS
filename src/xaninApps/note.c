@@ -12,14 +12,14 @@
 void nano()
 {
 
-    KEYBOARD_SIG_OFF();
-
+    keyboard_trun_on();
     no_enter = true;
-
     keyboard_scan_code = 0x0;
-
     FileSystemEntryStruct* file_descriptor = find_fs_entry(program_parameters);
 
+
+    arrows_navigate = true;
+        
     
     if(file_descriptor == nullptr)
     {
@@ -29,10 +29,10 @@ void nano()
         
         while(1)
         {
-
-
             if(keyboard_scan_code == ENTER)
             {
+
+
                 for(int i = 0; i < 50; i++)
                     keyboard_command[i] = '\0';
 

@@ -16,11 +16,11 @@ void scan(void)
     erase_spaces(program_name);
     erase_spaces(program_parameters);
 
-//    xprintf("%z%s\n",set_output_color(blue,white),program_name);
-
-
+    //xprintf("%z%s\n",set_output_color(blue,white),program_name);
 
     KEYBOARD_SIG_ON(no_keyboard_input);
+
+    no_enter = true;
 
     if(cmpstr(program_name,"touch"))
     {
@@ -155,6 +155,8 @@ void scan(void)
 
 //    for(int i = 0; i < 50; i++)
 //        program_parameters[i] = '\0';
+
+    no_enter = false;
 
     KEYBOARD_SIG_OFF();
 

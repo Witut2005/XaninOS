@@ -17,6 +17,8 @@
 
 uint16_t* cursor = (uint16_t*)VGA_TEXT_MEMORY + (4*80);
 
+bool arrows_navigate = false;
+
 static uint8_t y,x;
 
 void setTerminal();

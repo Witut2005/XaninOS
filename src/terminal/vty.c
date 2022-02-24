@@ -32,6 +32,38 @@ void terminalKeyboard(uint8_t scanCode)
 
     uint8_t key = keyboard_map[scanCode];
 
+    if(arrows_navigate)
+    {
+        if(key == '2')
+        {
+            if((uint32_t)cursor <= VGA_TEXT_MEMORY + (80 * sizeof(uint16_t) * 27))           
+                cursor += 80; 
+
+            return;
+        }
+
+        else if(key == '6')
+        {
+            cursor++;
+            return;
+        }
+
+        else if(key == '4')
+        {
+            cursor--;
+            return;
+        }
+
+        else if(key == '8')
+        {
+            if((uint32_t)cursor >= VGA_TEXT_MEMORY + (80 * sizeof(uint16_t)))
+                cursor -= 80; 
+            return;
+        }
+        
+        
+    }
+
     if(scanCode == BSPC)
     {
         if(*(cursor-1) == (uint16_t)('>' | ((black << 4) | white) << 8))
