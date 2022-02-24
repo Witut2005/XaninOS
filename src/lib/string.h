@@ -10,7 +10,7 @@ uint32_t strlen(char* a)
     {
         length++;
     }
-
+    
 
     return length;
 
@@ -83,7 +83,7 @@ char* int_to_str(int x, char* buf)
 
 
     buf = reverse_string(buf);
-    
+    *(buf + i) = '\0';
     return buf;
 
 }
@@ -103,12 +103,13 @@ char* bin_to_str(int x, char* buf)
 
     for(i = 0; x != 0; i++)
     {
-        buf[i] = (x % 2) + '0';
+        buf[i] = (x & 1) + '0';
         x = x >> 1;
     }
 
-
     buf = reverse_string(buf);
+    
+    *(buf + i) = '\0';
     
     return buf;
 
@@ -241,4 +242,36 @@ uint32_t atoi(char* str)
     
     return sum;
 }
+
+
+
+uint32_t str_to_int(char* str, uint8_t format)
+{
+
+    uint32_t sum = 0;
+
+    if(format > 16) 
+        format = 16;
+
+    for(int i = 0; i < strlen(str); i++)
+    {
+    
+        sum *= format;
+
+        if(str[i] >= '0' && str[i] <= '9')
+            str[i] = str[i] - '0';
+
+        else if(str[i] >= 'a' && str[i] <= 'f')
+            str[i] = str[i] - 'a' + 10;
+        
+        else
+            i++;
+
+        sum += str[i];        
+    }
+    
+    return sum;
+
+}
+
 

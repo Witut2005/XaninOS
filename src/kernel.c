@@ -129,12 +129,7 @@ void _start(void)
    
    */
    
-        
-    clearScr(); 
-    
-    
-
-
+      
     tuiInit:
 
     clearScr();

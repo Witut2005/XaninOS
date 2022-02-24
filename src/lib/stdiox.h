@@ -197,11 +197,12 @@ void xprintf(char* str, ... )
                 {
                     number = va_arg(args,int);
 
-                    bin_to_str(number,tmpPtr);
+                    tmpPtr = bin_to_str(number,tmp);
 
                     for(int i = 0; tmpPtr[i] != '\0'; i++)
                     {
-                        cursor[bufCounter] = (uint16_t) (tmpPtr[i] + (((backgroundColor << 4) | fontColor) << 8));
+
+                        cursor[bufCounter] = (uint16_t)(tmpPtr[i] + (((backgroundColor << 4) | fontColor) << 8));
                         bufCounter++;
                         x++;
                     }
@@ -247,9 +248,30 @@ void xprintf(char* str, ... )
                         bufCounter++;
                         x++;
                     }
-                    break;
-                }
 
+                    
+                    break;
+
+                }
+                
+                case 'X':
+                {
+                    number = va_arg(args,int);
+                    int_to_hex_str(number,tmpPtr);
+
+                    for(int i = 0; tmpPtr[i] != '\0'; i++)
+                    {
+                        cursor[bufCounter] = (uint16_t) (tmpPtr[i] + (((backgroundColor << 4) | fontColor) << 8));
+                        bufCounter++;
+                        x++;
+                    }
+
+                    toupper(tmpPtr);
+                    
+                    break;
+
+                }
+                
                 case 'o':
                 {
                     number = va_arg(args,int);
