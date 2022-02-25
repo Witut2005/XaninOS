@@ -47,6 +47,8 @@ struct FileSystemEntryStruct
     char* entry_size_pointer;
     char* entry_data_pointer;
     char* entry_name_pointer;
+    
+    char entry_data[512];
 
 };
 

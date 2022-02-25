@@ -46,8 +46,12 @@ void nano()
         
     else
     {
-
+    
+        
         clearScr();
+        
+
+        
         if(file_descriptor->entry_type == DIRECTORY)
         {
             xprintf("%zyou cant edit directory\n",set_output_color(red,white));
@@ -55,16 +59,24 @@ void nano()
             while(keyboard_scan_code != F4_KEY);
         }
 
-        xprintf("%s\r",file_descriptor->entry_data_pointer);
+        //xprintf("%s\r",file_descriptor->entry_data_pointer);
 
+        
+        for(int i = 0; i < file_descriptor->entry_size; i++)
+            putchar(file_descriptor->entry_data_pointer[i]);
+    
+    
 
-        y = 0;
+        cursor = (uint16_t*)(VGA_TEXT_MEMORY);
+
         while(keyboard_scan_code != F4_KEY);
 
-
         uint32_t file_data_counter = 0x0;
-        for(char* i = (char*)VGA_TEXT_MEMORY; *i >= 0x20; i+=2, file_data_counter++)
-            file_descriptor->entry_data_pointer[file_data_counter] = *i;
+        
+        for(char* i = (char*)VGA_TEXT_MEMORY; 
+                (uint32_t)i < VGA_TEXT_MEMORY + (512 * 2); i+=2, file_data_counter++)
+            
+                file_descriptor->entry_data_pointer[file_data_counter] = *i;
 
         file_descriptor->entry_size = file_data_counter;
 

@@ -34,7 +34,7 @@ void terminalKeyboard(uint8_t scanCode)
 
     if(arrows_navigate)
     {
-        if(key == '2')
+        if(scanCode == ARROW_DOWN)
         {
             if((uint32_t)cursor <= VGA_TEXT_MEMORY + (80 * sizeof(uint16_t) * 27))           
                 cursor += 80; 
@@ -42,19 +42,19 @@ void terminalKeyboard(uint8_t scanCode)
             return;
         }
 
-        else if(key == '6')
+        else if(scanCode == ARROW_RIGHT)
         {
             cursor++;
             return;
         }
 
-        else if(key == '4')
+        else if(scanCode == ARROW_LEFT)
         {
             cursor--;
             return;
         }
 
-        else if(key == '8')
+        else if(scanCode == ARROW_UP)
         {
             if((uint32_t)cursor >= VGA_TEXT_MEMORY + (80 * sizeof(uint16_t)))
                 cursor -= 80; 

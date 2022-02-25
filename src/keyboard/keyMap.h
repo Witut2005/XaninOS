@@ -81,3 +81,11 @@ uint8_t keyboard_map[128] = {
 
 
 };
+
+enum keyboard_special_keys
+{
+    ARROW_UP = 72,
+    ARROW_LEFT = 75,
+    ARROW_RIGHT = 77,
+    ARROW_DOWN = 80
+};

@@ -11,7 +11,7 @@ void touch(void)
 
     if(program_parameters[strlen(program_parameters)-1] == '/')
     {
-        xprintf("%zINVALID DIRECTORY NAME ('/' AT THE END)\n",set_output_color(red,white));
+        xprintf("%zINVALID FILE NAME ('/' AT THE END)\n",set_output_color(red,white));
 
         keyboard_scan_code = NULL;
 
@@ -43,6 +43,7 @@ void touch(void)
     file_descriptor->entry_type = FILE;
     file_descriptor->owner = 0x0;
     file_descriptor->group = 0x0;
+    file_descriptor->entry_data_pointer = (char*)(file_descriptor) + USTAR_SECTOR_SIZE;
   
     FileSystem.file_entries_number++;
 

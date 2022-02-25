@@ -140,6 +140,38 @@ void print_bcd_number(uint8_t x)
 
 }
 
+char putchar(char character)
+{
+
+    if(character < 0x20)
+    {
+        *cursor = (uint16_t) (0x0 + (((black << 4) | white) << 8));
+    
+        x++;
+
+        if(x == 80)
+        {    
+            x = 0x0;
+            y++;
+        }
+        return false;
+    }
+
+    cursor = (unsigned short*)(VGA_TEXT_MEMORY) + x + ((80)*y);
+    *cursor = (uint16_t) (character + (((black << 4) | white) << 8));
+        
+    x++;
+
+    if(x == 80)
+    {    
+        x = 0x0;
+        y++;
+    }
+           
+
+    return character;
+
+}
 
 
 
@@ -362,7 +394,7 @@ char* get_program_name(void)
 
 }
 */
-
+/*
 char putchar(char c)
 {
     *cursor = (set_output_color(black, white) << 8) | c;
@@ -370,7 +402,7 @@ char putchar(char c)
 
     return c;
 }
-
+*/
 
 
 void xscanf(char* str, ... )
