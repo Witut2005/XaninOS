@@ -12,7 +12,7 @@ using namespace std;
 
 fstream file;
 bool ustar = false;
-static uint8_t buf[0x30 * 512];
+static uint8_t buf[0x50 * 512];
 char* buf_ptr = (char*)buf;
 uint64_t fileSize;
 uint32_t offset;
@@ -22,7 +22,7 @@ char entries_counter = 0x0;
 
 void find_ustar(char* x)
 {
-    for(int i = 0; i < 50 * 512 - 1; i++)
+    for(int i = 0; i < 0x50 * 512 - 1; i++)
     {
         if(strcmp(&x[i],"ustar  ") == 0)
             entries_counter++;
@@ -57,6 +57,8 @@ int main(void)
 
     file.read((char*)buf,fileSize);
 
+
+	
     for(int i = 0; i < fileSize; i++)
     {
 
@@ -89,12 +91,12 @@ int main(void)
     }
 
     printf("\nUSTAR FILE SYSTEM DETECTED IN OS IMAGE AT OFFSET 0x%x\n",offset + 0x10);
-    offset = offset + 0x20000 - 0x200 + 0x10;   //fs start address is relative value so we need to add some addreses
+    offset = offset + 0x20000 + 0x10 - (0x200 * 0xD);   //fs start address is relative value so we need to add some addreses
     printf("USTAR FILE SYSTEM DETECTED AT OFFSET 0x%x\n\n",offset);
 
 
 
-    file.seekg(5,ios::beg);
+    file.seekg(0x3,ios::beg);
 
     file.write((char*)&offset,sizeof(uint32_t));
 
@@ -124,8 +126,6 @@ int main(void)
         file << 0;    
 
 
-    for(int i = 0; i < 512; i++)
-        file << "test";
 
     file.close();
 

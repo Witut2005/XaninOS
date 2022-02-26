@@ -26,6 +26,11 @@ void scan(void)
     {
         touch();
     }
+    
+    else if(cmpstr(program_name,"load"))
+    {
+    	load(strtoi(program_parameters, 16));
+    }
 
     else if(cmpstr(program_name,"dev-info"))
     {
@@ -37,6 +42,10 @@ void scan(void)
         reboot();
     }
 
+    else if(cmpstr(program_name, "create"))
+    {
+       create(program_parameters); 
+    }
 
     else if(cmpstr(program_name,"shutdown"))
     {

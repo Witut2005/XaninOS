@@ -16,4 +16,4 @@ last_modification_date: dw 0x0
 starting_cluster: dw 0x0
 file_size: dd 0x0
 
-times 510 - ($-$$) db 0x0
+times 2048 - ($-$$) db 0x0

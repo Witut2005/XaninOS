@@ -13,6 +13,7 @@
 #include <devices/ACPI/ACPI.c>
 #include <devices/USB/usb.c>
 #include <devices/HARD_DISK/disk.c>
+#include <fat/fat_driver.c>
 
 //extern void init_disk(uint16_t base, uint8_t master);
 //extern void disk_read(uint16_t base, uint8_t master, uint32_t sector_number, uint32_t bytes_number, uint16_t* where);
@@ -117,7 +118,7 @@ void _start(void)
     init_disk(ATA_FIRST_BUS, ATA_MASTER);
 
         
-    xprintf("elf load address: 0x%x\n", *(uint32_t*)0x20002);
+    //xprintf("elf load address: 0x%x\n", *(uint32_t*)0x20002);
       
   
     /*
@@ -128,8 +129,8 @@ void _start(void)
                 (uint16_t*)(*(uint32_t*)0x20002 + (i * 512)));
    
    */
-  
-        
+
+    
 
     tuiInit:
 

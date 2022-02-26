@@ -26,6 +26,11 @@ number_of_heads: dw 1
 hidden_sectors: dd 0x0
 large_sector_count: dd 0x0
 
+extended_boot_record:
+dq 0x0
+dq 0x0
+dq 0x0
+dw 0x0
 
 USTAR_START:
 db "OFF"
@@ -44,7 +49,7 @@ reserved: db 0x0
 how_many_sectors: dw 0x35
 offset: dw 0x0
 segment_num: dw 0x2000
-lba: dd 0x1
+lba: dd 0xD
 lba48: dd 0x0
 
 _loadSector:
@@ -73,8 +78,18 @@ mov ah, 0x42
 mov dl, [BOOT_DISK_NUMBER]
 int 0x13
 
-mov word [lba], 0x1 + 0x35
+mov word [lba], 0xD + 0x35
 mov word [offset], 0x35 * 0x200
+
+mov si, DAP
+mov ah, 0x42
+mov dl, [BOOT_DISK_NUMBER]
+int 0x13
+
+mov word [lba], 0x2
+mov word [offset], 0x800
+mov word [segment_num], 0x0
+mov word [how_many_sectors], 0xD
 
 mov si, DAP
 mov ah, 0x42
@@ -109,7 +124,7 @@ int 0x10
 jmp print_msg
 
 jmp_ker_load:
-jmp word 0x2000:0000
+jmp word 0x2000:0x0000
 
 
 disk_num: dw 0x0

@@ -203,6 +203,13 @@ void xprintf(char* str, ... )
 
     while(str[strCounter])
     {
+
+        if(x > 80)
+        {
+            x = 0;
+            y++;
+        }
+
         if(str[strCounter] == '%')
         {
 
@@ -242,7 +249,7 @@ void xprintf(char* str, ... )
                     break;
                 }
 
-                
+                    
 
                 case 's':
                 {
@@ -261,6 +268,20 @@ void xprintf(char* str, ... )
 
                 }
 
+                case 'c':
+                {
+
+                    char character;
+                    character = (char)va_arg(args,int);
+
+
+                    cursor[bufCounter] = (uint16_t)(character + (((backgroundColor << 4) | fontColor) << 8));
+                        bufCounter++;
+                        x++;
+
+                    break;
+                }
+
                 case 'z':
                 {
                     fontColor = (uint8_t)va_arg(args,int);
@@ -271,8 +292,8 @@ void xprintf(char* str, ... )
 
                 case 'x':
                 {
-                    number = va_arg(args,int);
-                    int_to_hex_str(number,tmpPtr);
+                    uint32_t number_hex = va_arg(args,uint32_t);
+                    int_to_hex_str(number_hex,tmpPtr);
 
                     for(int i = 0; tmpPtr[i] != '\0'; i++)
                     {

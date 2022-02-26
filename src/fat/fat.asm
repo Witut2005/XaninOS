@@ -1,4 +1,4 @@
 
 
 fat:
-times 512 - ($-$$) db 0x0
+times 4096 - ($-$$) db 0x0

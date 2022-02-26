@@ -19,6 +19,8 @@
 #include <xaninApps/shutdown.c>
 #include <xaninApps/reboot.c>
 #include <xaninApps/device_info.c>
+#include <xaninApps/load.c>
+#include <fat/create.c>
 
 
 void scan(void);
