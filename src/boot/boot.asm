@@ -5,7 +5,7 @@
 
 
 jmp _loadSector
-
+nop
 
 ;/------------------------------------------/
 ;|this filed is not used by ustar           |

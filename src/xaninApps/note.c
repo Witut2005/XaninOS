@@ -65,8 +65,6 @@ void nano()
         for(int i = 0; i < file_descriptor->entry_size; i++)
             putchar(file_descriptor->entry_data_pointer[i]);
     
-    
-
         cursor = (uint16_t*)(VGA_TEXT_MEMORY);
 
         while(keyboard_scan_code != F4_KEY);
@@ -75,7 +73,6 @@ void nano()
         
         for(char* i = (char*)VGA_TEXT_MEMORY; 
                 (uint32_t)i < VGA_TEXT_MEMORY + (512 * 2); i+=2, file_data_counter++)
-            
                 file_descriptor->entry_data_pointer[file_data_counter] = *i;
 
         file_descriptor->entry_size = file_data_counter;
