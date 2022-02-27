@@ -4,7 +4,7 @@
 
 #include <lib/stdiox.h>
 
-void load(uint32_t address)
+void loadch(uint32_t address)
 {
 
     clearScr();
@@ -13,10 +13,8 @@ void load(uint32_t address)
 
     for(int i = 0; i < 512; i++)
     {
-        xprintf("%x ", data_pointer[i]);
+        xprintf("%c ", data_pointer[i]);
     }
 
 	while(keyboard_scan_code != ENTER);
-	
-
 }

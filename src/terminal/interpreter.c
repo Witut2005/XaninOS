@@ -29,8 +29,17 @@ void scan(void)
     
     else if(cmpstr(program_name,"load"))
     {
+    	keyboard_scan_code = 0x0;
     	load(strtoi(program_parameters, 16));
+    	app_exited = true;
     }
+	
+	else if(cmpstr(program_name,"loadch"))
+	{
+		keyboard_scan_code = 0x0;
+		loadch(strtoi(program_parameters, 16));
+		app_exited = true;
+	}
 
     else if(cmpstr(program_name,"dev-info"))
     {
@@ -151,7 +160,7 @@ void scan(void)
         xprintf("%zunknown command",set_output_color(red,white));
         while(1)
         {
-            if(keyboard_input == 'q')
+            if(keyboard_scan_code = ENTER)
             {
                 for(int i = 0; i < 50; i++)
                     keyboard_command[i] = '\0';

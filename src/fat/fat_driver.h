@@ -6,7 +6,7 @@
 
 #define FAT_START 0x800
 #define ROOT_DIRECTORY_START 0x1800 
-#define CLUSTER_SIZE 0x200
+
 
 struct root_directory_entry
 {
@@ -40,5 +40,10 @@ uint8_t* fat_find_unallocated_cluster(void);
 
 enum fat_macros
 {
-    FILENAME_MAX_LENGTH = 8 
+    FILENAME_MAX_LENGTH = 0x8, 
+    FAT_END_FILE = 0xF8,
+    FAT_UNALLOCATED = 0x0,
+    FAT_ALLOCATED = 0x1,
+    CLUSTER_SIZE = 0x200
+    
 };

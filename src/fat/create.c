@@ -8,6 +8,13 @@ void create(char* file_name)
 
     uint8_t file_name_length_counter = 0x0;
 
+    char* unallocated_entry;
+
+    for(unallocated_entry = (char*)0x800; *unallocated_entry != 0 && (uint32_t)unallocated_entry < (0x800 + (CLUSTER_SIZE * 4)); unallocated_entry++);
+
+    *unallocated_entry = FAT_ALLOCATED;
+    *(unallocated_entry + 1) = FAT_END_FILE;
+    
     while(file_name[file_name_length_counter] != '.')
     {
         if(file_name_length_counter > 8)
@@ -33,10 +40,10 @@ void create(char* file_name)
     for(int i = 9; i < 12; i++)
     {
         if(file_name[i] < 0x20)
-            root_directory_table[fat_entries].file_extension[i] = 0x20;
+            root_directory_table[fat_entries].file_extension[i-9] = 0x20;
         
         else 
-            root_directory_table[fat_entries].file_extension[i] = file_name[i];
+            root_directory_table[fat_entries].file_extension[i-9] = file_name[i];
     }
 
 
@@ -52,8 +59,10 @@ void create(char* file_name)
     root_directory_table[fat_entries].starting_cluster = fat_find_unallocated_cluster();  
     root_directory_table[fat_entries].file_size = 512;
 
-    file_allocation_table[fat_entries] = 0x1; 
-    fat_entries++;
+
+
+    fat_entries += 2;
 
     app_exited = true;
 }
+

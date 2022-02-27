@@ -20,6 +20,7 @@
 #include <xaninApps/reboot.c>
 #include <xaninApps/device_info.c>
 #include <xaninApps/load.c>
+#include <xaninApps/loadch.c>
 #include <fat/create.c>
 
 
