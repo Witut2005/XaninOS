@@ -88,21 +88,28 @@ void modify(char* file_name)
 
     else 
     {
-        xprintf("%zNO SUCH FILE\n", set_output_color(red, white));
-        while(1);
+        xprintf("NO SUCH FILE\n");
+        while(keyboard_scan_code != F4_KEY);
     }
     clearScr();
     keyboard_scan_code = 0x0;
 
+    char* file_data = finded_entry->starting_cluster * CLUSTER_SIZE;
+    
+    for(int i = 0; i < finded_entry->file_size; i++)
+    	xprintf("%c", file_data[i]);
+
+	cursor = (uint16_t*)VGA_TEXT_MEMORY;
+
     while(keyboard_scan_code != F4_KEY);
 
-    char* file_data;
+
     
     //xprintf("starting cluster: %d\n", finded_entry->starting_cluster);
     //xprintf("name finded: %s\n", finded_entry->file_name);
     //xprintf("file pointer: %d\n", file_data);
 
-    file_data = finded_entry->starting_cluster * CLUSTER_SIZE;
+
 
    
     uint32_t file_data_counter = 0x0;

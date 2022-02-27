@@ -33,7 +33,7 @@ void create(char* file_name)
     
         else
         {
-            root_directory_table[fat_entries].file_name[i] = 0x20;
+            free_root_entry->file_name[i] = 0x20;
         }
     }
 
