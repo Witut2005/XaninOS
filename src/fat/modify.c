@@ -1,14 +1,19 @@
 
+#pragma once
 
 
 #include <fat/fat_driver.h>
 #include <fat/find_file.c>
 #include <lib/string.h>
 #include <lib/stdiox.h>
+#include <lib/memory.h>
 
 void modify(char* file_name)
 {
 
+    //keyboard_trun_on();
+    no_enter = true;
+    clearScr();
 
     union fat_file
     {
@@ -59,9 +64,9 @@ void modify(char* file_name)
     }
 
     int extension_counter = 0x0;
+    
     for(char* i = find_character('.', file_name) + 1; i < find_character('.', file_name) + 4; i++, extension_counter++)
     {
-
         if(*i < 0x20)
             file.file_extension[extension_counter] = 0x20;
 
@@ -69,22 +74,47 @@ void modify(char* file_name)
             file.file_extension[extension_counter] = *i;
     }
 
+    
+    root_directory_entry* finded_entry;
+    
     xprintf("your file: %s\n", file.fat_file_id);
-   
+    //xprintf("length: %d\n", strlen(file.fat_file_id)); 
+
     if(find_file(file.fat_file_id) != nullptr)
     {
-        xprintf("%zTHIS FILE EXIST\n", set_output_color(green, white));
+        finded_entry = find_file(file.fat_file_id);
+        xprintf("%zFILE EXIST", set_output_color(green,white));
     }
 
     else 
     {
         xprintf("%zNO SUCH FILE\n", set_output_color(red, white));
+        while(1);
     }
-
+    clearScr();
     keyboard_scan_code = 0x0;
 
-    while(keyboard_scan_code != ENTER);
+    while(keyboard_scan_code != F4_KEY);
 
-    app_exited = true;
+    char* file_data;
+    
+    //xprintf("starting cluster: %d\n", finded_entry->starting_cluster);
+    //xprintf("name finded: %s\n", finded_entry->file_name);
+    //xprintf("file pointer: %d\n", file_data);
 
+    file_data = finded_entry->starting_cluster * CLUSTER_SIZE;
+
+   
+    uint32_t file_data_counter = 0x0;
+    for(char* i = (char*)VGA_TEXT_MEMORY; 
+            (uint32_t)i < VGA_TEXT_MEMORY + (512 * 2); i+=2, file_data_counter++)
+            file_data[file_data_counter] = *i;
+
+    finded_entry->file_size = file_data_counter;
+    
+    for(int i = 0; i < sizeof(comBuf);i++)
+        keyboard_command[i] = '\0';
+ 
+    no_enter = false;
+    index = 0x0; 
 }

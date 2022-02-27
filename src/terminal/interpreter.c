@@ -18,7 +18,7 @@ void scan(void)
 
     //xprintf("%z%s\n",set_output_color(blue,white),program_name);
 
-    KEYBOARD_SIG_ON(no_keyboard_input);
+    //KEYBOARD_SIG_ON(no_keyboard_input);
 
     no_enter = true;
 
@@ -36,6 +36,9 @@ void scan(void)
      
     else if(cmpstr(program_name,"modify"))
     {
+        keyboard_trun_on();
+    	//while(1);
+    	xprintf("%s\n", program_parameters);
     	keyboard_scan_code = 0x0;
     	modify(program_parameters);
     	app_exited = true;
@@ -183,6 +186,6 @@ void scan(void)
 
     no_enter = false;
 
-    KEYBOARD_SIG_OFF();
+    //KEYBOARD_SIG_OFF();
 
 }

@@ -26,7 +26,7 @@ void fat_read_cluster(uint16_t cluster_number)
 }
 
 
-uint8_t* fat_find_unallocated_cluster(void)
+uint8_t fat_find_unallocated_cluster(void)
 {
     
     uint16_t fat_counter = 0x0;
@@ -34,7 +34,8 @@ uint8_t* fat_find_unallocated_cluster(void)
     while(file_allocation_table[fat_counter] != 0)
         fat_counter++;
 
-    return &file_allocation_table[fat_counter];
+	return fat_counter;
+    //return &file_allocation_table[fat_counter];
 
 }
 

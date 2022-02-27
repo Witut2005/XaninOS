@@ -8,12 +8,6 @@ void create(char* file_name)
 
     uint8_t file_name_length_counter = 0x0;
 
-    char* unallocated_entry;
-
-    for(unallocated_entry = (char*)0x800; *unallocated_entry != 0 && (uint32_t)unallocated_entry < (0x800 + (CLUSTER_SIZE * 4)); unallocated_entry++);
-
-    *unallocated_entry = FAT_ALLOCATED;
-    *(unallocated_entry + 1) = FAT_END_FILE;
     
     while(file_name[file_name_length_counter] != '.')
     {
@@ -86,6 +80,11 @@ void create(char* file_name)
     free_root_entry->last_modification_time = 0x0;
     free_root_entry->last_modification_date = 0x0;
     free_root_entry->starting_cluster = fat_find_unallocated_cluster();  
+    
+    char* write_entry = (char*)0x800 + free_root_entry->starting_cluster;
+    *write_entry = FAT_ALLOCATED;
+    *(write_entry + 1) = FAT_END_FILE;
+    
     free_root_entry->file_size = 512;
 
     fat_entries += 2;
@@ -94,6 +93,8 @@ void create(char* file_name)
 
     while(keyboard_scan_code != ENTER);
 
+    for(int i = 0; i < sizeof(comBuf);i++)
+        keyboard_command[i] = '\0';
     app_exited = true;
 }
 

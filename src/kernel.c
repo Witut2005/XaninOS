@@ -130,7 +130,8 @@ void _start(void)
    
    */
 
-    
+    for(char* i = (char*)0x0; (uint32_t)i < 0x200; i++)
+    	*i = i;
 
     tuiInit:
 
