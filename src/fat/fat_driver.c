@@ -37,3 +37,25 @@ uint8_t* fat_find_unallocated_cluster(void)
     return &file_allocation_table[fat_counter];
 
 }
+
+
+root_directory_entry* fat_find_free_root_entry(void)
+{
+
+    char* fat_counter;
+
+    for(fat_counter = (char*)0x1800; (uint32_t)fat_counter < 0x1800 + (SECTOR_SIZE * 2); fat_counter++)
+    { 
+    
+        if((uint32_t)fat_counter % 32 == 0 && *fat_counter == 0)
+            return (root_directory_entry*)fat_counter;
+    
+    }
+
+    return nullptr;
+
+}
+
+
+
+

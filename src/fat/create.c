@@ -1,7 +1,7 @@
 
 #include <fat/fat_driver.h>
 #include <lib/stdiox.h>
-
+#include <lib/algorithm.h>
 
 void create(char* file_name)
 {
@@ -23,30 +23,45 @@ void create(char* file_name)
         file_name_length_counter++;
     }
 
+    root_directory_entry* free_root_entry = fat_find_free_root_entry();
+
     for(int i = 0; i < FILENAME_MAX_LENGTH; i++)
     {
-        if(file_name[i] < 0x20)
+    
+        if(i < file_name_length_counter)
+        {
+            if(file_name[i] < 0x20)
+                free_root_entry->file_name[i] = 0x20;
+            
+            else 
+                free_root_entry->file_name[i] = file_name[i];
+        }
+    
+        else
+        {
             root_directory_table[fat_entries].file_name[i] = 0x20;
-        
-        else 
-            root_directory_table[fat_entries].file_name[i] = file_name[i];
+        }
     }
 
-    if(file_name[8] != '.')
+    if(find_character('.', file_name) == nullptr)
     {
         xprintf("%zINCORRECT FILE EXTENSION\n",set_output_color(red,white));
     }
 
-    for(int i = 9; i < 12; i++)
+    int extension_counter = 0x0;
+
+    for(char* i = find_character('.', file_name) + 1; i < find_character('.', file_name) + 4; i++, extension_counter++)
     {
-        if(file_name[i] < 0x20)
-            root_directory_table[fat_entries].file_extension[i-9] = 0x20;
-        
+
+        if(*i < 0x20)
+            free_root_entry->file_extension[extension_counter] = 0x20;
+
         else 
-            root_directory_table[fat_entries].file_extension[i-9] = file_name[i];
+            free_root_entry->file_extension[extension_counter] = *i;
     }
 
 
+    /*
     root_directory_table[fat_entries].file_attr = 0x0;
     root_directory_table[fat_entries].entry_case = 0x0;
     root_directory_table[fat_entries].creation_time_miliseconds = 0x0;
@@ -59,9 +74,25 @@ void create(char* file_name)
     root_directory_table[fat_entries].starting_cluster = fat_find_unallocated_cluster();  
     root_directory_table[fat_entries].file_size = 512;
 
+    */
 
+    free_root_entry->file_attr = 0x0;
+    free_root_entry->entry_case = 0x0;
+    free_root_entry->creation_time_miliseconds = 0x0;
+    free_root_entry->creation_time = 0x0;
+    free_root_entry->creation_date = 0x0;
+    free_root_entry->last_access_date = 0x0;
+    free_root_entry->reserved = 0x0;
+    free_root_entry->last_modification_time = 0x0;
+    free_root_entry->last_modification_date = 0x0;
+    free_root_entry->starting_cluster = fat_find_unallocated_cluster();  
+    free_root_entry->file_size = 512;
 
     fat_entries += 2;
+
+    keyboard_scan_code = 0x0;
+
+    while(keyboard_scan_code != ENTER);
 
     app_exited = true;
 }

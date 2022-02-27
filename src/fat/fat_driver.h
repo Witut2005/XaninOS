@@ -37,6 +37,7 @@ fat_cell* file_allocation_table = (fat_cell*)FAT_START;
 
 void fat_read_cluster(uint16_t cluster_number);
 uint8_t* fat_find_unallocated_cluster(void);
+root_directory_entry* fat_find_free_root_entry(void);
 
 enum fat_macros
 {

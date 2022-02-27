@@ -25,7 +25,7 @@ char* keyboard_command;
 void clearScr(void)
 {
     uint16_t* ptrTmp = (uint16_t*)VRAM;
-    for(int i = 0; i < (80 * 25); i++)
+    for(int i = 0; i < (80 * 28); i++)
     {
         *ptrTmp = '\0';
         ptrTmp++;
@@ -349,14 +349,14 @@ void xprintf(char* str, ... )
         {
             y++;
             x = 0;
-            cursor = (unsigned short*)(VGA_TEXT_MEMORY) + ((80)*y);
+            cursor = (uint16_t*)(VGA_TEXT_MEMORY) + ((80)*y);
             strCounter++;
         }
 
         else if(str[strCounter] == '\r')
         {
             x = 0;
-            cursor = (unsigned short*)(VGA_TEXT_MEMORY) + ((80)*y);
+            cursor = (uint16_t*)(VGA_TEXT_MEMORY) + ((80)*y);
             strCounter++;
         }
 

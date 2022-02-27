@@ -33,13 +33,20 @@ void scan(void)
     	load(strtoi(program_parameters, 16));
     	app_exited = true;
     }
+     
+    else if(cmpstr(program_name,"modify"))
+    {
+    	keyboard_scan_code = 0x0;
+    	modify(program_parameters);
+    	app_exited = true;
+    }
 	
 	else if(cmpstr(program_name,"loadch"))
 	{
 		keyboard_scan_code = 0x0;
 		loadch(strtoi(program_parameters, 16));
 		app_exited = true;
-	}
+	}	
 
     else if(cmpstr(program_name,"dev-info"))
     {

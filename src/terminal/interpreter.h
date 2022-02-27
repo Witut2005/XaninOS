@@ -22,6 +22,7 @@
 #include <xaninApps/load.c>
 #include <xaninApps/loadch.c>
 #include <fat/create.c>
+#include <fat/modify.c>
 
 
 void scan(void);

@@ -163,7 +163,8 @@ char* int_to_hex_str(uint32_t x, char* buf)
     if(!x)
     {
         buf[0] = '0';
-        buf[1] = '\0';
+        buf[1] = '0';
+        buf[2] = '\0';
         return buf;
     }
     
