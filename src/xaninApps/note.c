@@ -6,6 +6,7 @@
 #include <lib/signal.h>
 #include <lib/stdiox.h>
 #include <stddef.h>
+#include <lib/exit_process.h>
 
 #define F4_KEY 0x3e
 
@@ -31,14 +32,8 @@ void nano()
         {
             if(keyboard_scan_code == ENTER)
             {
-
-
-                for(int i = 0; i < 50; i++)
-                    keyboard_command[i] = '\0';
-
-                index = 0x0; /* some problems with keyboard keyboard_input when index is no reseted */
-                app_exited = true; 
-                return;
+                arrows_navigate = false;
+                exit_process();
             }
         }   
     
@@ -56,7 +51,8 @@ void nano()
         {
             xprintf("%zyou cant edit directory\n",set_output_color(red,white));
             xprintf("%zuse F4 key to exit\n",set_output_color(red,white));
-            while(keyboard_scan_code != F4_KEY);
+            while(keyboard_scan_code != ENTER);
+            exit_process();
         }
 
         //xprintf("%s\r",file_descriptor->entry_data_pointer);
@@ -80,14 +76,8 @@ void nano()
 
     }
 
-    
-    for(int i = 0; i < sizeof(comBuf);i++)
-        keyboard_command[i] = '\0';
-
-    index = 0x0; /* some problems with keyboard keyboard_input when index is no reseted */
-    app_exited = true; 
-    no_enter = false;
-
+    arrows_navigate = false;
+    exit_process();
 
 
 }

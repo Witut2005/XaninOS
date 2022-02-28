@@ -1,9 +1,9 @@
 #pragma once
 
 //#include <pong/pong.c>
+#include <lib/stdiox.h>
 #include <xaninApps/help.c>
 #include <tetris/tetris.c>
-#include <lib/stdiox.h>
 #include <headers/colors.h>
 #include <xaninApps/ls.c>
 #include <xaninApps/type.c>
@@ -23,6 +23,7 @@
 #include <xaninApps/loadch.c>
 #include <fat/create.c>
 #include <fat/modify.c>
+#include <fat/dir.c>
 
 
 void scan(void);

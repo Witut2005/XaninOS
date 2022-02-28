@@ -3,6 +3,7 @@
 
 
 #include <fat/fat_driver.h>
+#include <lib/exit_process.h>
 #include <fat/find_file.c>
 #include <lib/string.h>
 #include <lib/stdiox.h>
@@ -61,6 +62,8 @@ void modify(char* file_name)
     if(find_character('.', file_name) == nullptr)
     {
         xprintf("%zINCORRECT FILE EXTENSION\n",set_output_color(red,white));
+        while(keyboard_scan_code != ENTER);
+        exit_process();
     }
 
     int extension_counter = 0x0;
@@ -78,19 +81,15 @@ void modify(char* file_name)
     root_directory_entry* finded_entry;
     
     xprintf("your file: %s\n", file.fat_file_id);
-    //xprintf("length: %d\n", strlen(file.fat_file_id)); 
 
-    if(find_file(file.fat_file_id) != nullptr)
+
+    if(find_file(file.fat_file_id) == nullptr)
     {
-        finded_entry = find_file(file.fat_file_id);
-        xprintf("%zFILE EXIST", set_output_color(green,white));
+        xprintf("%zNO SUCH FILE\n", set_output_color(red,white));
+        while(keyboard_scan_code != ENTER);
+        exit_process();
     }
 
-    else 
-    {
-        xprintf("NO SUCH FILE\n");
-        while(keyboard_scan_code != F4_KEY);
-    }
     clearScr();
     keyboard_scan_code = 0x0;
 

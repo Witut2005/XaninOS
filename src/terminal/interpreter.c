@@ -143,6 +143,11 @@ void scan(void)
         KEYBOARD_SIG_ON(no_keyboard_input);
     }
 
+    else if(cmpstr(program_name,"dir"))
+    {
+        dir();
+    }
+
     else if(cmpstr(program_name,"cls") || cmpstr(program_name,"clear"))
     {
         clearScr();
@@ -167,25 +172,15 @@ void scan(void)
 
     else
     {
-        xprintf("%zunknown command",set_output_color(red,white));
-        while(1)
-        {
-            if(keyboard_scan_code = ENTER)
-            {
-                for(int i = 0; i < 50; i++)
-                    keyboard_command[i] = '\0';
 
-                index = 0x0; /* some problems with keyboard keyboard_input when index is no reseted */
-                app_exited = true; no_enter = false;break;
-            }
-        }
+        keyboard_scan_code = NULL;
+        xprintf("%zunknown command",set_output_color(red,white));
+        
+        while(keyboard_scan_code != ENTER);
+
+        exit_process();
+        
     }
 
-//    for(int i = 0; i < 50; i++)
-//        program_parameters[i] = '\0';
-
-    no_enter = false;
-
-    //KEYBOARD_SIG_OFF();
 
 }

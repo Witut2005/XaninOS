@@ -80,6 +80,24 @@ void terminalKeyboard(uint8_t scanCode)
         *cursor = '\0'; /* delete character */
     }
 
+    else if(scanCode == ARROW_UP || scanCode == ARROW_DOWN)
+    {
+        return;
+    }
+
+    else if(scanCode == ARROW_LEFT)
+    {
+        if(*(cursor-1) == (uint16_t)('>' | ((black << 4) | white) << 8))
+            return;
+
+        cursor--;
+    }
+
+    else if(scanCode == ARROW_RIGHT)
+    {
+        cursor++;
+    }
+
     else if(scanCode == ENTER)
     {
 

@@ -7,14 +7,20 @@ void create(char* file_name)
 {
 
     uint8_t file_name_length_counter = 0x0;
+    keyboard_scan_code = 0x0;
 
-    
-    while(file_name[file_name_length_counter] != '.')
-    {
-        if(file_name_length_counter > 8)
-            xprintf("%zFILE NAME CANT BE MORE THAN 8 CHARACTERS LONG", 
-                                        set_output_color(red,white));
+
+    while(file_name[file_name_length_counter] != '.' && file_name_length_counter != 8)
         file_name_length_counter++;
+    
+    
+    if(file_name_length_counter >= 8)
+    {
+        xprintf("%zFILE NAME CANT BE MORE THAN 8 CHARACTERS LONG", 
+                                        set_output_color(red,white));
+        
+        while(keyboard_scan_code != ENTER);
+        exit_process();
     }
 
     root_directory_entry* free_root_entry = fat_find_free_root_entry();
@@ -40,6 +46,8 @@ void create(char* file_name)
     if(find_character('.', file_name) == nullptr)
     {
         xprintf("%zINCORRECT FILE EXTENSION\n",set_output_color(red,white));
+        while(keyboard_scan_code != ENTER);
+        exit_process();
     }
 
     int extension_counter = 0x0;

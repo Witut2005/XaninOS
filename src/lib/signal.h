@@ -25,8 +25,12 @@ struct
 
 
 #define keyboard_turn_off(x) {signal.appHandler = &x;int32_63 |= 0x2;}
+
 #define keyboard_trun_on(){\
 	if(int32_63 & 0x2)\
 		int32_63 ^= 0x2;\
-	signal.appHandler = nullptr;\
+    no_enter = false;\
 }
+
+
+	//signal.appHandler = nullptr;
