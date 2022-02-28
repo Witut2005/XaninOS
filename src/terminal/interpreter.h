@@ -24,6 +24,8 @@
 #include <fat/create.c>
 #include <fat/modify.c>
 #include <fat/dir.c>
+#include <fat/mkdir.c>
+#include <fat/cdf.c>
 
 
 void scan(void);

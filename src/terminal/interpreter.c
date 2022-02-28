@@ -21,11 +21,13 @@ void scan(void)
     //KEYBOARD_SIG_ON(no_keyboard_input);
 
     no_enter = true;
+    keyboard_scan_code = 0x0;
 
     if(cmpstr(program_name,"touch"))
     {
         touch();
     }
+    
     
     else if(cmpstr(program_name,"load"))
     {
@@ -33,6 +35,7 @@ void scan(void)
     	load(strtoi(program_parameters, 16));
     	app_exited = true;
     }
+    
      
     else if(cmpstr(program_name,"modify"))
     {
@@ -50,6 +53,11 @@ void scan(void)
 		loadch(strtoi(program_parameters, 16));
 		app_exited = true;
 	}	
+	
+	else if(cmpstr(program_name, "cdf"))
+	{
+		cdf(program_parameters);
+	}
 
     else if(cmpstr(program_name,"dev-info"))
     {
@@ -63,7 +71,12 @@ void scan(void)
 
     else if(cmpstr(program_name, "create"))
     {
-       create(program_parameters); 
+       	create(program_parameters); 
+    }
+    
+    else if(cmpstr(program_name, "mkdir"))
+    {
+		mkdir(program_parameters);
     }
 
     else if(cmpstr(program_name,"shutdown"))
