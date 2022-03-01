@@ -8,8 +8,17 @@
 #include <stdint.h>
 
 
+enum special_keys
+{
+    BSPC = 0xE,
+    ENTER = 0x1C,
+    ESC = 0x1
+};
+
 #define BSPC 0x0E
 #define ENTER 0x1C
+
+
 
 uint8_t keyboard_scan_code;
 

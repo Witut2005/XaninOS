@@ -58,5 +58,47 @@ root_directory_entry* fat_find_free_root_entry(void)
 }
 
 
+uint8_t fat_get_name_length(char* entry_name)
+{
+
+    uint8_t entry_name_length = 0x0;
+
+    while(entry_name[entry_name_length] != '.' && entry_name_length != 8)
+    {
+
+        if(entry_name_length >= 8)
+            return false;
+    
+        entry_name_length++;
+
+    }
+
+    if(!entry_name_length)
+        return false;
+
+    return entry_name_length;
+
+}
 
 
+void fat_save_entry_name(char* entry_name, root_directory_entry* entry)
+{
+    for(int i = 0; i < FILENAME_MAX_LENGTH; i++)
+    {
+    
+        if(i < fat_get_name_length(entry_name))
+        {
+            if(entry_name[i] < 0x20)
+                entry->file_name[i] = 0x20;
+            
+            else 
+                entry->file_name[i] = entry_name[i];
+        }
+    
+        else
+        {
+            entry->file_name[i] = 0x20;
+        }
+    }
+
+}

@@ -21,11 +21,13 @@
 #include <xaninApps/device_info.c>
 #include <xaninApps/load.c>
 #include <xaninApps/loadch.c>
+#include <xaninApps/epilepsy.c>
 #include <fat/create.c>
 #include <fat/modify.c>
 #include <fat/dir.c>
 #include <fat/mkdir.c>
 #include <fat/cdf.c>
+
 
 
 void scan(void);

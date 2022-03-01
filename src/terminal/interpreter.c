@@ -27,7 +27,11 @@ void scan(void)
     {
         touch();
     }
-    
+
+    else if(cmpstr(program_name,"epilepsy"))
+    {
+        epilepsy();
+    }    
     
     else if(cmpstr(program_name,"load"))
     {

@@ -24,11 +24,12 @@ void modify(char* file_name)
         struct
         {
             char file_name[8];
-            char file_extension[3];
+            char file_extension[4];
    
         };
     }file;
 
+    arrows_navigate = true;
 
     uint8_t file_name_length_counter = 0x0;
 
@@ -79,7 +80,9 @@ void modify(char* file_name)
 
     
     root_directory_entry* finded_entry;
-    
+
+    file.file_extension[3] = '\0';
+
     xprintf("your file: %s\n", file.fat_file_id);
 
 

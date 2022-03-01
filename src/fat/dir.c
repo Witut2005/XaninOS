@@ -12,8 +12,7 @@ void dir(void)
 
     char* print;
 
-
-    for(print = (char*)0x1800; *print != NULL; print += 32)
+    for(print = (char*)0x1800; *print != 0x0; print += 32)
         xprintf("%s\n", print);
 
     while(keyboard_scan_code != ENTER);

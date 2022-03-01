@@ -16,11 +16,13 @@ void cdf(char* folder_name)
         exit_process();
     }
 
-    fat.current_folder = folder->starting_cluster;
-
+    fat.current_folder = (uint16_t*)(folder->starting_cluster * CLUSTER_SIZE);
+    
     xprintf("folder: %d\n", fat.current_folder);
 
     while(keyboard_scan_code != ENTER);
     exit_process();
+
+
 
 }

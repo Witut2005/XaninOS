@@ -56,5 +56,4 @@ void disable_cursor(void)
 
 
 
-
 #endif

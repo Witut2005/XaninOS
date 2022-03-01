@@ -45,7 +45,8 @@ struct fat_folder_entry
 
 struct fat_metadata
 {
-    uint16_t current_folder; 
+    uint16_t* current_folder; 
+    uint16_t number_of_files;
 };
 
 struct fat_metadata fat;
@@ -66,6 +67,10 @@ fat_cell* file_allocation_table = (fat_cell*)FAT_START;
 void fat_read_cluster(uint16_t cluster_number);
 uint8_t fat_find_unallocated_cluster(void);
 root_directory_entry* fat_find_free_root_entry(void);
+uint8_t fat_get_name_length(char* entry_name);
+
+void fat_entry_name_padding(char* entry_name);
+void fat_save_entry_name(char* entry_name, root_directory_entry* entry);
 
 enum fat_macros
 {
