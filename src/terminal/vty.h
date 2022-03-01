@@ -35,5 +35,7 @@ void add_y(uint8_t yadd);
 bool no_enter = false;
 
 bool terminalAppExit = false;
+bool cursor_show = false;
+char selected_character; 
 
 #endif

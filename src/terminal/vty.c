@@ -36,33 +36,64 @@ void terminalKeyboard(uint8_t scanCode)
     {
         if(scanCode == ARROW_DOWN)
         {
+
+            *cursor = (uint16_t)(selected_character | ((black << 4) | white) << 8);
+
             if((uint32_t)cursor <= VGA_TEXT_MEMORY + (80 * sizeof(uint16_t) * 27))           
                 cursor += 80; 
 
+            selected_character = (char)*cursor;
+            *cursor = (uint16_t)('_' | ((black << 4) | white) << 8);
             return;
         }
 
         else if(scanCode == ARROW_RIGHT)
         {
+
+            *cursor = (uint16_t)(selected_character | ((black << 4) | white) << 8);
+
             cursor++;
+
+            selected_character = (char)*cursor;
+            *cursor = (uint16_t)('_' | ((black << 4) | white) << 8);
             return;
         }
 
         else if(scanCode == ARROW_LEFT)
         {
+
+            *cursor = (uint16_t)(selected_character | ((black << 4) | white) << 8);
             cursor--;
+
+            selected_character = (char)*cursor;
+            *cursor = (uint16_t)('_' | ((black << 4) | white) << 8);
             return;
         }
 
         else if(scanCode == ARROW_UP)
         {
+            *cursor = (uint16_t)(selected_character | ((black << 4) | white) << 8);
+
             if((uint32_t)cursor >= VGA_TEXT_MEMORY + (80 * sizeof(uint16_t)))
                 cursor -= 80; 
+            
+            selected_character = (char)*cursor;
+            *cursor = (uint16_t)('_' | ((black << 4) | white) << 8);
             return;
         }
         
         
     }
+
+    /*
+
+    if(cursor_show)
+    {
+        selected_character = (char)*cursor;
+        *cursor = (uint16_t)('_' | ((black << 4) | white) << 8);
+    }
+
+    */
 
     if(scanCode == BSPC)
     {

@@ -30,6 +30,7 @@ void modify(char* file_name)
     }file;
 
     arrows_navigate = true;
+    cursor_show = true;
 
     uint8_t file_name_length_counter = 0x0;
 
