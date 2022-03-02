@@ -7,6 +7,18 @@
 #define FAT_START 0x800
 #define ROOT_DIRECTORY_START 0x1800 
 
+union fat_file
+{
+    
+    char fat_file_id[12];
+
+    struct
+    {
+        char file_name[8];
+        char file_extension[4];
+   
+    };
+}file;
 
 struct root_directory_entry
 {
@@ -69,7 +81,7 @@ uint8_t fat_find_unallocated_cluster(void);
 root_directory_entry* fat_find_free_root_entry(void);
 uint8_t fat_get_name_length(char* entry_name);
 
-void fat_entry_name_padding(char* entry_name);
+void fat_entry_name_padding(char* entry_name, uint8_t name_length);
 void fat_save_entry_name(char* entry_name, root_directory_entry* entry);
 
 enum fat_macros

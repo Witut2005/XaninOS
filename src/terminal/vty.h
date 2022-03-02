@@ -1,7 +1,6 @@
 
 
-#ifndef VTY_H
-#define VTY_H
+#pragma once
 
 #include <headers/macros.h>
 #include <headers/colors.h>
@@ -38,4 +37,4 @@ bool terminalAppExit = false;
 bool cursor_show = false;
 char selected_character; 
 
-#endif
+#define putchar_at_cursor(x) *cursor = (uint16_t)(x | ((black << 4) | white) << 8)

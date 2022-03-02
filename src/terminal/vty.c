@@ -43,7 +43,7 @@ void terminalKeyboard(uint8_t scanCode)
                 cursor += 80; 
 
             selected_character = (char)*cursor;
-            *cursor = (uint16_t)('_' | ((black << 4) | white) << 8);
+            putchar_at_cursor('_');
             return;
         }
 
@@ -51,11 +51,10 @@ void terminalKeyboard(uint8_t scanCode)
         {
 
             *cursor = (uint16_t)(selected_character | ((black << 4) | white) << 8);
-
             cursor++;
 
             selected_character = (char)*cursor;
-            *cursor = (uint16_t)('_' | ((black << 4) | white) << 8);
+            putchar_at_cursor('_');
             return;
         }
 
@@ -66,7 +65,7 @@ void terminalKeyboard(uint8_t scanCode)
             cursor--;
 
             selected_character = (char)*cursor;
-            *cursor = (uint16_t)('_' | ((black << 4) | white) << 8);
+            putchar_at_cursor('_');
             return;
         }
 
@@ -78,7 +77,7 @@ void terminalKeyboard(uint8_t scanCode)
                 cursor -= 80; 
             
             selected_character = (char)*cursor;
-            *cursor = (uint16_t)('_' | ((black << 4) | white) << 8);
+            putchar_at_cursor('_');
             return;
         }
         
@@ -90,6 +89,7 @@ void terminalKeyboard(uint8_t scanCode)
     if(cursor_show)
     {
         selected_character = (char)*cursor;
+        
         *cursor = (uint16_t)('_' | ((black << 4) | white) << 8);
     }
 

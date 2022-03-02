@@ -102,3 +102,26 @@ void fat_save_entry_name(char* entry_name, root_directory_entry* entry)
     }
 
 }
+
+
+void fat_entry_name_padding(char* entry_name, uint8_t name_length)
+{
+    for(int i = 0; i < FILENAME_MAX_LENGTH; i++)
+    {
+
+        if(i < name_length)
+        {
+            if(entry_name[i] < 0x20)
+                file.file_name[i] = 0x20;
+            
+            else 
+                file.file_name[i] = entry_name[i];
+        }
+    
+        else
+        {
+            file.file_name[i] = 0x20;
+        }
+    
+    }
+}

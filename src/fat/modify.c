@@ -16,18 +16,7 @@ void modify(char* file_name)
     no_enter = true;
     clearScr();
 
-    union fat_file
-    {
-    
-        char fat_file_id[12];
 
-        struct
-        {
-            char file_name[8];
-            char file_extension[4];
-   
-        };
-    }file;
 
     arrows_navigate = true;
     cursor_show = true;
@@ -42,24 +31,7 @@ void modify(char* file_name)
         file_name_length_counter++;
     }
 
-    for(int i = 0; i < FILENAME_MAX_LENGTH; i++)
-    {
-
-        if(i < file_name_length_counter)
-        {
-            if(file_name[i] < 0x20)
-                file.file_name[i] = 0x20;
-            
-            else 
-                file.file_name[i] = file_name[i];
-        }
-    
-        else
-        {
-            file.file_name[i] = 0x20;
-        }
-    
-    }
+    fat_entry_name_padding(file_name, file_name_length_counter);
 
     if(find_character('.', file_name) == nullptr)
     {
