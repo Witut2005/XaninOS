@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "stdlibx.h": "c",
+        "stdiox.h": "c"
+    }
+}

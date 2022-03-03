@@ -22,6 +22,7 @@
 #include <xaninApps/load.c>
 #include <xaninApps/loadch.c>
 #include <xaninApps/epilepsy.c>
+#include <xaninApps/keyboard_test.c>
 #include <fat/create.c>
 #include <fat/modify.c>
 #include <fat/dir.c>

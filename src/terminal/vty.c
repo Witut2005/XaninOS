@@ -24,6 +24,20 @@ static uint8_t index = 0x0;
 void terminalKeyboard(uint8_t scanCode)
 {
 
+    keyboard_scan_code = scanCode;
+
+    
+    if(keyboard_scan_code >= 128 )
+    {
+        key_released = true;
+        return;
+    }
+
+    key_released = false;
+
+    if(print_off)
+        return;
+
     if(!index)
     {
         for(int i = 0; i < 50;i++)

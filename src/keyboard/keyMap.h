@@ -22,6 +22,7 @@ enum special_keys
 
 
 uint8_t keyboard_scan_code;
+uint16_t ugalol;
 
 uint8_t keyboard_map[128] = {
   // -------- 0 to 9 --------

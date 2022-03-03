@@ -1,11 +1,25 @@
 
 
-#include <stdio.h>
-#include <stdlibx.h>
+#include <lib/stdiox.h>
+#include <lib/stdlibx.h>
+#include <handlers/handlers.c>
 
 void keyboard_test(void)
 {
 
-    xprintf("%x ", keyboard_scan_code);
+    uint16_t* tmp = (uint16_t*)VGA_TEXT_MEMORY;
+
+    clearScr();
+
+    while(1)
+    {
+    
+    if(key_pressed())
+        xprintf("%x ", ugalol);
+        //*tmp = (uint16_t)('1'| ((black << 4) | white) << 8);
+    //else
+      //  *tmp = (uint16_t)('0'| ((black << 4) | white) << 8);
+
+    }
 
 }

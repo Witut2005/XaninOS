@@ -40,6 +40,10 @@ void scan(void)
     	app_exited = true;
     }
     
+    else if(cmpstr(program_name,"key-test"))
+    {
+        keyboard_test();
+    }
      
     else if(cmpstr(program_name,"modify"))
     {

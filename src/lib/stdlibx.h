@@ -29,6 +29,14 @@ struct TIME time;
 
 char* weekDaysLUT[7] = {"Sunday","Monday","Tuesday ","Wednesday","Thursday","Friday","Saturday"};
 
+bool key_pressed(void)
+{
+    if(key_released)
+        return false;
+    else
+        return true;
+}
+
 void getTime()
 {
     asm("cli");
