@@ -13,11 +13,14 @@ enum special_keys
     BSPC = 0xE,
     ENTER = 0x1C,
     ESC = 0x1,
-    CAPS = 0x3A
+    CAPS = 0x3A,
+    ARROW_UP = 72,
+    ARROW_LEFT = 75,
+    ARROW_RIGHT = 77,
+    ARROW_DOWN = 80,
+    LSHIFT = 0x2A,
+    LSHIFT_RELEASE = 0xAA
 };
-
-#define BSPC 0x0E
-#define ENTER 0x1C
 
 
 
@@ -93,10 +96,3 @@ uint8_t keyboard_map[128] = {
 
 };
 
-enum keyboard_special_keys
-{
-    ARROW_UP = 72,
-    ARROW_LEFT = 75,
-    ARROW_RIGHT = 77,
-    ARROW_DOWN = 80
-};

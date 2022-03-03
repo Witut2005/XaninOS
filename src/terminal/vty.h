@@ -42,3 +42,4 @@ char selected_character;
 bool caps_on = false;
 bool print_off = false;
 bool key_released = false;
+bool lshift_pressed = false;

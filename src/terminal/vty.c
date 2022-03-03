@@ -26,7 +26,18 @@ void terminalKeyboard(uint8_t scanCode)
 
     keyboard_scan_code = scanCode;
 
-    
+    if(keyboard_scan_code == LSHIFT)
+    {
+        lshift_pressed = true;
+        return;
+    }
+
+    if(keyboard_scan_code == LSHIFT_RELEASE)
+    {
+        lshift_pressed = false;
+        return;
+    }
+
     if(keyboard_scan_code >= 128 )
     {
         key_released = true;
@@ -57,9 +68,13 @@ void terminalKeyboard(uint8_t scanCode)
 
     uint8_t key = keyboard_map[scanCode];
 
-    if(caps_on)
+    if(caps_on || lshift_pressed)
         if(key >= 'a' && key <= 'z')
             key -= 32;
+
+    if(lshift_pressed)
+        if(key == '-')
+            key = '_';
 
     if(arrows_navigate)
     {
