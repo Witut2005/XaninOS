@@ -30,7 +30,22 @@ void terminalKeyboard(uint8_t scanCode)
             keyboard_command[i] = '\0';
     }
 
+    if(scanCode == CAPS)
+    {
+        if(caps_on)
+            caps_on = false;
+        else
+            caps_on = true;
+
+        return;
+    }
+
+
     uint8_t key = keyboard_map[scanCode];
+
+    if(caps_on)
+        if(key >= 'a' && key <= 'z')
+            key -= 32;
 
     if(arrows_navigate)
     {

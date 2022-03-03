@@ -38,3 +38,5 @@ bool cursor_show = false;
 char selected_character; 
 
 #define putchar_at_cursor(x) *cursor = (uint16_t)(x | ((black << 4) | white) << 8)
+
+bool caps_on = false;

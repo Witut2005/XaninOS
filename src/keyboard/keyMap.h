@@ -12,7 +12,8 @@ enum special_keys
 {
     BSPC = 0xE,
     ENTER = 0x1C,
-    ESC = 0x1
+    ESC = 0x1,
+    CAPS = 0x3A
 };
 
 #define BSPC 0x0E
