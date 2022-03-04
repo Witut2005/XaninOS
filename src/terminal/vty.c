@@ -76,6 +76,50 @@ void terminalKeyboard(uint8_t scanCode)
         if(key == '-')
             key = '_';
 
+    if(lshift_pressed)
+        if(key == '1' || key == '3' || key == '4' || key == '5')
+            key -= 16;
+
+    if(lshift_pressed)
+        if(key == '2')
+            key = '@';
+
+    if(lshift_pressed)
+        if(key == '6')
+            key = '^';
+
+    if(lshift_pressed)
+        if(key == '7')
+            key = '&';
+
+    if(lshift_pressed)
+        if(key == '8')
+            key = '*';
+
+    if(lshift_pressed)
+        if(key == '9')
+            key = '(';
+
+    if(lshift_pressed)
+        if(key == '0')
+            key = ')';
+
+    if(lshift_pressed)
+        if(key == '=')
+            key = '+';
+
+    if(lshift_pressed)
+        if(key == '[')
+            key = '{';
+
+    if(lshift_pressed)
+        if(key == ']')
+            key = '}';
+
+    if(lshift_pressed)
+        if(key == '/')
+            key = '?';
+
     if(arrows_navigate)
     {
         if(scanCode == ARROW_DOWN)
