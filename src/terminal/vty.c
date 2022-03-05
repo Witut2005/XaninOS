@@ -81,44 +81,22 @@ void terminalKeyboard(uint8_t scanCode)
             key -= 16;
 
     if(lshift_pressed)
-        if(key == '2')
-            key = '@';
+    {
 
-    if(lshift_pressed)
-        if(key == '6')
-            key = '^';
+        remap_key('2', '@');
+        remap_key('6', '^');
+        remap_key('7', '&');
+        remap_key('8', '*');
+        remap_key('9','(');
+        remap_key('0',')');
+        remap_key('=', '+');
+        remap_key('[', '{');
+        remap_key(']', '}');
+        remap_key('/', '?');
+        remap_key(';', ':');
+        remap_key('`','~');
 
-    if(lshift_pressed)
-        if(key == '7')
-            key = '&';
-
-    if(lshift_pressed)
-        if(key == '8')
-            key = '*';
-
-    if(lshift_pressed)
-        if(key == '9')
-            key = '(';
-
-    if(lshift_pressed)
-        if(key == '0')
-            key = ')';
-
-    if(lshift_pressed)
-        if(key == '=')
-            key = '+';
-
-    if(lshift_pressed)
-        if(key == '[')
-            key = '{';
-
-    if(lshift_pressed)
-        if(key == ']')
-            key = '}';
-
-    if(lshift_pressed)
-        if(key == '/')
-            key = '?';
+    }
 
     if(arrows_navigate)
     {

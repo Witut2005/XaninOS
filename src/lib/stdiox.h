@@ -497,7 +497,49 @@ void xscanf(char* str, ... )
                         case 'd':
                         {
 
+                            uint32_t* number = va_arg(args, uint32_t*);
                             
+                            for(int i = 0x0; keyboard_command[counter] != '\0' && keyboard_command[counter] != ' '; i++)
+                            {
+                                buffer[i] = keyboard_command[counter];
+                                counter++;
+                            }
+                            
+                            *number = strtoi(buffer, 10);                       
+
+                            break;
+                        }
+
+                        case 'x':
+                        {
+
+                            uint32_t* number = va_arg(args, uint32_t*);
+                            
+                            for(int i = 0x0; keyboard_command[counter] != '\0' && keyboard_command[counter] != ' '; i++)
+                            {
+                                buffer[i] = keyboard_command[counter];
+                                counter++;
+                            }
+                            
+                            *number = strtoi(buffer, 16);                       
+
+                            break;
+                        }
+                    
+
+                        case 'b':
+                        {
+
+                            uint32_t* number = va_arg(args, uint32_t*);
+                            
+                            for(int i = 0x0; keyboard_command[counter] != '\0' && keyboard_command[counter] != ' '; i++)
+                            {
+                                buffer[i] = keyboard_command[counter];
+                                counter++;
+                            }
+                            
+                            *number = strtoi(buffer, 2);                       
+
                             break;
                         }
 

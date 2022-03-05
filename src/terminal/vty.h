@@ -39,7 +39,14 @@ char selected_character;
 
 #define putchar_at_cursor(x) *cursor = (uint16_t)(x | ((black << 4) | white) << 8)
 
+#define remap_key(from, to)\
+        if(key == from)\
+            key = to
+
+
 bool caps_on = false;
 bool print_off = false;
 bool key_released = false;
 bool lshift_pressed = false;
+
+

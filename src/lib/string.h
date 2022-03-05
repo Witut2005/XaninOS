@@ -251,9 +251,22 @@ uint32_t strtoi(char* str, uint8_t format)
 
     uint16_t* tmp_text = VGA_TEXT_MEMORY;
     uint8_t digit_counter = strlen(str);
+	uint32_t tmp;
 
     for(int i = 0; i < digit_counter; i++)
     {
+    
+    	if(str[i] >= '0' && str[i] <= '9')
+    		tmp = str[i] - 48;
+    	
+    	else if(str[i] >= 'a' && str[i] <= 'f')
+            tmp = str[i] - 'a' + 0xa;
+            
+        else if(str[i] >= 'A' && str[i] <= 'F')
+        	tmp = str[i] - 'A' + 0xa; 
+    
+    	if(tmp >= format)
+    		continue;
     
         sum *= format;
 
