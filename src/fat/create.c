@@ -1,5 +1,6 @@
 
 #include <fat/fat_driver.h>
+#include <fat/find_file.c>
 #include <lib/stdiox.h>
 #include <lib/algorithm.h>
 
@@ -18,29 +19,28 @@ void create(char* file_name)
 
     root_directory_entry* free_root_entry = fat_find_free_root_entry();
 
-    fat_save_entry_name(file_name, free_root_entry);
 
-    /*
-
-    for(int i = 0; i < FILENAME_MAX_LENGTH; i++)
+    for(int i = 0; i < 512 / 2; i++)
     {
-    
-        if(i < file_name_length_counter)
+        
+        if(fat.current_folder[i] == FAT_UNALLOCATED)
         {
-            if(file_name[i] < 0x20)
-                free_root_entry->file_name[i] = 0x20;
-            
-            else 
-                free_root_entry->file_name[i] = file_name[i];
+            fat.current_folder[i] = (char)(((uint32_t)free_root_entry - ROOT_DIRECTORY_START) / 32);
+            break;
         }
-    
-        else
-        {
-            free_root_entry->file_name[i] = 0x20;
-        }
+
     }
 
-    */
+    root_directory_entry* folder_info = find_file(fat_current_folder);
+    uint16_t* folder_data = folder_info->starting_cluster * CLUSTER_SIZE;
+
+    for(int i = 0; i < 512; i++)
+    {
+        if(folder_data[i] == FAT_UNALLOCATED)
+            folder_data[i] = (uint32_t)(free_root_entry - ROOT_DIRECTORY_START) / 32;
+    }
+
+    fat_save_entry_name(file_name, free_root_entry);
 
     if(find_character('.', file_name) == nullptr)
     {
@@ -60,22 +60,6 @@ void create(char* file_name)
         else 
             free_root_entry->file_extension[extension_counter] = *i;
     }
-
-
-    /*
-    root_directory_table[fat_entries].file_attr = 0x0;
-    root_directory_table[fat_entries].entry_case = 0x0;
-    root_directory_table[fat_entries].creation_time_miliseconds = 0x0;
-    root_directory_table[fat_entries].creation_time = 0x0;
-    root_directory_table[fat_entries].creation_date = 0x0;
-    root_directory_table[fat_entries].last_access_date = 0x0;
-    root_directory_table[fat_entries].reserved = 0x0;
-    root_directory_table[fat_entries].last_modification_time = 0x0;
-    root_directory_table[fat_entries].last_modification_date = 0x0;
-    root_directory_table[fat_entries].starting_cluster = fat_find_unallocated_cluster();  
-    root_directory_table[fat_entries].file_size = 512;
-
-    */
 
     free_root_entry->file_attr = 0x0;
     free_root_entry->entry_case = 0x0;

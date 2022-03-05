@@ -11,12 +11,17 @@ void dir(void)
     keyboard_scan_code = 0x0;
 
     char* print;
+    int i = 0;
 
-    for(print = (char*)0x1800; *print != 0x0; print += 32)
-        xprintf("%s\n", print);
+    root_directory_entry* file = ROOT_DIRECTORY_START;
+
+    while(fat.current_folder[i] != FAT_UNALLOCATED)
+    {
+        xprintf("%s\n", file[fat.current_folder[i]].file_name);
+        i++;
+    }
 
     while(keyboard_scan_code != ENTER);
-
     exit_process();
 
 }

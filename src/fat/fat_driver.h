@@ -57,7 +57,7 @@ struct fat_folder_entry
 
 struct fat_metadata
 {
-    uint16_t* current_folder; 
+    uint8_t* current_folder; 
     uint16_t number_of_files;
 };
 
@@ -95,3 +95,5 @@ enum fat_macros
     CLUSTER_SIZE = 0x200,
     ROOT_DIRECTORY = 0x0
 };
+
+char fat_current_folder[8];

@@ -73,16 +73,12 @@ void terminalKeyboard(uint8_t scanCode)
             key -= 32;
 
     if(lshift_pressed)
-        if(key == '-')
-            key = '_';
-
-    if(lshift_pressed)
         if(key == '1' || key == '3' || key == '4' || key == '5')
             key -= 16;
 
     if(lshift_pressed)
     {
-
+        remap_key('-','_');
         remap_key('2', '@');
         remap_key('6', '^');
         remap_key('7', '&');
@@ -95,6 +91,11 @@ void terminalKeyboard(uint8_t scanCode)
         remap_key('/', '?');
         remap_key(';', ':');
         remap_key('`','~');
+        remap_key(',','<');
+        remap_key('.', '>');
+
+        if(key == 0x27)
+            key = 0x22;
 
     }
 

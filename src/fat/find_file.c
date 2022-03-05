@@ -17,7 +17,8 @@ root_directory_entry* find_file(char* file_name)
             return (root_directory_entry*)i;
 		}
 		
-		//xprintf("%s\n", (char*)0x1820);
+		xprintf("%s\n", (char*)0x1800);
+
     }
 
 
