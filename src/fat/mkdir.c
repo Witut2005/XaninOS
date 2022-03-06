@@ -22,30 +22,55 @@ void mkdir(char* file_name)
 
     root_directory_entry* free_root_entry = fat_find_free_root_entry();
 
+    if(used_folder == ROOT_DIRECTORY_START)
+    {
+
     for(int i = 0; i < FILENAME_MAX_LENGTH; i++)
     {
     
         if(i < file_name_length_counter)
         {
             if(file_name[i] < 0x20)
-                free_root_entry->file_name[i] = 0x20;
+                file_name[i] = 0x20;
             
             else 
-                free_root_entry->file_name[i] = file_name[i];
+                file_name[i] = file_name[i];
         }
     
         else
         {
-            free_root_entry->file_name[i] = 0x20;
+            file_name[i] = 0x20;
         }
     }
 
+    }
 
     fat_folder* new_entry = fat_find_free_folder_entry(used_folder);
 
 
+
     for(int i = 0; i < FILENAME_MAX_LENGTH; i++)
-        new_entry->entry_name[i] = "a";
+        new_entry->entry_name[i] = file_name[i];
+
+
+    new_entry->entry_attr = FAT_FOLDER;
+    //new_entry->file_extension[0] = '\0';
+    new_entry->entry_case = 0x0;
+    new_entry->creation_time_miliseconds = 0x0;
+    new_entry->creation_time = 0x0;
+    new_entry->creation_date = 0x0;
+    new_entry->last_access_date = 0x0;
+    new_entry->reserved = 0x0;
+    new_entry->last_modification_time = 0x0;
+    new_entry->last_modification_date = 0x0;
+    new_entry->starting_cluster = fat_find_unallocated_cluster();  
+    
+
+    if(used_folder != ROOT_DIRECTORY_START)
+    {
+    new_entry->entry_name[0] = '.';
+    new_entry->entry_name[1] = '\0';
+
 
     new_entry->entry_attr = FAT_FOLDER;
     //new_entry->file_extension[0] = '\0';
@@ -59,7 +84,34 @@ void mkdir(char* file_name)
     new_entry->last_modification_date = 0x0;
     new_entry->starting_cluster = fat_find_unallocated_cluster();  
 
+    new_entry++;
 
+    new_entry->entry_name[0] = '.';
+    new_entry->entry_name[1] = '.';
+    new_entry->entry_name[2] = '\0';
+
+
+    new_entry->entry_attr = FAT_FOLDER;
+    //new_entry->file_extension[0] = '\0';
+    new_entry->entry_case = 0x0;
+    new_entry->creation_time_miliseconds = 0x0;
+    new_entry->creation_time = 0x0;
+    new_entry->creation_date = 0x0;
+    new_entry->last_access_date = 0x0;
+    new_entry->reserved = 0x0;
+    new_entry->last_modification_time = 0x0;
+    new_entry->last_modification_date = 0x0;
+    new_entry->starting_cluster = fat_find_unallocated_cluster();  
+
+    char* write_entry = (char*)0x800 + free_root_entry->starting_cluster;
+    *write_entry = FAT_ALLOCATED;
+    *(write_entry + 1) = FAT_END_FILE;
+
+    }
+
+    else
+    {
+    
     free_root_entry->file_attr = FAT_FOLDER;
     free_root_entry->file_extension[0] = '\0';
     free_root_entry->entry_case = 0x0;
@@ -71,11 +123,15 @@ void mkdir(char* file_name)
     free_root_entry->last_modification_time = 0x0;
     free_root_entry->last_modification_date = 0x0;
     free_root_entry->starting_cluster = fat_find_unallocated_cluster();  
-    
+  
+
     char* write_entry = (char*)0x800 + free_root_entry->starting_cluster;
     *write_entry = FAT_ALLOCATED;
     *(write_entry + 1) = FAT_END_FILE;
-    
+
+    }
+
+
     free_root_entry->file_size = 512;
 
     fat_entries += 2;

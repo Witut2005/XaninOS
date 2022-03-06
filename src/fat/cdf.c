@@ -36,9 +36,25 @@ void cdf(char* folder_name)
     fat.current_folder = (uint8_t*)(folder->starting_cluster * CLUSTER_SIZE); 
     
     //if(used_folder == nullptr)
-    {
+    
+    if(used_folder == ROOT_DIRECTORY_START)
         used_folder = (fat_folder*)(folder->starting_cluster * CLUSTER_SIZE); 
-    }    
+
+    else
+    {
+        for(fat_folder* i = used_folder; (uint32_t)i < ((uint32_t)used_folder + (CLUSTER_SIZE * 2)); i++)
+        {
+     
+            if(cmpstr(folder_name, (char*)i))
+            {
+         	    //xprintf("%zFILE EXIST", set_output_color(green,white));
+                used_folder = i->starting_cluster * CLUSTER_SIZE;
+		    }
+	
+        }
+
+    }
+
 
     xprintf("folder: %d\n", fat.current_folder);
 

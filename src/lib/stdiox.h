@@ -336,8 +336,38 @@ void xprintf(char* str, ... )
                         bufCounter++;
                         x++;
                     }
+                    break;
                 }
 
+                case 'm':
+                {
+
+                    strCounter++;
+                    switch(str[strCounter])
+                    {
+                        case 'x':
+                        {
+
+                            uint8_t number_hex = (uint8_t)va_arg(args,uint32_t);
+                            xint_to_hex_str(number_hex,tmpPtr, sizeof(uint8_t));
+
+                            for(int i = 0; tmpPtr[i] != '\0'; i++)
+                            {
+                                cursor[bufCounter] = (uint16_t) (tmpPtr[i] + (((backgroundColor << 4) | fontColor) << 8));
+                                bufCounter++;
+                                x++;
+                            }
+
+                    
+                            break;                            
+
+                        }
+                    
+                    }
+
+
+                    break;
+                }
 
 
             }

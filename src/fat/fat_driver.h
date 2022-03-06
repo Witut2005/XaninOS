@@ -82,7 +82,7 @@ struct fat_folder
 }__attribute__((packed));
 
 typedef struct fat_folder fat_folder;
-fat_folder* used_folder;
+fat_folder* used_folder = ROOT_DIRECTORY_START;
 
 
 struct fat_metadata

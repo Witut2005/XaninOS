@@ -14,6 +14,7 @@
 #include <devices/USB/usb.c>
 #include <devices/HARD_DISK/disk.c>
 #include <fat/fat_driver.c>
+#include <xin_fs/xin.c>
 
 //extern void init_disk(uint16_t base, uint8_t master);
 //extern void disk_read(uint16_t base, uint8_t master, uint32_t sector_number, uint32_t bytes_number, uint16_t* where);
@@ -107,10 +108,10 @@ void _start(void)
     getCpuSpeed();
     getTime();
     srand(time.seconds);
-    file_system_init();
+    //file_system_init();
     clearScr();   
 	
-
+    xin_init_fs();
     
     //init_disk(ATA_SLAVE);
     //disk_read(ATA_SLAVE, 0x0,250, 0x7c00);

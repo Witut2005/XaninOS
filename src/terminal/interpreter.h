@@ -23,12 +23,14 @@
 #include <xaninApps/loadch.c>
 #include <xaninApps/epilepsy.c>
 #include <xaninApps/keyboard_test.c>
+
 #include <fat/create.c>
 #include <fat/modify.c>
 #include <fat/dir.c>
 #include <fat/mkdir.c>
 #include <fat/cdf.c>
 
+#include <xin_fs/xin.c>
 
 
 void scan(void);

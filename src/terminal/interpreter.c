@@ -79,7 +79,8 @@ void scan(void)
 
     else if(cmpstr(program_name, "create"))
     {
-       	create(program_parameters); 
+       	//create(program_parameters); 
+        xin_create_file(program_parameters);
     }
     
     else if(cmpstr(program_name, "mkdir"))

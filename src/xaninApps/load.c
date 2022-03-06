@@ -18,7 +18,7 @@ void load(uint32_t address)
     	{
 			xprintf("\n");
     	}	
-        xprintf("%x ", data_pointer[i]);
+        xprintf("%mx ", data_pointer[i]);
     }
 
 	while(keyboard_scan_code != ENTER);
