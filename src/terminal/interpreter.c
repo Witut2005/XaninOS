@@ -64,7 +64,7 @@ void scan(void)
 	
 	else if(cmpstr(program_name, "cdf"))
 	{
-		cdf(program_parameters);
+		//cdf(program_parameters);
 	}
 
     else if(cmpstr(program_name,"dev-info"))
@@ -85,7 +85,8 @@ void scan(void)
     
     else if(cmpstr(program_name, "mkdir"))
     {
-		mkdir(program_parameters);
+		//mkdir(program_parameters);
+        xin_create_directory(program_parameters);
     }
 
     else if(cmpstr(program_name,"shutdown"))
@@ -123,13 +124,15 @@ void scan(void)
 
     else if(cmpstr(program_name,"cd"))
     {
-        cd();
+        //cd();
+        xin_change_directory(program_parameters);
     }
 
     else if(cmpstr(program_name,"pwd"))
     {
-        pwd();
-        app_exited = true;
+        xprintf("%s\n", xin_current_directory);
+        //pwd();
+        //app_exited = true;
     }
 
 

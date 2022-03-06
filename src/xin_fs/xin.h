@@ -12,7 +12,11 @@ enum xin_fs_properties
     XIN_EOF = 0xFF,
     MAX_PATH = 40,
     PERMISSION_MAX = 0xFF,
-    SECTOR_SIZE = 512
+    SECTOR_SIZE = 512,
+    XIN_FILE = 'F',
+    XIN_DIRECTORY = 'D',
+    XIN_LINK = 'L',
+    XIN_HARD_LINK = 'H'
 };
 
 struct xin_entry
@@ -34,9 +38,19 @@ struct xin_entry
 
 typedef struct xin_entry xin_entry;
 
-xin_entry* xin_find_free_entry(void);
-xin_entry* xin_create_file(char* entry_name);
-xin_entry* xin_init_fs(void);
+
+char xin_current_directory[40] = {'\0'};
+
+
+
 bool xin_remove_entry(char* entry_name);
+
+xin_entry* xin_init_fs(void);
+xin_entry* xin_find_free_entry(void);
+
+void xin_create_file(char* entry_name);
+void xin_create_directory(char* entry_name);
+void xin_change_directory(char* new_directory);
+
 
 
