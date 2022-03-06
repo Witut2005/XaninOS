@@ -41,6 +41,25 @@ void mkdir(char* file_name)
     }
 
 
+    fat_folder* new_entry = fat_find_free_folder_entry(used_folder);
+
+
+    for(int i = 0; i < FILENAME_MAX_LENGTH; i++)
+        new_entry->entry_name[i] = "a";
+
+    new_entry->entry_attr = FAT_FOLDER;
+    //new_entry->file_extension[0] = '\0';
+    new_entry->entry_case = 0x0;
+    new_entry->creation_time_miliseconds = 0x0;
+    new_entry->creation_time = 0x0;
+    new_entry->creation_date = 0x0;
+    new_entry->last_access_date = 0x0;
+    new_entry->reserved = 0x0;
+    new_entry->last_modification_time = 0x0;
+    new_entry->last_modification_date = 0x0;
+    new_entry->starting_cluster = fat_find_unallocated_cluster();  
+
+
     free_root_entry->file_attr = FAT_FOLDER;
     free_root_entry->file_extension[0] = '\0';
     free_root_entry->entry_case = 0x0;
@@ -65,8 +84,7 @@ void mkdir(char* file_name)
 
     while(keyboard_scan_code != ENTER);
 
-    for(int i = 0; i < sizeof(comBuf);i++)
-        keyboard_command[i] = '\0';
-    app_exited = true;
+    exit_process();
+
 }
 

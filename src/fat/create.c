@@ -61,6 +61,26 @@ void create(char* file_name)
             free_root_entry->file_extension[extension_counter] = *i;
     }
 
+
+
+    fat_folder* new_entry = fat_find_free_folder_entry(used_folder);
+
+    for(int i = 0; i < FILENAME_MAX_LENGTH; i++)
+        new_entry->entry_name[i] = 'a';
+
+    new_entry->entry_attr = FAT_FOLDER;
+    //new_entry->file_extension[0] = '\0';
+    new_entry->entry_case = 0x0;
+    new_entry->creation_time_miliseconds = 0x0;
+    new_entry->creation_time = 0x0;
+    new_entry->creation_date = 0x0;
+    new_entry->last_access_date = 0x0;
+    new_entry->reserved = 0x4142;
+    new_entry->last_modification_time = 0x0;
+    new_entry->last_modification_date = 0x0;
+    new_entry->starting_cluster = fat_find_unallocated_cluster();  
+
+
     free_root_entry->file_attr = 0x0;
     free_root_entry->entry_case = 0x0;
     free_root_entry->creation_time_miliseconds = 0x0;

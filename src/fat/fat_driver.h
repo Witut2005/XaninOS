@@ -40,20 +40,50 @@ struct root_directory_entry
     uint32_t file_size;
 }__attribute__((packed));
 
-struct fat_folder_entry
+struct file_entry
 {
-    char name[8];
-    char attribute;
-    uint16_t create_time_1;
-    uint8_t create_time_2;
-    uint16_t create_date;
-    uint16_t last_access_date;
-    uint16_t last_modified_time;
-    uint16_t last_modified_date;
-    uint16_t starting_cluster;
-    uint32_t folder_size;
 
+    char file_name[8];
+    char file_extension[3];
+    char file_attr;
+    char entry_case;
+    char creation_time_miliseconds;
+    uint16_t creation_time;
+    uint16_t creation_date;
+    uint16_t last_access_date;
+    uint16_t reserved;
+    uint16_t last_modification_time;
+    uint16_t last_modification_date;
+    
+    uint16_t starting_cluster;
+    
+    uint32_t file_size;
 }__attribute__((packed));
+
+typedef struct file_entry file_entry;
+
+struct fat_folder
+{
+
+    char entry_name[11];
+    char entry_attr;
+    char entry_case;
+    char creation_time_miliseconds;
+    uint16_t creation_time;
+    uint16_t creation_date;
+    uint16_t last_access_date;
+    uint16_t reserved;
+    uint16_t last_modification_time;
+    uint16_t last_modification_date;
+    
+    uint16_t starting_cluster;
+    
+    uint32_t file_size;
+}__attribute__((packed));
+
+typedef struct fat_folder fat_folder;
+fat_folder* used_folder;
+
 
 struct fat_metadata
 {
@@ -83,6 +113,7 @@ uint8_t fat_get_name_length(char* entry_name);
 
 void fat_entry_name_padding(char* entry_name, uint8_t name_length);
 void fat_save_entry_name(char* entry_name, root_directory_entry* entry);
+fat_folder* fat_find_free_folder_entry(fat_folder* current_folder);
 
 enum fat_macros
 {

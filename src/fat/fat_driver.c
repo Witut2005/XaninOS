@@ -48,8 +48,42 @@ root_directory_entry* fat_find_free_root_entry(void)
     for(fat_counter = (char*)0x1800; (uint32_t)fat_counter < 0x1800 + (SECTOR_SIZE * 2); fat_counter++)
     { 
     
-        if((uint32_t)fat_counter % 32 == 0 && *fat_counter == 0)
+        if((uint32_t)fat_counter % 32 == 0 && *fat_counter == 0x0)
             return (root_directory_entry*)fat_counter;
+    
+    }
+
+    return nullptr;
+
+}
+
+fat_folder* fat_find_free_file_entry(fat_folder* current_folder)
+{
+
+    char* fat_counter;
+
+    for(fat_counter = (char*)current_folder; (uint32_t)fat_counter < 0x1800 + (CLUSTER_SIZE * 2); fat_counter++)
+    { 
+    
+        if((uint32_t)fat_counter % 32 == 0 && *fat_counter == 0x0)
+            return (fat_folder*)fat_counter;
+    
+    }
+
+    return nullptr;
+
+}
+
+fat_folder* fat_find_free_folder_entry(fat_folder* current_folder)
+{
+
+    char* fat_counter;
+
+    for(fat_counter = (char*)current_folder; (uint32_t)fat_counter < 0x1800 + (CLUSTER_SIZE * 2); fat_counter++)
+    { 
+    
+        if((uint32_t)fat_counter % 32 == 0 && *fat_counter == 0x0)
+            return (fat_folder*)fat_counter;
     
     }
 

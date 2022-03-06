@@ -140,7 +140,7 @@ void _start(void)
 
    
     xprintf("xaninOS\n");
-    xprintf("version 22.02v\n");
+    xprintf("version 22.03v\n");
 
     getTime();
     xprintf("weekday: %s\n\n",weekDaysLUT[time.weekDay]);

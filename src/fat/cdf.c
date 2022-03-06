@@ -35,6 +35,11 @@ void cdf(char* folder_name)
 
     fat.current_folder = (uint8_t*)(folder->starting_cluster * CLUSTER_SIZE); 
     
+    //if(used_folder == nullptr)
+    {
+        used_folder = (fat_folder*)(folder->starting_cluster * CLUSTER_SIZE); 
+    }    
+
     xprintf("folder: %d\n", fat.current_folder);
 
     while(keyboard_scan_code != ENTER);
