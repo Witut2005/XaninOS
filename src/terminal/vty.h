@@ -16,7 +16,7 @@
 
 uint16_t* cursor = (uint16_t*)VGA_TEXT_MEMORY + (4*80);
 
-bool arrows_navigate = false;
+
 
 static uint8_t y,x;
 
@@ -33,6 +33,7 @@ void add_y(uint8_t yadd);
 
 bool no_enter = false;
 
+bool arrows_navigate = false;
 bool terminalAppExit = false;
 bool cursor_show = false;
 char selected_character; 

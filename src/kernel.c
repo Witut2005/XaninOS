@@ -13,7 +13,7 @@
 #include <devices/ACPI/ACPI.c>
 #include <devices/USB/usb.c>
 #include <devices/HARD_DISK/disk.c>
-#include <fat/fat_driver.c>
+//#include <fat/fat_driver.c>
 #include <xin_fs/xin.c>
 
 //extern void init_disk(uint16_t base, uint8_t master);
@@ -152,6 +152,7 @@ void _start(void)
     x++;
 
     app_exited = false;
+    arrows_navigate = true;
 
     while(1)
     {

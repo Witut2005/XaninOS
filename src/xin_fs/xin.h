@@ -38,19 +38,24 @@ struct xin_entry
 
 typedef struct xin_entry xin_entry;
 
-
+char xin_current_path[40] = {'\0'};
 char xin_current_directory[40] = {'\0'};
 
 
+char* xin_set_current_directory(char* directory);
+char* xin_get_current_directory(void);
+char* xin_get_current_path(char* file_name);
 
 bool xin_remove_entry(char* entry_name);
+char* xin_get_current_path(char* file_name);
 
 xin_entry* xin_init_fs(void);
 xin_entry* xin_find_free_entry(void);
 
 void xin_create_file(char* entry_name);
 void xin_create_directory(char* entry_name);
-void xin_change_directory(char* new_directory);
+xin_entry* xin_change_directory(char* new_directory);
+void xin_entry_info(char* entry_name);
 
 
 

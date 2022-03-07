@@ -1,4 +1,3 @@
-
 #pragma once
 
 
@@ -152,14 +151,12 @@ void terminalKeyboard(uint8_t scanCode)
     }
 
     /*
-
     if(cursor_show)
     {
         selected_character = (char)*cursor;
         
         *cursor = (uint16_t)('_' | ((black << 4) | white) << 8);
     }
-
     */
 
     if(scanCode == BSPC)

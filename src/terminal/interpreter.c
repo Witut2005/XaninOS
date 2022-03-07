@@ -51,7 +51,7 @@ void scan(void)
     	//while(1);
     	xprintf("%s\n", program_parameters);
     	keyboard_scan_code = 0x0;
-    	modify(program_parameters);
+    	//modify(program_parameters);
     	app_exited = true;
     }
 	
@@ -170,7 +170,12 @@ void scan(void)
 
     else if(cmpstr(program_name,"dir"))
     {
-        dir();
+        //dir();
+    }
+
+    else if(cmpstr(program_name,"xin_info"))
+    {
+        xin_entry_info(program_parameters);
     }
 
     else if(cmpstr(program_name,"cls") || cmpstr(program_name,"clear"))
@@ -185,8 +190,10 @@ void scan(void)
     
     else if(cmpstr(program_name,"note"))
     {
-        nano();
-        KEYBOARD_SIG_ON(no_keyboard_input);
+        //nano();
+        keyboard_trun_on();
+        xin_note(program_parameters);
+        //KEYBOARD_SIG_ON(no_keyboard_input);
     }
 
     else if(cmpstr(program_name,"type"))

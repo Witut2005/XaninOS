@@ -16,8 +16,6 @@ void modify(char* file_name)
     no_enter = true;
     clearScr();
 
-
-
     arrows_navigate = true;
     cursor_show = true;
 
