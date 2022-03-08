@@ -39,7 +39,7 @@ uint8_t input_keyboard;
 
 ---
 
-### Constants and macros
+## Constants and macros
 
 Names of constants and macros should be written using UPPERCASE letters with underscores separating words from each other:
 

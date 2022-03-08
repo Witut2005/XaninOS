@@ -108,19 +108,9 @@ void scan(void)
 
     else if(cmpstr(program_name,"rd"))
     {
-        rd();
+        //rd();
+        xin_remove_entry(program_parameters);
     }
-
-
-    /*
-    else if(cmpstr(keyboard_command,"hexview"))
-    {
-        hexview();
-        KEYBOARD_SIG_ON(no_keyboard_input);
-    }
-    */
-
-
 
     else if(cmpstr(program_name,"cd"))
     {
@@ -131,8 +121,8 @@ void scan(void)
     else if(cmpstr(program_name,"pwd"))
     {
         xprintf("%s\n", xin_current_directory);
-        //pwd();
-        //app_exited = true;
+        while(keyboard_scan_code != ENTER);
+        exit_process();
     }
 
 

@@ -30,16 +30,24 @@ src/ - source files
 
 Command to list all available commands within xaninOS:
 
-##XANIN COMMANDS
+## XANIN COMMANDS
 
 ```
 "help" or "h"
 ```
 
-##RUNNING XANIN
-
+## Running xaninOS 
 ```
 run_linux.sh (you can find this file inside /src directory)
-OR
-bochs.exe -f ./osdev.bochsrc
+```
+
+## Running xaninOS on Windows
+
+```
+run_windows.bat (you can find this file inside /src directory)
+```
+
+## Building xaninOS from source
+```
+build.sh ((you can find this file inside /src directory))
 ```

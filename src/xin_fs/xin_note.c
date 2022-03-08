@@ -8,10 +8,9 @@
 
 void xin_note(char* file_name)
 {
-    no_enter = true;
     clearScr();
+    no_enter = true;
     arrows_navigate = true;
-    //cursor_show = true;
 
 
     xin_entry* xin_file = xin_find_entry(file_name);

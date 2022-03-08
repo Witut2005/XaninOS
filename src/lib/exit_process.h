@@ -10,10 +10,11 @@
 #include <lib/stdiox.h>
 #include <stddef.h>
 
-#define exit_process()\
+#define exit_process(x)\
     index = 0x0;\
     no_enter = false;\
     for(int i = 0; i < sizeof(comBuf);i++)\
         keyboard_command[i] = '\0';\
         app_exited = true;\
-    return;
+    return x;
+

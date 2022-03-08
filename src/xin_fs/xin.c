@@ -6,13 +6,11 @@
 
 char* xin_set_current_directory(char* directory)
 {
-
     for(int i = 0; i < sizeof(xin_current_directory); i++)
         xin_current_directory[i] = '\0';
     
     for(int i = 0; directory[i] != '\0'; i++)
         xin_current_directory[i] = directory[i];
-        
 }
 
 char* xin_get_current_directory(void)
@@ -35,6 +33,32 @@ char* xin_get_current_path(char* file_name)
         xin_current_path[i] = file_name[pos];
 
     return xin_current_path;
+}
+
+/* DIRECTORY AND FILES */
+xin_entry* xin_find_entry(char* entry_name)
+{
+    for(char* i = XIN_ENTRY_TABLE; (uint32_t)i < XIN_ENTRY_TABLE + (SECTOR_SIZE * 2); i += 32)
+    {
+        if(cmpstr(entry_name, i))     
+        {
+            return (xin_entry*)i;
+        }
+    }
+
+
+    entry_name = xin_get_current_path(entry_name);
+
+    for(char* i = XIN_ENTRY_TABLE; (uint32_t)i < XIN_ENTRY_TABLE + (SECTOR_SIZE * 2); i += 32)
+    {
+        if(cmpstr(entry_name, i))  
+        {   
+            return (xin_entry*)i;    
+        }
+    }
+
+    return nullptr;
+
 }
 
 uint8_t* xin_find_free_pointer(void)
@@ -61,31 +85,6 @@ xin_entry* xin_find_free_entry(void)
 
 }
 
-/* DIRECTORY AND FILES */
-xin_entry* xin_find_entry(char* entry_name)
-{
-    for(char* i = XIN_ENTRY_TABLE; (uint32_t)i < XIN_ENTRY_TABLE + (SECTOR_SIZE * 2); i += 32)
-    {
-        if(cmpstr(entry_name, i))     
-        {
-            return (xin_entry*)i;
-        }
-    }
-
-
-    xin_get_current_path(entry_name);
-
-    for(char* i = XIN_ENTRY_TABLE; (uint32_t)i < XIN_ENTRY_TABLE + (SECTOR_SIZE * 2); i += 32)
-    {
-        if(cmpstr(entry_name, i))  
-        {   
-            return (xin_entry*)i;    
-        }
-    }
-
-    return nullptr;
-
-}
 
 xin_entry* xin_init_fs(void)
 {
@@ -180,12 +179,42 @@ xin_entry* xin_change_directory(char* new_directory)
     }
 
     set_string(xin_current_directory,new_directory);
-    return xin_find_entry(new_directory);
+    
+    exit_process(xin_find_entry(new_directory));
 
 }
 
 bool xin_remove_entry(char* entry_name)
-{
+{   
+    
+    xprintf("%s", entry_name);
+
+    char* entry_to_delete = (char*)xin_find_entry(entry_name);
+
+    xin_entry* entry_data = (xin_entry*)entry_to_delete;
+
+    if(entry_to_delete == nullptr)
+    {
+        xprintf("%zNO SUCH DIRECTORY\n", set_output_color(red,white));
+        while(keyboard_scan_code != ENTER);
+        exit_process(false);
+    }   
+
+    if(entry_data->entry_type == XIN_FILE) 
+    {
+
+        for(char* i = (char*)entry_data->starting_sector + XIN_POINTERS_TABLE;
+                *i != XIN_EOF; i++)
+        {
+            *i = XIN_UNALLOCATED;
+        }
+
+    }
+
+    for(int i = 0; i < sizeof(xin_entry); i++)
+        entry_to_delete[i] = '\0';
+
+    exit_process(true);
 
 }
 
