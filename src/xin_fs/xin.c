@@ -120,8 +120,11 @@ void xin_create_file(char* entry_name)
     entry->entry_type = XIN_FILE;
 
     uint8_t* write_entry = xin_find_free_pointer();
-    write_entry[0] = XIN_ALLOCATED;
-    write_entry[1] = XIN_EOF;
+
+    for(int i = 0; i < 15; i++)
+        write_entry[i] = XIN_ALLOCATED;
+
+    write_entry[15] = XIN_EOF;
 
     entry->starting_sector = (uint32_t)write_entry - XIN_ENTRY_POINTERS;
 
@@ -232,3 +235,5 @@ void xin_entry_info(char* entry_name)
     exit_process();
 
 }
+
+

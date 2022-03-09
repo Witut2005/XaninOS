@@ -37,6 +37,13 @@ bool key_pressed(void)
         return true;
 }
 
+char getchar(void)
+{
+    keyboard_input = 0x0;
+    while((!keyboard_input) || (keyboard_scan_code >= 128 ));
+    return keyboard_input;
+}
+
 void getTime()
 {
     asm("cli");

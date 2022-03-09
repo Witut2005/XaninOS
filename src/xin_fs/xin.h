@@ -57,5 +57,6 @@ void xin_create_directory(char* entry_name);
 xin_entry* xin_change_directory(char* new_directory);
 void xin_entry_info(char* entry_name);
 
+void xin_entry_resize(uint16_t last_sector);
 
 

@@ -36,6 +36,7 @@
 
 #include <xin_fs/xin.c>
 #include <xin_fs/xin_note.c>
+#include <xin_fs/xin_paint.c>
 
 
 void scan(void);

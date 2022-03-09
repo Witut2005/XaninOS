@@ -8,11 +8,12 @@
 
 #define VGA_SCREEN_RESOLUTION 4480
 
-void xin_note(char* file_name)
+void xin_paint(char* file_name)
 {
     clearScr();
     no_enter = true;
-    arrows_navigate = true;
+    in_graphic_mode = true;
+    print_off = true;
 
 
     xin_entry* xin_file = xin_find_entry(file_name);
@@ -45,21 +46,48 @@ void xin_note(char* file_name)
         }
 
 
-        //for(uint8_t* xin_pointer_table = (uint8_t*)(XIN_POINTER_TABLE + xin_entry->starting_sector); *xin_pointer_table != XIN_EOF; xin_pointer_table++)
-        
         char* data_pointer;
 
         {
             for(char* i = (char*)(xin_file->starting_sector * SECTOR_SIZE);  i < (char*)(xin_file->starting_sector + VGA_SCREEN_RESOLUTION); i++)
             {
-                putchar(*i);
+                xprintf("%z ", set_output_color(*i >> 4, *i & 0x0F));
             }
         }
 
 
         cursor = (uint16_t*)(VGA_TEXT_MEMORY);
         
-        while(keyboard_scan_code != F4_KEY);
+
+
+        while(keyboard_scan_code != F4_KEY)
+        {
+
+            switch(getchar())
+            {
+                case '0': *cursor = (uint16_t) (0x20 + (((black << 4) | black) << 8));break;
+                case '1': *cursor = (uint16_t) (0x20 + (((blue << 4) | black) << 8));break;
+                case '2': *cursor = (uint16_t) (0x20 + (((green << 4) | black) << 8));break;
+                case '3': *cursor = (uint16_t) (0x20 + (((cyan << 4) | black) << 8));break;
+                case '4': *cursor = (uint16_t) (0x20 + (((red << 4) | black) << 8));break;
+                case '5': *cursor = (uint16_t) (0x20 + (((magenta << 4) | black) << 8));break;
+                case '6': *cursor = (uint16_t) (0x20 + (((brown << 4) | black) << 8));break;
+                case '7': *cursor = (uint16_t) (0x20 + (((lgray << 4) | black) << 8));break;
+                case '8': *cursor = (uint16_t) (0x20 + (((dgray << 4) | black) << 8));break;
+                case '9': *cursor = (uint16_t) (0x20 + (((lblue << 4) | black) << 8));break;
+                case 'a': *cursor = (uint16_t) (0x20 + (((lgreen << 4) | black) << 8));break;
+                case 'b': *cursor = (uint16_t) (0x20 + (((lcyan << 4) | black) << 8));break;
+                case 'c': *cursor = (uint16_t) (0x20 + (((lred << 4) | black) << 8));break;
+                case 'd': *cursor = (uint16_t) (0x20 + (((lmagenta << 4) | black) << 8));break;
+                case 'e': *cursor = (uint16_t) (0x20 + (((yellow << 4) | black) << 8));break;
+                case 'f': *cursor = (uint16_t) (0x20 + (((white << 4) | black) << 8));break;
+                default: break;
+            }
+
+
+
+        }
+
 
         uint32_t file_data_counter = 0x0;
 

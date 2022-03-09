@@ -16,5 +16,7 @@
     for(int i = 0; i < sizeof(comBuf);i++)\
         keyboard_command[i] = '\0';\
         app_exited = true;\
+    print_off = false;\
+    in_graphic_mode = false;\
     return x;
 

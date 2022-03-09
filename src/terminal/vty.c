@@ -44,9 +44,7 @@ void terminalKeyboard(uint8_t scanCode)
     }
 
     key_released = false;
-
-    if(print_off)
-        return;
+    
 
     if(!index)
     {
@@ -106,7 +104,7 @@ void terminalKeyboard(uint8_t scanCode)
             *cursor = (uint16_t)(selected_character | ((black << 4) | white) << 8);
 
             if((uint32_t)cursor <= VGA_TEXT_MEMORY + (80 * sizeof(uint16_t) * 27))           
-                cursor += 80; 
+                cursor += 79; 
 
             selected_character = (char)*cursor;
             putchar_at_cursor('_');
@@ -140,7 +138,7 @@ void terminalKeyboard(uint8_t scanCode)
             *cursor = (uint16_t)(selected_character | ((black << 4) | white) << 8);
 
             if((uint32_t)cursor >= VGA_TEXT_MEMORY + (80 * sizeof(uint16_t)))
-                cursor -= 80; 
+                cursor -= 79; 
             
             selected_character = (char)*cursor;
             putchar_at_cursor('_');
@@ -150,21 +148,11 @@ void terminalKeyboard(uint8_t scanCode)
         
     }
 
-    /*
-    if(cursor_show)
-    {
-        selected_character = (char)*cursor;
-        
-        *cursor = (uint16_t)('_' | ((black << 4) | white) << 8);
-    }
-    */
 
     if(scanCode == BSPC)
     {
         if(*(cursor-1) == (uint16_t)('>' | ((black << 4) | white) << 8))
             return;
-
-
 
         if(index != 0)
             index--;
@@ -175,8 +163,19 @@ void terminalKeyboard(uint8_t scanCode)
         *cursor = '\0'; /* delete character */
     }
 
+
+
     else if(scanCode == ARROW_UP || scanCode == ARROW_DOWN)
     {
+        if(in_graphic_mode)
+        {
+            if(keyboard_scan_code == ARROW_UP)
+                cursor -= 79;
+
+            else if(keyboard_scan_code == ARROW_DOWN)
+                cursor += 79;
+        }
+
         return;
     }
 
@@ -218,6 +217,10 @@ void terminalKeyboard(uint8_t scanCode)
 
     else
     {
+
+        if(print_off)
+            return;
+
         *cursor = (uint16_t)(key | ((black << 4) | white) << 8); 
         keyboard_command[index] = key;
         index++;

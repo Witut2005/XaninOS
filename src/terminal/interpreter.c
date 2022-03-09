@@ -33,6 +33,11 @@ void scan(void)
         epilepsy();
     }    
     
+    else if(cmpstr(program_name,"paint"))
+    {
+        xin_paint(program_parameters);
+    }
+
     else if(cmpstr(program_name,"load"))
     {
     	keyboard_scan_code = 0x0;
