@@ -203,7 +203,7 @@ bool xin_remove_entry(char* entry_name)
     if(entry_data->entry_type == XIN_FILE) 
     {
 
-        for(char* i = (char*)entry_data->starting_sector + XIN_POINTERS_TABLE;
+        for(char* i = (char*)entry_data->starting_sector + XIN_ENTRY_POINTERS;
                 *i != XIN_EOF; i++)
         {
             *i = XIN_UNALLOCATED;

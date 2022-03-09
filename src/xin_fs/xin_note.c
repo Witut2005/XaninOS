@@ -48,7 +48,7 @@ void xin_note(char* file_name)
         char* data_pointer;
 
         {
-            for(char* i = (char*)(xin_file->starting_sector * SECTOR_SIZE);  i < (char*)((xin_file->starting_sector * SECTOR_SIZE) + SECTOR_SIZE); i++)
+            for(char* i = (char*)(xin_file->starting_sector * SECTOR_SIZE);  i < (char*)((4480 + xin_file->starting_sector * SECTOR_SIZE) / 2); i++)
             {
                 xprintf("%c", *i);
             }
@@ -56,6 +56,7 @@ void xin_note(char* file_name)
 
 
         cursor = (uint16_t*)(VGA_TEXT_MEMORY);
+        
         while(keyboard_scan_code != F4_KEY);
 
         uint32_t file_data_counter = 0x0;
@@ -63,7 +64,7 @@ void xin_note(char* file_name)
         data_pointer= xin_file->starting_sector * SECTOR_SIZE;
         
         for(char* i = (char*)VGA_TEXT_MEMORY; 
-                (uint32_t)i < VGA_TEXT_MEMORY + (512 * 2); i+=2, file_data_counter++)
+                (uint32_t)i < VGA_TEXT_MEMORY + 4480; i+=2, file_data_counter++)
                 data_pointer[file_data_counter] = *i;
 
         xin_file->entry_size = file_data_counter;
