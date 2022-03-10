@@ -19,11 +19,13 @@ void set_y(uint8_t yset)
 }
 
 static uint8_t index = 0x0;
+ 
 
 void terminalKeyboard(uint8_t scanCode)
 {
 
     keyboard_scan_code = scanCode;
+
 
     if(keyboard_scan_code == LSHIFT)
     {
@@ -37,7 +39,7 @@ void terminalKeyboard(uint8_t scanCode)
         return;
     }
 
-    if(keyboard_scan_code >= 128 )
+    if(keyboard_scan_code >= 128)
     {
         key_released = true;
         return;

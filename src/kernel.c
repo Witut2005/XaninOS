@@ -42,94 +42,33 @@ void _start(void)
     clearScr();
     asm("cli");
 
-
-
     keyboard_command = comBuf;
-
 
     set_idt();
 
-
-    
-    uint32_t pci_address_selector = 0x0;
-
     xprintf("DETECTING USB CONTROLLERS. PLEASE WAIT...\n");
 
-    for(pci_address_selector = 0x0; pci_address_selector < 2500000; pci_address_selector+=0x4) 
-    {
-
-        static uint32_t var, tmp; 
-        tmp = var;
-
-
-        pci_set_parameters(pci_config_address, pci_address_selector);
-
-        var = pci_get_device_class(pci_address_selector);
-
- 
-        if(var == 0x0c03 && tmp != var)
-        {
-
-
-            xprintf("USB CONTROLLER DETECTED VENDOR ID: ");
-            xprintf("0x%x\n",pci_get_vendor_id(pci_address_selector));          
-            
-            xprintf("USB CONTROLLER TYPE: %s\n", 
-                    usb_controller_names[usb_controller_get_type(pci_address_selector) / 0x10]);
-            
-            xprintf("USB CONTROLLER BASE ADDRES 0x%x\n",pci_get_data32(pci_address_selector,0x20));  
-
-        }
-           
-        if(var == 0x0106 && tmp != var)
-        {
-        
-            xprintf("HARD DISK DETECTED\n");
-            
-        }
-    
-
-    }
+    usb_detect();
 
     xprintf("\n\n%zUSB DETECTION TEST ENDED. PRESS ENTER TO START XANIN OS\n",
             set_output_color(green,white));
- 
-   
 
+   
     keyboard_init();
     set_pit();
 
  
-    xscanf("%d",x);
-
-    //dma_controller_reset();
-
-    clearScr();
     getCpuSpeed();
     getTime();
     srand(time.seconds);
-    //file_system_init();
-    clearScr();   
 	
     xin_init_fs();
     
-    //init_disk(ATA_SLAVE);
-    //disk_read(ATA_SLAVE, 0x0,250, 0x7c00);
    
     init_disk(ATA_FIRST_BUS, ATA_MASTER);
 
-        
-    //xprintf("elf load address: 0x%x\n", *(uint32_t*)0x20002);
-      
-  
-    /*
-  
-
-    for(int i = 0; i < 60; i++)
-        disk_read(ATA_FIRST_BUS, ATA_MASTER, i+2, 512, 
-                (uint16_t*)(*(uint32_t*)0x20002 + (i * 512)));
-   
-   */
+    keyboard_scan_code = 0x0;
+    while(!keyboard_scan_code);
 
     for(char* i = (char*)0x0; (uint32_t)i < 0x1000; i++)
     	*i = 0x0;

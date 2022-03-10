@@ -1,6 +1,15 @@
 
 #include <devices/USB/usb.h>
 #include <devices/PCI/pci.h>
+#include <lib/stdiox.h>
+
+char* usb_controller_names[4] = 
+{
+    "UHCI",
+    "OHCI",
+    "EHCI",
+    "XHCI"
+};
 
 
 uint8_t usb_controller_get_type(uint32_t configuration_address)
@@ -23,17 +32,6 @@ uint8_t usb_controller_get_type(uint32_t configuration_address)
     return ret;
 
 }
-
-char* usb_controller_names[4] = 
-{
-
-    "UHCI",
-    "OHCI",
-    "EHCI",
-    "XHCI"
-
-};
-
 
 void uhci_init(uint32_t configuration_address, uint8_t controller_type)
 {
@@ -64,3 +62,43 @@ void uhci_init(uint32_t configuration_address, uint8_t controller_type)
 
 
 
+void usb_detect(void)
+{
+    uint32_t pci_address_selector = 0x0;
+
+    for(pci_address_selector = 0x0; pci_address_selector < 2500000; pci_address_selector+=0x4) 
+    {
+        static uint32_t var, tmp; 
+        tmp = var;
+
+
+        pci_set_parameters(pci_config_address, pci_address_selector);
+
+        var = pci_get_device_class(pci_address_selector);
+
+ 
+        if(var == 0x0c03 && tmp != var)
+        {
+
+
+            xprintf("USB CONTROLLER DETECTED VENDOR ID: ");
+            xprintf("0x%x\n",pci_get_vendor_id(pci_address_selector));          
+            
+            xprintf("USB CONTROLLER TYPE: %s\n", 
+                    usb_controller_names[usb_controller_get_type(pci_address_selector) / 0x10]);
+            
+            xprintf("USB CONTROLLER BASE ADDRES 0x%x\n",pci_get_data32(pci_address_selector,0x20));  
+
+        }
+           
+        if(var == 0x0106 && tmp != var)
+        {
+        
+            xprintf("HARD DISK DETECTED\n");
+            
+        }
+    
+
+    }
+
+}

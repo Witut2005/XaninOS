@@ -65,6 +65,10 @@ void keyboard_handler(void)
     keyboard_scan_code = inbIO(KEYBOARD_DATA_REG); // get keyboard_scan_code
     ugalol = indwIO(KEYBOARD_DATA_REG); 
 
+    
+    keyboard_handle[0x0] = terminalKeyboard;
+
+
 
     //HANDLE KEYBOARD APP SIGNAL 
     if(int32_63 & 0x2)
@@ -86,7 +90,8 @@ void keyboard_handler(void)
         if(keyStatus & 1)
         {
             keyboard_input = keyboard_map[keyboard_scan_code];
-            terminalKeyboard(keyboard_scan_code);
+            keyboard_handle[0x0](keyboard_scan_code);
+            //terminalKeyboard(keyboard_scan_code);
         }
     
     return;
