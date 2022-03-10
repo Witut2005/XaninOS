@@ -200,10 +200,13 @@ void scan(void)
     else
     {
 
-        keyboard_scan_code = NULL;
+
         xprintf("%zunknown command",set_output_color(red,white));
-        
-        while(keyboard_scan_code != ENTER);
+
+        keyboard_scan_code = 0x0;        
+        keyboard_input = 0x0;
+
+        while((!keyboard_input) || (keyboard_scan_code == ENTER));
 
         exit_process();
         

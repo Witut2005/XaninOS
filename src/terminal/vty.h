@@ -59,3 +59,8 @@ bool lshift_pressed = false;
 
 bool in_graphic_mode = false;
 
+typedef char (*keyboard_handle_input)(char);
+
+keyboard_handle_input keyboard_handle[50];
+
+char keyboard_default_handler(char);

@@ -19,6 +19,7 @@ void set_y(uint8_t yset)
 }
 
 static uint8_t index = 0x0;
+ 
 
 void terminalKeyboard(uint8_t scanCode)
 {
@@ -27,19 +28,6 @@ void terminalKeyboard(uint8_t scanCode)
     key_info.character = keyboard_map[scanCode];
 
     keyboard_scan_code = scanCode;
-
-    if(key_info.scan_code == LSHIFT)
-    {
-        lshift_pressed = true;
-        return;
-    }
-
-    if(key_info.scan_code == LSHIFT_RELEASE)
-    {
-        lshift_pressed = false;
-        return;
-    }
-
 
     switch(key_info.scan_code)
     {
