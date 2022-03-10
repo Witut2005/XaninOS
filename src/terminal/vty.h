@@ -17,18 +17,25 @@
 uint16_t* cursor = (uint16_t*)VGA_TEXT_MEMORY + (4*80);
 
 
+struct key_info_t
+{
+    uint8_t scan_code;
+    char character;
+    bool is_shift;
+    bool is_ctrl;
+    bool is_caps;
+};
+
+typedef struct key_info_t key_info_t;
+key_info_t key_info;
+
+
 
 static uint8_t y,x;
-
 void setTerminal();
-
 void set_x(uint8_t newVal);
-
 void set_y(uint8_t newVal);
-
 void add_x(uint8_t xadd);
-
-
 void add_y(uint8_t yadd);
 
 bool no_enter = false;

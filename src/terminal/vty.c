@@ -23,17 +23,38 @@ static uint8_t index = 0x0;
 void terminalKeyboard(uint8_t scanCode)
 {
 
+    key_info.scan_code = scanCode;
+    key_info.character = keyboard_map[scanCode];
+
     keyboard_scan_code = scanCode;
 
-    if(keyboard_scan_code == LSHIFT)
+    if(key_info.scan_code == LSHIFT)
     {
         lshift_pressed = true;
         return;
     }
 
-    if(keyboard_scan_code == LSHIFT_RELEASE)
+    if(key_info.scan_code == LSHIFT_RELEASE)
     {
         lshift_pressed = false;
+        return;
+    }
+
+
+    switch(key_info.scan_code)
+    {
+        case LSHIFT: {key_info.is_shift = true; return;}
+        case LSHIFT_RELEASE: {key_info.is_shift = false; return;}
+        case CAPS: {key_info.is_caps = ~key_info.is_caps; return;}
+    }
+
+    if(scanCode == CAPS)
+    {
+        if(caps_on)
+            caps_on = false;
+        else
+            caps_on = true;
+
         return;
     }
 
@@ -51,17 +72,6 @@ void terminalKeyboard(uint8_t scanCode)
         for(int i = 0; i < 50;i++)
             keyboard_command[i] = '\0';
     }
-
-    if(scanCode == CAPS)
-    {
-        if(caps_on)
-            caps_on = false;
-        else
-            caps_on = true;
-
-        return;
-    }
-
 
     uint8_t key = keyboard_map[scanCode];
 
