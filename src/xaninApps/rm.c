@@ -1,4 +1,6 @@
 
+/*
+
 #include <fs/ustar.c>
 #include <stddef.h>
 
@@ -52,3 +54,5 @@ void rd(void)
 
 
 }
+
+*/

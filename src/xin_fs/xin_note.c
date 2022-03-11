@@ -3,6 +3,7 @@
 #include <lib/stdiox.h>
 #include <xin_fs/xin.c>
 #include <lib/memory.h>
+#include <terminal/interpreter.h>
 #include <lib/exit_process.h>
 #include <lib/string.h>
 

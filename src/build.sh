@@ -39,14 +39,14 @@ cat ./boot/boot ./fat/fat ./fat/root_directory_table ./boot/kernelLoader kernel.
 
 dd if=xanin.bin of=xanin.img
 mv xanin.img -f ../bin
-mv xanin.bin -f ../bin
-cd ../bin
-make
-./detectUstar
+rm xanin.bin 
+#cd ../bin
+#make
+#./detectUstar
 
-cp xanin.img xanin.bin
+#cp xanin.img xanin.bin
 
-cd ../src
+#cd ../src
 
 
 

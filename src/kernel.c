@@ -7,7 +7,7 @@
 #include <terminal/vty.c>
 #include <terminal/interpreter.c>
 #include <lib/math.h>
-#include <fs/ustar.c>
+//#include <fs/ustar.c>
 #include <keyboard/keyboardInit.c>
 #include <devices/PCI/pci.c>
 #include <devices/ACPI/ACPI.c>
@@ -41,7 +41,8 @@ void _start(void)
 
     clearScr();
     asm("cli");    //disable interrupts while IDT is not configured
-    screen_init(); //init screen management system
+    screen_init(); //init screen management syst
+
 
     keyboard_command = comBuf;
 
@@ -94,6 +95,8 @@ void _start(void)
     app_exited = false;
     arrows_navigate = true;
 
+    //keyboard_test();
+
     while(1)
     {
 
@@ -104,8 +107,10 @@ void _start(void)
                 keyboard_command[i] = '\0';
             goto tuiInit;
         }
-
-        scan();
+        terminal_refresh();
+        
+        if(key_info.scan_code == ENTER)
+            scan();
 
     }
 

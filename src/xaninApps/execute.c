@@ -1,4 +1,6 @@
 
+/*
+
 #include <fs/ustar.c>
 
 void execute()
@@ -20,7 +22,7 @@ void execute()
     {
         void(*executable_program)(void) = (void(*)(void))file_descriptor->entry_data_pointer;
         asm("mov esi, ebx" :: "b"(file_descriptor->entry_data_pointer));
-        executable_program(); /* calle must execute RET instruction */
+        executable_program();  calle must execute RET instruction 
         xprintf("\n%zprogram succefully returned. Press 'q' to exit\n\n",set_output_color(green,white));
     }
 
@@ -34,9 +36,11 @@ void execute()
             for(int i = 0; i < sizeof(comBuf);i++)
                 keyboard_command[i] = '\0';
 
-            index = 0x0; /* some problems with keyboard keyboard_input when index is no reseted */
+            index = 0x0;  some problems with keyboard keyboard_input when index is no reseted 
             app_exited = true; no_enter = false;break;
         }
     }
 
 }
+
+*/

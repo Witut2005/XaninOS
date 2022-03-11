@@ -2,6 +2,7 @@
 
 #include <lib/stdiox.h>
 #include <lib/stdlibx.h>
+#include <lib/exit_process.h>
 
 void epilepsy(void)
 {

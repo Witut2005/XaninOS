@@ -3,7 +3,6 @@
 
 #include <terminal/vty.h>
 #include <terminal/vty.c>
-#include <fs/ustar.h>
 #include <lib/stdiox.h>
 #include <handlers/handlers.h>
 #include <lib/signal.h>

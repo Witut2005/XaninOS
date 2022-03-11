@@ -25,7 +25,7 @@ void scan(void)
 
     if(cmpstr(program_name,"touch"))
     {
-        touch();
+        //touch();
     }
 
     else if(cmpstr(program_name,"epilepsy"))
@@ -108,7 +108,7 @@ void scan(void)
 
     else if(cmpstr(program_name,"md"))
     {
-        md();
+        //md();
     }
 
     else if(cmpstr(program_name,"rd"))
@@ -159,8 +159,8 @@ void scan(void)
 
     else if(cmpstr(program_name,"execute"))
     {
-        execute();
-        KEYBOARD_SIG_ON(no_keyboard_input);
+        //execute();
+        //KEYBOARD_SIG_ON(no_keyboard_input);
     }
 
     else if(cmpstr(program_name,"dir"))
@@ -181,7 +181,9 @@ void scan(void)
 
 
     else if(cmpstr(program_name,"ls") || cmpstr(program_name,"dir"))
-        ls();
+    {
+        //ls();
+    }
     
     else if(cmpstr(program_name,"note"))
     {
@@ -193,8 +195,8 @@ void scan(void)
 
     else if(cmpstr(program_name,"type"))
     {
-        type();
-        KEYBOARD_SIG_ON(no_keyboard_input);
+        //type();
+        //KEYBOARD_SIG_ON(no_keyboard_input);
     }
 
     else

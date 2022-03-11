@@ -22,11 +22,21 @@ static uint8_t index = 0x0;
  
 void screen_init(void)
 {
-    screen.cursor = VGA_TEXT_MEMORY;
-    *screen.cursor = (uint16_t) 'c' + (((red << 4) | white) << 8);
+    //screen.cursor = VGA_TEXT_MEMORY;
+    
+    screen.cursor = screen_buffer;
+
+    for(int i = 0; i < VGA_HEIGHT; i++)
+        screen.cursor[i] = (uint16_t*)(VGA_TEXT_MEMORY + (80 * i * 2));  
+
+    screen.x = 0x0;
+    screen.y = 0x0;
+
     x = 0x0;
     y = 0x0;
 }
+
+
 
 void terminalKeyboard(uint8_t scanCode)
 {
@@ -42,6 +52,22 @@ void terminalKeyboard(uint8_t scanCode)
         case LSHIFT_RELEASE: {key_info.is_shift = false; return;}
         case CAPS: {key_info.is_caps = ~key_info.is_caps; return;}
     }
+
+    key_remap('-','_');
+    key_remap('2', '@');
+    key_remap('6', '^');
+    key_remap('7', '&');
+    key_remap('8', '*');
+    key_remap('9','(');
+    key_remap('0',')');
+    key_remap('=', '+');
+    key_remap('[', '{');
+    key_remap(']', '}');
+    key_remap('/', '?');
+    key_remap(';', ':');
+    key_remap('`','~');
+    key_remap(',','<');
+    key_remap('.', '>');
 
     if(scanCode == CAPS)
     {
@@ -154,7 +180,7 @@ void terminalKeyboard(uint8_t scanCode)
     }
 
 
-    if(scanCode == BSPC)
+    if(key_info.is_bspc)
     {
         if(*(cursor-1) == (uint16_t)('>' | ((black << 4) | white) << 8))
             return;
@@ -166,6 +192,7 @@ void terminalKeyboard(uint8_t scanCode)
 
         cursor--;
         *cursor = '\0'; /* delete character */
+        key_info.is_bspc = false;
     }
 
 
@@ -232,6 +259,85 @@ void terminalKeyboard(uint8_t scanCode)
         cursor++;
         x++;
     }
+
+
+}
+
+void terminal_refresh(void)
+{
+    
+
+
+
+    if(key_info.is_bspc)
+    {
+        if(*(cursor-1) == (uint16_t)('>' | ((black << 4) | white) << 8))
+            return;
+
+        if(index != 0)
+            index--;
+
+        comBuf[index] = '\0';
+
+        cursor--;
+        *cursor = '\0'; /* delete character */
+        key_info.is_bspc = false;
+
+    }
+
+
+    else if(key_info.scan_code == ARROW_LEFT)
+    {
+        if(*(cursor-1) == (uint16_t)('>' | ((black << 4) | white) << 8))
+            return;
+
+        cursor--;
+    }
+
+    else if(key_info.scan_code == ARROW_RIGHT)
+    {
+        cursor++;
+    }
+
+    else if(key_info.scan_code == ENTER)
+    {
+
+        if(strlen(keyboard_command) != 0)
+        {
+            y++;
+            x = 0;
+            cursor = (uint16_t*)VRAM;
+            add_y(y);
+
+            if(!no_enter)
+            {
+                *cursor = (uint16_t)('>' | ((black << 4) | white) << 8); 
+                cursor++;
+                x++;
+            }
+            
+        }
+
+        index = 0x0;       
+
+    }
+
+
+
+    else
+    {
+        if(key_info.character != '\0')
+        {
+            *cursor = (uint16_t)(key_info.character | ((black << 4) | white) << 8); 
+            keyboard_command[index] = key_info.character;
+            index++;
+            cursor++;
+            x++;
+
+        }
+    }
+
+    key_info.character = 0x0;
 
 
 }

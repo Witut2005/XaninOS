@@ -1,4 +1,6 @@
 
+/*
+
 #include <fs/ustar.c>
 #include <stddef.h>
 
@@ -27,7 +29,7 @@ void md(void)
                 for(int i = 0; i < 50; i++)
                     keyboard_command[i] = '\0';
 
-                index = 0x0; /* some problems with keyboard keyboard_input when index is no reseted */
+                index = 0x0;  some problems with keyboard keyboard_input when index is no reseted 
                 app_exited = true; no_enter = false;return;
             }
         }   
@@ -58,9 +60,11 @@ void md(void)
     for(int i = 0; i < 50; i++)
         keyboard_command[i] = '\0';
 
-    index = 0x0; /* some problems with keyboard keyboard_input when index is no reseted */
+    index = 0x0;  some problems with keyboard keyboard_input when index is no reseted 
     app_exited = true; 
     no_enter = false;
 
 
 }
+
+*/

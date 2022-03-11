@@ -39,5 +39,6 @@
 #include <xin_fs/xin_paint.c>
 
 
+
 void scan(void);
 

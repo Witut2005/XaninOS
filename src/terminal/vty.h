@@ -8,9 +8,15 @@
 #include <lib/stdiox.h>
 #include <lib/string.h>
 
-#define SCREEN_WIDTH 25
+#define SCREEN_WIDTH 28
 #define SCREEN_HEIGHT 80
 #define SCREEN_RESOLUTION (25 * 80)
+
+enum screen_macros
+{
+    VGA_WIDTH = 80,
+    VGA_HEIGHT = 28
+};
 
 #define VGA_TEXT_MEMORY 0xb8000
 
@@ -24,6 +30,7 @@ struct key_info_t
     bool is_shift;
     bool is_ctrl;
     bool is_caps;
+    bool is_bspc;
 };
 
 typedef struct key_info_t key_info_t;
@@ -31,15 +38,17 @@ key_info_t key_info;
 
 struct screen_t
 {
-    uint16_t* cursor;
+    uint16_t** cursor;
     uint8_t x;
     uint8_t y;
 
 };
 
+
 typedef struct screen_t screen_t;
 screen_t screen;
 
+uint16_t* screen_buffer[28];
 
 static uint8_t y,x;
 void setTerminal();
@@ -63,6 +72,10 @@ char selected_character;
             key = to
 
 
+#define key_remap(from, to)\
+        if(key_info.character == from)\
+            key_info.character = to
+
 bool caps_on = false;
 bool print_off = false;
 bool key_released = false;
@@ -75,3 +88,7 @@ typedef char (*keyboard_handle_input)(char);
 keyboard_handle_input keyboard_handle[50];
 
 char keyboard_default_handler(char);
+
+char program_name[40];
+char program_parameters[40];
+void terminal(void);

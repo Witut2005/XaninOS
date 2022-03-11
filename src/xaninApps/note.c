@@ -1,4 +1,6 @@
 
+/*
+
 #include <terminal/vty.h>
 #include <fs/ustar.h>
 #include <lib/stdiox.h>
@@ -81,3 +83,6 @@ void nano()
 
 
 }
+
+
+*/

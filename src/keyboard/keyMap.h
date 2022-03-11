@@ -11,6 +11,7 @@
 enum special_keys
 {
     BSPC = 0xE,
+    BSPC_RELEASE = 0x8E,
     ENTER = 0x1C,
     ESC = 0x1,
     CAPS = 0x3A,
@@ -19,7 +20,9 @@ enum special_keys
     ARROW_RIGHT = 77,
     ARROW_DOWN = 80,
     LSHIFT = 0x2A,
-    LSHIFT_RELEASE = 0xAA
+    LSHIFT_RELEASE = 0xAA,
+    F4_KEY = 0x3E
+
 };
 
 

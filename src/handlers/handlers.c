@@ -7,7 +7,9 @@
 #include <terminal/vty.c>
 #include <headers/macros.h>
 #include <keyboard/keyMap.h>
+#include <keyboard/keyboard_driver.c>
 #include <handlers/handlers.h>
+
 //#include <devices/DMA/dma.c>
 
 
@@ -63,40 +65,9 @@ void keyboard_handler(void)
 
     keyStatus = inbIO(KEYBOARD_STATUS_REG); // if status & 1 (ON)
     keyboard_scan_code = inbIO(KEYBOARD_DATA_REG); // get keyboard_scan_code
-    ugalol = indwIO(KEYBOARD_DATA_REG); 
 
-    
-    keyboard_handle[0x0] = terminalKeyboard;
+    keyboard_driver(keyboard_scan_code);
 
-
-
-    //HANDLE KEYBOARD APP SIGNAL 
-    if(int32_63 & 0x2)
-    {
-        if(keyStatus & 1)
-            keyboard_input = keyboard_map[keyboard_scan_code];
-
-        signal.appHandler();
-        return;
-    }
-
-
-
-    //PRINT CHARACTER
-
-    else
-    {
-
-        if(keyStatus & 1)
-        {
-            keyboard_input = keyboard_map[keyboard_scan_code];
-            keyboard_handle[0x0](keyboard_scan_code);
-            //terminalKeyboard(keyboard_scan_code);
-        }
-    
-    return;
-
-    }
 }
  
 

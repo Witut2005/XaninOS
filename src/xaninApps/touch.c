@@ -1,4 +1,6 @@
 
+/*
+
 #include <fs/ustar.h>
 #include <lib/stdiox.h>
 
@@ -23,7 +25,7 @@ void touch(void)
                 for(int i = 0; i < 50; i++)
                     keyboard_command[i] = '\0';
 
-                index = 0x0; /* some problems with keyboard keyboard_input when index is no reseted */
+                index = 0x0;  some problems with keyboard keyboard_input when index is no reseted 
                 app_exited = true; 
                 return;
             }
@@ -49,8 +51,8 @@ void touch(void)
 
     for(int i = 0; i < 50; i++)
         keyboard_command[i] = '\0';
-
-    index = 0x0; /* some problems with keyboard keyboard_input when index is no reseted */
+        
+    index = 0x0;  some problems with keyboard keyboard_input when index is no reseted 
     app_exited = true;
     
     xprintf("%zTOUCH BREAK\n",set_output_color(red,white));
@@ -58,3 +60,5 @@ void touch(void)
     keyboard_scan_code = NULL;
 
 }
+
+*/

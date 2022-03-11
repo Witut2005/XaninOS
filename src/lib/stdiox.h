@@ -24,7 +24,7 @@ char* keyboard_command;
 
 void clearScr(void)
 {
-    uint16_t* ptrTmp = (uint16_t*)VRAM;
+    uint16_t* ptrTmp = (uint16_t*)VGA_TEXT_MEMORY;
     for(int i = 0; i < (80 * 28); i++)
     {
         *ptrTmp = '\0';

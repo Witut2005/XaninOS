@@ -1,5 +1,7 @@
 
 
+/*
+
 #include <fs/ustar.h>
 #include <lib/stdiox.h>
 
@@ -27,3 +29,6 @@ void ls()
 
 
 }
+
+
+*/
