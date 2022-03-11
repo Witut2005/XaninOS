@@ -20,14 +20,21 @@ void set_y(uint8_t yset)
 
 static uint8_t index = 0x0;
  
+void screen_init(void)
+{
+    screen.cursor = VGA_TEXT_MEMORY;
+    *screen.cursor = (uint16_t) 'c' + (((red << 4) | white) << 8);
+    x = 0x0;
+    y = 0x0;
+}
 
 void terminalKeyboard(uint8_t scanCode)
 {
 
+    keyboard_scan_code = scanCode;
+
     key_info.scan_code = scanCode;
     key_info.character = keyboard_map[scanCode];
-
-    keyboard_scan_code = scanCode;
 
     switch(key_info.scan_code)
     {

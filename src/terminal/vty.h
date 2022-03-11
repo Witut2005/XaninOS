@@ -29,6 +29,16 @@ struct key_info_t
 typedef struct key_info_t key_info_t;
 key_info_t key_info;
 
+struct screen_t
+{
+    uint16_t* cursor;
+    uint8_t x;
+    uint8_t y;
+
+};
+
+typedef struct screen_t screen_t;
+screen_t screen;
 
 
 static uint8_t y,x;
@@ -37,6 +47,7 @@ void set_x(uint8_t newVal);
 void set_y(uint8_t newVal);
 void add_x(uint8_t xadd);
 void add_y(uint8_t yadd);
+void screen_init(void);
 
 bool no_enter = false;
 

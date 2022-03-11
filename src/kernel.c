@@ -40,7 +40,8 @@ void _start(void)
     disable_cursor();
 
     clearScr();
-    asm("cli");
+    asm("cli");    //disable interrupts while IDT is not configured
+    screen_init(); //init screen management system
 
     keyboard_command = comBuf;
 
@@ -103,10 +104,6 @@ void _start(void)
                 keyboard_command[i] = '\0';
             goto tuiInit;
         }
-
-        index = 0x0;
-        for(int i = 0; i < sizeof(comBuf); i++)
-            keyboard_command[i] = '\0';
 
         scan();
 
