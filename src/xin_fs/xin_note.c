@@ -9,11 +9,49 @@
 
 #define VGA_SCREEN_RESOLUTION 4480
 
+void note_input(void)
+{
+
+            if(KeyInfo.scan_code == ARROW_UP)
+            {
+                Screen.y--;
+                Screen.x--;
+                KeyInfo.scan_code = 0x0;
+            }
+
+            else if(KeyInfo.scan_code == ARROW_DOWN)
+            {
+                Screen.y++;
+                Screen.x--;
+                KeyInfo.scan_code = 0x0;
+                KeyInfo.character = 0x0;
+            }
+
+            else if(KeyInfo.scan_code == ARROW_RIGHT)
+            {
+                Screen.x++;    
+                KeyInfo.scan_code = 0x0;
+                KeyInfo.character = 0x0;
+            }
+
+            else if(KeyInfo.scan_code == ARROW_LEFT)
+            {
+                Screen.x--;
+                KeyInfo.scan_code = 0x0;
+                KeyInfo.character = 0x0;
+            }
+
+            else
+                xprintf("%c", KeyInfo.character);
+        
+}
+
 void xin_note(char* file_name)
 {
     clearScr();
     no_enter = true;
     arrows_navigate = true;
+    keyboard_handle = note_input;
 
 
     xin_entry* xin_file = xin_find_entry(file_name);
@@ -21,12 +59,11 @@ void xin_note(char* file_name)
     if(xin_file == nullptr)
     {
         xprintf("%zno such file or directory %s\n",set_output_color(red,white),program_parameters);
-        
+        keyboard_handle = nullptr;
         while(1)
         {
-            if(keyboard_scan_code == ENTER)
+            if(KeyInfo.scan_code == ENTER)
             {
-                arrows_navigate = false;
                 exit_process();
             }
         }   
@@ -59,8 +96,12 @@ void xin_note(char* file_name)
 
 
         cursor = (uint16_t*)(VGA_TEXT_MEMORY);
-        
-        while(keyboard_scan_code != F4_KEY);
+
+
+
+        while(KeyInfo.scan_code != F4_KEY);
+
+
 
         uint32_t file_data_counter = 0x0;
 
@@ -80,6 +121,6 @@ void xin_note(char* file_name)
 
     }
 
-    
+    keyboard_handle = nullptr;
     exit_process();
 }

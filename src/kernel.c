@@ -33,6 +33,7 @@ char* tmpStr;
 
 
 
+
 void _start(void)
 {
 
@@ -41,21 +42,18 @@ void _start(void)
 
     clearScr();
     asm("cli");    //disable interrupts while IDT is not configured
-    screen_init(); //init screen management syst
+    screen_init(); //init screen management system
 
-    /*
 
-    char napis[] = {"jeden dwa trzy oraz cztery"};
+    xprintf("%z  .GBJ     ?BBY.                     ,, \n", set_output_color(black, magenta));
+    xprintf("%z   :B#Y  !G#P^   .,,.     ..  ..     ''   ..  ..   \n", set_output_color(black, magenta));
+    xprintf("%z    .G#\/#G~     ?PYJJ5P   HuCJJ5G\    55  HuCJJJPP\ \n", set_output_color(black, magenta));
+    xprintf("%z     >###<     ~.   .G#.  I#D   7#:  GP  I#D    P#:\n", set_output_color(black, magenta));
+    xprintf("%z   .5#BG#P.    !JYYJ?G#.  I#^   ^#:  GP  I#^    Y#:\n", set_output_color(black, magenta));
+    xprintf("%z .Y##/ \i#G.   ?#^   :G#.  I#^   ~#:  GP  I#^    Y#:\n", set_output_color(black, magenta));
+    xprintf("%z7GB5.    5BG. .5G555J?B^  I#^   ^#:  P5  I#^    JB:\n\n\n", set_output_color(black, magenta));
 
-    //Screen.cursor[0][1] = 0x4141;
-    xprintf("%d\n", 1234567890);
-    xprintf("%x\n", 0x1234);
-    xprintf("%o\n", 8);
-    xprintf("%b\n", 3);
-    xprintf("%s", napis);
-    while(1);
 
-    */
 
     keyboard_command = comBuf;
 
@@ -65,10 +63,10 @@ void _start(void)
 
     usb_detect();
 
-    xprintf("\n\n%zUSB DETECTION TEST ENDED. PRESS ENTER TO START XANIN OS\n",
+    xprintf("\n%zUSB DETECTION TEST ENDED. PRESS ENTER TO START XANIN OS\n",
             set_output_color(green,white));
 
-   
+
     keyboard_init();
     set_pit();
 
@@ -93,18 +91,28 @@ void _start(void)
     tuiInit:
 
     clearScr();
+    
+    getTime();
 
    
-    xprintf("xaninOS\n");
-    xprintf("version 22.03v\n");
+    //xprintf("xaninOS\n");
+    
+    xprintf("%z  .GBJ     ?BBY.                     ,, \n", set_output_color(logo_back_color, logo_front_color));
+    xprintf("%z   :B#Y  !G#P^   .,,.     ..  ..     ''   ..  ..   \n", set_output_color(logo_back_color, logo_front_color));
+    xprintf("%z    .G#\/#G~     ?PYJJ5P   HuCJJ5G\    55  HuCJJJPP\ \n", set_output_color(logo_back_color, logo_front_color));
+    xprintf("%z     >###<     ~.   .G#.  I#D   7#:  GP  I#D    P#:\n", set_output_color(logo_back_color, logo_front_color));
+    xprintf("%z   .5#BG#P.    !JYYJ?G#.  I#^   ^#:  GP  I#^    Y#:\n", set_output_color(logo_back_color, logo_front_color));
+    xprintf("%z .Y##/ \i#G.   ?#^   :G#.  I#^   ~#:  GP  I#^    Y#:  %zversion 22.03v\n", set_output_color(logo_back_color, logo_front_color), set_output_color(black,white));
+    xprintf("%z7GB5.    5BG. .5G555J?B^  I#^   ^#:  P5  I#^    JB:  %zweekday: %s \n\n\n", set_output_color(logo_back_color, logo_front_color), set_output_color(black,white), weekDaysLUT[time.weekDay]);
 
-    getTime();
-    xprintf("weekday: %s\n\n",weekDaysLUT[time.weekDay]);
+//    xprintf("");
+
+//    xprintf("weekday: %s\n\n",weekDaysLUT[time.weekDay]);
 
 
-    Screen.cursor[4][0] = (uint16_t)('>' | ((black << 4) | white) << 8);
+    Screen.cursor[8][0] = (uint16_t)('>' | ((black << 4) | white) << 8);
     Screen.x = 1;
-    Screen.y = 4;
+    Screen.y = 8;
 
 
 

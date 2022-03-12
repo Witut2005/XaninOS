@@ -23,6 +23,7 @@
 #include <xaninApps/loadch.c>
 #include <xaninApps/epilepsy.c>
 #include <xaninApps/keyboard_test.c>
+#include <xaninApps/logo.c>
 
 /*
 

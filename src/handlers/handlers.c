@@ -57,16 +57,9 @@ void pit_handler(void)
 
 void keyboard_handler(void)
 {
-
-
-    uint32_t zero = 0;
-
-
     keyStatus = inbIO(KEYBOARD_STATUS_REG); // if status & 1 (ON)
     keyboard_scan_code = inbIO(KEYBOARD_DATA_REG); // get keyboard_scan_code
-
     keyboard_driver(keyboard_scan_code);
-
 }
  
 

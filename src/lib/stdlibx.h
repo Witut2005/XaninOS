@@ -42,7 +42,7 @@ char getchar(void)
 {
     
     while((!KeyInfo.character) || (KeyInfo.scan_code >= 128));
-    uint8_t tmp = KeyInfo.character;
+    char tmp = KeyInfo.character;
     KeyInfo.character = 0x0;
     return tmp;
 

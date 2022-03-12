@@ -224,7 +224,7 @@ void xprintf(char* str, ... )
                         //x++;
                         
                         Screen.cursor[Screen.y][Screen.x] = (uint16_t) (tmpPtr[i] + (((backgroundColor << 4) | fontColor) << 8));
-                        if(Screen.x == 79)
+                        if(Screen.x == 80)
                         {
                             Screen.y++;
                             Screen.x = 0x0;
@@ -250,7 +250,7 @@ void xprintf(char* str, ... )
                         //x++;
                         
                         Screen.cursor[Screen.y][Screen.x] = (uint16_t) (tmpPtr[i] + (((backgroundColor << 4) | fontColor) << 8));
-                        if(Screen.x == 79)
+                        if(Screen.x == 80)
                         {
                             Screen.y++;
                             Screen.x = 0x0;
@@ -284,7 +284,7 @@ void xprintf(char* str, ... )
                         }
 
                         Screen.cursor[Screen.y][Screen.x] = (uint16_t) (stringPtr[i] + (((backgroundColor << 4) | fontColor) << 8));
-                        if(Screen.x == 79)
+                        if(Screen.x == 80)
                         {
                             Screen.y++;
                             Screen.x = 0x0;
@@ -318,12 +318,19 @@ void xprintf(char* str, ... )
                         continue;
                     }
 
+                    if(character == '\0')
+                    {
+                        return;
+                    }
+
                     Screen.cursor[Screen.y][Screen.x] = (uint16_t) (character + (((backgroundColor << 4) | fontColor) << 8));
-                    if(bufCounter == 79)
+
+                    if(Screen.x == 80)
                     {
                         Screen.y++;
                         Screen.x = 0x0;
                     }
+
                     Screen.x++;
                     bufCounter++;
 
@@ -350,7 +357,7 @@ void xprintf(char* str, ... )
                         //x++;
                         
                         Screen.cursor[Screen.y][Screen.x] = (uint16_t) (tmpPtr[i] + (((backgroundColor << 4) | fontColor) << 8));
-                        if(Screen.x == 79)
+                        if(Screen.x == 80)
                         {
                             Screen.y++;
                             Screen.x = 0x0;
@@ -376,7 +383,7 @@ void xprintf(char* str, ... )
                         //x++;
 
                         Screen.cursor[Screen.y][Screen.x] = (uint16_t) (tmpPtr[i] + (((backgroundColor << 4) | fontColor) << 8));
-                        if(Screen.x == 79)
+                        if(Screen.x == 80)
                         {
                             Screen.y++;
                             Screen.x = 0x0;
@@ -404,7 +411,7 @@ void xprintf(char* str, ... )
                         //x++;
 
                         Screen.cursor[Screen.y][Screen.x] = (uint16_t) (tmpPtr[i] + (((backgroundColor << 4) | fontColor) << 8));
-                        if(Screen.x == 79)
+                        if(Screen.x == 80)
                         {
                             Screen.y++;
                             Screen.x = 0x0;
@@ -435,7 +442,7 @@ void xprintf(char* str, ... )
 
                                 Screen.cursor[Screen.y][Screen.x] = (uint16_t) (tmpPtr[i] + (((backgroundColor << 4) | fontColor) << 8));
 
-                                if(Screen.x == 79)
+                                if(Screen.x == 80)
                                 {
                                     Screen.y++;
                                     Screen.x = 0x0;
@@ -529,6 +536,8 @@ void xscanf(char* str, ... )
 
     for(int i = 0; i < 50;i++)
         buffer[i] = '\0';
+
+    index = 0x0;
 
 
     start:
@@ -653,9 +662,6 @@ void xscanf(char* str, ... )
 
         }
 
-
-        
-
         else if(KeyInfo.character)
         {
             char tmp = getchar();
@@ -664,5 +670,7 @@ void xscanf(char* str, ... )
             index++;
         }    
     }
+
+
 
 }

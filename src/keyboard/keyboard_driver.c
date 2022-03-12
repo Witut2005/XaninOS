@@ -4,16 +4,13 @@
 void keyboard_driver(uint8_t scanCode)
 {
 
-    KeyInfo.character = 0x0;
-    KeyInfo.scan_code = 0x0;
-
     KeyInfo.scan_code = scanCode;
 
 
     switch(KeyInfo.scan_code)
     {
-        case LSHIFT: {KeyInfo.is_shift = true; return;}
-        case LSHIFT_RELEASE: {KeyInfo.is_shift = false; return;}
+        case LSHIFT: {KeyInfo.is_shift = true; break;}
+        case LSHIFT_RELEASE: {KeyInfo.is_shift = false; break;}
         case BSPC: 
         {
             
@@ -26,7 +23,6 @@ void keyboard_driver(uint8_t scanCode)
                 return;
             }
 
-            Screen.x--;
 
             if(!Screen.x)
             {
@@ -34,7 +30,9 @@ void keyboard_driver(uint8_t scanCode)
                 Screen.x = 79;
             }
 
-           if(index)
+            Screen.x--;
+
+            if(index)
                 index--;
 
             comBuf[index] = '\0';
@@ -44,14 +42,24 @@ void keyboard_driver(uint8_t scanCode)
             return;
         }
         
-        case BSPC_RELEASE: {KeyInfo.is_bspc = false; return;}
+        case BSPC_RELEASE: {KeyInfo.is_bspc = false; break;}
         case CAPS: 
         {
             KeyInfo.is_caps = KeyInfo.is_caps  ?  false : true; 
-            return; 
         }
 
-    
+        case ARROW_UP: {KeyInfo.is_up = true; break;}
+        case ARROW_UP_RELEASE: {KeyInfo.is_up = false; break;}
+
+        case ARROW_DOWN: {KeyInfo.is_down = true; break;}
+        case ARROW_DOWN_RELEASE: {KeyInfo.is_down = false; break;}
+
+        case ARROW_RIGHT: {KeyInfo.is_right = true; break;}
+        case ARROW_RIGHT_RELEASE: {KeyInfo.is_right = false; break;}
+
+        case ARROW_LEFT: {KeyInfo.is_left = true; break;}
+        case ARROW_LEFT_RELEASE: {KeyInfo.is_left = false; break;}
+
     }
 
     KeyInfo.character = keyboard_map[scanCode];
@@ -62,14 +70,18 @@ void keyboard_driver(uint8_t scanCode)
         if(KeyInfo.character >= 'a' && KeyInfo.character <= 'z')
         {
             KeyInfo.character -= 32;
-            return;
         }
     }
 
+    
+
     if(KeyInfo.scan_code >= 128)
     {
-        
+        KeyInfo.character = 0x0;
     }
+
+    
+    
 
     if(KeyInfo.is_shift)
     {
@@ -95,18 +107,14 @@ void keyboard_driver(uint8_t scanCode)
 
     }
 
-    /*
-
-    if(KeyInfo.scan_code >= 128 )
+    
+    if(keyboard_handle != nullptr)
     {
-        KeyInfo.character = '\0';
-        KeyInfo.scan_code = 0x0;
-        return;
+        keyboard_handle();
     }
 
-    */
+    return;
 
-    //xprintf("%c", KeyInfo.character);
           
     
 }

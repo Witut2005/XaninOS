@@ -16,9 +16,14 @@ enum special_keys
   ESC = 0x1,
   CAPS = 0x3A,
   ARROW_UP = 72,
+  ARROW_UP_RELEASE = 0xC8,
   ARROW_LEFT = 75,
+  ARROW_LEFT_RELEASE = 0xCB,
   ARROW_RIGHT = 77,
+  ARROW_RIGHT_RELEASE = 0xCD,
   ARROW_DOWN = 80,
+  ARROW_DOWN_RELEASE = 0xD0,
+
   LSHIFT = 0x2A,
   LSHIFT_RELEASE = 0xAA,
   F4_KEY = 0x3E
@@ -73,16 +78,16 @@ uint8_t keyboard_map[128] = {
   // -------- 70 to 79 --------
   ' ', // scroll lock
   '7', // numpad 7, HOME key if preceded by keycode 224
-  '8', // numpad 8, up arrow if preceded by keycode 224
+  '\0', // numpad 8, up arrow if preceded by keycode 224
   '9', // numpad 9, PAGE UP key if preceded by keycode 224
   '-', // numpad hyphen
-  '4', // numpad 4, left arrow if preceded by keycode 224
+  '\0', // numpad 4, left arrow if preceded by keycode 224
   '5', // numpad 5
-  '6', // numpad 6, right arrow if preceded by keycode 224
+  '\0', // numpad 6, right arrow if preceded by keycode 224
   ' ',
   '1', // numpad 1, END key if preceded by keycode 224
   // -------- 80 to 89 --------
-  '2', // numpad 2, down arrow if preceded by keycode 224
+  '\0', // numpad 2, down arrow if preceded by keycode 224
   '3', // numpad 3, PAGE DOWN key if preceded by keycode 224
   '0', // numpad 0, INSERT key if preceded by keycode 224
   '.', // numpad dot, DELETE key if preceded by keycode 224

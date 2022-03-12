@@ -22,6 +22,8 @@ enum screen_macros
 
 uint16_t* cursor = (uint16_t*)VGA_TEXT_MEMORY + (4*80);
 
+uint8_t logo_front_color = magenta;
+uint8_t logo_back_color = black;
 
 struct key_info_t
 {
@@ -31,6 +33,10 @@ struct key_info_t
     bool is_ctrl;
     bool is_caps;
     bool is_bspc;
+    bool is_left;
+    bool is_right;
+    bool is_up;
+    bool is_down;
 };
 
 typedef struct key_info_t key_info_t;
@@ -85,9 +91,9 @@ bool lshift_pressed = false;
 
 bool in_graphic_mode = false;
 
-typedef void (*keyboard_handle_input)(char* str, ... );
+typedef void (*keyboard_handle_input)(void);
 
-keyboard_handle_input keyboard_handle[50];
+keyboard_handle_input keyboard_handle = nullptr;
  
 
 char program_name[40];

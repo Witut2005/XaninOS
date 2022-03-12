@@ -19,13 +19,22 @@ void scan(void)
     xprintf("%s\n", program_name);
     xprintf("%s\n", program_parameters);
 
+    KeyInfo.character = 0x0;
 
     no_enter = true;
     keyboard_scan_code = 0x0;
 
+
+
     if(cmpstr(program_name,"touch"))
     {
         //touch();
+    }
+
+    else if(program_name, "logo")
+    {
+        logo_color_change(program_parameters);
+        app_exited = true;
     }
 
     else if(cmpstr(program_name,"epilepsy"))
