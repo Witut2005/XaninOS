@@ -50,7 +50,6 @@ struct screen_t
 
 };
 
-
 typedef struct screen_t screen_t;
 screen_t Screen;
 
