@@ -8,6 +8,7 @@
 #include <headers/macros.h>
 #include <terminal/vty.h>
 #include <tetris/tetris.c>
+#include <lib/stdlibx.h>
 
 
 
@@ -412,47 +413,6 @@ void xprintf(char* str, ... )
 }
 
 
-/*
-char* get_program_name(void)
-{
-
-    char* program_name_pointer = program_name;
-
-    uint32_t i = 0x0;
-
-    while(keyboard_command[i] != 0x20)
-    {
-        program_name_pointer[i] = keyboard_command[i];
-        i++;
-    }
-
-    program_name_pointer[i] = '\0';
-
-    char* parameter_pointer = program_parameters;
-
-    i++;
-
-    while(keyboard_command[i] != 0x20)
-    {
-        parameter_pointer[i] = keyboard_command[i];
-        i++;
-    }
-
-    parameter_pointer[i] = '\0';
-    return parameter_pointer;
-
-}
-*/
-/*
-char putchar(char c)
-{
-    *cursor = (set_output_color(black, white) << 8) | c;
-    x++;
-
-    return c;
-}
-*/
-
 
 void xscanf(char* str, ... )
 {
@@ -477,11 +437,30 @@ void xscanf(char* str, ... )
     for(int i = 0; i < 50;i++)
         buffer[i] = '\0';
 
+
+    start:
+
     while(1)
     {
-        if(keyboard_scan_code == ENTER)
+
+        if(key_info.is_bspc)
+        {    
+            if(index)
+                index--;
+
+            comBuf[index] = '\0';
+            
+            *cursor = '\0'; /* delete character */
+            cursor--;
+            x--;
+            key_info.is_bspc = false;
+            goto start;
+        }
+        
+
+        else if(key_info.scan_code == ENTER)
         {
-            while(str[str_counter] != '\0')
+            while(str[str_counter])
             {
                 if(str[str_counter] == '%')
                 {
@@ -490,6 +469,7 @@ void xscanf(char* str, ... )
                     {
                         case 's':
                         {
+
                             string_pointer = va_arg(args, char*);
 
                             for(int i = 0; string_pointer[i] != '\0'; i++)
@@ -591,11 +571,17 @@ void xscanf(char* str, ... )
         for(int i = 0x0; i < 50;i++)
             buffer[i] = 0x0;
 
-
-
         return;
 
         }
+
+        else if(key_info.character)
+        {
+            char tmp = getchar();
+            xprintf("%c", tmp);
+            keyboard_command[index] = tmp;
+            index++;
+        }    
     }
 
 }

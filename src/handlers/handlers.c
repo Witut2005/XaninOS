@@ -44,7 +44,6 @@ void divide_by_zero_exception(void)
 
 
 
-bool pitActive = false; 
 
 void pit_handler(void)
 {

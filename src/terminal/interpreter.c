@@ -16,6 +16,7 @@ void scan(void)
     erase_spaces(program_name);
     erase_spaces(program_parameters);
 
+
     //xprintf("%z%s\n",set_output_color(blue,white),program_name);
 
     //KEYBOARD_SIG_ON(no_keyboard_input);
@@ -140,23 +141,6 @@ void scan(void)
         help();   
     }
 
-    /*
-
-    else if(cmpstr(program_name,"pong"))
-    {
-
-        pongStart:
-
-        pong_app_init();
-
-        while(!app_exited)
-        {
-            pong_update_screen();
-        }   
-    }
-
-    */
-
     else if(cmpstr(program_name,"execute"))
     {
         //execute();
@@ -203,12 +187,17 @@ void scan(void)
     {
 
 
-        xprintf("%zunknown command",set_output_color(red,white));
+        xprintf("\nunknown command",set_output_color(red,white));
 
         keyboard_scan_code = 0x0;        
         keyboard_input = 0x0;
 
-        while((!keyboard_input) || (keyboard_scan_code == ENTER));
+        getchar();
+
+        while(!key_info.scan_code);
+
+        //while((!keyboard_input) || (keyboard_scan_code == ENTER));
+
 
         exit_process();
         

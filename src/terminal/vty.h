@@ -49,6 +49,8 @@ typedef struct screen_t screen_t;
 screen_t screen;
 
 uint16_t* screen_buffer[28];
+uint8_t index = 0x0;
+
 
 static uint8_t y,x;
 void setTerminal();

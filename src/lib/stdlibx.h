@@ -5,6 +5,7 @@
 #include <pit/pit.c>
 #include <terminal/vty.h>
 #include <headers/colors.h>
+#include <handlers/handlers.c>
 
 
 struct TIME
@@ -39,9 +40,12 @@ bool key_pressed(void)
 
 char getchar(void)
 {
-    keyboard_input = 0x0;
-    while((!keyboard_input) || (keyboard_scan_code >= 128));
-    return keyboard_input;
+    
+    while((!key_info.character) || (key_info.scan_code >= 128));
+    uint8_t tmp = key_info.character;
+    key_info.character = 0x0;
+    return tmp;
+
 }
 
 char getscan(void)
@@ -88,10 +92,6 @@ void getTime()
     //GET CENTURY
     outbIO(CMOS_ADDR,0x32);
     time.century = inbIO(CMOS_DATA);
-
-
-
-
 
     asm("sti");
 }

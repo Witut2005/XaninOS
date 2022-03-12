@@ -3,7 +3,6 @@
 
 #include <stdint.h>
 #include <lib/hal.h>
-#include <lib/stdiox.h>
 
 #define PIT_CHANNEL0 0x40
 #define PIT_CHANNEL1 0x41
@@ -16,6 +15,7 @@
 
 
 uint16_t divisor = 0xFFFF;
+bool pitActive = false; 
 volatile uint32_t pit_current_time = 0x0;
 
 
@@ -50,10 +50,6 @@ void sleep(uint32_t miliseconds)
 {
 
     volatile uint32_t start_time = pit_current_time + miliseconds;
-
-    xprintf("divisor: %d\n", divisor);
-
-    xprintf("%d %d", start_time, pit_current_time);
 
     while(pit_current_time < start_time)
         asm("nop");

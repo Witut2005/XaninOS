@@ -107,10 +107,9 @@ void _start(void)
                 keyboard_command[i] = '\0';
             goto tuiInit;
         }
-        terminal_refresh();
+        //terminal_refresh();
         
-        if(key_info.scan_code == ENTER)
-            scan();
+        scan();
 
     }
 

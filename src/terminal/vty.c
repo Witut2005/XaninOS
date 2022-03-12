@@ -18,7 +18,6 @@ void set_y(uint8_t yset)
     y = yset;
 }
 
-static uint8_t index = 0x0;
  
 void screen_init(void)
 {
@@ -268,6 +267,7 @@ void terminal_refresh(void)
     
 
 
+    /*
 
     if(key_info.is_bspc)
     {
@@ -280,13 +280,15 @@ void terminal_refresh(void)
         comBuf[index] = '\0';
 
         cursor--;
-        *cursor = '\0'; /* delete character */
+        *cursor = '\0';  delete character 
         key_info.is_bspc = false;
 
     }
 
+    */
 
-    else if(key_info.scan_code == ARROW_LEFT)
+
+    if(key_info.scan_code == ARROW_LEFT)
     {
         if(*(cursor-1) == (uint16_t)('>' | ((black << 4) | white) << 8))
             return;
