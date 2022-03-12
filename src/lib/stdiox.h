@@ -34,6 +34,8 @@ void clearScr(void)
 
     x = 0;
     y = 0;
+    Screen.x = 0;
+    Screen.y = 0;
 }
 
 
@@ -203,11 +205,6 @@ void xprintf(char* str, ... )
     while(str[strCounter])
     {
 
-        if(x > 80)
-        {
-            x = 0;
-            y++;
-        }
 
         if(str[strCounter] == '%')
         {
@@ -223,9 +220,17 @@ void xprintf(char* str, ... )
 
                     for(int i = 0; tmpPtr[i] != '\0'; i++)
                     {
-                        cursor[bufCounter] = (uint16_t) (tmpPtr[i] + (((backgroundColor << 4) | fontColor) << 8));
+                        //cursor[bufCounter] = (uint16_t) (tmpPtr[i] + (((backgroundColor << 4) | fontColor) << 8));
+                        //x++;
+                        
+                        Screen.cursor[Screen.y][Screen.x] = (uint16_t) (tmpPtr[i] + (((backgroundColor << 4) | fontColor) << 8));
+                        if(Screen.x == 79)
+                        {
+                            Screen.y++;
+                            Screen.x = 0x0;
+                        }
+                        Screen.x++;
                         bufCounter++;
-                        x++;
                     }
 
                     break;
@@ -240,9 +245,18 @@ void xprintf(char* str, ... )
                     for(int i = 0; tmpPtr[i] != '\0'; i++)
                     {
 
-                        cursor[bufCounter] = (uint16_t)(tmpPtr[i] + (((backgroundColor << 4) | fontColor) << 8));
+                        //cursor[bufCounter] = (uint16_t)(tmpPtr[i] + (((backgroundColor << 4) | fontColor) << 8));
+                        //bufCounter++;
+                        //x++;
+                        
+                        Screen.cursor[Screen.y][Screen.x] = (uint16_t) (tmpPtr[i] + (((backgroundColor << 4) | fontColor) << 8));
+                        if(Screen.x == 79)
+                        {
+                            Screen.y++;
+                            Screen.x = 0x0;
+                        }
+                        Screen.x++;
                         bufCounter++;
-                        x++;
                     }
 
                     break;
@@ -258,9 +272,27 @@ void xprintf(char* str, ... )
 
                     for(int i = 0; stringPtr[i] != '\0'; i++)
                     {
-                        cursor[bufCounter] = (uint16_t) (stringPtr[i] + (((backgroundColor << 4) | fontColor) << 8));
+                        //cursor[bufCounter] = (uint16_t) (stringPtr[i] + (((backgroundColor << 4) | fontColor) << 8));
+                        //bufCounter++;
+                        //x++;
+                        if(stringPtr[i] == '\n')
+                        {            
+                            Screen.x = 0x0;
+                            Screen.y++;
+                            bufCounter++;
+                            continue;
+                        }
+
+                        Screen.cursor[Screen.y][Screen.x] = (uint16_t) (stringPtr[i] + (((backgroundColor << 4) | fontColor) << 8));
+                        if(Screen.x == 79)
+                        {
+                            Screen.y++;
+                            Screen.x = 0x0;
+                        }
+                        Screen.x++;
                         bufCounter++;
-                        x++;
+
+
                     }
 
                     break;
@@ -274,9 +306,26 @@ void xprintf(char* str, ... )
                     character = (char)va_arg(args,int);
 
 
-                    cursor[bufCounter] = (uint16_t)(character + (((backgroundColor << 4) | fontColor) << 8));
+                    //cursor[bufCounter] = (uint16_t)(character + (((backgroundColor << 4) | fontColor) << 8));
+                    //bufCounter++;
+                    //x++;
+
+                    if(character == '\n')
+                    {            
+                        Screen.x = 0x0;
+                        Screen.y++;
                         bufCounter++;
-                        x++;
+                        continue;
+                    }
+
+                    Screen.cursor[Screen.y][Screen.x] = (uint16_t) (character + (((backgroundColor << 4) | fontColor) << 8));
+                    if(bufCounter == 79)
+                    {
+                        Screen.y++;
+                        Screen.x = 0x0;
+                    }
+                    Screen.x++;
+                    bufCounter++;
 
                     break;
                 }
@@ -296,9 +345,18 @@ void xprintf(char* str, ... )
 
                     for(int i = 0; tmpPtr[i] != '\0'; i++)
                     {
-                        cursor[bufCounter] = (uint16_t) (tmpPtr[i] + (((backgroundColor << 4) | fontColor) << 8));
+                        //cursor[bufCounter] = (uint16_t) (tmpPtr[i] + (((backgroundColor << 4) | fontColor) << 8));
+                        //bufCounter++;
+                        //x++;
+                        
+                        Screen.cursor[Screen.y][Screen.x] = (uint16_t) (tmpPtr[i] + (((backgroundColor << 4) | fontColor) << 8));
+                        if(Screen.x == 79)
+                        {
+                            Screen.y++;
+                            Screen.x = 0x0;
+                        }
+                        Screen.x++;
                         bufCounter++;
-                        x++;
                     }
 
                     
@@ -313,9 +371,19 @@ void xprintf(char* str, ... )
 
                     for(int i = 0; tmpPtr[i] != '\0'; i++)
                     {
-                        cursor[bufCounter] = (uint16_t) (tmpPtr[i] + (((backgroundColor << 4) | fontColor) << 8));
+                        //cursor[bufCounter] = (uint16_t) (tmpPtr[i] + (((backgroundColor << 4) | fontColor) << 8));
+                        //bufCounter++;
+                        //x++;
+
+                        Screen.cursor[Screen.y][Screen.x] = (uint16_t) (tmpPtr[i] + (((backgroundColor << 4) | fontColor) << 8));
+                        if(Screen.x == 79)
+                        {
+                            Screen.y++;
+                            Screen.x = 0x0;
+                        }
+                        Screen.x++;
                         bufCounter++;
-                        x++;
+
                     }
 
                     toupper(tmpPtr);
@@ -331,9 +399,18 @@ void xprintf(char* str, ... )
 
                     for(int i = 0; tmpPtr[i] != '\0'; i++)
                     {
-                        cursor[bufCounter] = (uint16_t) (tmpPtr[i] + (((backgroundColor << 4) | fontColor) << 8));
+                        //cursor[bufCounter] = (uint16_t) (tmpPtr[i] + (((backgroundColor << 4) | fontColor) << 8));
+                        //bufCounter++;
+                        //x++;
+
+                        Screen.cursor[Screen.y][Screen.x] = (uint16_t) (tmpPtr[i] + (((backgroundColor << 4) | fontColor) << 8));
+                        if(Screen.x == 79)
+                        {
+                            Screen.y++;
+                            Screen.x = 0x0;
+                        }
+                        Screen.x++;
                         bufCounter++;
-                        x++;
                     }
                     break;
                 }
@@ -352,9 +429,21 @@ void xprintf(char* str, ... )
 
                             for(int i = 0; tmpPtr[i] != '\0'; i++)
                             {
-                                cursor[bufCounter] = (uint16_t) (tmpPtr[i] + (((backgroundColor << 4) | fontColor) << 8));
+                                //cursor[bufCounter] = (uint16_t) (tmpPtr[i] + (((backgroundColor << 4) | fontColor) << 8));
+                                //bufCounter++;
+                                //x++;
+
+                                Screen.cursor[Screen.y][Screen.x] = (uint16_t) (tmpPtr[i] + (((backgroundColor << 4) | fontColor) << 8));
+
+                                if(Screen.x == 79)
+                                {
+                                    Screen.y++;
+                                    Screen.x = 0x0;
+                                }
+                                
+                                Screen.x++;
                                 bufCounter++;
-                                x++;
+
                             }
 
                     
@@ -375,10 +464,9 @@ void xprintf(char* str, ... )
         }
 
         else if(str[strCounter] == '\n')
-        {
-            y++;
-            x = 0;
-            cursor = (uint16_t*)(VGA_TEXT_MEMORY) + ((80)*y);
+        {            
+            Screen.x = 0x0;
+            Screen.y++;
             strCounter++;
         }
 
@@ -398,10 +486,15 @@ void xprintf(char* str, ... )
 
         else
         {
-            cursor[bufCounter] = (uint16_t) (str[strCounter] + (((backgroundColor << 4) | fontColor) << 8));
+            //cursor[bufCounter] = (uint16_t) (str[strCounter] + (((backgroundColor << 4) | fontColor) << 8));
+
+            //x++;
+
+            Screen.cursor[Screen.y][Screen.x] = (uint16_t) (str[strCounter] + (((backgroundColor << 4) | fontColor) << 8));
+            Screen.x++;
             strCounter++;
             bufCounter++;
-            x++;
+
         }
 
 
@@ -443,22 +536,7 @@ void xscanf(char* str, ... )
     while(1)
     {
 
-        if(key_info.is_bspc)
-        {    
-            if(index)
-                index--;
-
-            comBuf[index] = '\0';
-            
-            *cursor = '\0'; /* delete character */
-            cursor--;
-            x--;
-            key_info.is_bspc = false;
-            goto start;
-        }
-        
-
-        else if(key_info.scan_code == ENTER)
+        if(KeyInfo.scan_code == ENTER)
         {
             while(str[str_counter])
             {
@@ -493,7 +571,7 @@ void xscanf(char* str, ... )
                             }
 
                             end:
-
+                            
                             for(int i = 0x0; i < 50;i++)
                                 buffer[i] = '\0';
 
@@ -575,7 +653,10 @@ void xscanf(char* str, ... )
 
         }
 
-        else if(key_info.character)
+
+        
+
+        else if(KeyInfo.character)
         {
             char tmp = getchar();
             xprintf("%c", tmp);

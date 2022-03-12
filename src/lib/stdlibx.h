@@ -41,18 +41,18 @@ bool key_pressed(void)
 char getchar(void)
 {
     
-    while((!key_info.character) || (key_info.scan_code >= 128));
-    uint8_t tmp = key_info.character;
-    key_info.character = 0x0;
+    while((!KeyInfo.character) || (KeyInfo.scan_code >= 128));
+    uint8_t tmp = KeyInfo.character;
+    KeyInfo.character = 0x0;
     return tmp;
 
 }
 
 char getscan(void)
 {
-    keyboard_scan_code = 0x0;
-    while((!keyboard_input) || (keyboard_scan_code >= 128));
-    return keyboard_scan_code;
+    uint8_t tmp = KeyInfo.scan_code;
+    KeyInfo.scan_code = 0x0;
+    return tmp;
 }
 
 void getTime()

@@ -34,7 +34,7 @@ struct key_info_t
 };
 
 typedef struct key_info_t key_info_t;
-key_info_t key_info;
+key_info_t KeyInfo;
 
 struct screen_t
 {
@@ -46,11 +46,11 @@ struct screen_t
 
 
 typedef struct screen_t screen_t;
-screen_t screen;
+screen_t Screen;
 
 uint16_t* screen_buffer[28];
 uint8_t index = 0x0;
-
+char character_blocked = '\0';
 
 static uint8_t y,x;
 void setTerminal();
@@ -75,8 +75,8 @@ char selected_character;
 
 
 #define key_remap(from, to)\
-        if(key_info.character == from)\
-            key_info.character = to
+        if(KeyInfo.character == from)\
+            KeyInfo.character = to
 
 bool caps_on = false;
 bool print_off = false;
@@ -85,11 +85,10 @@ bool lshift_pressed = false;
 
 bool in_graphic_mode = false;
 
-typedef char (*keyboard_handle_input)(char);
+typedef void (*keyboard_handle_input)(char* str, ... );
 
 keyboard_handle_input keyboard_handle[50];
-
-char keyboard_default_handler(char);
+ 
 
 char program_name[40];
 char program_parameters[40];

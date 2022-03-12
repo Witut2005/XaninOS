@@ -4,40 +4,74 @@
 void keyboard_driver(uint8_t scanCode)
 {
 
+    KeyInfo.character = 0x0;
+    KeyInfo.scan_code = 0x0;
 
-    key_info.character = 0x0;
-    key_info.scan_code = 0x0;
-
-    key_info.scan_code = scanCode;
+    KeyInfo.scan_code = scanCode;
 
 
-    switch(key_info.scan_code)
+    switch(KeyInfo.scan_code)
     {
-        case LSHIFT: {key_info.is_shift = true; return;}
-        case LSHIFT_RELEASE: {key_info.is_shift = false; return;}
+        case LSHIFT: {KeyInfo.is_shift = true; return;}
+        case LSHIFT_RELEASE: {KeyInfo.is_shift = false; return;}
         case BSPC: 
         {
-            if(key_info.is_bspc)
+            
+            
+
+            KeyInfo.is_bspc = true; 
+            
+            if((char)Screen.cursor[Screen.y][Screen.x - 1] == character_blocked)
             {
-                key_info.is_bspc = false;
                 return;
             }
-            key_info.is_bspc = true; 
+
+            Screen.x--;
+
+            if(!Screen.x)
+            {
+                Screen.y--;
+                Screen.x = 79;
+            }
+
+           if(index)
+                index--;
+
+            comBuf[index] = '\0';
+            Screen.cursor[Screen.y][Screen.x] = '\0';
+
+            
             return;
         }
         
-        case BSPC_RELEASE: {key_info.is_bspc = false; return;}
-        case CAPS: {key_info.is_caps = ~key_info.is_caps; return;}
+        case BSPC_RELEASE: {KeyInfo.is_bspc = false; return;}
+        case CAPS: 
+        {
+            KeyInfo.is_caps = KeyInfo.is_caps  ?  false : true; 
+            return; 
+        }
+
+    
     }
 
-    key_info.character = keyboard_map[scanCode];
+    KeyInfo.character = keyboard_map[scanCode];
 
 
-    if((key_info.is_caps) || (key_info.is_caps))
-        if(key_info.character >= 'a' && key_info.character <= 'z')
-            key_info.character -= 32;
+    if((KeyInfo.is_caps) || (KeyInfo.is_shift))
+    {
+        if(KeyInfo.character >= 'a' && KeyInfo.character <= 'z')
+        {
+            KeyInfo.character -= 32;
+            return;
+        }
+    }
 
-    if(key_info.is_shift)
+    if(KeyInfo.scan_code >= 128)
+    {
+        
+    }
+
+    if(KeyInfo.is_shift)
     {
     key_remap('-','_');
     key_remap('1','!');
@@ -61,15 +95,18 @@ void keyboard_driver(uint8_t scanCode)
 
     }
 
+    /*
 
-    if(key_info.scan_code >= 128 )
+    if(KeyInfo.scan_code >= 128 )
     {
-        key_info.character = '\0';
-        key_info.scan_code = 0x0;
+        KeyInfo.character = '\0';
+        KeyInfo.scan_code = 0x0;
         return;
     }
 
-    //xprintf("%c", key_info.character);
+    */
+
+    //xprintf("%c", KeyInfo.character);
           
     
 }

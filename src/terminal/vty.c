@@ -23,16 +23,14 @@ void screen_init(void)
 {
     //screen.cursor = VGA_TEXT_MEMORY;
     
-    screen.cursor = screen_buffer;
+    Screen.cursor = screen_buffer;
 
     for(int i = 0; i < VGA_HEIGHT; i++)
-        screen.cursor[i] = (uint16_t*)(VGA_TEXT_MEMORY + (80 * i * 2));  
+        Screen.cursor[i] = (uint16_t*)(VGA_TEXT_MEMORY + (80 * i * 2));  
 
-    screen.x = 0x0;
-    screen.y = 0x0;
-
-    x = 0x0;
-    y = 0x0;
+    Screen.x = 0x0;
+    Screen.y = 0x0;
+    
 }
 
 
@@ -42,14 +40,14 @@ void terminalKeyboard(uint8_t scanCode)
 
     keyboard_scan_code = scanCode;
 
-    key_info.scan_code = scanCode;
-    key_info.character = keyboard_map[scanCode];
+    KeyInfo.scan_code = scanCode;
+    KeyInfo.character = keyboard_map[scanCode];
 
-    switch(key_info.scan_code)
+    switch(KeyInfo.scan_code)
     {
-        case LSHIFT: {key_info.is_shift = true; return;}
-        case LSHIFT_RELEASE: {key_info.is_shift = false; return;}
-        case CAPS: {key_info.is_caps = ~key_info.is_caps; return;}
+        case LSHIFT: {KeyInfo.is_shift = true; return;}
+        case LSHIFT_RELEASE: {KeyInfo.is_shift = false; return;}
+        case CAPS: {KeyInfo.is_caps = ~KeyInfo.is_caps; return;}
     }
 
     key_remap('-','_');
@@ -179,7 +177,7 @@ void terminalKeyboard(uint8_t scanCode)
     }
 
 
-    if(key_info.is_bspc)
+    if(KeyInfo.is_bspc)
     {
         if(*(cursor-1) == (uint16_t)('>' | ((black << 4) | white) << 8))
             return;
@@ -191,7 +189,7 @@ void terminalKeyboard(uint8_t scanCode)
 
         cursor--;
         *cursor = '\0'; /* delete character */
-        key_info.is_bspc = false;
+        KeyInfo.is_bspc = false;
     }
 
 
@@ -267,28 +265,7 @@ void terminal_refresh(void)
     
 
 
-    /*
-
-    if(key_info.is_bspc)
-    {
-        if(*(cursor-1) == (uint16_t)('>' | ((black << 4) | white) << 8))
-            return;
-
-        if(index != 0)
-            index--;
-
-        comBuf[index] = '\0';
-
-        cursor--;
-        *cursor = '\0';  delete character 
-        key_info.is_bspc = false;
-
-    }
-
-    */
-
-
-    if(key_info.scan_code == ARROW_LEFT)
+    if(KeyInfo.scan_code == ARROW_LEFT)
     {
         if(*(cursor-1) == (uint16_t)('>' | ((black << 4) | white) << 8))
             return;
@@ -296,26 +273,29 @@ void terminal_refresh(void)
         cursor--;
     }
 
-    else if(key_info.scan_code == ARROW_RIGHT)
+    else if(KeyInfo.scan_code == ARROW_RIGHT)
     {
         cursor++;
     }
 
-    else if(key_info.scan_code == ENTER)
+    else if(KeyInfo.scan_code == ENTER)
     {
 
         if(strlen(keyboard_command) != 0)
         {
             y++;
             x = 0;
-            cursor = (uint16_t*)VRAM;
-            add_y(y);
+            //cursor = (uint16_t*)VRAM;
+            //add_y(y);
 
             if(!no_enter)
             {
-                *cursor = (uint16_t)('>' | ((black << 4) | white) << 8); 
-                cursor++;
-                x++;
+                /*
+                    cursor = (uint16_t)('>' | ((black << 4) | white) << 8); 
+                    cursor++;
+                    x++;
+                */
+
             }
             
         }
@@ -328,10 +308,10 @@ void terminal_refresh(void)
 
     else
     {
-        if(key_info.character != '\0')
+        if(KeyInfo.character != '\0')
         {
-            *cursor = (uint16_t)(key_info.character | ((black << 4) | white) << 8); 
-            keyboard_command[index] = key_info.character;
+            *cursor = (uint16_t)(KeyInfo.character | ((black << 4) | white) << 8); 
+            keyboard_command[index] = KeyInfo.character;
             index++;
             cursor++;
             x++;
@@ -339,7 +319,7 @@ void terminal_refresh(void)
         }
     }
 
-    key_info.character = 0x0;
+    KeyInfo.character = 0x0;
 
 
 }

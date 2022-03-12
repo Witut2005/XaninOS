@@ -13,10 +13,10 @@ void loadch(uint32_t address)
 
     for(int i = 0; i < 512; i++)
     {    
-    	if(x == 32)
+    	if(Screen.x == 32)
     	{
-    		x = 0x0;
-    		y++;
+    		Screen.x = 0x0;
+            Screen.y++;
     	}
         xprintf("%c", data_pointer[i]);
     }

@@ -15,7 +15,7 @@ void keyboard_test(void)
     {
     
 
-    xprintf("%x", key_info.scan_code);
+    xprintf("%x", KeyInfo.scan_code);
 
     //if(key_pressed())
         //xprintf("%x ", ugalol);

@@ -12,14 +12,13 @@ void scan(void)
 
 
     xscanf("%s %s",program_name, program_parameters);
-    //xscanf("%s",program_name)
+    
     erase_spaces(program_name);
     erase_spaces(program_parameters);
 
+    xprintf("%s\n", program_name);
+    xprintf("%s\n", program_parameters);
 
-    //xprintf("%z%s\n",set_output_color(blue,white),program_name);
-
-    //KEYBOARD_SIG_ON(no_keyboard_input);
 
     no_enter = true;
     keyboard_scan_code = 0x0;
@@ -187,21 +186,20 @@ void scan(void)
     {
 
 
-        xprintf("\nunknown command",set_output_color(red,white));
+        xprintf("%z\nunknown command",set_output_color(red,white));
 
         keyboard_scan_code = 0x0;        
         keyboard_input = 0x0;
 
-        getchar();
+        getscan();
 
-        while(!key_info.scan_code);
-
-        //while((!keyboard_input) || (keyboard_scan_code == ENTER));
-
+        while(!KeyInfo.scan_code);
 
         exit_process();
         
     }
 
+    KeyInfo.character = 0x0;
+    KeyInfo.scan_code = 0x0;
 
 }

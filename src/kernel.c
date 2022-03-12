@@ -43,6 +43,19 @@ void _start(void)
     asm("cli");    //disable interrupts while IDT is not configured
     screen_init(); //init screen management syst
 
+    /*
+
+    char napis[] = {"jeden dwa trzy oraz cztery"};
+
+    //Screen.cursor[0][1] = 0x4141;
+    xprintf("%d\n", 1234567890);
+    xprintf("%x\n", 0x1234);
+    xprintf("%o\n", 8);
+    xprintf("%b\n", 3);
+    xprintf("%s", napis);
+    while(1);
+
+    */
 
     keyboard_command = comBuf;
 
@@ -59,7 +72,8 @@ void _start(void)
     keyboard_init();
     set_pit();
 
- 
+    while(getscan() != ENTER);
+
     getCpuSpeed();
     getTime();
     srand(time.seconds);
@@ -88,14 +102,17 @@ void _start(void)
     xprintf("weekday: %s\n\n",weekDaysLUT[time.weekDay]);
 
 
-    *cursor = (uint16_t)('>' | ((black << 4) | white) << 8);
-    cursor++;
-    x++;
+    Screen.cursor[4][0] = (uint16_t)('>' | ((black << 4) | white) << 8);
+    Screen.x = 1;
+    Screen.y = 4;
+
+
 
     app_exited = false;
     arrows_navigate = true;
 
-    //keyboard_test();
+
+    character_blocked = '>';
 
     while(1)
     {
@@ -107,7 +124,6 @@ void _start(void)
                 keyboard_command[i] = '\0';
             goto tuiInit;
         }
-        //terminal_refresh();
         
         scan();
 
