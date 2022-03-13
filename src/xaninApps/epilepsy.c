@@ -19,7 +19,7 @@ void epilepsy(void)
 
         color_picker++;
 
-        if(keyboard_input == 'q' || keyboard_scan_code == ENTER || keyboard_scan_code == ESC)
+        if(KeyInfo.character == 'q' || KeyInfo.scan_code == ENTER || KeyInfo.scan_code == ESC)
         {    
             exit_process();
         }

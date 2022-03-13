@@ -258,12 +258,21 @@ void scan(void)
         //KEYBOARD_SIG_ON(no_keyboard_input);
     }
 
-    else if(program_name, "logo")
+    else if(cmpstr(program_name, "logo"))
     {
         //xprintf("k");
         //while(KeyInfo.scan_code != ENTER);
         
         logo_color_change(program_parameters);
+        app_exited = true;
+    }
+
+    else if(cmpstr(program_name, "\0"))
+    {
+        logo_front_color++;
+        if(logo_front_color == 16)
+            logo_front_color = 0x0;
+
         app_exited = true;
     }
 
@@ -280,9 +289,7 @@ void scan(void)
 
         KeyInfo.scan_code = 0x0;
 
-        while(KeyInfo.scan_code != F4_KEY);
-
-        while(1);
+        while(!KeyInfo.scan_code || KeyInfo.scan_code >= 128);
 
         exit_process();
         
