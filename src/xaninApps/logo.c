@@ -53,9 +53,12 @@ void logo_color_change(char* color)
     else if(cmpstr(color, "white"))
         logo_front_color = white;
 
-    //uint16_t tmp = strtoi(color,16);
+    else if(cmpstr(color, "rand"))
+        logo_front_color = rand() % 16;
+    
 
-    //logo_front_color = tmp & 0xF;
-    //logo_back_color = tmp >> 4;
+    else if(cmpstr(color, "\0"))
+        logo_front_color = rand() % 16;
+
 
 }

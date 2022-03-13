@@ -115,11 +115,6 @@ void xin_create_file(char* entry_name)
     
     set_string(entry->entry_path, entry_name);
     
-    //entry->entry_path[0] = 'a';
-    entry->entry_path[0] = 'h';
-    entry->entry_path[1] = 'u';
-    entry->entry_path[2] = 'j';
-    
     entry->creation_date = 0x0;
     entry->creation_time = 0x0;
     entry->os_specific = 0xFFFF;
@@ -241,7 +236,7 @@ void xin_entry_info(char* entry_name)
     xprintf("creation date: 0x%x\n", xin_file_descriptor->creation_time);
     xprintf("starting_sector: 0x%x\n", xin_file_descriptor->starting_sector);
 
-    while(keyboard_scan_code != ENTER);
+    while(KeyInfo.scan_code != ENTER);
     exit_process();
 
 }

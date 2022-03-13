@@ -442,8 +442,13 @@ void xprintf(char* str, ... )
 
         else if(str[strCounter] == '\t')
         {
-            x += 3;
-            cursor += 3;
+            Screen.x += 3;
+            strCounter++;
+        }
+
+        else if(str[strCounter] == '\\')
+        {
+            Screen.cursor[Screen.y][Screen.x] = (uint16_t)('\\' + (((backgroundColor << 4) | fontColor) << 8));
             strCounter++;
         }
 

@@ -12,37 +12,69 @@
 void note_input(void)
 {
 
+    char selected_character;
+
     if(KeyInfo.is_up)
     {
+
+        Screen.cursor[Screen.y][Screen.x] = (uint16_t)(selected_character | ((black << 4) | white) << 8);
+
         Screen.y--;
-        Screen.x--;
-        KeyInfo.scan_code = 0x0;
+
+        if((char)Screen.cursor[Screen.y][Screen.x] != 0x20 && (char)Screen.cursor[Screen.y][Screen.x] != '\0')
+            Screen.x--;
+
+
+        selected_character = (char)Screen.cursor[Screen.y][Screen.x];
+
+        Screen.cursor[Screen.y][Screen.x] = (uint16_t)('_' | ((black << 4) | white) << 8);
     }
 
     else if(KeyInfo.is_down)
     {
+        Screen.cursor[Screen.y][Screen.x] = (uint16_t)(selected_character | ((black << 4) | white) << 8);
+
         Screen.y++;
-        Screen.x--;
-        KeyInfo.scan_code = 0x0;
-        KeyInfo.character = 0x0;
+
+        if((char)Screen.cursor[Screen.y][Screen.x] != 0x20 && (char)Screen.cursor[Screen.y][Screen.x] != '\0')
+            Screen.x--;
+        
+
+        selected_character = (char)Screen.cursor[Screen.y][Screen.x];
+
+        Screen.cursor[Screen.y][Screen.x] = (uint16_t)('_' | ((black << 4) | white) << 8);
     }
 
     else if(KeyInfo.is_right)
     {
+
+        Screen.cursor[Screen.y][Screen.x] = (uint16_t)(selected_character | ((black << 4) | white) << 8);
+
         Screen.x++;    
-        KeyInfo.scan_code = 0x0;
-        KeyInfo.character = 0x0;
+
+        selected_character = (char)Screen.cursor[Screen.y][Screen.x];
+
+        Screen.cursor[Screen.y][Screen.x] = (uint16_t)('_' | ((black << 4) | white) << 8);
     }
 
     else if(KeyInfo.is_left)
     {
+        Screen.cursor[Screen.y][Screen.x] = (uint16_t)(selected_character | ((black << 4) | white) << 8);
+
         Screen.x--;
-        KeyInfo.scan_code = 0x0;
-        KeyInfo.character = 0x0;
+
+        selected_character = (char)Screen.cursor[Screen.y][Screen.x];
+
+        Screen.cursor[Screen.y][Screen.x] = (uint16_t)('_' | ((black << 4) | white) << 8);
     }
 
     else
+    {
         xprintf("%c", KeyInfo.character);
+        if(KeyInfo.character)
+            selected_character = '\0';
+
+    }
         
 }
 
@@ -91,10 +123,6 @@ void xin_note(char* file_name)
                 putchar(*i);
             }
         }
-
-
-        cursor = (uint16_t*)(VGA_TEXT_MEMORY);
-
 
 
         while(KeyInfo.scan_code != F4_KEY);

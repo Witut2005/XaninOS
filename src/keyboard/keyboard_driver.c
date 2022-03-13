@@ -18,7 +18,7 @@ void keyboard_driver(uint8_t scanCode)
 
             KeyInfo.is_bspc = true; 
             
-            if((char)Screen.cursor[Screen.y][Screen.x - 1] == character_blocked)
+            if((char)Screen.cursor[Screen.y][Screen.x - 1] == character_blocked && character_blocked != '\0')
             {
                 return;
             }

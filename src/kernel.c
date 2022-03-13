@@ -45,6 +45,12 @@ void _start(void)
     screen_init(); //init screen management system
 
 
+    //*(char*)VGA_TEXT_MEMORY = 0x41;
+    //*(char*)(VGA_TEXT_MEMORY + 1) = 0x42;
+    
+
+
+
     xprintf("%z  .GBJ     ?BBY.                     ,,\n", set_output_color(logo_back_color, logo_front_color));
     xprintf("%z   :B#Y  !G#P^   .,,.     ..  ..     ''   ..  ..\n", set_output_color(logo_back_color, logo_front_color));
     xprintf("%z    .G#//#G~    ?PYJJ5P   HuCJJ5G    55  HuCJJJPP.\n", set_output_color(logo_back_color, logo_front_color));

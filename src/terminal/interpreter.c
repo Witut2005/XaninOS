@@ -22,6 +22,8 @@ void scan(void)
     KeyInfo.character = 0x0;
     KeyInfo.scan_code = 0x0;
 
+    character_blocked = '\0';
+
     if(cmpstr(program_name,"touch"))
     {
 
