@@ -195,8 +195,6 @@ xin_entry* xin_change_directory(char* new_directory)
 bool xin_remove_entry(char* entry_name)
 {   
     
-    xprintf("%s", entry_name);
-
     char* entry_to_delete = (char*)xin_find_entry(entry_name);
 
     xin_entry* entry_data = (xin_entry*)entry_to_delete;
@@ -204,25 +202,29 @@ bool xin_remove_entry(char* entry_name)
     if(entry_to_delete == nullptr)
     {
         xprintf("%zNO SUCH DIRECTORY\n", set_output_color(red,white));
-        while(keyboard_scan_code != ENTER);
+        while(KeyInfo.scan_code != ENTER);
         exit_process(false);
     }   
 
+    xprintf("starting addr: 0x%x\n", entry_data->starting_sector + XIN_ENTRY_POINTERS);
+
+
     if(entry_data->entry_type == XIN_FILE) 
     {
-
-        for(char* i = (char*)entry_data->starting_sector + XIN_ENTRY_POINTERS;
-                *i != XIN_EOF; i++)
+        for(char* i = (char*)entry_data->starting_sector + XIN_ENTRY_POINTERS; *i != XIN_EOF && *i != XIN_UNALLOCATED; i++)
         {
             *i = XIN_UNALLOCATED;
+            xprintf("%x",*i);
         }
-
     }
 
     for(int i = 0; i < sizeof(xin_entry); i++)
         entry_to_delete[i] = '\0';
 
+    return true;
+
     exit_process(true);
+
 
 }
 

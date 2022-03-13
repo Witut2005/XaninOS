@@ -163,6 +163,7 @@ void scan(void)
         
         //rd();
         xin_remove_entry(program_parameters);
+        app_exited = true;
     }
 
     else if(cmpstr(program_name,"cd"))

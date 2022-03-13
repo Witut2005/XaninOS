@@ -18,7 +18,7 @@ void loadch(uint32_t address)
     		Screen.x = 0x0;
             Screen.y++;
     	}
-        xprintf("%c", data_pointer[i]);
+        putchar(data_pointer[i]);
     }
 
 	while(keyboard_scan_code != ENTER);

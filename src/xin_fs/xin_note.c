@@ -12,7 +12,7 @@
 void note_input(void)
 {
 
-    char selected_character;
+    uint16_t selected_character;
 
     if(KeyInfo.is_up)
     {
@@ -50,7 +50,14 @@ void note_input(void)
 
         Screen.cursor[Screen.y][Screen.x] = (uint16_t)(selected_character | ((black << 4) | white) << 8);
 
+
         Screen.x++;    
+
+        if(Screen.x == 80)
+        {
+            Screen.x = 0x0;
+            Screen.y++;
+        }
 
         selected_character = (char)Screen.cursor[Screen.y][Screen.x];
 
@@ -60,6 +67,12 @@ void note_input(void)
     else if(KeyInfo.is_left)
     {
         Screen.cursor[Screen.y][Screen.x] = (uint16_t)(selected_character | ((black << 4) | white) << 8);
+
+        if(Screen.x == 0)
+        {
+            Screen.x = 79;
+            Screen.y--;
+        }
 
         Screen.x--;
 
@@ -72,7 +85,7 @@ void note_input(void)
     {
         xprintf("%c", KeyInfo.character);
         if(KeyInfo.character)
-            selected_character = '\0';
+            selected_character = (char)Screen.cursor[Screen.y][Screen.x];
 
     }
         

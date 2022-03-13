@@ -146,27 +146,27 @@ char putchar(char character)
 
     if(character < 0x20)
     {
-        *cursor = (uint16_t) (0x0 + (((black << 4) | white) << 8));
+        Screen.cursor[Screen.y][Screen.x] = (uint16_t) (0x0 + (((black << 4) | white) << 8));
     
-        x++;
+        Screen.x++;
 
         if(x == 80)
         {    
-            x = 0x0;
-            y++;
+            Screen.x = 0x0;
+            Screen.y++;
         }
         return false;
     }
 
-    cursor = (unsigned short*)(VGA_TEXT_MEMORY) + x + ((80)*y);
-    *cursor = (uint16_t) (character + (((black << 4) | white) << 8));
+    Screen.cursor[Screen.y][Screen.x] = (unsigned short*)(VGA_TEXT_MEMORY) + x + ((80)*y);
+    Screen.cursor[Screen.y][Screen.x] = (uint16_t) (character + (((black << 4) | white) << 8));
         
-    x++;
+    Screen.x++;
 
     if(x == 80)
     {    
-        x = 0x0;
-        y++;
+        Screen.x = 0x0;
+        Screen.y++;
     }
            
 

@@ -14,26 +14,68 @@ uint8_t current_color;
 void paint_input(void)
 {
 
-    char selected_color;
+    char selected_cell;
 
     if(KeyInfo.is_up)
     {
+
+        Screen.cursor[Screen.y][Screen.x] = selected_cell;
+
         Screen.y--;
+
+        if((char)Screen.cursor[Screen.y][Screen.x] != 0x20 && (char)Screen.cursor[Screen.y][Screen.x] != '\0')
+            Screen.x--;
+
+        
+        selected_cell = Screen.cursor[Screen.y][Screen.x];
+
+        Screen.cursor[Screen.y][Screen.x] = (uint16_t)('_' | ((black << 4) | white) << 8);
+        
     }
 
     else if(KeyInfo.is_down)
     {
+        Screen.cursor[Screen.y][Screen.x] = selected_cell;
+        
         Screen.y++;
+
+        if((char)Screen.cursor[Screen.y][Screen.x] != 0x20 && (char)Screen.cursor[Screen.y][Screen.x] != '\0')
+            Screen.x--;
+
+        selected_cell = Screen.cursor[Screen.y][Screen.x];
+
+        Screen.cursor[Screen.y][Screen.x] = (uint16_t)('_' | ((black << 4) | white) << 8);
+
     }
 
     else if(KeyInfo.is_right)
     {
-        Screen.x++;    
+
+        Screen.cursor[Screen.y][Screen.x] = selected_cell;
+    
+        Screen.x++; 
+
+        selected_cell = Screen.cursor[Screen.y][Screen.x];
+
+        Screen.cursor[Screen.y][Screen.x] = (uint16_t)('_' | ((black << 4) | white) << 8);
     }
 
     else if(KeyInfo.is_left)
     {
+
+        Screen.cursor[Screen.y][Screen.x] = selected_cell;
+
         Screen.x--;
+
+        selected_cell = Screen.cursor[Screen.y][Screen.x];
+
+        Screen.cursor[Screen.y][Screen.x] = (uint16_t)('_' | ((black << 4) | white) << 8);
+    }
+
+    else
+    {
+        if(KeyInfo.character)
+            selected_character = '\0';
     }
 
         
@@ -84,6 +126,9 @@ void xin_paint(char* file_name)
             xprintf("%z%c", set_output_color( (*(i+1) >> 4), *(i+1)), 0x20);
         }
         
+
+        Screen.x = 0x0;
+        Screen.y = 0x0;
 
         while(keyboard_scan_code != F4_KEY)
         {
