@@ -12,16 +12,17 @@ void load(uint32_t address)
     char* data_pointer = (char*)(address);
 
 
-    for(int i = 0; i < 512; i++)
+    for(int i = 0; i < 28; i++)
     {
-    	if(x == 16)
-    	{
-			xprintf("\n");
-    	}	
-        xprintf("%mx ", data_pointer[i]);
+        for(int j = 0; j < 26; j++)
+        {
+            xprintf(" %mx", data_pointer[ (16 * i) + j]);
+        }
+        xprintf("\n");
     }
 
 	while(keyboard_scan_code != ENTER);
+
 	
 
 }

@@ -75,11 +75,12 @@ uint8_t* xin_find_free_pointer(void)
 
 xin_entry* xin_find_free_entry(void)
 {
-    for(xin_entry* i = XIN_ENTRY_TABLE; (uint32_t)i < 0x1800 + (SECTOR_SIZE * 2); i++)
+    for(char* i = (char*)XIN_ENTRY_TABLE + 64; (uint32_t)i < 0x1800 + (SECTOR_SIZE * 2); i += 64)
     {
         if(*(char*)i == '\0')
-            return i;
+            return (xin_entry*)i;
     }
+
 
     return nullptr;
 
@@ -109,7 +110,16 @@ void xin_create_file(char* entry_name)
 {
     xin_entry* entry = xin_find_free_entry();
 
+    xprintf("addr: 0x%x\n", (uint32_t)entry->entry_path);
+    //while(1);
+    
     set_string(entry->entry_path, entry_name);
+    
+    //entry->entry_path[0] = 'a';
+    entry->entry_path[0] = 'h';
+    entry->entry_path[1] = 'u';
+    entry->entry_path[2] = 'j';
+    
     entry->creation_date = 0x0;
     entry->creation_time = 0x0;
     entry->os_specific = 0xFFFF;

@@ -9,7 +9,7 @@ void keyboard_driver(uint8_t scanCode)
 
     switch(KeyInfo.scan_code)
     {
-        case LSHIFT: {KeyInfo.is_shift = true; break;}
+        case LSHIFT: {KeyInfo.is_shift = true; return;}
         case LSHIFT_RELEASE: {KeyInfo.is_shift = false; break;}
         case BSPC: 
         {
@@ -42,27 +42,34 @@ void keyboard_driver(uint8_t scanCode)
             return;
         }
         
-        case BSPC_RELEASE: {KeyInfo.is_bspc = false; break;}
+        case BSPC_RELEASE: {KeyInfo.is_bspc = false; return;}
         case CAPS: 
         {
             KeyInfo.is_caps = KeyInfo.is_caps  ?  false : true; 
         }
 
-        case ARROW_UP: {KeyInfo.is_up = true; break;}
-        case ARROW_UP_RELEASE: {KeyInfo.is_up = false; break;}
+        case ARROW_UP: {KeyInfo.is_up = true; return;}
+        case ARROW_UP_RELEASE: {KeyInfo.is_up = false; return;}
 
-        case ARROW_DOWN: {KeyInfo.is_down = true; break;}
-        case ARROW_DOWN_RELEASE: {KeyInfo.is_down = false; break;}
+        case ARROW_DOWN: {KeyInfo.is_down = true; return;}
+        case ARROW_DOWN_RELEASE: {KeyInfo.is_down = false; return;}
 
-        case ARROW_RIGHT: {KeyInfo.is_right = true; break;}
-        case ARROW_RIGHT_RELEASE: {KeyInfo.is_right = false; break;}
+        case ARROW_RIGHT: {KeyInfo.is_right = true; return;}
+        case ARROW_RIGHT_RELEASE: {KeyInfo.is_right = false; return;}
 
-        case ARROW_LEFT: {KeyInfo.is_left = true; break;}
-        case ARROW_LEFT_RELEASE: {KeyInfo.is_left = false; break;}
+        case ARROW_LEFT: {KeyInfo.is_left = true; return;}
+        case ARROW_LEFT_RELEASE: {KeyInfo.is_left = false; return;}
 
     }
 
     KeyInfo.character = keyboard_map[scanCode];
+
+
+
+    if(KeyInfo.scan_code >= 128)
+    {
+        KeyInfo.character = 0x0;
+    }
 
 
     if((KeyInfo.is_caps) || (KeyInfo.is_shift))
@@ -73,15 +80,6 @@ void keyboard_driver(uint8_t scanCode)
         }
     }
 
-    
-
-    if(KeyInfo.scan_code >= 128)
-    {
-        KeyInfo.character = 0x0;
-    }
-
-    
-    
 
     if(KeyInfo.is_shift)
     {

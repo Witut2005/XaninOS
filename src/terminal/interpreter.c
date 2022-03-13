@@ -16,7 +16,7 @@ void scan(void)
     erase_spaces(program_name);
     erase_spaces(program_parameters);
 
-    xprintf("%s\n", program_name);
+    xprintf("\n%s\n", program_name);
     xprintf("%s\n", program_parameters);
 
     KeyInfo.character = 0x0;
@@ -29,12 +29,6 @@ void scan(void)
     if(cmpstr(program_name,"touch"))
     {
         //touch();
-    }
-
-    else if(program_name, "logo")
-    {
-        logo_color_change(program_parameters);
-        app_exited = true;
     }
 
     else if(cmpstr(program_name,"epilepsy"))
@@ -94,6 +88,8 @@ void scan(void)
     else if(cmpstr(program_name, "create"))
     {
        	//create(program_parameters); 
+        //xprintf("%zHUJ", set_output_color(red,white));
+        //while(1);
         xin_create_file(program_parameters);
     }
     
@@ -139,7 +135,6 @@ void scan(void)
         exit_process();
     }
 
-
     else if(cmpstr(program_name,"help") || cmpstr(program_name,"h"))
     {
         clearScr();
@@ -147,6 +142,12 @@ void scan(void)
         x = 0;
 
         help();   
+    }
+
+    else if(program_name, "logo")
+    {
+        logo_color_change(program_parameters);
+        app_exited = true;
     }
 
     else if(cmpstr(program_name,"execute"))
