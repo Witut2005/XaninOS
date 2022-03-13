@@ -12,45 +12,43 @@
 void note_input(void)
 {
 
-            if(KeyInfo.scan_code == ARROW_UP)
-            {
-                Screen.y--;
-                Screen.x--;
-                KeyInfo.scan_code = 0x0;
-            }
+    if(KeyInfo.is_up)
+    {
+        Screen.y--;
+        Screen.x--;
+        KeyInfo.scan_code = 0x0;
+    }
 
-            else if(KeyInfo.scan_code == ARROW_DOWN)
-            {
-                Screen.y++;
-                Screen.x--;
-                KeyInfo.scan_code = 0x0;
-                KeyInfo.character = 0x0;
-            }
+    else if(KeyInfo.is_down)
+    {
+        Screen.y++;
+        Screen.x--;
+        KeyInfo.scan_code = 0x0;
+        KeyInfo.character = 0x0;
+    }
 
-            else if(KeyInfo.scan_code == ARROW_RIGHT)
-            {
-                Screen.x++;    
-                KeyInfo.scan_code = 0x0;
-                KeyInfo.character = 0x0;
-            }
+    else if(KeyInfo.is_right)
+    {
+        Screen.x++;    
+        KeyInfo.scan_code = 0x0;
+        KeyInfo.character = 0x0;
+    }
 
-            else if(KeyInfo.scan_code == ARROW_LEFT)
-            {
-                Screen.x--;
-                KeyInfo.scan_code = 0x0;
-                KeyInfo.character = 0x0;
-            }
+    else if(KeyInfo.is_left)
+    {
+        Screen.x--;
+        KeyInfo.scan_code = 0x0;
+        KeyInfo.character = 0x0;
+    }
 
-            else
-                xprintf("%c", KeyInfo.character);
+    else
+        xprintf("%c", KeyInfo.character);
         
 }
 
 void xin_note(char* file_name)
 {
     clearScr();
-    no_enter = true;
-    arrows_navigate = true;
     keyboard_handle = note_input;
 
 
@@ -62,7 +60,7 @@ void xin_note(char* file_name)
         keyboard_handle = nullptr;
         while(1)
         {
-            if(KeyInfo.scan_code == ENTER)
+            if(KeyInfo.scan_code == F4_KEY)
             {
                 exit_process();
             }
@@ -78,7 +76,7 @@ void xin_note(char* file_name)
         {
             xprintf("%zyou cant edit directory\n",set_output_color(red,white));
             xprintf("%zuse F4 key to exit\n",set_output_color(red,white));
-            while(keyboard_scan_code != ENTER);
+            while(keyboard_scan_code != F4_KEY);
             exit_process();
         }
 
@@ -101,8 +99,6 @@ void xin_note(char* file_name)
 
         while(KeyInfo.scan_code != F4_KEY);
 
-
-
         uint32_t file_data_counter = 0x0;
 
         data_pointer = (char*)(xin_file->starting_sector * SECTOR_SIZE);
@@ -121,7 +117,6 @@ void xin_note(char* file_name)
 
     }
 
-    while(1);
 
     keyboard_handle = nullptr;
     exit_process();

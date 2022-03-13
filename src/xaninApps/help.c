@@ -6,7 +6,7 @@
 void help(void)
 {
 
-    no_enter = true;
+    KeyInfo.scan_code = 0x0;
     
     xprintf("AVAILABLE COMMANDS:\n");
     xprintf("petris\n");
