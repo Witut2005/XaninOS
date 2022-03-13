@@ -2,10 +2,6 @@
 
 #include <terminal/interpreter.h>
 
-void no_keyboard_input()
-{
-    asm("nop");
-}
 
 void scan(void)
 {
@@ -55,11 +51,8 @@ void scan(void)
      
     else if(cmpstr(program_name,"modify"))
     {
-        keyboard_trun_on();
-    	//while(1);
     	xprintf("%s\n", program_parameters);
     	keyboard_scan_code = 0x0;
-    	//modify(program_parameters);
     	app_exited = true;
     }
 	
@@ -180,10 +173,7 @@ void scan(void)
     
     else if(cmpstr(program_name,"note"))
     {
-        //nano();
-        keyboard_trun_on();
         xin_note(program_parameters);
-        //KEYBOARD_SIG_ON(no_keyboard_input);
     }
 
     else if(cmpstr(program_name,"type"))
@@ -196,18 +186,21 @@ void scan(void)
     {
 
 
-        xprintf("%z\nunknown command",set_output_color(red,white));
+        xprintf("%zunknown command",set_output_color(red,white));
 
         keyboard_scan_code = 0x0;        
         keyboard_input = 0x0;
 
-        getscan();
+        KeyInfo.scan_code = 0x0;
 
-        while(!KeyInfo.scan_code);
+        while(KeyInfo.scan_code != F4_KEY);
+
+        while(1);
 
         exit_process();
         
     }
+
 
     KeyInfo.character = 0x0;
     KeyInfo.scan_code = 0x0;

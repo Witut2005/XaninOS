@@ -121,6 +121,8 @@ void xin_note(char* file_name)
 
     }
 
+    while(1);
+
     keyboard_handle = nullptr;
     exit_process();
 }
