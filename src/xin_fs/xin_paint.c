@@ -19,57 +19,64 @@ void paint_input(void)
     if(KeyInfo.is_up)
     {
 
-        Screen.cursor[Screen.y][Screen.x] = selected_cell;
+        //Screen.cursor[Screen.y][Screen.x] = selected_cell;
 
         Screen.y--;
 
+        
         if((char)Screen.cursor[Screen.y][Screen.x] != 0x20 && (char)Screen.cursor[Screen.y][Screen.x] != '\0')
             Screen.x--;
-
         
+        /*
+
         selected_cell = Screen.cursor[Screen.y][Screen.x];
 
         Screen.cursor[Screen.y][Screen.x] = (uint16_t)('_' | ((black << 4) | white) << 8);
+        */
         
     }
 
     else if(KeyInfo.is_down)
     {
-        Screen.cursor[Screen.y][Screen.x] = selected_cell;
+        //Screen.cursor[Screen.y][Screen.x] = selected_cell;
         
         Screen.y++;
 
         if((char)Screen.cursor[Screen.y][Screen.x] != 0x20 && (char)Screen.cursor[Screen.y][Screen.x] != '\0')
             Screen.x--;
 
+        /*
         selected_cell = Screen.cursor[Screen.y][Screen.x];
 
         Screen.cursor[Screen.y][Screen.x] = (uint16_t)('_' | ((black << 4) | white) << 8);
+        */
 
     }
 
     else if(KeyInfo.is_right)
     {
 
-        Screen.cursor[Screen.y][Screen.x] = selected_cell;
+        //Screen.cursor[Screen.y][Screen.x] = selected_cell;
     
         Screen.x++; 
 
+        /*
         selected_cell = Screen.cursor[Screen.y][Screen.x];
-
         Screen.cursor[Screen.y][Screen.x] = (uint16_t)('_' | ((black << 4) | white) << 8);
+        */
     }
 
     else if(KeyInfo.is_left)
     {
 
-        Screen.cursor[Screen.y][Screen.x] = selected_cell;
+        //Screen.cursor[Screen.y][Screen.x] = selected_cell;
 
         Screen.x--;
 
+        /*
         selected_cell = Screen.cursor[Screen.y][Screen.x];
-
         Screen.cursor[Screen.y][Screen.x] = (uint16_t)('_' | ((black << 4) | white) << 8);
+        */
     }
 
     else

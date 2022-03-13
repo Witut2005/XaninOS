@@ -1,9 +1,0 @@
-
-
-bo odczytu danych z plyty wykorzystywany jest laser
-
-
-zad.dom 
-
-opracowanie parametrow kart SD wyslac na mail-a
-

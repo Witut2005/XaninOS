@@ -7,8 +7,8 @@ nasm -fbin ./boot/boot.asm
 nasm -fbin ./boot/locateFS.asm
 nasm -fbin ./boot/kernelLoader.asm
 
-nasm -fbin ./fat/fat.asm
-nasm -fbin ./fat/root_directory_table.asm
+nasm -fbin ./xin_fs/xin_pointers.asm
+nasm -fbin ./xin_fs/entries_table.asm
 
 cd ./handlers
 nasm -f elf32 keyboard.asm -o keyboard.o
@@ -30,7 +30,7 @@ i386-elf-gcc -O0 -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -ffrees
 
 #dd if=/dev/zero of=zero.img bs=512 count=2024
 
-cat ./boot/boot ./fat/fat ./fat/root_directory_table ./boot/kernelLoader kernel.bin ./boot/locateFS home.tar > xanin.bin
+cat ./boot/boot ./xin_fs/xin_pointers ./xin_fs/entries_table ./boot/kernelLoader kernel.bin ./boot/locateFS home.tar > xanin.bin
 
 
 

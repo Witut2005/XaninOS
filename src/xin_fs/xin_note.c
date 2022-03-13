@@ -128,14 +128,14 @@ void xin_note(char* file_name)
 
         //for(uint8_t* xin_pointer_table = (uint8_t*)(XIN_POINTER_TABLE + xin_entry->starting_sector); *xin_pointer_table != XIN_EOF; xin_pointer_table++)
         
-        char* data_pointer;
+        char* data_pointer = xin_file->starting_sector * SECTOR_SIZE;
 
+        
+        for(int i = 0;  i < (VGA_SCREEN_RESOLUTION / 2); i++)
         {
-            for(char* i = (char*)(xin_file->starting_sector * SECTOR_SIZE);  i < (char*)(xin_file->starting_sector + VGA_SCREEN_RESOLUTION); i++)
-            {
-                putchar(*i);
-            }
+            xprintf("%c",data_pointer[i]);
         }
+        
 
 
         while(KeyInfo.scan_code != F4_KEY);
