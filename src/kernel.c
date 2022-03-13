@@ -45,13 +45,13 @@ void _start(void)
     screen_init(); //init screen management system
 
 
-    xprintf("%z  .GBJ     ?BBY.                     ,, \n", set_output_color(black, magenta));
-    xprintf("%z   :B#Y  !G#P^   .,,.     ..  ..     ''   ..  ..   \n", set_output_color(black, magenta));
-    xprintf("%z    .G#\/#G~     ?PYJJ5P   HuCJJ5G\    55  HuCJJJPP\ \n", set_output_color(black, magenta));
-    xprintf("%z     >###<     ~.   .G#.  I#D   7#:  GP  I#D    P#:\n", set_output_color(black, magenta));
-    xprintf("%z   .5#BG#P.    !JYYJ?G#.  I#^   ^#:  GP  I#^    Y#:\n", set_output_color(black, magenta));
-    xprintf("%z .Y##/ \i#G.   ?#^   :G#.  I#^   ~#:  GP  I#^    Y#:\n", set_output_color(black, magenta));
-    xprintf("%z7GB5.    5BG. .5G555J?B^  I#^   ^#:  P5  I#^    JB:\n\n\n", set_output_color(black, magenta));
+    xprintf("%z  .GBJ     ?BBY.                     ,,\n", set_output_color(logo_back_color, logo_front_color));
+    xprintf("%z   :B#Y  !G#P^   .,,.     ..  ..     ''   ..  ..\n", set_output_color(logo_back_color, logo_front_color));
+    xprintf("%z    .G#//#G~    ?PYJJ5P   HuCJJ5G    55  HuCJJJPP.\n", set_output_color(logo_back_color, logo_front_color));
+    xprintf("%z     >###<     ~.   .G#.  I#D   7#:  GP  I#D    P#:\n", set_output_color(logo_back_color, logo_front_color));
+    xprintf("%z   .5#BG#P.    !JYYJ?G#.  I#^   ^#:  GP  I#^    Y#:\n", set_output_color(logo_back_color, logo_front_color));
+    xprintf("%z .Y##/ i#G.   ?#^   :G#.  I#^   ~#:  GP  I#^    Y#:%z  version 22.03v\n", set_output_color(logo_back_color, logo_front_color), set_output_color(black,white));
+    xprintf("%z7GB5.    5BG. .5G555J?B^  I#^   ^#:  P5  I#^    JB:%z  weekday: %s \n\n\n", set_output_color(logo_back_color, logo_front_color), set_output_color(black,white), weekDaysLUT[time.weekDay]);
 
 
 
@@ -100,7 +100,7 @@ void _start(void)
     
     xprintf("%z  .GBJ     ?BBY.                     ,,\n", set_output_color(logo_back_color, logo_front_color));
     xprintf("%z   :B#Y  !G#P^   .,,.     ..  ..     ''   ..  ..\n", set_output_color(logo_back_color, logo_front_color));
-    xprintf("%z    .G#\/#G~     ?PYJJ5P   HuCJJ5G    55  HuCJJJPP.\n", set_output_color(logo_back_color, logo_front_color));
+    xprintf("%z    .G#//#G~    ?PYJJ5P   HuCJJ5G    55  HuCJJJPP.\n", set_output_color(logo_back_color, logo_front_color));
     xprintf("%z     >###<     ~.   .G#.  I#D   7#:  GP  I#D    P#:\n", set_output_color(logo_back_color, logo_front_color));
     xprintf("%z   .5#BG#P.    !JYYJ?G#.  I#^   ^#:  GP  I#^    Y#:\n", set_output_color(logo_back_color, logo_front_color));
     xprintf("%z .Y##/ i#G.   ?#^   :G#.  I#^   ~#:  GP  I#^    Y#:%z  version 22.03v\n", set_output_color(logo_back_color, logo_front_color), set_output_color(black,white));
