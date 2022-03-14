@@ -58,6 +58,12 @@ void paint_input(void)
         Screen.cursor[Screen.y][Screen.x] = (uint16_t)('_' | ((black << 4) | white) << 8);
     }
 
+    else if(KeyInfo.scan_code == F3_KEY)
+    {
+        selected_cell = 0x0;
+        clearScr();
+    }
+
     else
     {
         switch(KeyInfo.character)
@@ -125,9 +131,9 @@ void xin_paint(char* file_name)
 
         char* data_pointer;
         
-        for(char* i = (xin_file->starting_sector * SECTOR_SIZE);  (uint32_t)i < (xin_file->starting_sector + VGA_SCREEN_RESOLUTION); i += 2)
+        for(char* i = (xin_file->starting_sector * SECTOR_SIZE);  (uint32_t)i < ((xin_file->starting_sector + 0x9 ) * SECTOR_SIZE); i += 2)
         {
-            xprintf("%z%c", set_output_color( (*(i+1) >> 4), *(i+1)), 0x20);
+            xprintf("%z%c", set_output_color( (*(i+1) >> 4), *(i+1)), ' ');
         }
        
         Screen.x = 0x0;

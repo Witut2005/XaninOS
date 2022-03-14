@@ -50,15 +50,32 @@ void set_idt(void)
 
 
     /* configure IDT entries*/
-    configure_idt_entry(0x0,divide_by_zero_exception,CODE_SEGMENT);
-    configure_idt_entry(0x6,invalid_opcode,CODE_SEGMENT);
-    configure_idt_entry(0x20,pit_handler_init,CODE_SEGMENT);
-    configure_idt_entry(0x21,keyboard_handler_init,CODE_SEGMENT);
-    configure_idt_entry(0x26,floppy_interrupt,CODE_SEGMENT);
-    configure_idt_entry(0x80,_syscall,CODE_SEGMENT);
+    configure_idt_entry(0x0, divide_by_zero_exception,CODE_SEGMENT);
+    configure_idt_entry(0x1, debug_exception, CODE_SEGMENT);
+    configure_idt_entry(0x2, nmi_interrupt,CODE_SEGMENT);
+    configure_idt_entry(0x3, breakpoint_exception, CODE_SEGMENT);
+    configure_idt_entry(0x4, overflow_exception, CODE_SEGMENT);
+    configure_idt_entry(0x5, nmi_interrupt,CODE_SEGMENT);
+    configure_idt_entry(0x6, invalid_opcode,CODE_SEGMENT);
+    configure_idt_entry(0x7, device_not_available_exception,CODE_SEGMENT);
+    configure_idt_entry(0x8, double_fault_exception,CODE_SEGMENT);
+    configure_idt_entry(0x9, coprocessor_segment_overrun,CODE_SEGMENT);
+    configure_idt_entry(0xa, invalid_tss_exception,CODE_SEGMENT);
+    configure_idt_entry(0xb, segment_not_present,CODE_SEGMENT);
+    configure_idt_entry(0xc, stack_fault_exception,CODE_SEGMENT);
+    configure_idt_entry(0xd, general_protection_exception, CODE_SEGMENT);
+    configure_idt_entry(0xe, page_fault_exception, CODE_SEGMENT);
+    configure_idt_entry(0xf, x86_fpu_floating_point_exception, CODE_SEGMENT);
+    configure_idt_entry(17, aligment_check_exception, CODE_SEGMENT);
+    configure_idt_entry(18, machine_check_exception,CODE_SEGMENT);
+    configure_idt_entry(19, simd_floating_point_exception, CODE_SEGMENT);
+    configure_idt_entry(20, virtualization_exception,CODE_SEGMENT);
+    configure_idt_entry(21, control_protection_exception,CODE_SEGMENT);
 
-
-
+    configure_idt_entry(0x20, pit_handler_init,CODE_SEGMENT);
+    configure_idt_entry(0x21, keyboard_handler_init,CODE_SEGMENT);
+    configure_idt_entry(0x26, floppy_interrupt,CODE_SEGMENT);
+    configure_idt_entry(0x80, _syscall,CODE_SEGMENT);
 
     struct idtReg idtr = {
         IDT_SIZE,

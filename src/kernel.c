@@ -90,7 +90,7 @@ void _start(void)
     keyboard_scan_code = 0x0;
     while(!keyboard_scan_code);
 
-    for(char* i = (char*)0x0; (uint32_t)i < 0x1000; i++)
+    for(char* i = (char*)0x0; (uint32_t)i < 0x20000; i++)
     	*i = 0x0;
 
 
