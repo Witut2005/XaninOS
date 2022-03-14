@@ -284,13 +284,13 @@ void scan(void)
         
 
         xprintf("%zunknown command",set_output_color(red,white));
+        logo_front_color = red;
 
         keyboard_scan_code = 0x0;        
         keyboard_input = 0x0;
 
         KeyInfo.scan_code = 0x0;
 
-        while(!KeyInfo.scan_code || KeyInfo.scan_code >= 128);
 
         exit_process();
         

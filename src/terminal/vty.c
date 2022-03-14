@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include <terminal/vty.h>
 #include <tetris/tetris.c>
 #include <xaninApps/help.c>
@@ -34,237 +33,52 @@ void screen_init(void)
 }
 
 
-
-void terminalKeyboard(uint8_t scanCode)
+void terminal_keyboard(void)
 {
-
-    keyboard_scan_code = scanCode;
-
-    KeyInfo.scan_code = scanCode;
-    KeyInfo.character = keyboard_map[scanCode];
-
-    switch(KeyInfo.scan_code)
-    {
-        case LSHIFT: {KeyInfo.is_shift = true; return;}
-        case LSHIFT_RELEASE: {KeyInfo.is_shift = false; return;}
-        case CAPS: {KeyInfo.is_caps = ~KeyInfo.is_caps; return;}
-    }
-
-    key_remap('-','_');
-    key_remap('2', '@');
-    key_remap('6', '^');
-    key_remap('7', '&');
-    key_remap('8', '*');
-    key_remap('9','(');
-    key_remap('0',')');
-    key_remap('=', '+');
-    key_remap('[', '{');
-    key_remap(']', '}');
-    key_remap('/', '?');
-    key_remap(';', ':');
-    key_remap('`','~');
-    key_remap(',','<');
-    key_remap('.', '>');
-
-    if(scanCode == CAPS)
-    {
-        if(caps_on)
-            caps_on = false;
-        else
-            caps_on = true;
-
-        return;
-    }
-
-    if(keyboard_scan_code >= 128 )
-    {
-        key_released = true;
-        return;
-    }
-
-    key_released = false;
-    
-
-    if(!index)
-    {
-        for(int i = 0; i < 50;i++)
-            keyboard_command[i] = '\0';
-    }
-
-    uint8_t key = keyboard_map[scanCode];
-
-    if(caps_on || lshift_pressed)
-        if(key >= 'a' && key <= 'z')
-            key -= 32;
-
-    if(lshift_pressed)
-        if(key == '1' || key == '3' || key == '4' || key == '5')
-            key -= 16;
-
-    if(lshift_pressed)
-    {
-        remap_key('-','_');
-        remap_key('2', '@');
-        remap_key('6', '^');
-        remap_key('7', '&');
-        remap_key('8', '*');
-        remap_key('9','(');
-        remap_key('0',')');
-        remap_key('=', '+');
-        remap_key('[', '{');
-        remap_key(']', '}');
-        remap_key('/', '?');
-        remap_key(';', ':');
-        remap_key('`','~');
-        remap_key(',','<');
-        remap_key('.', '>');
-
-        if(key == 0x27)
-            key = 0x22;
-
-    }
-
-    if(arrows_navigate)
-    {
-        if(scanCode == ARROW_DOWN)
-        {
-
-            *cursor = (uint16_t)(selected_character | ((black << 4) | white) << 8);
-
-            if((uint32_t)cursor <= VGA_TEXT_MEMORY + (80 * sizeof(uint16_t) * 27))           
-                cursor += 79; 
-
-            selected_character = (char)*cursor;
-            putchar_at_cursor('_');
-            return;
-        }
-
-        else if(scanCode == ARROW_RIGHT)
-        {
-
-            *cursor = (uint16_t)(selected_character | ((black << 4) | white) << 8);
-            cursor++;
-
-            selected_character = (char)*cursor;
-            putchar_at_cursor('_');
-            return;
-        }
-
-        else if(scanCode == ARROW_LEFT)
-        {
-
-            *cursor = (uint16_t)(selected_character | ((black << 4) | white) << 8);
-            cursor--;
-
-            selected_character = (char)*cursor;
-            putchar_at_cursor('_');
-            return;
-        }
-
-        else if(scanCode == ARROW_UP)
-        {
-            *cursor = (uint16_t)(selected_character | ((black << 4) | white) << 8);
-
-            if((uint32_t)cursor >= VGA_TEXT_MEMORY + (80 * sizeof(uint16_t)))
-                cursor -= 79; 
-            
-            selected_character = (char)*cursor;
-            putchar_at_cursor('_');
-            return;
-        }
+    if(KeyInfo.is_left)
+    {        
+        Screen.cursor[Screen.y][Screen.x] = (uint16_t)(selected_character | ((black << 4) | white) << 8);
         
+        if((char)Screen.cursor[Screen.y][Screen.x - 1] == character_blocked)
+        {
+            return;
+        }
+
+        Screen.x--;
+
+
+        selected_character = (char)Screen.cursor[Screen.y][Screen.x];
+        Screen.cursor[Screen.y][Screen.x] = (uint16_t)('_' | ((black << 4) | white) << 8);
+    }
+
+    else if(KeyInfo.is_right)
+    {
+        Screen.cursor[Screen.y][Screen.x] = (uint16_t)(selected_character | ((black << 4) | white) << 8);
         
-    }
-
-
-    if(KeyInfo.is_bspc)
-    {
-        if(*(cursor-1) == (uint16_t)('>' | ((black << 4) | white) << 8))
-            return;
-
-        if(index != 0)
-            index--;
-
-        comBuf[index] = '\0';
-
-        cursor--;
-        *cursor = '\0'; /* delete character */
-        KeyInfo.is_bspc = false;
-    }
-
-
-
-    else if(scanCode == ARROW_UP || scanCode == ARROW_DOWN)
-    {
-        if(in_graphic_mode)
+        if(&Screen.cursor[Screen.y][Screen.x + 1] == &Screen.cursor[8][79])
         {
-            if(keyboard_scan_code == ARROW_UP)
-                cursor -= 79;
-
-            else if(keyboard_scan_code == ARROW_DOWN)
-                cursor += 79;
+            return;
         }
 
-        return;
-    }
+        Screen.x++;
 
-    else if(scanCode == ARROW_LEFT)
-    {
-        if(*(cursor-1) == (uint16_t)('>' | ((black << 4) | white) << 8))
-            return;
-
-        cursor--;
-    }
-
-    else if(scanCode == ARROW_RIGHT)
-    {
-        cursor++;
-    }
-
-    else if(scanCode == ENTER)
-    {
-
-        if(strlen(keyboard_command) != 0)
-        {
-            y++;
-            x = 0;
-            cursor = (uint16_t*)VRAM;
-            add_y(y);
-
-            if(!no_enter)
-            {
-                *cursor = (uint16_t)('>' | ((black << 4) | white) << 8); 
-                cursor++;
-                x++;
-            }
-            
-        }
-
-        index = 0x0;       
-
+        selected_character = (char)Screen.cursor[Screen.y][Screen.x];
+        Screen.cursor[Screen.y][Screen.x] = (uint16_t)('_' | ((black << 4) | white) << 8);    
     }
 
     else
     {
-
-        if(print_off)
-            return;
-
-        *cursor = (uint16_t)(key | ((black << 4) | white) << 8); 
-        keyboard_command[index] = key;
-        index++;
-        cursor++;
-        x++;
+        Screen.cursor[Screen.y][Screen.x] = KeyInfo.character;
+        selected_character = (char)Screen.cursor[Screen.y][Screen.x];
     }
 
 
 }
 
+
 void terminal_refresh(void)
 {
     
-
-
     if(KeyInfo.scan_code == ARROW_LEFT)
     {
         if(*(cursor-1) == (uint16_t)('>' | ((black << 4) | white) << 8))

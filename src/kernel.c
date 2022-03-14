@@ -126,7 +126,7 @@ void _start(void)
     arrows_navigate = true;
 
 
-
+    keyboard_handle = terminal_keyboard;
 
     while(1)
     {

@@ -1,9 +1,9 @@
 #pragma once
 
-//  http://www.brokenthorn.com/Resources/OSDevScanCodes.html
-//  https://www.youtube.com/watch?v=YtnNX074jMU
+/*  http://www.brokenthorn.com/Resources/OSDevScanCodes.html
+    https://www.youtube.com/watch?v=YtnNX074jMU
+    xaninOS uses Original XT Scan Code Set  */
 
-//  xaninOS uses Original XT Scan Code Set
 
 #include <stdint.h>
 
@@ -23,11 +23,11 @@ enum special_keys
   ARROW_RIGHT_RELEASE = 0xCD,
   ARROW_DOWN = 80,
   ARROW_DOWN_RELEASE = 0xD0,
-
   LSHIFT = 0x2A,
   LSHIFT_RELEASE = 0xAA,
-  F4_KEY = 0x3E
-
+  F4_KEY = 0x3E,
+  L_CTRL = 0x1D,
+  L_CTRL_RELEASE = 0x9D
 };
 
 

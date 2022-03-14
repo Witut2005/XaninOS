@@ -14,75 +14,74 @@ uint8_t current_color;
 void paint_input(void)
 {
 
-    char selected_cell;
+    uint16_t selected_cell;
 
     if(KeyInfo.is_up)
     {
-
-        //Screen.cursor[Screen.y][Screen.x] = selected_cell;
-
+        Screen.cursor[Screen.y][Screen.x] = selected_cell;
         Screen.y--;
-
-        
+   
         if((char)Screen.cursor[Screen.y][Screen.x] != 0x20 && (char)Screen.cursor[Screen.y][Screen.x] != '\0')
             Screen.x--;
-        
-        /*
-
+             
         selected_cell = Screen.cursor[Screen.y][Screen.x];
-
-        Screen.cursor[Screen.y][Screen.x] = (uint16_t)('_' | ((black << 4) | white) << 8);
-        */
-        
+        Screen.cursor[Screen.y][Screen.x] = (uint16_t)('_' | ((black << 4) | white) << 8);        
     }
 
     else if(KeyInfo.is_down)
     {
-        //Screen.cursor[Screen.y][Screen.x] = selected_cell;
-        
+        Screen.cursor[Screen.y][Screen.x] = selected_cell;
         Screen.y++;
 
         if((char)Screen.cursor[Screen.y][Screen.x] != 0x20 && (char)Screen.cursor[Screen.y][Screen.x] != '\0')
             Screen.x--;
 
-        /*
         selected_cell = Screen.cursor[Screen.y][Screen.x];
-
-        Screen.cursor[Screen.y][Screen.x] = (uint16_t)('_' | ((black << 4) | white) << 8);
-        */
-
+        Screen.cursor[Screen.y][Screen.x] = (uint16_t)('_' | ((black << 4) | white) << 8);   
     }
 
     else if(KeyInfo.is_right)
     {
-
-        //Screen.cursor[Screen.y][Screen.x] = selected_cell;
-    
+        Screen.cursor[Screen.y][Screen.x] = selected_cell;
         Screen.x++; 
 
-        /*
         selected_cell = Screen.cursor[Screen.y][Screen.x];
         Screen.cursor[Screen.y][Screen.x] = (uint16_t)('_' | ((black << 4) | white) << 8);
-        */
     }
 
     else if(KeyInfo.is_left)
     {
-
-        //Screen.cursor[Screen.y][Screen.x] = selected_cell;
-
+        Screen.cursor[Screen.y][Screen.x] = selected_cell;
         Screen.x--;
 
-        /*
         selected_cell = Screen.cursor[Screen.y][Screen.x];
         Screen.cursor[Screen.y][Screen.x] = (uint16_t)('_' | ((black << 4) | white) << 8);
-        */
     }
 
     else
     {
+        switch(KeyInfo.character)
+        {
+            case '0': Screen.cursor[Screen.y][Screen.x] = (uint16_t) (0x20 + (((black << 4) | black) << 8)); current_color = black; break;
+            case '1': Screen.cursor[Screen.y][Screen.x] = (uint16_t) (0x20 + (((blue << 4) | black) << 8)); current_color = blue; break;
+            case '2': Screen.cursor[Screen.y][Screen.x] = (uint16_t) (0x20 + (((green << 4) | black) << 8)); current_color = green;break;
+            case '3': Screen.cursor[Screen.y][Screen.x] = (uint16_t) (0x20 + (((cyan << 4) | black) << 8)); current_color = cyan; break;
+            case '4': Screen.cursor[Screen.y][Screen.x] = (uint16_t) (0x20 + (((red << 4) | black) << 8)); current_color = red; break;
+            case '5': Screen.cursor[Screen.y][Screen.x] = (uint16_t) (0x20 + (((magenta << 4) | black) << 8)); current_color = magenta; break;
+            case '6': Screen.cursor[Screen.y][Screen.x] = (uint16_t) (0x20 + (((brown << 4) | black) << 8)); current_color = brown; break;
+            case '7': Screen.cursor[Screen.y][Screen.x] = (uint16_t) (0x20 + (((lgray << 4) | black) << 8)); current_color = lgray; break;
+            case '8': Screen.cursor[Screen.y][Screen.x] = (uint16_t) (0x20 + (((dgray << 4) | black) << 8)); current_color = dgray; break;
+            case '9': Screen.cursor[Screen.y][Screen.x] = (uint16_t) (0x20 + (((lblue << 4) | black) << 8)); current_color = lblue; break;
+            case 'a': Screen.cursor[Screen.y][Screen.x] = (uint16_t) (0x20 + (((lgreen << 4) | black) << 8)); current_color = lgreen; break;
+            case 'b': Screen.cursor[Screen.y][Screen.x] = (uint16_t) (0x20 + (((lcyan << 4) | black) << 8)); current_color = lcyan; break;
+            case 'c': Screen.cursor[Screen.y][Screen.x] = (uint16_t) (0x20 + (((lred << 4) | black) << 8)); current_color = lred; break;
+            case 'd': Screen.cursor[Screen.y][Screen.x] = (uint16_t) (0x20 + (((lmagenta << 4) | black) << 8)); current_color = lmagenta; break;
+            case 'e': Screen.cursor[Screen.y][Screen.x] = (uint16_t) (0x20 + (((yellow << 4) | black) << 8)); current_color = yellow; break;
+            case 'f': Screen.cursor[Screen.y][Screen.x] = (uint16_t) (0x20 + (((white << 4) | black) << 8)); current_color = white; break;
+        }
+
         if(KeyInfo.character)
-            selected_character = '\0';
+            selected_cell = (uint16_t) (' ' + (((current_color << 4) | black) << 8));
     }
 
         
@@ -100,7 +99,8 @@ void xin_paint(char* file_name)
     
     if(xin_file == nullptr)
     {
-        xprintf("%zno such file or directory %s\n",set_output_color(red,white),program_parameters);
+    
+        xprintf("%zNo such file or directory %s\n",set_output_color(red,white),program_parameters);
         
         while(1)
         {
@@ -110,21 +110,18 @@ void xin_paint(char* file_name)
                 exit_process();
             }
         }   
-    
     }
         
     else
     {
-    
-            
+                
         if(xin_file->entry_type == XIN_DIRECTORY)
         {
-            xprintf("%zyou cant edit directory\n",set_output_color(red,white));
-            xprintf("%zuse F4 key to exit\n",set_output_color(red,white));
+            xprintf("%zYou can't edit directory\n",set_output_color(red,white));
+            xprintf("%zUse F4 key to exit\n",set_output_color(red,white));
             while(keyboard_scan_code != ENTER);
             exit_process();
         }
-
 
         char* data_pointer;
         
@@ -132,39 +129,11 @@ void xin_paint(char* file_name)
         {
             xprintf("%z%c", set_output_color( (*(i+1) >> 4), *(i+1)), 0x20);
         }
-        
-
+       
         Screen.x = 0x0;
         Screen.y = 0x0;
 
-        while(keyboard_scan_code != F4_KEY)
-        {
-
-            switch(getchar())
-            {
-                case '0': Screen.cursor[Screen.y][Screen.x] = (uint16_t) (0x20 + (((black << 4) | black) << 8)); current_color = black; break;
-                case '1': Screen.cursor[Screen.y][Screen.x] = (uint16_t) (0x20 + (((blue << 4) | black) << 8)); current_color = blue; break;
-                case '2': Screen.cursor[Screen.y][Screen.x] = (uint16_t) (0x20 + (((green << 4) | black) << 8)); current_color = green;break;
-                case '3': Screen.cursor[Screen.y][Screen.x] = (uint16_t) (0x20 + (((cyan << 4) | black) << 8)); current_color = cyan; break;
-                case '4': Screen.cursor[Screen.y][Screen.x] = (uint16_t) (0x20 + (((red << 4) | black) << 8)); current_color = red; break;
-                case '5': Screen.cursor[Screen.y][Screen.x] = (uint16_t) (0x20 + (((magenta << 4) | black) << 8)); current_color = magenta; break;
-                case '6': Screen.cursor[Screen.y][Screen.x] = (uint16_t) (0x20 + (((brown << 4) | black) << 8)); current_color = brown; break;
-                case '7': Screen.cursor[Screen.y][Screen.x] = (uint16_t) (0x20 + (((lgray << 4) | black) << 8)); current_color = lgray; break;
-                case '8': Screen.cursor[Screen.y][Screen.x] = (uint16_t) (0x20 + (((dgray << 4) | black) << 8)); current_color = dgray; break;
-                case '9': Screen.cursor[Screen.y][Screen.x] = (uint16_t) (0x20 + (((lblue << 4) | black) << 8)); current_color = lblue; break;
-                case 'a': Screen.cursor[Screen.y][Screen.x] = (uint16_t) (0x20 + (((lgreen << 4) | black) << 8)); current_color = lgreen; break;
-                case 'b': Screen.cursor[Screen.y][Screen.x] = (uint16_t) (0x20 + (((lcyan << 4) | black) << 8)); current_color = lcyan; break;
-                case 'c': Screen.cursor[Screen.y][Screen.x] = (uint16_t) (0x20 + (((lred << 4) | black) << 8)); current_color = lred; break;
-                case 'd': Screen.cursor[Screen.y][Screen.x] = (uint16_t) (0x20 + (((lmagenta << 4) | black) << 8)); current_color = lmagenta; break;
-                case 'e': Screen.cursor[Screen.y][Screen.x] = (uint16_t) (0x20 + (((yellow << 4) | black) << 8)); current_color = yellow; break;
-                case 'f': Screen.cursor[Screen.y][Screen.x] = (uint16_t) (0x20 + (((white << 4) | black) << 8)); current_color = white; break;
-                default: break;
-            }
-
-
-
-        }
-
+        while(KeyInfo.scan_code != F4_KEY);
 
         uint32_t file_data_counter = 0x0;
 
@@ -182,4 +151,5 @@ void xin_paint(char* file_name)
 
     keyboard_handle = nullptr;
     exit_process();
+
 }
