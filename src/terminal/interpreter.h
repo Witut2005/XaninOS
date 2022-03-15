@@ -24,6 +24,8 @@
 #include <xaninApps/keyboard_test.c>
 #include <xaninApps/logo.c>
 #include <xaninApps/register_dump.c>
+#include <xaninApps/cpu_info.c>
+
 /*
 
 #include <fat/create.c>

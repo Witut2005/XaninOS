@@ -6,23 +6,22 @@
 
 void keyboard_test(void)
 {
-
-    uint16_t* tmp = (uint16_t*)VGA_TEXT_MEMORY;
-
-    clearScr();
-
+    
     while(1)
     {
-    
+      xprintf("%x", KeyInfo.scan_code);
+      if(Screen.y >= 30)
+      {
+        Screen.y = 0;
+        Screen.x = 0;
+      }
 
-    xprintf("%x", KeyInfo.scan_code);
-
-    //if(key_pressed())
-        //xprintf("%x ", ugalol);
-        //*tmp = (uint16_t)('1'| ((black << 4) | white) << 8);
-    //else
-      //  *tmp = (uint16_t)('0'| ((black << 4) | white) << 8);
+      if(getscan() == ESC)
+        break;
+      
 
     }
+
+  app_exited = true;
 
 }

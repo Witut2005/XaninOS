@@ -81,6 +81,13 @@ void note_input(void)
         Screen.cursor[Screen.y][Screen.x] = (uint16_t)('_' | ((black << 4) | white) << 8);
     }
 
+    else if(getscan() == DELETE_KEY)
+    {
+        Screen.cursor[Screen.y][Screen.x] = '\0';
+        selected_character = '\0';
+    }
+
+
     else
     {
         xprintf("%c", KeyInfo.character);
@@ -138,7 +145,7 @@ void xin_note(char* file_name)
         
 
 
-        while(KeyInfo.scan_code != F4_KEY);
+        while(getscan() != F4_KEY && getscan() != ESC);
 
         uint32_t file_data_counter = 0x0;
 

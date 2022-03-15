@@ -48,7 +48,7 @@ char getchar(void)
 char getscan(void)
 {
     uint8_t tmp = KeyInfo.scan_code;
-    KeyInfo.scan_code = 0x0;
+    //KeyInfo.scan_code = 0x0;
     return tmp;
 }
 

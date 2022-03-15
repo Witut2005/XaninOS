@@ -40,6 +40,11 @@ void scan(void)
         epilepsy();
     }    
     
+    else if(cmpstr(program_name,"cpu_info"))
+    {
+        cpu_info();
+    }
+
     else if(cmpstr(program_name,"paint"))
     {
         //xprintf("3");

@@ -47,8 +47,8 @@ void _start(void)
 
     //*(char*)VGA_TEXT_MEMORY = 0x41;
     //*(char*)(VGA_TEXT_MEMORY + 1) = 0x42;
-    
-
+    set_idt();
+    getTime();
 
 
     xprintf("%z  .GBJ     ?BBY.                     ,,\n", set_output_color(logo_back_color, logo_front_color));
@@ -63,7 +63,6 @@ void _start(void)
 
     keyboard_command = comBuf;
 
-    set_idt();
 
     xprintf("DETECTING USB CONTROLLERS. PLEASE WAIT...\n");
 
@@ -79,7 +78,7 @@ void _start(void)
     while(getscan() != ENTER);
 
     getCpuSpeed();
-    getTime();
+
     srand(time.seconds);
 	
     xin_init_fs();
