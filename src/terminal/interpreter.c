@@ -24,6 +24,8 @@ void scan(void)
 
     character_blocked = '\0';
 
+    keyboard_handle = nullptr;
+
     if(cmpstr(program_name,"touch"))
     {
 
@@ -153,11 +155,13 @@ void scan(void)
 
     else if(cmpstr(program_name,"petris"))
     {
-        //xprintf("e");
+        /*
+        xprintf("e");
         //while(KeyInfo.scan_code != ENTER);
         
         clearScr();
         tetris();
+        */
     }
 
     else if(cmpstr(program_name,"md"))
@@ -284,7 +288,7 @@ void scan(void)
     {
         logo_front_color++;
         if(logo_front_color == 16)
-            logo_front_color = 0x0;
+            logo_front_color = 1;
 
         app_exited = true;
     }
@@ -309,7 +313,7 @@ void scan(void)
     }
 
 
-
+    keyboard_handle = nullptr;
     app_exited = true;
     KeyInfo.character = 0x0;
     KeyInfo.scan_code = 0x0;

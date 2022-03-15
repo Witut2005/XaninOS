@@ -54,11 +54,18 @@ void logo_color_change(char* color)
         logo_front_color = white;
 
     else if(cmpstr(color, "rand"))
+    {
         logo_front_color = rand() % 16;
-    
+        if(!logo_front_color)
+            logo_front_color++;
+    }
 
     else if(cmpstr(color, "\0"))
+    {
         logo_front_color = rand() % 16;
-
+        if(!logo_front_color)
+            logo_front_color++;
+    }
+        
 
 }

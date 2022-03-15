@@ -7,11 +7,6 @@
 jmp _loadSector
 nop
 
-;/------------------------------------------/
-;|this filed is not used by ustar           |
-;|this filed is created to handle easier FS |
-;/------------------------------------------/
-
 
 bios_parameter_block:
 oem_id: dq "00000000"

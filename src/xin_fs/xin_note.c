@@ -12,45 +12,44 @@
 void note_input(void)
 {
 
-    uint16_t selected_character;
+    uint8_t selected_character;
 
     if(KeyInfo.is_up)
     {
 
-        Screen.cursor[Screen.y][Screen.x] = (uint16_t)(selected_character | ((black << 4) | white) << 8);
+        Screen.cursor[Screen.y][Screen.x] = (uint16_t)(selected_character | (((black << 4) | white) << 8));
 
         Screen.y--;
 
-        if((char)Screen.cursor[Screen.y][Screen.x] != 0x20 && (char)Screen.cursor[Screen.y][Screen.x] != '\0')
-            Screen.x--;
-
+        /*
+            if((char)Screen.cursor[Screen.y][Screen.x] != 0x20 && (char)Screen.cursor[Screen.y][Screen.x] != '\0')
+                Screen.x--;
+        */
 
         selected_character = (char)Screen.cursor[Screen.y][Screen.x];
-
         Screen.cursor[Screen.y][Screen.x] = (uint16_t)('_' | ((black << 4) | white) << 8);
     }
 
     else if(KeyInfo.is_down)
     {
-        Screen.cursor[Screen.y][Screen.x] = (uint16_t)(selected_character | ((black << 4) | white) << 8);
+        Screen.cursor[Screen.y][Screen.x] = (uint16_t)(selected_character | (((black << 4) | white) << 8));
 
         Screen.y++;
 
+        /*
         if((char)Screen.cursor[Screen.y][Screen.x] != 0x20 && (char)Screen.cursor[Screen.y][Screen.x] != '\0')
             Screen.x--;
-        
+        */
+
 
         selected_character = (char)Screen.cursor[Screen.y][Screen.x];
-
         Screen.cursor[Screen.y][Screen.x] = (uint16_t)('_' | ((black << 4) | white) << 8);
     }
 
     else if(KeyInfo.is_right)
     {
 
-        Screen.cursor[Screen.y][Screen.x] = (uint16_t)(selected_character | ((black << 4) | white) << 8);
-
-
+        Screen.cursor[Screen.y][Screen.x] = (uint16_t)(selected_character | (((black << 4) | white) << 8));
         Screen.x++;    
 
         if(Screen.x == 80)
@@ -60,13 +59,12 @@ void note_input(void)
         }
 
         selected_character = (char)Screen.cursor[Screen.y][Screen.x];
-
-        Screen.cursor[Screen.y][Screen.x] = (uint16_t)('_' | ((black << 4) | white) << 8);
+        Screen.cursor[Screen.y][Screen.x] = (uint16_t)('_' | (((black << 4) | white) << 8));
     }
 
     else if(KeyInfo.is_left)
     {
-        Screen.cursor[Screen.y][Screen.x] = (uint16_t)(selected_character | ((black << 4) | white) << 8);
+        Screen.cursor[Screen.y][Screen.x] = (uint16_t)(selected_character | (((black << 4) | white) << 8));
 
         if(Screen.x == 0)
         {
@@ -77,25 +75,25 @@ void note_input(void)
         Screen.x--;
 
         selected_character = (char)Screen.cursor[Screen.y][Screen.x];
-
         Screen.cursor[Screen.y][Screen.x] = (uint16_t)('_' | ((black << 4) | white) << 8);
     }
 
+    else
+    {
+        xprintf("%c", getchar());
+        if(getchar())
+            selected_character = (char)Screen.cursor[Screen.y][Screen.x];
+    }  
+
+    /*
     else if(getscan() == DELETE_KEY)
     {
         Screen.cursor[Screen.y][Screen.x] = '\0';
         selected_character = '\0';
     }
+    */
 
-
-    else
-    {
-        xprintf("%c", KeyInfo.character);
-        if(KeyInfo.character)
-            selected_character = (char)Screen.cursor[Screen.y][Screen.x];
-
-    }
-        
+ 
 }
 
 void xin_note(char* file_name)
@@ -112,7 +110,7 @@ void xin_note(char* file_name)
         keyboard_handle = nullptr;
         while(1)
         {
-            if(KeyInfo.scan_code == F4_KEY)
+            if((getscan() == F4_KEY) || (getscan() == ENTER))
             {
                 exit_process();
             }
@@ -123,7 +121,6 @@ void xin_note(char* file_name)
     else
     {
     
-            
         if(xin_file->entry_type == XIN_DIRECTORY)
         {
             xprintf("%zyou cant edit directory\n",set_output_color(red,white));
@@ -142,7 +139,6 @@ void xin_note(char* file_name)
         {
             xprintf("%c",data_pointer[i]);
         }
-        
 
         while(getscan() != F4_KEY && getscan() != ESC);
 
@@ -160,7 +156,6 @@ void xin_note(char* file_name)
                 data_pointer[file_data_counter] = *i;
 
         xin_file->entry_size = file_data_counter;
-
 
     }
 

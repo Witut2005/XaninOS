@@ -64,13 +64,10 @@ void keyboard_driver(uint8_t scanCode)
 
     KeyInfo.character = keyboard_map[scanCode];
 
-
-
     if(KeyInfo.scan_code >= 128)
     {
         KeyInfo.character = 0x0;
     }
-
 
     if((KeyInfo.is_caps) || (KeyInfo.is_shift))
     {
@@ -79,7 +76,6 @@ void keyboard_driver(uint8_t scanCode)
             KeyInfo.character -= 32;
         }
     }
-
 
     if(KeyInfo.is_shift)
     {
