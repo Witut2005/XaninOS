@@ -40,12 +40,9 @@ bool key_pressed(void)
 
 char getchar(void)
 {
-    
-    while((!KeyInfo.character) || (KeyInfo.scan_code >= 128));
     char tmp = KeyInfo.character;
     KeyInfo.character = 0x0;
     return tmp;
-
 }
 
 char getscan(void)
@@ -123,3 +120,30 @@ uint32_t rand()
 {
     return (((randomizer = randomizer * 214013 + 2531011) >> 16) & 0x7fff);
 }
+
+struct 
+{
+    uint32_t eax;
+    uint32_t ecx;
+    uint32_t edx;
+    uint32_t ebx;
+    uint32_t esp;
+    uint32_t ebp;
+    uint32_t esi;
+    uint32_t edi;
+}typedef reg_t;
+
+struct
+{
+    uint16_t cs;
+    uint16_t es;
+    uint16_t ds;
+    uint16_t ss;
+    uint16_t fs;
+    uint16_t gs;
+}typedef seg_t;
+
+reg_t Register;
+seg_t SegmentRegister;
+
+

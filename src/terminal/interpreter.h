@@ -7,7 +7,6 @@
 #include <headers/colors.h>
 #include <xaninApps/ls.c>
 #include <xaninApps/type.c>
-#include <xaninApps/regDump.c>
 #include <xaninApps/note.c>
 #include <xaninApps/hexview.c>
 #include <xaninApps/execute.c>
@@ -24,7 +23,7 @@
 #include <xaninApps/epilepsy.c>
 #include <xaninApps/keyboard_test.c>
 #include <xaninApps/logo.c>
-
+#include <xaninApps/register_dump.c>
 /*
 
 #include <fat/create.c>

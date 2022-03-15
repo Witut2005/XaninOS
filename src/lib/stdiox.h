@@ -179,7 +179,7 @@ char putchar(char character)
 void xprintf(char* str, ... )
 {
 
-    char tmp[1024];
+    char tmp[128];
 
     for(int i = 0; i < sizeof(tmp); i++)
         tmp[i] = '\0';
@@ -482,8 +482,6 @@ void xscanf(char* str, ... )
     uint32_t counter = 0x0;
 
     char* string_pointer;
-
-
 
     va_list args;
     va_start(args, str);

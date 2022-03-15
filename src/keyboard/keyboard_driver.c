@@ -83,25 +83,28 @@ void keyboard_driver(uint8_t scanCode)
 
     if(KeyInfo.is_shift)
     {
-    key_remap('-','_');
-    key_remap('1','!');
-    key_remap('2', '@');
-    key_remap('3','#');
-    key_remap('4', '$');
-    key_remap('5', '%');
-    key_remap('6', '^');
-    key_remap('7', '&');
-    key_remap('8', '*');
-    key_remap('9','(');
-    key_remap('0',')');
-    key_remap('=', '+');
-    key_remap('[', '{');
-    key_remap(']', '}');
-    key_remap('/', '?');
-    key_remap(';', ':');
-    key_remap('`','~');
-    key_remap(',','<');
-    key_remap('.', '>');
+        key_remap('-','_');
+        key_remap('1','!');
+        key_remap('2', '@');
+        key_remap('3','#');
+        key_remap('4', '$');
+        key_remap('5', '%');
+        key_remap('6', '^');
+        key_remap('7', '&');
+        key_remap('8', '*');
+        key_remap('9','(');
+        key_remap('0',')');
+        key_remap('=', '+');
+        key_remap('[', '{');
+        key_remap(']', '}');
+        key_remap('/', '?');
+        key_remap(';', ':');
+        key_remap('`','~');
+        key_remap(',','<');
+        key_remap('.', '>');
+        key_remap('/', '?');
+        key_remap(0x5C, '|');
+        key_remap(0x27, 0x22);
 
     }
 

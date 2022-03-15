@@ -98,6 +98,8 @@ void _start(void)
 
     clearScr();
     
+    //asm("int 0xFF");
+    //asm("int 13");// <-- GENERAL PROTECTION EXCEPTION TEST
 
     getTime();
 

@@ -17,8 +17,8 @@ xor sp, sp
 
 lgdt[_GDT_ADDR] ;LGDT ALWAYS BEFORE ENTERING 32-BIT MODE
 
-mov eax,cr0
-or eax,0x1
+mov eax, cr0
+or eax, 0x1
 mov cr0,eax
 
 
@@ -29,16 +29,12 @@ jmp dword CODE_SEGMENT:(_bits32)
 
 _bits32:
 
-mov eax,DATA_SEGMENT
-mov es,eax
-mov ds,eax
-
-
-mov ax,DATA_SEGMENT
-mov ss,ax
-
-
-
+mov eax, DATA_SEGMENT
+mov es, eax
+mov ds, eax
+mov fs, eax
+mov ss, eax
+mov gs, eax
 
 mov dword esp,0x01000000
 
@@ -188,12 +184,11 @@ _GDT:
     dd 0x0
     ;---------
 
-
     ;code segment
     ;should work :))
     dd 0x0000ffff 
     db 0x0
-    db 10011010b
+    db 10011110b
     db 11001111b
     db 0x0
 

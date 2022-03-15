@@ -63,7 +63,7 @@ void set_idt(void)
     configure_idt_entry(0xa, invalid_tss_exception,CODE_SEGMENT);
     configure_idt_entry(0xb, segment_not_present,CODE_SEGMENT);
     configure_idt_entry(0xc, stack_fault_exception,CODE_SEGMENT);
-    configure_idt_entry(0xd, general_protection_exception, CODE_SEGMENT);
+    configure_idt_entry(13, general_protection_exception, CODE_SEGMENT);
     configure_idt_entry(0xe, page_fault_exception, CODE_SEGMENT);
     configure_idt_entry(0xf, x86_fpu_floating_point_exception, CODE_SEGMENT);
     configure_idt_entry(17, aligment_check_exception, CODE_SEGMENT);
@@ -76,6 +76,8 @@ void set_idt(void)
     configure_idt_entry(0x21, keyboard_handler_init,CODE_SEGMENT);
     configure_idt_entry(0x26, floppy_interrupt,CODE_SEGMENT);
     configure_idt_entry(0x80, _syscall,CODE_SEGMENT);
+    
+    configure_idt_entry(0xFF, reboot_interrupt,CODE_SEGMENT);
 
     struct idtReg idtr = {
         IDT_SIZE,

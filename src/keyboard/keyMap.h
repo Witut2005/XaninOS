@@ -53,9 +53,9 @@ uint8_t keyboard_map[128] = {
   // -------- 30 to 39 --------
   'a','s','d','f','g','h','j','k','l',';',
   // -------- 40 to 49 --------
-  ' ','`',
+  0x27,'`',
   ' ', // left Shift
-  ' ','z','x','c','v','b','n',
+  0x5C,'z','x','c','v','b','n',
   // -------- 50 to 59 --------
   'm',',','.',
   '/', // slash, or numpad slash if preceded by keycode 224

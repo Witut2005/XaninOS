@@ -30,7 +30,7 @@ i386-elf-gcc -O0 -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -ffrees
 
 #dd if=/dev/zero of=zero.img bs=512 count=2024
 
-cat ./boot/boot ./xin_fs/xin_pointers ./xin_fs/entries_table ./boot/kernelLoader kernel.bin ./boot/locateFS home.tar > xanin.bin
+cat ./boot/boot ./xin_fs/xin_pointers ./xin_fs/entries_table ./boot/kernelLoader kernel.bin ./boot/locateFS  > xanin.bin
 
 
 

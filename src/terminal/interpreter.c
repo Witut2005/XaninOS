@@ -48,6 +48,13 @@ void scan(void)
         xin_paint(program_parameters);
     }
 
+    else if(cmpstr(program_name,"reg_dump"))
+    {
+        clearScr();
+        reg_dump();
+        while(getscan() != ENTER);
+    }
+
     else if(cmpstr(program_name,"load"))
     {
         //xprintf("4");
@@ -298,6 +305,7 @@ void scan(void)
 
 
 
+    app_exited = true;
     KeyInfo.character = 0x0;
     KeyInfo.scan_code = 0x0;
 
