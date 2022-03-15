@@ -384,6 +384,13 @@ void xprintf(char* str, ... )
                     break;
                 }
 
+                case 'h':
+                {
+                    uint16_t cursor_new_position = (uint16_t)va_arg(args,uint32_t);
+                    Screen.y = cursor_new_position >> 8;
+                    Screen.x = cursor_new_position && 0xFF;
+                }
+
                 case 'm':
                 {
 

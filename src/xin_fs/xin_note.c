@@ -144,7 +144,6 @@ void xin_note(char* file_name)
         }
         
 
-
         while(getscan() != F4_KEY && getscan() != ESC);
 
         uint32_t file_data_counter = 0x0;
