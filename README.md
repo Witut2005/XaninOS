@@ -5,17 +5,17 @@
 Features:
 
 - own bootloader
-- interrupt descriptor table
+- interrupt descriptor table (IDT)
+- all exceptions are handled
+- debugging commands(reg_dump, load, loadch)
 - configurated PIC
 - configurated keyboard controller
-- pong game
-- petris (paint and tetris in one :b)
+- note (notepad)
+- paint
 - recreated some parts of C libaries
-- basic implementation of USTAR filesystem
-- file system manipulation commands (touch, md, ls etc.)
-- xanin can execute external programs (in 32-bit .bin format)
+- own file system (xin fs)
+- file system manipulation commands (create, rd, load, loadch)
 - usb detector
-- you can very easily attach other archive file to kernel
 
 ---
 
@@ -36,7 +36,8 @@ Command to list all available commands within xaninOS:
 "help" or "h"
 ```
 
-## Running xaninOS 
+## Running xaninOS
+
 ```
 run_linux.sh (you can find this file inside /src directory)
 ```
@@ -48,6 +49,7 @@ run_windows.bat (you can find this file inside /src directory)
 ```
 
 ## Building xaninOS from source
+
 ```
 build.sh ((you can find this file inside /src directory))
 ```
