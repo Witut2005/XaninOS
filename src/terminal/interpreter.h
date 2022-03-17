@@ -25,6 +25,7 @@
 #include <xaninApps/logo.c>
 #include <xaninApps/register_dump.c>
 #include <xaninApps/cpu_info.c>
+#include <xaninApps/calc.c>
 
 /*
 

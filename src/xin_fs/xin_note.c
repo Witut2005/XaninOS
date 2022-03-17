@@ -14,6 +14,16 @@ void note_input(void)
 
     uint8_t selected_character;
 
+    if(&Screen.cursor[Screen.y][Screen.x] < VGA_TEXT_MEMORY)
+    {
+        Screen.y++;
+    }
+
+    if(&Screen.cursor[Screen.y][Screen.x] > VGA_TEXT_MEMORY + SCREEN_RESOLUTION)
+    {
+        Screen.y--;
+    }
+
     if(KeyInfo.is_up)
     {
 

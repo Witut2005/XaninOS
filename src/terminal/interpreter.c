@@ -47,6 +47,11 @@ void scan(void)
         cpu_info();
     }
 
+    else if(cmpstr(program_name,"calc"))
+    {
+        //calc();
+    }
+
     else if(cmpstr(program_name,"paint"))
     {
         //xprintf("3");

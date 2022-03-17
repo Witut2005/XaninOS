@@ -4,7 +4,6 @@
 
 char* get_acpi_address_base(void)
 {
-
     char* acpi_string = (char*)0xE000;
 
     while(acpi_string > (char*)0xFFFFF)
@@ -15,10 +14,7 @@ char* get_acpi_address_base(void)
         }
     
         acpi_string += 0x10;
-    
     }
-
-
 }
 
 

@@ -615,6 +615,8 @@ void xscanf(char* str, ... )
         for(int i = 0x0; i < 50;i++)
             buffer[i] = 0x0;
 
+        KeyInfo.scan_code = 0x0;
+
         return;
 
         }

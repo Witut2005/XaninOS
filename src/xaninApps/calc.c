@@ -1,44 +1,54 @@
 
-/*
 #include <lib/math.h>
 #include <lib/string.h>
 #include <lib/stdiox.h>
 #include <lib/signal.h>
 #include <headers/macros.h>
 
-static uint8_t calcCom[11];
-static uint8_t indexCalc = 0;
 
-
-void calcKeyboard()
+enum operation_types
 {
-    calcCom[indexCalc] = input;
-    indexCalc++;
-
-}
+    CALC_ADD = 1,
+    CALC_SUB = 2,
+    CALC_MUL = 3,
+    CALC_DIV = 4
+};
 
 void calc()
 {
 
-    KEYBOARD_SIG_ON(calcKeyboard);
+    int operation_type;
+    uint32_t a, b, result;
 
+    xprintf("choose type of operation:\n");
+    xprintf("1. add\n");
+    xprintf("2. subtract\n");
+    xprintf("3. multiply\n");
+    xprintf("4. divide\n");
 
-    uint32_t toRet;
+    xscanf("%d", &operation_type);
 
-    uint16_t* calcCur = 0xb8000 + (80 * 5);
+    xprintf("\nfirst number: ");
+    xscanf("%d", &a);
 
-    sprint(black,white,"type of operation: ");
-    sprint(black,white,"1. add");
-    sprint(black,white,"2. sub");
+    KeyInfo.scan_code = 0x0;
 
+    xprintf("\nsecond number: ");
+    xscanf("%d", &b);
+    
 
+    switch(operation_type)
+    {
+        case CALC_ADD: result = a + b; break;
+        case CALC_SUB: result = a - b; break;
+        case CALC_MUL: result = a * b; break;
+        case CALC_DIV: result = a / b; break;
+        
+    }
 
-    reverseStr(numStr);
-    toRet = atoi(numStr);
+    xprintf("\nyour result: %d", result);
 
-
+    while(getscan() != ENTER);
 
 }
 
-
-*/
