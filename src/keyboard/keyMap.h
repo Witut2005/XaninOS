@@ -29,7 +29,11 @@ enum special_keys
   F4_KEY = 0x3E,
   L_CTRL = 0x1D,
   L_CTRL_RELEASE = 0x9D,
-  DELETE_KEY = 0x53
+  DELETE_KEY = 0x53,
+  W_KEY = 0x11,
+  S_KEY = 0x1F,
+  O_KEY = 0x18,
+  J_KEY = 0x24
 };
 
 

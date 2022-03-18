@@ -26,6 +26,7 @@
 #include <xaninApps/register_dump.c>
 #include <xaninApps/cpu_info.c>
 #include <xaninApps/calc.c>
+#include <xaninApps/pong/pong.c>
 
 /*
 

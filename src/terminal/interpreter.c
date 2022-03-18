@@ -95,6 +95,12 @@ void scan(void)
     	app_exited = true;
     }
 	
+    else if(cmpstr(program_name, "pong"))
+    {
+        pong_init();
+        
+    }
+
 	else if(cmpstr(program_name,"loadch"))
 	{
         //xprintf("7");

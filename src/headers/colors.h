@@ -24,3 +24,5 @@ enum Colors{
 };
 
 
+#define white16 (uint16_t)('_' | (white)) 
+
