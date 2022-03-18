@@ -34,6 +34,11 @@ void scan(void)
         //touch();
     }
 
+    else if(cmpstr(program_name,"zsk"))
+    {
+        zsk();
+    }
+
     else if(cmpstr(program_name,"timer_test"))
     {
         timer_test();

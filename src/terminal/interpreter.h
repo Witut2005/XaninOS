@@ -28,6 +28,7 @@
 #include <xaninApps/calc.c>
 #include <xaninApps/pong/pong.c>
 #include <xaninApps/timer_test.c>
+#include <xaninApps/zsk.c>
 
 /*
 

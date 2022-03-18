@@ -10,3 +10,12 @@ void sleep(int seconds)
         for(uint32_t j = 0; j < (cpu_mhz * 15); j++);
     }
 }
+
+
+void sleep5(int seconds5)
+{
+    for(uint32_t i = 0; i < seconds5; i++)
+    {
+        for(uint32_t j = 0; j < (cpu_mhz * 3); j++);
+    }
+}

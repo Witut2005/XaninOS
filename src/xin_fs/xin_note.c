@@ -7,7 +7,6 @@
 #include <lib/exit_process.h>
 #include <lib/string.h>
 
-#define VGA_SCREEN_RESOLUTION 4480
 
 void note_input(void)
 {
