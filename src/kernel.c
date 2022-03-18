@@ -73,7 +73,24 @@ void _start(void)
 
 
     keyboard_init();
+
+
+
+    uint32_t cpu_mhz = 0x0;
+
     set_pit();
+
+    while(!pitActive)
+    {
+        cpu_mhz++;
+    }
+
+    cpu_mhz = cpu_mhz / 55;
+    cpu_mhz = cpu_mhz * 1000; //Cycles per second
+    cpu_mhz = cpu_mhz / 1000000; //from Hz to MHz
+    cpu_mhz = cpu_mhz * 7;
+    
+
 
     while(getscan() != ENTER);
 

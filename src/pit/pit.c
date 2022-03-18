@@ -21,15 +21,17 @@ volatile uint32_t pit_current_time = 0x0;
 
 void set_pit_divisor(uint16_t divisor_value)
 {
-    if(divisor_value < 250)
+
+    pitActive = false; 
+
+    if(divisor_value > 250)
         divisor_value = 250;
 
     divisor = divisor_value;
 
     outbIO(PIT_CHANNEL0,(uint8_t)(divisor & 0x00ff));
-    
-    for(int i = 0; i < 0xFFFF; i++)
-        asm("nop");
+
+    //for(int i = 0; i < 0xFFFFFFFF; i ++);
 
     outbIO(PIT_CHANNEL0,(uint8_t)((divisor & 0x00ff) >> 8));
 
@@ -40,11 +42,13 @@ void set_pit_divisor(uint16_t divisor_value)
 
 void set_pit()
 {
-    set_pit_divisor(0xFFFF);
+    pitActive = false; 
     outbIO(PIC1_DATA_REG, 0xFC); // pit irq on
     outbIO(PIT_MODE_COMMAND_REGISTER,0x30);
+    set_pit_divisor(0);
 }
 
+/*
 
 void sleep(uint32_t miliseconds)
 {
@@ -56,4 +60,5 @@ void sleep(uint32_t miliseconds)
 
 }
 
+*/
 

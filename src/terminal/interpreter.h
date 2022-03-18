@@ -27,6 +27,7 @@
 #include <xaninApps/cpu_info.c>
 #include <xaninApps/calc.c>
 #include <xaninApps/pong/pong.c>
+#include <xaninApps/timer_test.c>
 
 /*
 

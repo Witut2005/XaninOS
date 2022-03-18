@@ -70,19 +70,19 @@ void cpu_info(void)
 {
 
 
-    uint32_t ecx, edx, ebx;
+    unsigned int ecx, edx, ebx;
     char cpu_vendor_string[12];
     char cpu_brand_string[48];
 
-    __get_cpuid(0,0, cpu_vendor_string, &cpu_vendor_string[8], &cpu_vendor_string[4]);
+    __get_cpuid(0,0, (uint32_t)cpu_vendor_string, (uint32_t)(&cpu_vendor_string[8]), (uint32_t)(&cpu_vendor_string[4]));
     
     clearScr();
 
 
 
-    __get_cpuid(0x80000002, cpu_brand_string, cpu_brand_string + 4, cpu_brand_string + 8, cpu_brand_string + 12);
-    __get_cpuid(0x80000003, cpu_brand_string + 16, cpu_brand_string + 20, cpu_brand_string + 24, cpu_brand_string + 28);
-    __get_cpuid(0x80000004, cpu_brand_string + 32, cpu_brand_string + 36, cpu_brand_string + 40, cpu_brand_string + 44);
+    __get_cpuid(0x80000002, (uint32_t)cpu_brand_string, (uint32_t)(cpu_brand_string + 4), (uint32_t)(cpu_brand_string + 8), (uint32_t)(cpu_brand_string + 12));
+    __get_cpuid(0x80000003, (uint32_t)(cpu_brand_string + 16), (uint32_t)(cpu_brand_string + 20), (uint32_t)(cpu_brand_string + 24), (uint32_t)(cpu_brand_string + 28));
+    __get_cpuid(0x80000004, (uint32_t)(cpu_brand_string + 32), (uint32_t)(cpu_brand_string + 36), (uint32_t)(cpu_brand_string + 40), (uint32_t)(cpu_brand_string + 44));
 
 
 
