@@ -14,32 +14,41 @@ void keyboard_driver(uint8_t scanCode)
         case BSPC: 
         {
             
-            
-
-            KeyInfo.is_bspc = true; 
-            
-            if((char)Screen.cursor[Screen.y][Screen.x - 1] == character_blocked && character_blocked != '\0')
+            if(use_backspace)
             {
-                return;
+                KeyInfo.is_bspc = true; 
+            
+                Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((black << 4) | white) << 8));
+
+                if((char)Screen.cursor[Screen.y][Screen.x - 1] == character_blocked && character_blocked != '\0')
+                {
+                    return;
+                }
+
+
+
+                if(!Screen.x)
+                {
+                    Screen.y--;
+                    Screen.x = 79;
+                    return;
+                }
+
+                Screen.x--;
+
+
+
+                if(index)
+                    index--;
+
+                comBuf[index] = '\0';
+                Screen.cursor[Screen.y][Screen.x] = '\0';
+
+                Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((lred << 4) | white) << 8));
+
             }
 
 
-            if(!Screen.x)
-            {
-                Screen.y--;
-                Screen.x = 79;
-            }
-
-            Screen.x--;
-
-            if(index)
-                index--;
-
-            comBuf[index] = '\0';
-            Screen.cursor[Screen.y][Screen.x] = '\0';
-
-            
-            return;
         }
         
         case BSPC_RELEASE: {KeyInfo.is_bspc = false; return;}

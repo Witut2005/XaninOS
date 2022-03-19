@@ -50,8 +50,6 @@ void note_input(void)
     else if(KeyInfo.is_right)
     {
 
-
-
         Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | (((black << 4) | white) << 8));
 
         Screen.x++;
@@ -107,7 +105,7 @@ void xin_note(char* file_name)
 {
     clearScr();
     keyboard_handle = note_input;
-
+    use_backspace = true;
 
     xin_entry* xin_file = xin_find_entry(file_name);
     
