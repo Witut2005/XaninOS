@@ -1,5 +1,7 @@
 #include <cpuid.h>
 #include <lib/stdiox.h>
+#include <lib/time.h>
+
 
 enum {
     CPUID_ECX_SSE3         = 1 << 0, 
@@ -94,7 +96,7 @@ void cpu_info(void)
 
     xprintf("CPU brand: %s\n", cpu_brand_string);
 
-    xprintf("\n");
+    xprintf("CPU speed: %dMHz\n\n", cpu_mhz);
 
     __get_cpuid(0,1, &ebx, &ecx, &edx);
 

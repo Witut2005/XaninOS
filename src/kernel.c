@@ -49,6 +49,29 @@ void _start(void)
     //*(char*)(VGA_TEXT_MEMORY + 1) = 0x42;
     set_idt();
     getTime();
+    keyboard_init();
+
+    /*
+
+    char a[20],b[20];
+    clearScr();
+
+    for(int i = 0; i < 20; i++)
+        a[i] = '\0';
+    
+    for(int i = 0; i < 20; i++)
+        b[i] = '\0';
+
+    xscanf("%s %s",a, b);
+
+    xprintf("\n%s\n", a);
+    xprintf("%s\n", b);
+
+    xprintf("\n");
+
+    while(1);
+
+    */
 
 
     xprintf("%z  .GBJ     ?BBY.                     ,,\n", set_output_color(logo_back_color, logo_front_color));
@@ -72,7 +95,7 @@ void _start(void)
             set_output_color(green,white));
 
 
-    keyboard_init();
+
 
     xprintf("\n\n");
 
@@ -93,12 +116,12 @@ void _start(void)
     cpu_mhz = cpu_mhz * 7;
     
 
-    xprintf("cpu mhz %dMHz\n", cpu_mhz);
-    xprintf("cpu khz %dKHz\n", cpu_khz);
+    //xprintf("cpu mhz %dMHz\n", cpu_mhz);
+    //xprintf("cpu khz %dKHz\n", cpu_khz);
 
     while(getscan() != ENTER);
 
-    getCpuSpeed();
+    //getCpuSpeed();
 
     srand(time.seconds);
 	

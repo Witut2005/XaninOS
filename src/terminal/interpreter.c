@@ -24,6 +24,7 @@ void scan(void)
 
     character_blocked = '\0';
 
+
     keyboard_handle = nullptr;
 
     if(cmpstr(program_name,"touch"))

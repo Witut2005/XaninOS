@@ -104,7 +104,7 @@ void keyboard_driver(uint8_t scanCode)
 
     }
 
-    
+
     if(keyboard_handle != nullptr)
     {
         keyboard_handle();

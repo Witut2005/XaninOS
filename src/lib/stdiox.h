@@ -526,7 +526,8 @@ void xscanf(char* str, ... )
                                 buffer[i] = keyboard_command[counter];
                                 counter++;
                             }
-
+                                
+                                
                             for(int i = 0; buffer[i] != '\0' && buffer[i] != ' '; i++)
                             {
                                 if((buffer[i] > 127) || (buffer[i] < 0x20))
