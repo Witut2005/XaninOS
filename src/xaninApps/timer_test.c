@@ -20,7 +20,7 @@ void timer_test(void)
         current_time++;
 
         
-        sleep(1);
+        msleep(1000);
 
     }
 }

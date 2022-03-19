@@ -37,40 +37,57 @@ void terminal_keyboard(void)
 {
     if(KeyInfo.is_left)
     {        
-        Screen.cursor[Screen.y][Screen.x] = (uint16_t)(selected_character | ((black << 4) | white) << 8);
+        //Screen.cursor[Screen.y][Screen.x] = (uint16_t)(selected_character | ((black << 4) | white) << 8);
         
+        Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | (((black << 4) | white) << 8));
+        
+
+
         if((char)Screen.cursor[Screen.y][Screen.x - 1] == character_blocked)
         {
             return;
         }
 
+        if(!Screen.x)
+        {
+            Screen.x = 0;
+            Screen.y--;
+        }
+
+
         Screen.x--;
+        index--;
 
-
-        selected_character = (char)Screen.cursor[Screen.y][Screen.x];
-        Screen.cursor[Screen.y][Screen.x] = (uint16_t)('_' | ((black << 4) | white) << 8);
+        Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | ((lred << 4) | white) << 8);
     }
 
     else if(KeyInfo.is_right)
     {
-        Screen.cursor[Screen.y][Screen.x] = (uint16_t)(selected_character | ((black << 4) | white) << 8);
+        //Screen.cursor[Screen.y][Screen.x] = (uint16_t)(selected_character | ((black << 4) | white) << 8);
         
-        if(&Screen.cursor[Screen.y][Screen.x + 1] == &Screen.cursor[8][79])
+        Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | (((black << 4) | white) << 8));
+        
+
+        if(&Screen.cursor[Screen.y][Screen.x + 1] >= &Screen.cursor[8][79])
         {
             return;
         }
 
         Screen.x++;
 
-        selected_character = (char)Screen.cursor[Screen.y][Screen.x];
-        Screen.cursor[Screen.y][Screen.x] = (uint16_t)('_' | ((black << 4) | white) << 8);    
+        if(Screen.x == 80)
+        {
+            Screen.x = 0;
+            Screen.y++;
+        }
+
+
+        index++;
+
+
+        Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | ((lred << 4) | white) << 8);    
     }
 
-    else
-    {
-        Screen.cursor[Screen.y][Screen.x] = KeyInfo.character;
-        selected_character = (char)Screen.cursor[Screen.y][Screen.x];
-    }
 
 
 }
