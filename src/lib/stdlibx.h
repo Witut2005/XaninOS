@@ -54,7 +54,7 @@ char getscan(void)
     return tmp;
 }
 
-void getTime()
+void get_time()
 {
     asm("cli");
 
@@ -97,7 +97,7 @@ void getTime()
 
 
 
-void getCpuSpeed()
+void get_cpu_speed()
 {
     set_pit_divisor(0x0);
 
@@ -149,3 +149,30 @@ reg_t Register;
 seg_t SegmentRegister;
 
 
+void swap(int *xp, int *yp)
+{
+    int temp = *xp;
+    *xp = *yp;
+    *yp = temp;
+}
+
+void bubble_sort(int array[], int n)  //syntax bubble_sort(array[], n=size of array)
+{
+bool swapped;
+int i, j;
+  for (i=0; i<n-1; i++)
+  {
+      swapped = false;
+      for(j=0; j<n-i-1; j++)
+      {
+        if(array[j]>array[j+1])
+        {
+            swap(&array[j], &array[j+1]);
+            swapped = true;
+        }
+      }
+    if (swapped == false)
+        break;
+  }
+
+}

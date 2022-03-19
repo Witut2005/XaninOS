@@ -7,20 +7,14 @@
 #include <terminal/vty.c>
 #include <terminal/interpreter.c>
 #include <lib/math.h>
-//#include <fs/ustar.c>
 #include <keyboard/keyboardInit.c>
 #include <devices/PCI/pci.c>
 #include <devices/ACPI/ACPI.c>
 #include <devices/USB/usb.c>
 #include <devices/HARD_DISK/disk.c>
-//#include <fat/fat_driver.c>
 #include <xin_fs/xin.c>
 
-//extern void init_disk(uint16_t base, uint8_t master);
-//extern void disk_read(uint16_t base, uint8_t master, uint32_t sector_number, uint32_t bytes_number, uint16_t* where);
 
-
-//#include <devices/DMA/dma.c>
 
 char* tmpStr;
 
@@ -40,7 +34,7 @@ void _start(void)
 
     disable_cursor();
 
-    clearScr();
+    clear_scr();
     asm("cli");    //disable interrupts while IDT is not configured
     screen_init(); //init screen management system
 
@@ -48,13 +42,14 @@ void _start(void)
     //*(char*)VGA_TEXT_MEMORY = 0x41;
     //*(char*)(VGA_TEXT_MEMORY + 1) = 0x42;
     set_idt();
-    getTime();
+    get_time();
     keyboard_init();
+
 
     /*
 
     char a[20],b[20];
-    clearScr();
+    clear_scr();
 
     for(int i = 0; i < 20; i++)
         a[i] = '\0';
@@ -139,12 +134,12 @@ void _start(void)
 
     tuiInit:
 
-    clearScr();
+    clear_scr();
     
     //asm("int 0xFF");
     //asm("int 13");// <-- GENERAL PROTECTION EXCEPTION TEST
 
-    getTime();
+    get_time();
 
    
     //xprintf("xaninOS\n");

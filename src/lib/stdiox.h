@@ -7,7 +7,6 @@
 #include <headers/colors.h>
 #include <headers/macros.h>
 #include <terminal/vty.h>
-#include <tetris/tetris.c>
 #include <lib/stdlibx.h>
 
 
@@ -24,7 +23,7 @@ char comBuf[50];
 char* keyboard_command;
 
 
-void clearScr(void)
+void clear_scr(void)
 {
     uint16_t* ptrTmp = (uint16_t*)VGA_TEXT_MEMORY;
     for(int i = 0; i < (80 * 28); i++)
@@ -81,39 +80,6 @@ void putch(char c)
 }
 
 
-void printNum(uint8_t x)
-{
-    uint8_t arr[4];
-
-    arr[3] = '\0';
-
-    arr[2] = x % 10;
-    x = x / 10;
-
-    arr[1] = x % 10;
-    x = x / 10;
-
-    arr[0] = x % 10;
-
-
-    increment_array(arr,3,48);
-
-    bool notZero;
-
-    uint16_t* ptr;
-
-
-    for(uint8_t i = 0; i < 3; i++)
-    {
-        char charakter = arr[i];
-        notZero = true;
-        putch(charakter);
-    }
-
-    y++;
-    x = 0;
-
-}
 
 void print_hex_number(uint8_t x)
 {

@@ -1,7 +1,6 @@
 #pragma once
 
 #include <terminal/vty.h>
-#include <tetris/tetris.c>
 #include <xaninApps/help.c>
 #include <lib/signal.h>
 

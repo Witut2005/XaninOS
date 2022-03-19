@@ -105,7 +105,7 @@ void note_input(void)
 
 void xin_note(char* file_name)
 {
-    clearScr();
+    clear_scr();
     keyboard_handle = note_input;
 
 

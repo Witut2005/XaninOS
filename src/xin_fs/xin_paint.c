@@ -66,7 +66,7 @@ void paint_input(void)
     else if(KeyInfo.scan_code == F3_KEY)
     {
         selected_cell = 0x0;
-        clearScr();
+        clear_scr();
     }
 
     else
@@ -101,7 +101,7 @@ void paint_input(void)
 
 void xin_paint(char* file_name)
 {
-    clearScr();
+    clear_scr();
 
     keyboard_handle = paint_input;
 

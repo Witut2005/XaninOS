@@ -20,7 +20,7 @@ void hexview(void)
         
 
             char* data_ptr = (char*)atoi(COMMAND);
-            clearScr();
+            clear_scr();
             for(int i = 0; i < 0x20; i++)
                 xprintf("%x",data_ptr[i]);
             return;      
