@@ -36,7 +36,7 @@ void scan(void)
 
     else if(cmpstr(program_name,"zsk"))
     {
-        zsk();
+        zsk(program_parameters);
     }
 
     else if(cmpstr(program_name,"timer_test"))

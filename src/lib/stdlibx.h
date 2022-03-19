@@ -3,9 +3,11 @@
 
 #include <lib/hal.h>
 #include <pit/pit.c>
+#include <lib/time.h>
 #include <terminal/vty.h>
 #include <headers/colors.h>
 #include <handlers/handlers.c>
+
 
 
 struct TIME

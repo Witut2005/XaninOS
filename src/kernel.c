@@ -74,9 +74,8 @@ void _start(void)
 
     keyboard_init();
 
+    xprintf("\n\n");
 
-
-    uint32_t cpu_mhz = 0x0;
 
     set_pit();
 
@@ -87,10 +86,15 @@ void _start(void)
 
     cpu_mhz = cpu_mhz / 55;
     cpu_mhz = cpu_mhz * 1000; //Cycles per second
+    cpu_khz = cpu_mhz / 1000;
     cpu_mhz = cpu_mhz / 1000000; //from Hz to MHz
+
+    cpu_khz = cpu_khz * 7;
     cpu_mhz = cpu_mhz * 7;
     
 
+    xprintf("cpu mhz %dMHz\n", cpu_mhz);
+    xprintf("cpu khz %dKHz\n", cpu_khz);
 
     while(getscan() != ENTER);
 

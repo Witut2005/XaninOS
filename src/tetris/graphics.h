@@ -54,7 +54,7 @@ void update(void)
 
 	//sleep(1);
 	
-	
+	/*
 	
     for(int i = 0; i < 300;i++)
     {
@@ -62,7 +62,7 @@ void update(void)
             asm("nop");
     }
 
-	
+	*/
 
 
 }

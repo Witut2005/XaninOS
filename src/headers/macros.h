@@ -27,5 +27,3 @@ uint8_t keyboard_input;
 
 
 bool app_exited = false;
-
-uint32_t cpu_mhz = 0x0;

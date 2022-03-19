@@ -28,7 +28,7 @@ void zsk_init(void)
     xprintf("  {___}      L____/        O      O    \n");
 }
 
-void zsk_move(void)
+void zsk_move(uint32_t delay)
 {
     uint16_t* tmp = VGA_TEXT_MEMORY;
     
@@ -43,17 +43,30 @@ void zsk_move(void)
         tmp[i] = tmp[i + 1];
     }
 
-    sleep5(1);
+    msleep(delay);
 
 }
 
-void zsk(void)
+void zsk(char* delay_str)
 {
+
+
+    uint32_t delay;
+
+
+
+    if(!strlen(delay_str))
+        delay = 100;
+    
+    else
+        delay = strtoi(delay_str,10);
+    
+    
 
     zsk_init();
 
     while(getscan() != ENTER)
-        zsk_move();
+        zsk_move(delay);
 
     app_exited = true;
 
