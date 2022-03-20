@@ -29,7 +29,9 @@ void paint_input(void)
     if(KeyInfo.is_up)
     {
         Screen.cursor[Screen.y][Screen.x] = selected_cell;
-        Screen.y--;
+        
+        if((uint32_t)&Screen.cursor[Screen.y - 1][Screen.x] >= VGA_TEXT_MEMORY)
+            Screen.y--;
    
 
         selected_cell = Screen.cursor[Screen.y][Screen.x];
@@ -39,7 +41,9 @@ void paint_input(void)
     else if(KeyInfo.is_down)
     {
         Screen.cursor[Screen.y][Screen.x] = selected_cell;
-        Screen.y++;
+        
+        if((uint32_t)&Screen.cursor[Screen.y + 1][Screen.x] <= VGA_TEXT_MEMORY + VGA_SCREEN_RESOLUTION)
+            Screen.y++;
 
         selected_cell = Screen.cursor[Screen.y][Screen.x];
         Screen.cursor[Screen.y][Screen.x] = (uint16_t)('_' | ((black << 4) | white) << 8);   

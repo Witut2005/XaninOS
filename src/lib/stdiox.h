@@ -13,6 +13,8 @@
 
 
 #define set_output_color(x,y) (x << 4 | y)
+#define cursor_set_position(x, y) (x << 8 | y)
+
 #define VRAM VGA_TEXT_MEMORY
 
 #define VGA_SCREEN_RESOLUTION 4480
@@ -386,7 +388,14 @@ void xprintf(char* str, ... )
                     break;
                 }
 
- 
+                case 'h':
+                {
+                    number = (uint16_t)va_arg(args,uint32_t);
+                    Screen.x = (number >> 8) & 0xFF;
+                    Screen.y = number & 0xFF;
+                    break;
+                }
+
                 case 'm':
                 {
 
@@ -499,7 +508,6 @@ void xscanf(char* str, ... )
 
     index = 0x0;
 
-    use_backspace = true;
 
     start:
 
@@ -636,6 +644,7 @@ void xscanf(char* str, ... )
                             break;
                         }
 
+
                     }
 
                 str_counter++;
@@ -677,6 +686,8 @@ void xscanf(char* str, ... )
             xprintf("%c", tmp);
 
             letters_refresh_add(&Screen.cursor[Screen.y][Screen.x], character_saved);
+            keyboard_refresh_add(index, character_saved);
+
 
             Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((lred << 4) | white) << 8));
             keyboard_command[index] = tmp;

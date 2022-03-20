@@ -5,6 +5,8 @@
 #include <xaninApps/help.c>
 #include <lib/signal.h>
 
+#define VGA_SCREEN_RESOLUTION 4480
+
 void add_y(uint8_t yadd)
 {
     cursor += yadd * 80;
@@ -57,6 +59,23 @@ void letters_refresh_add(uint16_t* cursor_current_positon, char character_saved)
         character_saved = tmp;
     }
 }
+
+void keyboard_refresh_add(uint8_t keyboard_index_position, char character_saved)
+{
+
+    char tmp;
+
+    uint8_t counter = keyboard_index_position;
+
+    for(char* i = &keyboard_command[keyboard_index_position]; counter < 50; counter++, i++)
+    {
+        tmp = *i;
+        *i = character_saved;
+        character_saved = tmp;
+    }
+}
+
+
 
 void terminal_keyboard(void)
 {

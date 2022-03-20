@@ -52,8 +52,9 @@ void note_input(void)
     {
 
         Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | (((black << 4) | white) << 8));
-
-        Screen.y--;
+        
+        if((uint32_t)&Screen.cursor[Screen.y - 1][Screen.x] >= VGA_TEXT_MEMORY)
+            Screen.y--;
 
         Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | (((lred << 4) | white) << 8));
 
@@ -63,8 +64,9 @@ void note_input(void)
     {
 
         Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | (((black << 4) | white) << 8));
-
-        Screen.y++;
+        
+        if((uint32_t)&Screen.cursor[Screen.y + 1][Screen.x] <= VGA_TEXT_MEMORY + VGA_SCREEN_RESOLUTION)
+            Screen.y++;
 
         Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | (((lred << 4) | white) << 8));
 
@@ -94,18 +96,27 @@ void note_input(void)
 
         Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | (((black << 4) | white) << 8));
 
+        
+
+        if(Screen.x == 0)
+        {
+            Screen.x = 80;
+            Screen.y--;
+        }
+
+
         Screen.x--;
 
         Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | (((lred << 4) | white) << 8));
 
 
-        if(Screen.x == 80)
-        {
-            Screen.x = 0x0;
-            Screen.y++;
-        }
+    }
 
-
+    else if(KeyInfo.scan_code == ENTER)
+    {
+        Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | (((black << 4) | white) << 8));
+        xprintf("\r\n");
+        Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | (((lred << 4) | white) << 8));
     }
 
     else if(getscan() == ENTER)
@@ -124,6 +135,18 @@ void note_input(void)
             letters_refresh_add(&Screen.cursor[Screen.y][Screen.x], character_saved_tmp);
         }
     }  
+
+    uint8_t x_save, y_save;
+
+
+    x_save = Screen.x;
+    y_save = Screen.y;
+
+    xprintf("%h",(cursor_set_position(0,27)));
+    xprintf("y%x x%x",y_save,x_save);
+
+    Screen.x = x_save;
+    Screen.y = y_save;
 
     /*
     else if(getscan() == DELETE_KEY)
