@@ -4,6 +4,8 @@
 #include <xaninApps/help.c>
 #include <lib/signal.h>
 
+#define VGA_SCREEN_RESOLUTION 4480
+
 void add_y(uint8_t yadd)
 {
     cursor += yadd * 80;
@@ -31,6 +33,48 @@ void screen_init(void)
     
 }
 
+void letters_refresh(uint16_t* cursor_current_positon)
+{
+
+    cursor_current_positon++;
+
+    for(uint16_t* i = cursor_current_positon; (uint32_t)i < VGA_TEXT_MEMORY + VGA_SCREEN_RESOLUTION; i++)
+    {
+        *(i - 1) = *i;
+    }
+}
+
+void letters_refresh_add(uint16_t* cursor_current_positon, char character_saved)
+{
+
+    //cursor_current_positon--;
+
+    char tmp;
+
+    for(uint16_t* i = cursor_current_positon; (uint32_t)i < VGA_TEXT_MEMORY + VGA_SCREEN_RESOLUTION; i++)
+    {
+        tmp = *(char*)(i);
+        *(char*)(i) = character_saved;
+        character_saved = tmp;
+    }
+}
+
+void keyboard_refresh_add(uint8_t keyboard_index_position, char character_saved)
+{
+
+    char tmp;
+
+    uint8_t counter = keyboard_index_position;
+
+    for(char* i = &keyboard_command[keyboard_index_position]; counter < 50; counter++, i++)
+    {
+        tmp = *i;
+        *i = character_saved;
+        character_saved = tmp;
+    }
+}
+
+
 
 void terminal_keyboard(void)
 {
@@ -55,7 +99,9 @@ void terminal_keyboard(void)
 
 
         Screen.x--;
-        index--;
+        
+        if(index)
+            index--;
 
         Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | ((lred << 4) | white) << 8);
     }
@@ -81,7 +127,8 @@ void terminal_keyboard(void)
         }
 
 
-        index++;
+        //if(index)
+        //    index--;
 
 
         Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | ((lred << 4) | white) << 8);    

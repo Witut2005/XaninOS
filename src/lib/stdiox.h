@@ -12,18 +12,21 @@
 
 
 #define set_output_color(x,y) (x << 4 | y)
+#define cursor_set_position(x, y) (x << 8 | y)
+
 #define VRAM VGA_TEXT_MEMORY
 
 #define VGA_SCREEN_RESOLUTION 4480
 
 static char* keyString = "keyboard initalized succed :))\n";
-static char HEX_LUT[16] = {'0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f'};
-
-char comBuf[50];
-char* keyboard_command;
+static char HEX_LUT[] = {'0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f'};
 
 
-void clear_scr(void)
+
+bool use_backspace = false;
+
+
+void clearScr(void)
 {
     uint16_t* ptrTmp = (uint16_t*)VGA_TEXT_MEMORY;
     for(int i = 0; i < (80 * 28); i++)
@@ -351,7 +354,14 @@ void xprintf(char* str, ... )
                     break;
                 }
 
- 
+                case 'h':
+                {
+                    number = (uint16_t)va_arg(args,uint32_t);
+                    Screen.x = (number >> 8) & 0xFF;
+                    Screen.y = number & 0xFF;
+                    break;
+                }
+
                 case 'm':
                 {
 
@@ -464,13 +474,50 @@ void xscanf(char* str, ... )
 
     index = 0x0;
 
+    use_backspace = true;
 
     start:
 
     while(1)
     {
 
-        if(KeyInfo.scan_code == ENTER)
+        if(KeyInfo.is_bspc)
+        {
+            Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((black << 4) | white) << 8));
+
+            if((char)Screen.cursor[Screen.y][Screen.x - 1] == character_blocked && character_blocked != '\0')
+            {
+                goto start;
+            }
+
+
+
+            if(!Screen.x)
+            {
+                Screen.y--;
+                Screen.x = 79;
+                return;
+            }
+
+            Screen.x--;
+
+
+
+            if(index)
+                index--;
+
+            comBuf[index] = '\0';
+            Screen.cursor[Screen.y][Screen.x] = '\0';
+
+            Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((lred << 4) | white) << 8));
+
+
+            msleep(10);
+            KeyInfo.is_bspc = false;
+            letters_refresh(&Screen.cursor[Screen.y][Screen.x]);
+        }
+
+        else if(KeyInfo.scan_code == ENTER)
         {
             while(str[str_counter])
             {
@@ -564,6 +611,7 @@ void xscanf(char* str, ... )
                             break;
                         }
 
+
                     }
 
                 str_counter++;
@@ -586,6 +634,8 @@ void xscanf(char* str, ... )
 
         KeyInfo.scan_code = 0x0;
 
+        use_backspace = false;
+
         return;
 
         }
@@ -593,12 +643,27 @@ void xscanf(char* str, ... )
         else if(KeyInfo.character)
         {
             char tmp = getchar();
+            Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((black << 4) | white) << 8));
+            char character_saved = (char)(Screen.cursor[Screen.y][Screen.x]);
+            
+            //Screen.cursor[Screen.y][Screen.x + 1] = (uint16_t)(' ' + (((black << 4) | white) << 8));
+
+
+
             xprintf("%c", tmp);
+
+            letters_refresh_add(&Screen.cursor[Screen.y][Screen.x], character_saved);
+            keyboard_refresh_add(index, character_saved);
+
+
+            Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((lred << 4) | white) << 8));
             keyboard_command[index] = tmp;
             index++;
+
         }    
     }
 
+    use_backspace = false;
 
 
 }

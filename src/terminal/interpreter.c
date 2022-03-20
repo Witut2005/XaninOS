@@ -24,8 +24,16 @@ void scan(void)
 
     character_blocked = '\0';
 
-
     keyboard_handle = nullptr;
+
+    //keyboard_buffer_refresh(&Screen.cursor[8][1]);
+
+    xprintf("command:\n");
+
+    for(int i = 0; i < 40; i++)
+        putchar(keyboard_command[i]);
+
+    while(KeyInfo.scan_code != ENTER);
 
     if(cmpstr(program_name,"touch"))
     {
@@ -73,7 +81,7 @@ void scan(void)
 
     else if(cmpstr(program_name,"reg_dump"))
     {
-        clear_scr();
+        clearScr();
         reg_dump();
         while(getscan() != ENTER);
     }
@@ -181,7 +189,7 @@ void scan(void)
         xprintf("e");
         //while(KeyInfo.scan_code != ENTER);
         
-        clear_scr();
+        clearScr();
         tetris();
         */
     }
@@ -228,7 +236,7 @@ void scan(void)
         //xprintf("j");
         //while(KeyInfo.scan_code != ENTER);
         
-        clear_scr();
+        clearScr();
         y = 2;
         x = 0;
 
@@ -266,7 +274,7 @@ void scan(void)
         //xprintf("s");
         //while(KeyInfo.scan_code != ENTER);
         
-        clear_scr();
+        clearScr();
         app_exited = true;
     }
 

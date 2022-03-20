@@ -22,17 +22,3 @@ uint32_t pow(uint32_t a, uint32_t b)
 
 }
 
-/*
-
-uint32_t atoi(char* str) 
-{
-    uint32_t num = 0;
-
-    for(int i = 0; str[i] != '\0'; i++)
-        num = (num * 10) + str[i] - 48; 
-
-    return num;
-
-}
-
-*/

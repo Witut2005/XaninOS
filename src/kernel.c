@@ -32,9 +32,10 @@ void _start(void)
 {
 
 
+
     disable_cursor();
 
-    clear_scr();
+    clearScr();
     asm("cli");    //disable interrupts while IDT is not configured
     screen_init(); //init screen management system
 
@@ -42,15 +43,18 @@ void _start(void)
     //*(char*)VGA_TEXT_MEMORY = 0x41;
     //*(char*)(VGA_TEXT_MEMORY + 1) = 0x42;
     set_idt();
-    get_time();
+    getTime();
     keyboard_init();
+    
+    for(char* i = (char*)0x0; (uint32_t)i < 0x20000; i++)
+    	*i = 0x0;
 
 
 
     /*
 
     char a[20],b[20];
-    clear_scr();
+    clearScr();
 
     for(int i = 0; i < 20; i++)
         a[i] = '\0';
@@ -129,18 +133,15 @@ void _start(void)
     keyboard_scan_code = 0x0;
     while(!keyboard_scan_code);
 
-    for(char* i = (char*)0x0; (uint32_t)i < 0x20000; i++)
-    	*i = 0x0;
-
 
     tuiInit:
 
-    clear_scr();
+    clearScr();
     
     //asm("int 0xFF");
     //asm("int 13");// <-- GENERAL PROTECTION EXCEPTION TEST
 
-    get_time();
+    getTime();
 
    
     //xprintf("xaninOS\n");

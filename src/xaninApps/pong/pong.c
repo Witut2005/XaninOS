@@ -90,7 +90,7 @@ void pong_update(void)
 void pong_init(void)
 {
 
-    clear_scr();
+    clearScr();
 
     keyboard_handle = pong_input;
 

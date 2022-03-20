@@ -8,7 +8,8 @@
 #include <headers/colors.h>
 #include <handlers/handlers.c>
 
-
+char comBuf[50];
+char* keyboard_command;
 
 struct TIME
 {
@@ -54,7 +55,14 @@ char getscan(void)
     return tmp;
 }
 
-void get_time()
+char* keyboard_buffer_refresh(uint16_t* screen_buffer)
+{
+    for(int i = 0; i < 50; i++)
+        keyboard_command[i] = *(char*)(screen_buffer + i);
+
+}
+
+void getTime()
 {
     asm("cli");
 
@@ -108,6 +116,29 @@ void get_cpu_speed()
 }
 
 static uint32_t randomizer;
+
+
+
+void swap_int(int *xp, int *yp)
+{
+    int temp = *xp;
+    *xp = *yp;
+    *yp = temp;
+}
+
+void swap_char(char* *xp, char* yp)
+{
+    char temp = *xp;
+    *xp = *yp;
+    *yp = temp;
+}
+
+void swap_short(uint16_t* *xp, uint16_t* yp)
+{
+    uint16_t temp = *xp;
+    *xp = *yp;
+    *yp = temp;
+}
 
 
 //https://crypto.stackexchange.com/questions/6760/how-does-the-rand-function-in-c-work

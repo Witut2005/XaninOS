@@ -1,6 +1,42 @@
 
 #include <terminal/vty.h>
 
+void app_default_backspace_handler(void)
+{
+    Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((black << 4) | white) << 8));
+
+    if((char)Screen.cursor[Screen.y][Screen.x - 1] == character_blocked && character_blocked != '\0')
+    {
+        return;
+    }
+
+
+
+    if(!Screen.x)
+    {
+        Screen.y--;
+        Screen.x = 79;
+        return;
+    }
+
+    Screen.x--;
+
+
+
+    if(index)
+        index--;
+
+    comBuf[index] = '\0';
+    Screen.cursor[Screen.y][Screen.x] = '\0';
+
+    Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((lred << 4) | white) << 8));
+
+
+    msleep(50);
+    KeyInfo.is_bspc = false;
+}
+
+
 void keyboard_driver(uint8_t scanCode)
 {
 
@@ -13,33 +49,11 @@ void keyboard_driver(uint8_t scanCode)
         case LSHIFT_RELEASE: {KeyInfo.is_shift = false; break;}
         case BSPC: 
         {
+            KeyInfo.is_bspc = true;
             
-            
-
-            KeyInfo.is_bspc = true; 
-            
-            if((char)Screen.cursor[Screen.y][Screen.x - 1] == character_blocked && character_blocked != '\0')
-            {
-                return;
-            }
-
-
-            if(!Screen.x)
-            {
-                Screen.y--;
-                Screen.x = 79;
-            }
-
-            Screen.x--;
-
-            if(index)
-                index--;
-
-            comBuf[index] = '\0';
-            Screen.cursor[Screen.y][Screen.x] = '\0';
-
-            
-            return;
+            if(keyboard_handle != nullptr)
+                keyboard_handle();
+            return;            
         }
         
         case BSPC_RELEASE: {KeyInfo.is_bspc = false; return;}
@@ -64,7 +78,7 @@ void keyboard_driver(uint8_t scanCode)
 
     KeyInfo.character = keyboard_map[scanCode];
 
-    if(KeyInfo.scan_code >= 128)
+    if(KeyInfo.scan_code >= 128 || KeyInfo.scan_code == BSPC)
     {
         KeyInfo.character = 0x0;
     }

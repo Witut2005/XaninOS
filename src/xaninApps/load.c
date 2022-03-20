@@ -7,7 +7,7 @@
 void load(uint32_t address)
 {
 
-    clear_scr();
+    clearScr();
 
     char* data_pointer = (char*)(address);
 
