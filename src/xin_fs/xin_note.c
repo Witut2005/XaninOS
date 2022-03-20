@@ -119,13 +119,6 @@ void note_input(void)
         Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | (((lred << 4) | white) << 8));
     }
 
-    else if(getscan() == ENTER)
-    {
-        Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | (((black << 4) | white) << 8));
-        xprintf("\r\n");
-        Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | (((lred << 4) | white) << 8));
-    }
-
     else
     {
         if(KeyInfo.character)

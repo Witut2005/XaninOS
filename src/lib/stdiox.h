@@ -508,6 +508,7 @@ void xscanf(char* str, ... )
 
     index = 0x0;
 
+    use_backspace = true;
 
     start:
 
