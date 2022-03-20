@@ -8,7 +8,7 @@
 #include <headers/colors.h>
 #include <handlers/handlers.c>
 
-char comBuf[50];
+char command_buffer[50];
 char* keyboard_command;
 
 struct TIME
@@ -62,7 +62,7 @@ char* keyboard_buffer_refresh(uint16_t* screen_buffer)
 
 }
 
-void getTime()
+void time_get()
 {
     asm("cli");
 
@@ -179,6 +179,14 @@ struct
 reg_t Register;
 seg_t SegmentRegister;
 
+void* malloc(size_t size)
+{
+
+    //uint16_t 
+    char* allocation_table = (char*)0x40000;
+
+
+}
 
 void int_swap(int *xp, int *yp)
 {

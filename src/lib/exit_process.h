@@ -12,7 +12,7 @@
 #define exit_process(x)\
     index = 0x0;\
     no_enter = false;\
-    for(int i = 0; i < sizeof(comBuf);i++)\
+    for(int i = 0; i < sizeof(command_buffer);i++)\
         keyboard_command[i] = '\0';\
         app_exited = true;\
     print_off = false;\

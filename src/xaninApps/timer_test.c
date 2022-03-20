@@ -15,7 +15,7 @@ void timer_test(void)
 
     while(getscan() != ENTER)
     {
-        clearScr();
+        screen_clear();
         xprintf("%d", current_time);
         current_time++;
 

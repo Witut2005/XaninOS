@@ -9,7 +9,7 @@ void shutdown(void)
     outdwIO(0xB004, 0x2000); /* BOCHS AND OLD QEMU */
     outdwIO(0x4004, 0x3400); /* VIRTUALBOX */
 
-    clearScr();
+    screen_clear();
 
     xprintf("goodbye :))\n\n");
 

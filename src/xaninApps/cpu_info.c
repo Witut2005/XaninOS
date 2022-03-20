@@ -78,7 +78,7 @@ void cpu_info(void)
 
     __get_cpuid(0,0, (uint32_t)cpu_vendor_string, (uint32_t)(&cpu_vendor_string[8]), (uint32_t)(&cpu_vendor_string[4]));
     
-    clearScr();
+    screen_clear();
 
 
 

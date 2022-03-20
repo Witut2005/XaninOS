@@ -8,7 +8,7 @@
 
 void zsk_init(void)
 {
-    clearScr();
+    screen_clear();
 
     Screen.x = 0;
     Screen.y = 15;

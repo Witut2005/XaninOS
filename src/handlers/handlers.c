@@ -28,7 +28,7 @@ void floppy_interrupt(void)
 
 void invalid_opcode(void)
 {
-    clearScr();
+    screen_clear();
     xprintf("\n%zINVALID OPCODE",set_output_color(red,white));
     reg_dump();
     asm("cli");
@@ -37,7 +37,7 @@ void invalid_opcode(void)
 
 void divide_by_zero_exception(void)
 {
-    clearScr();
+    screen_clear();
     xprintf("\n%DIVIDE BY ZERO ERROR",set_output_color(red,white));
     reg_dump();
     asm("cli");
@@ -61,7 +61,7 @@ void keyboard_handler(void)
  
 void debug_exception(void)
 {
-    clearScr();
+    screen_clear();
     xprintf("%zDEBUG EXCEPTION", set_output_color(red,white));
     reg_dump();
     asm("cli");
@@ -70,7 +70,7 @@ void debug_exception(void)
 
 void nmi_interrupt(void)
 {
-    clearScr();
+    screen_clear();
     xprintf("%zNMI INTERRUPT", set_output_color(red,white));
     reg_dump();
     asm("cli");
@@ -79,7 +79,7 @@ void nmi_interrupt(void)
 
 void breakpoint_exception(void)
 {
-    clearScr();
+    screen_clear();
     xprintf("%zBREAKPOINT EXCEPTION", set_output_color(red,white));
     reg_dump();
     asm("cli");
@@ -88,7 +88,7 @@ void breakpoint_exception(void)
 
 void overflow_exception(void)
 {
-    clearScr();
+    screen_clear();
     xprintf("%zOVERFLOW EXCEPTION", set_output_color(red,white));
     reg_dump();
     asm("cli");
@@ -97,7 +97,7 @@ void overflow_exception(void)
 
 void bound_range_exceeded_exception(void)
 {
-    clearScr();
+    screen_clear();
     xprintf("\n%zBOUND Range Exceeded Exception", set_output_color(red,white));
     reg_dump();
     asm("cli");
@@ -106,7 +106,7 @@ void bound_range_exceeded_exception(void)
 
 void device_not_available_exception(void)
 {
-    clearScr();
+    screen_clear();
     xprintf("\n%zDevice not available exception", set_output_color(red,white));
     reg_dump();
     asm("cli");
@@ -115,7 +115,7 @@ void device_not_available_exception(void)
 
 void double_fault_exception(void)
 {
-    clearScr();
+    screen_clear();
     xprintf("\n%zDouble fault exception", set_output_color(red,white));
     reg_dump();
     asm("cli");
@@ -124,7 +124,7 @@ void double_fault_exception(void)
 
 void coprocessor_segment_overrun(void)
 {
-    clearScr();
+    screen_clear();
     xprintf("\n%zCoprocessor segment overrun", set_output_color(red,white));
     reg_dump();
     asm("cli");
@@ -133,7 +133,7 @@ void coprocessor_segment_overrun(void)
 
 void invalid_tss_exception(void)
 {
-    clearScr();
+    screen_clear();
     xprintf("%zInvalid TSS exception", set_output_color(red,white));
     reg_dump();
     asm("cli");
@@ -142,7 +142,7 @@ void invalid_tss_exception(void)
 
 void segment_not_present(void)
 {
-    clearScr();
+    screen_clear();
     xprintf("\n%zSegment not present", set_output_color(red,white));
     reg_dump();
     asm("cli");
@@ -151,7 +151,7 @@ void segment_not_present(void)
 
 void stack_fault_exception(void)
 {
-    clearScr();
+    screen_clear();
     xprintf("\n%zStack fault exception", set_output_color(red,white));
     reg_dump();
     asm("cli");
@@ -160,7 +160,7 @@ void stack_fault_exception(void)
 
 void general_protection_exception(void)
 {
-    clearScr();
+    screen_clear();
     xprintf("\n%zGeneral protection exception\n", set_output_color(red,white));
     reg_dump();
     asm("cli");
@@ -169,7 +169,7 @@ void general_protection_exception(void)
 
 void page_fault_exception(void)
 {
-    clearScr();
+    screen_clear();
     xprintf("%zPage fault exception", set_output_color(red,white));
     reg_dump();
     asm("cli");
@@ -178,7 +178,7 @@ void page_fault_exception(void)
     
 void x86_fpu_floating_point_exception(void)
 {
-    clearScr();
+    screen_clear();
     xprintf("%zx86 fpu floating point exception", set_output_color(red,white));
     reg_dump();
     asm("cli");
@@ -187,7 +187,7 @@ void x86_fpu_floating_point_exception(void)
 
 void aligment_check_exception(void)
 {
-    clearScr();
+    screen_clear();
     xprintf("%zAligment check exception", set_output_color(red,white));
     reg_dump();
     asm("cli");
@@ -196,7 +196,7 @@ void aligment_check_exception(void)
 
 void machine_check_exception(void)
 {
-    clearScr();
+    screen_clear();
     xprintf("%zMachine check exception", set_output_color(red,white));
     reg_dump();
     asm("cli");
@@ -205,7 +205,7 @@ void machine_check_exception(void)
 
 void simd_floating_point_exception(void)
 {
-    clearScr();
+    screen_clear();
     xprintf("%zSIMD floating point exception", set_output_color(red,white));
     reg_dump();
     asm("cli");
@@ -214,7 +214,7 @@ void simd_floating_point_exception(void)
 
 void virtualization_exception(void)
 {
-    clearScr();
+    screen_clear();
     xprintf("%zVirtualization exception", set_output_color(red,white));
     reg_dump();
     asm("cli");
@@ -223,7 +223,7 @@ void virtualization_exception(void)
 
 void control_protection_exception(void)
 {
-    clearScr();
+    screen_clear();
     xprintf("%zControl protection exception", set_output_color(red,white));
     reg_dump();
     asm("cli");

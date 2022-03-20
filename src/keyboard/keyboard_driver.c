@@ -26,7 +26,7 @@ void app_default_backspace_handler(void)
     if(index)
         index--;
 
-    comBuf[index] = '\0';
+    command_buffer[index] = '\0';
     Screen.cursor[Screen.y][Screen.x] = '\0';
 
     Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((lred << 4) | white) << 8));

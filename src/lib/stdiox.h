@@ -26,7 +26,7 @@ static char HEX_LUT[] = {'0','1','2','3','4','5','6','7','8','9','a','b','c','d'
 bool use_backspace = false;
 
 
-void clearScr(void)
+void screen_clear(void)
 {
     uint16_t* ptrTmp = (uint16_t*)VGA_TEXT_MEMORY;
     for(int i = 0; i < (80 * 28); i++)
@@ -467,7 +467,7 @@ void xscanf(char* str, ... )
     char buffer[50];
 
     for(int i = 0; i < 50;i++)
-        comBuf[i] = '\0';
+        command_buffer[i] = '\0';
 
     for(int i = 0; i < 50;i++)
         buffer[i] = '\0';
@@ -506,7 +506,7 @@ void xscanf(char* str, ... )
             if(index)
                 index--;
 
-            comBuf[index] = '\0';
+            command_buffer[index] = '\0';
             Screen.cursor[Screen.y][Screen.x] = '\0';
 
             Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((lred << 4) | white) << 8));

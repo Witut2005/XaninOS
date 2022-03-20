@@ -7,7 +7,7 @@
 void loadch(uint32_t address)
 {
 
-    clearScr();
+    screen_clear();
 
     char* data_pointer = (char*)(address);
 

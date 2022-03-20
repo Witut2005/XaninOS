@@ -16,17 +16,12 @@
 #include <lib/algorithm.h>
 
 
-char* tmpStr;
-
 
 /*--------------------------------------/
 |wesolego nowego roku :))               |
 |niech xanin rośnie i rośnie            |
 |ja, rok 2021, 31 grudzień, 23:52:35    |
 /--------------------------------------*/
-
-
-
 
 void _start(void)
 {
@@ -35,7 +30,7 @@ void _start(void)
 
     disable_cursor();
 
-    clearScr();
+    screen_clear();
     asm("cli");    //disable interrupts while IDT is not configured
     screen_init(); //init screen management system
 
@@ -43,7 +38,7 @@ void _start(void)
     //*(char*)VGA_TEXT_MEMORY = 0x41;
     //*(char*)(VGA_TEXT_MEMORY + 1) = 0x42;
     set_idt();
-    getTime();
+    time_get();
     keyboard_init();
     
     for(char* i = (char*)0x0; (uint32_t)i < 0x20000; i++)
@@ -54,7 +49,7 @@ void _start(void)
     /*
 
     char a[20],b[20];
-    clearScr();
+    screen_clear();
 
     for(int i = 0; i < 20; i++)
         a[i] = '\0';
@@ -84,7 +79,7 @@ void _start(void)
 
 
 
-    keyboard_command = comBuf;
+    keyboard_command = command_buffer;
 
 
     xprintf("DETECTING USB CONTROLLERS. PLEASE WAIT...\n");
@@ -136,12 +131,12 @@ void _start(void)
 
     tuiInit:
 
-    clearScr();
+    screen_clear();
     
     //asm("int 0xFF");
     //asm("int 13");// <-- GENERAL PROTECTION EXCEPTION TEST
 
-    getTime();
+    time_get();
 
    
     //xprintf("xaninOS\n");
@@ -176,7 +171,7 @@ void _start(void)
         if(app_exited)
         {
             app_exited = false;
-            for(int i = 0; i < sizeof(comBuf); i++)
+            for(int i = 0; i < sizeof(command_buffer); i++)
                 keyboard_command[i] = '\0';
             goto tuiInit;
         }

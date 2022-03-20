@@ -14,6 +14,7 @@ void note_input(void)
 {
 
     uint8_t selected_character;
+    uint8_t x_save, y_save;
 
     if((uint32_t)&Screen.cursor[Screen.y][Screen.x] < VGA_TEXT_MEMORY)
     {
@@ -25,6 +26,14 @@ void note_input(void)
         Screen.y--;
     }
 
+    x_save = Screen.x;
+    y_save = Screen.y;
+
+    xprintf("%h",(cursor_set_position(0,27)));
+    xprintf("         ");
+
+    Screen.x = x_save;
+    Screen.y = y_save;
 
     if(KeyInfo.is_bspc)
     {       
@@ -129,7 +138,6 @@ void note_input(void)
         }
     }  
 
-    uint8_t x_save, y_save;
 
 
     x_save = Screen.x;
@@ -154,7 +162,7 @@ void note_input(void)
 
 void xin_note(char* file_name)
 {
-    clearScr();
+    screen_clear();
     keyboard_handle = note_input;
     use_backspace = true;
 
