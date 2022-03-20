@@ -26,7 +26,7 @@ cd ..
 
 #COMPILE																										 HERE YOU MUST PUT PATH TO SRC DIRECTORY
 
-i386-elf-gcc -O0 -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-int-conversion -Wno-unused-function -I /home/muto/Desktop/xaninOS/src kernel.c ./handlers/keyboard.o ./pit/pit.o ./syscall/syscall.o -o kernel.bin
+i386-elf-gcc -O0 -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-int-conversion -Wno-unused-function -I /home/muto/xaninOS/src kernel.c ./handlers/keyboard.o ./pit/pit.o ./syscall/syscall.o -o kernel.bin
 
 #dd if=/dev/zero of=zero.img bs=512 count=2024
 
