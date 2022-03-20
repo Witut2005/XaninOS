@@ -45,7 +45,7 @@ void nano()
     {
     
         
-        clearScr();
+        clear_scr();
         
 
         

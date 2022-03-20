@@ -81,7 +81,7 @@ void scan(void)
 
     else if(cmpstr(program_name,"reg_dump"))
     {
-        clearScr();
+        clear_scr();
         reg_dump();
         while(getscan() != ENTER);
     }
@@ -189,7 +189,7 @@ void scan(void)
         xprintf("e");
         //while(KeyInfo.scan_code != ENTER);
         
-        clearScr();
+        clear_scr();
         tetris();
         */
     }
@@ -236,7 +236,7 @@ void scan(void)
         //xprintf("j");
         //while(KeyInfo.scan_code != ENTER);
         
-        clearScr();
+        clear_scr();
         y = 2;
         x = 0;
 
@@ -274,7 +274,7 @@ void scan(void)
         //xprintf("s");
         //while(KeyInfo.scan_code != ENTER);
         
-        clearScr();
+        clear_scr();
         app_exited = true;
     }
 

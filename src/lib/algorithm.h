@@ -2,7 +2,7 @@
 
 #include <lib/string.h>
 #include <stddef.h>
-
+#include <lib/stdiox.h>
 char* find_character(char character, char* str)
 {
 
@@ -16,4 +16,10 @@ char* find_character(char character, char* str)
 
 	return nullptr;
 
+}
+
+void print_array(int array[], int n)  //n=size of array
+{
+    for(int i=0; i<n; i++)
+        xprintf("%d ", array[i]);
 }
