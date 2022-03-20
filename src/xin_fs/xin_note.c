@@ -154,7 +154,7 @@ void note_input(void)
 
 void xin_note(char* file_name)
 {
-    clear_scr();
+    clearScr();
     keyboard_handle = note_input;
     use_backspace = true;
 
