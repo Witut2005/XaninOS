@@ -33,7 +33,7 @@ void scan(void)
     for(int i = 0; i < 40; i++)
         putchar(keyboard_command[i]);
 
-    //while(KeyInfo.scan_code != ENTER);
+    while(KeyInfo.scan_code != ENTER);
 
     if(cmpstr(program_name,"touch"))
     {

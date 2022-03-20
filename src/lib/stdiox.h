@@ -512,7 +512,7 @@ void xscanf(char* str, ... )
 
             if((char)Screen.cursor[Screen.y][Screen.x - 1] == character_blocked && character_blocked != '\0')
             {
-                return;
+                goto start;
             }
 
 

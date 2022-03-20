@@ -82,8 +82,8 @@ void terminal_keyboard(void)
 
         Screen.x--;
         
-        //if(index)
-        //    index--;
+        if(index)
+            index--;
 
         Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | ((lred << 4) | white) << 8);
     }
