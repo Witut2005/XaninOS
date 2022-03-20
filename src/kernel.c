@@ -49,7 +49,7 @@ void _start(void)
     //*(char*)VGA_TEXT_MEMORY = 0x41;
     //*(char*)(VGA_TEXT_MEMORY + 1) = 0x42;
     set_idt();
-    getTime();
+    get_time();
     keyboard_init();
     
     for(char* i = (char*)0x0; (uint32_t)i < 0x20000; i++)
@@ -145,7 +145,7 @@ void _start(void)
     //asm("int 0xFF");
     //asm("int 13");// <-- GENERAL PROTECTION EXCEPTION TEST
 
-    getTime();
+    get_time();
 
    
     //xprintf("xaninOS\n");

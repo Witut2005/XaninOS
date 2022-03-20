@@ -26,7 +26,7 @@ void scan(void)
 
     keyboard_handle = nullptr;
 
-    keyboard_buffer_refresh(&Screen.cursor[8][1]);
+    //keyboard_buffer_refresh(&Screen.cursor[8][1]);
 
     xprintf("command:\n");
 
