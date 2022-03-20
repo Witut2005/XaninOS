@@ -13,7 +13,7 @@
 #include <devices/USB/usb.c>
 #include <devices/HARD_DISK/disk.c>
 #include <xin_fs/xin.c>
-
+#include <lib/algorithm.h>
 
 
 char* tmpStr;
@@ -44,6 +44,7 @@ void _start(void)
     set_idt();
     get_time();
     keyboard_init();
+
 
 
     /*
