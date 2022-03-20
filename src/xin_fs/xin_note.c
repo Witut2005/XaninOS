@@ -8,16 +8,7 @@
 #include <lib/string.h>
 
 
-void move_letters(uint16_t* cursor_current_positon)
-{
 
-    cursor_current_positon++;
-
-    for(uint16_t* i = cursor_current_positon; (uint32_t)i < VGA_TEXT_MEMORY + VGA_SCREEN_RESOLUTION; i++)
-    {
-        *(i - 1) = *i;
-    }
-}
 
 void note_input(void)
 {
@@ -53,7 +44,7 @@ void note_input(void)
 
         msleep(10);
         KeyInfo.is_bspc = false;
-        move_letters(&Screen.cursor[Screen.y][Screen.x]);
+        letters_refresh(&Screen.cursor[Screen.y][Screen.x]);
     
     }
 
@@ -126,7 +117,12 @@ void note_input(void)
 
     else
     {
-        xprintf("%c", getchar());
+        if(KeyInfo.character)
+        {
+            char character_saved_tmp = (char)Screen.cursor[Screen.y][Screen.x];
+            xprintf("%c", getchar());
+            letters_refresh_add(&Screen.cursor[Screen.y][Screen.x], character_saved_tmp);
+        }
     }  
 
     /*

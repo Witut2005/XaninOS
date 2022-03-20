@@ -24,8 +24,16 @@ void scan(void)
 
     character_blocked = '\0';
 
-
     keyboard_handle = nullptr;
+
+    keyboard_buffer_refresh(&Screen.cursor[8][1]);
+
+    xprintf("command:\n");
+
+    for(int i = 0; i < 40; i++)
+        putchar(keyboard_command[i]);
+
+    //while(KeyInfo.scan_code != ENTER);
 
     if(cmpstr(program_name,"touch"))
     {

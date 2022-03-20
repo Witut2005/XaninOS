@@ -39,7 +39,6 @@ enum special_keys
 
 
 uint8_t keyboard_scan_code;
-uint16_t ugalol;
 
 uint8_t keyboard_map[128] = {
   // -------- 0 to 9 --------
@@ -53,7 +52,7 @@ uint8_t keyboard_map[128] = {
   'q','w','e','r',
   // -------- 20 to 29 --------
   't','y','u','i','o','p','[',']',
-  ' ', // Enter
+  '\0', // Enter
   ' ', // left Ctrl
   // -------- 30 to 39 --------
   'a','s','d','f','g','h','j','k','l',';',
@@ -96,7 +95,7 @@ uint8_t keyboard_map[128] = {
   '\0', // numpad 2, down arrow if preceded by keycode 224
   '3', // numpad 3, PAGE DOWN key if preceded by keycode 224
   '0', // numpad 0, INSERT key if preceded by keycode 224
-  '.', // numpad dot, DELETE key if preceded by keycode 224
+  '\0', // numpad dot, DELETE key if preceded by keycode 224
   ' ',' ',' ',' ',' ',' ',
   // -------- 90 to 99 --------
   ' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',

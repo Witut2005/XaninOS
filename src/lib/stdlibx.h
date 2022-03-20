@@ -8,7 +8,8 @@
 #include <headers/colors.h>
 #include <handlers/handlers.c>
 
-
+char comBuf[50];
+char* keyboard_command;
 
 struct TIME
 {
@@ -52,6 +53,13 @@ char getscan(void)
     uint8_t tmp = KeyInfo.scan_code;
     KeyInfo.scan_code = 0x0;
     return tmp;
+}
+
+char* keyboard_buffer_refresh(uint16_t* screen_buffer)
+{
+    for(int i = 0; i < 50; i++)
+        keyboard_command[i] = *(char*)(screen_buffer + i);
+
 }
 
 void getTime()

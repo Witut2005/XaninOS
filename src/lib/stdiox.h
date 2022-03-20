@@ -20,8 +20,7 @@
 static char* keyString = "keyboard initalized succed :))\n";
 static char HEX_LUT[] = {'0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f'};
 
-char comBuf[50];
-char* keyboard_command;
+
 
 bool use_backspace = false;
 
@@ -540,6 +539,7 @@ void xscanf(char* str, ... )
 
             msleep(10);
             KeyInfo.is_bspc = false;
+            letters_refresh(&Screen.cursor[Screen.y][Screen.x]);
         }
 
         else if(KeyInfo.scan_code == ENTER)
@@ -668,10 +668,20 @@ void xscanf(char* str, ... )
         {
             char tmp = getchar();
             Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((black << 4) | white) << 8));
+            char character_saved = (char)(Screen.cursor[Screen.y][Screen.x]);
+            
+            //Screen.cursor[Screen.y][Screen.x + 1] = (uint16_t)(' ' + (((black << 4) | white) << 8));
+
+
+
             xprintf("%c", tmp);
+
+            letters_refresh_add(&Screen.cursor[Screen.y][Screen.x], character_saved);
+
             Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((lred << 4) | white) << 8));
             keyboard_command[index] = tmp;
             index++;
+
         }    
     }
 
