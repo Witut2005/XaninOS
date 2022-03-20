@@ -8,6 +8,17 @@
 #include <lib/string.h>
 
 
+void move_letters(uint16_t* cursor_current_positon)
+{
+
+    cursor_current_positon++;
+
+    for(uint16_t* i = cursor_current_positon; (uint32_t)i < VGA_TEXT_MEMORY + VGA_SCREEN_RESOLUTION; i++)
+    {
+        *(i - 1) = *i;
+    }
+}
+
 void note_input(void)
 {
 
@@ -24,8 +35,29 @@ void note_input(void)
     }
 
 
+    if(KeyInfo.is_bspc)
+    {       
+        Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((black << 4) | white) << 8));
 
-    if(KeyInfo.is_up)
+        if(!Screen.x)
+        {
+            Screen.y--;
+            Screen.x = 79;
+            return;
+        }
+
+        Screen.x--;
+
+        Screen.cursor[Screen.y][Screen.x] = '\0';
+        Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((lred << 4) | white) << 8));
+
+        msleep(10);
+        KeyInfo.is_bspc = false;
+        move_letters(&Screen.cursor[Screen.y][Screen.x]);
+    
+    }
+
+    else if(KeyInfo.is_up)
     {
 
         Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | (((black << 4) | white) << 8));
@@ -83,6 +115,13 @@ void note_input(void)
         }
 
 
+    }
+
+    else if(getscan() == ENTER)
+    {
+        Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | (((black << 4) | white) << 8));
+        xprintf("\r\n");
+        Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | (((lred << 4) | white) << 8));
     }
 
     else

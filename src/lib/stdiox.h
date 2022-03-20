@@ -507,7 +507,42 @@ void xscanf(char* str, ... )
     while(1)
     {
 
-        if(KeyInfo.scan_code == ENTER)
+        if(KeyInfo.is_bspc)
+        {
+            Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((black << 4) | white) << 8));
+
+            if((char)Screen.cursor[Screen.y][Screen.x - 1] == character_blocked && character_blocked != '\0')
+            {
+                return;
+            }
+
+
+
+            if(!Screen.x)
+            {
+                Screen.y--;
+                Screen.x = 79;
+                return;
+            }
+
+            Screen.x--;
+
+
+
+            if(index)
+                index--;
+
+            comBuf[index] = '\0';
+            Screen.cursor[Screen.y][Screen.x] = '\0';
+
+            Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((lred << 4) | white) << 8));
+
+
+            msleep(10);
+            KeyInfo.is_bspc = false;
+        }
+
+        else if(KeyInfo.scan_code == ENTER)
         {
             while(str[str_counter])
             {
