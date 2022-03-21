@@ -179,15 +179,7 @@ struct
 reg_t Register;
 seg_t SegmentRegister;
 
-/*
-void* malloc(size_t size)
-{
 
-    //uint16_t 
-    char* allocation_table = (char*)0x40000;
-
-}
-*/
 
 void int_swap(int *xp, int *yp)
 {
@@ -196,7 +188,7 @@ void int_swap(int *xp, int *yp)
     *yp = temp;
 }
 
-void bubble_sort(int array[], int n)  //syntax bubble_sort(array[], n=size of array)
+void bubble_sort(int* array, int n)  //syntax bubble_sort(array[], n=size of array)
 {
 bool swapped;
 int i, j;
@@ -217,7 +209,7 @@ int i, j;
 
 }
 
-void merge(int array[], int first, int middle, int last)
+void merge(int* array, int first, int middle, int last)
 {
     int i, j, k;
     int n1 = middle - first + 1;  //sizeof
@@ -274,6 +266,36 @@ void merge_sort(int array[], int first, int last)
 
         merge(array, first, middle, last);
     }
+
+}
+
+uint16_t* memory_managament_map = (uint16_t*)0x20000; 
+
+void bit_set(uint16_t* address, uint16_t bit_number)
+{
+    *address |= (1 << bit_number);
+}
+
+bool bit_clear(uint16_t* address, uint16_t bit_number)
+{
+    *address -= (1 << bit_number);
+}
+
+void memory_manager_init(void)
+{
+    for(char* i = 0x20000; (uint32_t)i <= 0x40000; i++)
+        *i = 0x0;
+}
+
+void* malloc(uint16_t size)
+{
+    char* allocation_table = (char*)0x20000;
+
+    //*allocation_table = 
+}
+
+void* free(uint16_t* addr)
+{
 
 
 

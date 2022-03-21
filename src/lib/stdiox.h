@@ -21,10 +21,7 @@
 static char* keyString = "keyboard initalized succed :))\n";
 static char HEX_LUT[] = {'0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f'};
 
-
-
 bool use_backspace = false;
-
 
 void screen_clear(void)
 {
@@ -509,7 +506,7 @@ void xscanf(char* str, ... )
             command_buffer[index] = '\0';
             Screen.cursor[Screen.y][Screen.x] = '\0';
 
-            Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((lred << 4) | white) << 8));
+            Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((white << 4) | white) << 8));
 
 
             msleep(10);
@@ -656,7 +653,7 @@ void xscanf(char* str, ... )
             keyboard_refresh_add(index, character_saved);
 
 
-            Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((lred << 4) | white) << 8));
+            Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((white << 4) | white) << 8));
             keyboard_command[index] = tmp;
             index++;
 

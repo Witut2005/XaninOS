@@ -33,7 +33,8 @@ enum special_keys
   W_KEY = 0x11,
   S_KEY = 0x1F,
   O_KEY = 0x18,
-  J_KEY = 0x24
+  J_KEY = 0x24,
+  TAB_KEY = 0xF
 };
 
 

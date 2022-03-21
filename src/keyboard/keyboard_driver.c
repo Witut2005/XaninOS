@@ -60,6 +60,7 @@ void keyboard_driver(uint8_t scanCode)
         case CAPS: 
         {
             KeyInfo.is_caps = KeyInfo.is_caps  ?  false : true; 
+            return;
         }
 
         case ARROW_UP: {KeyInfo.is_up = true; return;}

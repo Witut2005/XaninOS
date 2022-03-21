@@ -40,7 +40,7 @@ void note_input(void)
         Screen.x--;
 
         Screen.cursor[Screen.y][Screen.x] = '\0';
-        Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((lred << 4) | white) << 8));
+        Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((white << 4) | black) << 8));
 
         msleep(10);
         KeyInfo.is_bspc = false;
@@ -56,7 +56,7 @@ void note_input(void)
         if((uint32_t)&Screen.cursor[Screen.y - 1][Screen.x] >= VGA_TEXT_MEMORY)
             Screen.y--;
 
-        Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | (((lred << 4) | white) << 8));
+        Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | (((white << 4) | black) << 8));
 
     }
 
@@ -68,7 +68,7 @@ void note_input(void)
         if((uint32_t)&Screen.cursor[Screen.y + 1][Screen.x] <= VGA_TEXT_MEMORY + VGA_SCREEN_RESOLUTION)
             Screen.y++;
 
-        Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | (((lred << 4) | white) << 8));
+        Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | (((white << 4) | black) << 8));
 
     }
 
@@ -79,7 +79,7 @@ void note_input(void)
 
         Screen.x++;
 
-        Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | (((lred << 4) | white) << 8));
+        Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | (((white << 4) | black) << 8));
 
 
         if(Screen.x == 80)
@@ -93,11 +93,8 @@ void note_input(void)
     else if(KeyInfo.is_left)
     {
 
-
         Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | (((black << 4) | white) << 8));
-
-        
-
+    
         if(Screen.x == 0)
         {
             Screen.x = 80;
@@ -107,7 +104,7 @@ void note_input(void)
 
         Screen.x--;
 
-        Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | (((lred << 4) | white) << 8));
+        Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | (((white << 4) | black) << 8));
 
 
     }
@@ -116,7 +113,14 @@ void note_input(void)
     {
         Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | (((black << 4) | white) << 8));
         xprintf("\r\n");
-        Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | (((lred << 4) | white) << 8));
+        Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | (((white << 4) | black) << 8));
+    }
+
+    else if(KeyInfo.scan_code == TAB_KEY)
+    {
+        Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | (((black << 4) | white) << 8));
+        Screen.x += 3;
+        Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | (((white << 4) | black) << 8));
     }
 
     else
@@ -131,11 +135,12 @@ void note_input(void)
 
 
 
+
     x_save = Screen.x;
     y_save = Screen.y;
 
     xprintf("%h",(cursor_set_position(0,27)));
-    xprintf("y%x x%x",y_save,x_save);
+    xprintf("x%x y%x",x_save,y_save);
 
     Screen.x = x_save;
     Screen.y = y_save;

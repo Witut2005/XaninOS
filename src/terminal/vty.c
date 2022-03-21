@@ -80,11 +80,8 @@ void terminal_keyboard(void)
 {
     if(KeyInfo.is_left)
     {        
-        //Screen.cursor[Screen.y][Screen.x] = (uint16_t)(selected_character | ((black << 4) | white) << 8);
         
         Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | (((black << 4) | white) << 8));
-        
-
 
         if((char)Screen.cursor[Screen.y][Screen.x - 1] == character_blocked)
         {
@@ -103,7 +100,7 @@ void terminal_keyboard(void)
         if(index)
             index--;
 
-        Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | ((lred << 4) | white) << 8);
+        Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | ((white << 4) | black) << 8);
     }
 
     else if(KeyInfo.is_right)
@@ -131,7 +128,7 @@ void terminal_keyboard(void)
         //    index--;
 
 
-        Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | ((lred << 4) | white) << 8);    
+        Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | ((white << 4) | black) << 8);    
     }
 
 

@@ -48,7 +48,7 @@ void set_pit()
     set_pit_divisor(0);
 }
 
-/*
+/*22
 
 void sleep(uint32_t miliseconds)
 {

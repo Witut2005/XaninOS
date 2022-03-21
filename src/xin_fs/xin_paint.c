@@ -129,7 +129,7 @@ void paint_input(void)
     y_save = Screen.y;
 
     xprintf("%h",(cursor_set_position(0,27)));
-    xprintf("y%x x%x",y_save,x_save);
+    xprintf("x%x y%x",x_save,y_save);
 
     Screen.x = x_save;
     Screen.y = y_save;        

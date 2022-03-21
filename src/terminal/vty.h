@@ -89,7 +89,6 @@ bool caps_on = false;
 bool print_off = false;
 bool key_released = false;
 bool lshift_pressed = false;
-
 bool in_graphic_mode = false;
 
 typedef void (*keyboard_handle_input)(void);

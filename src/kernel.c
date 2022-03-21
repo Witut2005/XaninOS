@@ -68,34 +68,8 @@ void _start(void)
 
     */
 
-
-    xprintf("%z  .GBJ     ?BBY.                     ,,\n", set_output_color(logo_back_color, logo_front_color));
-    xprintf("%z   :B#Y  !G#P^   .,,.     ..  ..     ''   ..  ..\n", set_output_color(logo_back_color, logo_front_color));
-    xprintf("%z    .G#//#G~    ?PYJJ5P   HuCJJ5G    55  HuCJJJPP.\n", set_output_color(logo_back_color, logo_front_color));
-    xprintf("%z     >###<     ~.   .G#.  I#D   7#:  GP  I#D    P#:\n", set_output_color(logo_back_color, logo_front_color));
-    xprintf("%z   .5#BG#P.    !JYYJ?G#.  I#^   ^#:  GP  I#^    Y#:\n", set_output_color(logo_back_color, logo_front_color));
-    xprintf("%z .Y##/ i#G.   ?#^   :G#.  I#^   ~#:  GP  I#^    Y#:%z  version 22.03v\n", set_output_color(logo_back_color, logo_front_color), set_output_color(black,white));
-    xprintf("%z7GB5.    5BG. .5G555J?B^  I#^   ^#:  P5  I#^    JB:%z  weekday: %s \n\n\n", set_output_color(logo_back_color, logo_front_color), set_output_color(black,white), weekDaysLUT[time.weekDay]);
-
-
-
-    keyboard_command = command_buffer;
-
-
-    xprintf("DETECTING USB CONTROLLERS. PLEASE WAIT...\n");
-
-    usb_detect();
-
-    xprintf("\n%zUSB DETECTION TEST ENDED. PRESS ENTER TO START XANIN OS\n",
-            set_output_color(green,white));
-
-
-
-
-    xprintf("\n\n");
-
-
     set_pit();
+
 
     while(!pitActive)
     {
@@ -109,13 +83,46 @@ void _start(void)
 
     cpu_khz = cpu_khz * 7;
     cpu_mhz = cpu_mhz * 7;
+
+    /*
+    uint16_t dd = 10;
+    xprintf("0x%x\n", dd);
+    bit_clear(&dd, 1);
+    xprintf("0x%x\n", dd);
+    */
+
     
+    /*
+
+    xprintf("%z  .GBJ     ?BBY.                     ,,\n", set_output_color(logo_back_color, logo_front_color));
+    xprintf("%z   :B#Y  !G#P^   .,,.     ..  ..     ''   ..  ..\n", set_output_color(logo_back_color, logo_front_color));
+    xprintf("%z    .G#//#G~    ?PYJJ5P   HuCJJ5G    55  HuCJJJPP.\n", set_output_color(logo_back_color, logo_front_color));
+    xprintf("%z     >###<     ~.   .G#.  I#D   7#:  GP  I#D    P#:\n", set_output_color(logo_back_color, logo_front_color));
+    xprintf("%z   .5#BG#P.    !JYYJ?G#.  I#^   ^#:  GP  I#^    Y#:\n", set_output_color(logo_back_color, logo_front_color));
+    xprintf("%z .Y##/ i#G.   ?#^   :G#.  I#^   ~#:  GP  I#^    Y#:%z  version 22.03v\n", set_output_color(logo_back_color, logo_front_color), set_output_color(black,white));
+    xprintf("%z7GB5.    5BG. .5G555J?B^  I#^   ^#:  P5  I#^    JB:%z  weekday: %s \n\n\n", set_output_color(logo_back_color, logo_front_color), set_output_color(black,white), weekDaysLUT[time.weekDay]);
+
+    */
+
+    keyboard_command = command_buffer;
+
+    xprintf("DETECTING USB CONTROLLERS. PLEASE WAIT...\n");
+
+    usb_detect();
+
+    xprintf("\n%zUSB DETECTION TEST ENDED. PRESS ENTER TO START XANIN OS\n",
+            set_output_color(green,white));
+
+
+    xprintf("\n\n");
+   
 
     //xprintf("cpu mhz %dMHz\n", cpu_mhz);
     //xprintf("cpu khz %dKHz\n", cpu_khz);
 
-    while(getscan() != ENTER);
+    zsk("100");
 
+    //while(getscan() != ENTER);
     //getCpuSpeed();
 
     srand(time.seconds);
