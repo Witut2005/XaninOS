@@ -26,6 +26,18 @@ void note_input(void)
     Screen.x = x_save;
     Screen.y = y_save;
 
+    if((uint32_t)&Screen.cursor[Screen.y][Screen.x] < VGA_TEXT_MEMORY)
+    {
+        Screen.x = 0x0;
+        Screen.y = 0x0;
+    }
+
+    if((uint32_t)&Screen.cursor[Screen.y][Screen.x ] >= VGA_TEXT_MEMORY + VGA_SCREEN_RESOLUTION)
+    {
+        Screen.x = 79;
+        Screen.y = 27;
+    }
+
     if(KeyInfo.is_bspc)
     {       
         Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((black << 4) | white) << 8));

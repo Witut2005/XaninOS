@@ -35,6 +35,13 @@ void paint_input(void)
         selected_cell = '\0';
     }
 
+    if((uint32_t)&Screen.cursor[Screen.y][Screen.x] >= VGA_TEXT_MEMORY + VGA_SCREEN_RESOLUTION)
+    {
+        Screen.x = 79;
+        Screen.y = 27;
+        selected_cell = '\0';
+    }
+
     if(KeyInfo.is_up)
     {
         Screen.cursor[Screen.y][Screen.x] = selected_cell;

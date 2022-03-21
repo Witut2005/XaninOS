@@ -47,9 +47,7 @@ void divide_by_zero_exception(void)
 void pit_handler(void)
 {
     pitActive = true;
-
-    pit_current_time++;
-
+    pit_tick(0xFFFF);
 }
 
 void keyboard_handler(void)

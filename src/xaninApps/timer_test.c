@@ -10,6 +10,8 @@ void timer_test(void)
 
     uint32_t current_time = 0;
 
+    screen_clear();
+
     xprintf("Press ENTER to start...");
     while(getscan() != ENTER);
 
