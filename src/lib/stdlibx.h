@@ -179,14 +179,15 @@ struct
 reg_t Register;
 seg_t SegmentRegister;
 
+/*
 void* malloc(size_t size)
 {
 
     //uint16_t 
     char* allocation_table = (char*)0x40000;
 
-
 }
+*/
 
 void int_swap(int *xp, int *yp)
 {
