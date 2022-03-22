@@ -70,6 +70,18 @@ void _start(void)
 
     set_pit();
 
+    //char jed[20], dwa[20];
+
+    /*
+    screen_clear();
+    char jed[20];
+    scanf("%s", jed);
+    xprintf("\n");
+    xprintf("test: %s", jed);
+    */
+
+
+    while(1);
 
 
 
