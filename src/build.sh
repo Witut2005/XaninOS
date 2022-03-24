@@ -30,8 +30,3 @@ cat ./boot/boot ./xin_fs/xin_pointers ./xin_fs/entries_table ./boot/kernelLoader
 dd if=xanin.bin of=xanin.img
 mv xanin.img -f ../bin
 rm xanin.bin 
-
-
-
-
-

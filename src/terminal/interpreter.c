@@ -68,7 +68,7 @@ void scan(void)
 
     else if(cmpstr(program_name,"calc"))
     {
-        //calc();
+        calc();
     }
 
     else if(cmpstr(program_name,"paint"))
@@ -104,6 +104,11 @@ void scan(void)
         keyboard_test();
     }
      
+    else if(cmpstr(program_name,"shooter"))
+    {
+        shooter();
+    }
+
     else if(cmpstr(program_name,"modify"))
     {
         //xprintf("6");

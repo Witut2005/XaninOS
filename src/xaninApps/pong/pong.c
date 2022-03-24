@@ -7,7 +7,7 @@
 void pong_input(void)
 {   
 
-    if(getscan() == W_KEY)
+    if(KeyInfo.scan_code == W_KEY)
     {
         for(int i = 0; i < 6; i++)
         {
@@ -24,7 +24,7 @@ void pong_input(void)
         }
     }
 
-    else if(getscan() == S_KEY)
+    else if(KeyInfo.scan_code == S_KEY)
     {
 
         for(int i = 0; i < 6; i++)
@@ -42,7 +42,7 @@ void pong_input(void)
         }
     }
 
-    else if(getscan() == O_KEY)
+    else if(KeyInfo.scan_code == O_KEY)
     {
         for(int i = 0; i < 6; i++)
         {
@@ -59,7 +59,7 @@ void pong_input(void)
         }
     }
 
-    else if(getscan() == J_KEY)
+    else if(KeyInfo.scan_code == J_KEY)
     {
 
         for(int i = 0; i < 6; i++)
@@ -84,7 +84,38 @@ void pong_input(void)
 
 void pong_update(void)
 {
-    while(getscan() != ENTER);
+    while(getscan() != ENTER)
+    {
+     
+        msleep(5);
+     
+        switch(rand() % 3)
+        {
+            case 0:
+            {
+                *ball = '\0';
+                ball++;
+                break;
+            }
+
+            case 1:
+            {
+                *ball = '\0';
+                ball = ball - 80 + ball_direction;
+                *ball = (' ' + (((white << 4) | white) << 8));
+                break;
+                *ball = (' ' + (((white << 4) | white) << 8));
+            }
+
+            case 2:
+            {
+                *ball = '\0';
+                ball = ball + 80 + ball_direction;
+                *ball = (' ' + (((white << 4) | white) << 8));
+                break;
+            }
+        }
+    }
 }
 
 void pong_init(void)
@@ -106,6 +137,9 @@ void pong_init(void)
     
     pong1_y = 10;
     pong2_y = 10;
+    ball = &Screen.cursor[14][39];
+
+    *ball = (' ' + (((white << 4) | white) << 8));
 
     pong_update();
 
