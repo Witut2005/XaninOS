@@ -14,7 +14,10 @@ uint16_t* ball;
 int ball_direction = 1;
 int ball_vector = 1;
 
+char player1_input, player2_input;
+
 void pong_init(void);
 void pong_update(void);
 void pong_input(void);
+void pong_get_input(void);
 void pong(void);

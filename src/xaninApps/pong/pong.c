@@ -38,6 +38,21 @@ void pong_init(void)
 
 }
 
+/*
+void pong_get_input(void)
+{
+    if(KeyInfo.character == 'w' || KeyInfo.character == 's')
+        player1_input = KeyInfo.character;
+
+    else if(KeyInfo.scan_code == ARROW_UP)
+        player2_input = 'p';
+
+    else if(KeyInfo.scan_code == ARROW_DOWN)
+        player2_input = 'l';
+        
+}
+*/
+
 void pong_input(void)
 {   
 
@@ -110,7 +125,7 @@ void pong_input(void)
 
     else if(KeyInfo.scan_code == ARROW_DOWN || KeyInfo.character == 'l')
     {
-        if(pong2_y == 26)
+        if(pong2_y == 21)
             return;
 
         for(int i = 0; i < 6; i++)
@@ -142,7 +157,7 @@ void pong_update(void)
     while(getscan() != ENTER)
     {
     
-        msleep(75);
+        msleep(100);
        
         *ball = '\0';
         ball = ball + ball_direction;
@@ -152,9 +167,12 @@ void pong_update(void)
 
 
         if(*(ball + ball_direction) == (uint16_t)(' ' + (((lgray << 4) | lgray) << 8)))
+            ball_direction = ball_direction * -1;
+        
+        if(*ball == (uint16_t)(' ' + (((lgray << 4) | lgray) << 8)))
         {
             ball_direction = ball_direction * -1;
-            
+            ball = ball - 1;       
         }
 
 
