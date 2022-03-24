@@ -121,7 +121,7 @@ void scan(void)
 	
     else if(cmpstr(program_name, "pong"))
     {
-        pong_init();
+        pong();
         
     }
 
