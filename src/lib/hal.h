@@ -54,6 +54,10 @@ void disable_cursor(void)
 	   outbIO(0x3D5, 0x20);
 }
 
+void eoi_send(void)
+{
+    asm("out 0x20, al" :: "a"(0x20));
+}
 
 
 #endif

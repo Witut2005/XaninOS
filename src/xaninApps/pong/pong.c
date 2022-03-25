@@ -229,13 +229,13 @@ void pong(void)
         pong_update();
         if(player1_points == 5)
         {
-            result_screen("PLAYER 1");
+            result_screen("RIGHT PLAYER");
             pong_init();
         }
 
         else if(player2_points == 5)
         {
-            result_screen("PLAYER 2");
+            result_screen("LEFT PLAYER");
             pong_init();
             
         }

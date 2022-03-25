@@ -533,7 +533,7 @@ ata3: enabled=0, ioaddr1=0x168, ioaddr2=0x360, irq=9
 #ata0-master: type=disk, mode=flat, path=xanin.img, cylinders=306, heads=4, spt=17
 #ata0-master: type=disk, path="xanin.img", mode=flat, cylinders=101, heads=16, spt=63
 
-ata0-master: type=disk, path="xanin.img", mode=flat
+ata0-master: type=disk, path="xanin.img", mode=flat, cylinders=306, heads=4, spt=17
 
 #ata0-master: type=disk, mode=flat, path="xanin.img"
 #ata0-master: type=disk, mode=flat, path="30M.sample", cylinders=615, heads=6, spt=17
