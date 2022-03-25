@@ -101,10 +101,18 @@ void player2_get_input(void)
 
 void result_screen(char* str)
 {
+
+    player1_points = 0;
+    player2_points = 0;
+
+    player1_input = 0;
+    player2_input = 0;
+
     screen_clear();
     Screen.x = 33;
     Screen.y = 12;
     xprintf("%s wins", str);
+    
     while(KeyInfo.scan_code != ENTER);
 }
 
@@ -115,17 +123,19 @@ void ball_update(void)
     ball = ball + ball_direction;     
     ball = ball + (80 * ball_vector);
 
+    Screen.cursor[3][25] = (uint16_t)((player1_points + '0') + (((black << 4) | white) << 8));
+    Screen.cursor[3][54] = (uint16_t)((player2_points + '0') + (((black << 4) | white) << 8));
 
     if(*(ball + ball_direction) == (uint16_t)(' ' + (((lgray << 4) | lgray) << 8)))
         ball_direction = ball_direction * -1;
         
     if(*ball == (uint16_t)(' ' + (((lgray << 4) | lgray) << 8)))
     {
-        ball_direction = ball_direction * -1;
-        ball = ball - 1;       
+        ball = ball - (1 * ball_direction);      
+        ball_direction = ball_direction * -1; 
     }
 
-    if(rand() % 5 == 4)
+    if(!(rand() % 4))
         ball = ball + ball_direction;
 
 
@@ -155,6 +165,9 @@ void pong_init(void)
 {
 
 
+    player1_input = 0;
+    player2_input = 0;
+
     screen_clear();
 
     drawLineX(0,79,0,lgreen);
@@ -162,7 +175,6 @@ void pong_init(void)
 
     drawLineY(0,27,0,green);
     drawLineY(0,27,79,green);
-
 
     keyboard_handle = pong_get_input;
 
@@ -191,15 +203,19 @@ void pong_init(void)
 void pong_update(void)
 {
 
-    ball_update();
     player1_get_input();
     player2_get_input();
+    ball_update();
 
-    msleep(100);
+    msleep(75);
 
     if(KeyInfo.character == 'r')    
+    {
+        player1_points = 0;
+        player2_points = 0;
         pong_init();
-    
+    }
+        
 }
 
 
@@ -208,17 +224,20 @@ void pong(void)
 {
     pong_init();
 
-    while(KeyInfo.scan_code != ENTER && app_exited != true)
+    while(KeyInfo.scan_code != ESC && app_exited != true)
     { 
         pong_update();
         if(player1_points == 5)
         {
             result_screen("PLAYER 1");
+            pong_init();
         }
 
         else if(player2_points == 5)
         {
             result_screen("PLAYER 2");
+            pong_init();
+            
         }
     }
 
