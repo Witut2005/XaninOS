@@ -83,6 +83,14 @@ mov ah, 0x42
 mov dl, [BOOT_DISK_NUMBER]
 int 0x13
 
+mov word [lba], 0xD + 0x6A
+mov word [offset], 0x6A * 0x200
+
+mov si, DAP
+mov ah, 0x42
+mov dl, [BOOT_DISK_NUMBER]
+int 0x13
+
 mov word [lba], 0x2
 mov word [offset], 0x800
 mov word [segment_num], 0x0
