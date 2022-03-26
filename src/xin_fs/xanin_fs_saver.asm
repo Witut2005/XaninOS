@@ -1,26 +1,28 @@
+extern xanin_saver_c
 
-
-
-idt_real_info:
-    dw 0x03ff
-    dw 0x0000
-    dw 0x0000
-
+global xanin_saver
 
 xanin_saver:
-    cli
-    mov eax, 0x28
-    mov ds, eax
-    mov fs, eax
-    mov gs, eax
-    mov ss, eax
-    mov es, eax
 
-    ;lidt idt_real_info  
-    
+
+    mov al, 0x8
+    out 0x21, al
+
+    mov al, 0x70
+    out 0xa1, al
+
+    call xanin_saver_c
+
+    ;jmp 0x20:prot16
+
+    ;prot16:
+
     mov eax, cr0
     xor eax, 0x1 
     mov cr0,eax
+    
+    mov ax, 0x0
+    jmp word 0x0:0x7c02
 
-;    jmp word 0x20:0x7c02
-    jmp word 0x0:0x7a05
+
+

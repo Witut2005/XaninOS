@@ -90,10 +90,6 @@ out 0xA1,al
 
 
 ;stack test 
-nop
-nop
-nop
-
 push 0x11111111
 push 0x22222222
 push 0x33333333
@@ -213,7 +209,7 @@ _GDT:
     dd 0x0000ffff 
     db 0x0
     db 10011010b
-    db 00001111b
+    db 01001111b
     db 0x0
     
     ;0x28

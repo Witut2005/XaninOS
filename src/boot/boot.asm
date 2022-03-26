@@ -6,10 +6,15 @@
 
 jmp _loadSector
 
-mov ax, 0x0
+sti
 mov ds, ax
 mov ss, ax
-jmp $
+mov gs, ax
+mov fs, ax
+mov es, ax
+
+mov al, 'a'
+int 0x10
 
 
 mov ah, 0x43
@@ -102,10 +107,6 @@ jmp print_msg
 jmp_ker_load:
 jmp word 0x2000:0x0000
 
-idt_real_info:
-dw 0x3ff
-dw 0x0
-dw 0x0
 
 
 disk_num: dw 0x0

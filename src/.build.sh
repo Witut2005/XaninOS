@@ -29,7 +29,7 @@ nasm -f elf32 xanin_fs_saver.asm -o xanin_fs_saver.o
 cd ..
 
 #COMPILE																										 HERE YOU MUST PUT PATH TO SRC DIRECTORY
-i386-elf-gcc -O0 -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-int-conversion -Wno-unused-function -I /home/witut/Desktop/xaninOS/src kernel.c ./handlers/keyboard.o ./pit/pit.o ./syscall/syscall.o ./lib/v86_mode.o ./xin_fs/xanin_fs_saver.o -o kernel.bin
+i386-elf-gcc -O0 -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-int-conversion -Wno-unused-function -I /home/witut/Desktop/xaninOS/src kernel.c ./handlers/keyboard.o ./pit/pit.o ./syscall/syscall.o ./xin_fs/xanin_fs_saver.o ./lib/v86_mode.o -o kernel.bin
 #dd if=/dev/zero of=zero.img bs=512 count=2024
 
 cat ./boot/boot ./xin_fs/xin_pointers ./xin_fs/entries_table ./boot/kernelLoader kernel.bin ./boot/locateFS  > xanin.bin
@@ -38,3 +38,4 @@ cat ./boot/boot ./xin_fs/xin_pointers ./xin_fs/entries_table ./boot/kernelLoader
 dd if=xanin.bin of=xanin.img
 mv xanin.img -f ../bin
 rm xanin.bin 
+rm kernel.bin

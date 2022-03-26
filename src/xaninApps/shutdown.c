@@ -3,6 +3,8 @@
 #include <lib/stdiox.h>
 #include <xin_fs/xanin_fs_saver.c>
 
+extern void xanin_saver(void);
+
 void shutdown(void)
 {
 
