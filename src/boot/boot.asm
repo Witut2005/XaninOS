@@ -20,8 +20,6 @@ mov word [segment_num], 0x0
 mov dl, [BOOT_DISK_NUMBER]
 mov si, DAP
 
-
-
 int 0x13
 
 BOOT_DISK_NUMBER: db 0x0
