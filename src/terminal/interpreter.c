@@ -11,13 +11,17 @@ void scan(void)
     for(int i = 0; i < 40; i++)
         program_parameters[i] = '\0';
 
-    xscanf("%s %s",program_name, program_parameters);
+    xscanf("%s %s %s %s %s",program_name, program_parameters, program_parameters1, program_parameters2, program_parameters3);
 
     erase_spaces(program_name);
     erase_spaces(program_parameters);
 
     xprintf("\n%s\n", program_name);
     xprintf("%s\n", program_parameters);
+    xprintf("%s\n", program_parameters1);
+    xprintf("%s\n", program_parameters2);
+    xprintf("%s\n", program_parameters3);
+
 
     KeyInfo.character = 0x0;
     KeyInfo.scan_code = 0x0;
@@ -94,6 +98,16 @@ void scan(void)
     	keyboard_scan_code = 0x0;
     	load(strtoi(program_parameters, 16));
     	app_exited = true;
+    }
+
+    else if(cmpstr(program_name,"disk_load"))
+    {
+        disk_load(strtoi(program_parameters,16), strtoi(program_parameters1, 16));
+    }
+
+    else if(cmpstr(program_name,"disk_write"))
+    {
+        disk_write_data(strtoi(program_parameters,16), strtoi(program_parameters1, 16));
     }
 
     else if(cmpstr(program_name,"execute_addr"))

@@ -30,6 +30,8 @@
 #include <xaninApps/zsk.c>
 #include <xaninApps/shooter/shooter.c>
 #include <xaninApps/execute_addr.c>
+#include <xaninApps/disk_load.c>
+#include <xaninApps/disk_write.c>
 
 /*
 

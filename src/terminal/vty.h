@@ -97,6 +97,10 @@ keyboard_handle_input keyboard_handle = nullptr;
  
 char program_name[40];
 char program_parameters[40];
+char program_parameters1[40];
+char program_parameters2[40];
+char program_parameters3[40];
+
 void terminal(void);
 void letters_refresh(uint16_t* cursor_current_positon);
 void letters_refresh_add(uint16_t* cursor_current_positon, char character_saved);
