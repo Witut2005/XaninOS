@@ -32,6 +32,7 @@
 #include <xaninApps/execute_addr.c>
 #include <xaninApps/disk_load.c>
 #include <xaninApps/disk_write.c>
+#include <xaninApps/install.c>
 
 /*
 

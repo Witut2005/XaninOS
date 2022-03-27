@@ -47,6 +47,6 @@ enum AtaCommands
 };
 
 void init_disk(uint16_t base, uint8_t master);
-void disk_read(uint16_t base, uint8_t master, uint32_t sector_number, uint32_t bytes_number, uint16_t* where); 
-void disk_write(uint16_t base, uint8_t master, uint32_t sector_number, uint16_t* where);
+void disk_read(uint16_t base, uint8_t master, uint32_t sector_number, uint8_t how_many_sectors, uint16_t* where);
+void disk_write(uint16_t base, uint8_t master, uint32_t sector_number, uint8_t how_many_sectors, uint16_t* where);
 void disk_flush(uint16_t base, uint8_t master);

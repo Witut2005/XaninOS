@@ -100,14 +100,19 @@ void scan(void)
     	app_exited = true;
     }
 
+    else if(cmpstr(program_name,"install"))
+    {
+        install();
+    }
+
     else if(cmpstr(program_name,"disk_load"))
     {
-        disk_load(strtoi(program_parameters,16), strtoi(program_parameters1, 16));
+        disk_load(strtoi(program_parameters,16), strtoi(program_parameters1, 16), strtoi(program_parameters2, 16));
     }
 
     else if(cmpstr(program_name,"disk_write"))
     {
-        disk_write_data(strtoi(program_parameters,16), strtoi(program_parameters1, 16));
+        disk_write_data(strtoi(program_parameters,16), strtoi(program_parameters1, 16), strtoi(program_parameters2, 16));
     }
 
     else if(cmpstr(program_name,"execute_addr"))

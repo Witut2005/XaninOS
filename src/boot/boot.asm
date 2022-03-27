@@ -6,15 +6,6 @@
 
 jmp _loadSector
 
-mov ah, 0x43
-mov word [how_many_sectors], 0x20
-mov word [lba], 0x0
-mov word [offset], 0x0
-mov word [segment_num], 0x0
-mov dl, [BOOT_DISK_NUMBER]
-mov si, DAP
-
-int 0x13
 
 BOOT_DISK_NUMBER: db 0x0
 
