@@ -9,7 +9,7 @@ build:
 normal:
 	qemu-system-x86_64 -m 512 -hda ../bin/xanin.img
 
-terminal:
+curses:
 	qemu-system-i386 -curses -k en-us -m 512 -hda ../bin/xanin.img 
 
 debug:

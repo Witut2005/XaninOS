@@ -95,6 +95,12 @@ void scan(void)
     	load(strtoi(program_parameters, 16));
     	app_exited = true;
     }
+
+    else if(cmpstr(program_name,"execute_addr"))
+    {
+        execute_addr(strtoi(program_parameters, 16));
+        app_exited = true;
+    }
     
     else if(cmpstr(program_name,"key-test"))
     {

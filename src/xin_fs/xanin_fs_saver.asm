@@ -1,9 +1,9 @@
-extern xanin_saver_c
 
-global xanin_saver
+
+[org 0x600]
+
 
 xanin_saver:
-
 
     mov al, 0x8
     out 0x21, al
@@ -11,18 +11,60 @@ xanin_saver:
     mov al, 0x70
     out 0xa1, al
 
-    call xanin_saver_c
+    [bits 32]
+    jmp word 0x20:prot16
 
-    ;jmp 0x20:prot16
+    [bits 16]
+    prot16:
 
-    ;prot16:
+    cli
+
+    mov eax, 0x28
+    mov ds, eax
+    mov es, eax
+    mov fs, eax
+    mov gs, eax
+    mov ss, eax
 
     mov eax, cr0
-    xor eax, 0x1 
+    and eax, 0x7FFFFFFE 
     mov cr0,eax
     
-    mov ax, 0x0
-    jmp word 0x0:0x7c02
+    jmp word 0x0:real_mode
 
+    real_mode:
+    mov sp, 0x2000
+
+    mov ax, 0x0
+    mov ds, ax
+    mov ss, ax
+    mov gs, ax
+    mov fs, ax
+    mov es, ax
+
+    lidt[LVT]
+
+    sti
+
+    mov ax, 0xb800
+    mov ds,ax
+
+    mov word [0x0], 0x4242
+
+    mov ax, 0x5307
+    mov cx, 0x3
+    mov bx, 0x1
+    int 0x15
+    
+
+
+    jmp $
+
+
+    LVT:
+    dw 0x03FF
+    dd 0x0
+
+    times 512 - ($-$$) db 0x0   
 
 

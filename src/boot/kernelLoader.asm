@@ -208,8 +208,8 @@ _GDT:
     ;16bit code segment
     dd 0x0000ffff 
     db 0x0
-    db 10011010b
-    db 01001111b
+    db 10011000b
+    db 00001111b
     db 0x0
     
     ;0x28

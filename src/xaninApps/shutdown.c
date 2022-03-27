@@ -3,12 +3,11 @@
 #include <lib/stdiox.h>
 #include <xin_fs/xanin_fs_saver.c>
 
-extern void xanin_saver(void);
-
 void shutdown(void)
 {
 
-    xanin_saver();
+    void (*execute)(void) = 0x600;
+    execute();
 
     outdwIO(0x604, 0x2000);  /* QEMU */
     outdwIO(0xB004, 0x2000); /* BOCHS AND OLD QEMU */

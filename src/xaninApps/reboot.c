@@ -1,6 +1,15 @@
 
+#pragma once
+
+#include <stdint.h>
+
 void reboot(void)
 {
-    //asm("jmp 0x0000:0x0000"); /* JUMP TO NULL SEGMENT */
-    asm("int 0xFF");
+
+    uint16_t tmp[3] = {0,0,0};
+
+    asm("lidt %0" :: "m"(tmp));
+    asm("mov ebx, 0x0");
+    asm("div ebx");
+
 }
