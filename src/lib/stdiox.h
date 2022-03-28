@@ -61,31 +61,30 @@ cursor = (unsigned short*)(VGA_TEXT_MEMORY) + ((80)*y);
 
 }
 
-uint8_t x_putch = 0x0;
-
-/* put character */
-void putch(char c)
+char putchar(char character)
 {
 
-    
+    Screen.cursor[Screen.y][Screen.x] = (uint16_t) (character + (((black << 4) | white) << 8));
+        
+    Screen.x++;
 
-    uint16_t* ptr;
-    
-    ptr = (unsigned short*)(VGA_TEXT_MEMORY + x_putch);
-    *ptr = (uint16_t) c + (((black << 4) | white) << 8);
+    if(x == 80)
+    {    
+        Screen.x = 0x0;
+        Screen.y++;
+    }
+           
 
-    x_putch+=2;
-
+    return character;
 
 }
-
 
 
 void print_hex_number(uint8_t x)
 {
     char* mystr;
-    putch(HEX_LUT[(x & 0xF0) >> 4]);
-    putch(HEX_LUT[x & 0x0F]);
+    putchar(HEX_LUT[(x & 0xF0) >> 4]);
+    putchar(HEX_LUT[x & 0x0F]);
 
 }
 
@@ -108,38 +107,7 @@ void print_bcd_number(uint8_t x)
 
 }
 
-char putchar(char character)
-{
 
-    if(character < 0x20)
-    {
-        Screen.cursor[Screen.y][Screen.x] = (uint16_t) (0x0 + (((black << 4) | white) << 8));
-    
-        Screen.x++;
-
-        if(x == 80)
-        {    
-            Screen.x = 0x0;
-            Screen.y++;
-        }
-        return false;
-    }
-
-    Screen.cursor[Screen.y][Screen.x] = (unsigned short*)(VGA_TEXT_MEMORY) + x + ((80)*y);
-    Screen.cursor[Screen.y][Screen.x] = (uint16_t) (character + (((black << 4) | white) << 8));
-        
-    Screen.x++;
-
-    if(x == 80)
-    {    
-        Screen.x = 0x0;
-        Screen.y++;
-    }
-           
-
-    return character;
-
-}
 
 
 
