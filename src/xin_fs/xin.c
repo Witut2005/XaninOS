@@ -86,23 +86,59 @@ xin_entry* xin_find_free_entry(void)
 
 }
 
+void xin_file_create(char *path, uint8_t creation_date, uint8_t creation_time, uint16_t os_specific, 
+                    uint8_t modification_date, uint8_t modification_time, uint8_t permissions, 
+                        uint8_t starting_sector, uint8_t entry_size)
+{
+    xin_entry* entry_created = xin_find_free_entry();
+    set_string(entry_created -> entry_path, path);
+    
+    entry_created->creation_date = creation_date;
+    entry_created->creation_time = creation_time;
+    entry_created->os_specific = os_specific;
+    entry_created->modification_date = modification_date;
+    entry_created->modification_time = modification_time;
+    entry_created->entry_permissions = permissions;
+    entry_created->entry_size = entry_size;
+    entry_created->starting_sector = starting_sector;
+
+    uint8_t* write_entry = xin_find_free_pointer();
+    entry_size--;
+
+    for(uint8_t* i = write_entry;  i < ( write_entry + entry_size); i++)
+        *i = XIN_ALLOCATED;
+    
+    *(write_entry + entry_size) = XIN_EOF;
+
+
+}
+
+void xin_folder_create(char *path, uint8_t creation_date, uint8_t creation_time, uint16_t os_specific, 
+                    uint8_t modification_date, uint8_t modification_time, uint8_t permissions)
+{
+    xin_entry* entry_created = xin_find_free_entry();
+    set_string(entry_created -> entry_path, path);
+    
+    entry_created->creation_date = creation_date;
+    entry_created->creation_time = creation_time;
+    entry_created->os_specific = os_specific;
+    entry_created->modification_date = modification_date;
+    entry_created->modification_time = modification_time;
+    entry_created->entry_permissions = permissions;
+    entry_created->entry_size = 0x0;
+    entry_created->starting_sector = 0x0;
+
+}
+
+
 
 xin_entry* xin_init_fs(void)
 {
-    xin_entry* home_entry = (xin_entry*)XIN_ENTRY_TABLE;
     
-    set_string(home_entry->entry_path, "/");
-    xin_current_directory[0] = '/';
-
-    home_entry->creation_date = 0x0;
-    home_entry->creation_time = 0x0;
-    home_entry->os_specific = 0xFFFF;
-    home_entry->modification_date = 0x0;
-    home_entry->modification_time = 0x0;
-    home_entry->entry_permissions = PERMISSION_MAX;
-    home_entry->entry_size = 0x0;
-    home_entry->starting_sector = 0x0;
-
+    xin_folder_create("/", 0x0, 0x0, 0xFFFF, 0x0, 0x0, PERMISSION_MAX);
+    xin_file_create("ivt.bin", 0x0, 0x0, 0xFFFF, 0x0, 0x0, PERMISSION_MAX, 0x0, 0x2);
+    xin_file_create("file_system.bin", 0x0, 0x0, 0xFFFF, 0x0, 0x0, PERMISSION_MAX, 0x2, 0xE + 0x10);
+    xin_file_create("boot.bin", 0x0, 0x0, 0xFFFF, 0x0, 0x0, PERMISSION_MAX, 0xE3, 0x1);
 }
 
 
