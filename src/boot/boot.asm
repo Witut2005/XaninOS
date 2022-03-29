@@ -88,6 +88,18 @@ mov ah, 0x42
 mov dl, [BOOT_DISK_NUMBER]
 int 0x13
 
+;assembly applications
+mov word [lba], 0x1
+mov word [offset], 0x600
+mov word [segment_num], 0x0
+mov word [how_many_sectors], 0x1
+
+mov si, DAP
+mov ah, 0x42
+mov dl, [BOOT_DISK_NUMBER]
+int 0x13
+
+
 
 read_ok: 
 

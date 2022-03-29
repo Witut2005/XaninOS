@@ -6,8 +6,8 @@
 void shutdown(void)
 {
 
-    void (*execute)(void) = 0x600;
-    execute();
+    real_mode_enter(0x800);
+
 
     outdwIO(0x604, 0x2000);  /* QEMU */
     outdwIO(0xB004, 0x2000); /* BOCHS AND OLD QEMU */

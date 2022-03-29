@@ -64,4 +64,11 @@ static inline void io_wait(void)
     asm("out 0x80, al" :: "a"(0x0));
 }
 
+void real_mode_enter(uint16_t address_to_execute)
+{
+    asm("mov bp, bp" :: "bp"(address_to_execute));
+    void (*enter16)(void) = 0x600;
+    enter16();
+}
+
 #endif

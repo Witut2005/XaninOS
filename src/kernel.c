@@ -33,6 +33,7 @@ void _start(void)
 
     screen_clear();
 
+
     asm("cli");    //disable interrupts while IDT is not configured
     screen_init(); //init screen management system
 

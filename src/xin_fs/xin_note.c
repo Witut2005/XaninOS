@@ -52,7 +52,7 @@ void note_input(void)
 
         KeyInfo.is_bspc = false;
         return;
-        //letters_refresh(&Screen.cursor[Screen.y][Screen.x]);
+        letters_refresh(&Screen.cursor[Screen.y][Screen.x]);
     
     }
 
@@ -137,7 +137,7 @@ void note_input(void)
         {
             char character_saved_tmp = (char)Screen.cursor[Screen.y][Screen.x];
             xprintf("%c", getchar());
-            //letters_refresh_add(&Screen.cursor[Screen.y][Screen.x], character_saved_tmp);
+            letters_refresh_add(&Screen.cursor[Screen.y][Screen.x], character_saved_tmp);
         }
     }  
 
