@@ -64,4 +64,14 @@ static inline void io_wait(void)
     asm("out 0x80, al" :: "a"(0x0));
 }
 
+void real_mode_enter(uint16_t segment, uint16_t offset)
+{
+
+    asm("mov dx, dx" :: "dx"(offset));
+    asm("mov bx, bx" :: "bx"(segment));
+
+    void (*enter16)(void) = 0x600;
+    enter16();
+}
+
 #endif

@@ -19,11 +19,6 @@
 
 
 
-static uint8_t x;
-static uint8_t y;
-
 uint8_t keyboard_input;
-
-
 
 bool app_exited = false;

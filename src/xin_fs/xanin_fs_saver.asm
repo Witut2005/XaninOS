@@ -1,5 +1,3 @@
-
-
 [org 0x600]
 
 
@@ -66,5 +64,3 @@ xanin_saver:
     dd 0x0
 
     times 512 - ($-$$) db 0x0   
-
-
