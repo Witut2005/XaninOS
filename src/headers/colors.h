@@ -25,4 +25,5 @@ enum Colors{
 
 
 #define white16 (uint16_t)('_' | (white)) 
+#define white32 (uint32_t) (((' ' | (0xFF << 8)) << 16) | (' ' | (0xFF << 8 )))
 

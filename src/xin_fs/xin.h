@@ -18,7 +18,10 @@ enum xin_fs_properties
     XIN_FILE = 'F',
     XIN_DIRECTORY = 'D',
     XIN_LINK = 'L',
-    XIN_HARD_LINK = 'H'
+    XIN_HARD_LINK = 'H',
+
+    XIN_READ_ONLY = 0x10
+
 };
 
 struct xin_entry

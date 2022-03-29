@@ -16,6 +16,7 @@
 #include <lib/algorithm.h>
 
 
+extern void v86_mode_enter(void);
 
 /*--------------------------------------/
 |wesolego nowego roku :))               |
@@ -31,79 +32,18 @@ void _start(void)
     disable_cursor();
 
     screen_clear();
+
+
     asm("cli");    //disable interrupts while IDT is not configured
     screen_init(); //init screen management system
 
 
-    //*(char*)VGA_TEXT_MEMORY = 0x41;
-    //*(char*)(VGA_TEXT_MEMORY + 1) = 0x42;
     set_idt();
     time_get();
     keyboard_init();
     
-    for(char* i = (char*)0x0; (uint32_t)i < 0x20000; i++)
-    	*i = 0x0;
-
-
-
-    /*
-
-    char a[20],b[20];
-    screen_clear();
-
-    for(int i = 0; i < 20; i++)
-        a[i] = '\0';
-    
-    for(int i = 0; i < 20; i++)
-        b[i] = '\0';
-
-    xscanf("%s %s",a, b);
-
-    xprintf("\n%s\n", a);
-    xprintf("%s\n", b);
-
-    xprintf("\n");
-
-    while(1);
-
-    */
 
     set_pit();
-
-    //char jed[20], dwa[20];
-
-    /*
-    screen_clear();
-    char jed[20];
-    scanf("%s", jed);
-    xprintf("\n");
-    xprintf("test: %s", jed);
-    */
-
-
-    while(1);
-
-
-
-    /*
-    uint16_t dd = 10;
-    xprintf("0x%x\n", dd);
-    bit_clear(&dd, 1);
-    xprintf("0x%x\n", dd);
-    */
-
-    
-    /*
-
-    xprintf("%z  .GBJ     ?BBY.                     ,,\n", set_output_color(logo_back_color, logo_front_color));
-    xprintf("%z   :B#Y  !G#P^   .,,.     ..  ..     ''   ..  ..\n", set_output_color(logo_back_color, logo_front_color));
-    xprintf("%z    .G#//#G~    ?PYJJ5P   HuCJJ5G    55  HuCJJJPP.\n", set_output_color(logo_back_color, logo_front_color));
-    xprintf("%z     >###<     ~.   .G#.  I#D   7#:  GP  I#D    P#:\n", set_output_color(logo_back_color, logo_front_color));
-    xprintf("%z   .5#BG#P.    !JYYJ?G#.  I#^   ^#:  GP  I#^    Y#:\n", set_output_color(logo_back_color, logo_front_color));
-    xprintf("%z .Y##/ i#G.   ?#^   :G#.  I#^   ~#:  GP  I#^    Y#:%z  version 22.03v\n", set_output_color(logo_back_color, logo_front_color), set_output_color(black,white));
-    xprintf("%z7GB5.    5BG. .5G555J?B^  I#^   ^#:  P5  I#^    JB:%z  weekday: %s \n\n\n", set_output_color(logo_back_color, logo_front_color), set_output_color(black,white), weekDaysLUT[time.weekDay]);
-
-    */
 
     keyboard_command = command_buffer;
 
@@ -117,14 +57,7 @@ void _start(void)
 
     xprintf("\n\n");
    
-
-    //xprintf("cpu mhz %dMHz\n", cpu_mhz);
-    //xprintf("cpu khz %dKHz\n", cpu_khz);
-
     zsk("100");
-
-    //while(getscan() != ENTER);
-    //getCpuSpeed();
 
     srand(time.seconds);
 	
@@ -141,13 +74,9 @@ void _start(void)
 
     screen_clear();
     
-    //asm("int 0xFF");
-    //asm("int 13");// <-- GENERAL PROTECTION EXCEPTION TEST
 
     time_get();
 
-   
-    //xprintf("xaninOS\n");
     
     xprintf("%z  .GBJ     ?BBY.                     ,,\n", set_output_color(logo_back_color, logo_front_color));
     xprintf("%z   :B#Y  !G#P^   .,,.     ..  ..     ''   ..  ..\n", set_output_color(logo_back_color, logo_front_color));
@@ -156,10 +85,6 @@ void _start(void)
     xprintf("%z   .5#BG#P.    !JYYJ?G#.  I#^   ^#:  GP  I#^    Y#:\n", set_output_color(logo_back_color, logo_front_color));
     xprintf("%z .Y##/ i#G.   ?#^   :G#.  I#^   ~#:  GP  I#^    Y#:%z  version 22.03v\n", set_output_color(logo_back_color, logo_front_color), set_output_color(black,white));
     xprintf("%z7GB5.    5BG. .5G555J?B^  I#^   ^#:  P5  I#^    JB:%z  weekday: %s \n\n\n", set_output_color(logo_back_color, logo_front_color), set_output_color(black,white), weekDaysLUT[time.weekDay]);
-
-//    xprintf("");
-
-//    xprintf("weekday: %s\n\n",weekDaysLUT[time.weekDay]);
 
 
     Screen.cursor[8][0] = (uint16_t)('>' | ((black << 4) | white) << 8);

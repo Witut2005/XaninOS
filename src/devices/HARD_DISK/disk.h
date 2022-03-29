@@ -1,15 +1,13 @@
-#include <lib/stdiox.h>
 
-#define SECTOR_SIZE 0x200
+#pragma once
+
+#include <lib/stdiox.h>
 
 /* all ports all 8bit with exeception of DATA_REGISTER (16bit) */
 
 enum AtaRegisters
 {
-    
-
-
-    
+      
     ATA_MASTER = 0x1,
     ATA_SLAVE = 0x0,
 
@@ -42,10 +40,13 @@ enum AtaCommands
 {
 
     ATA_IDENTIFY = 0xEC,
-    ATA_READ = 0x20 
+    ATA_READ = 0x20,
+    ATA_WRITE = 0x30,
+    ATA_FLUSH = 0xE7
 
 };
 
 void init_disk(uint16_t base, uint8_t master);
-void disk_read(uint16_t base, uint8_t master, uint32_t sector_number, uint32_t bytes_number, uint16_t* where); 
-	
+void disk_read(uint16_t base, uint8_t master, uint32_t sector_number, uint8_t how_many_sectors, uint16_t* where);
+void disk_write(uint16_t base, uint8_t master, uint32_t sector_number, uint8_t how_many_sectors, uint16_t* where);
+void disk_flush(uint16_t base, uint8_t master);

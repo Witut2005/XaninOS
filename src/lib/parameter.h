@@ -1,6 +1,4 @@
-static char program_parameters[50];
-static char program_name[50];
-
+#pragma once
 
 char* get_program_parameter(char* where_to_store)
 {

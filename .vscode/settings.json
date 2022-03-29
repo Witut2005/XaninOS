@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "vty.c": "cpp",
-        "stdiox.h": "c"
+        "stdiox.h": "c",
+        "stdint.h": "c"
     }
 }

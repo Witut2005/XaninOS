@@ -48,7 +48,7 @@ void set_pit()
     pitActive = false; 
     outbIO(PIC1_DATA_REG, 0xFC); // pit irq on
     //outbIO(PIT_MODE_COMMAND_REGISTER,0x30);
-    set_pit_divisor(0xFFFF);
+    set_pit_divisor(0x8000);
     asm("sti");
 }
 

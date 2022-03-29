@@ -142,11 +142,12 @@ void swap_short(uint16_t* *xp, uint16_t* yp)
 
 
 //https://crypto.stackexchange.com/questions/6760/how-does-the-rand-function-in-c-work
-
 void srand(uint32_t seed)
 {
     randomizer = seed;
 }
+
+void (*abort_return_address)(void);
 
 
 uint32_t rand()
