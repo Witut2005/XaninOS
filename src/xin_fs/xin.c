@@ -138,6 +138,7 @@ xin_entry* xin_init_fs(void)
     xin_file_create("ivt.bin", 0x0, 0x0, XIN_READ_ONLY, 0x0, 0x0, PERMISSION_MAX, 0x0, 0x2);
     xin_file_create("file_system.bin", 0x0, 0x0, XIN_READ_ONLY, 0x0, 0x0, PERMISSION_MAX, 0x2, 0xE + 0x10);
     xin_file_create("boot.bin", 0x0, 0x0, XIN_READ_ONLY, 0x0, 0x0, PERMISSION_MAX, 0x3E, 0x1);
+    xin_file_create("shutdown.bin", 0x0, 0x0, XIN_READ_ONLY, 0x0, 0x0, PERMISSION_MAX, 0x3E, 0x1);
 }
 
 
@@ -181,7 +182,7 @@ void xin_create_directory(char* entry_name)
     if(entry_name[strlen(entry_name) - 1] != '/')
     {
         xprintf("%zMISSING / ENDING CHARACTER IN DIRECTORY NAME\n", set_output_color(red, white));
-        while(keyboard_scan_code != ENTER);
+        while(KeyInfo.scan_code != ENTER);
         exit_process();
     }
 
@@ -210,14 +211,14 @@ xin_entry* xin_change_directory(char* new_directory)
     if(xin_find_entry(new_directory) == nullptr)
     {
         xprintf("%zNO SUCH DIRECTORY\n", set_output_color(red,white));
-        while(keyboard_scan_code != ENTER);
+        while(KeyInfo.scan_code != ENTER);
         return nullptr;
     }
 
     if(new_directory[strlen(new_directory) - 1] != '/')
     {
         xprintf("%zMISSING / ENDING CHARACTER IN DIRECTORY NAME\n", set_output_color(red, white));
-        while(keyboard_scan_code != ENTER);
+        while(KeyInfo.scan_code != ENTER);
         return nullptr;
     }
 

@@ -21,7 +21,7 @@ void load(uint32_t address)
         xprintf("\n");
     }
 
-	while(keyboard_scan_code != ENTER);
+	while(KeyInfo.scan_code != ENTER);
 
 	
 

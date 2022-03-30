@@ -192,7 +192,7 @@ void xin_note(char* file_name)
         {
             xprintf("%zyou cant edit directory\n",set_output_color(red,white));
             xprintf("%zuse F4 key to exit\n",set_output_color(red,white));
-            while(keyboard_scan_code != F4_KEY);
+            while(KeyInfo.scan_code != F4_KEY);
             exit_process();
         }
 

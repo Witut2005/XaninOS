@@ -7,9 +7,8 @@
 void shutdown(void)
 {
 
-    //real_mode_enter(0x1000, 0x0);
+    real_mode_enter(0x1000, 0x0); // <-- location in RAM of shutdown program
 
-    execute_addr(0x600);
 
     outdwIO(0x604, 0x2000);  /* QEMU */
     outdwIO(0xB004, 0x2000); /* BOCHS AND OLD QEMU */

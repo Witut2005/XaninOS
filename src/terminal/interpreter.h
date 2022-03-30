@@ -33,6 +33,8 @@
 #include <xaninApps/disk_load.c>
 #include <xaninApps/disk_write.c>
 #include <xaninApps/install.c>
+#include <xaninApps/stack_frame_test.c>
+#include <xin_fs/list_files.c>
 
 /*
 

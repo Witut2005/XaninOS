@@ -21,5 +21,5 @@ void loadch(uint32_t address)
         putchar(data_pointer[i]);
     }
 
-	while(keyboard_scan_code != ENTER);
+	while(KeyInfo.scan_code != ENTER);
 }

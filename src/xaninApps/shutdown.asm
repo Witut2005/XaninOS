@@ -1,5 +1,5 @@
 
-[org 0x800]
+[org 0x10000]
 [bits 16]
 
 shutdown:

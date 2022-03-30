@@ -66,8 +66,8 @@ void _start(void)
    
     init_disk(ATA_FIRST_BUS, ATA_MASTER);
 
-    keyboard_scan_code = 0x0;
-    while(!keyboard_scan_code);
+    KeyInfo.scan_code = 0x0;
+    while(!KeyInfo.scan_code);
 
 
     tuiInit:

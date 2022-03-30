@@ -20,8 +20,8 @@ cd ./pit
 nasm -f elf32 pit.asm -o pit.o
 cd ..
 
-cd ./xin_fs
-nasm -f bin xanin_fs_saver.asm -o xanin_fs_saver
+cd ./lib
+nasm -f bin enter_real_mode.asm -o enter_real_mode
 cd ..
 
 cd ./xaninApps
@@ -37,7 +37,7 @@ i386-elf-gcc -O0 -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -ffrees
 
 dd if=./xaninApps/shutdown of=./xaninApps/xanin_apps_space bs=512 count=16 conv=notrunc
 
-cat ./boot/boot ./xin_fs/xanin_fs_saver ./xaninApps/xanin_apps_space ./xin_fs/xin_pointers ./xin_fs/entries_table ./boot/kernelLoader kernel.bin > xanin.bin
+cat ./boot/boot ./lib/enter_real_mode ./xaninApps/xanin_apps_space ./xin_fs/xin_pointers ./xin_fs/entries_table ./boot/kernelLoader kernel.bin > xanin.bin
 #        0                   1                   2                   10                          14          15                                  
 
 

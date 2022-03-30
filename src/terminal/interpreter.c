@@ -65,6 +65,11 @@ void scan(void)
         epilepsy();
     }    
     
+    else if(cmpstr(program_name,"stack_test"))
+    {
+        stack_frame_test(0x10, 0x20);
+    }
+
     else if(cmpstr(program_name,"cpu_info"))
     {
         cpu_info();
@@ -95,7 +100,7 @@ void scan(void)
         //xprintf("4");
         //while(KeyInfo.scan_code != ENTER);
         
-    	keyboard_scan_code = 0x0;
+    	KeyInfo.scan_code = 0x0;
     	load(strtoi(program_parameters, 16));
     	app_exited = true;
     }
@@ -140,7 +145,7 @@ void scan(void)
         //while(KeyInfo.scan_code != ENTER);
         
     	xprintf("%s\n", program_parameters);
-    	keyboard_scan_code = 0x0;
+    	KeyInfo.scan_code = 0x0;
     	app_exited = true;
     }
 	
@@ -155,7 +160,7 @@ void scan(void)
         //xprintf("7");
         //while(KeyInfo.scan_code != ENTER);
         
-		keyboard_scan_code = 0x0;
+		KeyInfo.scan_code = 0x0;
 		loadch(strtoi(program_parameters, 16));
 		app_exited = true;
 	}	
@@ -257,7 +262,7 @@ void scan(void)
         //while(KeyInfo.scan_code != ENTER);
         
         xprintf("%s\n", xin_current_directory);
-        while(keyboard_scan_code != ENTER);
+        while(KeyInfo.scan_code != ENTER);
         exit_process();
     }
 
@@ -311,10 +316,7 @@ void scan(void)
 
     else if(cmpstr(program_name,"ls") || cmpstr(program_name,"dir"))
     {
-        //xprintf("t");
-        //while(KeyInfo.scan_code != ENTER);
-
-        //ls();
+        list_files();
     }
     
     else if(cmpstr(program_name,"note"))
@@ -362,7 +364,7 @@ void scan(void)
         xprintf("%zunknown command",set_output_color(red,white));
         logo_front_color = red;
 
-        keyboard_scan_code = 0x0;        
+        KeyInfo.scan_code = 0x0;        
         keyboard_input = 0x0;
 
         KeyInfo.scan_code = 0x0;
