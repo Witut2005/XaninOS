@@ -4,6 +4,9 @@
 #include <xin_fs/xin.h>
 #include <stddef.h>
 
+
+xin_entry* current_program = XIN_ENTRY_TABLE + (4 * sizeof(xin_entry));
+
 char* xin_set_current_directory(char* directory)
 {
     for(int i = 0; i < sizeof(xin_current_directory); i++)
@@ -138,8 +141,12 @@ xin_entry* xin_init_fs(void)
     xin_file_create("ivt.bin", 0x0, 0x0, XIN_READ_ONLY, 0x0, 0x0, PERMISSION_MAX, 0x0, 0x2);
     xin_file_create("file_system.bin", 0x0, 0x0, XIN_READ_ONLY, 0x0, 0x0, PERMISSION_MAX, 0x2, 0xE + 0x10);
     xin_file_create("boot.bin", 0x0, 0x0, XIN_READ_ONLY, 0x0, 0x0, PERMISSION_MAX, 0x3E, 0x1);
-    xin_file_create("shutdown.bin", 0x0, 0x0, XIN_READ_ONLY, 0x0, 0x0, PERMISSION_MAX, 0x80, 0x1);
+    xin_file_create("tmp.bin", 0x0, 0x0, 0xFFFF, 0x0, 0x0, PERMISSION_MAX, 0x80, 1);
+    xin_file_create("syscall_test.bin", 0x0, 0x0, 0xFFFF, 0x0, 0x0, PERMISSION_MAX, 0x81, 1);
+    xin_file_create("shutdown.bin", 0x0, 0x0, XIN_READ_ONLY, 0x0, 0x0, PERMISSION_MAX, 0x82, 0x1);
+
 }
+
 
 
 void xin_create_file(char* entry_name)

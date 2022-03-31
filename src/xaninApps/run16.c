@@ -40,20 +40,12 @@ void run16(char* file_name)
             exit_process();
         }
     
-        uint32_t address = (xin_file->starting_sector * SECTOR_SIZE);
+        uint32_t address = (current_program->starting_sector * SECTOR_SIZE);
 
-        if(address > 0xFFFFF)
-        {
-            xprintf("%zENTRY POINT CANNOT BE HIGHER THAN 0xFFFFF\n", set_output_color(red,white));
-            while(KeyInfo.scan_code != F4_KEY);
-            exit_process();
-        }
+        for(uint8_t* i = xin_file->starting_sector * SECTOR_SIZE; (uint32_t)i < xin_file->starting_sector * SECTOR_SIZE + SECTOR_SIZE; i++)
+            *(uint8_t*)(current_program->starting_sector * SECTOR_SIZE) = *i;
 
-
-        uint16_t segment = (address >> 4) & 0xF000;
-        uint16_t ip = address & 0xFFFF;
-
-        real_mode_enter(segment, ip);
+        real_mode_enter(0x1000, 0x0); // <-- tmp.bin address in memory
 
         
 

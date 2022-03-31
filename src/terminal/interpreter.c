@@ -70,6 +70,11 @@ void scan(void)
         run16(program_parameters);
     }
     
+    else if(cmpstr(program_name,"run"))
+    {
+        run(program_parameters);
+    }
+
     else if(cmpstr(program_name,"stack_test"))
     {
         stack_frame_test(0x10, 0x20);

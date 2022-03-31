@@ -90,7 +90,7 @@ int 0x13
 
 ;assembly applications
 mov word [lba], 0x2
-mov word [offset], 0x0
+mov word [offset], 0x200
 mov word [segment_num], 0x1000
 mov word [how_many_sectors], 0x10
 

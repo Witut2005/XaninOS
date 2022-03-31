@@ -13,6 +13,7 @@ void run(char* file_name)
 {
     screen_clear();
 
+
     xin_entry* xin_file = xin_find_entry(file_name);
     
     if(xin_file == nullptr)
@@ -40,7 +41,10 @@ void run(char* file_name)
             exit_process();
         }
     
-        void (*entry_point)(void) = (xin_file->starting_sector * SECTOR_SIZE);
+        for(uint8_t* i = xin_file->starting_sector * SECTOR_SIZE; (uint32_t)i < xin_file->starting_sector * SECTOR_SIZE + SECTOR_SIZE; i++)
+            *(uint8_t*)(current_program->starting_sector * SECTOR_SIZE) = *i;
+
+        void (*entry_point)(void) = 0x10000;
 
         entry_point();
 
