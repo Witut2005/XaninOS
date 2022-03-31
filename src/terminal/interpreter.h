@@ -34,6 +34,8 @@
 #include <xaninApps/disk_write.c>
 #include <xaninApps/install.c>
 #include <xaninApps/stack_frame_test.c>
+#include <xaninApps/run.c>
+#include <xaninApps/run16.c>
 #include <xin_fs/list_files.c>
 
 /*

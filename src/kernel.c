@@ -29,7 +29,7 @@ void _start(void)
 
 
 
-    disable_cursor();
+    //disable_cursor();
 
     screen_clear();
 

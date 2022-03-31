@@ -10,5 +10,6 @@ shutdown:
     mov cx, 0x3
     mov bx, 0x1
     int 0x15
+
     jmp $
 

@@ -138,7 +138,7 @@ xin_entry* xin_init_fs(void)
     xin_file_create("ivt.bin", 0x0, 0x0, XIN_READ_ONLY, 0x0, 0x0, PERMISSION_MAX, 0x0, 0x2);
     xin_file_create("file_system.bin", 0x0, 0x0, XIN_READ_ONLY, 0x0, 0x0, PERMISSION_MAX, 0x2, 0xE + 0x10);
     xin_file_create("boot.bin", 0x0, 0x0, XIN_READ_ONLY, 0x0, 0x0, PERMISSION_MAX, 0x3E, 0x1);
-    xin_file_create("shutdown.bin", 0x0, 0x0, XIN_READ_ONLY, 0x0, 0x0, PERMISSION_MAX, 0x3E, 0x1);
+    xin_file_create("shutdown.bin", 0x0, 0x0, XIN_READ_ONLY, 0x0, 0x0, PERMISSION_MAX, 0x80, 0x1);
 }
 
 
@@ -271,9 +271,12 @@ void xin_entry_info(char* entry_name)
     
     xin_entry* xin_file_descriptor = xin_find_entry(entry_name);
 
-    xprintf("entry path: %s\n", xin_file_descriptor->entry_path);
-    xprintf("creation date: 0x%x\n", xin_file_descriptor->creation_time);
-    xprintf("starting_sector: 0x%x\n", xin_file_descriptor->starting_sector);
+    if(xin_file_descriptor != nullptr)
+    {
+        xprintf("\n\rentry path: %s\n", xin_file_descriptor->entry_path);
+        xprintf("creation date: 0x%x\n", xin_file_descriptor->creation_time);
+        xprintf("starting_sector: 0x%x\n", xin_file_descriptor->starting_sector);
+    }
 
     while(KeyInfo.scan_code != ENTER);
     exit_process();

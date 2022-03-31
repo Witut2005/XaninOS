@@ -67,12 +67,14 @@ static inline void io_wait(void)
 void real_mode_enter(uint16_t segment, uint16_t offset)
 {
 
+    /* get segment */
     asm (
         "mov eax, [ebp + 8]\n\t"
         "mov ebx, eax\n\t"
         "and ebx, 0xFFFF"
         );
 
+    /* get offset */
     asm (
         "mov eax, [ebp + 12]\n\t"
         "mov edx, eax\n\t"

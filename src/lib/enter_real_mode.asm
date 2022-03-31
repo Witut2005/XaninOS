@@ -45,15 +45,14 @@ xanin_saver:
     sti
 
     pushf
+    push 0x0
+    push 0x2000
+
+    pushf
     push bx
     push dx
     
-
     iret
-
-    
-    jmp $
-
 
     LVT:
     dw 0x03FF
