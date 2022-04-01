@@ -41,8 +41,11 @@ void run(char* file_name)
             exit_process();
         }
     
-        for(uint8_t* i = xin_file->starting_sector * SECTOR_SIZE; (uint32_t)i < xin_file->starting_sector * SECTOR_SIZE + SECTOR_SIZE; i++)
-            *(uint8_t*)(current_program->starting_sector * SECTOR_SIZE) = *i;
+        uint8_t* where_to_load = 0x10000;
+
+
+        for(uint8_t* i = xin_file->starting_sector * SECTOR_SIZE; (uint32_t)i < (xin_file->starting_sector * SECTOR_SIZE) + SECTOR_SIZE; i++, where_to_load++)
+            *where_to_load = *i;
 
         void (*entry_point)(void) = 0x10000;
 
