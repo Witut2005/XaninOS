@@ -27,14 +27,13 @@ extern void v86_mode_enter(void);
 void _start(void)
 {
 
-
+    asm("cli");    //disable interrupts while IDT is not configured
 
     disable_cursor();
 
     screen_clear();
 
 
-    asm("cli");    //disable interrupts while IDT is not configured
     screen_init(); //init screen management system
 
 

@@ -6,18 +6,15 @@
 
 print_syscall:
 
-nop
-nop
-mov edi, 0xb8000
+mov eax, 0
+mov edi, xscanf123
+mov esi, napis
 
-nop
-nop
-mov word [edi], 0x4141
+int 0x80
 
-nop
-nop
 jmp $
 
+xscanf123: db '%','s',0x0
 napis: db "syscall test", 0xa,0
 
 times 512 - ($-$$) db 0x0
