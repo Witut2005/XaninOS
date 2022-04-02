@@ -3,12 +3,27 @@
 
 global _syscall
 
+%macro input_on 0
+
+mov al, 0x20
+out 0x20, al
+sti
+
+%endmacro
+
 extern xscanf
 extern xprintf
 extern putchar
+extern strlen
+extern screen_clear
+extern zsk
+extern shutdown
+
+get_eip:
+    mov eax, [esp]
+    ret
 
 _syscall:
-
     test eax, eax
     jz _xscanf
 
@@ -18,16 +33,38 @@ _syscall:
     cmp eax, 2
     je _putchar
 
+    cmp eax, 3
+    je _strlen
+
+    cmp eax, 4
+    je _screen_clear
+
+    cmp eax, 100
+    je _zsk
+
+    cmp eax, 50
+    je _shutdown
+
     mov eax,0xffffffff
     iretd
 
 _xscanf:
-    push esi
+    ;MORE ARGS !!!
     push edi
+    push esi
+
+	mov al,0x20
+	out 0x20,al ; SEND EOI TO PIC1
     
+    sti
+
     call xscanf
 
-    add esp, 0x8
+    xscanf_end:
+
+    pop eax
+    pop eax
+
     jmp _end
 
 _xprintf:
@@ -42,7 +79,29 @@ _putchar:
     pop eax
     jmp _end
 
+
+_strlen:
+    push esi
+    call strlen
+    jmp _end
+
+_screen_clear:
+    call screen_clear
+    jmp _end
+
+_zsk:
+    input_on
+    push esi
+    call zsk
+    pop eax
+    jmp _end
+
+_shutdown:
+    input_on
+    call shutdown
+
 _end:
 iretd
+
 
 

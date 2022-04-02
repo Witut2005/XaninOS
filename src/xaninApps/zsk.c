@@ -31,7 +31,7 @@ void zsk_init(void)
 void zsk_move(uint32_t delay)
 {
     uint16_t* tmp = VGA_TEXT_MEMORY;
-    
+
     
     if(*tmp == (uint16_t)('#' + (((black << 4) | white) << 8)))
     {
@@ -43,7 +43,8 @@ void zsk_move(uint32_t delay)
         tmp[i] = tmp[i + 1];
     }
 
-    msleep(delay);
+
+        msleep(delay);
 
 }
 
@@ -51,15 +52,19 @@ void zsk(char* delay_str)
 {
     uint32_t delay;
 
+
     if(!strlen(delay_str))
         delay = 100;
     
     else
         delay = strtoi(delay_str,10);
 
+    xprintf("delay: %d", delay);
+    //fwhile(1);
+
     zsk_init();
 
-    while(getscan() != ENTER)
+    while(KeyInfo.scan_code != ENTER)
         zsk_move(delay);
 
     app_exited = true;

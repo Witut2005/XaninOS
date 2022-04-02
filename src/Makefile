@@ -6,7 +6,7 @@ bld_run:
 build:
 	bash .build.sh
 
-normal:
+run:
 	qemu-system-x86_64 -m 512 -hda ../bin/xanin.img
 
 curses:

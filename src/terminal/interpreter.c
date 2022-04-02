@@ -2,6 +2,7 @@
 
 #include <terminal/interpreter.h>
 
+char scanf_str[40] = "%s %s %s %s %s";
 
 void scan(void)
 {
@@ -11,7 +12,7 @@ void scan(void)
     for(int i = 0; i < 40; i++)
         program_parameters[i] = '\0';
 
-    xscanf("%s %s %s %s %s",program_name, program_parameters, program_parameters1, program_parameters2, program_parameters3);
+    xscanf(scanf_str,program_name, program_parameters, program_parameters1, program_parameters2, program_parameters3);
 
     erase_spaces(program_name);
     erase_spaces(program_parameters);

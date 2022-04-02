@@ -436,6 +436,8 @@ void xscanf(char* str, ... )
         buffer[i] = '\0';
 
     index = 0x0;
+ 
+    character_blocked = (char)Screen.cursor[Screen.y][Screen.x - 1];
 
     start:
 
@@ -446,7 +448,7 @@ void xscanf(char* str, ... )
         {
             Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((black << 4) | white) << 8));
 
-            if((char)Screen.cursor[Screen.y][Screen.x - 1] == character_blocked && character_blocked != '\0')
+            if((char)Screen.cursor[Screen.y][Screen.x - 1] == character_blocked)
             {
                 goto start;
             }
@@ -491,7 +493,7 @@ void xscanf(char* str, ... )
                         {
 
                             string_pointer = va_arg(args, char*);
-
+                            
                             for(int i = 0; string_pointer[i] != '\0'; i++)
                                 string_pointer[i] = '\0';
 
@@ -514,6 +516,8 @@ void xscanf(char* str, ... )
                             }
 
                             end:
+
+
                             
                             for(int i = 0x0; i < 50;i++)
                                 buffer[i] = '\0';
@@ -596,7 +600,8 @@ void xscanf(char* str, ... )
         KeyInfo.scan_code = 0x0;
 
         use_backspace = false;
-
+        Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((black << 4) | white) << 8));
+            
         return;
 
         }
@@ -604,6 +609,7 @@ void xscanf(char* str, ... )
         else if(KeyInfo.character)
         {
             char tmp = getchar();
+
             Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((black << 4) | white) << 8));
             char character_saved = (char)(Screen.cursor[Screen.y][Screen.x]);
             

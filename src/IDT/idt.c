@@ -77,6 +77,9 @@ void set_idt(void)
     configure_idt_entry(0x26, floppy_interrupt,CODE_SEGMENT);
     configure_idt_entry(0x80, _syscall,CODE_SEGMENT);
     
+    configure_idt_entry(0x81, no_handler,CODE_SEGMENT);
+    
+
     configure_idt_entry(0xFF, reboot_interrupt,CODE_SEGMENT);
 
     struct idtReg idtr = {

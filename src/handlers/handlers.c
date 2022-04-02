@@ -229,6 +229,12 @@ void control_protection_exception(void)
     asm("hlt");
 }
 
+void no_handler(void)
+{
+    asm("out 0x20, al":: "ax"(0x20));
+    
+    while(1);
+}
 
 void reboot_interrupt(void)
 {
