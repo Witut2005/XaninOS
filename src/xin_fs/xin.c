@@ -290,4 +290,10 @@ void xin_entry_info(char* entry_name)
 
 }
 
+uint32_t xin_get_start_sector(char* entry_name)
+{
+    xin_entry* xin_file_descriptor = xin_find_entry(entry_name);
 
+    return xin_file_descriptor->starting_sector;
+
+}

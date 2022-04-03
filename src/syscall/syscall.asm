@@ -18,6 +18,7 @@ extern strlen
 extern screen_clear
 extern zsk
 extern shutdown
+extern xin_get_start_sector
 
 get_eip:
     mov eax, [esp]
@@ -39,11 +40,17 @@ _syscall:
     cmp eax, 4
     je _screen_clear
 
+    ;16-BIT APPS
+    cmp eax, 50
+    je _shutdown
+
+    ;32-BIT APPS
     cmp eax, 100
     je _zsk
 
-    cmp eax, 50
-    je _shutdown
+    ;XIN_FILE_SYSTEM
+    cmp eax, 200
+    je _xin_get_start_sector
 
     mov eax,0xffffffff
     iretd
@@ -89,6 +96,10 @@ _screen_clear:
     call screen_clear
     jmp _end
 
+_shutdown:
+    input_on
+    call shutdown
+
 _zsk:
     input_on
     push esi
@@ -96,9 +107,13 @@ _zsk:
     pop eax
     jmp _end
 
-_shutdown:
-    input_on
-    call shutdown
+
+_xin_get_start_sector:
+    push esi
+    call xin_get_start_sector
+    jmp $
+    pop eax
+    jmp _end
 
 _end:
 iretd

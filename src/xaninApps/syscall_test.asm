@@ -6,18 +6,15 @@
 
 jmp print_syscall
 
-xscanf123: db "abcd", 0x0
-prints: db "omg you printed me",0xa,0
+str: db "shutdown.bin",0
 
-my_var: db 0x0
-napis: db "%s",0x0
-zsk_delay: db "100",0x0
 
 print_syscall:
 
 
 
-mov eax, 50
+mov eax, 200
+mov esi, str
 int 0x80
 
 
