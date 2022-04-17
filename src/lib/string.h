@@ -2,8 +2,6 @@
 #pragma once
 
 
-
-
 uint32_t strlen(char* a)
 {
 
@@ -294,7 +292,7 @@ uint32_t strtoi(char* str, uint8_t format)
     if(format > 16) 
         format = 16;
 
-    uint16_t* tmp_text = VGA_TEXT_MEMORY;
+    uint16_t* tmp_text = (uint16_t*)VGA_TEXT_MEMORY;
     uint8_t digit_counter = strlen(str);
 	uint32_t tmp;
 

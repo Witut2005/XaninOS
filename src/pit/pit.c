@@ -57,6 +57,7 @@ float pit_time = 0x0;
 float pit_tick(uint32_t frequency)
 {
     pit_time += 1 / (float)(PIT_BASE_FREQUENCY / frequency);
+    return pit_time;
 }
 
 

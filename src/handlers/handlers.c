@@ -20,7 +20,7 @@ extern void keyboard_handler_init(void);
 
 void floppy_interrupt(void)
 {
-    sprint(red,white,"FLOPPY ERROR");
+    xprintf("FLOPPY ERROR");
     
     asm("cli");
     asm("hlt");

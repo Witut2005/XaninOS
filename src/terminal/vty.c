@@ -3,20 +3,14 @@
 #include <terminal/vty.h>
 #include <xaninApps/help.c>
 #include <lib/signal.h>
+#include <headers/macros.h>
+#include <headers/colors.h>
+#include <keyboard/keyMap.h>
+#include <lib/stdiox.h>
+#include <lib/string.h>
 
 #define VGA_SCREEN_RESOLUTION 4480
 
-void add_y(uint8_t yadd)
-{
-    cursor += yadd * 80;
-    y++;
-}
-
-void set_y(uint8_t yset)
-{
-    cursor = (uint16_t*)VRAM + (yset * 80);
-    y = yset;
-}
 
  
 void screen_init(void)
@@ -131,69 +125,6 @@ void terminal_keyboard(void)
         Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | ((white << 4) | black) << 8);    
     }
 
-
-
-}
-
-
-void terminal_refresh(void)
-{
-    
-    if(KeyInfo.scan_code == ARROW_LEFT)
-    {
-        if(*(cursor-1) == (uint16_t)('>' | ((black << 4) | white) << 8))
-            return;
-
-        cursor--;
-    }
-
-    else if(KeyInfo.scan_code == ARROW_RIGHT)
-    {
-        cursor++;
-    }
-
-    else if(KeyInfo.scan_code == ENTER)
-    {
-
-        if(strlen(keyboard_command) != 0)
-        {
-            y++;
-            x = 0;
-            //cursor = (uint16_t*)VRAM;
-            //add_y(y);
-
-            if(!no_enter)
-            {
-                /*
-                    cursor = (uint16_t)('>' | ((black << 4) | white) << 8); 
-                    cursor++;
-                    x++;
-                */
-
-            }
-            
-        }
-
-        index = 0x0;       
-
-    }
-
-
-
-    else
-    {
-        if(KeyInfo.character != '\0')
-        {
-            *cursor = (uint16_t)(KeyInfo.character | ((black << 4) | white) << 8); 
-            keyboard_command[index] = KeyInfo.character;
-            index++;
-            cursor++;
-            x++;
-
-        }
-    }
-
-    KeyInfo.character = 0x0;
 
 
 }

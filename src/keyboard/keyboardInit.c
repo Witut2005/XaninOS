@@ -25,7 +25,7 @@ uint8_t keyboard_init()
 
     if(KEYBOARD_TEST_STATUS == KEYBOARD_TEST_FAILURE)
     {
-        sprint(red,white,"keyboard self test failed. Halting execution\n");
+        xprintf("keyboard self test failed. Halting execution\n");
         asm("cli");
         asm("hlt");
     }

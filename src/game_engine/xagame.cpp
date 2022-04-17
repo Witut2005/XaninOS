@@ -1,6 +1,28 @@
 
-#include <lib/stdiox.h>
+
 #include <game_engine/xagame.h>
+#include <game_engine/xagame_types.h>
+#include <headers/colors.h>
+
+
+#define set_output_color(x,y) (x << 4 | y)
+
+struct screen_t
+{
+    uint16_t** cursor;
+    uint8_t x;
+    uint8_t y;
+
+};
+
+typedef struct screen_t screen_t;
+
+extern "C"
+{
+    void* malloc(uint16_t size);
+    screen_t Screen;
+}
+
 
 square* square_create(uint32_t x, uint32_t y, uint32_t size, uint8_t color)
 {

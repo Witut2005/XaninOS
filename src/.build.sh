@@ -32,9 +32,15 @@ cd ..
 
 #COMPILE																										 HERE YOU MUST PUT PATH TO SRC DIRECTORY
 
+
 #i386-elf-gcc -O0 -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -I /home/witut/Desktop/xaninOS/src -c ./real_mode_manager/real_mode.cpp -o ./real_mode_manager/real_mode.o
 
-i386-elf-gcc -O0 -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-int-conversion -Wno-unused-function -I /home/witut/Desktop/xaninOS/src kernel.c ./handlers/keyboard.o ./pit/pit.o ./syscall/syscall.o -o kernel.bin
+
+i386-elf-g++ -O0 -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -I /home/witut/Desktop/xaninOS/src \
+-c ./game_engine/xagame.cpp -o ./game_engine/xagame.o
+
+i386-elf-gcc -O0 -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-int-conversion -Wno-unused-function -I /home/witut/Desktop/xaninOS/src \
+kernel.c ./handlers/keyboard.o ./pit/pit.o ./syscall/syscall.o ./game_engine/xagame.o -o kernel.bin
 
 cat ./xaninApps/shutdown ./xaninApps/syscall_test > ./xaninApps/xanin_external_apps
 

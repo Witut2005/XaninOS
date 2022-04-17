@@ -9,7 +9,8 @@
 #include <terminal/vty.h>
 #include <lib/stdlibx.h>
 
-
+#include <keyboard/keyMap.h>
+#include <lib/string.h>
 
 #define set_output_color(x,y) (x << 4 | y)
 #define cursor_set_position(x, y) (x << 8 | y)
@@ -39,27 +40,6 @@ void screen_clear(void)
 }
 
 
-/* small print */
-void sprint(uint8_t backColor,uint8_t colors,char* str)
-{
-
-cursor = (unsigned short*)(VGA_TEXT_MEMORY) + ((80)*y);
-
-    for (int i = 0; str[i] != '\0'; i++)
-    {
-        if(str[i] == '\n')
-        {
-            y++;
-            cursor = (unsigned short*)(VGA_TEXT_MEMORY) + ((80)*y) - 1;
-            continue;
-        }
-
-        cursor[i] = (uint16_t) (str[i] + (((backColor << 4) | colors) << 8));
-    }
-
-    y++;
-
-}
 
 char putchar(char character)
 {
@@ -378,8 +358,7 @@ void xprintf(char* str, ... )
 
         else if(str[strCounter] == '\r')
         {
-            x = 0;
-            cursor = (uint16_t*)(VGA_TEXT_MEMORY) + ((80)*y);
+            Screen.x = 0;
             strCounter++;
         }
 

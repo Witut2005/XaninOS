@@ -2,11 +2,9 @@
 
 #pragma once
 
-#include <headers/macros.h>
-#include <headers/colors.h>
-#include <keyboard/keyMap.h>
-#include <lib/stdiox.h>
-#include <lib/string.h>
+#include <stdint.h>
+
+
 
 #define SCREEN_WIDTH 28
 #define SCREEN_HEIGHT 80
@@ -20,7 +18,6 @@ enum screen_macros
 
 #define VGA_TEXT_MEMORY 0xb8000
 
-uint16_t* cursor = (uint16_t*)VGA_TEXT_MEMORY + (4*80);
 
 uint8_t logo_front_color = magenta;
 uint8_t logo_back_color = black;
@@ -53,7 +50,7 @@ struct screen_t
 };
 
 typedef struct screen_t screen_t;
-screen_t Screen;
+extern screen_t Screen;
 
 uint16_t* screen_buffer[28];
 uint8_t index = 0x0;
