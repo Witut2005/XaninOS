@@ -2,6 +2,10 @@
     "files.associations": {
         "vty.c": "cpp",
         "stdiox.h": "c",
-        "stdint.h": "c"
+        "stdint.h": "c",
+        "array": "c",
+        "string_view": "c",
+        "initializer_list": "c",
+        "utility": "c"
     }
 }

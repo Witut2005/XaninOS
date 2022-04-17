@@ -270,7 +270,7 @@ void merge_sort(int array[], int first, int last)
 
 }
 
-uint16_t* memory_managament_map = (uint16_t*)0x20000; 
+uint8_t* memory_managament_map = (uint8_t*)0x100000; 
 
 void bit_set(uint16_t* address, uint16_t bit_number)
 {
@@ -279,18 +279,21 @@ void bit_set(uint16_t* address, uint16_t bit_number)
 
 bool bit_clear(uint16_t* address, uint16_t bit_number)
 {
-    *address -= (1 << bit_number);
+    if(*address & (1 << bit_number))
+        *address ^= (1 << bit_number);
 }
 
 void memory_manager_init(void)
 {
-    for(char* i = 0x20000; (uint32_t)i <= 0x40000; i++)
+    for(char* i = 0x100000; (uint32_t)i <= 0x120000; i++)
         *i = 0x0;
 }
 
 void* malloc(uint16_t size)
 {
-    char* allocation_table = (char*)0x20000;
+    char* allocation_table = (char*)0x100000;
+    memory_managament_map += size;
+    return memory_managament_map - size;
 
     //*allocation_table = 
 }

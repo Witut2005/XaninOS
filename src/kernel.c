@@ -15,6 +15,7 @@
 #include <xin_fs/xin.c>
 #include <lib/algorithm.h>
 #include <lib/assert.h>
+#include <game_engine/xagame.c>
 
 
 extern void v86_mode_enter(void);
