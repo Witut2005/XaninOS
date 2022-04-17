@@ -14,6 +14,7 @@
 #include <devices/HARD_DISK/disk.c>
 #include <xin_fs/xin.c>
 #include <lib/algorithm.h>
+#include <lib/assert.h>
 
 
 extern void v86_mode_enter(void);
