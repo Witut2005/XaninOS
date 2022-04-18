@@ -114,6 +114,11 @@ int 0x10
 jmp print_msg
 
 jmp_ker_load:
+
+    mov ax, 0xA000
+    mov ds,ax
+    mov word [0x0], 0x4242
+
 jmp word 0x2000:0x0000
 
 idt_real:
@@ -121,6 +126,7 @@ dw 0x3ff
 dd 0x0
 
 
+vesa_mode: dw 0x0
 disk_num: dw 0x0
 str: db "ERROR your computer doesnt support fully int13 xaninOS cant be loaded",0
 

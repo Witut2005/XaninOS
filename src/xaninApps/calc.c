@@ -34,29 +34,6 @@ void calc()
 
     xscanf("%d", &operation_type);
 
-        if(operation_type==6)
-        {
-                xprintf("\n base of number system: ");
-                xscanf("%d", &a);
-
-                 KeyInfo.scan_code = 0x0;
-
-                    if(a > 35)
-                        {
-                   xprintf("\nnumber system not supported %zMAX 35%z", set_output_color(red,white));
-                   goto end_run;
-                        }
-
-                xprintf("\n decimal number: ");
-                xscanf("%d", &b);
-
-                    result = d2nbns(a,b);
-
-                xprintf("\noutput: %s", output_string);
-
-                goto end_run;
-
-        }
 
     xprintf("\nfirst number: ");
     xscanf("%d", &a);

@@ -20,7 +20,7 @@
 #define VGA_SCREEN_RESOLUTION 4480
 
 static char* keyString = "keyboard initalized succed :))\n";
-static char HEX_LUT[] = {'0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f'};
+static char hex_lut[] = {'0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f'};
 
 bool use_backspace = false;
 
@@ -63,8 +63,8 @@ char putchar(char character)
 void print_hex_number(uint8_t x)
 {
     char* mystr;
-    putchar(HEX_LUT[(x & 0xF0) >> 4]);
-    putchar(HEX_LUT[x & 0x0F]);
+    putchar(hex_lut[(x & 0xF0) >> 4]);
+    putchar(hex_lut[x & 0x0F]);
 
 }
 

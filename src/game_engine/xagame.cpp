@@ -1,88 +1,79 @@
 
+#include <game_engine/xagame.hpp>
 
-#include <game_engine/xagame.h>
-#include <game_engine/xagame_types.h>
-#include <headers/colors.h>
+void xgm::rectangle::create(uint32_t x, uint32_t y, uint32_t size_x, uint32_t size_y, uint8_t color)
+{    
 
+    this->is_destroyed = false;
 
-#define set_output_color(x,y) (x << 4 | y)
+    this->position_x = x;
+    this->position_y = y;
+    this->size_x = size_x;
+    this->size_y = size_y;
+    this->color = color;
 
-struct screen_t
-{
-    uint16_t** cursor;
-    uint8_t x;
-    uint8_t y;
-
-};
-
-typedef struct screen_t screen_t;
-
-extern "C"
-{
-    void* malloc(uint16_t size);
-    screen_t Screen;
+    for(int i = 0; i < this->size_y; i++)
+    {
+        for(int j = 0; j < this->size_x + (size_x / 3); j++)
+            Screen.cursor[this->position_y + i][this->position_x + j] = ' ' | (set_output_color(color, white) << 8);
+    }
 }
 
 
-square* square_create(uint32_t x, uint32_t y, uint32_t size, uint8_t color)
+
+void xgm::rectangle::move(int32_t x, int32_t y)
 {
-    square* new_square = (square*)malloc(sizeof(square));
-    
+    if(this->is_destroyed)
+        return;
 
-    new_square->position_x = x;
-    new_square->position_y = y;
-    new_square->size = size;
-    new_square->color = color;
-
-    for(int i = 0; i < size; i++)
+    for(int i = 0; i < this->size_y; i++)
     {
-        for(int j = 0; j < (float)size * 1.5; j++)
-            Screen.cursor[y][x + j] = ' ' | (set_output_color(color, white) << 8);
+        for(int j = 0; j < this->size_x + (size_x / 3); j++)
+            Screen.cursor[this->position_y + i][this->position_x + j] = ' ' | (set_output_color(black, white) << 8);
 
-        y++;
     }
 
-    return new_square;
-}
+    this->position_x += x;
+    this->position_y += y;
 
-rectangle* rectangle_create(uint32_t x, uint32_t y, uint32_t size_x, uint32_t size_y, uint8_t color)
-{
-    rectangle* new_rectangle = (rectangle*) malloc(sizeof(rectangle));
-
-    new_rectangle->position_x = x;
-    new_rectangle->position_y = y;
-    new_rectangle->size_x = size_x;
-    new_rectangle->size_y = size_y;
-    new_rectangle->color = color;
-
-
-    for(int i = 0; i < new_rectangle->size_y; i++)
+    for(int i = 0; i < this->size_y; i++)
     {
-        for(int j = 0; j < (float)new_rectangle->size_x * 1.5; j++)
-            Screen.cursor[y + i][new_rectangle->position_x + j] = ' ' | (set_output_color(color, white) << 8);
+        for(int j = 0; j < this->size_x + (size_x / 3); j++)
+            Screen.cursor[this->position_y + i][this->position_x + j] = ' ' | (set_output_color((this->color), white) << 8);
     }
 
-    return new_rectangle;
 
 }
 
-void rectangle_move(rectangle* rectangle, uint8_t x, uint8_t y)
+void xgm::rectangle::destroy()
 {
-
-
-    for(int i = 0; i < rectangle->size_y; i++)
+    for(int i = 0; i < this->size_y; i++)
     {
-        for(int j = 0; j < (float)rectangle->size_x * 1.5; j++)
-            Screen.cursor[rectangle->position_y + i][rectangle->position_x + j] = ' ' | (set_output_color(black, black) << 8);
+        for(int j = 0; j < this->size_x + (size_x / 3); j++)
+            Screen.cursor[this->position_y + i][this->position_x + j] = ' ' | (set_output_color(black, white) << 8);
+
     }
 
-    rectangle->position_x += x;
-    rectangle->position_y += y;
+    is_destroyed = true;
+}
 
-    for(int i = 0; i < rectangle->size_y; i++)
+void xgm::rectangle::rotate_right_90()
+{
+    for(int i = 0; i < this->size_y; i++)
     {
-        for(int j = 0; j < (float)rectangle->size_x * 1.5; j++)
-            Screen.cursor[rectangle->position_y + i][rectangle->position_x + j] = ' ' | (set_output_color(rectangle->color, white) << 8);
-    }    
+        for(int j = 0; j < this->size_x + (size_x / 3); j++)
+            Screen.cursor[this->position_y + i][this->position_x + j] = ' ' | (set_output_color(black, white) << 8);
+
+    }
+
+    uint32_t size_x_tmp = this->size_x;
+    this->size_x = this->size_y;
+    this->size_y = size_x_tmp;
+
+    for(int i = 0; i < this->size_y - (size_y / 3); i++)
+    {
+        for(int j = 0; j < this->size_x + (size_x / 3); j++)
+            Screen.cursor[this->position_y + i][this->position_x + j] = ' ' | (set_output_color((this->color), white) << 8);
+    }
 
 }

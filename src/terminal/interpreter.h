@@ -52,6 +52,7 @@
 #include <xin_fs/xin_note.c>
 #include <xin_fs/xin_paint.c>
 
+extern void xagame_test(void);
 
 
 void scan(void);

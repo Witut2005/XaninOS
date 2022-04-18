@@ -48,6 +48,11 @@ void scan(void)
         //touch();
     }
 
+    else if(cmpstr(program_name,"xagame_test"))
+    {
+        xagame_test();
+    }
+
     else if(cmpstr(program_name,"zsk"))
     {
         zsk(program_parameters);

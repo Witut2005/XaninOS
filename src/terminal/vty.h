@@ -50,7 +50,8 @@ struct screen_t
 };
 
 typedef struct screen_t screen_t;
-extern screen_t Screen;
+
+screen_t Screen;
 
 uint16_t* screen_buffer[28];
 uint8_t index = 0x0;
@@ -58,10 +59,6 @@ char character_blocked = '\0';
 
 static uint8_t y,x;
 void setTerminal();
-void set_x(uint8_t newVal);
-void set_y(uint8_t newVal);
-void add_x(uint8_t xadd);
-void add_y(uint8_t yadd);
 void screen_init(void);
 
 bool no_enter = false;
