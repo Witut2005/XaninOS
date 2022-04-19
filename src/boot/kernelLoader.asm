@@ -7,6 +7,8 @@ jmp enter_32
 elf_load_address: dd 0x90909090
 
 enter_32:
+
+
 mov ax, 0x2000
 mov ds, ax
 mov es, ax
@@ -20,7 +22,6 @@ lgdt[_GDT_ADDR] ;LGDT ALWAYS BEFORE ENTERING 32-BIT MODE
 mov eax, cr0
 or eax, 0x1
 mov cr0,eax
-
 
 jmp dword CODE_SEGMENT:(_bits32)
 

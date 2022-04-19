@@ -77,3 +77,9 @@ void xgm::rectangle::rotate_right_90()
     }
 
 }
+
+xgm::rectangle::rectangle(uint32_t class_id)
+{
+    this->class_id = class_id;
+
+}

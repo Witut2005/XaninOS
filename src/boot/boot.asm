@@ -1,5 +1,4 @@
-
-[org 0x7c00] ;there we start execution
+org 0x7c00] ;there we start execution
 [bits 16]; <-- 16bit real mode
 
 
@@ -133,3 +132,39 @@ str: db "ERROR your computer doesnt support fully int13 xaninOS cant be loaded",
 times 510 - ($-$$) db 0x0
 
 dw 0xaa55
+
+;vbe_info_structure:
+;    vesa_attribute:                 dw 0
+;    vesa_window_a:                  db 0
+;    vesa_window_b:                  db 0
+;    vesa_granularity:               dw 0
+;    vesa_window_size:               dw 0 
+;    vesa_segment_a:                 dw 0
+;    vesa_segment_b:                 dw 0
+;    vesa_win_func_ptr:              dd 0
+;    vesa_pitch:                     dw 0
+;    vesa_width:                     dw 0
+;    vesa_w_char:                    db 0
+;    vesa_y_char:                    db 0
+;    vesa_planes:                    db 0
+;    vesa_bpp:                       db 0
+;    vesa_banks:                     db 0
+;    vesa_memory_model:              db 0
+;    vesa_bank_size:                 db 0
+;    vesa_image_pages:               db 0
+;    vesa_reserved0:                 db 0
+
+;    vesa_red_mask:                  db 0
+;    vesa_rred_position:             db 0
+;    vesa_green_mask:                db 0 
+;    vesa_green_position:            db 0
+;    vesa_blue_mask:                 db 0
+;    vesa_blue_position:             db 0
+;    vesa_reserved_mask:             db 0
+;    vesa_reserved_position:         db 0
+;    vesa_direct_color_attributes:   db 0
+;
+;    vesa_framebuffer:               dd 0
+;    vesa_off_screen_mem_off:        dd 0
+;    vesa_off_screen_mem_size:       dw 0xffff
+;    vesa_reserved1:                 resb 206

@@ -147,6 +147,14 @@ void xprintf(char* str, ... )
                     break;
                 }
 
+                case 'f':
+                {
+                    //float float_number = (float)va_arg(args,double);
+                    //float_to_string(float_number,tmpPtr);
+
+
+                }
+
                 case 'b':
                 {
                     number = va_arg(args,int);

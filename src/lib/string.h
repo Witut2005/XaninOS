@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include <lib/math.h>
 
 uint32_t strlen(char* a)
 {
@@ -46,6 +47,34 @@ char* reverse_string(char* str)
     return str;
 
 }
+
+char* float_to_string(float number, char* str)
+{
+    uint32_t* float_ptr = (uint32_t*)&number;
+    bool sign_bit = (*float_ptr & (1 << 31) >> 31);
+    uint8_t exponent = (*float_ptr & (0xFF << 23) >> 23);
+    exponent -= 127;
+    exponent = pow(2,exponent);
+    uint32_t mantissa = (*float_ptr & 0x7FFFFF);
+
+    uint32_t number_high;
+    uint32_t number_low;
+
+    int i = 0;
+
+    number_high = exponent * mantissa;
+
+    if(sign_bit)
+    {
+        str[i] = '-';
+        i++;
+    }
+
+
+
+
+}
+
 
 uint32_t cmpstr(char* a,char* b)
 {
