@@ -157,7 +157,7 @@ void xin_create_file(char* entry_name)
     xprintf("addr: 0x%x\n", (uint32_t)entry->entry_path);
     //while(1);
    
-    entry_name = xin_get_current_path(entry_name);
+    xin_get_current_path(entry_name);
 
     set_string(entry->entry_path, entry_name);
     
@@ -198,8 +198,6 @@ void xin_create_directory(char* entry_name)
 
     xin_entry* entry = xin_find_free_entry();
 
-    entry_name = xin_get_current_path(entry_name);
-
     set_string(entry->entry_path, entry_name);
     entry->creation_date = 0x0;
     entry->creation_time = 0x0;
@@ -232,11 +230,6 @@ xin_entry* xin_change_directory(char* new_directory)
         xprintf("%zMISSING / ENDING CHARACTER IN DIRECTORY NAME\n", set_output_color(red, white));
         while(KeyInfo.scan_code != ENTER);
         return nullptr;
-    }
-
-    if(new_directory[0] != '/')
-    {
-        new_directory = xin_get_current_path(new_directory);
     }
 
     set_string(xin_current_directory,new_directory);
