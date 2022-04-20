@@ -41,7 +41,7 @@ char* xin_get_current_path(char* file_name)
 /* DIRECTORY AND FILES */
 xin_entry* xin_find_entry(char* entry_name)
 {
-    for(char* i = XIN_ENTRY_TABLE; (uint32_t)i < XIN_ENTRY_TABLE + (SECTOR_SIZE * 2); i += 32)
+    for(char* i = XIN_ENTRY_TABLE; (uint32_t)i < XIN_ENTRY_TABLE + (SECTOR_SIZE * 4); i += 32)
     {
         if(cmpstr(entry_name, i))     
         {
@@ -52,7 +52,7 @@ xin_entry* xin_find_entry(char* entry_name)
 
     entry_name = xin_get_current_path(entry_name);
 
-    for(char* i = XIN_ENTRY_TABLE; (uint32_t)i < XIN_ENTRY_TABLE + (SECTOR_SIZE * 2); i += 32)
+    for(char* i = XIN_ENTRY_TABLE; (uint32_t)i < XIN_ENTRY_TABLE + (SECTOR_SIZE * 4); i += 32)
     {
         if(cmpstr(entry_name, i))  
         {   
@@ -146,6 +146,9 @@ xin_entry* xin_init_fs(void)
     xin_file_create_at_address("shutdown.bin", 0x0, 0x0, XIN_READ_ONLY, 0x0, 0x0, PERMISSION_MAX, 0x81, 0x1);
     xin_file_create_at_address("syscall_test.bin", 0x0, 0x0, 0xFFFF, 0x0, 0x0, PERMISSION_MAX, 0x82, 1);
 
+
+    xin_change_directory("/");
+
 }
 
 
@@ -184,8 +187,57 @@ void xin_create_file(char* entry_name)
 }
 
 
+void xin_create_directory(char* entry_path)
+{
+
+    if(entry_path[strlen(entry_path) - 1] != '/')
+    {
+        xprintf("%zMISSING / ENDING CHARACTER IN DIRECTORY NAME\n", set_output_color(red, white));
+        while(KeyInfo.scan_code != ENTER);
+        exit_process();
+    }
+
+    if(xin_find_entry(entry_path) == nullptr)
+    {
+        xprintf("NO SUCH DIRECTORY\n", set_output_color(red, white));
+        while(KeyInfo.scan_code != ENTER);
+        return;
+    }
+
+    
+    xin_entry* entry = xin_find_free_entry();
+
+    char entry_name[40];
+    xprintf("your parent folder: %s\n", entry_path);
+    xprintf("type your new directory name: ");
+    xscanf("%s", entry_name);
+
+    int i = 0;
+
+    for(; entry_path[i] != '\0'; i++)
+        entry->entry_path[i] = entry_path[i];
+    
+
+    for(int j = 0; entry_name[j] != '\0'; i++, j++)
+        entry->entry_path[i] = entry_name[j];
 
 
+
+    entry->creation_date = 0x0;
+    entry->creation_time = 0x0;
+    entry->os_specific = 0xFFFF;
+    entry->modification_date = 0x0;
+    entry->modification_time = 0x0;
+    entry->entry_permissions = PERMISSION_MAX;
+    entry->entry_size = 0x0;
+    entry->starting_sector = 0x0;
+    entry->entry_type = XIN_DIRECTORY;
+
+    exit_process();
+
+}
+
+/*
 void xin_create_directory(char* entry_name)
 {
 
@@ -214,13 +266,15 @@ void xin_create_directory(char* entry_name)
     exit_process();
 
 }
-
+*/
 
 xin_entry* xin_change_directory(char* new_directory)
 {
 
 
-    if(xin_find_entry(new_directory) == nullptr)
+    xin_entry* xin_new_directory = xin_find_entry(new_directory);
+
+    if(xin_new_directory == nullptr)
     {
         xprintf("%zNO SUCH DIRECTORY\n", set_output_color(red,white));
         while(KeyInfo.scan_code != ENTER);
@@ -234,14 +288,23 @@ xin_entry* xin_change_directory(char* new_directory)
         return nullptr;
     }
 
+    /*
     if(new_directory[0] != '/')
     {
         new_directory = xin_get_current_path(new_directory);
     }
+    */
 
-    set_string(xin_current_directory,new_directory);
+    for(int i = 0; i < sizeof(xin_current_directory); i++)
+        xin_current_directory[i] = '\0';
     
-    exit_process(xin_find_entry(new_directory));
+    
+    set_string(xin_current_directory, xin_new_directory->entry_path);
+   
+
+    xprintf("your file: %s", xin_current_directory);
+
+    return xin_new_directory;
 
 }
 
