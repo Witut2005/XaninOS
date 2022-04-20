@@ -426,6 +426,8 @@ void xscanf(char* str, ... )
  
     character_blocked = (char)Screen.cursor[Screen.y][Screen.x - 1];
 
+    char* starting_screen_position = (char*)&Screen.cursor[Screen.y][Screen.x - 1];
+
     start:
 
     while(1)
@@ -435,7 +437,7 @@ void xscanf(char* str, ... )
         {
             Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((black << 4) | white) << 8));
 
-            if((char)Screen.cursor[Screen.y][Screen.x - 1] == character_blocked)
+            if(&Screen.cursor[Screen.y][Screen.x - 1] == (uint16_t*)starting_screen_position)
             {
                 goto start;
             }

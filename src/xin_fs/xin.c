@@ -207,21 +207,32 @@ void xin_create_directory(char* entry_path)
     
     xin_entry* entry = xin_find_free_entry();
 
+    xprintf("Your parent directory: %s\n", entry_path);
+    xprintf("Your new directory name: ");
+
     char entry_name[40];
-    xprintf("your parent folder: %s\n", entry_path);
-    xprintf("type your new directory name: ");
     xscanf("%s", entry_name);
 
     int i = 0;
 
-    for(; entry_path[i] != '\0'; i++)
-        entry->entry_path[i] = entry_path[i];
+    for(; entry_path[i] != '\0'; i++);
     
 
     for(int j = 0; entry_name[j] != '\0'; i++, j++)
-        entry->entry_path[i] = entry_name[j];
+        entry_path[i] = entry_name[j];
 
+    if(xin_find_entry(entry_path) != nullptr)
+    {
+        xprintf("%zDIRECTORY WITH THIS NAME ALREADY EXISTS\n", 
+                                set_output_color(red, white));
+        while(KeyInfo.scan_code != ENTER);
+        return;
+    }
 
+    for(int j = 0; j < sizeof(entry->entry_path); j++)
+    {
+        entry->entry_path[j] = entry_path[j];
+    }
 
     entry->creation_date = 0x0;
     entry->creation_time = 0x0;
