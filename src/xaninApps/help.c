@@ -11,8 +11,9 @@ void help(void)
     xprintf("AVAILABLE COMMANDS:\n");
     xprintf("cls\n");
     xprintf("note file_name\n");
-    xprintf("create file_name\n");
-    xprintf("mkdir directory_name\n");
+    xprintf("create parent_directory\n");
+    xprintf("mkdir parent_directory\n");
+    xprintf("pong\n");
     xprintf("cd directory_name\n");
     xprintf("reg_dump\n");
     xprintf("cpu_info");

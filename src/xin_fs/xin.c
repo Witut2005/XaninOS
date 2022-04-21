@@ -155,14 +155,49 @@ xin_entry* xin_init_fs(void)
 
 void xin_create_file(char* entry_name)
 {
-    xin_entry* entry = xin_find_free_entry();
 
-    xprintf("addr: 0x%x\n", (uint32_t)entry->entry_path);
-    //while(1);
-   
+    xprintf("Your parent directory: %s\n", entry_name); 
+
+    if(entry_name[strlen(entry_name) - 1] != '/')
+    {
+        xprintf("%zMISSING / ENDING CHARACTER IN DIRECTORY NAME\n", set_output_color(red, white));
+        while(KeyInfo.scan_code != ENTER);
+        exit_process();
+    }
+
+    if(xin_find_entry(entry_name) == nullptr)
+    {
+        xprintf("NO SUCH DIRECTORY\n", set_output_color(red, white));
+        while(KeyInfo.scan_code != ENTER);
+        return;
+    }
+
+    xprintf("Your new file name: ");
+    char new_entry_name[40];
+    char entry_full_name[40];
+    xscanf("%s", new_entry_name);
+
+
+    int i;
+
+    for(i = 0; entry_name[i] != '\0'; i++)
+        entry_full_name[i] = entry_name[i];   
+    
+    for(int j = 0; new_entry_name[j] != '\0'; j++, i++) 
+        entry_full_name[i] = new_entry_name[j];    
+
+    uint8_t* write_entry = xin_find_free_pointer();
+
+    for(int i = 0; i < 15; i++)
+        write_entry[i] = XIN_ALLOCATED;
+
+    write_entry[15] = XIN_EOF;
+    
     entry_name = xin_get_current_path(entry_name);
 
-    set_string(entry->entry_path, entry_name);
+    xin_entry* entry = xin_find_free_entry(); 
+        
+    set_string(entry->entry_path, entry_full_name);
     
     entry->creation_date = 0x0;
     entry->creation_time = 0x0;
@@ -173,12 +208,6 @@ void xin_create_file(char* entry_name)
     entry->entry_size = 0x0;
     entry->entry_type = XIN_FILE;
 
-    uint8_t* write_entry = xin_find_free_pointer();
-
-    for(int i = 0; i < 15; i++)
-        write_entry[i] = XIN_ALLOCATED;
-
-    write_entry[15] = XIN_EOF;
 
     entry->starting_sector = (uint32_t)write_entry - XIN_ENTRY_POINTERS;
 
