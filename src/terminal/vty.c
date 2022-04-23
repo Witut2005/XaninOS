@@ -4,7 +4,7 @@
 #include <xaninApps/help.c>
 #include <lib/signal.h>
 #include <headers/macros.h>
-#include <headers/colors.h>
+#include <lib/colors.h>
 #include <keyboard/keyMap.h>
 #include <lib/stdiox.h>
 #include <lib/string.h>

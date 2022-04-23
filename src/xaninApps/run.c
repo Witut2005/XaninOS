@@ -38,7 +38,7 @@ void run(char* file_name)
             xprintf("%zYOU CANT RUN DIRECTORY\n",set_output_color(red,white));
             xprintf("%zuse F4 key to exit\n",set_output_color(red,white));
             while(KeyInfo.scan_code != F4_KEY);
-            exit_process();
+            return;
         }
     
         uint8_t* where_to_load = 0x10000;
@@ -53,5 +53,4 @@ void run(char* file_name)
 
     }
 
-    exit_process();
 }

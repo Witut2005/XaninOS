@@ -106,14 +106,24 @@ void xin_file_create_at_address(char *path, uint8_t creation_date, uint8_t creat
     entry_created->entry_size = entry_size;
     entry_created->starting_sector = starting_sector;
 
-    uint8_t* write_entry = xin_find_free_pointer();
-    entry_size--;
+    //entry_size--;
+
+    uint8_t* write_entry = (uint8_t*)(XIN_ENTRY_POINTERS + starting_sector);
+
+    uint8_t tmp = 0;
 
     for(uint8_t* i = write_entry;  i < ( write_entry + entry_size); i++)
+    {
         *i = XIN_ALLOCATED;
-    
-    *(write_entry + entry_size) = XIN_EOF;
+        tmp++;
+    }
 
+    *(write_entry + entry_size - 1) = XIN_EOF;
+    xprintf("SIZE: %d\n", entry_size);
+
+    xprintf("BEG ADDR: %x\n",write_entry);
+    xprintf("ADDR: %x\n",(write_entry + entry_size - 1) );
+    xprintf("TMP %d\n", tmp);
 
 }
 
@@ -121,6 +131,7 @@ void xin_folder_create(char *path, uint8_t creation_date, uint8_t creation_time,
                     uint8_t modification_date, uint8_t modification_time, uint8_t permissions)
 {
     xin_entry* entry_created = xin_find_free_entry();
+
     set_string(entry_created -> entry_path, path);
     
     entry_created->creation_date = creation_date;
@@ -138,14 +149,22 @@ void xin_folder_create(char *path, uint8_t creation_date, uint8_t creation_time,
 
 xin_entry* xin_init_fs(void)
 {
+
+
+    for(uint8_t* i = XIN_ENTRY_POINTERS; (uint32_t)i < XIN_ENTRY_POINTERS + 0x200; i++)
+        *i = 0x0;
+
+
     xin_folder_create("/", 0x0, 0x0, 0xFFFF, 0x0, 0x0, PERMISSION_MAX);
+
+
     xin_file_create_at_address("ivt.bin", 0x0, 0x0, XIN_READ_ONLY, 0x0, 0x0, PERMISSION_MAX, 0x0, 0x2);
-    xin_file_create_at_address("file_system.bin", 0x0, 0x0, XIN_READ_ONLY, 0x0, 0x0, PERMISSION_MAX, 0x2, 0xE + 0x10);
+    xin_file_create_at_address("file_system.bin", 0x0, 0x0, XIN_READ_ONLY, 0x0, 0x0, PERMISSION_MAX, 0x2, 30 - 10);
+
     xin_file_create_at_address("boot.bin", 0x0, 0x0, XIN_READ_ONLY, 0x0, 0x0, PERMISSION_MAX, 0x3E, 0x1);
     xin_file_create_at_address("tmp.bin", 0x0, 0x0, 0xFFFF, 0x0, 0x0, PERMISSION_MAX, 0x80, 1);
     xin_file_create_at_address("shutdown.bin", 0x0, 0x0, XIN_READ_ONLY, 0x0, 0x0, PERMISSION_MAX, 0x81, 0x1);
     xin_file_create_at_address("syscall_test.bin", 0x0, 0x0, 0xFFFF, 0x0, 0x0, PERMISSION_MAX, 0x82, 1);
-
 
     xin_change_directory("/");
 

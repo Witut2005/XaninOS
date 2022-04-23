@@ -4,6 +4,7 @@
 #include <lib/hal.h>
 #include <handlers/handlers.c>
 #include <keyboard/keyMap.h>
+#include <syscall/syscall.c>
 
 
 #define IDT_HANDLERS 256
@@ -21,7 +22,7 @@
     idtEntries[idt_entry].P_DPL = 0x8e
 
 
-extern void _syscall(void);
+//extern void _syscall(void);
 
     /* IDT Register */
     struct idtReg
@@ -75,7 +76,7 @@ void set_idt(void)
     configure_idt_entry(0x20, pit_handler_init,CODE_SEGMENT);
     configure_idt_entry(0x21, keyboard_handler_init,CODE_SEGMENT);
     configure_idt_entry(0x26, floppy_interrupt,CODE_SEGMENT);
-    configure_idt_entry(0x80, _syscall,CODE_SEGMENT);
+    configure_idt_entry(0x80, syscall,CODE_SEGMENT);
     
     configure_idt_entry(0x81, no_handler,CODE_SEGMENT);
     

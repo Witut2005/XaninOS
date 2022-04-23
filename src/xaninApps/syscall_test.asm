@@ -6,15 +6,10 @@
 
 jmp print_syscall
 
-str: db "shutdown.bin",0
-
 
 print_syscall:
 
-
-
-mov eax, 200
-mov esi, str
+mov eax, 2
 int 0x80
 
 

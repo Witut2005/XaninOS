@@ -2,6 +2,7 @@
     "files.associations": {
         "stdlibx.h": "c",
         "stdiox.h": "c",
-        "stdint.h": "c"
+        "stdint.h": "c",
+        "colors.h": "c"
     }
 }

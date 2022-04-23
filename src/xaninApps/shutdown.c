@@ -7,7 +7,7 @@
 void shutdown(void)
 {
 
-    real_mode_enter(0x1000, 0x0); // <-- location in RAM of shutdown program
+    real_mode_enter(0x1000, 0x200); // <-- location in RAM of shutdown program
 
 
     outdwIO(0x604, 0x2000);  /* QEMU */

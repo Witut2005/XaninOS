@@ -4,7 +4,7 @@
 
 #include <stdarg.h>
 #include <stdint.h>
-#include <headers/colors.h>
+#include <lib/colors.h>
 #include <headers/macros.h>
 #include <terminal/vty.h>
 #include <lib/stdlibx.h>
@@ -26,15 +26,13 @@ bool use_backspace = false;
 
 void screen_clear(void)
 {
-    uint16_t* ptrTmp = (uint16_t*)VGA_TEXT_MEMORY;
+    uint16_t* screen_cleaner = (uint16_t*)VGA_TEXT_MEMORY;
     for(int i = 0; i < (80 * 28); i++)
     {
-        *ptrTmp = '\0';
-        ptrTmp++;
+        *screen_cleaner = '\0';
+        screen_cleaner++;
     }
 
-    x = 0;
-    y = 0;
     Screen.x = 0;
     Screen.y = 0;
 }
@@ -60,28 +58,18 @@ char putchar(char character)
 }
 
 
-void print_hex_number(uint8_t x)
-{
-    char* mystr;
-    putchar(hex_lut[(x & 0xF0) >> 4]);
-    putchar(hex_lut[x & 0x0F]);
 
-}
 
 void print_bcd_number(uint8_t x)
 {
 
-    uint16_t* ptr;
+    Screen.cursor[Screen.y][Screen.x] = (uint16_t)( (((x & 0xf0) >> 4) + 48)  | (((red << 4) | white) << 8));
+    Screen.x += 0x2;
 
-    ptr = (unsigned short*)(VGA_TEXT_MEMORY) + x +  ((80)*y);
-    *ptr = (uint16_t)( (((x & 0xf0) >> 4) + 48)  | (((red << 4) | white) << 8));
-    x += 0x2;
+    Screen.cursor[Screen.y][Screen.x] = (uint16_t)(((x & 0x0f) + 48)  | (((red << 4) | white) << 8));
+    Screen.x += 0x2;
 
-    ptr = (unsigned short*)(VGA_TEXT_MEMORY) + x +  ((80)*y);
-    *ptr = (uint16_t)(((x & 0x0f) + 48)  | (((red << 4) | white) << 8));
-    x += 0x2;
-
-    y++;
+    Screen.y++;
 
     return;
 
@@ -95,12 +83,15 @@ void xprintf(char* str, ... )
 {
 
     char tmp[128];
+    char* temporary_pointer = tmp;
+    
+    uint32_t number;
+
 
     for(int i = 0; i < sizeof(tmp); i++)
         tmp[i] = '\0';
 
-    char* tmpPtr = tmp;
-    uint32_t number;
+
 
     char* stringPtr;
 
@@ -109,33 +100,33 @@ void xprintf(char* str, ... )
 
 
 
-    uint32_t strCounter = 0;
+    uint32_t string_counter = 0;
 
-    uint8_t backgroundColor = black;
-    uint8_t fontColor = white;
+    uint8_t background_color = black;
+    uint8_t font_color = white;
 
 
-    while(str[strCounter])
+    while(str[string_counter])
     {
 
         for(int i = 0; i < sizeof(tmp); i++)
             tmp[i] = '\0';
 
-        if(str[strCounter] == '%')
+        if(str[string_counter] == '%')
         {
 
-            strCounter++;
-            switch(str[strCounter])
+            string_counter++;
+            switch(str[string_counter])
             {
                 case 'd':
                 {
                     number = va_arg(args,int);
 
-                    int_to_str(number,tmpPtr);
+                    int_to_str(number,temporary_pointer);
 
-                    for(int i = 0; tmpPtr[i] != '\0'; i++)
+                    for(int i = 0; temporary_pointer[i] != '\0'; i++)
                     {                        
-                        Screen.cursor[Screen.y][Screen.x] = (uint16_t) (tmpPtr[i] + (((backgroundColor << 4) | fontColor) << 8));
+                        Screen.cursor[Screen.y][Screen.x] = (uint16_t) (temporary_pointer[i] + (((background_color << 4) | font_color) << 8));
                         if(Screen.x == 80)
                         {
                             Screen.y++;
@@ -150,7 +141,7 @@ void xprintf(char* str, ... )
                 case 'f':
                 {
                     //float float_number = (float)va_arg(args,double);
-                    //float_to_string(float_number,tmpPtr);
+                    //float_to_string(float_number,temporary_pointer);
 
 
                 }
@@ -159,11 +150,11 @@ void xprintf(char* str, ... )
                 {
                     number = va_arg(args,int);
 
-                    tmpPtr = bin_to_str(number,tmp);
+                    temporary_pointer = bin_to_str(number,tmp);
 
-                    for(int i = 0; tmpPtr[i] != '\0'; i++)
+                    for(int i = 0; temporary_pointer[i] != '\0'; i++)
                     { 
-                        Screen.cursor[Screen.y][Screen.x] = (uint16_t) (tmpPtr[i] + (((backgroundColor << 4) | fontColor) << 8));
+                        Screen.cursor[Screen.y][Screen.x] = (uint16_t) (temporary_pointer[i] + (((background_color << 4) | font_color) << 8));
                         if(Screen.x == 80)
                         {
                             Screen.y++;
@@ -192,7 +183,7 @@ void xprintf(char* str, ... )
                             continue;
                         }
 
-                        Screen.cursor[Screen.y][Screen.x] = (uint16_t) (stringPtr[i] + (((backgroundColor << 4) | fontColor) << 8));
+                        Screen.cursor[Screen.y][Screen.x] = (uint16_t) (stringPtr[i] + (((background_color << 4) | font_color) << 8));
                         if(Screen.x == 80)
                         {
                             Screen.y++;
@@ -225,7 +216,7 @@ void xprintf(char* str, ... )
                         return;
                     }
 
-                    Screen.cursor[Screen.y][Screen.x] = (uint16_t) (character + (((backgroundColor << 4) | fontColor) << 8));
+                    Screen.cursor[Screen.y][Screen.x] = (uint16_t) (character + (((background_color << 4) | font_color) << 8));
 
                     if(Screen.x == 80)
                     {
@@ -240,20 +231,20 @@ void xprintf(char* str, ... )
 
                 case 'z':
                 {
-                    fontColor = (uint8_t)va_arg(args,int);
-                    backgroundColor = (fontColor & 0xf0) >> 4;
-                    fontColor = fontColor & 0x0f;
+                    font_color = (uint8_t)va_arg(args,int);
+                    background_color = (font_color & 0xf0) >> 4;
+                    font_color = font_color & 0x0f;
                     break;
                 }
 
                 case 'x':
                 {
                     uint32_t number_hex = va_arg(args,uint32_t);
-                    int_to_hex_str(number_hex,tmpPtr);
+                    int_to_hex_str(number_hex,temporary_pointer);
 
-                    for(int i = 0; tmpPtr[i] != '\0'; i++)
+                    for(int i = 0; temporary_pointer[i] != '\0'; i++)
                     {
-                        Screen.cursor[Screen.y][Screen.x] = (uint16_t) (tmpPtr[i] + (((backgroundColor << 4) | fontColor) << 8));
+                        Screen.cursor[Screen.y][Screen.x] = (uint16_t) (temporary_pointer[i] + (((background_color << 4) | font_color) << 8));
                         if(Screen.x == 80)
                         {
                             Screen.y++;
@@ -270,11 +261,11 @@ void xprintf(char* str, ... )
                 case 'X':
                 {
                     number = va_arg(args,int);
-                    int_to_hex_str(number,tmpPtr);
+                    int_to_hex_str(number,temporary_pointer);
 
-                    for(int i = 0; tmpPtr[i] != '\0'; i++)
+                    for(int i = 0; temporary_pointer[i] != '\0'; i++)
                     {
-                        Screen.cursor[Screen.y][Screen.x] = (uint16_t) (tmpPtr[i] + (((backgroundColor << 4) | fontColor) << 8));
+                        Screen.cursor[Screen.y][Screen.x] = (uint16_t) (temporary_pointer[i] + (((background_color << 4) | font_color) << 8));
                         if(Screen.x == 80)
                         {
                             Screen.y++;
@@ -283,7 +274,7 @@ void xprintf(char* str, ... )
                         Screen.x++;
                     }
 
-                    toupper(tmpPtr);
+                    toupper(temporary_pointer);
                     
                     break;
 
@@ -292,11 +283,11 @@ void xprintf(char* str, ... )
                 case 'o':
                 {
                     number = va_arg(args,int);
-                    int_to_oct_str(number,tmpPtr);
+                    int_to_oct_str(number,temporary_pointer);
 
-                    for(int i = 0; tmpPtr[i] != '\0'; i++)
+                    for(int i = 0; temporary_pointer[i] != '\0'; i++)
                     {
-                        Screen.cursor[Screen.y][Screen.x] = (uint16_t) (tmpPtr[i] + (((backgroundColor << 4) | fontColor) << 8));
+                        Screen.cursor[Screen.y][Screen.x] = (uint16_t) (temporary_pointer[i] + (((background_color << 4) | font_color) << 8));
                         if(Screen.x == 80)
                         {
                             Screen.y++;
@@ -318,18 +309,18 @@ void xprintf(char* str, ... )
                 case 'm':
                 {
 
-                    strCounter++;
-                    switch(str[strCounter])
+                    string_counter++;
+                    switch(str[string_counter])
                     {
                         case 'x':
                         {
 
                             uint8_t number_hex = (uint8_t)va_arg(args,uint32_t);
-                            xint_to_hex_str(number_hex,tmpPtr, sizeof(uint8_t));
+                            xint_to_hex_str(number_hex,temporary_pointer, sizeof(uint8_t));
 
-                            for(int i = 0; tmpPtr[i] != '\0'; i++)
+                            for(int i = 0; temporary_pointer[i] != '\0'; i++)
                             {
-                                Screen.cursor[Screen.y][Screen.x] = (uint16_t) (tmpPtr[i] + (((backgroundColor << 4) | fontColor) << 8));
+                                Screen.cursor[Screen.y][Screen.x] = (uint16_t) (temporary_pointer[i] + (((background_color << 4) | font_color) << 8));
                                 
                                 if(Screen.x == 80)
                                 {
@@ -354,43 +345,43 @@ void xprintf(char* str, ... )
 
             }
 
-            strCounter++;
+            string_counter++;
         }
 
-        else if(str[strCounter] == '\n')
+        else if(str[string_counter] == '\n')
         {            
             Screen.x = 0x0;
             Screen.y++;
-            strCounter++;
+            string_counter++;
         }
 
-        else if(str[strCounter] == '\r')
+        else if(str[string_counter] == '\r')
         {
             Screen.x = 0;
-            strCounter++;
+            string_counter++;
         }
 
-        else if(str[strCounter] == '\t')
+        else if(str[string_counter] == '\t')
         {
             Screen.x += 3;
-            strCounter++;
+            string_counter++;
         }
 
-        else if(str[strCounter] == '\\')
+        else if(str[string_counter] == '\\')
         {
-            Screen.cursor[Screen.y][Screen.x] = (uint16_t)('\\' + (((backgroundColor << 4) | fontColor) << 8));
-            strCounter++;
+            Screen.cursor[Screen.y][Screen.x] = (uint16_t)('\\' + (((background_color << 4) | font_color) << 8));
+            string_counter++;
         }
 
         else
         {
-            //cursor[bufCounter] = (uint16_t) (str[strCounter] + (((backgroundColor << 4) | fontColor) << 8));
+            //cursor[bufCounter] = (uint16_t) (str[string_counter] + (((background_color << 4) | font_color) << 8));
 
             //x++;
 
-            Screen.cursor[Screen.y][Screen.x] = (uint16_t) (str[strCounter] + (((backgroundColor << 4) | fontColor) << 8));
+            Screen.cursor[Screen.y][Screen.x] = (uint16_t) (str[string_counter] + (((background_color << 4) | font_color) << 8));
             Screen.x++;
-            strCounter++;
+            string_counter++;
         }
 
 

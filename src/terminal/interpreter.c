@@ -77,6 +77,11 @@ void scan(void)
         epilepsy();
     }    
 
+    else if(cmpstr(program_name, "hexeditor"))
+    {
+        hexeditor(program_parameters);
+    }
+
     else if(cmpstr(program_name,"run16"))
     {
         run16(program_parameters);
@@ -156,10 +161,13 @@ void scan(void)
         keyboard_test();
     }
      
+    /*
     else if(cmpstr(program_name,"shooter"))
     {
         shooter();
     }
+    */
+
 
     else if(cmpstr(program_name,"modify"))
     {

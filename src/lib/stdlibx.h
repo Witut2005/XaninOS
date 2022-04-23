@@ -5,7 +5,7 @@
 #include <pit/pit.c>
 #include <lib/time.h>
 #include <terminal/vty.h>
-#include <headers/colors.h>
+#include <lib/colors.h>
 #include <handlers/handlers.c>
 
 char command_buffer[50];

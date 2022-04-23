@@ -3,7 +3,7 @@
 //#include <pong/pong.c>
 #include <lib/stdiox.h>
 #include <xaninApps/help.c>
-#include <headers/colors.h>
+#include <lib/colors.h>
 //#include <xaninApps/ls.c>
 //#include <xaninApps/type.c>
 //#include <xaninApps/note.c>
@@ -28,7 +28,7 @@
 #include <xaninApps/pong/pong.c>
 #include <xaninApps/timer_test.c>
 #include <xaninApps/zsk.c>
-#include <xaninApps/shooter/shooter.c>
+//#include <xaninApps/shooter/shooter.c>
 #include <xaninApps/execute_addr.c>
 #include <xaninApps/disk_load.c>
 #include <xaninApps/disk_write.c>
@@ -37,6 +37,7 @@
 #include <xaninApps/run.c>
 #include <xaninApps/run16.c>
 #include <xin_fs/list_files.c>
+#include <xaninApps/hexeditor/hexeditor.c>
 
 /*
 
@@ -51,6 +52,8 @@
 #include <xin_fs/xin.c>
 #include <xin_fs/xin_note.c>
 #include <xin_fs/xin_paint.c>
+
+
 
 extern void xagame_test(void);
 

@@ -1,6 +1,6 @@
 
 #include <stdint.h>
-#include <headers/colors.h>
+#include <lib/colors.h>
 
 /* USE IN CPP FILES NOT IN C BRUH */
 
@@ -9,7 +9,6 @@ struct screen_t
     uint16_t** cursor;
     uint8_t x;
     uint8_t y;
-
 };
 
 typedef struct screen_t screen_t;

@@ -22,9 +22,8 @@ void run16(char* file_name)
         while(1)
         {
             if((KeyInfo.scan_code == F4_KEY) || (KeyInfo.scan_code == ENTER))
-            {
-                exit_process();
-            }
+                return;
+            
         }   
     
     }
@@ -37,7 +36,7 @@ void run16(char* file_name)
             xprintf("%zYOU CANT RUN DIRECTORY\n",set_output_color(red,white));
             xprintf("%zuse F4 key to exit\n",set_output_color(red,white));
             while(KeyInfo.scan_code != F4_KEY);
-            exit_process();
+            return;
         }
     
         uint32_t address = (current_program->starting_sector * SECTOR_SIZE);
@@ -51,5 +50,5 @@ void run16(char* file_name)
 
     }
 
-    exit_process();
+    return;
 }
