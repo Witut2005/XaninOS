@@ -39,10 +39,12 @@ void run16(char* file_name)
             return;
         }
     
-        uint32_t address = (current_program->starting_sector * SECTOR_SIZE);
+        //uint32_t address = (current_program->starting_sector * SECTOR_SIZE);
+
+        uint8_t* dest = 0x10000;
 
         for(uint8_t* i = xin_file->starting_sector * SECTOR_SIZE; (uint32_t)i < xin_file->starting_sector * SECTOR_SIZE + SECTOR_SIZE; i++)
-            *(uint8_t*)(current_program->starting_sector * SECTOR_SIZE) = *i;
+            *dest = *i;
 
         real_mode_enter(0x1000, 0x0); // <-- tmp.bin address in memory
 

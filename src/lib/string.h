@@ -221,6 +221,27 @@ char* int_to_hex_str(uint32_t x, char* buf)
 
 }
 
+uint32_t hex_str_to_int(char* str)
+{
+    
+    uint32_t value = 0;
+
+    for(char* i = str; *i != '\0' && *i != ' '; i++)
+    {
+        value = value * 0x10;
+
+        if(*i >= '0' && *i <= '9')
+            value += *i - '0';
+        
+        else if(*i >= 'A' && *i <= 'F')
+            value += *i - 'A' + 0xa;
+
+    }
+
+    return value;
+
+}
+
 char* xint_to_hex_str(uint32_t x, char* buf, uint8_t how_many_chars)
 {
     how_many_chars *= 2;

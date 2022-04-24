@@ -5,7 +5,6 @@
 #include <stddef.h>
 
 
-xin_entry* current_program = XIN_ENTRY_TABLE + (4 * sizeof(xin_entry));
 
 char* xin_set_current_directory(char* directory)
 {
@@ -230,7 +229,10 @@ void xin_create_file(char* entry_parent_directory)
 
     entry->starting_sector = (uint32_t)write_entry - XIN_ENTRY_POINTERS;
 
-    exit_process();
+    //xprintf("file: %s\n", entry->entry_path);
+    //while(KeyInfo.scan_code != ENTER);
+
+    return;
 
 }
 
@@ -427,5 +429,39 @@ uint32_t xin_get_start_sector(char* entry_name)
     xin_entry* xin_file_descriptor = xin_find_entry(entry_name);
 
     return xin_file_descriptor->starting_sector;
+}
 
+
+xin_entry* fopen(char* file_path, const char* mode)
+{
+    xin_entry* file = xin_find_entry(file_path);
+
+    if(file != nullptr && file->entry_type != XIN_DIRECTORY)
+        return file;
+    
+    else
+        return nullptr;
+
+}
+
+size_t read(xin_entry* entry, void* buf, size_t count)
+{
+
+    char* end = (char*)(entry->starting_sector * SECTOR_SIZE) + count;
+
+    for(char* i = (char*)(entry->starting_sector * SECTOR_SIZE); i < end; i++, buf++)
+    {
+        *(char*)buf = *i;
+    }
+}
+
+size_t write(xin_entry* entry, void* buf, size_t count)
+{
+
+    char* end = (char*)(entry->starting_sector * SECTOR_SIZE) + count;
+
+    for(char* i = (char*)(entry->starting_sector * SECTOR_SIZE); i < end; i++, buf++)
+    {
+        *i = *(char*)buf;
+    }
 }

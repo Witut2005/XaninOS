@@ -57,6 +57,7 @@ void _start(void)
     xprintf("\n\n");
    
  
+
     //zsk("100");
 
     srand(time.seconds);
