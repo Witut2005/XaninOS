@@ -67,8 +67,7 @@ void _start(void)
    
     init_disk(ATA_FIRST_BUS, ATA_MASTER);
 
-
-
+    
     tuiInit:
 
     screen_clear();

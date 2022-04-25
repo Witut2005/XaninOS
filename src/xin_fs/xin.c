@@ -436,7 +436,7 @@ xin_entry* fopen(char* file_path, const char* mode)
 {
     xin_entry* file = xin_find_entry(file_path);
 
-    if(file != nullptr && file->entry_type != XIN_DIRECTORY)
+    if(file != nullptr && file->entry_type != XIN_DIRECTORY && file->entry_path[0] != '\0')
         return file;
     
     else
