@@ -169,32 +169,20 @@ void xin_note(char* file_name)
     keyboard_handle = note_input;
     use_backspace = true;
 
-    xin_entry* xin_file = xin_find_entry(file_name);
+    //xin_entry* xin_file = xin_find_entry(file_name);
     
+    xin_entry* xin_file = fopen(file_name, "rw");
+
     if(xin_file == nullptr)
     {
-        xprintf("%zno such file or directory %s\n",set_output_color(red,white),program_parameters);
-        keyboard_handle = nullptr;
-        while(1)
-        {
-            if((getscan() == F4_KEY) || (getscan() == ENTER))
-            {
-                exit_process();
-            }
-        }   
-    
+        xprintf("Could not open file: %s\n", file_name);
+
+        while(KeyInfo.scan_code != ENTER);
+
     }
         
     else
     {
-    
-        if(xin_file->entry_type == XIN_DIRECTORY)
-        {
-            xprintf("%zyou cant edit directory\n",set_output_color(red,white));
-            xprintf("%zuse F4 key to exit\n",set_output_color(red,white));
-            while(KeyInfo.scan_code != F4_KEY);
-            exit_process();
-        }
 
         if(xin_file->os_specific == XIN_READ_ONLY)
         {

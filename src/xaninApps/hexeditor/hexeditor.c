@@ -13,7 +13,6 @@ void hexeditor_input(void)
     uint8_t selected_character;
     uint8_t x_save, y_save;
 
-    //KeyInfo.is_caps = true;
 
     if(KeyInfo.scan_code == F4_KEY || KeyInfo.scan_code == ESC)
     {
@@ -135,7 +134,6 @@ void hexeditor_input(void)
             data_pointer_position++;
         }
 
-
         if(KeyInfo.character >= 'a' && KeyInfo.character <= 'f')
         {
             if(Screen.cursor[Screen.y][Screen.x + 1] == (uint16_t)( ' '| (((black << 4) | white) << 8)))
@@ -148,7 +146,7 @@ void hexeditor_input(void)
             else
             {
                 data_pointer[data_pointer_position] &= 0x0F;
-                tmp = ((KeyInfo.character - 'f' + 0xa) << 4);
+                tmp = ((KeyInfo.character - 'a' + 0xa) << 4);
                 data_pointer[data_pointer_position] += tmp;
             }
 
@@ -177,25 +175,7 @@ void hexeditor_input(void)
             xprintf("%c", getchar());
         
         }
-
-        else if(KeyInfo.scan_code == BSPC)
-        {
             
-            if((uint32_t)&Screen.cursor[Screen.y][Screen.x - 1] < VGA_TEXT_MEMORY)
-                return;
-
-            if(Screen.cursor[Screen.y][Screen.x + 1] == (uint16_t)( ' '| (((black << 4) | white) << 8)))
-                data_pointer[data_pointer_position] &= 0xF0;
-            
-            else
-                data_pointer[data_pointer_position] &= 0x0F;
-            
-
-            Screen.x -= 3;
-
-            xprintf("%c", '0');    
-        }
-
         if(Screen.cursor[Screen.y][Screen.x] == (uint16_t)( ' '| (((black << 4) | white) << 8)))
         {
             Screen.x++;
@@ -203,6 +183,9 @@ void hexeditor_input(void)
         }
 
     }  
+    
+
+ 
 }
 
 void bytes_print(xin_entry* file)
@@ -216,7 +199,7 @@ void bytes_print(xin_entry* file)
     {
         for(int j = 0; j < 26; j++)
         {
-            xprintf("%mx ", data_pointer[ (26 * i) + j]);
+            xprintf("%mX ", data_pointer[ (26 * i) + j]);
         }
         xprintf("\n");
     }
@@ -227,6 +210,7 @@ void bytes_print(xin_entry* file)
 
 void file_save(xin_entry* file)
 {
+    fseek(file, 0);
     write(file, data_pointer, 28 * 26);
 }
 
@@ -234,7 +218,6 @@ void file_save(xin_entry* file)
 void hexeditor(char* file_name)
 {
 
-    //KeyInfo.is_caps = true;
 
     keyboard_handle = hexeditor_input;
 
@@ -256,6 +239,5 @@ void hexeditor(char* file_name)
 
     file_save(file);
 
-    KeyInfo.is_caps = false;
 
 }
