@@ -67,6 +67,12 @@ void _start(void)
    
     init_disk(ATA_FIRST_BUS, ATA_MASTER);
     
+    screen_clear();
+    char* jeden = "1234\n";
+    char* dwa = "56789\n";
+    xprintf("%s", jeden);
+    xprintf("%s", dwa);
+    while(1);
         
     tuiInit:
 

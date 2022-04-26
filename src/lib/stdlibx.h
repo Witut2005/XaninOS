@@ -108,7 +108,8 @@ void time_get()
 uint8_t floppy_type_get_cmos()
 {
     outbIO(CMOS_ADDR, 0x10);
-    return inbIO(CMOS_DATA);sex!!}
+    return inbIO(CMOS_DATA);
+}
 
 void get_cpu_speed()
 {
