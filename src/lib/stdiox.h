@@ -19,9 +19,6 @@
 
 #define VGA_SCREEN_RESOLUTION 4480
 
-static char* keyString = "keyboard initalized succed :))\n";
-static char hex_lut[] = {'0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f'};
-
 bool use_backspace = false;
 
 void screen_clear(void)
@@ -59,7 +56,6 @@ char putchar(char character)
 
 
 
-
 void print_bcd_number(uint8_t x)
 {
 
@@ -69,7 +65,6 @@ void print_bcd_number(uint8_t x)
     Screen.cursor[Screen.y][Screen.x] = (uint16_t)(((x & 0x0f) + 48)  | (((red << 4) | white) << 8));
     Screen.x += 0x2;
 
-    Screen.y++;
 
     return;
 
@@ -194,6 +189,22 @@ void xprintf(char* str, ... )
 
                     }
 
+                    break;
+
+                }
+
+
+                case 'i':
+                {
+
+                    uint8_t number = (uint8_t)va_arg(args, uint32_t);
+
+                    Screen.cursor[Screen.y][Screen.x] = (uint16_t)( (((number & 0xf0) >> 4) + '0')  | (((background_color << 4) | font_color) << 8));
+                    Screen.x++;
+
+                    Screen.cursor[Screen.y][Screen.x] = (uint16_t)(((number & 0x0f) + '0')  | (((background_color << 4) | font_color) << 8));
+                    Screen.x++;
+                
                     break;
 
                 }

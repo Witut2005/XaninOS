@@ -11,7 +11,7 @@
 char command_buffer[50];
 char* keyboard_command;
 
-struct TIME
+struct CmosTime
 {
     uint8_t seconds; 
     uint8_t minutes;
@@ -26,7 +26,9 @@ struct TIME
 
 }__attribute__((packed));
 
-struct TIME time;
+typedef struct CmosTime CmosTime;
+
+CmosTime Time;
 
 #define CMOS_ADDR 0x70
 #define CMOS_DATA 0x71
@@ -69,41 +71,44 @@ void time_get()
 
     //GET SECONDS
     outbIO(CMOS_ADDR,0x0);
-    time.seconds = inbIO(CMOS_DATA);
+    Time.seconds = inbIO(CMOS_DATA);
 
     //GET MINUTES
     outbIO(CMOS_ADDR,0x2);
-    time.minutes = inbIO(CMOS_DATA);
+    Time.minutes = inbIO(CMOS_DATA);
 
     //GET HOURS
     outbIO(CMOS_ADDR,0x4);
-    time.hour = inbIO(CMOS_DATA);
+    Time.hour = inbIO(CMOS_DATA);
 
     //GET WEEKDAY
     outbIO(CMOS_ADDR,0x6);
-    time.weekDay = inbIO(CMOS_DATA);
-    time.weekDay--;
+    Time.weekDay = inbIO(CMOS_DATA);
+    Time.weekDay--;
 
     //GET DAY_OF_MONTH
     outbIO(CMOS_ADDR,0x7);
-    time.dayOfMonth = inbIO(CMOS_DATA);
+    Time.dayOfMonth = inbIO(CMOS_DATA);
 
     //GET MONTH
     outbIO(CMOS_ADDR,0x8);
-    time.month = inbIO(CMOS_DATA);
+    Time.month = inbIO(CMOS_DATA);
 
     //GET YEAR
     outbIO(CMOS_ADDR,0x9);
-    time.year = inbIO(CMOS_DATA);
+    Time.year = inbIO(CMOS_DATA);
 
     //GET CENTURY
     outbIO(CMOS_ADDR,0x32);
-    time.century = inbIO(CMOS_DATA);
+    Time.century = inbIO(CMOS_DATA);
 
     asm("sti");
 }
 
-
+uint8_t floppy_type_get_cmos()
+{
+    outbIO(CMOS_ADDR, 0x10);
+    return inbIO(CMOS_DATA);sex!!}
 
 void get_cpu_speed()
 {
@@ -180,6 +185,18 @@ struct
 reg_t Register;
 seg_t SegmentRegister;
 
+
+uint32_t memory_map_get_cmos()
+{
+    outbIO(0x70, 0x30);
+    uint32_t low_memory = inbIO(0x71);
+
+    outbIO(0x70, 0x31);
+    uint32_t high_memory = inbIO(0x71);
+
+    return low_memory | (high_memory << 8);
+
+}
 
 
 void int_swap(int *xp, int *yp)

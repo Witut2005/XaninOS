@@ -1,7 +1,5 @@
-#pragma once
 
-#ifndef HAL_H
-#define HAL_H
+#pragma once
 
 #include <stdint.h>
 #include <headers/macros.h>
@@ -85,4 +83,16 @@ void real_mode_enter(uint16_t segment, uint16_t offset)
     enter16();
 }
 
-#endif
+static inline void rdmsr(uint32_t msr_id, uint32_t low, uint32_t high)
+{
+    asm("rdmsr" : "=a"(low), "=d"(high) : "c"(msr_id));
+}
+
+
+static inline void wrmsr(uint32_t msr_id, uint32_t low, uint32_t high)
+{
+    asm("wrmsr" : "=a"(low), "=d"(high) : "c"(msr_id));
+}
+
+
+
