@@ -6,9 +6,8 @@
 
 jmp print_syscall
 
-str: db "omg",0xa,0
-str1: db "syscall are cool stuff",0xa,0x0
 
+napis: "xaninOS syscall",0xa,0
 return_addr: resb 4
 
 print_syscall:
@@ -19,18 +18,26 @@ print_syscall:
 mov dword [return_addr], ebx
 
 
-mov eax, 2
+mov eax, 1
+mov edi, 2
+mov esi, 3
+mov edx, 4
+mov ecx, 5
+mov ebx, 6
 mov esi, ebx
 int 0x80
 
 
-;mov eax, 0
-;mov esi, str1
-;int 0x80
-
-mov eax, 3
-mov esi, str1
+mov eax, 0
+mov esi, napis
 int 0x80
+
+mov eax, 2
+mov esi, ecx
+int 0x80
+
+jmp $
+
 
 push dword [return_addr]
 ret
