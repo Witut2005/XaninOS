@@ -4,12 +4,6 @@
 [org 0x10000]
 [bits 32]
 
-jmp print_syscall
-
-
-napis: "xaninOS syscall",0xa,0
-return_addr: resb 4
-
 print_syscall:
 
 ;push dword [ebp + 4]
@@ -18,22 +12,21 @@ print_syscall:
 mov dword [return_addr], ebx
 
 
-mov eax, 1
-mov edi, 2
-mov esi, 3
-mov edx, 4
-mov ecx, 5
-mov ebx, 6
-mov esi, ebx
-int 0x80
-
-
-mov eax, 0
+mov eax, 'p' + 's'
 mov esi, napis
 int 0x80
 
-mov eax, 2
-mov esi, ecx
+mov eax, 'f' + 'o'
+mov esi, file_name
+int 0x80
+
+
+mov dword esi, [eax + 59]
+and esi, 0xFF00
+shr esi, 8
+
+mov eax, 'p' + 'x'
+mov esi, esi
 int 0x80
 
 jmp $
@@ -41,5 +34,9 @@ jmp $
 
 push dword [return_addr]
 ret
+
+napis: db "xaninOS syscall",0xa,0
+file_name: db "syscall_test.bin",0
+return_addr: resb 4
 
 times 512 - ($-$$) db 0x0

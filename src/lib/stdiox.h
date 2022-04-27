@@ -141,6 +141,53 @@ void xprintf(char* str, ... )
 
                 }
 
+                case 'y':
+                {
+                    uint32_t time = va_arg(args,int);
+               
+                    uint32_t time_mask = 0xF0000000;
+                    uint32_t time_shift = 28;
+
+                    for(int i = 0; i < 8; i++, time_mask = time_mask >> 4, time_shift -= 4)
+                    {
+                        if(i == 2 || i == 4)
+                        {
+
+                            Screen.cursor[Screen.y][Screen.x] = (uint16_t) '-'  | (((background_color << 4) | font_color) << 8);
+                            Screen.x++;
+                        }
+
+                        Screen.cursor[Screen.y][Screen.x] = (uint16_t)( (((time & time_mask) >> time_shift) + '0')  | (((background_color << 4) | font_color) << 8));
+                        Screen.x++;
+                    }
+
+                    break;
+
+                }
+
+                case 't':
+                {
+                
+                    uint16_t time = va_arg(args,int);
+               
+                    uint16_t time_mask = 0xF000;
+                    uint16_t time_shift = 12;
+
+                    for(int i = 0; i < 4; i++, time_mask = time_mask >> 4, time_shift -= 4)
+                    {
+                        if(i == 2)
+                        {
+
+                            Screen.cursor[Screen.y][Screen.x] = (uint16_t) ':'  | (((background_color << 4) | font_color) << 8);
+                            Screen.x++;
+                        }
+
+                        Screen.cursor[Screen.y][Screen.x] = (uint16_t)( (((time & time_mask) >> time_shift) + '0')  | (((background_color << 4) | font_color) << 8));
+                        Screen.x++;
+                    }
+                    break;
+                }
+
                 case 'b':
                 {
                     number = va_arg(args,int);

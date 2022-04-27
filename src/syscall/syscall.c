@@ -1,16 +1,17 @@
 
 #include <stdint.h>
 #include <lib/stdiox.h>
+#include <xin_fs/xin.h>
 
-
-#define return_sys asm(\
+#define return_sys(x)\
+        asm(\
         "pop ebx\n\t"\
         "pop ecx\n\t"\
         "pop edx\n\t"\
         "pop esi\n\t"\
         "pop edi\n\t"\    
         );\
-        return eax;
+        return x
 
 
 uint32_t syscall()
@@ -84,38 +85,53 @@ uint32_t syscall()
     switch(eax)
     {
 
-        case 0:
+        case 'p' + 's':
         {
             xprintf("%s", (char*)esi);
-            return_sys;
+            return_sys(eax);
         }
 
 
-        case 1:
+        case 'p' + 'd':
         {
             xprintf("%d", esi);
-            return_sys; 
+            return_sys(eax); 
         }
 
-        case 2:
+        case 'p' + 'x':
         {
             xprintf("0x%x", esi);
-            return_sys; 
+            return_sys(eax); 
         }
 
-        case 3:
+        case 's' + 's':
         { 
             xscanf("%s",(char*)esi); 
-            return_sys;
+            return_sys(eax);
         }
 
-        case 4:
+        case 's' + 'd':
         {
-            return 1234;
+            xscanf("%d", (uint32_t*)esi);
+            return_sys(eax);
         }
+
+        case 's' + 'x':
+        {
+            xscanf("%x", (uint32_t*)esi);
+            return_sys(eax);
+        }
+
+
+        case 'f' + 'o':
+        {
+            return_sys(fopen((char*)esi, "rw"));
+        }
+
 
     }
 
     
 
 }
+

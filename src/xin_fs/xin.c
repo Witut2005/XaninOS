@@ -199,13 +199,19 @@ void xin_create_file(char *entry_parent_directory)
     /* write entry to xin entry date table */
     xin_entry *entry = xin_find_free_entry();
 
+    time_get();
+
+
+
+
     set_string(entry->entry_path, entry_full_name);
 
-    entry->creation_date = 0x0;
-    entry->creation_time = 0x0;
+    entry->creation_date = (uint32_t)((Time.day_of_month << 24) | (Time.month << 16) | (Time.century << 8) | (Time.year)); 
+    entry->creation_time = (uint16_t)(Time.hour << 8) | (Time.minutes);
+    entry->modification_date = (uint32_t)((Time.day_of_month << 24) | (Time.month << 16) | (Time.century << 8) | (Time.year)); 
+    entry->modification_time = (uint16_t)(Time.hour << 8) | (Time.minutes);
+
     entry->os_specific = 0xFFFF;
-    entry->modification_date = 0x0;
-    entry->modification_time = 0x0;
     entry->entry_permissions = PERMISSION_MAX;
     entry->entry_size = 0x0;
     entry->entry_type = XIN_FILE;
@@ -247,8 +253,7 @@ void xin_create_directory(char *entry_path)
 
     int i = 0;
 
-    for (; entry_path[i] != '\0'; i++)
-        ;
+    for (; entry_path[i] != '\0'; i++);
 
     for (int j = 0; entry_name[j] != '\0'; i++, j++)
         entry_path[i] = entry_name[j];
@@ -384,23 +389,6 @@ bool xin_remove_entry(char *entry_name)
     exit_process(true);
 }
 
-void xin_entry_info(char *entry_name)
-{
-
-    xin_entry *xin_file_descriptor = xin_find_entry(entry_name);
-
-    if (xin_file_descriptor != nullptr)
-    {
-        xprintf("\n\rentry path: %s\n", xin_file_descriptor->entry_path);
-        xprintf("creation date: 0x%x\n", xin_file_descriptor->creation_time);
-        xprintf("starting_sector: 0x%x\n", xin_file_descriptor->starting_sector);
-    }
-
-    while (KeyInfo.scan_code != ENTER)
-        ;
-    exit_process();
-}
-
 uint32_t xin_get_start_sector(char *entry_name)
 {
     xin_entry *xin_file_descriptor = xin_find_entry(entry_name);
@@ -445,6 +433,12 @@ size_t write(xin_entry *entry, void *buf, size_t count)
         *i = *(char *)buf;
         entry->file_position++;
     }
+
+    time_get();
+
+    entry->modification_date = (uint32_t)((Time.day_of_month << 24) | (Time.month << 16) | (Time.century << 8) | (Time.year)); 
+    entry->modification_time = (uint16_t)(Time.hour << 8) | (Time.minutes);
+
 }
 
 uint32_t fseek(xin_entry *file, uint32_t new_position)

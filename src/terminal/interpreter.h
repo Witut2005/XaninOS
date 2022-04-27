@@ -53,6 +53,7 @@
 #include <xin_fs/xin_note.c>
 #include <xin_fs/xin_paint.c>
 
+#include <xaninApps/file_system/xin_info.c>
 
 
 extern void xagame_test(void);

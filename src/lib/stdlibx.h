@@ -17,8 +17,8 @@ struct CmosTime
     uint8_t minutes;
     uint8_t hour;
 
-    uint8_t weekDay;
-    uint8_t dayOfMonth;
+    uint8_t weekday;
+    uint8_t day_of_month;
     uint8_t month;
     uint8_t year;
     uint8_t century;
@@ -33,7 +33,7 @@ CmosTime Time;
 #define CMOS_ADDR 0x70
 #define CMOS_DATA 0x71
 
-char* weekDaysLUT[7] = {"Sunday","Monday","Tuesday ","Wednesday","Thursday","Friday","Saturday"};
+char* daysLUT[7] = {"Sunday","Monday","Tuesday ","Wednesday","Thursday","Friday","Saturday"};
 
 bool key_pressed(void)
 {
@@ -80,15 +80,16 @@ void time_get()
     //GET HOURS
     outbIO(CMOS_ADDR,0x4);
     Time.hour = inbIO(CMOS_DATA);
+    Time.hour += 2;
 
-    //GET WEEKDAY
+    //GET day
     outbIO(CMOS_ADDR,0x6);
-    Time.weekDay = inbIO(CMOS_DATA);
-    Time.weekDay--;
+    Time.weekday = inbIO(CMOS_DATA);
+    Time.weekday--;
 
     //GET DAY_OF_MONTH
     outbIO(CMOS_ADDR,0x7);
-    Time.dayOfMonth = inbIO(CMOS_DATA);
+    Time.day_of_month = inbIO(CMOS_DATA);
 
     //GET MONTH
     outbIO(CMOS_ADDR,0x8);
