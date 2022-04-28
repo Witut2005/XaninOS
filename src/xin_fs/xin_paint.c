@@ -192,10 +192,14 @@ void xin_paint(char* file_name)
 
         if(xin_file->os_specific != XIN_READ_ONLY)
         {
-            for(char* i = (char*)(VGA_TEXT_MEMORY + 1); 
-                    (uint32_t)i < VGA_TEXT_MEMORY + VGA_SCREEN_RESOLUTION; i+=2, file_data_counter++)
-                    data_pointer[file_data_counter] = *i;
 
+            uint8_t* screen_ptr = (uint8_t*)VGA_TEXT_MEMORY;
+
+        for(int i = 0; i < VGA_SCREEN_RESOLUTION; i++, screen_ptr += 2)
+            {
+                //fseek(xin_file, i);
+                write(xin_file, screen_ptr + 1, 1);
+            }
             xin_file->entry_size = file_data_counter;
         }
 

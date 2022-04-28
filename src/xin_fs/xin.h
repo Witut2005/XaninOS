@@ -38,6 +38,7 @@ struct xin_entry
     uint32_t entry_size;    
     uint32_t starting_sector;
     uint32_t file_position;
+    char current_rights[2];
 
 }__attribute__((packed));
 

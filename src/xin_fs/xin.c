@@ -424,7 +424,7 @@ size_t read(xin_entry *entry, void *buf, size_t count)
 size_t write(xin_entry *entry, void *buf, size_t count)
 {
 
-    char *end = (char *)(entry->starting_sector * SECTOR_SIZE) + count;
+    char *end = (char *)(entry->starting_sector * SECTOR_SIZE) + count + entry->file_position;
 
     uint32_t tmp = entry->file_position;
 

@@ -36,6 +36,10 @@ void note_input(void)
 
     else if(KeyInfo.is_bspc)
     {       
+        
+        if(!Screen.x && !Screen.y)
+            return;
+
         Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((black << 4) | white) << 8));
 
         if(!Screen.x)
@@ -169,8 +173,6 @@ void xin_note(char* file_name)
     keyboard_handle = note_input;
     use_backspace = true;
 
-    //xin_entry* xin_file = xin_find_entry(file_name);
-    
     xin_entry* xin_file = fopen(file_name, "rw");
 
     if(xin_file == nullptr)
@@ -190,8 +192,6 @@ void xin_note(char* file_name)
             while(KeyInfo.scan_code != ENTER);
         }
 
-        //for(uint8_t* xin_pointer_table = (uint8_t*)(XIN_POINTER_TABLE + xin_entry->starting_sector); *xin_pointer_table != XIN_EOF; xin_pointer_table++)
-        
         char* data_pointer = xin_file->starting_sector * SECTOR_SIZE;
 
         uint16_t* bruh_moment = VGA_TEXT_MEMORY;
@@ -209,16 +209,20 @@ void xin_note(char* file_name)
         if(xin_file->os_specific != XIN_READ_ONLY)
         {
 
-        for(char* i = (char*)VGA_TEXT_MEMORY; 
-            (uint32_t)i < VGA_TEXT_MEMORY + VGA_SCREEN_RESOLUTION; i+=2, file_data_counter++)
-                data_pointer[file_data_counter] = *i;
+            uint16_t* screen_ptr = (uint16_t*)VGA_TEXT_MEMORY;
 
-        xin_file->entry_size = file_data_counter;
+            for(int i = 0; i < VGA_SCREEN_RESOLUTION; i++, screen_ptr++)
+            {
+                fseek(xin_file, i);
+                write(xin_file, (char*)screen_ptr, 1);
+            }
+
+            xin_file->entry_size = file_data_counter;
         }
 
     }
 
 
     keyboard_handle = nullptr;
-    exit_process();
+    return;
 }
