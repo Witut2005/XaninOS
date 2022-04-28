@@ -11,7 +11,7 @@
 
 void run(char* file_name)
 {
-    screen_clear();
+    //screen_clear();
 
 
     xin_entry* xin_file = xin_find_entry(file_name);
@@ -49,7 +49,16 @@ void run(char* file_name)
 
         void (*entry_point)(void) = 0x10000;
 
+        asm(
+            "mov ebx, [ebp + 4]\n\t" 
+            "call 0x10000"
+            );
+
         entry_point();
+
+        end_exec:
+        return;
+        
 
     }
 

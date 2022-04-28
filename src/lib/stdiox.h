@@ -19,9 +19,6 @@
 
 #define VGA_SCREEN_RESOLUTION 4480
 
-static char* keyString = "keyboard initalized succed :))\n";
-static char hex_lut[] = {'0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f'};
-
 bool use_backspace = false;
 
 void screen_clear(void)
@@ -59,7 +56,6 @@ char putchar(char character)
 
 
 
-
 void print_bcd_number(uint8_t x)
 {
 
@@ -69,7 +65,6 @@ void print_bcd_number(uint8_t x)
     Screen.cursor[Screen.y][Screen.x] = (uint16_t)(((x & 0x0f) + 48)  | (((red << 4) | white) << 8));
     Screen.x += 0x2;
 
-    Screen.y++;
 
     return;
 
@@ -146,6 +141,53 @@ void xprintf(char* str, ... )
 
                 }
 
+                case 'y':
+                {
+                    uint32_t time = va_arg(args,int);
+               
+                    uint32_t time_mask = 0xF0000000;
+                    uint32_t time_shift = 28;
+
+                    for(int i = 0; i < 8; i++, time_mask = time_mask >> 4, time_shift -= 4)
+                    {
+                        if(i == 2 || i == 4)
+                        {
+
+                            Screen.cursor[Screen.y][Screen.x] = (uint16_t) '-'  | (((background_color << 4) | font_color) << 8);
+                            Screen.x++;
+                        }
+
+                        Screen.cursor[Screen.y][Screen.x] = (uint16_t)( (((time & time_mask) >> time_shift) + '0')  | (((background_color << 4) | font_color) << 8));
+                        Screen.x++;
+                    }
+
+                    break;
+
+                }
+
+                case 't':
+                {
+                
+                    uint16_t time = va_arg(args,int);
+               
+                    uint16_t time_mask = 0xF000;
+                    uint16_t time_shift = 12;
+
+                    for(int i = 0; i < 4; i++, time_mask = time_mask >> 4, time_shift -= 4)
+                    {
+                        if(i == 2)
+                        {
+
+                            Screen.cursor[Screen.y][Screen.x] = (uint16_t) ':'  | (((background_color << 4) | font_color) << 8);
+                            Screen.x++;
+                        }
+
+                        Screen.cursor[Screen.y][Screen.x] = (uint16_t)( (((time & time_mask) >> time_shift) + '0')  | (((background_color << 4) | font_color) << 8));
+                        Screen.x++;
+                    }
+                    break;
+                }
+
                 case 'b':
                 {
                     number = va_arg(args,int);
@@ -194,6 +236,22 @@ void xprintf(char* str, ... )
 
                     }
 
+                    break;
+
+                }
+
+
+                case 'i':
+                {
+
+                    uint8_t number = (uint8_t)va_arg(args, uint32_t);
+
+                    Screen.cursor[Screen.y][Screen.x] = (uint16_t)( (((number & 0xf0) >> 4) + '0')  | (((background_color << 4) | font_color) << 8));
+                    Screen.x++;
+
+                    Screen.cursor[Screen.y][Screen.x] = (uint16_t)(((number & 0x0f) + '0')  | (((background_color << 4) | font_color) << 8));
+                    Screen.x++;
+                
                     break;
 
                 }
@@ -262,6 +320,7 @@ void xprintf(char* str, ... )
                 {
                     number = va_arg(args,int);
                     int_to_hex_str(number,temporary_pointer);
+                    toupper(temporary_pointer);
 
                     for(int i = 0; temporary_pointer[i] != '\0'; i++)
                     {
@@ -274,8 +333,6 @@ void xprintf(char* str, ... )
                         Screen.x++;
                     }
 
-                    toupper(temporary_pointer);
-                    
                     break;
 
                 }
@@ -335,13 +392,37 @@ void xprintf(char* str, ... )
                             break;                            
 
                         }
+                
+                        case 'X':
+                        {
+
+                            uint8_t number_hex = (uint8_t)va_arg(args,uint32_t);
+                            xint_to_hex_str(number_hex,temporary_pointer, sizeof(uint8_t));
+                            toupper(temporary_pointer);
+                            
+                            for(int i = 0; temporary_pointer[i] != '\0'; i++)
+                            {
+                                Screen.cursor[Screen.y][Screen.x] = (uint16_t) (temporary_pointer[i] + (((background_color << 4) | font_color) << 8));
+                                
+                                if(Screen.x == 80)
+                                {
+                                    Screen.y++;
+                                    Screen.x = 0x0;
+                                }
+                                
+                                Screen.x++;
+                            }
+
                     
+                            break;                            
+
+                        }
+
                     }
 
 
                     break;
                 }
-
 
             }
 

@@ -11,14 +11,14 @@
 char command_buffer[50];
 char* keyboard_command;
 
-struct TIME
+struct CmosTime
 {
     uint8_t seconds; 
     uint8_t minutes;
     uint8_t hour;
 
-    uint8_t weekDay;
-    uint8_t dayOfMonth;
+    uint8_t weekday;
+    uint8_t day_of_month;
     uint8_t month;
     uint8_t year;
     uint8_t century;
@@ -26,12 +26,14 @@ struct TIME
 
 }__attribute__((packed));
 
-struct TIME time;
+typedef struct CmosTime CmosTime;
+
+CmosTime Time;
 
 #define CMOS_ADDR 0x70
 #define CMOS_DATA 0x71
 
-char* weekDaysLUT[7] = {"Sunday","Monday","Tuesday ","Wednesday","Thursday","Friday","Saturday"};
+char* daysLUT[7] = {"Sunday","Monday","Tuesday ","Wednesday","Thursday","Friday","Saturday"};
 
 bool key_pressed(void)
 {
@@ -69,41 +71,46 @@ void time_get()
 
     //GET SECONDS
     outbIO(CMOS_ADDR,0x0);
-    time.seconds = inbIO(CMOS_DATA);
+    Time.seconds = inbIO(CMOS_DATA);
 
     //GET MINUTES
     outbIO(CMOS_ADDR,0x2);
-    time.minutes = inbIO(CMOS_DATA);
+    Time.minutes = inbIO(CMOS_DATA);
 
     //GET HOURS
     outbIO(CMOS_ADDR,0x4);
-    time.hour = inbIO(CMOS_DATA);
+    Time.hour = inbIO(CMOS_DATA);
+    Time.hour += 2;
 
-    //GET WEEKDAY
+    //GET day
     outbIO(CMOS_ADDR,0x6);
-    time.weekDay = inbIO(CMOS_DATA);
-    time.weekDay--;
+    Time.weekday = inbIO(CMOS_DATA);
+    Time.weekday--;
 
     //GET DAY_OF_MONTH
     outbIO(CMOS_ADDR,0x7);
-    time.dayOfMonth = inbIO(CMOS_DATA);
+    Time.day_of_month = inbIO(CMOS_DATA);
 
     //GET MONTH
     outbIO(CMOS_ADDR,0x8);
-    time.month = inbIO(CMOS_DATA);
+    Time.month = inbIO(CMOS_DATA);
 
     //GET YEAR
     outbIO(CMOS_ADDR,0x9);
-    time.year = inbIO(CMOS_DATA);
+    Time.year = inbIO(CMOS_DATA);
 
     //GET CENTURY
     outbIO(CMOS_ADDR,0x32);
-    time.century = inbIO(CMOS_DATA);
+    Time.century = inbIO(CMOS_DATA);
 
     asm("sti");
 }
 
-
+uint8_t floppy_type_get_cmos()
+{
+    outbIO(CMOS_ADDR, 0x10);
+    return inbIO(CMOS_DATA);
+}
 
 void get_cpu_speed()
 {
@@ -180,6 +187,18 @@ struct
 reg_t Register;
 seg_t SegmentRegister;
 
+
+uint32_t memory_map_get_cmos()
+{
+    outbIO(0x70, 0x30);
+    uint32_t low_memory = inbIO(0x71);
+
+    outbIO(0x70, 0x31);
+    uint32_t high_memory = inbIO(0x71);
+
+    return low_memory | (high_memory << 8);
+
+}
 
 
 void int_swap(int *xp, int *yp)
