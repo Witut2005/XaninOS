@@ -8,7 +8,19 @@
 void reg_dump(void)
 {
 
-    
+    screen_clear();
+
+    asm("mov ebx, [ebp + 4]\n\t"
+        "mov %0, ebx"
+        :"=r"(Register.eip)
+        :
+        :"eax", "ebx"
+        );     
+
+    xprintf("\nCPU STATE\n");
+    xprintf("ip: 0x%x\n", Register.eip);
+
+
     asm("push eax");
     asm("mov [eax], ebx" :: "a"(&Register.ebx));
     asm("pop eax");
@@ -26,6 +38,9 @@ void reg_dump(void)
     asm("mov [eax], fs" :: "a"(&SegmentRegister.fs));
     asm("mov [eax], cs" :: "a"(&SegmentRegister.cs));
     asm("mov [eax], gs" :: "a"(&SegmentRegister.gs));
+
+
+
 
     xprintf("\nGENERAL PURPOSE REGISTERS\n");
     xprintf("eax: 0x%x\n", Register.eax);

@@ -143,13 +143,27 @@ xin_entry *xin_init_fs(void)
 
     xin_folder_create("/", 0x0, 0x0, 0xFFFF, 0x0, 0x0, PERMISSION_MAX);
 
-    xin_file_create_at_address("ivt.bin", 0x0, 0x0, XIN_READ_ONLY, 0x0, 0x0, PERMISSION_MAX, 0x0, 0x2);
-    xin_file_create_at_address("file_system.bin", 0x0, 0x0, XIN_READ_ONLY, 0x0, 0x0, PERMISSION_MAX, 0x2, 30 - 10);
 
+    xin_file_create_at_address("ivt.bin", 0x0, 0x0, XIN_READ_ONLY, 0x0, 0x0, PERMISSION_MAX, 0x0, 0x2);
+    xin_file_create_at_address("file_system.bin", 0x0, 0x0, XIN_READ_ONLY, 0x0, 0x0, PERMISSION_MAX, 0x4, 30 - 10);
+    xin_file_create_at_address("enter_real_mode.bin", 0x0, 0x0, XIN_READ_ONLY, 0x0, 0x0, PERMISSION_MAX, 0x3, 1);
     xin_file_create_at_address("boot.bin", 0x0, 0x0, XIN_READ_ONLY, 0x0, 0x0, PERMISSION_MAX, 0x3E, 0x1);
     xin_file_create_at_address("tmp.bin", 0x0, 0x0, 0xFFFF, 0x0, 0x0, PERMISSION_MAX, 0x80, 1);
     xin_file_create_at_address("shutdown.bin", 0x0, 0x0, XIN_READ_ONLY, 0x0, 0x0, PERMISSION_MAX, 0x81, 0x1);
     xin_file_create_at_address("syscall_test.bin", 0x0, 0x0, 0xFFFF, 0x0, 0x0, PERMISSION_MAX, 0x82, 1);
+
+
+    uint32_t k = 0;
+
+    for(char* i = (char*)0x600; i < (char*)0x600 + 0x200; i++, k++)
+        enter_real_mode_buffer[k] = *i;
+    
+    k = 0;
+
+    for(char* i = (char*)0x10200; i < (char*)0x10200 + 0x200; i++, k++)
+        shutdown_program_buffer[k] = *i;
+    
+
 
     xin_change_directory("/");
 }
@@ -398,9 +412,11 @@ uint32_t xin_get_start_sector(char *entry_name)
 
 xin_entry *fopen(char *file_path, const char *mode)
 {
-    xin_entry *file = xin_find_entry(file_path);
 
-    file->file_position = 0;
+    set_string(current_file.current_rights, "\0");
+    xin_entry* const file = xin_find_entry(file_path);
+
+    current_file.file_position = 0;
 
     if (file != nullptr && file->entry_type != XIN_DIRECTORY && file->entry_path[0] != '\0')
         return file;
@@ -414,24 +430,24 @@ size_t read(xin_entry *entry, void *buf, size_t count)
 
     char *end = (char *)(entry->starting_sector * SECTOR_SIZE) + count;
 
-    for (char *i = (char *)(entry->starting_sector * SECTOR_SIZE) + entry->file_position; i < end; i++, buf++)
+    for (char *i = (char *)(entry->starting_sector * SECTOR_SIZE) + current_file.file_position; i < end; i++, buf++)
     {
         *(char *)buf = *i;
-        entry->file_position++;
+        current_file.file_position++;
     }
 }
 
 size_t write(xin_entry *entry, void *buf, size_t count)
 {
 
-    char *end = (char *)(entry->starting_sector * SECTOR_SIZE) + count + entry->file_position;
+    char *end = (char *)(entry->starting_sector * SECTOR_SIZE) + count + current_file.file_position;
 
-    uint32_t tmp = entry->file_position;
+    uint32_t tmp =current_file.file_position;
 
     for (char *i = (char *)(entry->starting_sector * SECTOR_SIZE) + tmp; i < end; i++, buf++)
     {
         *i = *(char *)buf;
-        entry->file_position++;
+        current_file.file_position++;
     }
 
     time_get();
@@ -441,19 +457,23 @@ size_t write(xin_entry *entry, void *buf, size_t count)
 
 }
 
-uint32_t fseek(xin_entry *file, uint32_t new_position)
+static inline void fseek(xin_entry *file, uint32_t new_position)
 {
-    file->file_position = new_position;
-    return new_position;
+    current_file.file_position = new_position;
 }
 
 uint32_t ftell(xin_entry* file)
 {
-    return file->file_position;
+    return current_file.file_position;
 }
 
 
 void fclose(xin_entry** file_descriptor)
 {
+    current_file.file_position = 0;
+    
+    set_string(current_file.current_rights, "\0");
+
     *file_descriptor = nullptr;
+
 }

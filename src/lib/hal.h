@@ -79,6 +79,7 @@ void real_mode_enter(uint16_t segment, uint16_t offset)
         "and edx, 0xFFFF"
         );
 
+
     void (*enter16)(void) = (void(*)(void))0x600;
     enter16();
 }

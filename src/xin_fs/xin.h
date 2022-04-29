@@ -37,13 +37,21 @@ struct xin_entry
     uint8_t entry_permissions;
     uint32_t entry_size;    
     uint32_t starting_sector;
-    uint32_t file_position;
-    char current_rights[2];
+
 
 }__attribute__((packed));
 
-
 typedef struct xin_entry xin_entry;
+
+struct FILE
+{
+    uint32_t file_position;
+    char current_rights[2];
+};
+
+typedef struct FILE FILE;
+
+FILE current_file;
 
 char xin_current_path[40] = {'\0'};
 char xin_current_directory[40] = {'\0'};

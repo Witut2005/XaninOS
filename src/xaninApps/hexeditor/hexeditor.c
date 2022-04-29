@@ -226,7 +226,8 @@ void hexeditor(char* file_name)
     if(file == nullptr)
     {
         xprintf("Can't open file %s\n", file_name);
-        while(1);
+        while(KeyInfo.scan_code != ENTER);
+        return;
     }
 
     char* data_pointer = (char*)malloc(28 * 80 * 2);

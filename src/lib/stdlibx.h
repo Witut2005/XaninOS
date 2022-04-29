@@ -172,6 +172,7 @@ struct
     uint32_t ebp;
     uint32_t esi;
     uint32_t edi;
+    uint32_t eip;
 }typedef reg_t;
 
 struct

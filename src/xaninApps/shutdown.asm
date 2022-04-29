@@ -2,7 +2,7 @@
 [org 0x10200]
 [bits 16]
 
-%include "/home/witut/Desktop/xaninOS/programming_libaries/xanin_asm.inc"
+;%include "/home/witut/Desktop/xaninOS/programming_libaries/xanin_asm.inc"
 
 ;jmp shutdown
 
