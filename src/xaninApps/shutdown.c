@@ -10,6 +10,8 @@ uint8_t shutdown_program_buffer[512];
 
 void shutdown(void)
 {
+    xprintf("shutting down...\n");
+
 
     uint32_t k = 0;
 
