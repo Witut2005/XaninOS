@@ -5,10 +5,13 @@
 
 void list_files(void)
 {
-    for(char* i = (char*)XIN_ENTRY_TABLE; (uint32_t)i < (XIN_ENTRY_TABLE + 0x1000); 
-                                                                                i+=64)
+
+    uint32_t current_path_string_len = strlen(xin_current_directory);
+
+    for(char* i = (char*)XIN_ENTRY_TABLE; (uint32_t)i < (XIN_ENTRY_TABLE + 0x1000); i+=64)                                                                  
     {
-       xprintf("%s\n", i); 
+        if(strncmp(xin_current_directory, i, current_path_string_len))
+            xprintf("%s\n", i); 
     }
 
     while(KeyInfo.scan_code != ENTER);

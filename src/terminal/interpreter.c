@@ -46,7 +46,7 @@ void scan(void)
     while(KeyInfo.scan_code != ENTER);
     */
 
-    if(cmpstr(program_name,"touch"))
+    if(strcmp(program_name,"touch"))
     {
 
         //xprintf("1");
@@ -54,22 +54,22 @@ void scan(void)
         //touch();
     }
 
-    else if(cmpstr(program_name,"xagame_test"))
+    else if(strcmp(program_name,"xagame_test"))
     {
         xagame_test();
     }
 
-    else if(cmpstr(program_name,"zsk"))
+    else if(strcmp(program_name,"zsk"))
     {
         zsk(program_parameters);
     }
 
-    else if(cmpstr(program_name,"timer_test"))
+    else if(strcmp(program_name,"timer_test"))
     {
         timer_test();
     }
 
-    else if(cmpstr(program_name,"epilepsy"))
+    else if(strcmp(program_name,"epilepsy"))
     {
         //xprintf("2");
         //while(KeyInfo.scan_code != ENTER);
@@ -77,37 +77,37 @@ void scan(void)
         epilepsy();
     }    
 
-    else if(cmpstr(program_name, "hexeditor"))
+    else if(strcmp(program_name, "hexeditor"))
     {
         hexeditor(program_parameters);
     }
 
-    else if(cmpstr(program_name,"run16"))
+    else if(strcmp(program_name,"run16"))
     {
         run16(program_parameters);
     }
     
-    else if(cmpstr(program_name,"run"))
+    else if(strcmp(program_name,"run"))
     {
         run(program_parameters);
     }
 
-    else if(cmpstr(program_name,"stack_test"))
+    else if(strcmp(program_name,"stack_test"))
     {
         stack_frame_test(0x10, 0x20);
     }
 
-    else if(cmpstr(program_name,"cpu_info"))
+    else if(strcmp(program_name,"cpu_info"))
     {
-        cpu_info();
+        cpu_info(program_parameters);
     }
 
-    else if(cmpstr(program_name,"calc"))
+    else if(strcmp(program_name,"calc"))
     {
-        calc();
+        calc(program_parameters);
     }
 
-    else if(cmpstr(program_name,"paint"))
+    else if(strcmp(program_name,"paint"))
     {
         //xprintf("3");
         //while(KeyInfo.scan_code != ENTER);
@@ -115,45 +115,45 @@ void scan(void)
         xin_paint(program_parameters);
     }
 
-    else if(cmpstr(program_name,"reg_dump"))
+    else if(strcmp(program_name,"reg_dump"))
     {
         screen_clear();
         reg_dump();
         while(getscan() != ENTER);
     }
 
-    else if(cmpstr(program_name,"load"))
+    else if(strcmp(program_name,"load"))
     {
         //xprintf("4");
         //while(KeyInfo.scan_code != ENTER);
         
     	KeyInfo.scan_code = 0x0;
-    	load(strtoi(program_parameters, 16));
+    	load(program_parameters);
     	app_exited = true;
     }
 
-    else if(cmpstr(program_name,"install"))
+    else if(strcmp(program_name,"install"))
     {
         install();
     }
 
-    else if(cmpstr(program_name,"disk_load"))
+    else if(strcmp(program_name,"disk_load"))
     {
         disk_load(strtoi(program_parameters,16), strtoi(program_parameters1, 16), strtoi(program_parameters2, 16));
     }
 
-    else if(cmpstr(program_name,"disk_write"))
+    else if(strcmp(program_name,"disk_write"))
     {
         disk_write_data(strtoi(program_parameters,16), strtoi(program_parameters1, 16), strtoi(program_parameters2, 16));
     }
 
-    else if(cmpstr(program_name,"execute_addr"))
+    else if(strcmp(program_name,"execute_addr"))
     {
         execute_addr(strtoi(program_parameters, 16));
         app_exited = true;
     }
     
-    else if(cmpstr(program_name,"key-test"))
+    else if(strcmp(program_name,"key-test"))
     {
         //xprintf("5");
         //while(KeyInfo.scan_code != ENTER);
@@ -162,40 +162,31 @@ void scan(void)
     }
      
     /*
-    else if(cmpstr(program_name,"shooter"))
+    else if(strcmp(program_name,"shooter"))
     {
         shooter();
     }
     */
 
 
-    else if(cmpstr(program_name,"modify"))
-    {
-        //xprintf("6");
-        //while(KeyInfo.scan_code != ENTER);
-        
-    	xprintf("%s\n", program_parameters);
-    	KeyInfo.scan_code = 0x0;
-    	app_exited = true;
-    }
 	
-    else if(cmpstr(program_name, "pong"))
+    else if(strcmp(program_name, "pong"))
     {
         pong();
         
     }
 
-	else if(cmpstr(program_name,"loadch"))
+	else if(strcmp(program_name,"loadch"))
 	{
         //xprintf("7");
         //while(KeyInfo.scan_code != ENTER);
         
 		KeyInfo.scan_code = 0x0;
-		loadch(strtoi(program_parameters, 16));
+		loadch(program_parameters);
 		app_exited = true;
 	}	
 	
-	else if(cmpstr(program_name, "cdf"))
+	else if(strcmp(program_name, "cdf"))
 	{
         //xprintf("8");
         //while(KeyInfo.scan_code != ENTER);
@@ -203,7 +194,7 @@ void scan(void)
 		//cdf(program_parameters);
 	}
 
-    else if(cmpstr(program_name,"dev-info"))
+    else if(strcmp(program_name,"dev-info"))
     {
         //xprintf("9");
         //while(KeyInfo.scan_code != ENTER);
@@ -211,7 +202,7 @@ void scan(void)
         get_device_info();
     }
 
-    else if(cmpstr(program_name,"reboot")) 
+    else if(strcmp(program_name,"reboot")) 
     {
         //xprintf("a");
         //while(KeyInfo.scan_code != ENTER);
@@ -219,7 +210,7 @@ void scan(void)
         reboot();
     }
 
-    else if(cmpstr(program_name, "create"))
+    else if(strcmp(program_name, "create"))
     {
         //xprintf("b");   
         //while(KeyInfo.scan_code != ENTER);
@@ -230,7 +221,7 @@ void scan(void)
         xin_create_file(program_parameters);
     }
     
-    else if(cmpstr(program_name, "mkdir"))
+    else if(strcmp(program_name, "mkdir"))
     {
         //xprintf("c");
         //while(KeyInfo.scan_code != ENTER);
@@ -239,7 +230,7 @@ void scan(void)
         xin_create_directory(program_parameters);
     }
 
-    else if(cmpstr(program_name,"shutdown"))
+    else if(strcmp(program_name,"shutdown"))
     {
         //xprintf("d");
         //while(KeyInfo.scan_code != ENTER);
@@ -248,7 +239,7 @@ void scan(void)
     }
 
 
-    else if(cmpstr(program_name,"petris"))
+    else if(strcmp(program_name,"petris"))
     {
         /*
         xprintf("e");
@@ -259,7 +250,7 @@ void scan(void)
         */
     }
 
-    else if(cmpstr(program_name,"md"))
+    else if(strcmp(program_name,"md"))
     {
         //xprintf("f");
         //while(KeyInfo.scan_code != ENTER);
@@ -267,7 +258,7 @@ void scan(void)
         //md();
     }
 
-    else if(cmpstr(program_name,"rd"))
+    else if(strcmp(program_name,"rd"))
     {
         //xprintf("g");
         //while(KeyInfo.scan_code != ENTER);
@@ -277,7 +268,7 @@ void scan(void)
         app_exited = true;
     }
 
-    else if(cmpstr(program_name,"cd"))
+    else if(strcmp(program_name,"cd"))
     {
         //xprintf("h");
         //while(KeyInfo.scan_code != ENTER);
@@ -286,7 +277,7 @@ void scan(void)
         xin_change_directory(program_parameters);
     }
 
-    else if(cmpstr(program_name,"pwd"))
+    else if(strcmp(program_name,"pwd"))
     {
         //xprintf("i");
         //while(KeyInfo.scan_code != ENTER);
@@ -296,7 +287,7 @@ void scan(void)
         exit_process();
     }
 
-    else if(cmpstr(program_name,"help") || cmpstr(program_name,"h"))
+    else if(strcmp(program_name,"help") || strcmp(program_name,"h"))
     {
         //xprintf("j");
         //while(KeyInfo.scan_code != ENTER);
@@ -309,7 +300,7 @@ void scan(void)
     }
 
 
-    else if(cmpstr(program_name,"execute"))
+    else if(strcmp(program_name,"execute"))
     {
         //xprintf("o");
         //while(KeyInfo.scan_code != ENTER);
@@ -318,7 +309,7 @@ void scan(void)
         //KEYBOARD_SIG_ON(no_keyboard_input);
     }
 
-    else if(cmpstr(program_name,"dir"))
+    else if(strcmp(program_name,"dir"))
     {
         //xprintf("p");
         //while(KeyInfo.scan_code != ENTER);
@@ -326,7 +317,7 @@ void scan(void)
         //dir();
     }
 
-    else if(cmpstr(program_name,"xin_info"))
+    else if(strcmp(program_name,"xin_info"))
     {
         //xprintf("r");
         //while(KeyInfo.scan_code != ENTER);
@@ -334,7 +325,7 @@ void scan(void)
         xin_entry_info(program_parameters);
     }
 
-    else if(cmpstr(program_name,"cls") || cmpstr(program_name,"clear"))
+    else if(strcmp(program_name,"cls") || strcmp(program_name,"clear"))
     {
         //xprintf("s");
         //while(KeyInfo.scan_code != ENTER);
@@ -344,12 +335,12 @@ void scan(void)
     }
 
 
-    else if(cmpstr(program_name,"ls") || cmpstr(program_name,"dir"))
+    else if(strcmp(program_name,"ls") || strcmp(program_name,"dir"))
     {
         list_files();
     }
     
-    else if(cmpstr(program_name,"note"))
+    else if(strcmp(program_name,"note"))
     {
         //xprintf("u");
         //while(KeyInfo.scan_code != ENTER);
@@ -358,7 +349,7 @@ void scan(void)
         xin_note(program_parameters);
     }
 
-    else if(cmpstr(program_name,"type"))
+    else if(strcmp(program_name,"type"))
     {
         //xprintf("w");
         //while(KeyInfo.scan_code != ENTER);
@@ -367,7 +358,7 @@ void scan(void)
         //KEYBOARD_SIG_ON(no_keyboard_input);
     }
 
-    else if(cmpstr(program_name, "logo"))
+    else if(strcmp(program_name, "logo"))
     {
         //xprintf("k");
         //while(KeyInfo.scan_code != ENTER);
@@ -376,7 +367,7 @@ void scan(void)
         app_exited = true;
     }
 
-    else if(cmpstr(program_name, "\0"))
+    else if(strcmp(program_name, "\0"))
     {
         logo_front_color++;
         if(logo_front_color == 16)

@@ -4,46 +4,44 @@
 #include <chip8/chip8.hpp>
 
 
-typedef void(*chip8_opcode_t)(void);
+typedef void(Chip8::*chip8_opcode_t)(void);
 
 //n = not
 //aa = at_address
 //e = equal
 
 
-namespace chip8
-{
-
 chip8_opcode_t opcode[20] = {
 
-    execute_aa,
-    screen_clear,
-    ret,
-    jump,
+
+    &Chip8::execute_aa,
+    &Chip8::screen_clear,
+    &Chip8::ret,
+    &Chip8::jump,
     
-    execute_subroutine_aa,
+    &Chip8::execute_subroutine_aa,
     
-    instruction_skip_if_e_imm,
-    instruction_skip_if_ne_imm,
+    &Chip8::instruction_skip_if_e_imm,
+    &Chip8::instruction_skip_if_ne_imm,
     
-    instruction_skip_if_e_reg,
+    &Chip8::instruction_skip_if_e_reg,
    
-    mov_imm,
-    add_imm,
+    &Chip8::mov_imm,
+    &Chip8::add_imm,
 
-    mov,
+    &Chip8::mov,
     
-    or_reg,
-    and_reg,
-    xor_reg,
+    &Chip8::or_reg,
+    &Chip8::and_reg,
+    &Chip8::xor_reg,
 
-    add_reg_with_carry,
-    sub_reg_with_borrow,
+    &Chip8::add_reg_with_carry,
+    &Chip8::sub_reg_with_borrow,
 
-    shift_vy_in_vx //8XY6
+    &Chip8::shift_vy_in_vx //8XY6
 
 
-
-};
 
 };
+
+

@@ -4,10 +4,21 @@
 
 #include <lib/stdiox.h>
 
-void loadch(uint32_t address)
+void loadch(char* address_string)
 {
 
     screen_clear();
+    
+    if(strcmp(address_string, "help"))
+    {
+        xprintf("xaninOS developer tools\n");
+        xprintf("Load program loads given address to the screen in ASCII format\n");
+    	while(KeyInfo.scan_code != ENTER);
+        return;
+    }
+    
+
+    uint32_t address = strtoi(address_string, 16);
 
     char* data_pointer = (char*)(address);
 

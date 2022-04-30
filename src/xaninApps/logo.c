@@ -4,63 +4,63 @@
 void logo_color_change(char* color)
 {
 
-    if(cmpstr(color, "black"))
+    if(strcmp(color, "black"))
         logo_front_color = black;
 
 
-    else if(cmpstr(color, "blue"))
+    else if(strcmp(color, "blue"))
         logo_front_color = blue; 
 
-    else if(cmpstr(color, "green"))
+    else if(strcmp(color, "green"))
         logo_front_color = green;
 
-    else if(cmpstr(color, "cyan"))
+    else if(strcmp(color, "cyan"))
         logo_front_color = cyan; 
 
-    else if(cmpstr(color, "red"))
+    else if(strcmp(color, "red"))
         logo_front_color = red;
     
-    else if(cmpstr(color, "magenta"))
+    else if(strcmp(color, "magenta"))
         logo_front_color = magenta;
     
-    else if(cmpstr(color, "brown"))
+    else if(strcmp(color, "brown"))
         logo_front_color = brown;
     
-    else if(cmpstr(color, "lgray"))
+    else if(strcmp(color, "lgray"))
         logo_front_color = lgray;
     
-    else if(cmpstr(color, "dgray"))
+    else if(strcmp(color, "dgray"))
         logo_front_color = dgray;
 
-    else if(cmpstr(color, "lblue"))
+    else if(strcmp(color, "lblue"))
         logo_front_color = lblue;
     
-    else if(cmpstr(color, "lgreen"))
+    else if(strcmp(color, "lgreen"))
         logo_front_color = lgreen;
     
-    else if(cmpstr(color, "lcyan"))
+    else if(strcmp(color, "lcyan"))
         logo_front_color = lcyan;
     
-    else if(cmpstr(color, "lred"))
+    else if(strcmp(color, "lred"))
         logo_front_color = lred;
     
-    else if(cmpstr(color, "lmagenta"))
+    else if(strcmp(color, "lmagenta"))
         logo_front_color = lmagenta;
 
-    else if(cmpstr(color, "yellow"))
+    else if(strcmp(color, "yellow"))
         logo_front_color = yellow;
 
-    else if(cmpstr(color, "white"))
+    else if(strcmp(color, "white"))
         logo_front_color = white;
 
-    else if(cmpstr(color, "rand"))
+    else if(strcmp(color, "rand"))
     {
         logo_front_color = rand() % 16;
         if(!logo_front_color)
             logo_front_color++;
     }
 
-    else if(cmpstr(color, "\0"))
+    else if(strcmp(color, "\0"))
     {
         logo_front_color = rand() % 16;
         if(!logo_front_color)

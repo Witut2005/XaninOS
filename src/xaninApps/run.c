@@ -14,7 +14,7 @@ void run(char* file_name)
     //screen_clear();
 
 
-    xin_entry* xin_file = xin_find_entry(file_name);
+    xin_entry* xin_file = fopen(file_name, "rw");
     
     if(xin_file == nullptr)
     {

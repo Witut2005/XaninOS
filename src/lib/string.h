@@ -2,6 +2,7 @@
 #pragma once
 
 #include <lib/math.h>
+#include <stddef.h>
 
 uint32_t strlen(char* a)
 {
@@ -76,7 +77,7 @@ char* float_to_string(float number, char* str)
 }
 
 
-uint32_t cmpstr(char* a,char* b)
+uint32_t strcmp(char* a,char* b)
 {
 
     uint32_t lengtha = strlen(a);
@@ -97,6 +98,18 @@ uint32_t cmpstr(char* a,char* b)
     return 1;		
 }
 
+uint32_t strncmp(char* a, char* b, size_t string_size)
+{
+
+    for(int i = 0; i < string_size;i ++)
+    {
+        if(a[i] != b[i])
+            return 0;
+    }
+
+    
+    return 1;		
+}
 
 
 

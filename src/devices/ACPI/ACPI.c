@@ -8,7 +8,7 @@ char* get_acpi_address_base(void)
 
     while(acpi_string > (char*)0xFFFFF)
     {    
-        if(cmpstr(acpi_string, "RSD PTR "))
+        if(strcmp(acpi_string, "RSD PTR "))
         {
             return acpi_string;
         }

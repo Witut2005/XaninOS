@@ -17,8 +17,18 @@ enum operation_types
     CALC_POW = 5
 };
 
-void calc()
+void calc(char* options)
 {
+
+    if(strcmp(options, "help"))
+    {
+        screen_clear();
+        xprintf("xaninOS developer tools\n");
+        xprintf("Simple calculator :))\n");
+    	while(KeyInfo.scan_code != ENTER);
+        return;
+    }
+
     int operation_type;
     uint32_t a, b, result;
 
@@ -30,7 +40,6 @@ void calc()
     xprintf("3. multiply\n");
     xprintf("4. divide\n");
     xprintf("5. powers\n");
-    xprintf("6. convert dec to nBase number system\n");
 
     xscanf("%d", &operation_type);
 

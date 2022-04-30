@@ -68,9 +68,17 @@ enum {
     CPUID_EDX_PBE          = 1 << 31
 };
 
-void cpu_info(void)
+void cpu_info(char* options)
 {
 
+    if(strcmp(options, "help"))
+    {
+        screen_clear();
+        xprintf("xaninOS developer tools\n");
+        xprintf("Cpu_Info program displays basic info about Central Processing Unit\n");
+    	while(KeyInfo.scan_code != ENTER);
+        return;
+    }
 
     unsigned int ecx, edx, ebx;
     char cpu_vendor_string[12];

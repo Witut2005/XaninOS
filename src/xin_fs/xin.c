@@ -40,7 +40,7 @@ xin_entry *xin_find_entry(char *entry_name)
 {
     for (char *i = XIN_ENTRY_TABLE; (uint32_t)i < XIN_ENTRY_TABLE + (SECTOR_SIZE * 4); i += 32)
     {
-        if (cmpstr(entry_name, i))
+        if (strcmp(entry_name, i))
         {
             return (xin_entry *)i;
         }
@@ -50,7 +50,7 @@ xin_entry *xin_find_entry(char *entry_name)
 
     for (char *i = XIN_ENTRY_TABLE; (uint32_t)i < XIN_ENTRY_TABLE + (SECTOR_SIZE * 4); i += 32)
     {
-        if (cmpstr(entry_name, i))
+        if (strcmp(entry_name, i))
         {
             return (xin_entry *)i;
         }
@@ -176,22 +176,20 @@ void xin_create_file(char *entry_parent_directory)
     if (entry_parent_directory[strlen(entry_parent_directory) - 1] != '/')
     {
         xprintf("%zMISSING / ENDING CHARACTER IN DIRECTORY NAME\n", set_output_color(red, white));
-        while (KeyInfo.scan_code != ENTER)
-            ;
+        while (KeyInfo.scan_code != ENTER);
         exit_process();
     }
 
     if (xin_find_entry(entry_parent_directory) == nullptr)
     {
         xprintf("NO SUCH DIRECTORY\n", set_output_color(red, white));
-        while (KeyInfo.scan_code != ENTER)
-            ;
+        while (KeyInfo.scan_code != ENTER);
         return;
     }
 
     xprintf("Your new file name: ");
-    char new_entry_name[40];
-    char entry_full_name[40];
+    char new_entry_name[40] = {0};
+    char entry_full_name[40] = {0};
     xscanf("%s", new_entry_name);
 
     int i;
@@ -214,9 +212,6 @@ void xin_create_file(char *entry_parent_directory)
     xin_entry *entry = xin_find_free_entry();
 
     time_get();
-
-
-
 
     set_string(entry->entry_path, entry_full_name);
 
@@ -262,7 +257,7 @@ void xin_create_directory(char *entry_path)
     xprintf("Your parent directory: %s\n", entry_path);
     xprintf("Your new directory name: ");
 
-    char entry_name[40];
+    char entry_name[40] = {0};
     xscanf("%s", entry_name);
 
     int i = 0;
@@ -338,16 +333,14 @@ xin_entry *xin_change_directory(char *new_directory)
     if (xin_new_directory == nullptr)
     {
         xprintf("%zNO SUCH DIRECTORY\n", set_output_color(red, white));
-        while (KeyInfo.scan_code != ENTER)
-            ;
+        while (KeyInfo.scan_code != ENTER);
         return nullptr;
     }
 
     if (new_directory[strlen(new_directory) - 1] != '/')
     {
         xprintf("%zMISSING / ENDING CHARACTER IN DIRECTORY NAME\n", set_output_color(red, white));
-        while (KeyInfo.scan_code != ENTER)
-            ;
+        while (KeyInfo.scan_code != ENTER);
         return nullptr;
     }
 
