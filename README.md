@@ -13,43 +13,42 @@ Features:
 - note (notepad)
 - paint
 - recreated some parts of C libaries
-- own file system (xin fs)
-- file system manipulation commands (create, rd, load, loadch)
+- file system manipulation commands (create, mkdir)
 - usb detector
+- own file system (xin file system)
+- pong game
+
 
 ---
 
-## DIRECTORIES
+## Directories
 
 ```
 bin/ - binary files
 src/ - source files
 ```
 
----
-
-Command to list all available commands within xaninOS:
-
-## XANIN COMMANDS
+## XaninOS commands
 
 ```
-"help" or "h"
+"help" or "h"               //prints all available commands
+"help" or "h" command_name  //prints short manual about the command
 ```
 
-## Running xaninOS
+## Running XaninOS
 
 ```
-run_linux.sh (you can find this file inside /src directory)
+make run (you can find this file inside /src directory)
 ```
 
-## Running xaninOS on Windows
+## Running XaninOS on Windows
 
 ```
-run_windows.bat (you can find this file inside /src directory)
+.run_windows.bat (you can find this file inside /src directory)
 ```
 
-## Building xaninOS from source
+## Building XaninOS from source
 
 ```
-build.sh ((you can find this file inside /src directory))
+build.sh (you can find this file inside /src directory)
 ```

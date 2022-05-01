@@ -224,7 +224,7 @@ void pong(void)
 {
     pong_init();
 
-    while(KeyInfo.scan_code != ESC && app_exited != true)
+    while(KeyInfo.scan_code != ESC && KeyInfo.scan_code != ENTER && KeyInfo.scan_code != F4_KEY && app_exited != true)
     { 
         pong_update();
         if(player1_points == 5)

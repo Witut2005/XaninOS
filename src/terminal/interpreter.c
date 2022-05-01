@@ -289,14 +289,7 @@ void scan(void)
 
     else if(strcmp(program_name,"help") || strcmp(program_name,"h"))
     {
-        //xprintf("j");
-        //while(KeyInfo.scan_code != ENTER);
-        
-        screen_clear();
-        y = 2;
-        x = 0;
-
-        help();   
+        help(program_parameters);   
     }
 
 

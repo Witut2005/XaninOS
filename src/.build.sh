@@ -26,6 +26,7 @@ cd ..
 
 cd ./xaninApps
 nasm -f bin shutdown.asm -o shutdown
+nasm -f bin reboot.asm -o reboot
 nasm -f bin syscall_test.asm -o syscall_test
 nasm -f bin xanin_apps_space.asm -o xanin_apps_space
 cd ..
@@ -48,12 +49,12 @@ i386-elf-g++ -O0 -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -ffrees
 i386-elf-gcc -O0 -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-int-conversion -Wno-unused-function -I /home/witut/Desktop/xaninOS/src \
 kernel.c ./handlers/keyboard.o ./pit/pit.o ./syscall/syscall.o ./xagames/xagame_test.o  -o kernel.bin
 
-cat ./xaninApps/shutdown ./xaninApps/syscall_test > ./xaninApps/xanin_external_apps
+cat ./xaninApps/shutdown ./xaninApps/reboot ./xaninApps/syscall_test > ./xaninApps/xanin_external_apps
 
 dd if=./xaninApps/xanin_external_apps of=./xaninApps/xanin_apps_space bs=512 count=16 conv=notrunc
 
 cat ./boot/boot ./lib/enter_real_mode ./xaninApps/xanin_apps_space ./xin_fs/xin_pointers ./xin_fs/entries_table ./boot/kernelLoader kernel.bin > xanin.bin
-#        0                   1                   2                   10                          14          15                                  
+#        0                   1                   2                   12                          16              17                                  
 
 
 #MOV XANIN.img to BIN

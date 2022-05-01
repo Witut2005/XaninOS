@@ -373,9 +373,12 @@ uint32_t strtoi(char* str, uint8_t format)
     
     	if(tmp >= format)
     		continue;
-    
+
         sum *= format;
 
+        sum += tmp;
+
+        /*
         if(str[i] >= '0' && str[i] <= '9')
             str[i] = str[i] - '0';
 
@@ -384,8 +387,9 @@ uint32_t strtoi(char* str, uint8_t format)
         
         else
             continue;
+        */
 
-        sum += str[i];        
+        //sum += str[i];        
     }
     
     return sum;
