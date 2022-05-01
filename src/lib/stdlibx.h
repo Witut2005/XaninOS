@@ -80,7 +80,24 @@ void time_get()
     //GET HOURS
     outbIO(CMOS_ADDR,0x4);
     Time.hour = inbIO(CMOS_DATA);
-    Time.hour += 2;
+    
+    if((Time.hour & 0xF0) == 2 && (Time.hour & 0x0F) >= 2)
+    {
+        Time.hour &= 0x0F;
+        Time.hour -= 2;
+
+        Time.hour = Time.hour << 4;
+
+    }
+
+    else if((Time.hour & 0xF) == 9 || (Time.hour & 0xF) == 8)
+    {
+        Time.hour = (Time.hour & 0xF0) + (Time.hour & 0x1);
+        Time.hour = Time.hour + (1 << 4);
+    }
+
+    else
+        Time.hour+=2;
 
     //GET day
     outbIO(CMOS_ADDR,0x6);
