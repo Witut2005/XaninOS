@@ -38,8 +38,13 @@ reboot:
 
     int 0x13
 
-    mov bx, 0
-    div bx
+    lidt[IVT]
 
+    mov cx, 0x0
+    div cx
 
-    times 512 - ($-$$) db 0x90
+    IVT:
+        dw 0x0
+        dd 0x0
+
+    times 512 - ($-$$) db 0xD6

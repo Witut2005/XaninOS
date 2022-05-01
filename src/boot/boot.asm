@@ -41,6 +41,7 @@ mov cx, 0x3
 
 reading_disk:
 
+
 ;kernal_load
 mov si, DAP
 mov ah, 0x42

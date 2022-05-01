@@ -40,7 +40,7 @@ xanin_saver:
     mov fs, ax
     mov es, ax
 
-    lidt[LVT]
+    lidt[IVT]
 
     sti
 
@@ -54,7 +54,7 @@ xanin_saver:
     
     iret
 
-    LVT:
+    IVT:
     dw 0x03FF
     dd 0x0
 

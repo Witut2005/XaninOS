@@ -10,12 +10,11 @@ jmp shutdown
 DAP:
 size_of_packet: db 0x10
 reserved: db 0x0
-how_many_sectors: dw 0x10
+how_many_sectors: dw 0xD
 offset: dw 0x800
 segment_num: dw 0x0
-lba: dd 0x4
+lba: dd 0x2 + 0x10
 lba48: dd 0x0
-
 
 
 shutdown:
@@ -37,24 +36,6 @@ shutdown:
     mov ah, 0x43
     mov al, 0x0
 
-    int 0x13
-
-
-
-   ;DRIVE NUMBER  
-    mov ax, 0x0
-    mov ds, ax
-    mov dl, [0x7c02]
-    
-    mov word [0x800], 1234
-   
-    ;DS:SI
-    mov ax, 0x1000
-    mov ds, ax 
-    mov si, 0x202
-
-    ;FUNC NUMBER
-    mov ah, 0x42 
     int 0x13
     
     ;mov ax, 0x0
