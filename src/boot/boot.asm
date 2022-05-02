@@ -5,7 +5,8 @@ org 0x7c00] ;there we start execution
 
 jmp _loadSector
 
-
+;12 + 2 + 16
+ 
 BOOT_DISK_NUMBER: db 0x0
 
 DAP:
@@ -14,7 +15,7 @@ reserved: db 0x0
 how_many_sectors: dw 0x35
 offset: dw 0x0
 segment_num: dw 0x2000
-lba: dd 0xD + 1 + 0x10
+lba: dd 0x2 + 0x10 + 0x30
 lba48: dd 0x0
 
 _loadSector:
@@ -49,7 +50,7 @@ mov dl, [BOOT_DISK_NUMBER]
 int 0x13
 
 ;kernel_1
-mov word [lba], 0xD + 1 + 0x35 + 0x10
+mov word [lba], 0x43 + 0x34
 mov word [offset], 0x35 * 0x200
 
 mov si, DAP
@@ -58,7 +59,7 @@ mov dl, [BOOT_DISK_NUMBER]
 int 0x13
 
 ;kernel_2
-mov word [lba], 0xD + 1 + 0x6A + 0x10
+mov word [lba], 0x43 + 0x69
 mov word [offset], 0x6A * 0x200
 
 mov si, DAP
@@ -70,7 +71,7 @@ int 0x13
 mov word [lba], 0x2 + 0x10
 mov word [offset], 0x800
 mov word [segment_num], 0x0
-mov word [how_many_sectors], 0xD
+mov word [how_many_sectors], 0x30
 
 mov si, DAP
 mov ah, 0x42

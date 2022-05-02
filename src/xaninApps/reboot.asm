@@ -9,7 +9,7 @@ jmp reboot
 DAP:
 size_of_packet: db 0x10
 reserved: db 0x0
-how_many_sectors: dw 0xD
+how_many_sectors: dw 0x30
 offset: dw 0x800
 segment_num: dw 0x0
 lba: dd 0x2 + 0x10
