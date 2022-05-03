@@ -95,6 +95,10 @@ char program_parameters1[40];
 char program_parameters2[40];
 char program_parameters3[40];
 
+char last_used_commands[40];
+char last_used_parameters[40];
+
+
 void terminal(void);
 void letters_refresh(uint16_t* cursor_current_positon);
 void letters_refresh_add(uint16_t* cursor_current_positon, char character_saved);

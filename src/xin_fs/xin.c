@@ -38,7 +38,7 @@ char *xin_get_current_path(char *file_name)
 /* DIRECTORY AND FILES */
 xin_entry *xin_find_entry(char *entry_name)
 {
-    for (char *i = XIN_ENTRY_TABLE; (uint32_t)i < XIN_ENTRY_TABLE + (SECTOR_SIZE * 4); i += 32)
+    for (char *i = XIN_ENTRY_TABLE; (uint32_t)i < XIN_ENTRY_TABLE + (SECTOR_SIZE * 8); i += 32)
     {
         if (strcmp(entry_name, i))
         {
@@ -48,7 +48,7 @@ xin_entry *xin_find_entry(char *entry_name)
 
     entry_name = xin_get_current_path(entry_name);
 
-    for (char *i = XIN_ENTRY_TABLE; (uint32_t)i < XIN_ENTRY_TABLE + (SECTOR_SIZE * 4); i += 32)
+    for (char *i = XIN_ENTRY_TABLE; (uint32_t)i < XIN_ENTRY_TABLE + (SECTOR_SIZE * 8); i += 32)
     {
         if (strcmp(entry_name, i))
         {
@@ -248,16 +248,14 @@ void xin_create_directory(char *entry_path)
     if (entry_path[strlen(entry_path) - 1] != '/')
     {
         xprintf("%zMISSING / ENDING CHARACTER IN DIRECTORY NAME\n", set_output_color(red, white));
-        while (KeyInfo.scan_code != ENTER)
-            ;
+        while (KeyInfo.scan_code != ENTER);
         exit_process();
     }
 
     if (xin_find_entry(entry_path) == nullptr)
     {
         xprintf("NO SUCH DIRECTORY\n", set_output_color(red, white));
-        while (KeyInfo.scan_code != ENTER)
-            ;
+        while (KeyInfo.scan_code != ENTER);
         return;
     }
 
@@ -279,9 +277,15 @@ void xin_create_directory(char *entry_path)
     if (xin_find_entry(entry_path) != nullptr)
     {
         xprintf("%zDIRECTORY WITH THIS NAME ALREADY EXISTS\n",
-                set_output_color(red, white));
-        while (KeyInfo.scan_code != ENTER)
-            ;
+        set_output_color(red, white));
+        while (KeyInfo.scan_code != ENTER);
+        return;
+    }
+
+    if(entry_path[strlen(entry_path) - 1] != '/')
+    {
+        xprintf("%zMISSING / ENDING CHARACTER IN DIRECTORY NAME\n", set_output_color(red, white));
+        while (KeyInfo.scan_code != ENTER);
         return;
     }
 
