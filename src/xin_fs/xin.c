@@ -177,7 +177,7 @@ xin_entry *xin_init_fs(void)
     xin_change_directory("/");
 }
 
-void xin_create_file(char *entry_parent_directory)
+void create_file(char *entry_parent_directory)
 {
 
     xprintf("Your parent directory: %s\n", entry_parent_directory);
@@ -416,21 +416,6 @@ uint32_t xin_get_start_sector(char *entry_name)
     return xin_file_descriptor->starting_sector;
 }
 
-xin_entry *fopen(char *file_path, const char *mode)
-{
-
-    set_string(current_file.current_rights, "\0");
-    xin_entry* const file = xin_find_entry(file_path);
-
-    current_file.file_position = 0;
-
-    if (file != nullptr && file->entry_type != XIN_DIRECTORY && file->entry_path[0] != '\0')
-        return file;
-
-    else
-        return nullptr;
-}
-
 size_t read(xin_entry *entry, void *buf, size_t count)
 {
 
@@ -463,7 +448,7 @@ size_t write(xin_entry *entry, void *buf, size_t count)
 
 }
 
-static inline void fseek(xin_entry *file, uint32_t new_position)
+void fseek(xin_entry *file, uint32_t new_position)
 {
     current_file.file_position = new_position;
 }
@@ -483,3 +468,71 @@ void fclose(xin_entry** file_descriptor)
     *file_descriptor = nullptr;
 
 }
+
+
+
+xin_entry* create(char* file_name)
+{
+
+    char* entry_full_name;
+
+    entry_full_name = xin_get_current_path(file_name);
+
+    /*
+
+    xin_entry* if_exist;
+    if_exist = xin_find_entry(entry_full_name);
+
+    if(if_exist)
+        return nullptr;
+
+    */
+
+    /* write entry to xin entry pointers table */
+    uint8_t *write_entry = xin_find_free_pointer();
+
+    for (int i = 0; i < 15; i++)
+        write_entry[i] = XIN_ALLOCATED;
+
+    write_entry[15] = XIN_EOF;
+
+    /* write entry to xin entry date table */
+    xin_entry *entry = xin_find_free_entry();
+
+    time_get();
+
+    set_string(entry->entry_path, entry_full_name);
+
+    entry->creation_date = (uint32_t)((Time.day_of_month << 24) | (Time.month << 16) | (Time.century << 8) | (Time.year)); 
+    entry->creation_time = (uint16_t)(Time.hour << 8) | (Time.minutes);
+    entry->modification_date = (uint32_t)((Time.day_of_month << 24) | (Time.month << 16) | (Time.century << 8) | (Time.year)); 
+    entry->modification_time = (uint16_t)(Time.hour << 8) | (Time.minutes);
+
+    entry->os_specific = 0xFFFF;
+    entry->entry_permissions = PERMISSION_MAX;
+    entry->entry_size = 0x0;
+    entry->entry_type = XIN_FILE;
+
+    entry->starting_sector = (uint32_t)write_entry - XIN_ENTRY_POINTERS;
+
+}
+
+
+xin_entry *fopen(char *file_path, const char *mode)
+{
+
+    set_string(current_file.current_rights, "\0");
+    xin_entry* const file = xin_find_entry(file_path);
+
+    current_file.file_position = 0;
+    
+    if (file != nullptr && file->entry_type != XIN_DIRECTORY && file->entry_path[0] != '\0')
+        return file;
+
+    else if(strcmp(mode, "rw") | strcmp(mode, "w"))
+        return create(file_path);
+    
+
+    return nullptr;
+}
+        

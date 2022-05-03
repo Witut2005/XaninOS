@@ -62,6 +62,11 @@ void scan(void)
         //touch();
     }
 
+    else if(strcmp(program_name, "assembler"))
+    {
+        assembler(program_parameters);
+    }
+
     else if(strcmp(program_name,"xagame_test"))
     {
         xagame_test();
@@ -226,7 +231,7 @@ void scan(void)
        	//create(program_parameters); 
         //xprintf("%zHUJ", set_output_color(red,white));
         //while(1);
-        xin_create_file(program_parameters);
+        create_file(program_parameters);
     }
     
     else if(strcmp(program_name, "mkdir"))

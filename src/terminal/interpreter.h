@@ -57,7 +57,7 @@
 
 
 extern void xagame_test(void);
-
+extern void assembler(char* file_name);
 
 void scan(void);
 
