@@ -12,7 +12,7 @@ enum xin_fs_properties
     XIN_UNALLOCATED = 0x0,
     XIN_EOF = 0xFF,
     
-    MAX_PATH = 40,
+    MAX_PATH = 38,
     PERMISSION_MAX = 0xFF,
     SECTOR_SIZE = 512,
     XIN_FILE = 'F',
@@ -24,29 +24,33 @@ enum xin_fs_properties
 
 };
 
-struct xin_entry
-{
 
-    char entry_path[MAX_PATH];
-    uint8_t entry_type;
-    uint32_t creation_date;
-    uint16_t creation_time;
-    uint16_t os_specific;
-    uint32_t modification_date;
-    uint16_t modification_time;
-    uint8_t entry_permissions;
-    uint32_t entry_size;    
-    uint32_t starting_sector;
-
-
-}__attribute__((packed));
 
 typedef struct xin_entry xin_entry;
 
-struct FILE
-{
-    uint32_t file_position;
-    char current_rights[2];
-};
 
-typedef struct FILE FILE;
+
+struct file_information_block
+{
+    char file_name[MAX_PATH];
+    char rights[2];
+    uint32_t position;
+
+
+}__attribute__((packed, aligned(64)));
+
+typedef struct file_information_block file_information_block;
+
+struct xin_entry
+{
+    char entry_path[MAX_PATH];          //38
+    uint8_t entry_type;                 //43
+    uint32_t creation_date;             //47
+    uint16_t creation_time;             //49
+    uint32_t modification_date;         //53
+    uint16_t modification_time;         //55
+    uint8_t entry_permissions;          //56
+    uint32_t entry_size;                //60
+    uint32_t starting_sector;           //64
+    file_information_block* file_info;  //42
+}__attribute__((packed));

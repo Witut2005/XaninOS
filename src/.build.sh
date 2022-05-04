@@ -49,7 +49,7 @@ i386-elf-g++ -O0 -masm=intel -w -Wno-builtin-declaration-mismatch -Wwrite-string
 i386-elf-g++ -O0 -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -fno-rtti -I /home/witut/Desktop/xaninOS/src \
 -c ./chip8/chip8.cpp  -o ./chip8/chip8.o
 
-i386-elf-gcc -O0 -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-int-conversion -Wno-unused-function -I /home/witut/Desktop/xaninOS/src \
+i386-elf-gcc -O0 -masm=intel -Wno-discarded-qualifiers -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-int-conversion -Wno-unused-function -I /home/witut/Desktop/xaninOS/src \
 kernel.c ./assembler/assembler.o ./handlers/keyboard.o ./pit/pit.o ./syscall/syscall.o ./xagames/xagame_test.o  -o kernel.bin
 
 cat ./xaninApps/shutdown ./xaninApps/reboot ./xaninApps/syscall_test > ./xaninApps/xanin_external_apps

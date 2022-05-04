@@ -10,7 +10,7 @@ void xin_entry_info(char *entry_name)
         xprintf("\nentry path: %s\n", file->entry_path);
         xprintf("creation date: %y\n", file->creation_date);
         xprintf("creation time: %t\n", file->creation_time);
-        xprintf("os_specific: 0x%x\n", file->os_specific);
+        xprintf("file_information_block location: 0x%x\n", file->file_info);
         xprintf("modification_date: %y\n", file->modification_date);
         xprintf("modification_time: %t\n", file->modification_time);
         xprintf("entry_permissions: 0x%x\n", file->entry_permissions);

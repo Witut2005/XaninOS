@@ -12,6 +12,7 @@ extern "C"
     void create(char* file_name);
     size_t read(xin_entry *entry, void *buf, size_t count);
     void fseek(xin_entry *file, uint32_t new_position);
+    void xprintf(char* str, ... );
 }
 struct screen_t
 {
@@ -46,14 +47,13 @@ void assembler(char* file_name)
 
         fseek(file, 80 * i);
         read(file, current_instruction, 3);
-        
         current_instruction[3] = '\0';
-            
-        for(int j = 0; j < 20; j++) 
+        
+        for(int j = 0; j < 1; j++) 
         {
             if(strcmp(current_instruction, (char*)opcodes[j].instruction_name))
             {
-                fseek(asm_output, i);
+                xprintf("%s\n", current_instruction);
                 write(asm_output, (uint8_t*)&opcodes[j].opcode, 1);
             }
         }

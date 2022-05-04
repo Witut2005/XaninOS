@@ -5,9 +5,8 @@
 #include <xin_fs/xin_entry.h>
 
 
-FILE current_file;
-char xin_current_path[40] = {'\0'};
-char xin_current_directory[40] = {'\0'};
+char xin_current_path[38] = {'\0'};
+char xin_current_directory[38] = {'\0'};
 
 
 char* xin_set_current_directory(char* directory);

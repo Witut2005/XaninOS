@@ -186,11 +186,13 @@ void xin_note(char* file_name)
     else
     {
 
+        /*
         if(xin_file->os_specific == XIN_READ_ONLY)
         {
             xprintf("%zYOUR ARE EDITING READ-ONLY FILE. CHANGES WILL NOT BE SAVED.", set_output_color(red,white));
             while(KeyInfo.scan_code != ENTER);
         }
+        */
 
         char* data_pointer = xin_file->starting_sector * SECTOR_SIZE;
 
@@ -206,7 +208,7 @@ void xin_note(char* file_name)
 
         data_pointer = (char*)(xin_file->starting_sector * SECTOR_SIZE);
 
-        if(xin_file->os_specific != XIN_READ_ONLY)
+        //if(xin_file->os_specific != XIN_READ_ONLY)
         {
 
             uint16_t* screen_ptr = (uint16_t*)VGA_TEXT_MEMORY;
