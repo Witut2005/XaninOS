@@ -53,9 +53,9 @@ void assembler(char* file_name)
         
         
 
-        for(int j = 0; j < 1; j++) 
+        for(int j = 0; j < 2; j++) 
         {
-            //if(strcmp(current_instruction, (char*)opcodes[j].instruction_name))
+      //      if(strcmp(current_instruction, (char*)opcodes[j].instruction_name))
             {
                 xprintf("%s\n", current_instruction);
                 
@@ -70,13 +70,20 @@ void assembler(char* file_name)
                         for(counter = 4; current_instruction[counter] != ','; counter++)
                             operand1[counter - 4] = current_instruction[counter];
                         counter++;
+
+                        operand1[counter - 1] = '\0';
                     }
 
                     else
                     {
-                        for(int l = counter; current_instruction[counter] != ' ' && 
+                        int l;
+
+                        for(l = counter; current_instruction[counter] != ' ' && 
                                     current_instruction[counter] != '\0'; counter++)
                             operand2[counter - l] = current_instruction[counter];
+                        
+                        operand2[counter - l + 1] = '\0'; 
+
                     }
 
                 }
@@ -84,13 +91,16 @@ void assembler(char* file_name)
                 xprintf("operand1: %s\n", operand1);
                 xprintf("operand2: %s\n", operand2);
 
+                
+                operands_get(opcodes[j].opcode, operand1, operand2);
 
-                write(asm_output, (uint8_t*)&opcodes[j].opcode, 1);
-            
-
-
+                write(asm_output, machine_code, 2);
+                return;        
             }
+        
+    
         }
+        
     }
 
 }
