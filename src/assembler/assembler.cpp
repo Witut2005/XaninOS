@@ -13,6 +13,7 @@ extern "C"
     size_t read(xin_entry *entry, void *buf, size_t count);
     void fseek(xin_entry *file, uint32_t new_position);
     void xprintf(char* str, ... );
+    
 }
 struct screen_t
 {
@@ -26,7 +27,8 @@ typedef struct screen_t screen_t;
 
 extern screen_t Screen;
 
-char current_instruction[4];
+char current_instruction[30];
+char operand1[5] = {'\0'}, operand2[5] = {'\0'};
 
 extern "C"
 {
@@ -46,15 +48,47 @@ void assembler(char* file_name)
     {
 
         fseek(file, 80 * i);
-        read(file, current_instruction, 3);
-        current_instruction[3] = '\0';
+        read(file, current_instruction, 30);
+        //current_instruction[3] = '\0';
         
+        
+
         for(int j = 0; j < 1; j++) 
         {
-            if(strcmp(current_instruction, (char*)opcodes[j].instruction_name))
+            //if(strcmp(current_instruction, (char*)opcodes[j].instruction_name))
             {
                 xprintf("%s\n", current_instruction);
+                
+
+                for(int k = 0; k < opcodes[j].operands; k++)
+                {
+
+                    int counter;
+
+                    if(!k)
+                    {
+                        for(counter = 4; current_instruction[counter] != ','; counter++)
+                            operand1[counter - 4] = current_instruction[counter];
+                        counter++;
+                    }
+
+                    else
+                    {
+                        for(int l = counter; current_instruction[counter] != ' ' && 
+                                    current_instruction[counter] != '\0'; counter++)
+                            operand2[counter - l] = current_instruction[counter];
+                    }
+
+                }
+
+                xprintf("operand1: %s\n", operand1);
+                xprintf("operand2: %s\n", operand2);
+
+
                 write(asm_output, (uint8_t*)&opcodes[j].opcode, 1);
+            
+
+
             }
         }
     }

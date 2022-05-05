@@ -34,7 +34,7 @@ void init_disk(uint16_t base, uint8_t master)
 		    disk_status = inbIO(base + ATA_COMMAND_REGISTER);  
     
     for(int i = 0; i < 256; i++)
-        indwIO(base + ATA_DATA_REGISTER);    
+        inwIO(base + ATA_DATA_REGISTER);    
 
 }
 
@@ -77,7 +77,7 @@ void disk_read(uint16_t base, uint8_t master, uint32_t sector_number,
     {
         for(int j = 0; j < 256; j++)
         {
-            uint16_t readed_data = indwIO(base + ATA_DATA_REGISTER);
+            uint16_t readed_data = inwIO(base + ATA_DATA_REGISTER);
         
       	    *where = readed_data;
       	    where++;
@@ -124,9 +124,9 @@ void disk_write(uint16_t base, uint8_t master, uint32_t sector_number, uint8_t h
     {
         for(int j = 0; j < 256; j++)
         {
-            //uint16_t readed_data = indwIO(base + ATA_DATA_REGISTER);
+            //uint16_t readed_data = inwIO(base + ATA_DATA_REGISTER);
         
-            outdwIO(base + ATA_DATA_REGISTER, where[j]);
+            outwIO(base + ATA_DATA_REGISTER, where[j]);
 
       	    //*where = readed_data;
       	    //where++;

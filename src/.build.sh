@@ -63,5 +63,6 @@ cat ./boot/boot ./lib/enter_real_mode ./xaninApps/xanin_apps_space ./xin_fs/xin_
 #MOV XANIN.img to BIN
 dd if=xanin.bin of=xanin.img
 mv xanin.img -f ../bin
-rm xanin.bin 
+mv xanin.bin -f ../bin
+#rm xanin.bin 
 rm kernel.bin

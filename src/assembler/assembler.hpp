@@ -4,79 +4,60 @@
 
 #include <stdint.h>
 
-char* register_names[]
+typedef struct 
 {
-    "eax",
-    "ax",
-    "ah",
-    "al",
+    char reg[5];
+    uint8_t reg_code;
+}asm_reg_t;
 
-    "ecx",
-    "cx",
-    "ch",
-    "cl",
+asm_reg_t registers[]
+{
+    {"ax", 0x0},
+    {"al", 0x0},
+    {"ah", 0x4},
 
-    "edx",
-    "dx",
-    "dh",
-    "dl",
+    {"cx", 0x1},
+    {"cl", 0x1},
+    {"ch", 0x5},
 
-    "ebx",
-    "bx",
-    "bh",
-    "bl",
+    {"dx", 0x2},
+    {"dl", 0x2},
+    {"dh", 0x6},
 
-    "esp",
-    "sp",
-    "sph",
-    "spl",
-
-    "esi",
-    "si",
-    "sih",
-    "sil",
-
-
-    "edi",
-    "di",
-    "dih",
-    "dil"
-
-    "[eax]",
-    "[ax]",
+    {"bx", 0x3},
+    {"bl", 0x3},
+    {"bh", 0x7},
     
-    "[ecx]",
-    "[cx]",
-
-    "[edx]",
-    "[dx]",
+    {"sp", 0x4},
+    {"bp", 0x5},
+    {"si", 0x6},
+    {"di", 0x7} 
     
-    "[ebx]",
-    "[bx]",
-
-    "[esp]",
-    "[sp]",
-
-    "[esi]",
-    "[si]",
-
-    "[edi]",
-    "[di]"
-
 };
 
 typedef struct asm_intruction
 {
     char instruction_name[4];
     uint8_t opcode;
+    uint8_t operands;
 };
+
 
 
 static const asm_intruction opcodes[20] = {
 
-    {"nop", 0x90}
+    {"nop", 0x90, 2},
+    {"add", 0x2, 2}
 
 
 };
+
+static uint8_t operands_get()
+{
+
+    
+
+}
+
 
 

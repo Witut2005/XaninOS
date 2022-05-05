@@ -26,9 +26,9 @@ void shutdown(void)
     real_mode_enter(0x1000, 0x200); // <-- location in RAM of shutdown program
 
 
-    outdwIO(0x604, 0x2000);  /* QEMU */
-    outdwIO(0xB004, 0x2000); /* BOCHS AND OLD QEMU */
-    outdwIO(0x4004, 0x3400); /* VIRTUALBOX */
+    outwIO(0x604, 0x2000);  /* QEMU */
+    outwIO(0xB004, 0x2000); /* BOCHS AND OLD QEMU */
+    outwIO(0x4004, 0x3400); /* VIRTUALBOX */
 
     screen_clear();
 

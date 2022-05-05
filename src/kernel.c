@@ -49,10 +49,11 @@ void _start(void)
     xprintf("DETECTING USB CONTROLLERS. PLEASE WAIT...\n");
 
     usb_detect();
+    
 
     xprintf("\n%zUSB DETECTION TEST ENDED. PRESS ENTER TO START XANIN OS\n",
             set_output_color(green,white));
-
+    while(KeyInfo.scan_code != ENTER);
 
     xprintf("\n\n");
    

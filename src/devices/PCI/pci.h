@@ -83,6 +83,18 @@ struct pci_device_structure1
 
 }__attribute__((packed));
 
+struct pci_power_management_register
+{
+    uint8_t power_state : 2;
+    uint8_t reserved1 : 6;
+    uint8_t pme_enable : 1;
+    uint8_t data_select : 4;
+    uint8_t data_scale : 2;
+    uint8_t pme_status : 1;
+    uint16_t reserved2;
+}__attribute__((packed));
+
+typedef struct pci_power_management_register pci_power_management_register;
 
 struct pci_config_register
 {
@@ -96,12 +108,6 @@ struct pci_config_register
 
 typedef struct pic_config_register pci_config_register;
 
-
-#define pci_set_parameters(config_register, parameter) \
-    config_register.pci_bus_number = (parameter & 0xFF0000) >> 16;\
-    config_register.pci_device_number = (parameter & 0xF800) >> 11;\
-    config_register.pci_function_number = (parameter & 0x700) >> 8;\
-    config_register.pci_register_offset = (parameter & 0xFF)
 
 enum PCI_DEVICES
 {

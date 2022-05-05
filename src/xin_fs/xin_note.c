@@ -51,7 +51,7 @@ void note_input(void)
 
         Screen.x--;
 
-        Screen.cursor[Screen.y][Screen.x] = '\0';
+        Screen.cursor[Screen.y][Screen.x] = 0x20;
         Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((white << 4) | black) << 8));
 
         KeyInfo.is_bspc = false;
