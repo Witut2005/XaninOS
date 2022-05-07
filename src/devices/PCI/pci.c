@@ -143,7 +143,7 @@ uint16_t pci_get_data16(const uint8_t bus, const uint8_t slot,
 }
 
 
-uint16_t pci_get_data8(const uint8_t bus, const uint8_t slot, 
+uint8_t pci_get_data8(const uint8_t bus, const uint8_t slot, 
                         const uint8_t function, const uint8_t offset )
 {
 
@@ -154,11 +154,11 @@ uint16_t pci_get_data8(const uint8_t bus, const uint8_t slot,
                         (slot << 11) |
                         (function << 8)|
                         (offset & 0xFC) | 
-                        (uint32_t)ENABLE_CONFIGURATION_SPACE_MAPPING);
+                        ENABLE_CONFIGURATION_SPACE_MAPPING);
 
 
     outdIO(PCI_ADDRESS_PORT, address);
-    ret = (uint8_t)(indIO(PCI_DATA_PORT) >> ((offset & 0x3) * 8));
+    ret = (uint8_t)(indIO(PCI_DATA_PORT) >> ((offset & 0x3) * 8)) & 0xFF;
    
 
     return ret;
@@ -179,13 +179,14 @@ uint8_t pci_write_data8(const uint8_t bus, const uint8_t slot, const uint8_t fun
     address = (uint32_t)((bus << 16) | 
                         (slot << 11) |
                         (function << 8)|
-                        (offset & 0xFC));
+                        (offset & 0xFC) | ENABLE_CONFIGURATION_SPACE_MAPPING);
 
     
 
     outdIO(PCI_ADDRESS_PORT, address);
-    outdIO(PCI_DATA_PORT, (indIO(PCI_DATA_PORT) & ~(0x000000FF << (offset & 0x3))) | (data << (offset & 0x3)));
+    outdIO(PCI_DATA_PORT, (indIO(PCI_DATA_PORT) & ~(0x000000FF << ((offset & 0x3) * 8))) | (data << ((offset & 0x3) * 8)));
      
+    outdIO(PCI_ADDRESS_PORT, address);
     ret = indIO(PCI_DATA_PORT);
 
     return ret;

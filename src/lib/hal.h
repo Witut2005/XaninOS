@@ -4,23 +4,23 @@
 #include <stdint.h>
 #include <headers/macros.h>
 
-static inline void outbIO(uint16_t port,uint8_t al)
+void outbIO(uint16_t port,uint8_t al)
 {
     asm("outb dx,al" :: "d" (port), "a"(al));
 }
 
-static inline void outwIO(uint16_t port,uint16_t ax)
+void outwIO(uint16_t port,uint16_t ax)
 {
     asm("out dx,ax" :: "d" (port), "a"(ax));
 }
 
-static inline void outdIO(uint16_t port,uint32_t eax)
+void outdIO(uint16_t port,uint32_t eax)
 {
     asm("out dx,eax" :: "d" (port), "a"(eax));
 }
 
 
-static inline uint8_t inbIO(uint16_t port)
+uint8_t inbIO(uint16_t port)
 {
     asm("in al,dx" :: "d" (port));
 
@@ -28,7 +28,7 @@ static inline uint8_t inbIO(uint16_t port)
     return retVal;
 }
 
-static inline uint16_t inwIO(uint16_t port)
+uint16_t inwIO(uint16_t port)
 {
     asm("in ax,dx" :: "d" (port));
 
@@ -37,7 +37,7 @@ static inline uint16_t inwIO(uint16_t port)
 }
 
 
-static inline uint32_t indIO(uint16_t port)
+uint32_t indIO(uint16_t port)
 {
     asm("in eax,dx" :: "d" (port));
 
@@ -46,18 +46,18 @@ static inline uint32_t indIO(uint16_t port)
 
 }
 
-static inline void disable_cursor(void)
+void disable_cursor(void)
 {
      outbIO(0x3D4, 0x0A);
 	   outbIO(0x3D5, 0x20);
 }
 
-static inline void eoi_send(void)
+void eoi_send(void)
 {
     asm("out 0x20, al" :: "a"(0x20));
 }
 
-static inline void io_wait(void)
+void io_wait(void)
 {
     asm("out 0x80, al" :: "a"(0x0));
 }
@@ -84,13 +84,13 @@ void real_mode_enter(uint16_t segment, uint16_t offset)
     enter16();
 }
 
-static inline void rdmsr(uint32_t msr_id, uint32_t low, uint32_t high)
+void rdmsr(uint32_t msr_id, uint32_t low, uint32_t high)
 {
     asm("rdmsr" : "=a"(low), "=d"(high) : "c"(msr_id));
 }
 
 
-static inline void wrmsr(uint32_t msr_id, uint32_t low, uint32_t high)
+void wrmsr(uint32_t msr_id, uint32_t low, uint32_t high)
 {
     asm("wrmsr" : "=a"(low), "=d"(high) : "c"(msr_id));
 }

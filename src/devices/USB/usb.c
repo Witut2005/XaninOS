@@ -98,17 +98,11 @@ void usb_detect(void)
             xprintf("0x%x\n",pci_get_data32((pci_address_selector & 0xFF000000) >> 24, (pci_address_selector & 0xFF0000) >> 16,
                                                                                                             (pci_address_selector & 0xFF00) >> 8, 0x10));  
 
-            //uint8_t pci_get_data32(pci_address_selector, 0xD);
+            return;
 
         }
            
-        if(var == 0x0106 && tmp != var)
-        {
-        
-            xprintf("HARD DISK DETECTED\n");
-            
-        }
-    
+   
 
     }
 

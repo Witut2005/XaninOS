@@ -3,6 +3,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <libcpp/cstdio.h>
 
 typedef struct 
 {

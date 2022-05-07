@@ -2,6 +2,8 @@
 #include <stddef.h>
 #include <assembler/assembler.hpp>
 #include <xin_fs/xin_entry.h>
+#include <libcpp/cstdlib.h>
+
 
 extern "C"
 {
@@ -12,7 +14,7 @@ extern "C"
     void create(char* file_name);
     size_t read(xin_entry *entry, void *buf, size_t count);
     void fseek(xin_entry *file, uint32_t new_position);
-    void xprintf(char* str, ... );
+    //void xprintf(char* str, ... );
     
 }
 struct screen_t
@@ -91,7 +93,6 @@ void assembler(char* file_name)
                 xprintf("operand1: %s\n", operand1);
                 xprintf("operand2: %s\n", operand2);
 
-                
                 operands_get(opcodes[j].opcode, operand1, operand2);
 
                 write(asm_output, machine_code, 2);
