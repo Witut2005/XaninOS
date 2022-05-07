@@ -3,6 +3,7 @@
 #include <assembler/assembler.hpp>
 #include <xin_fs/xin_entry.h>
 #include <libcpp/cstdlib.h>
+#include <libcpp/hal.h>
 
 
 extern "C"

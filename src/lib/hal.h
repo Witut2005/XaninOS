@@ -22,27 +22,50 @@ void outdIO(uint16_t port,uint32_t eax)
 
 uint8_t inbIO(uint16_t port)
 {
-    asm("in al,dx" :: "d" (port));
+    uint8_t ret;
 
-    register uint8_t retVal asm("al");
-    return retVal;
+    asm("in al,dx" :: "d" (port));
+    
+    asm("in al, %1;"
+        "mov %0, al;"
+        : "=r"(ret)
+        : "r"(port)
+        :"al"
+        );
+
+    return ret;
+    
+
 }
 
 uint16_t inwIO(uint16_t port)
 {
-    asm("in ax,dx" :: "d" (port));
 
-    register uint16_t retVal asm("ax");
-    return retVal;
+    uint16_t ret;
+    
+    asm("in ax, %1;"
+        "mov %0, ax;"
+        : "=r"(ret)
+        : "r"(port)
+        :"ax"
+        );
+
+    return ret;
+
 }
 
 
 uint32_t indIO(uint16_t port)
 {
-    asm("in eax,dx" :: "d" (port));
-
-    register uint32_t retVal asm("eax");
-    return retVal;
+    uint32_t ret;
+    
+    asm("in eax, %1;"
+        "mov %0, eax;"
+        : "=r"(ret)
+        : "r"(port)
+        :"eax"
+        );
+    return ret;
 
 }
 
