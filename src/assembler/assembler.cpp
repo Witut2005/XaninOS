@@ -1,10 +1,11 @@
 
+//#include <libcpp/utility.h>
 #include <stddef.h>
 #include <assembler/assembler.hpp>
 #include <xin_fs/xin_entry.h>
-#include <libcpp/cstdlib.h>
+#include <libcpp/cstdio.h>
 #include <libcpp/hal.h>
-
+#include <libcpp/algorithm.h>
 
 extern "C"
 {
@@ -36,9 +37,32 @@ char operand1[5] = {'\0'}, operand2[5] = {'\0'};
 extern "C"
 {
 
+struct Test{
+
+    int val;
+
+    Test(int x)
+    {
+        val = x;
+    }
+
+};
+
+
 void assembler(char* file_name)
 {
 
+    int arr[5] = {0,1,2,3,4};
+    //Test test = for_each(arr, &arr[5], Test::Test());
+
+    Test test(10);
+
+    xprintf("test: %d", test.val);
+
+    
+
+    while(1); 
+ 
     xin_entry* file = fopen(file_name, "r");
     xin_entry* asm_output = fopen("a.out", "w");
 

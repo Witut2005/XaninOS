@@ -3,6 +3,8 @@
 
 #include <libcpp/chal.h>
 
+namespace hal{
+
 
 class port8
 {
@@ -24,6 +26,7 @@ class port8
 
 class port16
 {
+    public:
     uint16_t port;
 
     public:
@@ -60,3 +63,5 @@ class port32
     }
 
 };
+
+}

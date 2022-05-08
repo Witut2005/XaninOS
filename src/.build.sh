@@ -43,7 +43,7 @@ cd ..
 i386-elf-g++ -O0 -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -fno-rtti -I /home/witut/Desktop/xaninOS/src \
 -c ./xagames/xagame_test.cpp  -o ./xagames/xagame_test.o
 
-i386-elf-g++ -O0 -masm=intel -w -Wno-builtin-declaration-mismatch -Wwrite-strings -nostdlib -ffreestanding -Wno-unused-function -fno-rtti -I /home/witut/Desktop/xaninOS/src \
+i386-elf-g++ -std=c++2a -O0 -masm=intel -w -Wno-builtin-declaration-mismatch -Wwrite-strings -nostdlib -ffreestanding -Wno-unused-function -fno-rtti -I /home/witut/Desktop/xaninOS/src \
 -c ./assembler/assembler.cpp  -o ./assembler/assembler.o
 
 i386-elf-g++ -O0 -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -fno-rtti -I /home/witut/Desktop/xaninOS/src \
