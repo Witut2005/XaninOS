@@ -12,6 +12,7 @@
 #include <devices/ACPI/ACPI.c>
 #include <devices/USB/usb.c>
 #include <devices/HARD_DISK/disk.c>
+#include <devices/VGA/vga.c>
 #include <xin_fs/xin.c>
 #include <lib/algorithm.h>
 #include <lib/assert.h>
@@ -34,10 +35,20 @@ void _start(void)
     screen_clear();
 
 
-    screen_init(); //init screen management system
+    //while(1);
+
+
 
 
     set_idt();
+    //vga_mode_set();
+
+
+    //while(1);
+
+    screen_init(); //init screen management system
+
+
     time_get();
     keyboard_init();
     
@@ -66,7 +77,11 @@ void _start(void)
     xin_init_fs();
     
    
-    init_disk(ATA_FIRST_BUS, ATA_MASTER);
+    //load("CE00");
+   // while(KeyInfo.character != 's');
+    //disk_read(ATA_FIRST_BUS, ATA_MASTER, 67, 100, *(uint32_t**)0x20002);
+    
+    //init_disk(ATA_FIRST_BUS, ATA_MASTER);
     
     
     screen_clear();

@@ -7,7 +7,9 @@ build:
 	bash .build.sh
 
 run:
-	qemu-system-i386 -device usb-ehci,id=ehci -m 512 ../bin/xanin.bin
+	#qemu-system-i386 -device usb-ehci,id=ehci,cache=unsafe -m 512 ../bin/xanin.bin
+
+	qemu-system-i386 -drive file=../bin/xanin.img,cache=unsafe -m 512
 
 
 curses:

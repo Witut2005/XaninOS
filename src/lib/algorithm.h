@@ -3,6 +3,8 @@
 #include <lib/string.h>
 #include <stddef.h>
 #include <lib/stdiox.h>
+
+
 char* find_character(char character, char* str)
 {
 
