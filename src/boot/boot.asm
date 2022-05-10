@@ -1,4 +1,4 @@
-org 0x7c00] ;there we start execution
+[org 0x7c00] ;there we start execution
 [bits 16]; <-- 16bit real mode
 
 
@@ -27,10 +27,13 @@ mov ax, 0x3
 int 0x10
 
 ;SETTING VIDEO MODE
-mov ax, 0x1111
+mov ax, 0x1112
 xor bl,bl
 int 10h
 
+mov ah, 0x1
+mov ch, 0x3f
+int 0x10
 
 int13_read:
 

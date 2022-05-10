@@ -71,8 +71,19 @@ uint32_t indIO(uint16_t port)
 
 void disable_cursor(void)
 {
-     outbIO(0x3D4, 0x0A);
-	   outbIO(0x3D5, 0x20);
+    outbIO(0x3D4, 0x0A);
+	outbIO(0x3D5, 0x20);
+}
+
+
+void update_cursor(int x, int y)
+{
+	uint16_t pos = y * 90 + x;
+ 
+	outbIO(0x3D4, 0x0F);
+	outbIO(0x3D5, (uint8_t) (pos & 0xFF));
+	outbIO(0x3D4, 0x0E);
+	outbIO(0x3D5, (uint8_t) ((pos >> 8) & 0xFF));
 }
 
 void eoi_send(void)

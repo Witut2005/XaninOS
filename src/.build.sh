@@ -24,6 +24,13 @@ cd ./lib
 nasm -f bin enter_real_mode.asm -o enter_real_mode
 cd ..
 
+cd ./devices/HARD_DISK
+nasm -f bin disk.asm -o disk
+nasm -f bin load_kernel.asm -o load_kernel
+cd ..
+cd ..
+
+
 cd ./xaninApps
 nasm -f bin shutdown.asm -o shutdown
 nasm -f bin reboot.asm -o reboot
@@ -52,7 +59,9 @@ i386-elf-g++ -O0 -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -ffrees
 i386-elf-gcc -O0 -masm=intel -Wno-discarded-qualifiers -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-int-conversion -Wno-unused-function -I /home/witut/Desktop/xaninOS/src \
 kernel.c ./assembler/assembler.o ./handlers/keyboard.o ./pit/pit.o ./syscall/syscall.o ./xagames/xagame_test.o  -o kernel.bin
 
-cat ./xaninApps/shutdown ./xaninApps/reboot ./xaninApps/syscall_test > ./xaninApps/xanin_external_apps
+
+
+cat ./xaninApps/shutdown ./xaninApps/reboot ./xaninApps/syscall_test ./devices/HARD_DISK/load_kernel > ./xaninApps/xanin_external_apps
 
 dd if=./xaninApps/xanin_external_apps of=./xaninApps/xanin_apps_space bs=512 count=16 conv=notrunc
 

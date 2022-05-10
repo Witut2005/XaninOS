@@ -46,8 +46,6 @@ void disk_read(uint16_t base, uint8_t master, uint32_t sector_number,
 
 
     uint8_t disk_status;
-
-
     outbIO(base + ATA_DRIVE_REGISTER, ((master == ATA_MASTER ? 0xE0 : 0xF0) | 
                                         ((sector_number >> 24) & 0x0F)));
 
@@ -90,7 +88,6 @@ void disk_read(uint16_t base, uint8_t master, uint32_t sector_number,
     
     if(disk_status & 0x1 == 1)
     	xprintf("%zDISK ERROR", set_output_color(red,white));
-
 
     xprintf("\n\n\n");
 
