@@ -309,6 +309,9 @@ void merge_sort(int array[], int first, int last)
 
 uint8_t* malloc_memory_map = (uint8_t*)0x100000; 
 uint8_t* allocation_table = (uint8_t*) 0x080000;
+uint8_t* memory_managament_map = (uint8_t*)0x100000; 
+
+
 
 void bit_set(uint8_t* address, uint8_t bit_number)
 {
@@ -334,21 +337,9 @@ uint8_t* allocation_table_entry_find(void)
 
 void* malloc(uint16_t size)
 {
-    malloc_memory_map += size;
- 
-
-    if(size % 8)
-    {
-        size += size % 8;
-    }
-
-    for(float i = 0; i < size; i++)
-    {
-        bit_set(allocation_table, i);
-    
-    }
-
-    return malloc_memory_map- size;
+    char* allocation_table = (char*)0x100000;
+    memory_managament_map += size;
+    return memory_managament_map - size;
 
     //*allocation_table = 
 }

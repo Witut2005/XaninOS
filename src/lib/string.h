@@ -4,6 +4,7 @@
 #include <lib/math.h>
 #include <stddef.h>
 
+
 uint32_t strlen(char* a)
 {
 
@@ -16,9 +17,17 @@ uint32_t strlen(char* a)
     
 
     return length;
-
-
 }
+
+char* strcpy(char* x, char* y)
+{
+    for(; *y != '\0'; x++, y++)
+        *x = *y;
+    *x = *y;
+    return x;
+}
+
+
 
 char* set_string(char* ptr, char* str)
 {
@@ -315,7 +324,7 @@ char* int_to_oct_str(int x, char* buf)
     
     return buf;
 }
-
+/*
 char* strcpy(char* dest, char* src)
 {
     while(*src)
@@ -329,7 +338,7 @@ char* strcpy(char* dest, char* src)
     return dest;
 
 }
-
+*/
 uint32_t atoi(char* str)
 {
     

@@ -28,8 +28,10 @@ extern void v86_mode_enter(void);
 void _start(void)
 {
 
+    
     asm("cli");    //disable interrupts while IDT is not configured
 
+    /*
     init_disk(ATA_FIRST_BUS, ATA_MASTER);
     disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x43, 100, (uint16_t*)0x500000);
 
@@ -38,6 +40,7 @@ void _start(void)
 
     update_cursor(100,100);
     disable_cursor();
+    */
 
     screen_clear();
 
@@ -48,7 +51,7 @@ void _start(void)
 
 
     set_idt();
-    vga_mode_set();
+    //vga_mode_set();
 
 
     //while(1);

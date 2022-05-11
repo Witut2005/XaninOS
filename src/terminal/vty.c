@@ -19,8 +19,8 @@ void screen_init(void)
     
     Screen.cursor = screen_buffer;
 
-    for(int i = 0; i < 60; i++)
-        Screen.cursor[i] = (uint16_t*)(VGA_TEXT_MEMORY + (90 * i * 2));  
+    for(int i = 0; i < 28; i++)
+        Screen.cursor[i] = (uint16_t*)(VGA_TEXT_MEMORY + (80 * i * 2));  
 
     Screen.x = 0x0;
     Screen.y = 0x0;

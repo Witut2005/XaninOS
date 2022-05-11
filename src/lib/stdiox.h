@@ -26,7 +26,7 @@ char* color_attributes[16] = {"black", "blue", "green", "cyan", "red", "magenta"
 void screen_clear(void)
 {
     uint16_t* screen_cleaner = (uint16_t*)VGA_TEXT_MEMORY;
-    for(int i = 0; i < (90 * 28); i++)
+    for(int i = 0; i < (80 * 28); i++)
     {
         *screen_cleaner = '\0';
         screen_cleaner++;
@@ -45,7 +45,7 @@ char putchar(char character)
         
     Screen.x++;
 
-    if(x == 90)
+    if(x == 80)
     {    
         Screen.x = 0x0;
         Screen.y++;
@@ -124,7 +124,7 @@ void xprintf(char* str, ... )
                     for(int i = 0; temporary_pointer[i] != '\0'; i++)
                     {                        
                         Screen.cursor[Screen.y][Screen.x] = (uint16_t) (temporary_pointer[i] + (((background_color << 4) | font_color) << 8));
-                        if(Screen.x == 90)
+                        if(Screen.x == 80)
                         {
                             Screen.y++;
                             Screen.x = 0x0;
@@ -199,7 +199,7 @@ void xprintf(char* str, ... )
                     for(int i = 0; temporary_pointer[i] != '\0'; i++)
                     { 
                         Screen.cursor[Screen.y][Screen.x] = (uint16_t) (temporary_pointer[i] + (((background_color << 4) | font_color) << 8));
-                        if(Screen.x == 90)
+                        if(Screen.x == 80)
                         {
                             Screen.y++;
                             Screen.x = 0x0;
@@ -217,6 +217,9 @@ void xprintf(char* str, ... )
 
                     stringPtr = va_arg(args,char*);
 
+                    if(stringPtr == nullptr)
+                        return;
+
 
                     for(int i = 0; stringPtr[i] != '\0'; i++)
                     {
@@ -228,7 +231,7 @@ void xprintf(char* str, ... )
                         }
 
                         Screen.cursor[Screen.y][Screen.x] = (uint16_t) (stringPtr[i] + (((background_color << 4) | font_color) << 8));
-                        if(Screen.x == 90)
+                        if(Screen.x == 80)
                         {
                             Screen.y++;
                             Screen.x = 0x0;
@@ -278,7 +281,7 @@ void xprintf(char* str, ... )
 
                     Screen.cursor[Screen.y][Screen.x] = (uint16_t) (character + (((background_color << 4) | font_color) << 8));
 
-                    if(Screen.x == 90)
+                    if(Screen.x == 80)
                     {
                         Screen.y++;
                         Screen.x = 0x0;
@@ -305,7 +308,7 @@ void xprintf(char* str, ... )
                     for(int i = 0; temporary_pointer[i] != '\0'; i++)
                     {
                         Screen.cursor[Screen.y][Screen.x] = (uint16_t) (temporary_pointer[i] + (((background_color << 4) | font_color) << 8));
-                        if(Screen.x == 90)
+                        if(Screen.x == 80)
                         {
                             Screen.y++;
                             Screen.x = 0x0;
@@ -327,7 +330,7 @@ void xprintf(char* str, ... )
                     for(int i = 0; temporary_pointer[i] != '\0'; i++)
                     {
                         Screen.cursor[Screen.y][Screen.x] = (uint16_t) (temporary_pointer[i] + (((background_color << 4) | font_color) << 8));
-                        if(Screen.x == 90)
+                        if(Screen.x == 80)
                         {
                             Screen.y++;
                             Screen.x = 0x0;
@@ -347,7 +350,7 @@ void xprintf(char* str, ... )
                     for(int i = 0; temporary_pointer[i] != '\0'; i++)
                     {
                         Screen.cursor[Screen.y][Screen.x] = (uint16_t) (temporary_pointer[i] + (((background_color << 4) | font_color) << 8));
-                        if(Screen.x == 90)
+                        if(Screen.x == 80)
                         {
                             Screen.y++;
                             Screen.x = 0x0;
@@ -381,7 +384,7 @@ void xprintf(char* str, ... )
                             {
                                 Screen.cursor[Screen.y][Screen.x] = (uint16_t) (temporary_pointer[i] + (((background_color << 4) | font_color) << 8));
                                 
-                                if(Screen.x == 90)
+                                if(Screen.x == 80)
                                 {
                                     Screen.y++;
                                     Screen.x = 0x0;
@@ -406,7 +409,7 @@ void xprintf(char* str, ... )
                             {
                                 Screen.cursor[Screen.y][Screen.x] = (uint16_t) (temporary_pointer[i] + (((background_color << 4) | font_color) << 8));
                                 
-                                if(Screen.x == 90)
+                                if(Screen.x == 80)
                                 {
                                     Screen.y++;
                                     Screen.x = 0x0;

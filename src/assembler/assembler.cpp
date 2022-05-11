@@ -6,6 +6,7 @@
 #include <libcpp/cstdio.h>
 #include <libcpp/hal.h>
 #include <libcpp/algorithm.h>
+#include <libcpp/string.h>
 
 extern "C"
 {
@@ -37,32 +38,27 @@ char operand1[5] = {'\0'}, operand2[5] = {'\0'};
 extern "C"
 {
 
-struct Test{
-
-    int val;
-
-    Test(int x)
-    {
-        val = x;
-    }
-
-};
 
 
 void assembler(char* file_name)
 {
 
-    int arr[5] = {0,1,2,3,4};
-    //Test test = for_each(arr, &arr[5], Test::Test());
 
-    Test test(10);
+    std::string str("lol");
+    std::string sec(str);
+    std::string thr = std::move(sec);
 
-    xprintf("test: %d", test.val);
+    xprintf("%s\n", str.c_str());
+    xprintf("%d\n", str.length());
 
+    xprintf("%s\n", sec.c_str());
+    xprintf("%d\n", sec.length());
+
+
+    xprintf("%s\n", thr.c_str());
+    xprintf("%d\n", thr.length());
+    while(1);
     
-
-    while(1); 
- 
     xin_entry* file = fopen(file_name, "r");
     xin_entry* asm_output = fopen("a.out", "w");
 

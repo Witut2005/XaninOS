@@ -23,7 +23,7 @@ extern "C"
     char* strcpy(char* dest, char* src);
     uint32_t atoi(char* str);
     uint32_t strtoi(char* str, uint8_t format);
-
+    char* strcpy(char* x, char* y);
 
 
 }

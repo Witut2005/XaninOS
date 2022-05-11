@@ -21,19 +21,18 @@ lba48: dd 0x0
 _loadSector:
 mov [BOOT_DISK_NUMBER], dl
 
-
 ;INITIALIZE SCREEN
 mov ax, 0x3
 int 0x10
 
 ;SETTING VIDEO MODE
-mov ax, 0x1112
+mov ax, 0x1111
 xor bl,bl
 int 10h
 
-mov ah, 0x1
-mov ch, 0x3f
-int 0x10
+;mov ah, 0x1
+;mov ch, 0x3f
+;int 0x10
 
 int13_read:
 
