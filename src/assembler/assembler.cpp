@@ -1,4 +1,5 @@
 
+#include <libcpp/ostream.h>
 #include <libcpp/utility.h>
 #include <stddef.h>
 #include <assembler/assembler.hpp>
@@ -58,11 +59,8 @@ void assembler(char* file_name)
     xprintf("%s\n", thr.c_str());
     xprintf("%d\n", thr.length());
 
-    std::array<int, 5> x = {1,2,3,4,5}; 
-    std::array<int, 5> y = x;
-
-    for(int i = 0; i < 5; i++)
-        xprintf("%d. array: %d\n", i, y[i]);
+    int xyz = 9876;
+    std::cout << xyz << std::endl ;
 
     while(1);
     
