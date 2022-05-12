@@ -25,27 +25,38 @@ class ostream
     }
     */
 
-    void operator<<(ostream_options x)
+    ostream& operator<<(ostream_options x)
     {
-        xprintf("\n");
+        if(!x.option)
+            xprintf("\n");
     }
 
-    void operator<<(uint32_t x)
-    {
-        xprintf("%d", x); 
-    }
-
-    void operator<<(int x)
+    ostream& operator<<(unsigned int x)
     {
         xprintf("%d", x); 
     }
 
-    void operator<<(char x)
+    ostream& operator<<(int x)
+    {
+        xprintf("%d", x); 
+    }
+
+    ostream& operator<<(char x)
     {
         xprintf("%c",x);
     }
 
-    void operator<<(uint16_t x)
+    ostream& operator<<(unsigned char x)
+    {
+        xprintf("%c",x);
+    }
+
+    ostream& operator<<(unsigned short x)
+    {
+        xprintf("%d",x);
+    }
+
+    ostream& operator<<(short x)
     {
         xprintf("%d",x);
     }

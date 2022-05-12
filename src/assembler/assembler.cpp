@@ -60,8 +60,7 @@ void assembler(char* file_name)
     xprintf("%d\n", thr.length());
 
     int xyz = 9876;
-    std::cout << xyz << std::endl ;
-
+    std::cout << std::endl << xyz;
     while(1);
     
     xin_entry* file = fopen(file_name, "r");
