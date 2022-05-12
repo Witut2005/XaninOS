@@ -335,6 +335,15 @@ uint8_t* allocation_table_entry_find(void)
     
 }
 
+
+struct MemoryChunk
+{
+    
+    uint8_t bytes_used;
+
+}__attribute__((packed));
+typedef struct MemoryChunk MemoryChunk;
+
 void* malloc(uint16_t size)
 {
     char* allocation_table = (char*)0x100000;

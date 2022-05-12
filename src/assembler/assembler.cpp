@@ -7,6 +7,7 @@
 #include <libcpp/hal.h>
 #include <libcpp/algorithm.h>
 #include <libcpp/string.h>
+#include <libcpp/array.cpp>
 
 extern "C"
 {
@@ -22,7 +23,6 @@ extern "C"
 }
 struct screen_t
 {
-    
     uint16_t** cursor;
     uint8_t x;
     uint8_t y;
@@ -57,6 +57,13 @@ void assembler(char* file_name)
 
     xprintf("%s\n", thr.c_str());
     xprintf("%d\n", thr.length());
+
+    std::array<int, 5> x = {1,2,3,4,5}; 
+    std::array<int, 5> y = x;
+
+    for(int i = 0; i < 5; i++)
+        xprintf("%d. array: %d\n", i, y[i]);
+
     while(1);
     
     xin_entry* file = fopen(file_name, "r");

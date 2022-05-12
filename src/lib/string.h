@@ -1,4 +1,5 @@
 
+
 #pragma once
 
 #include <lib/math.h>
@@ -8,12 +9,13 @@
 uint32_t strlen(char* a)
 {
 
+    if(a == nullptr)
+        return 0;
+
     uint32_t length = 0;
 
     for(char* i = a; *i != '\0' ;i++)
-    {
         length++;
-    }
     
 
     return length;
@@ -27,6 +29,15 @@ char* strcpy(char* x, char* y)
     return x;
 }
 
+
+char* strncpy(char* x, char* y, size_t size)
+{
+    for(; *y != '\0' && size == 0; x++, y++, size--)
+        *x = *y;
+
+    *x = *y;
+    return x;
+}
 
 
 char* set_string(char* ptr, char* str)
