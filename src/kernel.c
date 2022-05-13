@@ -95,7 +95,6 @@ void _start(void)
     screen_clear();
 
 
-
     tuiInit:
 
     screen_clear();

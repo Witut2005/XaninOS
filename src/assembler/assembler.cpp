@@ -1,5 +1,6 @@
 
 #include <libcpp/ostream.h>
+#include <libcpp/istream.h>
 #include <libcpp/utility.h>
 #include <stddef.h>
 #include <assembler/assembler.hpp>
@@ -45,22 +46,19 @@ void assembler(char* file_name)
 {
 
 
-    std::string str("lol");
-    std::string sec(str);
-    std::string thr = std::move(sec);
+    char xyz = 255;
 
-    xprintf("%s\n", str.c_str());
-    xprintf("%d\n", str.length());
+    std::array<int, 10>tab = {1,2,3,4};
 
-    xprintf("%s\n", sec.c_str());
-    xprintf("%d\n", sec.length());
+    tab[0] = tab[1] + tab[2];
+    std::cout << tab[0];
 
+    std::cin >> xyz;
+    std::cout << std::hex << xyz;
 
-    xprintf("%s\n", thr.c_str());
-    xprintf("%d\n", thr.length());
-
-    int xyz = 9876;
-    std::cout << std::endl << xyz;
+    char ff;
+    xscanf("%c", &ff);
+    xprintf("TRZY: %c", ff);
     while(1);
     
     xin_entry* file = fopen(file_name, "r");
