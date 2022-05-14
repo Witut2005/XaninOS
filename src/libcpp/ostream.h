@@ -124,6 +124,13 @@ class ostream
         }
     }
 
+    void put(char x)
+    {
+        xprintf("%c", x);
+    }
+
+
+
 }cout;
 
 

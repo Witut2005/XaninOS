@@ -32,16 +32,15 @@ void _start(void)
     asm("cli");    //disable interrupts while IDT is not configured
 
     /*
-    init_disk(ATA_FIRST_BUS, ATA_MASTER);
-    disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x43, 100, (uint16_t*)0x500000);
-
+    
     void(*entry)(void) = 0x10800;
     entry();
 
     update_cursor(100,100);
-    disable_cursor();
     */
 
+
+    disable_cursor();
     screen_clear();
 
 
@@ -52,6 +51,9 @@ void _start(void)
 
     set_idt();
     //vga_mode_set();
+
+    init_disk(ATA_FIRST_BUS, ATA_MASTER);
+    
 
 
     //while(1);
@@ -84,13 +86,12 @@ void _start(void)
 
     srand(Time.seconds);
 	
-    xin_init_fs();
-    
-   
-    //load("CE00");
-    //while(KeyInfo.character != 's');
-    
 
+
+    disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x1a, 1, (uint16_t*)0x1800);
+    disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x1b, 1, (uint16_t*)0x1a00);
+
+    xin_init_fs();
     
     screen_clear();
 

@@ -3,6 +3,7 @@
 #include <lib/stdiox.h>
 #include <xin_fs/xanin_fs_saver.c>
 #include <xaninApps/execute_addr.c>
+#include <devices/HARD_DISK/disk.h>
 
 uint8_t enter_real_mode_buffer[512];
 uint8_t shutdown_program_buffer[512];
@@ -22,6 +23,17 @@ void shutdown(void)
 
     for(char* i = (char*)0x10200; i < (char*)0x10200 + 0x200; i++, k++)
         *i = shutdown_program_buffer[k];
+
+    disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x12, 8, (uint16_t*)0x800);
+    disk_flush(ATA_FIRST_BUS, ATA_MASTER);
+
+    for(int i = 0; i < 40; i++)
+    {
+        disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x1a + i, 1, (uint16_t*)(0x1800 + (i * SECTOR_SIZE)));
+        disk_flush(ATA_FIRST_BUS, ATA_MASTER);
+    }
+
+    //real_mode_enter(0x1000, 0x200); // <-- location in RAM of shutdown program
 
     real_mode_enter(0x1000, 0x200); // <-- location in RAM of shutdown program
 

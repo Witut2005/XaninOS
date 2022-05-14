@@ -19,32 +19,6 @@ lba48: dd 0x0
 
 shutdown:
 
-    ;WRITE SECTORS ON DISK 
-    ;DISK NUMBER 
-    mov ax, 0x0
-    mov ds, ax 
-    mov dl, [0x7c02]
-    
-
-    mov ax, 0x1000
-    
-    ;DS:SI
-    mov ds, ax 
-    mov si, 0x202
-   
-    ;FUNC NUM AND FLAGS
-    mov ah, 0x43
-    mov al, 0x0
-
-    int 0x13
-    
-    ;mov ax, 0x0
-    ;mov ds, ax
-        
-    ;jmp $
-
-    ;RET_16
-
     mov ax, 0xb800
     mov ds, ax
 
