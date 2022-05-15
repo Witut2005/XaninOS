@@ -27,7 +27,7 @@ void shutdown(void)
     disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x12, 8, (uint16_t*)0x800);
     disk_flush(ATA_FIRST_BUS, ATA_MASTER);
 
-    for(int i = 0; i < 40; i++)
+    for(int i = 0; i < 70; i++)
     {
         disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x1a + i, 1, (uint16_t*)(0x1800 + (i * SECTOR_SIZE)));
         disk_flush(ATA_FIRST_BUS, ATA_MASTER);

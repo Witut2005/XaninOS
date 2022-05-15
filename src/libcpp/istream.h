@@ -50,19 +50,7 @@ namespace std
 
         istream& operator>>(char& x)
         {
-            switch(current_format_option)
-            {
-        
-
-                case 'h':
-                    xscanf("%x", &x);
-                case 'o':
-                    xscanf("%o", &x);
-                case 'b':
-                    xscanf("%b", &x);
-                case 'd':
-                    xscanf("%d", &x);
-            }
+            xscanf("%c",&x);
         }
 
         istream& operator>>(short& x)

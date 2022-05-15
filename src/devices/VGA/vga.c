@@ -1,3 +1,4 @@
+
 #include <devices/VGA/vga.h>
 #include <lib/memory.h>
 
@@ -240,26 +241,35 @@ void setFontVGA(const unsigned char * buffer, int h)
 
 
 
-void vga_mode_set()
+void vga_mode_set(uint8_t vga_mode)
 {
 
-    uint8_t rows, cols, ht, i;
-    /*
-    rows = 60;
-    cols = 90;
-    ht = 8;
-    vga_registers_write(g_90x60_text);
-    vga_font_write(g_8x8_font, 8);
+    switch(vga_mode)
+    {
 
-    */
+        
+        case VGA_TEXT_90x60:
+        { 
+            vga_registers_write(g_90x60_text);
+            setFontVGA(g_8x8_font, 8);
+            break;
+        }
+        
+        case VGA_TEXT_80x25:
+        {
+            vga_registers_write(g_80x25_text);
+            setFontVGA(g_8x16_font, 16);
+            break;
+        }
 
-	vga_registers_write(g_90x60_text);
+        case VGA_GRAPHICS_720x480x16:
+        {
+            vga_registers_write(g_720x480x16);
+            break;
+        }
 
-	cols = 80;
-	rows = 25;
-	ht = 16;
+    }
 
-	setFontVGA(g_8x8_font, 8);
 
 
 }

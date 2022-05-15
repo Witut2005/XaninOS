@@ -27,74 +27,44 @@ extern void v86_mode_enter(void);
 
 void _start(void)
 {
-
     
     asm("cli");    //disable interrupts while IDT is not configured
-
-    /*
-    
-    void(*entry)(void) = 0x10800;
-    entry();
-
-    update_cursor(100,100);
-    */
-
 
     disable_cursor();
     screen_clear();
 
 
-    //while(1);
-
-
-
-
     set_idt();
-    //vga_mode_set();
-
     init_disk(ATA_FIRST_BUS, ATA_MASTER);
     
-
-
-    //while(1);
-
     screen_init(); //init screen management system
-
 
     time_get();
     keyboard_init();
-    
-
     set_pit();
-
     keyboard_command = command_buffer;
 
     xprintf("DETECTING USB CONTROLLERS. PLEASE WAIT...\n");
-
     usb_detect();
     
-
     xprintf("\n%zUSB DETECTION TEST ENDED. PRESS ENTER TO START XANIN OS\n",
             set_output_color(green,white));
     while(KeyInfo.scan_code != ENTER);
 
     xprintf("\n\n");
    
- 
-
-    //zsk("100");
-
     srand(Time.seconds);
-	
 
 
     disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x1a, 1, (uint16_t*)0x1800);
     disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x1b, 1, (uint16_t*)0x1a00);
 
-    xin_init_fs();
-    
-    screen_clear();
+    for(int i = 0; i < 70; i++)
+        disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x1a + i, 1, (uint16_t*)(0x1800 + (i * SECTOR_SIZE)));
 
+
+    xin_init_fs();
+    screen_clear();
 
     tuiInit:
 

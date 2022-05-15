@@ -10,6 +10,7 @@
 #include <libcpp/algorithm.h>
 #include <libcpp/string.h>
 #include <libcpp/array.cpp>
+#include <libcpp/fstream.h>
 
 extern "C"
 {
@@ -46,24 +47,16 @@ void assembler(char* file_name)
 {
 
 
-    char xyz = 255;
-
-    std::array<int, 10>tab = {1,2,3,4};
-
-    tab[0] = tab[1] + tab[2];
-    std::cout << tab[0];
-
-    std::cin >> xyz;
-    std::cout << std::hex << xyz;
-
     char ff;
-    xscanf("%c", &ff);
+    std::cin >> ff;
     xprintf("TRZY: %c", ff);
     while(1);
     
     xin_entry* file = fopen(file_name, "r");
     xin_entry* asm_output = fopen("a.out", "w");
 
+    std::fstream ffile;
+    ffile.open("a.out", "123");
 
     if(file == nullptr)
         return;

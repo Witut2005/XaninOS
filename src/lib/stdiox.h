@@ -613,14 +613,7 @@ void xscanf(char* str, ... )
                         {
 
                             char* number = va_arg(args, char*);
-                            for(int i = 0x0; keyboard_command[counter] != '\0' && keyboard_command[counter] != ' '; i++)
-                            {
-                                buffer[i] = keyboard_command[counter];
-                                counter++;
-                            }
-                            
-                            *number = buffer[0]; //strtoi(buffer, 10);                       
-
+                            *number = keyboard_command[0]; //strtoi(buffer, 10);                     
                             break;
                         }
 
