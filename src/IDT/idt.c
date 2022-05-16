@@ -25,7 +25,7 @@
 //extern void _syscall(void);
 
     /* IDT Register */
-    struct idtReg
+    struct idt_register
     {
         uint16_t limit;
         uint32_t base;
@@ -83,7 +83,7 @@ void set_idt(void)
 
     configure_idt_entry(0xFF, reboot_interrupt,CODE_SEGMENT);
 
-    struct idtReg idtr = {
+    struct idt_register idtr = {
         IDT_SIZE,
         (uint32_t)&idtEntries
     };

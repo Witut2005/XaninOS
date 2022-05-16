@@ -31,6 +31,16 @@ namespace std
                 fclose(&file);
             }
 
+            size_t read(void* buf, size_t count)
+            {
+                xin::read(file, buf, count);
+            }
+
+            size_t write(void* buf, size_t count)
+            {
+                xin::write(file, buf, count);
+            }
+
 
     };
 

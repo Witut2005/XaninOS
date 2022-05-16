@@ -50,14 +50,17 @@ void assembler(char* file_name)
     char ff;
     std::cin >> ff;
     xprintf("TRZY: %c", ff);
-    while(1);
     
     xin_entry* file = fopen(file_name, "r");
     xin_entry* asm_output = fopen("a.out", "w");
 
     std::fstream ffile;
-    ffile.open("a.out", "123");
 
+    ffile.open("test.txt", "rw");
+    const char* kk = "write test fstream";
+    ffile.write((char*)kk, 10);
+
+    return;
     if(file == nullptr)
         return;
 
