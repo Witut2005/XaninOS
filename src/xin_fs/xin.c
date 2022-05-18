@@ -2,6 +2,7 @@
 #pragma once
 
 #include <xin_fs/xin.h>
+#include <lib/memory.h>
 #include <stddef.h>
 
 char *xin_set_current_directory(char *directory)
@@ -222,7 +223,6 @@ xin_entry *xin_init_fs(void)
 void create_file(char *entry_parent_directory)
 {
 
-    xprintf("Your parent directory: %s\n", entry_parent_directory);
 
     if (entry_parent_directory[strlen(entry_parent_directory) - 1] != '/')
     {
@@ -230,14 +230,25 @@ void create_file(char *entry_parent_directory)
         while (KeyInfo.scan_code != ENTER);
         exit_process();
     }
+    
 
-    if (xin_find_entry(entry_parent_directory) == nullptr)
+    {
+    
+    xin_entry* parent = xin_find_entry(entry_parent_directory);
+    
+    if(parent == nullptr || parent->entry_type != XIN_DIRECTORY)
     {
         xprintf("NO SUCH DIRECTORY\n", set_output_color(red, white));
         while (KeyInfo.scan_code != ENTER);
         return;
     }
+    
+    }
 
+    xprintf("Your parent directory: %s\n", entry_parent_directory);
+
+
+    while (KeyInfo.scan_code != ENTER);
     xprintf("Your new file name: ");
     char new_entry_name[38] = {0};
     char entry_full_name[38] = {0};
@@ -251,6 +262,11 @@ void create_file(char *entry_parent_directory)
     for (int j = 0; new_entry_name[j] != '\0'; j++, i++)
         entry_full_name[i] = new_entry_name[j];
 
+    if(xin_find_entry(entry_full_name) != nullptr)
+    {
+        xprintf("%zENTRY WITH THIS PATH EXISTS!\n", set_output_color(red,white));
+        while(KeyInfo.scan_code != ENTER);
+    }
     /* write entry to xin entry pointers table */
     uint8_t *write_entry = xin_find_free_pointer();
 
@@ -570,4 +586,40 @@ xin_entry *fopen(char *file_path, const char *mode)
 
     return nullptr;
 }
-        
+    
+
+
+void remove_directory(char* folder_name)
+{
+
+    screen_clear();
+
+    xin_entry* folder = xin_find_entry(folder_name);
+
+    if(folder == nullptr)
+        xprintf("%zNO SUCH DIRECTORY\n", set_output_color(red, white));
+
+    char name[40];
+    uint32_t name_length;
+
+    memcpy(name, folder->entry_path, 40); 
+    name_length = strlen(name) - 1;
+
+    for(xin_entry* i = (xin_entry*)XIN_ENTRY_TABLE; i < (xin_entry*)(XIN_ENTRY_TABLE + SECTOR_SIZE * 4); i++)
+    {
+
+        if(strncmp(name, i -> entry_path, name_length))
+        {
+            char* tmp = (char*)i;
+            for(char* j = (char*)i; j < tmp + 64; j++)
+            {
+                *j = '\0';
+            }
+        }
+
+
+    }
+
+
+}
+

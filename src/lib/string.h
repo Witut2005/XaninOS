@@ -36,6 +36,7 @@ char* strncpy(char* x, char* y, size_t size)
         *x = *y;
 
     *x = *y;
+
     return x;
 }
 

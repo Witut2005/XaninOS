@@ -35,7 +35,6 @@ class Chip8
 
   
     uint8_t v[0x10];
-    uint16_t i;
 
     uint8_t screen[28][80];
 

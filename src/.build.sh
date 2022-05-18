@@ -47,17 +47,17 @@ cd ..
 #i386-elf-g++ -O0 -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -fno-rtti -I /home/witut/Desktop/xaninOS/src \
 #-c ./game_engine/xagame.cpp  -o ./game_engine/xagame.o
 
-i386-elf-g++ -O0 -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -fno-rtti -I /home/witut/Desktop/xaninOS/src \
--c ./xagames/xagame_test.cpp  -o ./xagames/xagame_test.o
+#i386-elf-g++ -O0 -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -fno-rtti -I /home/witut/Desktop/xaninOS/src \
+#-c ./xagames/xagame_test.cpp  -o ./xagames/xagame_test.o
 
-i386-elf-g++ -std=c++2a -O0 -masm=intel -w -Wno-builtin-declaration-mismatch -Wwrite-strings -nostdlib -ffreestanding -Wno-unused-function -fno-rtti -I /home/witut/Desktop/xaninOS/src \
--c ./assembler/assembler.cpp  -o ./assembler/assembler.o
+#i386-elf-g++ -std=c++2a -O0 -masm=intel -w -Wno-builtin-declaration-mismatch -Wwrite-strings -nostdlib -ffreestanding -Wno-unused-function -fno-rtti -I /home/witut/Desktop/xaninOS/src \
+#-c ./assembler/assembler.cpp  -o ./assembler/assembler.o
 
 i386-elf-g++ -O0 -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -fno-rtti -I /home/witut/Desktop/xaninOS/src \
 -c ./chip8/chip8.cpp  -o ./chip8/chip8.o
 
-i386-elf-gcc -O0 -masm=intel -Wno-discarded-qualifiers -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-int-conversion -Wno-unused-function -I /home/witut/Desktop/xaninOS/src \
-kernel.c ./assembler/assembler.o ./handlers/keyboard.o ./pit/pit.o ./syscall/syscall.o ./xagames/xagame_test.o  -o kernel.bin
+i386-elf-gcc -O0 -masm=intel -Wno-discarded-qualifiers -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-int-conversion -Wno-unused-function -Wno-div-by-zero -I /home/witut/Desktop/xaninOS/src \
+kernel.c ./handlers/keyboard.o ./pit/pit.o ./syscall/syscall.o -o kernel.bin
 
 
 
