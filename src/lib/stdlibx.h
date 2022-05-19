@@ -43,6 +43,16 @@ bool key_pressed(void)
         return true;
 }
 
+void wait_key(uint8_t key)
+{
+    KeyInfo.scan_code = 0x0;
+    while(1)
+    {
+        if(KeyInfo.scan_code == key)
+            break;
+    }
+}
+
 char getchar(void)
 {
     char tmp = KeyInfo.character;
@@ -64,7 +74,7 @@ char* keyboard_buffer_refresh(uint16_t* screen_buffer)
 
 }
 
-void time_get()
+void time_get(void)
 {
     asm("cli");
 
@@ -123,13 +133,13 @@ void time_get()
     asm("sti");
 }
 
-uint8_t floppy_type_get_cmos()
+uint8_t floppy_type_get_cmos(void)
 {
     outbIO(CMOS_ADDR, 0x10);
     return inbIO(CMOS_DATA);
 }
 
-void get_cpu_speed()
+void get_cpu_speed(void)
 {
     set_pit_divisor(0x0);
 
@@ -174,7 +184,7 @@ void srand(uint32_t seed)
 void (*abort_return_address)(void);
 
 
-uint32_t rand()
+uint32_t rand(void)
 {
     return (((randomizer = randomizer * 214013 + 2531011) >> 16) & 0x7fff);
 }
@@ -206,7 +216,7 @@ reg_t Register;
 seg_t SegmentRegister;
 
 
-uint32_t memory_map_get_cmos()
+uint32_t memory_map_get_cmos(void)
 {
     outbIO(0x70, 0x30);
     uint32_t low_memory = inbIO(0x71);

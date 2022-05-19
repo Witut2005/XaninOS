@@ -1,5 +1,8 @@
 
+#pragma once
+
 #include <stdint.h>
+#include <libcpp/string.h>
 #include <libcpp/cstdio.h>
 
 namespace std
@@ -59,6 +62,11 @@ class ostream
         }
     }
 
+    ostream& operator<<(std::string x)
+    {
+        xprintf("%s", x.c_str());
+    }   
+
     ostream& operator<<(int x)
     {
         switch(current_format_option)
@@ -104,6 +112,16 @@ class ostream
 
 
         }
+    }
+
+    ostream& operator<<(const char* x)
+    {
+        xprintf("%s", x);
+    }
+
+    ostream& operator<<(char* x)
+    {
+        xprintf("%s", x);
     }
 
     ostream& operator<<(short x)

@@ -26,14 +26,11 @@ void scan(void)
     for(int i = 0; i < sizeof(program_parameters); i++)
         last_used_parameters[i] = program_parameters[i]; 
 
+    character_blocked = '\0';
+    keyboard_handle = nullptr;
 
     KeyInfo.character = 0x0;
     KeyInfo.scan_code = 0x0;
-
-    character_blocked = '\0';
-
-    keyboard_handle = nullptr;
-
 
 
     if(strcmp(program_name,"zsk"))
@@ -64,6 +61,11 @@ void scan(void)
     else if(strcmp(program_name,"run"))
     {
         run(program_parameters);
+    }
+
+    else if(strcmp(program_name, "test"))
+    {
+        cpp_test();
     }
 
     else if(strcmp(program_name,"stack_test"))

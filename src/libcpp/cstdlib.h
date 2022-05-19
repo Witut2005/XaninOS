@@ -27,5 +27,6 @@ bool bit_clear(uint16_t* address, uint16_t bit_number);
 void memory_manager_init(void);
 void* malloc(uint16_t size);
 void* free(uint16_t* addr);
+void wait_key(uint8_t key);
 
 }

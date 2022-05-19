@@ -34,6 +34,11 @@ void app_default_backspace_handler(void)
 
 void keyboard_driver(uint8_t scanCode)
 {
+    if(KeyInfo.scan_code == scanCode)
+        KeyInfo.is_hold = true;
+        
+    else
+        KeyInfo.is_hold = false;
 
     KeyInfo.scan_code = scanCode;
 
@@ -74,7 +79,18 @@ void keyboard_driver(uint8_t scanCode)
 
     KeyInfo.character = keyboard_map[scanCode];
 
-    if(KeyInfo.scan_code >= 128 || KeyInfo.scan_code == BSPC)
+    if(KeyInfo.scan_code >= 128)
+    {
+        KeyInfo.is_pressed = false;
+        KeyInfo.character = 0x0;
+    }
+
+    else
+    {
+        KeyInfo.is_pressed = true;
+    }
+
+    if(KeyInfo.scan_code == BSPC)
     {
         KeyInfo.character = 0x0;
     }

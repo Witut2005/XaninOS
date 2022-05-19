@@ -1,4 +1,6 @@
 
+#pragma once
+
 #include <libcpp/cstring.h>
 #include <libcpp/cstdlib.h>
 
@@ -8,6 +10,14 @@ namespace std
 class string
 {
     public: 
+
+    size_t reserve(uint32_t size)
+    {
+        string_data = (char*)malloc(size * sizeof(char));
+    }
+
+    string() {}
+
     string(char* str)
     {
         string_data = (char*)malloc(sizeof(char) * strlen(str));
@@ -37,7 +47,7 @@ class string
 
     }
 
-    char* c_str()
+    char*& c_str()
     {
         return string_data;
     }
@@ -50,7 +60,7 @@ class string
             return strlen(string_data); 
     }
 
-    private:
+    //private:
     char* string_data;
 
 };

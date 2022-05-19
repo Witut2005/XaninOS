@@ -55,6 +55,7 @@
 
 #include <xaninApps/file_system/xin_info.c>
 
+extern void cpp_test(void);
 
 //extern void xagame_test(void);
 //extern void assembler(char* file_name);

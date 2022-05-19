@@ -1,8 +1,9 @@
 
-
+#pragma once
 
 #include <stdint.h>
 #include <libcpp/cstdio.h>
+#include <libcpp/string.h>
 
 namespace std
 {
@@ -68,6 +69,28 @@ namespace std
                     xscanf("%d", x);
             }
         }
+
+        istream& operator>>(const char* x)
+        {
+            xscanf("%s", x);
+        }
+
+        istream& operator>>(char* x)
+        {
+            xscanf("%s", x);
+        }   
+
+        istream& operator>>(std::string& x)
+        {
+            x.reserve(80);
+            xscanf("%s", x.c_str());
+        }   
+        
+        istream& operator>>(std::string* x)
+        {
+            x->reserve(80);
+            xscanf("%s", x->c_str());
+        }   
 
         istream& operator>>(unsigned int& x)
         {
