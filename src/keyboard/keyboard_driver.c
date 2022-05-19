@@ -6,11 +6,7 @@ void app_default_backspace_handler(void)
     Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((black << 4) | white) << 8));
 
     if((char)Screen.cursor[Screen.y][Screen.x - 1] == character_blocked && character_blocked != '\0')
-    {
         return;
-    }
-
-
 
     if(!Screen.x)
     {
@@ -20,7 +16,6 @@ void app_default_backspace_handler(void)
     }
 
     Screen.x--;
-
 
 
     if(index)
@@ -84,11 +79,31 @@ void keyboard_driver(uint8_t scanCode)
         KeyInfo.character = 0x0;
     }
 
-    if((KeyInfo.is_caps) || (KeyInfo.is_shift))
+    if(KeyInfo.is_caps) 
     {
         if(KeyInfo.character >= 'a' && KeyInfo.character <= 'z')
         {
             KeyInfo.character -= 32;
+        }
+    }
+
+    if(KeyInfo.is_shift)
+    {
+        if(KeyInfo.is_caps)
+        {
+            if(KeyInfo.character >= 'A' && KeyInfo.character <= 'Z')
+            {
+                KeyInfo.character += 32;
+            }
+        }
+
+        else
+        {
+            if(KeyInfo.character >= 'a' && KeyInfo.character <= 'z')
+            {
+                KeyInfo.character -= 32;
+            }
+        
         }
     }
 

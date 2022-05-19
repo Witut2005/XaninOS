@@ -56,6 +56,10 @@ cd ..
 i386-elf-g++ -O0 -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -fno-rtti -I /home/witut/Desktop/xaninOS/src \
 -c ./chip8/chip8.cpp  -o ./chip8/chip8.o
 
+i386-elf-g++ -O0 -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -fno-rtti -I /home/witut/Desktop/xaninOS/src \
+-c ./chip8/chip8.cpp  -o ./chip8/chip8.o
+
+
 i386-elf-gcc -O0 -masm=intel -Wno-discarded-qualifiers -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-int-conversion -Wno-unused-function -Wno-div-by-zero -I /home/witut/Desktop/xaninOS/src \
 kernel.c ./handlers/keyboard.o ./pit/pit.o ./syscall/syscall.o -o kernel.bin
 
@@ -74,4 +78,4 @@ dd if=xanin.bin of=xanin.img
 mv xanin.img -f ../bin
 mv xanin.bin -f ../bin
 #rm xanin.bin 
-rm kernel.bin
+#rm kernel.bin

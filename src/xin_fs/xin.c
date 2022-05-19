@@ -227,7 +227,6 @@ void create_file(char *entry_parent_directory)
     if (entry_parent_directory[strlen(entry_parent_directory) - 1] != '/')
     {
         xprintf("%zMISSING / ENDING CHARACTER IN DIRECTORY NAME\n", set_output_color(red, white));
-        while (KeyInfo.scan_code != ENTER);
         exit_process();
     }
     
@@ -248,7 +247,6 @@ void create_file(char *entry_parent_directory)
     xprintf("Your parent directory: %s\n", entry_parent_directory);
 
 
-    while (KeyInfo.scan_code != ENTER);
     xprintf("Your new file name: ");
     char new_entry_name[38] = {0};
     char entry_full_name[38] = {0};
