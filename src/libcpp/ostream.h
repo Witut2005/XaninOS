@@ -20,6 +20,7 @@ ostream_options hex {'h'};
 ostream_options dec {'d'};
 ostream_options oct {'o'};
 ostream_options bin {'b'};
+ostream_options clear {'c'};
 
 class ostream 
 {
@@ -41,6 +42,8 @@ class ostream
             current_format_option = 'o';
         else if(x.option == 'b')
             current_format_option = 'b';
+        else if(x.option == 'c')
+            screen_clear();
         else 
             current_format_option = 'd';
     }
@@ -88,6 +91,12 @@ class ostream
 
     ostream& operator<<(char x)
     {
+        if(x == '\n')
+        {
+            xprintf("\n");
+            return *this;
+        }
+
         xprintf("%c",x);
     }
 

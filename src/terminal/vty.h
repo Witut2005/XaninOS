@@ -107,3 +107,4 @@ void terminal(void);
 void letters_refresh(uint16_t* cursor_current_positon);
 void letters_refresh_add(uint16_t* cursor_current_positon, char character_saved);
 void keyboard_refresh_add(uint8_t keyboard_index_position, char character_saved);
+void terminal_keyboard(void);

@@ -16,7 +16,7 @@ class string
         string_data = (char*)malloc(size * sizeof(char));
     }
 
-    string() {}
+    string() {string_data = (char*)malloc(PMMNGR_BLOCK_SIZE);} 
 
     string(char* str)
     {
@@ -49,6 +49,7 @@ class string
 
     string& operator=(const char* x)
     {
+        realloc(string_data, strlen(string_data), strlen(x));
         strcpy(string_data, x);
     }
 

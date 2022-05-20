@@ -546,6 +546,56 @@ void xscanf(char* str, ... )
             letters_refresh(&Screen.cursor[Screen.y][Screen.x]);
         }
 
+        else if(KeyInfo.scan_code == ARROW_RIGHT || KeyInfo.scan_code == ARROW_LEFT)
+        {
+            
+
+            if(KeyInfo.scan_code == ARROW_LEFT)
+            {        
+        
+                Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | (((black << 4) | white) << 8));
+
+                if((char)Screen.cursor[Screen.y][Screen.x - 1] == character_blocked)
+                {
+                    goto start;
+                }
+
+                Screen.x--;
+        
+                if(index)
+                    index--;
+
+                Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | ((white << 4) | black) << 8);
+            }
+
+            else 
+            {
+                //Screen.cursor[Screen.y][Screen.x] = (uint16_t)(selected_character | ((black << 4) | white) << 8);
+        
+                Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | (((black << 4) | white) << 8));
+        
+
+                if(&Screen.cursor[Screen.y][Screen.x + 1] >= &Screen.cursor[8][79])
+                {
+                    goto start;
+                }
+
+                Screen.x++;
+
+                if(Screen.x == 80)
+                {
+                    Screen.x = 0;
+                    Screen.y++;
+                }
+
+
+                Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | ((white << 4) | black) << 8);    
+            }
+
+            KeyInfo.scan_code = 0x0;
+                
+        }
+
         else if(KeyInfo.scan_code == ENTER)
         {
             while(str[str_counter])

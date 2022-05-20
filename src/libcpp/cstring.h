@@ -6,7 +6,7 @@
 extern "C"
 {
 
-    uint32_t strlen(char* a);
+    uint32_t strlen(const char* a);
     char* set_string(char* ptr, char* str);
     char* reverse_string(char* str);
     char* float_to_string(float number, char* str);

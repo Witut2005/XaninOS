@@ -2,6 +2,10 @@
 #pragma once
 #include <stdint.h>
 
+#define PMMNGR_BLOCKS_PER_BYTE 8
+#define PMMNGR_BLOCK_SIZE	4096
+#define PMMNGR_BLOCK_ALIGN	PMMNGR_BLOCK_SIZE
+
 extern "C"
 {
 
@@ -26,7 +30,9 @@ void bit_set(uint16_t* address, uint16_t bit_number);
 bool bit_clear(uint16_t* address, uint16_t bit_number);
 void memory_manager_init(void);
 void* malloc(uint16_t size);
-void* free(uint16_t* addr);
+void* realloc(void* ptr, uint32_t size_old, uint32_t size_new);
+void* free(void* ptr);
 void wait_key(uint8_t key);
+
 
 }

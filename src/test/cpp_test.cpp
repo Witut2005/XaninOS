@@ -13,21 +13,14 @@ extern "C"
 void cpp_test(void)
 {
 
-    std::string x = "hello\n";
-
-
-
+    std::string x;
+    x = "omglo";
     std::cin >> x;
 
-    screen_clear();
+    std::cout << std::clear;
 
-    x = "omglo";
-    
-    delete &x;
-
-    std::string* tmp_s = (std::string*)malloc(sizeof(std::string));
-    //memcpy((uint8_t*)&tmp_s, (uint8_t*)&std::base, sizeof(std::base));
-
+    std::cout << x << '\n'; 
+    std::cout << x << '\n'; 
 
     wait_key(ENTER_RELEASE);
     wait_key(ENTER_RELEASE);

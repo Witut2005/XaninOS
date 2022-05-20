@@ -6,7 +6,7 @@
 #include <stddef.h>
 
 
-uint32_t strlen(char* a)
+uint32_t strlen(const char* a)
 {
 
     if(a == nullptr)

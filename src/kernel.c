@@ -84,8 +84,6 @@ void _start(void)
     omgtmp = (char*)pmmngr_alloc_block();
     xprintf("block test: 0x%x\n", omgtmp);
 
-    wait_key(J_KEY);
-
 
 
     screen_clear();
@@ -117,7 +115,6 @@ void _start(void)
     arrows_navigate = true;
 
 
-    keyboard_handle = terminal_keyboard;
 
     while(1)
     {
