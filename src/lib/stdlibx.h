@@ -7,6 +7,7 @@
 #include <terminal/vty.h>
 #include <lib/colors.h>
 #include <handlers/handlers.c>
+#include <lib/alloc.h>
 
 char command_buffer[50];
 char* keyboard_command;
@@ -317,55 +318,62 @@ void merge_sort(int array[], int first, int last)
 
 }
 
-uint8_t* malloc_memory_map = (uint8_t*)0x100000; 
-uint8_t* allocation_table = (uint8_t*) 0x080000;
-uint8_t* memory_managament_map = (uint8_t*)0x100000; 
-
-
-
-void bit_set(uint8_t* address, uint8_t bit_number)
-{
-    *address |= (1 << bit_number);
-}
-
-bool bit_clear(uint16_t* address, uint16_t bit_number)
-{
-    if(*address & (1 << bit_number))
-        *address ^= (1 << bit_number);
-}
-
-void memory_manager_init(void)
-{
-    for(char* i = 0x100000; (uint32_t)i <= 0x120000; i++)
-        *i = 0x0;
-}
-
-uint8_t* allocation_table_entry_find(void)
-{
-    
-}
-
-
-struct MemoryChunk
-{
-    
-    uint8_t bytes_used;
-
-}__attribute__((packed));
-typedef struct MemoryChunk MemoryChunk;
-
 void* malloc(uint16_t size)
 {
-    char* allocation_table = (char*)0x100000;
-    memory_managament_map += size;
-    return memory_managament_map - size;
+    uint8_t* ptr = (uint8_t*)pmmngr_alloc_block();
 
-    //*allocation_table = 
+    for(int i = 1; i < size / 4096; i++)
+        pmmngr_alloc_block();
+
+    return ptr;
+
 }
 
-void* free(uint16_t* addr)
+
+void free(void* ptr)
+{
+    pmmngr_free_block(ptr);
+}
+
+void* realloc(void* ptr,  uint32_t size_old,  uint32_t size_new)
 {
 
+    if(size_old % 4096)
+        size_old += 4096;
 
+    if(size_new % 4096)
+        size_new += 4096;
+
+    char* ptr_old = ptr;
+
+    pmmngr_free_block(ptr_old);
+
+    for(uint32_t i = 1; i < size_old / 4096; i++)
+    {
+        pmmngr_free_block(ptr_old + (i * 4096));
+    }
+
+
+    ptr = pmmngr_alloc_block(ptr_old);
+
+    for(uint32_t i = 1; i < size_new / 4096; i++)
+    {
+        pmmngr_alloc_block(ptr + (i * 4096));
+    }
+
+    return ptr;
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -21,7 +21,7 @@ uint32_t strlen(char* a)
     return length;
 }
 
-char* strcpy(char* x, char* y)
+char* strcpy(char* x, const char* y)
 {
     for(; *y != '\0'; x++, y++)
         *x = *y;
@@ -30,7 +30,7 @@ char* strcpy(char* x, char* y)
 }
 
 
-char* strncpy(char* x, char* y, size_t size)
+char* strncpy(char* x, const char* y, size_t size)
 {
     for(; *y != '\0' && size == 0; x++, y++, size--)
         *x = *y;
@@ -41,7 +41,7 @@ char* strncpy(char* x, char* y, size_t size)
 }
 
 
-char* set_string(char* ptr, char* str)
+char* set_string(char* ptr, const char* str)
 {
     for(int i = 0; i < strlen(str); i++)
         ptr[i] = str[i];
@@ -98,7 +98,7 @@ char* float_to_string(float number, char* str)
 }
 
 
-uint32_t strcmp(char* a,char* b)
+uint32_t strcmp(char* a, const char* b)
 {
 
     uint32_t lengtha = strlen(a);

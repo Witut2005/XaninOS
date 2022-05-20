@@ -47,7 +47,23 @@ class string
 
     }
 
-    char*& c_str()
+    string& operator=(const char* x)
+    {
+        strcpy(string_data, x);
+    }
+
+    void* operator new (size_t size)
+    {
+        return malloc(1 * sizeof(string));
+    }
+
+    void operator delete (void* element)
+    {
+        std::string* delete_ptr = (std::string*)element;
+        delete_ptr->string_data = nullptr;
+    }
+
+    char* c_str()
     {
         return string_data;
     }
@@ -60,10 +76,10 @@ class string
             return strlen(string_data); 
     }
 
-    //private:
+    private:
     char* string_data;
 
-};
+}base;
 
 }
 

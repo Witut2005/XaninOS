@@ -16,6 +16,7 @@
 #include <xin_fs/xin.c>
 #include <lib/algorithm.h>
 #include <lib/assert.h>
+#include <lib/alloc.h>
 
 extern void v86_mode_enter(void);
 
@@ -64,6 +65,29 @@ void _start(void)
 
 
     xin_init_fs();
+    
+    pmmngr_init(0x100000, 0x90000);
+    pmmngr_init_region(0x100000, 0xFFFFFF);
+
+    screen_clear();
+
+    char* omgtmp = (char*)pmmngr_alloc_block();
+    xprintf("block test: 0x%x\n", omgtmp);
+    
+    pmmngr_free_block(omgtmp);
+
+    //0x7000
+    omgtmp = (char*)realloc(omgtmp, 0, 4096 + 512);
+    xprintf("block test: 0x%x\n", omgtmp);
+
+    //0x9000
+    omgtmp = (char*)pmmngr_alloc_block();
+    xprintf("block test: 0x%x\n", omgtmp);
+
+    wait_key(J_KEY);
+
+
+
     screen_clear();
 
     tuiInit:

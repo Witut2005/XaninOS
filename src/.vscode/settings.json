@@ -3,6 +3,7 @@
         "stdlibx.h": "c",
         "stdiox.h": "c",
         "stdint.h": "c",
-        "colors.h": "c"
+        "colors.h": "c",
+        "assert.h": "c"
     }
 }

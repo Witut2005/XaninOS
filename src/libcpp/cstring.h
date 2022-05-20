@@ -21,10 +21,9 @@ extern "C"
     uint32_t hex_str_to_int(char* str);
     char* xint_to_hex_str(uint32_t x, char* buf, uint8_t how_many_chars);
     char* int_to_oct_str(int x, char* buf);
-    char* strcpy(char* dest, char* src);
     uint32_t atoi(char* str);
     uint32_t strtoi(char* str, uint8_t format);
-    char* strcpy(char* x, char* y);
+    char* strcpy(char* x, const char* y);
 
 
 }
