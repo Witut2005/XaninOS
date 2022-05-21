@@ -1,4 +1,7 @@
 
+#pragma once
+
+#include <lib/hal.h>
 #include <terminal/vty.h>
 
 void app_default_backspace_handler(void)
@@ -156,8 +159,12 @@ void keyboard_driver(uint8_t scanCode)
         keyboard_handle();
     }
 
+    eoi_send();
+
     return;
 
           
     
 }
+
+

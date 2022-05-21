@@ -69,6 +69,15 @@ mov ah, 0x42
 mov dl, [BOOT_DISK_NUMBER]
 int 0x13
 
+;kernel_3
+mov word [lba], 0x43 + 0x69 + 0x40 + 0x35
+mov word [offset], (0x6A + 0x35 )* 0x200
+
+mov si, DAP
+mov ah, 0x42
+mov dl, [BOOT_DISK_NUMBER]
+int 0x13
+
 ;xin_fs structure
 ;mov word [lba], 0x2 + 0x10
 ;mov word [offset], 0x800

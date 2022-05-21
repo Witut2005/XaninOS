@@ -19,6 +19,7 @@
 #include <lib/alloc.h>
 
 extern void v86_mode_enter(void);
+extern void mouse_enable(void);
 
 /*--------------------------------------/
 |wesolego nowego roku :))               |
@@ -56,6 +57,7 @@ void _start(void)
    
     srand(Time.seconds);
 
+    
 
     disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x1a, 1, (uint16_t*)0x1800);
     disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x1b, 1, (uint16_t*)0x1a00);
@@ -85,6 +87,7 @@ void _start(void)
     xprintf("block test: 0x%x\n", omgtmp);
 
 
+    mouse_enable();
 
     screen_clear();
 
@@ -115,6 +118,7 @@ void _start(void)
     arrows_navigate = true;
 
 
+    //keyboard_handle = terminal_keyboard;
 
     while(1)
     {

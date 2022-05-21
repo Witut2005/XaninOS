@@ -7,6 +7,9 @@
 #include <syscall/syscall.c>
 
 
+extern void mouse_handler(void);
+
+
 #define IDT_HANDLERS 256
 #define IDT_SIZE 256 * 8 - 1
 
@@ -76,6 +79,9 @@ void set_idt(void)
     configure_idt_entry(0x20, pit_handler_init,CODE_SEGMENT);
     configure_idt_entry(0x21, keyboard_handler_init,CODE_SEGMENT);
     configure_idt_entry(0x26, floppy_interrupt,CODE_SEGMENT);
+    
+    configure_idt_entry(0x2C, mouse_handler, CODE_SEGMENT);
+
     configure_idt_entry(0x80, syscall,CODE_SEGMENT);
     
     configure_idt_entry(0x81, no_handler,CODE_SEGMENT);

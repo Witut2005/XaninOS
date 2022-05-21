@@ -72,7 +72,7 @@ void keyboard_refresh_add(uint8_t keyboard_index_position, char character_saved)
 
 void terminal_keyboard(void)
 {
-    if(KeyInfo.is_left)
+    if(KeyInfo.scan_code == ARROW_LEFT_RELEASE)
     {        
         
         Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | (((black << 4) | white) << 8));
@@ -117,14 +117,11 @@ void terminal_keyboard(void)
             Screen.y++;
         }
 
-
-        //if(index)
-        //    index--;
-
-
+        index++;
+        
         Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | ((white << 4) | black) << 8);    
+    
     }
-
 
 
 }

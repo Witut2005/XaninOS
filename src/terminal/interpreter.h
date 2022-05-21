@@ -38,6 +38,7 @@
 #include <xaninApps/run16.c>
 #include <xin_fs/list_files.c>
 #include <xaninApps/hexeditor/hexeditor.c>
+#include <xaninApps/mouse.c>
 
 /*
 

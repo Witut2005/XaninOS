@@ -48,6 +48,12 @@ void scan(void)
         epilepsy();
     }    
 
+    else if(strcmp(program_name, "mouse"))
+    {
+        xprintf("11111111111111");
+        mouse_test(program_parameters);
+    }
+    
     else if(strcmp(program_name, "hexeditor"))
     {
         hexeditor(program_parameters);

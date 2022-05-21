@@ -41,8 +41,20 @@ namespace std
                 xin::write(file, buf, count);
             }
 
+            fstream& operator >> (char* buf)
+            {
+                xin::read(file,buf, 1);
+            }
+
+            fstream& operator << (char* buf)
+            {
+                xin::write(file,buf, 1);
+            }
+
+
 
     };
 
 
 }
+
