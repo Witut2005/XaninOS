@@ -37,21 +37,10 @@ void mouse_handler2() //struct regs *a_r (not used but just there)
 void my_mouse_handler()
 {
 
-    asm("nop");
-    asm("nop");
-    asm("nop");
-     xprintf("pilka nozna");
-    asm("nop");
-    asm("nop");
-    asm("nop");
+    xprintf("pilka nozna");
     outbIO(0xA0, 0x20);
-    asm("nop");
-    asm("nop");
-    asm("nop");
     outbIO(0x20, 0x20);
-    asm("nop");
-    asm("nop");
-    asm("nop");
+
 
 }
 
@@ -114,10 +103,16 @@ void mouse_install()
   outbIO(0x64, 0x20);
   mouse_wait(0);
   _status=(inbIO(0x60) | 2);
+  _status &= ~(1 << 5);
+
   mouse_wait(1);
   outbIO(0x64, 0x60);
   mouse_wait(1);
   outbIO(0x60, _status);
+  mouse_read();
+
+  mouse_write(0xFF);
+  mouse_read();
  
   //Tell the mouse to use default settings
   mouse_write(0xF6);
@@ -128,8 +123,8 @@ void mouse_install()
   mouse_read();  //Acknowledge
 
 
-    //outbIO(0xA1, 0xFF);
-    //outbIO(0x21, 0xFC);
+  outbIO(0xa1, 0xF8);
+  outbIO(0x21, 0xEF);
     
     
 }

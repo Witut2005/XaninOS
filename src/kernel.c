@@ -88,10 +88,11 @@ void _start(void)
     xprintf("block test: 0x%x\n", omgtmp);
 
 
-     
+    //mouse_install();
+    
     screen_clear();
 
-    
+
     tuiInit:
 
 
