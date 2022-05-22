@@ -49,6 +49,7 @@ void pit_handler(void)
     pitActive = true;
     //xprintf("h");
     pit_tick(0xFFFF);
+    outbIO(0x20, 0x20);
 }
 
 void keyboard_handler(void)

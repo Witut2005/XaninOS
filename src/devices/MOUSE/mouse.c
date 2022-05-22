@@ -30,18 +30,29 @@ void mouse_handler2() //struct regs *a_r (not used but just there)
       break;
   }
     */
-
-   inbIO(0x60);
-   xprintf("o");
-
+   
 
 }
 
-void mouse_handler()
+void my_mouse_handler()
 {
-    mouse_handler2();
+
+    asm("nop");
+    asm("nop");
+    asm("nop");
+     xprintf("pilka nozna");
+    asm("nop");
+    asm("nop");
+    asm("nop");
     outbIO(0xA0, 0x20);
+    asm("nop");
+    asm("nop");
+    asm("nop");
     outbIO(0x20, 0x20);
+    asm("nop");
+    asm("nop");
+    asm("nop");
+
 }
 
 void mouse_wait(uint8_t a_type) //unsigned char
@@ -116,4 +127,9 @@ void mouse_install()
   mouse_write(0xF4);
   mouse_read();  //Acknowledge
 
+
+    //outbIO(0xA1, 0xFF);
+    //outbIO(0x21, 0xFC);
+    
+    
 }

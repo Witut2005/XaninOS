@@ -43,6 +43,8 @@ void _start(void)
     
 
     time_get();
+    //mouse_install();
+   
     keyboard_init();
     set_pit();
     keyboard_command = command_buffer;
@@ -86,15 +88,12 @@ void _start(void)
     xprintf("block test: 0x%x\n", omgtmp);
 
 
-    
+     
     screen_clear();
 
-    //sse_enable();
-    //xprintf("pic1 imr: 0x%x\n", inbIO(0x21));
-    //xprintf("pic2 imr: 0x%x\n", inbIO(0xa1));
-
-
+    
     tuiInit:
+
 
     screen_clear();
     

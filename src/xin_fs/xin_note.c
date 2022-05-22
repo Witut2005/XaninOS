@@ -10,31 +10,18 @@
 
 
 
-void note_input(void)
+void note_input(xchar x)
 {
 
-    uint8_t selected_character;
-    uint8_t x_save, y_save;
-
-    /*
-
-    x_save = Screen.x;
-    y_save = Screen.y;
-
-    xprintf("%h",(cursor_set_position(0,27)));
-    xprintf("         ");
-
-    Screen.x = x_save;
-    Screen.y = y_save;
-
-    */
+    static uint8_t selected_character;
+    
 
     if(KeyInfo.scan_code == F4_KEY || KeyInfo.scan_code == ESC)
     {
         app_exited = true;
     }
 
-    else if(KeyInfo.is_bspc)
+    else if(x.scan_code == BSPC)
     {       
         
         if(!Screen.x && !Screen.y)
@@ -60,7 +47,7 @@ void note_input(void)
     
     }
 
-    else if(KeyInfo.is_up)
+    else if(x.scan_code == ARROW_UP)
     {
 
         Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | (((black << 4) | white) << 8));
@@ -72,7 +59,7 @@ void note_input(void)
 
     }
 
-    else if(KeyInfo.is_down)
+    else if(x.scan_code == ARROW_DOWN)
     {
 
         Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | (((black << 4) | white) << 8));
@@ -84,7 +71,7 @@ void note_input(void)
 
     }
 
-    else if(KeyInfo.is_right)
+    else if(x.scan_code == ARROW_RIGHT)
     {
 
         Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | (((black << 4) | white) << 8));
@@ -102,7 +89,7 @@ void note_input(void)
 
     }
 
-    else if(KeyInfo.is_left)
+    else if(x.scan_code ==  ARROW_LEFT)
     {
 
         Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | (((black << 4) | white) << 8));
@@ -121,14 +108,14 @@ void note_input(void)
 
     }
 
-    else if(KeyInfo.scan_code == ENTER)
+    else if(x.scan_code == ENTER)
     {
         Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | (((black << 4) | white) << 8));
         xprintf("\r\n");
         Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | (((white << 4) | white) << 8));
     }
 
-    else if(KeyInfo.scan_code == TAB_KEY)
+    else if(x.scan_code == TAB_KEY)
     {
         Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | (((black << 4) | white) << 8));
         Screen.x += 3;
@@ -137,7 +124,7 @@ void note_input(void)
 
     else
     {
-        if(KeyInfo.character)
+        if(x.character)
         {
             char character_saved_tmp = (char)Screen.cursor[Screen.y][Screen.x];
             xprintf("%c", getchar());
@@ -146,31 +133,11 @@ void note_input(void)
     }  
 
 
-    /*
-    x_save = Screen.x;
-    y_save = Screen.y;
-
-    xprintf("%h",(cursor_set_position(0,27)));
-    xprintf("x%x y%x",x_save,y_save);
-
-    Screen.x = x_save;
-    Screen.y = y_save;
-
-    
-    else if(getscan() == DELETE_KEY)
-    {
-        Screen.cursor[Screen.y][Screen.x] = '\0';
-        selected_character = '\0';
-    }
-    */
-
- 
 }
 
 void xin_note(char* file_name)
 {
     screen_clear();
-    keyboard_handle = note_input;
     use_backspace = true;
 
     xin_entry* xin_file = fopen(file_name, "rw");
@@ -186,14 +153,6 @@ void xin_note(char* file_name)
     else
     {
 
-        /*
-        if(xin_file->os_specific == XIN_READ_ONLY)
-        {
-            xprintf("%zYOUR ARE EDITING READ-ONLY FILE. CHANGES WILL NOT BE SAVED.", set_output_color(red,white));
-            while(KeyInfo.scan_code != ENTER);
-        }
-        */
-
         char* data_pointer = xin_file->starting_sector * SECTOR_SIZE;
 
         uint16_t* bruh_moment = VGA_TEXT_MEMORY;
@@ -202,7 +161,7 @@ void xin_note(char* file_name)
             bruh_moment[i] = (uint16_t) (data_pointer[i] + (((black << 4) | white) << 8));
         
 
-        while(!app_exited);
+        while(!app_exited)note_input(inputg());
 
         uint32_t file_data_counter = 0x0;
 

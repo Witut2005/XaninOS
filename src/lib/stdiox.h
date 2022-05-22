@@ -541,7 +541,7 @@ void xscanf(char* str, ... )
             Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((white << 4) | white) << 8));
 
 
-            msleep(10);
+            //msleep(10);
             KeyInfo.is_bspc = false;
             letters_refresh(&Screen.cursor[Screen.y][Screen.x]);
         }
@@ -761,4 +761,28 @@ void xscanf(char* str, ... )
 
 
 }
+
+
+struct xchar
+{
+    char character;
+    uint8_t scan_code;
+};
+
+typedef struct xchar xchar;
+
+xchar inputg(void)
+{
+    KeyInfo.scan_code = 0x0;
+    while(KeyInfo.scan_code == 0x0);
+    
+    xchar x;
+
+    x.character = KeyInfo.character;
+    x.scan_code = KeyInfo.scan_code;
+
+    return x;
+
+}
+
 

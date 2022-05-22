@@ -7,19 +7,19 @@ uint32_t data_pointer_position = 0;
 
 uint8_t tmp; 
 
-void hexeditor_input(void)
+void hexeditor_input(xchar x)
 {
 
-    uint8_t selected_character;
+    static uint8_t selected_character;
     uint8_t x_save, y_save;
 
 
-    if(KeyInfo.scan_code == F4_KEY || KeyInfo.scan_code == ESC)
+    if(x.scan_code == F4_KEY || x.scan_code == ESC)
     {
         app_exited = true;
     }
 
-    else if(KeyInfo.is_up)
+    else if(x.scan_code == ARROW_UP)
     {
 
         Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | (((black << 4) | white) << 8));
@@ -41,7 +41,7 @@ void hexeditor_input(void)
 
     }
 
-    else if(KeyInfo.is_down)
+    else if(x.scan_code == ARROW_DOWN)
     {
         
 
@@ -61,7 +61,7 @@ void hexeditor_input(void)
 
     }
 
-    else if(KeyInfo.is_right)
+    else if(x.scan_code == ARROW_RIGHT)
     {
         
         if((uint32_t)&Screen.cursor[Screen.y][Screen.x + 1] > VGA_TEXT_MEMORY + VGA_SCREEN_RESOLUTION - 8)
@@ -89,7 +89,7 @@ void hexeditor_input(void)
 
     }
 
-    else if(KeyInfo.is_left)
+    else if(x.scan_code == ARROW_LEFT)
     {
 
         if((uint32_t)&Screen.cursor[Screen.y][Screen.x - 1] < VGA_TEXT_MEMORY)
@@ -117,6 +117,11 @@ void hexeditor_input(void)
 
     }
 
+    else if(x.scan_code == F4_KEY)
+    {
+        app_exited = true;
+        return;
+    }
     
     else
     {
@@ -134,7 +139,7 @@ void hexeditor_input(void)
             data_pointer_position++;
         }
 
-        if(KeyInfo.character >= 'a' && KeyInfo.character <= 'f')
+        if(x.character >= 'a' && x.character <= 'f')
         {
             if(Screen.cursor[Screen.y][Screen.x + 1] == (uint16_t)( ' '| (((black << 4) | white) << 8)))
             {
@@ -156,7 +161,7 @@ void hexeditor_input(void)
             xprintf("%c", getchar());
         }
 
-        else if(KeyInfo.character >= '0' && KeyInfo.character <= '9')
+        else if(x.character >= '0' && x.character <= '9')
         {
             if(Screen.cursor[Screen.y][Screen.x + 1] == (uint16_t)( ' '| (((black << 4) | white) << 8)))
             {
@@ -219,7 +224,6 @@ void hexeditor(char* file_name)
 {
 
 
-    keyboard_handle = hexeditor_input;
 
     xin_entry* file = fopen(file_name, "rw");
 
@@ -234,7 +238,7 @@ void hexeditor(char* file_name)
 
     bytes_print(file);
 
-    while(KeyInfo.scan_code != F4_KEY);
+    while(!app_exited)hexeditor_input(inputg());
 
     screen_clear();
 

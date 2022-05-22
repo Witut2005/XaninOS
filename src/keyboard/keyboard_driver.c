@@ -4,35 +4,6 @@
 #include <lib/hal.h>
 #include <terminal/vty.h>
 
-void app_default_backspace_handler(void)
-{
-    Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((black << 4) | white) << 8));
-
-    if((char)Screen.cursor[Screen.y][Screen.x - 1] == character_blocked && character_blocked != '\0')
-        return;
-
-    if(!Screen.x)
-    {
-        Screen.y--;
-        Screen.x = 79;
-        return;
-    }
-
-    Screen.x--;
-
-
-    if(index)
-        index--;
-
-    command_buffer[index] = '\0';
-    Screen.cursor[Screen.y][Screen.x] = '\0';
-
-    Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((lred << 4) | white) << 8));
-
-
-    msleep(50);
-    KeyInfo.is_bspc = false;
-}
 
 
 void keyboard_driver(uint8_t scanCode)
@@ -42,6 +13,7 @@ void keyboard_driver(uint8_t scanCode)
         
     else
         KeyInfo.is_hold = false;
+
 
     KeyInfo.scan_code = scanCode;
 
@@ -66,16 +38,16 @@ void keyboard_driver(uint8_t scanCode)
             break;
         }
 
-        case ARROW_UP: {KeyInfo.is_up = true; break;}
+        case ARROW_UP: {KeyInfo.is_up = true;KeyInfo.character = 0x0; break;}
         case ARROW_UP_RELEASE: {KeyInfo.is_up = false; break;}
 
-        case ARROW_DOWN: {KeyInfo.is_down = true; break;}
+        case ARROW_DOWN: {KeyInfo.is_down = true; KeyInfo.character = 0x0;break;}
         case ARROW_DOWN_RELEASE: {KeyInfo.is_down = false; break;}
 
-        case ARROW_RIGHT: {KeyInfo.is_right = true; break;}
+        case ARROW_RIGHT: {KeyInfo.is_right = true; KeyInfo.character = 0x0;break;}
         case ARROW_RIGHT_RELEASE: {KeyInfo.is_right = false; break;}
 
-        case ARROW_LEFT: {KeyInfo.is_left = true; break;}
+        case ARROW_LEFT: {KeyInfo.is_left = true;KeyInfo.character = 0x0; break;}
         case ARROW_LEFT_RELEASE: {KeyInfo.is_left = false; break;}
 
     }

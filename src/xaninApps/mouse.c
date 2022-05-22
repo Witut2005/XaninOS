@@ -8,6 +8,7 @@
 void mouse_test(char *x)
 {
 
+    /*
 
     while(1)
     {
@@ -18,5 +19,7 @@ void mouse_test(char *x)
         msleep(5);
 
     }
+
+    */
 
 }

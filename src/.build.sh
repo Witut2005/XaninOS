@@ -59,12 +59,12 @@ i386-elf-g++ -O0 -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -ffrees
 i386-elf-g++ -O0 -masm=intel -Wno-builtin-declaration-mismatch -Wno-write-strings -Wno-return-type -nostdlib -ffreestanding -Wno-unused-function -fno-rtti -I /home/witut/Desktop/xaninOS/src \
 -c ./test/cpp_test.cpp  -o ./test/cpp_test.o
 
-i386-elf-g++ -O0 -masm=intel -Wno-builtin-declaration-mismatch -Wno-write-strings -Wno-return-type -nostdlib -ffreestanding -Wno-unused-function -fno-rtti -I /home/witut/Desktop/xaninOS/src \
--c ./devices/mouse.cpp  -o ./devices/mouse.o
+#i386-elf-g++ -O0 -masm=intel -Wno-builtin-declaration-mismatch -Wno-write-strings -Wno-return-type -nostdlib -ffreestanding -Wno-unused-function -fno-rtti -I /home/witut/Desktop/xaninOS/src \
+#-c ./devices/mouse.cpp  -o ./devices/mouse.o ./devices/mouse.o
 
 
 i386-elf-gcc -O0 -masm=intel -Wno-discarded-qualifiers -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-int-conversion -Wno-unused-function -Wno-div-by-zero -I /home/witut/Desktop/xaninOS/src \
-kernel.c ./handlers/keyboard.o ./pit/pit.o ./syscall/syscall.o ./test/cpp_test.o ./devices/mouse.o -o kernel.bin
+kernel.c ./handlers/keyboard.o ./pit/pit.o ./syscall/syscall.o ./test/cpp_test.o  -o kernel.bin
 
 
 
