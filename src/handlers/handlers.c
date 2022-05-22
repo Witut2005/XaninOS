@@ -56,6 +56,7 @@ void keyboard_handler(void)
     keyStatus = inbIO(KEYBOARD_STATUS_REG); // if status & 1 (ON)
     KeyInfo.scan_code = inbIO(KEYBOARD_DATA_REG); // get KeyInfo.scan_code
     keyboard_driver(KeyInfo.scan_code);
+    outbIO(0x20,0x20);
 }
  
 void debug_exception(void)

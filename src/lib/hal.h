@@ -130,4 +130,26 @@ void wrmsr(uint32_t msr_id, uint32_t low, uint32_t high)
 }
 
 
+void pic_mask_set(uint16_t port, uint8_t value)
+{
 
+    if(port == 0x60)
+        outbIO(0x60, value);
+    else
+        outbIO(0x20, value);
+
+}
+
+void sse_enable(void)
+{
+    asm(
+        "mov eax, cr0\n\t"
+        "and ax, 0xFFFB\n\t"
+        "or ax, 0x2\n\t"
+        "mov cr0, eax\n\t"
+        "mov eax, cr4\n\t"
+        "mov ax, 3 << 9\n\t"
+        "mov cr4, eax\n\t"
+        "ret"
+    );
+}

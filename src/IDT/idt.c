@@ -5,9 +5,10 @@
 #include <handlers/handlers.c>
 #include <keyboard/keyMap.h>
 #include <syscall/syscall.c>
+#include <devices/MOUSE/mouse.c>
 
 
-extern void mouse_handler(void);
+//extern void mouse_handler(void);
 
 
 #define IDT_HANDLERS 256
@@ -23,7 +24,6 @@ extern void mouse_handler(void);
     idtEntries[idt_entry].segment = seg;\
     idtEntries[idt_entry].res = 0x0;\
     idtEntries[idt_entry].P_DPL = 0x8e
-
 
 //extern void _syscall(void);
 
@@ -75,19 +75,13 @@ void set_idt(void)
     configure_idt_entry(19, simd_floating_point_exception, CODE_SEGMENT);
     configure_idt_entry(20, virtualization_exception,CODE_SEGMENT);
     configure_idt_entry(21, control_protection_exception,CODE_SEGMENT);
-
     configure_idt_entry(0x20, pit_handler_init,CODE_SEGMENT);
     configure_idt_entry(0x21, keyboard_handler_init,CODE_SEGMENT);
     configure_idt_entry(0x26, floppy_interrupt,CODE_SEGMENT);
-    
     configure_idt_entry(0x2C, mouse_handler, CODE_SEGMENT);
-
     configure_idt_entry(0x80, syscall,CODE_SEGMENT);
-    
-    configure_idt_entry(0x81, no_handler,CODE_SEGMENT);
-    
-
-    configure_idt_entry(0xFF, reboot_interrupt,CODE_SEGMENT);
+    //configure_idt_entry(0x81, no_handler,CODE_SEGMENT);
+    //configure_idt_entry(0xFF, reboot_interrupt,CODE_SEGMENT);
 
     struct idt_register idtr = {
         IDT_SIZE,

@@ -159,10 +159,7 @@ void keyboard_driver(uint8_t scanCode)
         keyboard_handle();
     }
 
-    eoi_send();
-
     return;
-
           
     
 }

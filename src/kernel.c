@@ -37,9 +37,10 @@ void _start(void)
 
 
     set_idt();
+    screen_init(); //init screen management system
+
     init_disk(ATA_FIRST_BUS, ATA_MASTER);
     
-    screen_init(); //init screen management system
 
     time_get();
     keyboard_init();
@@ -56,8 +57,6 @@ void _start(void)
     xprintf("\n\n");
    
     srand(Time.seconds);
-
-    
 
     disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x1a, 1, (uint16_t*)0x1800);
     disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x1b, 1, (uint16_t*)0x1a00);
@@ -87,9 +86,13 @@ void _start(void)
     xprintf("block test: 0x%x\n", omgtmp);
 
 
-    mouse_enable();
-
+    
     screen_clear();
+
+    //sse_enable();
+    //xprintf("pic1 imr: 0x%x\n", inbIO(0x21));
+    //xprintf("pic2 imr: 0x%x\n", inbIO(0xa1));
+
 
     tuiInit:
 

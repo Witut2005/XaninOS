@@ -82,7 +82,7 @@ void pmmngr_init (size_t memSize, physical_addr bitmap)
     _mmngr_used_blocks	=	pmmngr_get_block_count();
 
     //! By default, all of memory is in use
-    memset (_mmngr_memory_map, 0xf, pmmngr_get_block_count() / PMMNGR_BLOCKS_PER_BYTE );
+    memset ((uint8_t*)_mmngr_memory_map, 0xf, pmmngr_get_block_count() / PMMNGR_BLOCKS_PER_BYTE );
 }
 
 
