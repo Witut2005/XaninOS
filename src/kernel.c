@@ -20,6 +20,8 @@
 
 extern void v86_mode_enter(void);
 extern void mouse_enable(void);
+extern bool apic_enable(void);
+extern bool apic_disable(void);
 
 /*--------------------------------------/
 |wesolego nowego roku :))               |
@@ -89,7 +91,12 @@ void _start(void)
 
 
     //mouse_install();
+    apic_enable();
+    apic_disable();
     
+    xprintf("apic: 0x%x", *(uint32_t*)0xFEE000F0);
+    //while(1);
+
     screen_clear();
 
 

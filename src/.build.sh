@@ -72,7 +72,7 @@ i386-elf-g++ -O0 -masm=intel -Wno-builtin-declaration-mismatch -Wno-write-string
 
 
 i386-elf-gcc -O0 -masm=intel -Wno-discarded-qualifiers -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-int-conversion -Wno-unused-function -Wno-div-by-zero -I /home/witut/Desktop/xaninOS/src \
-kernel.c ./handlers/keyboard.o ./pit/pit.o ./syscall/syscall.o ./test/cpp_test.o ./devices/MOUSE/mouse.o -o kernel.bin
+kernel.c ./handlers/keyboard.o ./pit/pit.o ./syscall/syscall.o ./test/cpp_test.o ./devices/MOUSE/mouse.o ./devices/APIC/apic.o -o kernel.bin
 
 
 
