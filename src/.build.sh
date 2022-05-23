@@ -60,6 +60,9 @@ cd ..
 
 i386-elf-g++ -O0 -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -fno-rtti -I /home/witut/Desktop/xaninOS/src \
 -c ./chip8/chip8.cpp  -o ./chip8/chip8.o
+O
+i386-elf-g++ -O0 -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -fno-rtti -I /home/witut/Desktop/xaninOS/src \
+-c ./devices/APIC/apic.cpp  -o ./devices/APIC/apic.o
 
 i386-elf-g++ -O0 -masm=intel -Wno-builtin-declaration-mismatch -Wno-write-strings -Wno-return-type -nostdlib -ffreestanding -Wno-unused-function -fno-rtti -I /home/witut/Desktop/xaninOS/src \
 -c ./test/cpp_test.cpp  -o ./test/cpp_test.o
