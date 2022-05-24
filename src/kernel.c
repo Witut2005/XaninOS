@@ -17,11 +17,11 @@
 #include <lib/algorithm.h>
 #include <lib/assert.h>
 #include <lib/alloc.h>
+#include <devices/APIC/apic_registers.h>
+#include <devices/APIC/apic.c>
 
 extern void v86_mode_enter(void);
 extern void mouse_enable(void);
-extern bool apic_enable(void);
-extern bool apic_disable(void);
 
 /*--------------------------------------/
 |wesolego nowego roku :))               |
@@ -53,9 +53,22 @@ void _start(void)
 
     xprintf("DETECTING USB CONTROLLERS. PLEASE WAIT...\n");
     usb_detect();
+
+    /*
+    pic_disable();
+    apic_enable();
+    apic_set_spurious_vector_number(0xFF);
+    apic_lvt_set();
+    */
+
+    xprintf("lvt: 0x%x\n", *(uint32_t*)APIC_LVT_REGISTER);
+    xprintf("lvt: 0x%x\n", *(uint32_t*)APIC_LVT_LINT0_REGISTER);
+    xprintf("lvt: 0x%x\n", *(uint32_t*)APIC_LVT_LINT1_REGISTER);
+
     
     xprintf("\n%zUSB DETECTION TEST ENDED. PRESS ENTER TO START XANIN OS\n",
             set_output_color(green,white));
+
     while(KeyInfo.scan_code != ENTER);
 
     xprintf("\n\n");
@@ -91,11 +104,9 @@ void _start(void)
 
 
     //mouse_install();
-    apic_enable();
-    apic_disable();
-    
+
+
     xprintf("apic: 0x%x", *(uint32_t*)0xFEE000F0);
-    //while(1);
 
     screen_clear();
 

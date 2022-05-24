@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <headers/macros.h>
+#include <devices/APIC/apic_registers.h>
 
 void outbIO(uint16_t port,uint8_t al)
 {
@@ -88,7 +89,13 @@ void update_cursor(int x, int y)
 
 void eoi_send(void)
 {
-    asm("out 0x20, al" :: "a"(0x20));
+
+    if(*(uint32_t*)APIC_SPURIOUS_INTERRUPT_VECTOR_REGISTER & (1 << 8))
+        *(uint32_t*)APIC_EOI_REGISTER = 0x1;
+
+    else
+        asm("out 0x20, al" :: "a"(0x20));
+
 }
 
 void io_wait(void)
@@ -138,6 +145,12 @@ void pic_mask_set(uint16_t port, uint8_t value)
     else
         outbIO(0x20, value);
 
+}
+
+void pic_disable()
+{
+    outbIO(0xa1, 0xff);
+    outbIO(0x21, 0xff);
 }
 
 void sse_enable(void)
