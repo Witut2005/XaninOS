@@ -59,13 +59,25 @@ void _start(void)
     apic_enable();
     apic_set_spurious_vector_number(0xFF);
     apic_lvt_set();
-    */
+    
 
     xprintf("lvt: 0x%x\n", *(uint32_t*)APIC_LVT_REGISTER);
     xprintf("lvt: 0x%x\n", *(uint32_t*)APIC_LVT_LINT0_REGISTER);
     xprintf("lvt: 0x%x\n", *(uint32_t*)APIC_LVT_LINT1_REGISTER);
+    */
 
     
+
+    rsdp = get_acpi_rsdp_address_base();
+    rsdt = rsdp->rsdt_address;
+
+    acpi_print_rsdt(rsdt);
+    
+  
+
+    //acpi_print_rsdp(rsdp);
+    while (1);
+
     xprintf("\n%zUSB DETECTION TEST ENDED. PRESS ENTER TO START XANIN OS\n",
             set_output_color(green,white));
 

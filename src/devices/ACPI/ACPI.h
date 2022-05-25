@@ -1,3 +1,4 @@
+#pragma once
 
 #include <stdint.h>
 
@@ -5,13 +6,30 @@
 struct rsdp_descriptor1
 {
 
-    uint8_t revision;
-    uint8_t checksum;
-    
     uint8_t signature[8];
-    uint8_t OEMID[6];
+    uint8_t checksum;
+    uint8_t oemid[6];
     
+    uint8_t revision;
     uint32_t rsdt_address;
 
-} __attribute__ ((packed))rsdp;
+} __attribute__ ((packed))*rsdp;
 
+typedef struct rsdp_descriptor1 rsdp_descriptor1;
+
+struct acpi_rsdt
+{
+    char signature[4];
+    uint32_t length;
+    uint8_t revision;
+    uint8_t checksum;
+    char oemid[6];
+    char oem_table_id[8];
+    uint32_t oem_revision;
+    uint32_t creator_id;
+    uint32_t creator_revision;
+};
+
+typedef struct acpi_rsdt acpi_rsdt;
+
+acpi_rsdt* rsdt;
