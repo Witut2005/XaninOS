@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <stddef.h>
 
 
 struct rsdp_descriptor1
@@ -28,8 +29,21 @@ struct acpi_rsdt
     uint32_t oem_revision;
     uint32_t creator_id;
     uint32_t creator_revision;
-};
+    uint32_t pointer_to_sdt[0x10];
+} __attribute__ ((packed));
 
 typedef struct acpi_rsdt acpi_rsdt;
 
 acpi_rsdt* rsdt;
+
+
+struct apic_sdt
+{
+
+    char signature[4];
+    uint32_t length;
+    uint8_t revision;
+    uint8_t checksum;
+    //uint
+
+};

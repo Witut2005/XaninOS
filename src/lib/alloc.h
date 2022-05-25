@@ -62,7 +62,7 @@ bool mmap_test (int bit)
 int mmap_first_free () 
 { 
 	//! find the first free bit
-	  for (uint32_t i=0; i< pmmngr_get_block_count() / 32; i++)
+	  for (uint32_t i = 0x10; i< pmmngr_get_block_count() / 32; i++)
         if (_mmngr_memory_map[i] != 0xffffffff)
 			      for (int j=0; j<32; j++) 
             {		//! test each bit in the dword

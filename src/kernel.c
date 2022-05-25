@@ -71,12 +71,12 @@ void _start(void)
     rsdp = get_acpi_rsdp_address_base();
     rsdt = rsdp->rsdt_address;
 
-    acpi_print_rsdt(rsdt);
+    acpi_print_rsdt();
     
   
 
     //acpi_print_rsdp(rsdp);
-    while (1);
+    //while (1);
 
     xprintf("\n%zUSB DETECTION TEST ENDED. PRESS ENTER TO START XANIN OS\n",
             set_output_color(green,white));
@@ -96,13 +96,14 @@ void _start(void)
 
     xin_init_fs();
     
-    pmmngr_init(0x100000, 0x90000);
-    pmmngr_init_region(0x100000, 0xFFFFFF);
+    pmmngr_init(0x200000, 0xF00000);
+    pmmngr_init_region(0x200000, 0xFFFFFF);
 
     screen_clear();
 
     char* omgtmp = (char*)pmmngr_alloc_block();
     xprintf("block test: 0x%x\n", omgtmp);
+    //while(1);
     
     pmmngr_free_block(omgtmp);
 
