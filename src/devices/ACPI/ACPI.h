@@ -67,15 +67,122 @@ struct apic_sdt_entry
     uint32_t creator_revision; 
     uint32_t lapic_address;
     uint32_t flags;
+
     uint8_t entry_type;
     uint8_t record_length;
 
 }__attribute__((packed))*apic_sdt;
-
 typedef struct apic_sdt_entry apic_sdt_entry;
 
 
 
 
+uint8_t* madt_entries[0x10];
+
+struct madt_entry_type0
+{
+    uint8_t entry_type;
+    uint8_t record_length;
+
+    uint8_t acpi_processor_id;
+    uint8_t apic_id;
+    uint32_t flags;
+
+}__attribute__((packed));
+typedef struct madt_entry_type0 madt_entry_type0;
+
+struct madt_entry_type1
+{
+    uint8_t entry_type;
+    uint8_t record_length;
+
+    uint8_t io_apic_id;
+    uint8_t reserved;
+    uint32_t io_apic_base;
+    uint32_t global_system_int_table;
+}__attribute__ ((packed));
+typedef struct madt_entry_type1 madt_entry_type1;
+
+
+struct madt_entry_type2
+{
+    uint8_t entry_type;
+    uint8_t record_length;
+
+    uint8_t bus_source;
+    uint8_t irq_source;
+    uint32_t global_system_int;
+    uint16_t flags;
+}__attribute__ ((packed));
+typedef struct madt_entry_type2 madt_entry_type2;
+
+
+struct madt_entry_type3
+{
+    uint8_t entry_type;
+    uint8_t record_length;
+
+    uint8_t nmi_source;
+    uint8_t reserved;
+    uint16_t flags;
+    uint32_t global_system_int;
+}__attribute__ ((packed));
+typedef struct madt_entry_type3 madt_entry_type3;
+
+
+struct madt_entry_type4
+{
+    uint8_t entry_type;
+    uint8_t record_length;
+
+    uint8_t acpi_processor_id;
+    uint16_t flags;
+    uint8_t lint;
+}__attribute__ ((packed));
+typedef struct madt_entry_type4 madt_entry_type4;
+
+struct madt_entry_type5
+{
+    uint8_t entry_type;
+    uint8_t record_length;
+
+    uint8_t reserved;
+
+    uint32_t lapic_address_low;
+    uint32_t lapic_address_high; //64bit physical address
+
+}__attribute__ ((packed));
+typedef struct madt_entry_type5 madt_entry_type5;
+
+struct madt_entry_type9
+{
+    uint8_t entry_type;
+    uint8_t record_length;
+
+    uint16_t reserved;
+    uint32_t x2apic_id;
+    uint32_t flags;
+    uint32_t acpi_id;
+
+}__attribute__ ((packed));
+typedef struct madt_entry_type9 madt_entry_type9;
+
+
+uint8_t madt_entry_type0_counter = 0;
+uint8_t madt_entry_type1_counter = 0;
+uint8_t madt_entry_type2_counter = 0;
+uint8_t madt_entry_type3_counter = 0;
+uint8_t madt_entry_type4_counter = 0;
+uint8_t madt_entry_type5_counter = 0;
+uint8_t madt_entry_type9_counter = 0;
+
+
+const madt_entry_type0** madt_entry_type0_ptr;
+const madt_entry_type1** madt_entry_type1_ptr;
+const madt_entry_type2** madt_entry_type2_ptr;
+const madt_entry_type3** madt_entry_type3_ptr;
+const madt_entry_type4** madt_entry_type4_ptr;
+const madt_entry_type5** madt_entry_type5_ptr;
+const madt_entry_type9** madt_entry_type9_ptr;
 
 

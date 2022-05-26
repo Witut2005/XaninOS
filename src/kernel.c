@@ -58,9 +58,16 @@ void _start(void)
     rsdt = rsdp->rsdt_address;
 
     apic_sdt = (apic_sdt_entry*)rsdt->pointer_to_sdt[1];
-    apic_sdt = (apic_sdt_entry*)rsdt->pointer_to_sdt[4];
     
-    acpi_print_sdt((sdt*)apic_sdt);
+    //acpi_print_sdt((sdt*)apic_sdt);
+    xprintf("lapic address: 0x%x\n", &apic_sdt->entry_type);
+    xprintf("entry type: 0x%x\n", apic_sdt->entry_type);
+
+    //madt_entries_get(apic_sdt);
+
+    //for(int i = 0; i < 1; i++)
+    //    xprintf("entry type : 0x%x\n", (*madt_entry_type1_ptr[i]).entry_type);
+
 
     while(KeyInfo.scan_code != ENTER);
 

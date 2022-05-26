@@ -88,8 +88,83 @@ void acpi_print_sdt(sdt* x)
 
 
 
+/*
+void madt_entries_get(apic_sdt_entry* apic_entry)
+{
+
+    madt_entry_type0_ptr = malloc(sizeof(madt_entry_type0) * 10);
+    madt_entry_type1_ptr = malloc(sizeof(madt_entry_type1) * 10);
+    madt_entry_type2_ptr = malloc(sizeof(madt_entry_type2) * 10);
+    madt_entry_type3_ptr = malloc(sizeof(madt_entry_type3) * 10);
+    madt_entry_type4_ptr = malloc(sizeof(madt_entry_type4) * 10);
+    madt_entry_type5_ptr = malloc(sizeof(madt_entry_type5) * 10);
+    madt_entry_type9_ptr = malloc(sizeof(madt_entry_type9) * 10);
 
 
+    uint8_t* tmp = (uint8_t*)&apic_entry->entry_type;
+
+    xprintf("lolek: 0x%x\n", tmp);
+
+
+    for(int i = 0; i < 0x10; tmp += *(tmp + 1), i++)
+    {
+
+
+            if(*tmp == 0)
+            {
+                madt_entry_type0_ptr[madt_entry_type0_counter] = (madt_entry_type0*)tmp;
+                madt_entry_type0_counter++;
+                
+            }
+
+            else if(*tmp == 1)
+            {
+                madt_entry_type1_ptr[madt_entry_type1_counter] = (madt_entry_type1*)tmp;
+                madt_entry_type1_counter++;
+                
+            }
+            
+            else if(*tmp == 2)
+            {
+                madt_entry_type2_ptr[madt_entry_type2_counter] = (madt_entry_type2*)tmp;
+                madt_entry_type2_counter++;
+                
+            }
+
+            else if(*tmp == 3)
+            {
+                madt_entry_type3_ptr[madt_entry_type3_counter] = (madt_entry_type3*)tmp;
+                madt_entry_type3_counter++;
+                
+            }
+            
+            else if(*tmp == 4)
+            {
+                madt_entry_type4_ptr[madt_entry_type4_counter] = (madt_entry_type4*)tmp;
+                madt_entry_type4_counter++;
+                
+            }
+
+            else if(*tmp == 5)
+            {
+                madt_entry_type5_ptr[madt_entry_type5_counter] = (madt_entry_type5*)tmp;
+                madt_entry_type5_counter++;
+                
+            }
+
+            else if(*tmp == 9)
+            {
+                madt_entry_type9_ptr[madt_entry_type9_counter] = (madt_entry_type9*)tmp;
+                madt_entry_type9_counter++;
+                
+            }
+
+        }
+    
+
+}
+
+*/
 
 
 
