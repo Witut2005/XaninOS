@@ -55,41 +55,35 @@ uint32_t acpi_checksum_check(void)
 
 }
 
-void acpi_get_rsdt(void)
-{
-    }
 
-void acpi_print_rsdt(void)
+void acpi_print_sdt(sdt* x)
 {
+    xprintf("singature:       : ");
 
-    xprintf("rsdt singature   : ");
-    
-    for(int i                 = 0; i < 4; i++)
-        xprintf("%c", rsdt->signature[i]);
+    for(int i = 0; i < 4; i++)
+        xprintf("%c", x->signature[i]);
     
     xprintf("\n");
 
-    xprintf("length           : 0x%x\n", rsdt->length);
-    xprintf("revision         : 0x%x\n", rsdt->revision);
-    xprintf("checksum         : 0x%x\n", rsdt->checksum);
+    xprintf("length           : 0x%x\n", x->length);
+    xprintf("revision         : 0x%x\n", x->revision);
+    xprintf("checksum         : 0x%x\n", x->checksum);
 
     xprintf("rsdt oemid       : ");
-    for(int i                 = 0; i < 6; i++)
-        xprintf("%c", rsdt->oemid[i]);
+    for(int i = 0; i < 6; i++)
+        xprintf("%c", x->oemid[i]);
     xprintf("\n");
 
 
     xprintf("rsdt oem table id: ");
-        for(int i             = 0; i < 8; i++)
-            xprintf("%c", rsdt->oem_table_id[i]);
+        for(int i = 0; i < 8; i++)
+            xprintf("%c", x->oem_table_id[i]);
     xprintf("\n");
 
-    xprintf("oem_revision     : 0x%x\n", rsdt->oem_revision);
-    xprintf("creator_id       : 0x%x\n", rsdt->creator_id);
-    xprintf("creator_revision : 0x%x\n", rsdt->creator_revision);
-    xprintf("check            : 0x%x\n", acpi_checksum_check());
-    xprintf("RSDT APIC signature: %s\n", (char*)rsdt->pointer_to_sdt[1]);
-
+    xprintf("oem_revision     : 0x%x\n", x->oem_revision);
+    xprintf("creator_id       : 0x%x\n", x->creator_id);
+    xprintf("creator_revision : 0x%x\n", x->creator_revision);
+ 
 }
 
 
