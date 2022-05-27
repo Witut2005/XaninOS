@@ -88,7 +88,6 @@ void acpi_print_sdt(sdt* x)
 
 
 
-/*
 void madt_entries_get(apic_sdt_entry* apic_entry)
 {
 
@@ -163,8 +162,6 @@ void madt_entries_get(apic_sdt_entry* apic_entry)
     
 
 }
-
-*/
 
 
 

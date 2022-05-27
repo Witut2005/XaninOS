@@ -41,6 +41,9 @@ void _start(void)
     set_idt();
     screen_init(); //init screen management system
 
+    pmmngr_init(0x200000, 0xF00000);
+    pmmngr_init_region(0x200000, 0xFFFFFF);
+
     init_disk(ATA_FIRST_BUS, ATA_MASTER);
     
 
@@ -61,13 +64,17 @@ void _start(void)
     
     //acpi_print_sdt((sdt*)apic_sdt);
     xprintf("lapic address: 0x%x\n", &apic_sdt->entry_type);
-    xprintf("entry type: 0x%x\n", apic_sdt->entry_type);
+    //xprintf("entry type: 0x%x\n", apic_sdt->entry_type);
 
-    //madt_entries_get(apic_sdt);
+    madt_entries_get(apic_sdt);
 
-    //for(int i = 0; i < 1; i++)
-    //    xprintf("entry type : 0x%x\n", (*madt_entry_type1_ptr[i]).entry_type);
+    for(int i = 0; i < 1; i++)
+    {
+        xprintf("entry type: 0x%x\n", (*madt_entry_type1_ptr[i]).global_system_int_table);
+        xprintf("resv: 0x%x\n", (*madt_entry_type1_ptr[i]).reserved);
+    }
 
+    
 
     while(KeyInfo.scan_code != ENTER);
 
@@ -84,8 +91,7 @@ void _start(void)
 
     xin_init_fs();
     
-    pmmngr_init(0x200000, 0xF00000);
-    pmmngr_init_region(0x200000, 0xFFFFFF);
+
 
     screen_clear();
 
@@ -118,14 +124,12 @@ void _start(void)
     screen_clear();
     
     time_get();
-    
-    xprintf("%z  .GBJ     ?BBY.                     ,,                              \n", set_output_color(logo_back_color, logo_front_color));
-    xprintf("%z   :B#Y  !G#P^   .,,.     ..  ..     ''   ..  ..                     \n", set_output_color(logo_back_color, logo_front_color));
-    xprintf("%z    .G#//#G~    ?PYJJ5P   HuCJJ5G    55  HuCJJJPP.                   \n", set_output_color(logo_back_color, logo_front_color));
-    xprintf("%z     >###<     ~.   .G#.  I#D   7#:  GP  I#D    P#:                  \n", set_output_color(logo_back_color, logo_front_color));
-    xprintf("%z   .5#BG#P.    !JYYJ?G#.  I#^   ^#:  GP  I#^    Y#:                  \n", set_output_color(logo_back_color, logo_front_color));
-    xprintf("%z .Y##/ i#G.   ?#^   :G#.  I#^   ~#:  GP  I#^    Y#:%z  version 22.05v\n", set_output_color(logo_back_color, logo_front_color), set_output_color(black,white));
-    xprintf("%z7GB5.    5BG. .5G555J?B^  I#^   ^#:  P5  I#^    JB:%z  %s %i:%i:%i\n\n\n", set_output_color(logo_back_color, logo_front_color), set_output_color(black,white), daysLUT[Time.weekday], Time.hour, Time.minutes, Time.seconds);
+
+    xprintf("%z    _/      _/                      _/              _/_/      _/_/_/       \n", set_output_color(logo_back_color, logo_front_color));
+    xprintf("%z     _/  _/      _/_/_/  _/_/_/        _/_/_/    _/    _/  _/              \n", set_output_color(logo_back_color, logo_front_color));
+    xprintf("%z      _/      _/    _/  _/    _/  _/  _/    _/  _/    _/    _/_/           \n", set_output_color(logo_back_color, logo_front_color));
+    xprintf("%z   _/  _/    _/    _/  _/    _/  _/  _/    _/  _/    _/        _/%z  version 22.05v\n",set_output_color(logo_back_color, logo_front_color), set_output_color(black,white) );
+    xprintf("%z_/      _/    _/_/_/  _/    _/  _/  _/    _/    _/_/    _/_/_/ %z  %s %i:%i:%i\n\n\n", set_output_color(logo_back_color, logo_front_color), set_output_color(black,white), daysLUT[Time.weekday], Time.hour, Time.minutes, Time.seconds);                                       
 
 
     Screen.cursor[8][0] = (uint16_t)('>' | ((black << 4) | white) << 8);
