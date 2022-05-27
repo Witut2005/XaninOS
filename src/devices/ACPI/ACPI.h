@@ -111,7 +111,7 @@ struct madt_entry_type2
 
     uint8_t bus_source;
     uint8_t irq_source;
-    uint32_t global_system_int;
+    uint32_t global_system_int_table;
     uint16_t flags;
 }__attribute__ ((packed));
 typedef struct madt_entry_type2 madt_entry_type2;

@@ -60,18 +60,21 @@ void _start(void)
     rsdp = get_acpi_rsdp_address_base();
     rsdt = rsdp->rsdt_address;
 
-    apic_sdt = (apic_sdt_entry*)rsdt->pointer_to_sdt[1];
-    
-    //acpi_print_sdt((sdt*)apic_sdt);
-    xprintf("lapic address: 0x%x\n", &apic_sdt->entry_type);
-    //xprintf("entry type: 0x%x\n", apic_sdt->entry_type);
+    apic_sdt = apic_sdt_find();
 
+
+    //acpi_print_sdt((sdt*)apic_sdt);
+    
+    
     madt_entries_get(apic_sdt);
 
-    for(int i = 0; i < 1; i++)
+    for(int i = 0; (*madt_entry_type1_ptr[i]).entry_type == 1; i++)
     {
-        xprintf("entry type: 0x%x\n", (*madt_entry_type1_ptr[i]).global_system_int_table);
-        xprintf("resv: 0x%x\n", (*madt_entry_type1_ptr[i]).reserved);
+        //if((*madt_entry_type1_ptr[i]).io_apic_id != (*madt_entry_type1_ptr[i - 1]).io_apic_id)
+        {
+            xprintf("entry type: 0x%x\n", (*madt_entry_type1_ptr[i]).entry_type);
+            xprintf("int: 0x%x\n", (*madt_entry_type1_ptr[i]).global_system_int_table);
+        }
     }
 
     

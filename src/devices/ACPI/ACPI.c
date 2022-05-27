@@ -86,7 +86,17 @@ void acpi_print_sdt(sdt* x)
  
 }
 
+apic_sdt_entry* apic_sdt_find(void)
+{
 
+    char* tmp = (uint8_t*)rsdt->pointer_to_sdt[0];
+
+    while(1)
+        if(strncmp(tmp, "APIC", 4) && !strncmp(tmp, "APICx", 5))
+            return (apic_sdt_entry*)tmp;
+        else tmp++;
+
+}
 
 void madt_entries_get(apic_sdt_entry* apic_entry)
 {
