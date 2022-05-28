@@ -3,7 +3,7 @@
 
 uint32_t acpi_rdsp_base;
 
-uint32_t acpi_rsdp_checksum_check(rsdp_descriptor *header)
+bool acpi_rsdp_checksum_check(rsdp_descriptor *header)
 {
     uint8_t sum = 0;
     uint8_t *field = (uint8_t *)header;
@@ -11,11 +11,27 @@ uint32_t acpi_rsdp_checksum_check(rsdp_descriptor *header)
     for (int i = 0; i < 20; i++)
     {
         sum += field[i];
-        i++;
     }
 
-    return sum;
+    return sum == 0;
 }
+
+bool acpi_rsdt_checksum_check(acpi_rsdt *header)
+{
+    uint8_t* tmp = (uint8_t *)header;
+    uint8_t sum = 0;
+
+    for(int i = 0; i < header->length; i++)
+    {
+        sum += tmp[i];
+    }
+
+    return sum == 0;
+
+
+
+}
+
 
 rsdp_descriptor *get_acpi_rsdp_address_base(void)
 {
@@ -23,7 +39,7 @@ rsdp_descriptor *get_acpi_rsdp_address_base(void)
 
     while (acpi_string < (char *)0xFFFFF)
     {
-        if (strncmp(acpi_string, "RSD PTR ", 8) && acpi_rsdp_checksum_check((rsdp_descriptor*)acpi_string) == 0)
+        if (strncmp(acpi_string, "RSD PTR ", 8))
         {
             return (rsdp_descriptor *)acpi_string;
         }

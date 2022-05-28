@@ -60,11 +60,25 @@ void _start(void)
     
     rsdp = get_acpi_rsdp_address_base();
     
-    xprintf("RSDP: 0x%x\n", rsdp);
+    //xprintf("RSDP: 0x%x\n", rsdp);
+
+
+    //acpi_print_rsdp();
+    
+    
+    xprintf("CHECKSUM CHECK RSDP: ");
+    1 == acpi_rsdp_checksum_check(rsdp) ? xprintf("%zVALID", set_output_color(green,white)) : xprintf("%zVALID", set_output_color(red,white));
+    xprintf("\n");
 
     //while(1);
 
-    //rsdt = rsdp->rsdt_address;
+    rsdt = rsdp->rsdt_address;
+
+    xprintf("CHECKSUM CHECK RSDT: ");
+    1 == acpi_rsdt_checksum_check(rsdt) ? xprintf("%zVALID", set_output_color(green,white)) : xprintf("%zVALID", set_output_color(red,white));
+    xprintf("\n");
+
+
 
     //apic_sdt = apic_sdt_find();
 
@@ -96,7 +110,6 @@ void _start(void)
 
     uint8_t* xanin_info_ptr = xanin_information_block_get();
 
-    xprintf("xanin_info: %x\n", xanin_info_ptr);
 
 
     while(KeyInfo.scan_code != ENTER);
