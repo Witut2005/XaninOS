@@ -119,6 +119,15 @@ jmp print_msg
 
 jmp_ker_load:
 
+    mov eax, 0x0000E820
+    mov edx, 0x534D4150
+    mov ebx, 0x0
+    mov ecx, 24
+    mov di, base
+
+    int 0x15
+    ;jmp $
+
     mov ax, 0xA000
     mov ds,ax
     mov word [0x0], 0x4242
@@ -137,7 +146,7 @@ str: db "ERROR your computer doesnt support fully int13 xaninOS cant be loaded",
 times (0x10 - ( $ - $$ ) % 0x10 ) db 0x00
 
 xanin_information_block: 
-    signature: db "XANIN_INFO"
+    signature: db "XANIN_INFO",0x0
     base: dd $
     
 

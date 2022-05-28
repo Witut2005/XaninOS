@@ -88,9 +88,15 @@ void _start(void)
         }
     }
 
-    */
+    
     xprintf("ff: 0x%x\n", *(uint16_t*)0x40e);
     xprintf("ugabnuga: 0x%x\n", acpi_rsdp_checksum_check(rsdp));
+
+    */
+
+    uint8_t* xanin_info_ptr = xanin_information_block_get();
+
+    xprintf("xanin_info: %x\n", xanin_info_ptr);
 
 
     while(KeyInfo.scan_code != ENTER);
