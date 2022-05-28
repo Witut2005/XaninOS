@@ -4,7 +4,7 @@
 #include <stddef.h>
 
 
-struct rsdp_descriptor1
+struct rsdp_descriptor
 {
 
     uint8_t signature[8];
@@ -16,7 +16,7 @@ struct rsdp_descriptor1
 
 } __attribute__ ((packed))*rsdp;
 
-typedef struct rsdp_descriptor1 rsdp_descriptor1;
+typedef struct rsdp_descriptor rsdp_descriptor;
 
 struct acpi_rsdt
 {
@@ -60,22 +60,18 @@ struct apic_sdt_entry
     uint32_t length;
     uint8_t revision;
     uint8_t checksum;
+
     char oemid[6];
     char oem_table_id[8];
     uint32_t oem_revision;
-    uint32_t creator_id;;
+    uint32_t creator_id;
     uint32_t creator_revision; 
-    uint32_t lapic_address;
-    uint32_t flags;
 
-    uint8_t entry_type;
-    uint8_t record_length;
+    //uint8_t entry_type;
+    //uint8_t record_length;
 
 }__attribute__((packed))*apic_sdt;
 typedef struct apic_sdt_entry apic_sdt_entry;
-
-
-
 
 uint8_t* madt_entries[0x10];
 

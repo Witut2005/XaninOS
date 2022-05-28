@@ -57,19 +57,30 @@ void _start(void)
     xprintf("DETECTING USB CONTROLLERS. PLEASE WAIT...\n");
     usb_detect();
     
+    
     rsdp = get_acpi_rsdp_address_base();
-    rsdt = rsdp->rsdt_address;
+    
+    xprintf("RSDP: 0x%x\n", rsdp);
 
-    apic_sdt = apic_sdt_find();
+    //while(1);
+
+    //rsdt = rsdp->rsdt_address;
+
+    //apic_sdt = apic_sdt_find();
+
+    //xprintf("ACPI APIC: %s\n", apic_sdt->signature);
 
 
-    //acpi_print_sdt((sdt*)apic_sdt);
+    //xprintf("apic sdt addr: 0x%x\n", apic_sdt);
+    //acpi_print_sdt((sdt*)rsdt);
     
     
-    madt_entries_get(apic_sdt);
+    //madt_entries_get(apic_sdt);
+
+    /*
 
     for(int i = 0; (*madt_entry_type1_ptr[i]).entry_type == 1; i++)
-    {
+    { 
         //if((*madt_entry_type1_ptr[i]).io_apic_id != (*madt_entry_type1_ptr[i - 1]).io_apic_id)
         {
             xprintf("entry type: 0x%x\n", (*madt_entry_type1_ptr[i]).entry_type);
@@ -77,7 +88,10 @@ void _start(void)
         }
     }
 
-    
+    */
+    xprintf("ff: 0x%x\n", *(uint16_t*)0x40e);
+    xprintf("ugabnuga: 0x%x\n", acpi_rsdp_checksum_check(rsdp));
+
 
     while(KeyInfo.scan_code != ENTER);
 
@@ -132,7 +146,7 @@ void _start(void)
     xprintf("%z     _/  _/      _/_/_/  _/_/_/        _/_/_/    _/    _/  _/              \n", set_output_color(logo_back_color, logo_front_color));
     xprintf("%z      _/      _/    _/  _/    _/  _/  _/    _/  _/    _/    _/_/           \n", set_output_color(logo_back_color, logo_front_color));
     xprintf("%z   _/  _/    _/    _/  _/    _/  _/  _/    _/  _/    _/        _/%z  version 22.05v\n",set_output_color(logo_back_color, logo_front_color), set_output_color(black,white) );
-    xprintf("%z_/      _/    _/_/_/  _/    _/  _/  _/    _/    _/_/    _/_/_/ %z  %s %i:%i:%i\n\n\n", set_output_color(logo_back_color, logo_front_color), set_output_color(black,white), daysLUT[Time.weekday], Time.hour, Time.minutes, Time.seconds);                                       
+    xprintf("%z_/      _/    _/_/_/  _/    _/  _/  _/    _/    _/_/    _/_/_/ %z%s %i:%i:%i\n\n\n", set_output_color(logo_back_color, logo_front_color), set_output_color(black,white), daysLUT[Time.weekday], Time.hour, Time.minutes, Time.seconds);                                       
 
 
     Screen.cursor[8][0] = (uint16_t)('>' | ((black << 4) | white) << 8);

@@ -16,7 +16,9 @@ void load(char* address_string)
 
     for(int i = 0; i < 28; i++)
     {
-        for(int j = 0; j < 26; j++)
+        (i * 16) >= 0x100 ? xprintf("0x%X:", i * 16) : xprintf("0x%X: ", i * 16);
+        
+        for(int j = 0; j < 16; j++)
         {
             xprintf(" %mX", data_pointer[ (16 * i) + j]);
         }

@@ -134,6 +134,14 @@ vesa_mode: dw 0x0
 disk_num: dw 0x0
 str: db "ERROR your computer doesnt support fully int13 xaninOS cant be loaded",0
 
+times (0x10 - ( $ - $$ ) % 0x10 ) db 0x00
+
+xanin_information_block: 
+    signature: db "XANIN_INFO"
+    base: dd $
+    
+
+
 times 510 - ($-$$) db 0x0
 
 dw 0xaa55
