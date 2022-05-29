@@ -65,31 +65,56 @@ void _start(void)
 
     //acpi_print_rsdp();
     
+
+    xprintf("%z--------------------\n",set_output_color(black,green));
     
     xprintf("CHECKSUM CHECK RSDP: ");
-    1 == acpi_rsdp_checksum_check(rsdp) ? xprintf("%zVALID", set_output_color(green,white)) : xprintf("%zVALID", set_output_color(red,white));
-    xprintf("\n");
+    1 == acpi_rsdp_checksum_check(rsdp) ? xprintf("%zVALID", set_output_color(green,white)) : xprintf("%zINVALID", set_output_color(red,white));
+    xprintf("\nRSDP address: 0x%x\n", rsdp);
+
 
     //while(1);
 
     rsdt = rsdp->rsdt_address;
 
+    xprintf("%z--------------------\n",set_output_color(black,green));
+
     xprintf("CHECKSUM CHECK RSDT: ");
-    1 == acpi_rsdt_checksum_check(rsdt) ? xprintf("%zVALID", set_output_color(green,white)) : xprintf("%zVALID", set_output_color(red,white));
-    xprintf("\n");
+    1 == acpi_rsdt_checksum_check(rsdt) ? xprintf("%zVALID", set_output_color(green,white)) : xprintf("%zINVALID", set_output_color(red,white));
+    xprintf("\nRSDT address: 0x%x\n", rsdt);
 
 
 
-    //apic_sdt = apic_sdt_find();
+    apic_sdt = apic_sdt_find();
 
-    //xprintf("ACPI APIC: %s\n", apic_sdt->signature);
+
+    xprintf("%z--------------------\n",set_output_color(black,green));
+
+    xprintf("CHECKSUM CHECK MADT: ");
+    1 == acpi_rsdt_checksum_check(rsdt) ? xprintf("%zVALID", set_output_color(green,white)) : xprintf("%zINVALID", set_output_color(red,white));
+    xprintf("\nMADT address: 0x%x\n", rsdt);
+
+    madt_entries_get(apic_sdt);
+
+
+    xprintf("%z--------------------\n",set_output_color(black,green));
+    xprintf("YOUR IOAPIC\n");
+    for(int i = 0; (*madt_entry_type1_ptr[i]).entry_type == 1 && (*madt_entry_type1_ptr[i]).length == 0xC; i++)
+    {        
+        xprintf("ENTRY_TYPE     0x%x\n", (*madt_entry_type1_ptr[i]).entry_type);
+        xprintf("ENTRY LENGTH   0x%x\n", (*madt_entry_type1_ptr[i]).length);        
+        xprintf("ID             0x%x\n", (*madt_entry_type1_ptr[i]).io_apic_id);
+        xprintf("RES            0x%x\n", (*madt_entry_type1_ptr[i]).reserved);
+        xprintf("IOAPIC BASE    0x%x\n", i, (*madt_entry_type1_ptr[i]).io_apic_base);
+        xprintf("GSIB           0x%x\n", (*madt_entry_type1_ptr[i]).global_system_int_table);
+    }
+    xprintf("%z--------------------\n",set_output_color(black,green));
 
 
     //xprintf("apic sdt addr: 0x%x\n", apic_sdt);
     //acpi_print_sdt((sdt*)rsdt);
     
     
-    //madt_entries_get(apic_sdt);
 
     /*
 
@@ -126,35 +151,10 @@ void _start(void)
 
 
     xin_init_fs();
-    
 
 
-    screen_clear();
-
-    char* omgtmp = (char*)pmmngr_alloc_block();
-    xprintf("block test: 0x%x\n", omgtmp);
-    //while(1);
-    
-    pmmngr_free_block(omgtmp);
-
-    //0x7000
-    omgtmp = (char*)realloc(omgtmp, 0, 4096 + 512);
-    xprintf("block test: 0x%x\n", omgtmp);
-
-    //0x9000
-    omgtmp = (char*)pmmngr_alloc_block();
-    xprintf("block test: 0x%x\n", omgtmp);
-
-
-    //mouse_install();
-
-
-    xprintf("apic: 0x%x", *(uint32_t*)0xFEE000F0);
-
-    screen_clear();
-
-
-    tuiInit:
+    while(1)
+    {
 
 
     screen_clear();
@@ -165,7 +165,7 @@ void _start(void)
     xprintf("%z     _/  _/      _/_/_/  _/_/_/        _/_/_/    _/    _/  _/              \n", set_output_color(logo_back_color, logo_front_color));
     xprintf("%z      _/      _/    _/  _/    _/  _/  _/    _/  _/    _/    _/_/           \n", set_output_color(logo_back_color, logo_front_color));
     xprintf("%z   _/  _/    _/    _/  _/    _/  _/  _/    _/  _/    _/        _/%z  version 22.05v\n",set_output_color(logo_back_color, logo_front_color), set_output_color(black,white) );
-    xprintf("%z_/      _/    _/_/_/  _/    _/  _/  _/    _/    _/_/    _/_/_/ %z%s %i:%i:%i\n\n\n", set_output_color(logo_back_color, logo_front_color), set_output_color(black,white), daysLUT[Time.weekday], Time.hour, Time.minutes, Time.seconds);                                       
+    xprintf("%z_/      _/    _/_/_/  _/    _/  _/  _/    _/    _/_/    _/_/_/      %z%s %i:%i:%i\n\n\n", set_output_color(logo_back_color, logo_front_color), set_output_color(black,white), daysLUT[Time.weekday], Time.hour, Time.minutes, Time.seconds);                                       
 
 
     Screen.cursor[8][0] = (uint16_t)('>' | ((black << 4) | white) << 8);
@@ -190,11 +190,15 @@ void _start(void)
             app_exited = false;
             for(int i = 0; i < sizeof(command_buffer); i++)
                 keyboard_command[i] = '\0';
-            goto tuiInit;
+            break;
         }
         
         scan();
 
     }
+
+    }
+
+
 
 }

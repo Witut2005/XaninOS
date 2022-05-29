@@ -28,8 +28,6 @@ bool acpi_rsdt_checksum_check(acpi_rsdt *header)
 
     return sum == 0;
 
-
-
 }
 
 
@@ -82,12 +80,12 @@ void acpi_print_sdt(sdt *x)
     xprintf("revision         : 0x%x\n", x->revision);
     xprintf("checksum         : 0x%x\n", x->checksum);
 
-    xprintf("rsdt oemid       : ");
+    xprintf("oemid       : ");
     for (int i = 0; i < 6; i++)
         xprintf("%c", x->oemid[i]);
     xprintf("\n");
 
-    xprintf("rsdt oem table id: ");
+    xprintf("oem table id: ");
     for (int i = 0; i < 8; i++)
         xprintf("%c", x->oem_table_id[i]);
     xprintf("\n");
@@ -103,7 +101,7 @@ apic_sdt_entry *apic_sdt_find(void)
     char *tmp = (uint8_t *)rsdt->pointer_to_sdt[0];
 
     while (1)
-        if (strncmp(tmp, "APIC", 4) && !strncmp(tmp, "APICx", 5))
+        if (strncmp(tmp, "APIC", 4))// && !strncmp(tmp, "APICx", 5))
             return (apic_sdt_entry *)tmp;
         else
             tmp++;
@@ -120,9 +118,7 @@ void madt_entries_get(apic_sdt_entry *apic_entry)
     madt_entry_type5_ptr = malloc(sizeof(madt_entry_type5) * 10);
     madt_entry_type9_ptr = malloc(sizeof(madt_entry_type9) * 10);
 
-    uint8_t *tmp = nullptr; //(uint8_t*)&apic_entry->entry_type;
-
-    xprintf("lolek: 0x%x\n", tmp);
+    uint8_t *tmp = (uint8_t*)(apic_entry) + 0x2C;
 
     for (int i = 0; i < 0x10; tmp += *(tmp + 1), i++)
     {
@@ -171,38 +167,16 @@ void madt_entries_get(apic_sdt_entry *apic_entry)
     }
 }
 
-/*
 
-
-uint8_t lapic_ids[256]={0}; // CPU core Local APIC IDs
-uint8_t numcore=0;          // number of cores detected
-uint64_t lapic_ptr=0;       // pointer to the Local APIC MMIO registers
-uint64_t ioapic_ptr=0;      // pointer to the IO APIC MMIO registers
-
-void detect_cores(uint8_t *rsdt)
+uint8_t madt_checksum_check(apic_sdt_entry* entry)
 {
-  uint8_t *ptr, *ptr2;
-  uint32_t len;
+    uint8_t* field = (uint8_t*)entry;
+    uint8_t sum = 0;
 
-  // iterate on ACPI table pointers
-  for(len = *((uint32_t*)(rsdt + 4)), ptr2 = rsdt + 36; ptr2 < rsdt + len; ptr2 += rsdt[0]=='X' ? 8 : 4) {
-    ptr = (uint8_t*)(uintptr_t)(rsdt[0]=='X' ? *((uint64_t*)ptr2) : *((uint32_t*)ptr2));
-    if(!memcmp(ptr, "APIC", 4)) {
-      // found MADT
-      lapic_ptr = (uint64_t)(*((uint32_t*)(ptr+0x24)));
-      ptr2 = ptr + *((uint32_t*)(ptr + 4));
-      // iterate on variable length records
-      for(ptr += 44; ptr < ptr2; ptr += ptr[1]) {
-        switch(ptr[0]) {
-          case 0: if(ptr[4] & 1) lapic_ids[numcore++] = ptr[3]; break; // found Processor Local APIC
-          case 1: ioapic_ptr = (uint64_t)*((uint32_t*)(ptr+4)); break;  // found IOAPIC
-          case 5: lapic_ptr = *((uint64_t*)(ptr+4)); break;             // found 64 bit LAPIC
-        }
-      }
-      break;
-    }
-  }
+    for(int i = 0; i < entry->length; i++)
+        sum += field[i];
+    
+
+    return sum == 0;
+
 }
-
-
-*/

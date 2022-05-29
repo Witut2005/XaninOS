@@ -33,10 +33,8 @@ void load(char* address_string)
 
         for(int j = 0; j < 16; j++)
         {
-            xprintf("%c", data_pointer[ (16 * i) + j]);
+            putchar(data_pointer[ (16 * i) + j]);
         }
-
-        
 
         xprintf("\n");
     }

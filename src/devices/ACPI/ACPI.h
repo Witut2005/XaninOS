@@ -78,7 +78,7 @@ uint8_t* madt_entries[0x10];
 struct madt_entry_type0
 {
     uint8_t entry_type;
-    uint8_t record_length;
+    uint8_t length;
 
     uint8_t acpi_processor_id;
     uint8_t apic_id;
@@ -90,7 +90,7 @@ typedef struct madt_entry_type0 madt_entry_type0;
 struct madt_entry_type1
 {
     uint8_t entry_type;
-    uint8_t record_length;
+    uint8_t length;
 
     uint8_t io_apic_id;
     uint8_t reserved;
@@ -103,7 +103,7 @@ typedef struct madt_entry_type1 madt_entry_type1;
 struct madt_entry_type2
 {
     uint8_t entry_type;
-    uint8_t record_length;
+    uint8_t length;
 
     uint8_t bus_source;
     uint8_t irq_source;
@@ -116,7 +116,7 @@ typedef struct madt_entry_type2 madt_entry_type2;
 struct madt_entry_type3
 {
     uint8_t entry_type;
-    uint8_t record_length;
+    uint8_t length;
 
     uint8_t nmi_source;
     uint8_t reserved;
@@ -129,7 +129,7 @@ typedef struct madt_entry_type3 madt_entry_type3;
 struct madt_entry_type4
 {
     uint8_t entry_type;
-    uint8_t record_length;
+    uint8_t length;
 
     uint8_t acpi_processor_id;
     uint16_t flags;
@@ -140,7 +140,7 @@ typedef struct madt_entry_type4 madt_entry_type4;
 struct madt_entry_type5
 {
     uint8_t entry_type;
-    uint8_t record_length;
+    uint8_t length;
 
     uint8_t reserved;
 
@@ -153,7 +153,7 @@ typedef struct madt_entry_type5 madt_entry_type5;
 struct madt_entry_type9
 {
     uint8_t entry_type;
-    uint8_t record_length;
+    uint8_t length;
 
     uint16_t reserved;
     uint32_t x2apic_id;
