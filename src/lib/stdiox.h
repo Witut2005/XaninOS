@@ -14,6 +14,8 @@
 
 #define set_output_color(x,y) (x << 4 | y)
 #define cursor_set_position(x, y) (x << 8 | y)
+#define stderr ( red << 4 | white)
+
 
 #define VRAM VGA_TEXT_MEMORY
 

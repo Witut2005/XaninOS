@@ -2,9 +2,14 @@
 #pragma once
 
 #include <stdint.h>
+#include <lib/colors.h>
+
+#define stderr (white << 4 | red)
+
 
 extern "C"
 {
+
 
 void screen_clear(void);
 char putchar(char character);

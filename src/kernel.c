@@ -18,7 +18,8 @@
 #include <lib/assert.h>
 #include <lib/alloc.h>
 #include <devices/APIC/apic_registers.h>
-#include <devices/APIC/apic.c>
+#include <devices/APIC/apic.h>
+#include <devices/IOAPIC/ioapic.h>
 
 extern void v86_mode_enter(void);
 extern void mouse_enable(void);
@@ -99,16 +100,27 @@ void _start(void)
 
     xprintf("%z--------------------\n",set_output_color(black,green));
     xprintf("YOUR IOAPIC\n");
-    for(int i = 0; (*madt_entry_type1_ptr[i]).entry_type == 1 && (*madt_entry_type1_ptr[i]).length == 0xC; i++)
+    for(int i = 0; (*madt_entry_type1_ptr[i]).entry_type == 1; i++)
     {        
-        xprintf("ENTRY_TYPE     0x%x\n", (*madt_entry_type1_ptr[i]).entry_type);
-        xprintf("ENTRY LENGTH   0x%x\n", (*madt_entry_type1_ptr[i]).length);        
-        xprintf("ID             0x%x\n", (*madt_entry_type1_ptr[i]).io_apic_id);
-        xprintf("RES            0x%x\n", (*madt_entry_type1_ptr[i]).reserved);
-        xprintf("IOAPIC BASE    0x%x\n", i, (*madt_entry_type1_ptr[i]).io_apic_base);
-        xprintf("GSIB           0x%x\n", (*madt_entry_type1_ptr[i]).global_system_int_table);
+        if((*madt_entry_type1_ptr[i]).length == 0xC)
+        {
+            xprintf("ENTRY_TYPE     0x%x\n", (*madt_entry_type1_ptr[i]).entry_type);
+            xprintf("ENTRY LENGTH   0x%x\n", (*madt_entry_type1_ptr[i]).length);        
+            xprintf("ID             0x%x\n", (*madt_entry_type1_ptr[i]).io_apic_id);
+            xprintf("RES            0x%x\n", (*madt_entry_type1_ptr[i]).reserved);
+            xprintf("IOAPIC BASE    0x%x\n", (*madt_entry_type1_ptr[i]).io_apic_base);
+            xprintf("GSIB           0x%x\n", (*madt_entry_type1_ptr[i]).global_system_int_table);
+            ioapic_init((*madt_entry_type1_ptr[i]).io_apic_base);
+            
+            xprintf("0x%x\n", ioapic_read(1));
+
+
+            break;
+
+        }
     }
     xprintf("%z--------------------\n",set_output_color(black,green));
+
 
 
     //xprintf("apic sdt addr: 0x%x\n", apic_sdt);

@@ -56,9 +56,10 @@ alias xanincpp='i386-elf-g++ -O0 -masm=intel -Wno-builtin-declaration-mismatch -
 xanincpp ./chip8/chip8.cpp  -o ./chip8/chip8.o
 xanincpp ./devices/APIC/apic.cpp  -o ./devices/APIC/apic.o
 xanincpp ./test/cpp_test.cpp  -o ./test/cpp_test.o
+xanincpp ./devices/IOAPIC/ioapic.cpp -o ./devices/IOAPIC/ioapic.o
 
 i386-elf-gcc -O0 -masm=intel -Wno-discarded-qualifiers -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-int-conversion -Wno-unused-function -Wno-div-by-zero -I /home/witut/Desktop/xaninOS/src \
-kernel.c ./handlers/keyboard.o ./pit/pit.o ./syscall/syscall.o ./test/cpp_test.o ./devices/MOUSE/mouse.o ./devices/APIC/apic.o -o kernel.bin
+kernel.c ./handlers/keyboard.o ./pit/pit.o ./syscall/syscall.o ./test/cpp_test.o ./devices/MOUSE/mouse.o ./devices/APIC/apic.o ./devices/IOAPIC/ioapic.o -o kernel.bin
 
 cat ./xaninApps/shutdown ./xaninApps/reboot ./xaninApps/syscall_test ./devices/HARD_DISK/load_kernel > ./xaninApps/xanin_external_apps
 
