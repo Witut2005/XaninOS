@@ -55,6 +55,7 @@
 #include <xin_fs/xin_paint.c>
 
 #include <xaninApps/file_system/xin_info.c>
+#include <elf/elf_loader.c>
 
 extern void cpp_test(void);
 

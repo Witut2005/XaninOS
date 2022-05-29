@@ -20,7 +20,7 @@ void keyboard_driver(uint8_t scanCode)
 
     switch(KeyInfo.scan_code)
     {
-        case LSHIFT: {KeyInfo.is_shift = true; break;}
+        case LSHIFT: {KeyInfo.is_shift = true; KeyInfo.character = '\0'; break;}
         case LSHIFT_RELEASE: {KeyInfo.is_shift = false; break;}
         case BSPC: 
         {
@@ -130,10 +130,9 @@ void keyboard_driver(uint8_t scanCode)
     {
         keyboard_handle();
     }
-
-    return;
-          
-    
+        
+    if(KeyInfo.scan_code == LSHIFT || KeyInfo.scan_code == CAPS)
+        KeyInfo.character = '\0';
 }
 
 

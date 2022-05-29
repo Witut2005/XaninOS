@@ -61,9 +61,11 @@ xanincpp ./devices/IOAPIC/ioapic.cpp -o ./devices/IOAPIC/ioapic.o
 i386-elf-gcc -O0 -masm=intel -Wno-discarded-qualifiers -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-int-conversion -Wno-unused-function -Wno-div-by-zero -I /home/witut/Desktop/xaninOS/src \
 kernel.c ./handlers/keyboard.o ./pit/pit.o ./syscall/syscall.o ./test/cpp_test.o ./devices/MOUSE/mouse.o ./devices/APIC/apic.o ./devices/IOAPIC/ioapic.o -o kernel.bin
 
-cat ./xaninApps/shutdown ./xaninApps/reboot ./xaninApps/syscall_test ./devices/HARD_DISK/load_kernel > ./xaninApps/xanin_external_apps
+cat ./xaninApps/shutdown ./elf/testc > ./xaninApps/xanin_external_apps
+
 
 dd if=./xaninApps/xanin_external_apps of=./xaninApps/xanin_apps_space bs=512 count=16 conv=notrunc
+
 
 cat ./boot/boot ./lib/enter_real_mode ./xaninApps/xanin_apps_space ./xin_fs/xin_pointers ./xin_fs/entries_table ./boot/kernelLoader kernel.bin > xanin.bin
 

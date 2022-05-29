@@ -48,6 +48,11 @@ void scan(void)
         epilepsy();
     }    
 
+    else if(strcmp(program_name,"elft"))
+    {
+        elfreader(program_parameters);
+    }
+
     else if(strcmp(program_name, "mouse"))
     {
         xprintf("11111111111111");

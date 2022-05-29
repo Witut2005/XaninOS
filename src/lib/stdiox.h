@@ -548,6 +548,11 @@ void xscanf(char* str, ... )
             letters_refresh(&Screen.cursor[Screen.y][Screen.x]);
         }
 
+        else if(KeyInfo.scan_code == LSHIFT)
+        {
+            goto start;
+        }
+
         else if(KeyInfo.scan_code == ARROW_RIGHT || KeyInfo.scan_code == ARROW_LEFT)
         {
             

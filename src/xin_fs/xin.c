@@ -196,12 +196,8 @@ xin_entry *xin_init_fs(void)
     xin_file_create_at_address("/tmp.bin",                  0x0, 0x0, XIN_READ_ONLY, 0x0, 0x0, PERMISSION_MAX, 0x80,0x1,    XIN_FILE, 5);
     xin_file_create_at_address("/shutdown.bin",             0x0, 0x0, XIN_READ_ONLY, 0x0, 0x0, PERMISSION_MAX, 0x81,0x1,    XIN_FILE, 6);
     xin_file_create_at_address("/reboot.bin",               0x0, 0x0, XIN_READ_ONLY, 0x0, 0x0, PERMISSION_MAX, 0x82,0x1,    XIN_FILE, 7);
-    xin_file_create_at_address("/syscall_test.bin",         0x0, 0x0, XIN_READ_ONLY, 0x0, 0x0, PERMISSION_MAX, 0x82,0x1,    XIN_FILE, 8);
-    xin_file_create_at_address("/test_disk.bin",            0x0, 0x0, XIN_READ_ONLY, 0x0, 0x0, PERMISSION_MAX, 0x83,0x1,    XIN_FILE, 9);
-    xin_file_create_at_address("/test_disk2.bin",            0x0, 0x0, XIN_READ_ONLY, 0x0, 0x0, PERMISSION_MAX, 0x83,0x1,    XIN_FILE, 0xa);
-    xin_file_create_at_address("/test_disk3.bin",            0x0, 0x0, XIN_READ_ONLY, 0x0, 0x0, PERMISSION_MAX, 0x83,0x1,    XIN_FILE, 0xb);    xin_file_create_at_address("/test_disk.bin",            0x0, 0x0, XIN_READ_ONLY, 0x0, 0x0, PERMISSION_MAX, 0x83,0x1,    XIN_FILE, 9);
-    xin_file_create_at_address("/test_disk2.bin",            0x0, 0x0, XIN_READ_ONLY, 0x0, 0x0, PERMISSION_MAX, 0x83,0x1,    XIN_FILE, 0xa);
-    xin_file_create_at_address("/test_disk3.bin",            0x0, 0x0, XIN_READ_ONLY, 0x0, 0x0, PERMISSION_MAX, 0x83,0x1,    XIN_FILE, 0xb);
+    xin_file_create_at_address("/elf.bin",                  0x0, 0x0, XIN_READ_ONLY, 0x0, 0x0, PERMISSION_MAX, 0x82,0x1,    XIN_FILE, 8);
+
 
     
 
