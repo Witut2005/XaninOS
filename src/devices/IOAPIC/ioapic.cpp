@@ -33,14 +33,21 @@ uint32_t InOutAdvancedProgrammableInterruptContoller::register_read(uint8_t offs
     switch(offset)
     {
         case 0 ... 2:
+        {
             *ioregsel = offset;
             break;
+        }
+
         case 0x10 ... 0x3F:
+        {
             *ioregsel = offset;
             break;
+        }
         default:
+        {
             xprintf("%zIOAPIC BAD REGISTER SELECTED\n", stderr);
             return 0xFFFFFFFF;
+        }
     }
 
     return *iowin;

@@ -137,8 +137,8 @@ mov eax, [esi + 0]
 cmp eax, 1  ; If it's not PT_LOAD, ignore.
 jne .next
 
-push dword [esi + 0x4]    ; p_offset GIT
-push dword [esi + 0x8]    ; p_vaddr GIT
+push dword [esi + 0x4]    ; p_offset 
+push dword [esi + 0x8]    ; p_vaddr 
 push dword [esi + 0x10]   ; p_filesz
 push dword [esi + 0x14]   ; p_memsz
 
@@ -159,10 +159,11 @@ rep stosb
 
 ; Copy segment
 
-mov esi,[esp + 0xc]
-lea esi,[kernel + esi]
-mov edi, [esp + 0x8]
-mov ecx, [esp + 0x4]
+mov esi,[esp + 0xc]     
+lea esi,[kernel + esi]     ;p_offset
+
+mov edi, [esp + 0x8]       ;p_vaddr
+mov ecx, [esp + 0x4]       ;p_filesz
 rep movsb
 
 ; Restore

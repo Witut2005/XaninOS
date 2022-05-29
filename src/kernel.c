@@ -20,6 +20,7 @@
 #include <devices/APIC/apic_registers.h>
 #include <devices/APIC/apic.h>
 #include <devices/IOAPIC/ioapic.h>
+#include <elf/elf_loader.c>
 
 extern void v86_mode_enter(void);
 extern void mouse_enable(void);
