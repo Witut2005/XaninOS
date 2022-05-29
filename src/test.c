@@ -4,9 +4,9 @@
 
 void _start()
 {
-    int x = 1234;
-    
-    x = 10 / 0;
 
+    int x;
+    x = x + 10;
+    asm("int 0x50");
 
 }

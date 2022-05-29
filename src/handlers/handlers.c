@@ -38,7 +38,7 @@ void invalid_opcode(void)
 void divide_by_zero_exception(void)
 {
     screen_clear();
-    xprintf("\n%DIVIDE BY ZERO ERROR",set_output_color(red,white));
+    xprintf("\n%zDIVIDE BY ZERO ERROR",set_output_color(red,white));
     reg_dump();
     asm("cli");
     asm("hlt");
@@ -220,6 +220,14 @@ void virtualization_exception(void)
     reg_dump();
     asm("cli");
     asm("hlt");
+}
+
+void elf_correctly_loaded(void)
+{
+    xprintf("\n%zELF loaded", set_output_color(black,green));
+    eoi_send();
+    asm("sti");
+    return;
 }
 
 void control_protection_exception(void)

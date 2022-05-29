@@ -62,11 +62,13 @@ void elf_load(xin_entry* file)
             p_filesz = *(uint32_t*)((uint8_t*)data + 0x10);
             p_memsz  = *(uint32_t*)((uint8_t*)data + 0x14);
 
+            /*
             xprintf("0x%x\n", p_offset);
             xprintf("0x%x\n", p_vaddr);
             xprintf("0x%x\n", p_filesz);
             xprintf("0x%x\n", p_memsz);
             xprintf("%z-----------\n", set_output_color(black,green));
+            */
 
 
             read_from_file = p_offset;
@@ -88,10 +90,11 @@ void elf_load(xin_entry* file)
 
     xprintf("LOAD IN FILE: %d\n", load_sum);
     
-    void(*tmp)(void);
-    tmp = entry_point;
+    void(*tmp)(void) = entry_point;
 
     tmp();
+
+    //msleep(10);
 
     while(inputg().scan_code != ENTER);
 
