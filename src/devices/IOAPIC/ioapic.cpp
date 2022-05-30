@@ -53,3 +53,14 @@ uint32_t InOutAdvancedProgrammableInterruptContoller::register_read(uint8_t offs
     return *iowin;
 
 }
+
+
+uint32_t InOutAdvancedProgrammableInterruptContoller::id_get()
+{   
+    return this->register_read(ioapicid);
+}
+
+uint32_t InOutAdvancedProgrammableInterruptContoller::version_get()
+{
+    return this->register_read(ioapicver);
+}

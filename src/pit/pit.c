@@ -44,12 +44,12 @@ void set_pit_divisor(uint16_t divisor_value)
 void set_pit()
 {
 
-    asm("cli");
+    interrupt_disable();
     pitActive = false; 
     outbIO(PIC1_DATA_REG, 0xFC); // pit irq on
     //outbIO(PIT_MODE_COMMAND_REGISTER,0x30);
     set_pit_divisor(0x8000);
-    asm("sti");
+    interrupt_enable();
 }
 
 float pit_time = 0x0;

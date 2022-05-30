@@ -3,7 +3,7 @@
 #include <stdint.h>
 #include <lib/hal.h>
 #include <handlers/handlers.c>
-#include <keyboard/keyMap.h>
+#include <keyboard/key_map.h>
 #include <syscall/syscall.c>
 #include <devices/MOUSE/mouse.c>
 
@@ -91,7 +91,7 @@ void set_idt(void)
     };
 
     /* load IDT Register with proper struct */
-    asm("sti");
+    interrupt_enable();
     asm("lidt %0" : : "m"(idtr));
 
 

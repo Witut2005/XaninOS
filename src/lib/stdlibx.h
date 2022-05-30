@@ -78,7 +78,7 @@ char* keyboard_buffer_refresh(uint16_t* screen_buffer)
 
 void time_get(void)
 {
-    asm("cli");
+    interrupt_disable();
 
 
     //GET SECONDS
@@ -132,7 +132,7 @@ void time_get(void)
     outbIO(CMOS_ADDR,0x32);
     Time.century = inbIO(CMOS_DATA);
 
-    asm("sti");
+    interrupt_enable();
 }
 
 uint8_t floppy_type_get_cmos(void)

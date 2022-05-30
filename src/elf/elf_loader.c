@@ -12,24 +12,27 @@ enum ELF_FIELD
     PT_LOAD = 0x1
 };
 
-bool elf_check_magic(xin_entry* file)
+bool elf_check_magic(uint8_t* data)
 {
-    char tmp[4];
-    read(file, tmp, 4);
-    return strncmp(tmp + 1, "ELF", 3) && tmp[0] == 0x7F;
+    return strncmp(data + 1, "ELF", 3) && data[0] == 0x7F;
 }
 
-bool elf_check_arch(xin_entry* file)
+bool elf_check_arch(uint8_t* file)
 {
     uint16_t tmp;
-    fseek(file, 0x12);
-    read(file, &tmp, 2);
+
+    tmp = file[0];
+    tmp += file[1] << 8;
+
     return tmp == X86_E_MACHINE;
+
 }
 
 void elf_load(xin_entry* file)
 {
     uint8_t* data = file->starting_sector * SECTOR_SIZE;
+
+    
     uint8_t* write_to_memory;
     uint8_t* read_from_file;
     uint32_t file_base = file->starting_sector * SECTOR_SIZE;
@@ -42,16 +45,30 @@ void elf_load(xin_entry* file)
     uint32_t p_memsz;       //size in bytes of segment in memory
     uint32_t entry_point = *(uint32_t*)((uint8_t*)data + 0x18);
 
+
+    if(!elf_check_magic(data))
+    {
+        xprintf("%zBAD MAGIC\n", stderr);
+        while(inputg().scan_code != ENTER);
+        return;
+    }
+
+    if(!elf_check_arch(data + 0x12))
+    {
+        xprintf("%zBAD ARCH\n", stderr);
+        while(inputg().scan_code != ENTER);
+        return;
+    }
+
     data += ELF_HEADER_SIZE;
 
 
     uint32_t load_sum = 0;
 
+
     while(phnum)
     {
         
-        
-
         if(*(uint32_t*)data == PT_LOAD)
         {
 
@@ -62,30 +79,18 @@ void elf_load(xin_entry* file)
             p_filesz = *(uint32_t*)((uint8_t*)data + 0x10);
             p_memsz  = *(uint32_t*)((uint8_t*)data + 0x14);
 
-            /*
-            xprintf("0x%x\n", p_offset);
-            xprintf("0x%x\n", p_vaddr);
-            xprintf("0x%x\n", p_filesz);
-            xprintf("0x%x\n", p_memsz);
-            xprintf("%z-----------\n", set_output_color(black,green));
-            */
-
-
             read_from_file = p_offset;
             write_to_memory = p_vaddr;
 
         
-        for(int i = 0; i < p_filesz; i++, write_to_memory++, read_from_file++)
-            *write_to_memory = *read_from_file;
-            
-        
+            for(int i = 0; i < p_filesz; i++, write_to_memory++, read_from_file++)
+                *write_to_memory = *read_from_file;
+                    
         }
 
         data += 0x20;
         phnum--;
         
-
-
     }
 
     xprintf("LOAD IN FILE: %d\n", load_sum);
@@ -94,10 +99,7 @@ void elf_load(xin_entry* file)
 
     tmp();
 
-    //msleep(10);
-
     while(inputg().scan_code != ENTER);
-
 
 }
 

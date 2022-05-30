@@ -136,8 +136,6 @@ void xin_paint(char* file_name)
 {
     screen_clear();
 
-    //keyboard_handle = paint_input;
-
 
     xin_entry* xin_file = fopen(file_name, "rw");
 
@@ -157,10 +155,8 @@ void xin_paint(char* file_name)
 
 
         for(int i = 0;  i < (VGA_SCREEN_RESOLUTION / 2); i++)
-        {
             bruh_moment[i] = (uint16_t)(' ' | ((data_pointer[i+1]) << 8));
-        }
-       
+        
         Screen.x = 0x0;
         Screen.y = 0x0;
 
@@ -172,18 +168,16 @@ void xin_paint(char* file_name)
 
         data_pointer = (char*)(xin_file->starting_sector * SECTOR_SIZE);
 
-        //if(xin_file->os_specific != XIN_READ_ONLY)
+        
+        uint8_t* screen_ptr = (uint8_t*)VGA_TEXT_MEMORY;
+
+        for(int i = 0; i < VGA_SCREEN_RESOLUTION; i++, screen_ptr += 2)
         {
-
-            uint8_t* screen_ptr = (uint8_t*)VGA_TEXT_MEMORY;
-
-            for(int i = 0; i < VGA_SCREEN_RESOLUTION; i++, screen_ptr += 2)
-            {
-                //fseek(xin_file, i);
-                write(xin_file, screen_ptr + 1, 1);
-            }
-            xin_file->entry_size = file_data_counter;
+            write(xin_file, screen_ptr + 1, 1);
         }
+        
+        xin_file->entry_size = file_data_counter;
+        
 
     }
 

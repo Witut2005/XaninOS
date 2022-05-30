@@ -20,6 +20,15 @@ void outdIO(uint16_t port,uint32_t eax)
     asm("out dx,eax" :: "d" (port), "a"(eax));
 }
 
+void interrupt_disable(void)
+{
+    asm("cli");
+}
+
+void interrupt_enable(void)
+{
+    asm("sti");
+}
 
 uint8_t inbIO(uint16_t port)
 {

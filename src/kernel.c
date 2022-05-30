@@ -7,7 +7,7 @@
 #include <terminal/vty.c>
 #include <terminal/interpreter.c>
 #include <lib/math.h>
-#include <keyboard/keyboardInit.c>
+#include <keyboard/keyboard_init.c>
 #include <devices/PCI/pci.c>
 #include <devices/ACPI/ACPI.c>
 #include <devices/USB/usb.c>
@@ -34,14 +34,14 @@ extern void mouse_enable(void);
 void _start(void)
 {
     
-    asm("cli");    //disable interrupts while IDT is not configured
+    interrupt_disable();            //disable interrupts while IDT is not configured
 
     disable_cursor();
     screen_clear();
 
 
     set_idt();
-    screen_init(); //init screen management system
+    screen_init();                  //init screen management system
 
     pmmngr_init(0x200000, 0xF00000);
     pmmngr_init_region(0x200000, 0xFFFFFF);
@@ -50,7 +50,6 @@ void _start(void)
     
 
     time_get();
-    //mouse_install();
    
     keyboard_init();
     set_pit();
@@ -61,12 +60,7 @@ void _start(void)
     
     
     rsdp = get_acpi_rsdp_address_base();
-    
-    //xprintf("RSDP: 0x%x\n", rsdp);
 
-
-    //acpi_print_rsdp();
-    
 
     xprintf("%z--------------------\n",set_output_color(black,green));
     
@@ -86,9 +80,7 @@ void _start(void)
     xprintf("\nRSDT address: 0x%x\n", rsdt);
 
 
-
     apic_sdt = apic_sdt_find();
-
 
     xprintf("%z--------------------\n",set_output_color(black,green));
 
@@ -112,42 +104,12 @@ void _start(void)
             xprintf("IOAPIC BASE    0x%x\n", (*madt_entry_type1_ptr[i]).io_apic_base);
             xprintf("GSIB           0x%x\n", (*madt_entry_type1_ptr[i]).global_system_int_table);
             ioapic_init((*madt_entry_type1_ptr[i]).io_apic_base);
-            
-            xprintf("0x%x\n", ioapic_read(1));
-
-
             break;
-
         }
     }
     xprintf("%z--------------------\n",set_output_color(black,green));
 
-
-
-    //xprintf("apic sdt addr: 0x%x\n", apic_sdt);
-    //acpi_print_sdt((sdt*)rsdt);
-    
-    
-
-    /*
-
-    for(int i = 0; (*madt_entry_type1_ptr[i]).entry_type == 1; i++)
-    { 
-        //if((*madt_entry_type1_ptr[i]).io_apic_id != (*madt_entry_type1_ptr[i - 1]).io_apic_id)
-        {
-            xprintf("entry type: 0x%x\n", (*madt_entry_type1_ptr[i]).entry_type);
-            xprintf("int: 0x%x\n", (*madt_entry_type1_ptr[i]).global_system_int_table);
-        }
-    }
-
-    
-    xprintf("ff: 0x%x\n", *(uint16_t*)0x40e);
-    xprintf("ugabnuga: 0x%x\n", acpi_rsdp_checksum_check(rsdp));
-
-    */
-
     uint8_t* xanin_info_ptr = xanin_information_block_get();
-
 
 
     while(KeyInfo.scan_code != ENTER);
@@ -182,33 +144,30 @@ void _start(void)
 
 
     Screen.cursor[8][0] = (uint16_t)('>' | ((black << 4) | white) << 8);
-    Screen.x = 1;
-    Screen.y = 8;
-    character_blocked = '>';
+    Screen.x            = 1;
+    Screen.y            = 8;
+    character_blocked   = '>';
 
-    KeyInfo.scan_code = 0x0;
-    KeyInfo.character = 0x0;
+    KeyInfo.scan_code   = 0x0;
+    KeyInfo.character   = 0x0;
 
-    app_exited = false;
-    arrows_navigate = true;
+    app_exited          = false;
+    arrows_navigate     = true;
 
 
     //keyboard_handle = terminal_keyboard;
 
-    while(1)
-    {
-
-        if(app_exited)
+        while(1)
         {
-            app_exited = false;
-            for(int i = 0; i < sizeof(command_buffer); i++)
-                keyboard_command[i] = '\0';
-            break;
-        }
-        
-        scan();
-
-    }
+            if(app_exited)
+            {
+                app_exited = false;
+                for(int i = 0; i < sizeof(command_buffer); i++)
+                    keyboard_command[i] = '\0';
+                break;
+            }
+            scan();
+        }   
 
     }
 

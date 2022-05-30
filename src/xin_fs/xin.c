@@ -136,8 +136,6 @@ void xin_file_create_at_address(char *path, uint8_t creation_date, uint8_t creat
     entry_created->entry_size = entry_size;
     entry_created->starting_sector = starting_sector;
 
-    // entry_size--;
-
     uint8_t *write_entry = (uint8_t *)(XIN_ENTRY_POINTERS + starting_sector);
 
     uint8_t tmp = 0;
@@ -150,16 +148,7 @@ void xin_file_create_at_address(char *path, uint8_t creation_date, uint8_t creat
 
     *(write_entry + entry_size - 1) = XIN_EOF;
 
-    /*
-
-    xprintf("SIZE: %d\n", entry_size);
-
-    xprintf("BEG ADDR: %x\n", write_entry);
-    xprintf("ADDR: %x\n", (write_entry + entry_size - 1));
-    xprintf("TMP %d\n", tmp);
-
-    */
-
+    
 }
 
 void xin_folder_create(char *path, uint8_t creation_date, uint8_t creation_time, uint16_t os_specific,
@@ -171,7 +160,6 @@ void xin_folder_create(char *path, uint8_t creation_date, uint8_t creation_time,
 
     entry_created->creation_date = creation_date;
     entry_created->creation_time = creation_time;
-    //entry_created->os_specific = os_specific;
     entry_created->modification_date = modification_date;
     entry_created->modification_time = modification_time;
     entry_created->entry_permissions = permissions;
@@ -182,24 +170,15 @@ void xin_folder_create(char *path, uint8_t creation_date, uint8_t creation_time,
 xin_entry *xin_init_fs(void)
 {
 
-    //for (uint8_t *i = XIN_ENTRY_POINTERS; (uint32_t)i < XIN_ENTRY_POINTERS + 0x200; i++)
-    //    *i = 0x0;
-
-    //xin_folder_create("/", 0x0, 0x0, 0xFFFF, 0x0, 0x0, PERMISSION_MAX); // FIRST ENTRY
-    
-
-    xin_file_create_at_address("/",                         0x0, 0x0, XIN_READ_ONLY, 0x0, 0x0, PERMISSION_MAX, 0x0, 0x0,    XIN_DIRECTORY, 0);
-    xin_file_create_at_address("/ivt",                      0x0, 0x0, XIN_READ_ONLY, 0x0, 0x0, PERMISSION_MAX, 0x0, 0x3,    XIN_FILE, 1);
-    xin_file_create_at_address("/file_system.bin",          0x0, 0x0, XIN_READ_ONLY, 0x0, 0x0, PERMISSION_MAX, 0x4, 20,     XIN_FILE, 2);
-    xin_file_create_at_address("/enter_real_mode.bin",      0x0, 0x0, XIN_READ_ONLY, 0x0, 0x0, PERMISSION_MAX, 0x3, 0x1,    XIN_FILE, 3);
-    xin_file_create_at_address("/boot.bin",                 0x0, 0x0, XIN_READ_ONLY, 0x0, 0x0, PERMISSION_MAX, 0x3E,0x1,    XIN_FILE, 4);
-    xin_file_create_at_address("/tmp.bin",                  0x0, 0x0, XIN_READ_ONLY, 0x0, 0x0, PERMISSION_MAX, 0x80,0x1,    XIN_FILE, 5);
-    xin_file_create_at_address("/shutdown.bin",             0x0, 0x0, XIN_READ_ONLY, 0x0, 0x0, PERMISSION_MAX, 0x81,0x1,    XIN_FILE, 6);
-    xin_file_create_at_address("/reboot.bin",               0x0, 0x0, XIN_READ_ONLY, 0x0, 0x0, PERMISSION_MAX, 0x82,0x1,    XIN_FILE, 7);
-    xin_file_create_at_address("/elf.bin",                  0x0, 0x0, XIN_READ_ONLY, 0x0, 0x0, PERMISSION_MAX, 0x82,0x1,    XIN_FILE, 8);
-
-
-    
+    xin_file_create_at_address("/",                         0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x0, 0x0,    XIN_DIRECTORY, 0);
+    xin_file_create_at_address("/ivt",                      0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x0, 0x3,    XIN_FILE, 1);
+    xin_file_create_at_address("/file_system.bin",          0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x4, 20,     XIN_FILE, 2);
+    xin_file_create_at_address("/enter_real_mode.bin",      0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x3, 0x1,    XIN_FILE, 3);
+    xin_file_create_at_address("/boot.bin",                 0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x3E,0x1,    XIN_FILE, 4);
+    xin_file_create_at_address("/tmp.bin",                  0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x80,0x1,    XIN_FILE, 5);
+    xin_file_create_at_address("/shutdown.bin",             0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x81,0x1,    XIN_FILE, 6);
+    xin_file_create_at_address("/reboot.bin",               0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x82,0x1,    XIN_FILE, 7);
+    xin_file_create_at_address("/elf.bin",                  0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x82,0x1,    XIN_FILE, 8);
 
     uint32_t k = 0;
 
@@ -210,10 +189,9 @@ xin_entry *xin_init_fs(void)
 
     for(char* i = (char*)0x10200; i < (char*)0x10200 + 0x200; i++, k++)
         shutdown_program_buffer[k] = *i;
-    
-
 
     xin_change_directory("/");
+
 }
 
 void create_file(char *entry_parent_directory)
@@ -227,7 +205,6 @@ void create_file(char *entry_parent_directory)
     }
     
 
-    {
     
     xin_entry* parent = xin_find_entry(entry_parent_directory);
     
@@ -236,8 +213,6 @@ void create_file(char *entry_parent_directory)
         xprintf("NO SUCH DIRECTORY\n", set_output_color(red, white));
         while (KeyInfo.scan_code != ENTER);
         return;
-    }
-    
     }
 
     xprintf("Your parent directory: %s\n", entry_parent_directory);
@@ -261,6 +236,7 @@ void create_file(char *entry_parent_directory)
         xprintf("%zENTRY WITH THIS PATH EXISTS!\n", set_output_color(red,white));
         while(KeyInfo.scan_code != ENTER);
     }
+
     /* write entry to xin entry pointers table */
     uint8_t *write_entry = xin_find_free_pointer();
 
@@ -281,15 +257,11 @@ void create_file(char *entry_parent_directory)
     entry->modification_date = (uint32_t)((Time.day_of_month << 24) | (Time.month << 16) | (Time.century << 8) | (Time.year)); 
     entry->modification_time = (uint16_t)(Time.hour << 8) | (Time.minutes);
     entry->file_info = nullptr;
-    //entry->os_specific = 0xFFFF;
     entry->entry_permissions = PERMISSION_MAX;
     entry->entry_size = 0x0;
     entry->entry_type = XIN_FILE;
 
     entry->starting_sector = (uint32_t)write_entry - XIN_ENTRY_POINTERS;
-
-    // xprintf("file: %s\n", entry->entry_path);
-    // while(KeyInfo.scan_code != ENTER);
 
     disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x12, 8, (uint16_t*)0x800);
     disk_flush(ATA_FIRST_BUS, ATA_MASTER);
@@ -300,7 +272,6 @@ void create_file(char *entry_parent_directory)
         disk_flush(ATA_FIRST_BUS, ATA_MASTER);
     }
 
-    return;
 }
 
 void xin_create_directory(char *entry_path)
@@ -357,7 +328,6 @@ void xin_create_directory(char *entry_path)
 
     entry->creation_date = 0x0;
     entry->creation_time = 0x0;
-    //entry->os_specific = 0xFFFF;
     entry->modification_date = 0x0;
     entry->modification_time = 0x0;
     entry->entry_permissions = PERMISSION_MAX;
@@ -367,38 +337,6 @@ void xin_create_directory(char *entry_path)
 
     exit_process();
 }
-
-/*
-void xin_create_directory(char* entry_name)
-{
-
-    if(entry_name[strlen(entry_name) - 1] != '/')
-    {
-        xprintf("%zMISSING / ENDING CHARACTER IN DIRECTORY NAME\n", set_output_color(red, white));
-        while(KeyInfo.scan_code != ENTER);
-        exit_process();
-    }
-
-    xin_entry* entry = xin_find_free_entry();
-
-    entry_name = xin_get_current_path(entry_name);
-
-    set_string(entry->entry_path, entry_name);
-    entry->creation_date = 0x0;
-    entry->creation_time = 0x0;
-    entry->os_specific = 0xFFFF;
-    entry->modification_date = 0x0;
-    entry->modification_time = 0x0;
-    entry->entry_permissions = PERMISSION_MAX;
-    entry->entry_size = 0x0;
-    entry->starting_sector = 0x0;
-    entry->entry_type = XIN_DIRECTORY;
-
-    exit_process();
-
-}
-*/
-
 
 bool xin_remove_entry(char *entry_name)
 {
@@ -419,11 +357,9 @@ bool xin_remove_entry(char *entry_name)
     if (entry_data->entry_type == XIN_FILE)
     {
         for (char *i = (char *)entry_data->starting_sector + XIN_ENTRY_POINTERS;
-             (uint32_t)i < entry_data->starting_sector + XIN_ENTRY_POINTERS + 16; i++)
-        {
+                (uint32_t)i < entry_data->starting_sector + XIN_ENTRY_POINTERS + 16; i++)
             *i = XIN_UNALLOCATED;
-            // xprintf("%x",*i);
-        }
+        
     }
 
     for (int i = 0; i < sizeof(xin_entry); i++)
@@ -504,16 +440,6 @@ xin_entry* create(char* file_name)
 
     entry_full_name = xin_get_current_path(file_name);
 
-    /*
-
-    xin_entry* if_exist;
-    if_exist = xin_find_entry(entry_full_name);
-
-    if(if_exist)
-        return nullptr;
-
-    */
-
     /* write entry to xin entry pointers table */
     uint8_t *write_entry = xin_find_free_pointer();
 
@@ -534,7 +460,6 @@ xin_entry* create(char* file_name)
     entry->modification_date = (uint32_t)((Time.day_of_month << 24) | (Time.month << 16) | (Time.century << 8) | (Time.year)); 
     entry->modification_time = (uint16_t)(Time.hour << 8) | (Time.minutes);
 
-    //entry->os_specific = 0xFFFF;
     entry->entry_permissions = PERMISSION_MAX;
     entry->entry_size = 0x0;
     entry->entry_type = XIN_FILE;
@@ -548,10 +473,6 @@ xin_entry *fopen(char *file_path, const char *mode)
 {
 
     xin_entry* file = xin_find_entry(file_path);
-
-    
-    //current_file.file_position = 0;
-    
 
 
     if (file != nullptr && file->entry_type != XIN_DIRECTORY && file->entry_path[0] != '\0')

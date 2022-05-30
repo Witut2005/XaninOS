@@ -9,7 +9,7 @@
 #include <terminal/vty.h>
 #include <lib/stdlibx.h>
 
-#include <keyboard/keyMap.h>
+#include <keyboard/key_map.h>
 #include <lib/string.h>
 
 #define set_output_color(x,y) (x << 4 | y)

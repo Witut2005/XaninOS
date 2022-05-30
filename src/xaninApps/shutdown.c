@@ -50,7 +50,7 @@ void shutdown(void)
 
     reg_dump();
 
-    asm("cli");
+    interrupt_disable();
     asm("hlt");
 
 }

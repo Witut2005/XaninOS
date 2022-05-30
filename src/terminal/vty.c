@@ -5,7 +5,7 @@
 #include <lib/signal.h>
 #include <headers/macros.h>
 #include <lib/colors.h>
-#include <keyboard/keyMap.h>
+#include <keyboard/key_map.h>
 #include <lib/stdiox.h>
 #include <lib/string.h>
 

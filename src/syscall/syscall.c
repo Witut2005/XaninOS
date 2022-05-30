@@ -80,7 +80,7 @@ uint32_t syscall()
     */
 
     eoi_send();
-    asm("sti");
+    interrupt_enable();
 
     switch(eax)
     {

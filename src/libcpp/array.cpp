@@ -14,13 +14,11 @@ class array
 
 
     public:
-    
     array(array& arr)
     {
         for(int i = 0; i < X; i++)
             this->arr[i] = arr[i];  
     }
-
 
     array(T start = 0, ...)
     {

@@ -3,15 +3,14 @@
 
 
 
-/*  http://www.brokenthorn.com/Resources/OSDevScanCodes.html
-    https://www.youtube.com/watch?v=YtnNX074jMU
-    xaninOS uses Original XT Scan Code Set  */
+/*  
+  http://www.brokenthorn.com/Resources/OSDevScanCodes.html
+  https://www.youtube.com/watch?v=YtnNX074jMU
+  xaninOS uses Original XT Scan Code Set  
+*/
 
 #include <keyboard/scan_codes.h>
 #include <stdint.h>
-
-
-
 
 
 

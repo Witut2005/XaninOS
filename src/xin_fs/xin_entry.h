@@ -5,6 +5,7 @@
 
 enum xin_fs_properties
 {
+    
     XIN_ENTRY_POINTERS = 0x800,
     XIN_ENTRY_TABLE = 0x1800,
 
@@ -19,8 +20,6 @@ enum xin_fs_properties
     XIN_DIRECTORY = 'D',
     XIN_LINK = 'L',
     XIN_HARD_LINK = 'H',
-
-    XIN_READ_ONLY = 0x10
 
 };
 
