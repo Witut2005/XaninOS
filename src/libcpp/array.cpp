@@ -1,5 +1,6 @@
 
 #include <stdarg.h>
+#include <libcpp/initializer_list.hpp>
 
 namespace std
 {
@@ -20,16 +21,14 @@ class array
             this->arr[i] = arr[i];  
     }
 
-    array(T start = 0, ...)
+    array(std::initializer_list<T> a)
     {
-        va_list arg;
-        va_start(arg, start);
+        
+        auto it = a.begin();
 
-        arr[0] = start;
-
-        for(int i = 1; i < X;i++) 
+        for(int i = 0; i < X;i++) 
         {
-            arr[i] = va_arg(arg, T);
+            arr[i] = it[i];
         }
     }
 
@@ -40,7 +39,7 @@ class array
 
     T* end()
     {
-        return &arr[X - 1];
+        return &arr[X];
     }
 
     T& operator[](uint32_t index)
