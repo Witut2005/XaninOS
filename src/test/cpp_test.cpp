@@ -9,32 +9,71 @@
 #include <keyboard/scan_codes.h>
 #include <libcpp/array.cpp>
 #include <libcpp/initializer_list.hpp>
+#include <libcpp/new.hpp>
 
-extern "C"
+class Test
+{
+    public:
+    Test(int x, int y) { std::cout << std::dec << "CLASS: " << (int)x << ", " << (int)y << std::endl; }
+    void print(int x, int y) { std::cout << std::dec << "CLASS: " << (int)x << ", " << (int)y << std::endl; }
+};
+
+void cpp_prog()
 {
 
-void cpp_test(void)
-{
-
-    std::string x;
-    x = "omglo";
-    std::cin >> x;
 
     std::cout << std::clear;
 
-    std::array<int, 10> test_array = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
-    std::array<int, 10> test_array2 = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+    int* p;
+    
+    p = (int*)malloc(sizeof(int));
+    std::cout << std::hex << (unsigned int)(p) <<std::endl;
+    p = new int{32};
 
-    std::cout << "array test: " << (int)123 << std::endl;
+    p = reinterpret_cast<int*> (operator new (sizeof(int)));
+
+    //Test* hm = new Test{10, 20};
+
+    Test* hm = reinterpret_cast<Test*>(::operator new (sizeof(Test)));
+
+    hm->print(50, 100);
+
+    //std::cout << std::hex << (unsigned int)(p) <<std::endl;
+    //std::cout << *p <<std::endl;
+
+
+    std::array<int, 10> test_array  = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+    std::array<int, 10> test_array2 = {9, 8, 7, 6, 5, 4, 3, 2, 1, 0};
+
+    std::swap(test_array, test_array2);
+    
+    //std::cout << *p << std::endl;
+
+    /*
+    std::cout << "first array" << std::endl;
 
     for(auto a : test_array)
-    {
-        std::cout << a << std::endl;
-    }
+        std::cout << a << " ";
+
+    */
+
+    std::cout << std::endl;
+    
+
 
     wait_key(ENTER_RELEASE);
     wait_key(ENTER_RELEASE);
 
 }
+
+
+extern "C"
+{
+
+    void cpp_test(void)
+    {
+        cpp_prog();
+    }
+    
 
 }

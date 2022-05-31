@@ -32,12 +32,12 @@ T& min(T& x, T& y)
 }
 
 template<class T, class X>
-bool equal(T* beg, T* end, X* beg2)
+bool equal(const T*  beg, const T*  end, const X*  beg2)
 {
         
-    for(T* x = beg; x != end; x++, beg++)
+    for(const T* x = beg; x != end; x++, beg2++)
     {
-        if(*x != *beg)
+        if(*x != *beg2)
             return false;
     }
 
@@ -45,6 +45,14 @@ bool equal(T* beg, T* end, X* beg2)
 
 }
 
+
+template<class T> 
+void swap(T& x, T& y)
+{
+    T tmp = x;
+    x = y;
+    y = tmp;
+}
 
 
 
