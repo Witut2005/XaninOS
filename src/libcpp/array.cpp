@@ -12,8 +12,6 @@ class array
     private:
     T arr[X];
 
-
-
     public:
     array(array& arr)
     {

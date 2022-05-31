@@ -1,4 +1,5 @@
 
+#include <libcpp/algorithm.h>
 #include <libcpp/cstring.h>
 #include <libcpp/cmemory.h>
 #include <libcpp/ostream.h>
@@ -22,6 +23,9 @@ void cpp_test(void)
     std::cout << std::clear;
 
     std::array<int, 10> test_array = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+    std::array<int, 10> test_array2 = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+
+    std::cout << "array test: " << (int)123 << std::endl;
 
     for(auto a : test_array)
     {

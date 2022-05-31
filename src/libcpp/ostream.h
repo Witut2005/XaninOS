@@ -46,6 +46,9 @@ class ostream
             screen_clear();
         else 
             current_format_option = 'd';
+
+        return (ostream&)*this;
+
     }
 
     ostream& operator<<(unsigned int x)
@@ -56,18 +59,26 @@ class ostream
 
             case 'h':
                 xprintf("%x", x);
+                break;
             case 'o':
                 xprintf("%o", x);
+                break;
             case 'b':
                 xprintf("%b", x);
+                break;
+
             case 'd':
                 xprintf("%d", x);
+                break;
+                
         }
+        return (ostream&)*this;
     }
 
     ostream& operator<<(std::string x)
     {
         xprintf("%s", x.c_str());
+        return (ostream&)*this;
     }   
 
     ostream& operator<<(int x)
@@ -77,15 +88,18 @@ class ostream
 
             case 'h':
                 xprintf("%x", x);
+                break;
             case 'o':
                 xprintf("%o", x);
+                break;
             case 'b':
                 xprintf("%b", x);
+                break;
             case 'd':
                 xprintf("%d", x);
-
-
+                break;
         }
+        return (ostream&)*this;
     }
 
 
@@ -94,15 +108,18 @@ class ostream
         if(x == '\n')
         {
             xprintf("\n");
-            return *this;
+            return (ostream&)*this;
         }
 
         xprintf("%c",x);
+        return (ostream&)*this;
+
     }
 
     ostream& operator<<(unsigned char x)
     {
         xprintf("%c",x);
+        return (ostream&)*this;
     }
 
     ostream& operator<<(unsigned short x)
@@ -112,26 +129,32 @@ class ostream
 
             case 'h':
                 xprintf("%x", x);
+                break;    
             case 'o':
                 xprintf("%o", x);
+                break;
             case 'b':
                 xprintf("%b", x);
+                break;
             case 'd':
                 xprintf("%d", x);
-
-
+                break;
         }
+        return (ostream&)*this;
     }
 
     ostream& operator<<(const char* x)
     {
         xprintf("%s", x);
+        return (ostream&)*this;
     }
 
     ostream& operator<<(char* x)
     {
         xprintf("%s", x);
+        return (ostream&)*this;
     }
+
 
     ostream& operator<<(short x)
     {
@@ -140,15 +163,19 @@ class ostream
 
             case 'h':
                 xprintf("%x", x);
+                break;
             case 'o':
                 xprintf("%o", x);
+                break;
             case 'b':
                 xprintf("%b", x);
+                break;
             case 'd':
                 xprintf("%d", x);
-
-
+                break;
         }
+        return (ostream&)*this;
+
     }
 
     void put(char x)
