@@ -47,11 +47,17 @@ class string
 
     }
 
-    string& operator=(const char* x)
+    string operator=(const char* x)
     {
         realloc(string_data, strlen(string_data), strlen(x));
         strcpy(string_data, x);
     }
+
+    char operator [](uint32_t index)
+    {
+        return this->string_data[index];
+    }
+
 
     void* operator new (size_t size)
     {
@@ -75,6 +81,18 @@ class string
             return 0;
         else 
             return strlen(string_data); 
+    }
+
+
+    uint32_t* begin()
+    {
+        return reinterpret_cast<uint32_t*> (string_data);
+    }
+
+
+    uint32_t* end()
+    {
+        return reinterpret_cast<uint32_t*> (string_data + length());
     }
 
     private:

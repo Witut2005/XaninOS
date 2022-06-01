@@ -27,7 +27,7 @@ void cpp_prog()
     int* p;
     
     p = (int*)malloc(sizeof(int));
-    std::cout << std::hex << (unsigned int)(p) <<std::endl;
+    std::cout << std::hex << p <<std::endl;
     p = new int{32};
 
     p = reinterpret_cast<int*> (operator new (sizeof(int)));
@@ -58,15 +58,25 @@ void cpp_prog()
     */
 
     std::array<int, 10>::iterator it = test_array.begin();
+    std::array<int, 10>::iterator it2 = test_array.begin();
 
-    std::array<int, 10>::iterator& it2 = ++it;
+    *it = 5;
 
-    it++;
+    for(auto a : test_array)
+    {
+        std::cout << a << " ";
+    }
 
-    std::cout << it2[0] << std::endl;
-    std::cout << std::hex << "iterator addr: " << (unsigned int)&it << std::endl;
-    
-    
+    std::cout << std::endl;
+
+    std::string str("123");
+
+
+    std::cout << std::hex << "0x" << str.begin() << std::endl;
+    std::cout << std::hex << "0x" << str.end() << std::endl;
+
+
+    std::cout << std::endl;
 
 
     wait_key(ENTER_RELEASE);

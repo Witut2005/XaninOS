@@ -14,13 +14,18 @@ struct ostream_options
     uint8_t option;
 };
 
+enum OstreamOptions
+{
+    endl = '\n',
+    hex = 'h',
+    dec = 'd',
+    oct = 'o',
+    bin = 'b',
+    clear ='c'
 
-ostream_options endl{'\n'};
-ostream_options hex {'h'};
-ostream_options dec {'d'};
-ostream_options oct {'o'};
-ostream_options bin {'b'};
-ostream_options clear {'c'};
+};
+
+
 
 class ostream 
 {
@@ -29,21 +34,27 @@ class ostream
 
     public:
 
-    ostream& operator<<(ostream_options x)
+    ostream& operator<<(OstreamOptions x)
     {
        
-        if(x.option == '\n')
+        if(x == endl)
             xprintf("\n");
-        else if(x.option == 'h')
+        
+        else if(x == hex)
             current_format_option = 'h';
-        else if(x.option == 'd')
+        
+        else if(x == dec)
             current_format_option = 'd';
-        else if(x.option == 'o')
+
+        else if(x == oct)
             current_format_option = 'o';
-        else if(x.option == 'b')
+
+        else if(x == bin)
             current_format_option = 'b';
-        else if(x.option == 'c')
+        
+        else if(x == clear)
             screen_clear();
+        
         else 
             current_format_option = 'd';
 
@@ -51,7 +62,32 @@ class ostream
 
     }
 
-    ostream& operator<<(unsigned int x)
+
+    ostream& operator<<(uint32_t x)
+    {
+
+        switch(current_format_option)
+        {
+
+            case 'h':
+                xprintf("%x", x);
+                break;
+            case 'o':
+                xprintf("%o", x);
+                break;
+            case 'b':
+                xprintf("%b", x);
+                break;
+
+            case 'd':
+                xprintf("%d", x);
+                break;
+                
+        }
+        return (ostream&)*this;
+    }
+
+    ostream& operator<<(uint32_t* x)
     {
 
         switch(current_format_option)
@@ -102,6 +138,27 @@ class ostream
         return (ostream&)*this;
     }
 
+    ostream& operator<<(int* x)
+    {
+        switch(current_format_option)
+        {
+
+            case 'h':
+                xprintf("%x", x);
+                break;
+            case 'o':
+                xprintf("%o", x);
+                break;
+            case 'b':
+                xprintf("%b", x);
+                break;
+            case 'd':
+                xprintf("%d", x);
+                break;
+        }
+        return (ostream&)*this;
+    }
+
 
     ostream& operator<<(char x)
     {
@@ -116,13 +173,13 @@ class ostream
 
     }
 
-    ostream& operator<<(unsigned char x)
+    ostream& operator<<(uint8_t x)
     {
         xprintf("%c",x);
         return (ostream&)*this;
     }
 
-    ostream& operator<<(unsigned short x)
+    ostream& operator<<(uint16_t x)
     {
         switch(current_format_option)
         {
@@ -156,7 +213,7 @@ class ostream
     }
 
 
-    ostream& operator<<(short x)
+    ostream& operator<<(int16_t x)
     {
         switch(current_format_option)
         {

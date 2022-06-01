@@ -27,18 +27,51 @@ class ArrayIterator
         ArrayIterator operator ++ (int) //postfix operator
         {
             ArrayIterator tmp = *this;
-            ++(*this);
+            ++(this->i_ptr); //++(*this);
+
             return tmp;
         }
+
+
+        ArrayIterator& operator -- ()   //prefix operator
+        {
+            i_ptr--;
+            return *this;
+        }
+
+        ArrayIterator operator -- (int) //postfix operator
+        {
+            ArrayIterator tmp = *this;
+            --(this->i_ptr);
+
+            return tmp;
+        }
+
 
         Type operator [](uint32_t index)
         {
             return i_ptr[index];
         }
 
+
         uint32_t* operator &()
         {
             return (uint32_t*)this;
+        }
+
+        Type& operator *()
+        {
+            return *i_ptr;
+        }
+
+        bool operator == (const ArrayIterator x)
+        {
+            return i_ptr == x.i_ptr;
+        }
+
+        bool operator != (const ArrayIterator x)
+        {
+            return i_ptr != x.i_ptr;
         }
 
     private:
