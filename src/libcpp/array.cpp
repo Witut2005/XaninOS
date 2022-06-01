@@ -5,6 +5,49 @@
 namespace std
 {
 
+
+template<class Arr>
+class ArrayIterator
+{
+
+
+
+    public: 
+    
+        using Type = typename Arr::Type;
+
+        ArrayIterator(Type* ptr) : i_ptr(ptr){}
+
+        ArrayIterator& operator ++ ()   //prefix operator
+        {
+            i_ptr++;
+            return *this;
+        }
+
+        ArrayIterator operator ++ (int) //postfix operator
+        {
+            ArrayIterator tmp = *this;
+            ++(*this);
+            return tmp;
+        }
+
+        Type operator [](uint32_t index)
+        {
+            return i_ptr[index];
+        }
+
+        uint32_t* operator &()
+        {
+            return (uint32_t*)this;
+        }
+
+    private:
+        Type* i_ptr;
+
+
+};
+
+
 template <class T, int X>
 class array
 {
@@ -13,6 +56,10 @@ class array
     T arr[X];
 
     public:
+
+    using Type = T;
+    using iterator = ArrayIterator< array<Type, X> >;
+
     array(array& arr)
     {
         for(int i = 0; i < X; i++)

@@ -57,7 +57,15 @@ void cpp_prog()
 
     */
 
-    std::cout << *std::find(test_array.begin(), test_array.end(), 9) << std::endl;
+    std::array<int, 10>::iterator it = test_array.begin();
+
+    std::array<int, 10>::iterator& it2 = ++it;
+
+    it++;
+
+    std::cout << it2[0] << std::endl;
+    std::cout << std::hex << "iterator addr: " << (unsigned int)&it << std::endl;
+    
     
 
 

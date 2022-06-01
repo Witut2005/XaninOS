@@ -4,6 +4,8 @@
         "stdiox.h": "c",
         "stdint.h": "c",
         "colors.h": "c",
-        "assert.h": "c"
+        "assert.h": "c",
+        "cstdarg": "cpp",
+        "cstdint": "cpp"
     }
 }
