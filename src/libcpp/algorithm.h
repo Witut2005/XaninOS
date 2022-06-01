@@ -20,19 +20,19 @@ f_type for_each(input_type begin, input_type end, f_type function )
 
 
 template<class T>
-T& max(T& x, T& y)
+constexpr T& max(T& x, T& y)
 {
     return (x > y) ? x : y; 
 }
 
 template<class T>
-T& min(T& x, T& y)
+constexpr T& min(T& x, T& y)
 {
     return (x < y) ? x : y; 
 }
 
 template<class T, class X>
-bool equal(const T*  beg, const T*  end, const X*  beg2)
+constexpr bool equal(const T*  beg, const T*  end, const X*  beg2)
 {
         
     for(const T* x = beg; x != end; x++, beg2++)
@@ -47,13 +47,28 @@ bool equal(const T*  beg, const T*  end, const X*  beg2)
 
 
 template<class T> 
-void swap(T& x, T& y)
+constexpr void swap(T& x, T& y)
 {
     T tmp = x;
     x = y;
     y = tmp;
 }
 
+
+template <class T>
+T* find(const T* beg, const T* end, const T value)
+{
+
+    for(; beg != end; beg++)
+    {
+        if(*beg == value)
+            return const_cast<T*> (beg);
+    }
+
+    
+    return const_cast<T*> (end);
+
+}
 
 
 }

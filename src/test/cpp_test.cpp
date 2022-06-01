@@ -57,7 +57,7 @@ void cpp_prog()
 
     */
 
-    std::cout << std::endl;
+    std::cout << *std::find(test_array.begin(), test_array.end(), 9) << std::endl;
     
 
 

@@ -8,7 +8,7 @@
 #define PS2_COMMAND_REGISTER  0x64
 
 
-using namespace hal;
+
 
 enum class Ps2
 {
@@ -18,6 +18,7 @@ enum class Ps2
 
 class MouseClass
 {
+    using namespace hal;
 
     private:
     Port8 PicMasterData = Port8(0x21);
