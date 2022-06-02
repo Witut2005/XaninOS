@@ -30,7 +30,7 @@ struct CmosTime
 
 typedef struct CmosTime CmosTime;
 
-CmosTime Time;
+CmosTime SystemTime;
 
 #define CMOS_ADDR 0x70
 #define CMOS_DATA 0x71
@@ -76,63 +76,65 @@ char* keyboard_buffer_refresh(uint16_t* screen_buffer)
 
 }
 
-void time_get(void)
+CmosTime* time_get(CmosTime* Time)
 {
     interrupt_disable();
 
 
     //GET SECONDS
     outbIO(CMOS_ADDR,0x0);
-    Time.seconds = inbIO(CMOS_DATA);
+    Time->seconds = inbIO(CMOS_DATA);
 
     //GET MINUTES
     outbIO(CMOS_ADDR,0x2);
-    Time.minutes = inbIO(CMOS_DATA);
+    Time->minutes = inbIO(CMOS_DATA);
 
     //GET HOURS
     outbIO(CMOS_ADDR,0x4);
-    Time.hour = inbIO(CMOS_DATA);
+    Time->hour = inbIO(CMOS_DATA);
     
-    if((Time.hour & 0xF0) == 2 && (Time.hour & 0x0F) >= 2)
+    if((Time->hour & 0xF0) == 2 && (Time->hour & 0x0F) >= 2)
     {
-        Time.hour &= 0x0F;
-        Time.hour -= 2;
+        Time->hour &= 0x0F;
+        Time->hour -= 2;
 
-        Time.hour = Time.hour << 4;
+        Time->hour = Time->hour << 4;
+
 
     }
 
-    else if((Time.hour & 0xF) == 9 || (Time.hour & 0xF) == 8)
+    else if((Time->hour & 0xF) == 9 || (Time->hour & 0xF) == 8)
     {
-        Time.hour = (Time.hour & 0xF0) + (Time.hour & 0x1);
-        Time.hour = Time.hour + (1 << 4);
+        Time->hour = (Time->hour & 0xF0) + (Time->hour & 0x1);
+        Time->hour = Time->hour + (1 << 4);
     }
 
     else
-        Time.hour+=2;
+        Time->hour+=2;
 
     //GET day
     outbIO(CMOS_ADDR,0x6);
-    Time.weekday = inbIO(CMOS_DATA);
-    Time.weekday--;
+    Time->weekday = inbIO(CMOS_DATA);
+    Time->weekday--;
 
     //GET DAY_OF_MONTH
     outbIO(CMOS_ADDR,0x7);
-    Time.day_of_month = inbIO(CMOS_DATA);
+    Time->day_of_month = inbIO(CMOS_DATA);
 
     //GET MONTH
     outbIO(CMOS_ADDR,0x8);
-    Time.month = inbIO(CMOS_DATA);
+    Time->month = inbIO(CMOS_DATA);
 
     //GET YEAR
     outbIO(CMOS_ADDR,0x9);
-    Time.year = inbIO(CMOS_DATA);
+    Time->year = inbIO(CMOS_DATA);
 
     //GET CENTURY
     outbIO(CMOS_ADDR,0x32);
-    Time.century = inbIO(CMOS_DATA);
+    Time->century = inbIO(CMOS_DATA);
 
     interrupt_enable();
+    return Time;
 }
 
 uint8_t floppy_type_get_cmos(void)

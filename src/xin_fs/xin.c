@@ -248,14 +248,14 @@ void create_file(char *entry_parent_directory)
     /* write entry to xin entry date table */
     xin_entry *entry = xin_find_free_entry();
 
-    time_get();
+    time_get(&SystemTime);
 
     set_string(entry->entry_path, entry_full_name);
 
-    entry->creation_date = (uint32_t)((Time.day_of_month << 24) | (Time.month << 16) | (Time.century << 8) | (Time.year)); 
-    entry->creation_time = (uint16_t)(Time.hour << 8) | (Time.minutes);
-    entry->modification_date = (uint32_t)((Time.day_of_month << 24) | (Time.month << 16) | (Time.century << 8) | (Time.year)); 
-    entry->modification_time = (uint16_t)(Time.hour << 8) | (Time.minutes);
+    entry->creation_date = (uint32_t)((SystemTime.day_of_month << 24) | (SystemTime.month << 16) | (SystemTime.century << 8) | (SystemTime.year)); 
+    entry->creation_time = (uint16_t)(SystemTime.hour << 8) | (SystemTime.minutes);
+    entry->modification_date = (uint32_t)((SystemTime.day_of_month << 24) | (SystemTime.month << 16) | (SystemTime.century << 8) | (SystemTime.year)); 
+    entry->modification_time = (uint16_t)(SystemTime.hour << 8) | (SystemTime.minutes);
     entry->file_info = nullptr;
     entry->entry_permissions = PERMISSION_MAX;
     entry->entry_size = 0x0;
@@ -403,10 +403,10 @@ size_t write(xin_entry *entry, void *buf, size_t count)
         entry->file_info->position++;
     }
 
-    time_get();
+    time_get(&SystemTime);
 
-    entry->modification_date = (uint32_t)((Time.day_of_month << 24) | (Time.month << 16) | (Time.century << 8) | (Time.year)); 
-    entry->modification_time = (uint16_t)(Time.hour << 8) | (Time.minutes);
+    entry->modification_date = (uint32_t)((SystemTime.day_of_month << 24) | (SystemTime.month << 16) | (SystemTime.century << 8) | (SystemTime.year)); 
+    entry->modification_time = (uint16_t)(SystemTime.hour << 8) | (SystemTime.minutes);
 
 }
 
@@ -451,14 +451,14 @@ xin_entry* create(char* file_name)
     /* write entry to xin entry date table */
     xin_entry *entry = xin_find_free_entry();
 
-    time_get();
+    time_get(&SystemTime);
 
     set_string(entry->entry_path, entry_full_name);
 
-    entry->creation_date = (uint32_t)((Time.day_of_month << 24) | (Time.month << 16) | (Time.century << 8) | (Time.year)); 
-    entry->creation_time = (uint16_t)(Time.hour << 8) | (Time.minutes);
-    entry->modification_date = (uint32_t)((Time.day_of_month << 24) | (Time.month << 16) | (Time.century << 8) | (Time.year)); 
-    entry->modification_time = (uint16_t)(Time.hour << 8) | (Time.minutes);
+    entry->creation_date = (uint32_t)((SystemTime.day_of_month << 24) | (SystemTime.month << 16) | (SystemTime.century << 8) | (SystemTime.year)); 
+    entry->creation_time = (uint16_t)(SystemTime.hour << 8) | (SystemTime.minutes);
+    entry->modification_date = (uint32_t)((SystemTime.day_of_month << 24) | (SystemTime.month << 16) | (SystemTime.century << 8) | (SystemTime.year)); 
+    entry->modification_time = (uint16_t)(SystemTime.hour << 8) | (SystemTime.minutes);
 
     entry->entry_permissions = PERMISSION_MAX;
     entry->entry_size = 0x0;

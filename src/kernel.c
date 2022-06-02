@@ -49,7 +49,7 @@ void _start(void)
     init_disk(ATA_FIRST_BUS, ATA_MASTER);
     
 
-    time_get();
+    time_get(&SystemTime);
    
     keyboard_init();
     set_pit();
@@ -116,7 +116,7 @@ void _start(void)
 
     xprintf("\n\n");
    
-    srand(Time.seconds);
+    srand(SystemTime.seconds);
 
     disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x1a, 1, (uint16_t*)0x1800);
     disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x1b, 1, (uint16_t*)0x1a00);
@@ -134,13 +134,13 @@ void _start(void)
 
     screen_clear();
     
-    time_get();
+    time_get(&SystemTime);
 
     xprintf("%z    _/      _/                      _/              _/_/      _/_/_/       \n", set_output_color(logo_back_color, logo_front_color));
     xprintf("%z     _/  _/      _/_/_/  _/_/_/        _/_/_/    _/    _/  _/              \n", set_output_color(logo_back_color, logo_front_color));
     xprintf("%z      _/      _/    _/  _/    _/  _/  _/    _/  _/    _/    _/_/           \n", set_output_color(logo_back_color, logo_front_color));
     xprintf("%z   _/  _/    _/    _/  _/    _/  _/  _/    _/  _/    _/        _/%z  version 22.06v\n",set_output_color(logo_back_color, logo_front_color), set_output_color(black,white) );
-    xprintf("%z_/      _/    _/_/_/  _/    _/  _/  _/    _/    _/_/    _/_/_/     %z%s %i:%i:%i\n\n\n", set_output_color(logo_back_color, logo_front_color), set_output_color(black,white), daysLUT[Time.weekday], Time.hour, Time.minutes, Time.seconds);                                       
+    xprintf("%z_/      _/    _/_/_/  _/    _/  _/  _/    _/    _/_/    _/_/_/     %z%s %i:%i:%i\n\n\n", set_output_color(logo_back_color, logo_front_color), set_output_color(black,white), daysLUT[SystemTime.weekday], SystemTime.hour, SystemTime.minutes, SystemTime.seconds);                                       
 
 
     Screen.cursor[8][0] = (uint16_t)('>' | ((black << 4) | white) << 8);

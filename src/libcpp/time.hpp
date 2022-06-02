@@ -1,21 +1,9 @@
+
+#pragma once
+
 #include <stdint.h>
+#include <libcpp/ctime.h>
 
-struct tm
-{
-
-    uint32_t tm_sec : 6;
-    uint32_t tm_min : 6;
-    uint32_t tm_hs  : 5;
-    uint32_t tm_mday: 5;
-    uint32_t tm_mon : 4;
-    uint32_t tm_year: 4;
-    uint32_t tm_wday: 3;
-    uint32_t tm_yday: 9;
-    uint32_t tm_isdst;
-    
-};
-
-typedef struct tm tm;
 
 namespace std
 {
@@ -28,22 +16,41 @@ namespace std
     
             public:
                 
-            static tm now()
-            {
-                asm("nop");        
-            }
+            system_clock(const system_clock&) = delete;   //copy constructor
 
-            static system_clock& get_instance()
-            {
-                return instance;
-            }
+            static time_t now();
+            static system_clock& get_instance();
+            static time_t to_time_t(time_t);
+
+            private:
+            
+            system_clock(){}
 
             static system_clock instance;
 
-        }SystemClock;
+        };
 
         system_clock system_clock::instance;
+
+time_t system_clock::now()
+{
+    asm("nop");        
+}
+
+
+system_clock& system_clock::get_instance()
+{
+    return system_clock::instance;
+}
+
+
+
+
+
 
     }
 
 }
+
+
+

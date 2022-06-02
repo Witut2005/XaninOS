@@ -25,6 +25,7 @@ void cpp_prog()
 
     std::cout << std::clear;
 
+    std::chrono::system_clock& CLOCK = std::chrono::system_clock::get_instance();
     std::chrono::system_clock::now();
 
 
