@@ -1,4 +1,5 @@
 
+#include <libcpp/time.hpp>
 #include <libcpp/algorithm.h>
 #include <libcpp/cstring.h>
 #include <libcpp/cmemory.h>
@@ -24,6 +25,9 @@ void cpp_prog()
 
     std::cout << std::clear;
 
+    std::chrono::system_clock::now();
+
+
     int* p;
     
     p = (int*)malloc(sizeof(int));
@@ -47,6 +51,8 @@ void cpp_prog()
 
     std::swap(test_array, test_array2);
     
+    
+
     //std::cout << *p << std::endl;
 
     /*
