@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 #include <lib/hal.h>
-
+#include <devices/APIC/apic_registers.h>
 
 #define PIT_CHANNEL0 0x40
 #define PIT_CHANNEL1 0x41
@@ -57,8 +57,10 @@ float pit_time = 0x0;
 float pit_tick(uint32_t frequency)
 {
     pit_time += 1 / (float)(PIT_BASE_FREQUENCY / frequency);
+    *(uint32_t*)APIC_EOI_REGISTER = 0x0;
     return pit_time;
 }
+
 
 
 

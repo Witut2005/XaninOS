@@ -28,6 +28,7 @@ extern "C"
     bool apic_enable(void)
     {
         Apic.enable();
+        Apic.set_spurious_vector_number(0xFF);
         return true;
     }
 

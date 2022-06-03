@@ -11,47 +11,43 @@ enum IoApicInfoRegs
     ioapicarb = 0x2
 };
 
+
+enum IOREDTBL
+{
+    
+    IOREDTBL0_LOW = 0x10,
+    IOREDTBL0_HIGH = 0x11,
+    IOREDTBL1_LOW = 0x12,
+    IOREDTBL1_HIGH = 0x13,
+    IOREDTBL2_LOW = 0x14,
+    IOREDTBL2_HIGH = 0x15
+
+};
+
+
 class InOutAdvancedProgrammableInterruptContoller
 {
 
+    enum 
+    {
+        
+    };
 
     private:
+        uint32_t* base;
         uint32_t* ioregsel;
         uint32_t* iowin;
-
-    union RedirectionEntry
-    {
-        struct 
-        {
-            uint64_t vector          : 8;
-            uint64_t delivery_mode   : 3;
-            uint64_t destination_mode: 1;
-            uint64_t delivery_status : 1;
-            uint64_t pin_polarity    : 1;
-            uint64_t remote_irr      : 1;
-            uint64_t trigger_mode    : 1;
-            uint64_t mask            : 1;
-            uint64_t reserved        : 39;
-            uint64_t destination     : 8;
-        };
-
-        struct 
-        {
-            uint32_t lower32;
-            uint32_t upper32;
-        };
-
-    };
     
  
     public:
-        
-
+    
         void register_write(uint8_t offset, uint32_t value);
         uint32_t register_read(uint8_t offset);
         void base_address_set(uint32_t base);
         uint32_t id_get();
         uint32_t version_get();        
+        void ioredtbl_configure(uint8_t offset, uint32_t lower, uint32_t upper); 
+
 
 }IoApic;
 
@@ -72,6 +68,12 @@ extern "C"
     {
         return IoApic.register_read(offset);
     }
+
+    void ioapic_ioredtbl_configure(void)
+    {
+        IoApic.ioredtbl_configure(0x0,0x0,0x0);
+    }
+
 
 }
 

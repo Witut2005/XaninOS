@@ -156,7 +156,7 @@ void pic_mask_set(uint16_t port, uint8_t value)
 
 }
 
-void pic_disable()
+static inline void pic_disable()
 {
     outbIO(0xa1, 0xff);
     outbIO(0x21, 0xff);
@@ -175,3 +175,14 @@ void sse_enable(void)
         "ret"
     );
 }
+
+static inline void pic_mode_disable(void)
+{ 
+    outbIO(0x22, 0x70); //select interrupt mode control register
+    outbIO(0x23, 0x1);  //force nmi and intr signals through the apic        
+}
+
+
+
+
+

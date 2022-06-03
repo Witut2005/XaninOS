@@ -55,8 +55,8 @@ void _start(void)
     set_pit();
     keyboard_command = command_buffer;
 
-    xprintf("DETECTING USB CONTROLLERS. PLEASE WAIT...\n");
-    usb_detect();
+    //xprintf("DETECTING USB CONTROLLERS. PLEASE WAIT...\n");
+    //usb_detect();
     
     
     rsdp = get_acpi_rsdp_address_base();
@@ -88,6 +88,10 @@ void _start(void)
     1 == acpi_rsdt_checksum_check(rsdt) ? xprintf("%zVALID", set_output_color(green,white)) : xprintf("%zINVALID", set_output_color(red,white));
     xprintf("\nMADT address: 0x%x\n", rsdt);
 
+    pic_disable();
+    pic_mode_disable();
+    
+
     madt_entries_get(apic_sdt);
 
 
@@ -108,6 +112,22 @@ void _start(void)
         }
     }
     xprintf("%z--------------------\n",set_output_color(black,green));
+
+    apic_enable();
+    xprintf("apic state: 0x%x\n", *(uint32_t*)APIC_SPURIOUS_INTERRUPT_VECTOR_REGISTER);
+
+    static uint32_t ioapic_iso_couter; //iso = interrupt source override 
+
+    for(int i = 0; (*madt_entry_type2_ptr[i]).entry_type == 2; i++)
+    {
+        xprintf(" %d %d |", (*madt_entry_type2_ptr[i]).irq_source, (*madt_entry_type2_ptr[i]).global_system_int_table);
+        ioapic_iso_couter++;        
+    }
+    
+
+    ioapic_ioredtbl_configure();
+
+    //xprintf("finded %d apic interrupt source override\n", ioapic_iso_couter);
 
     uint8_t* xanin_info_ptr = xanin_information_block_get();
 

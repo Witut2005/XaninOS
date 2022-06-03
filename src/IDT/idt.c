@@ -76,8 +76,10 @@ void set_idt(void)
     configure_idt_entry(19, simd_floating_point_exception, CODE_SEGMENT);
     configure_idt_entry(20, virtualization_exception,CODE_SEGMENT);
     configure_idt_entry(21, control_protection_exception,CODE_SEGMENT);
-    configure_idt_entry(0x20, pit_handler_init,CODE_SEGMENT);
+    
+    configure_idt_entry(0x22, pit_handler_init,CODE_SEGMENT);
     configure_idt_entry(0x21, keyboard_handler_init,CODE_SEGMENT);
+    
     configure_idt_entry(0x26, floppy_interrupt,CODE_SEGMENT);
     configure_idt_entry(0x2C, mouse_handler_init, CODE_SEGMENT);
     configure_idt_entry(0x80, syscall,CODE_SEGMENT);

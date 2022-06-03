@@ -3,6 +3,7 @@
 
 void InOutAdvancedProgrammableInterruptContoller::base_address_set(uint32_t base)
 {
+    this->base = (uint32_t*)base;
     ioregsel = (uint32_t*)base;
     iowin = (uint32_t*)((uint8_t*)base + 0x10);
 }
@@ -64,3 +65,17 @@ uint32_t InOutAdvancedProgrammableInterruptContoller::version_get()
 {
     return this->register_read(ioapicver);
 }
+
+
+void InOutAdvancedProgrammableInterruptContoller::ioredtbl_configure(uint8_t offset, uint32_t lower, uint32_t upper)
+{
+
+    this->register_write(IOREDTBL1_LOW, (0x21 << 0) | (0x0 << 8) | (0 << 11) | 
+            (0 << 13) | ( 0 << 15) | (0 << 16));
+    this->register_write(IOREDTBL1_HIGH, this->id_get() << 24);
+
+    this->register_write(IOREDTBL2_LOW, (0x22 << 0) | (0x0 << 8) | (0 << 11) | 
+            (0 << 13) | ( 0 << 15) | (0 << 16));
+    this->register_write(IOREDTBL2_HIGH, this->id_get() << 24);
+}
+
