@@ -21,6 +21,7 @@
 #include <devices/APIC/apic.h>
 #include <devices/IOAPIC/ioapic.h>
 #include <elf/elf_loader.c>
+#include <devices/ACPI/ACPI.h>
 
 extern void v86_mode_enter(void);
 extern void mouse_enable(void);
@@ -123,11 +124,35 @@ void _start(void)
         xprintf(" %d %d |", (*madt_entry_type2_ptr[i]).irq_source, (*madt_entry_type2_ptr[i]).global_system_int_table);
         ioapic_iso_couter++;        
     }
-    
 
-    ioapic_ioredtbl_configure();
 
-    //xprintf("finded %d apic interrupt source override\n", ioapic_iso_couter);
+
+    {
+
+    madt_entry_type2* apic_keyboard_redirect = nullptr; 
+    madt_entry_type2* apic_pit_redirect      = nullptr; 
+
+
+    for(int i = 0; (*madt_entry_type2_ptr[i]).entry_type == 2; i++)
+    {
+        if((*madt_entry_type2_ptr[i]).irq_source == 1)
+            apic_keyboard_redirect = madt_entry_type2_ptr[i];
+
+        else if((*madt_entry_type2_ptr[i]).irq_source == 0)
+            apic_pit_redirect = madt_entry_type2_ptr[i];
+
+    }
+
+
+    ioapic_ioredtbl_configure(apic_keyboard_redirect != nullptr ? apic_keyboard_redirect->global_system_int_table + APIC_IRQ_BASE: PIC_KEYBOARD_VECTOR
+                                    << APIC_VECTOR | 0x0 << APIC_DELIVERY_MODE | 0x0 << APIC_DESTINATION_MODE 
+                                        | 0x0 << APIC_INT_PIN_POLARITY | 0x0 << APIC_INT_MASK, ioapic_id_get());
+
+    ioapic_ioredtbl_configure(apic_pit_redirect != nullptr ? apic_pit_redirect->global_system_int_table + APIC_IRQ_BASE: PIC_PIT_VECTOR
+                                    << APIC_VECTOR | 0x0 << APIC_DELIVERY_MODE | 0x0 << APIC_DESTINATION_MODE 
+                                        | 0x0 << APIC_INT_PIN_POLARITY | 0x0 << APIC_INT_MASK, ioapic_id_get());
+
+    }
 
     uint8_t* xanin_info_ptr = xanin_information_block_get();
 
