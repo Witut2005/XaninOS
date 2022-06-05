@@ -1,5 +1,5 @@
 
-#include <lib/stdiox.h>
+#include <libc/stdiox.h>
 #include <devices/PCI/pci.c>
 
 

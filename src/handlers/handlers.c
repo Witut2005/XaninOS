@@ -1,9 +1,9 @@
 
 #pragma once
 
-#include <lib/signal.h>
-#include <lib/hal.h>
-#include <lib/stdiox.h>
+ 
+#include <libc/hal.h>
+#include <libc/stdiox.h>
 #include <terminal/vty.c>
 #include <headers/macros.h>
 #include <keyboard/key_map.h>

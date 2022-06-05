@@ -1,7 +1,7 @@
 #pragma once
 
 #include <stdint.h>
-#include <lib/hal.h>
+#include <libc/hal.h>
 #include <handlers/handlers.c>
 #include <keyboard/key_map.h>
 #include <syscall/syscall.c>

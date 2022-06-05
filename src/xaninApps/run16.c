@@ -1,12 +1,11 @@
 
 #pragma once
 
-#include <lib/stdiox.h>
+#include <libc/stdiox.h>
 #include <xin_fs/xin.c>
-#include <lib/memory.h>
+#include <libc/memory.h>
 #include <terminal/interpreter.h>
-#include <lib/exit_process.h>
-#include <lib/string.h>
+#include <libc/string.h>
 
 
 void run16(char* file_name)

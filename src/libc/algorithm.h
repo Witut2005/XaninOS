@@ -1,8 +1,8 @@
 #pragma once
 
-#include <lib/string.h>
+#include <libc/string.h>
 #include <stddef.h>
-#include <lib/stdiox.h>
+#include <libc/stdiox.h>
 
 
 char* find_character(char character, char* str)

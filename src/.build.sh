@@ -23,7 +23,7 @@ cd ./pit
 nasm -f elf32 pit.asm -o pit.o
 cd ..
 
-cd ./lib
+cd ./libc
 nasm -f bin enter_real_mode.asm -o enter_real_mode
 cd ..
 
@@ -48,18 +48,30 @@ cd ..
 
 
 #COMPILE																										 HERE YOU MUST PUT PATH TO SRC DIRECTORY
-#alias xanincpp='i386-elf-g++ -O0 -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -fno-rtti -I /home/witut/Desktop/xaninOS/src -c'
+#alias xanincpp='i386-elf-g++ -O0 -masm=intel -Wno-builtin-declaration-mismatch -nostdlibc -ffreestanding -Wno-unused-function -fno-rtti -I /home/witut/Desktop/xaninOS/src -c'
 
 shopt -s expand_aliases
 alias xanincpp='i386-elf-g++ -O0 -fno-exceptions -lstdc++ -masm=intel -std=c++14 -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Wno-write-strings -Wno-return-type -fno-rtti -I /home/witut/Desktop/xaninOS/src -c'
+alias xaninc='i386-elf-gcc -O0 -masm=intel -Wno-discarded-qualifiers -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-int-conversion -Wno-unused-function -Wno-div-by-zero -I /home/witut/Desktop/xaninOS/src/ -c'
 
 xanincpp ./chip8/chip8.cpp  -o ./chip8/chip8.o
 xanincpp ./devices/APIC/apic.cpp  -o ./devices/APIC/apic.o
 xanincpp ./test/cpp_test.cpp  -o ./test/cpp_test.o
 xanincpp ./devices/IOAPIC/ioapic.cpp -o ./devices/IOAPIC/ioapic.o
 
+#xaninc ./lib/c/c_libary.h -o ./lib/c/c_libary.o
+xaninc ./test/testc.c -o ./test/testc.o
+
 i386-elf-gcc -O0 -masm=intel -Wno-discarded-qualifiers -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-int-conversion -Wno-unused-function -Wno-div-by-zero -I /home/witut/Desktop/xaninOS/src \
-kernel.c ./handlers/keyboard.o ./pit/pit.o ./syscall/syscall.o ./test/cpp_test.o ./devices/MOUSE/mouse.o ./devices/APIC/apic.o ./devices/IOAPIC/ioapic.o -o kernel.bin
+kernel.c \
+./handlers/keyboard.o \
+./pit/pit.o \
+./syscall/syscall.o \
+./test/cpp_test.o \
+./devices/MOUSE/mouse.o \
+./devices/APIC/apic.o \
+./devices/IOAPIC/ioapic.o \
+./test/testc.o -o kernel.bin
 
 cat ./xaninApps/shutdown ./elf/testc > ./xaninApps/xanin_external_apps
 
@@ -67,7 +79,7 @@ cat ./xaninApps/shutdown ./elf/testc > ./xaninApps/xanin_external_apps
 dd if=./xaninApps/xanin_external_apps of=./xaninApps/xanin_apps_space bs=512 count=16 conv=notrunc
 
 
-cat ./boot/boot ./lib/enter_real_mode ./xaninApps/xanin_apps_space ./xin_fs/xin_pointers ./xin_fs/entries_table ./boot/kernelLoader kernel.bin > xanin.bin
+cat ./boot/boot ./libc/enter_real_mode ./xaninApps/xanin_apps_space ./xin_fs/xin_pointers ./xin_fs/entries_table ./boot/kernelLoader kernel.bin > xanin.bin
 
 #MOV XANIN.img to BIN
 dd if=xanin.bin of=xanin.img

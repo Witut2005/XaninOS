@@ -1,8 +1,8 @@
 
 
 #include <xaninApps/pong/pong.h>
-#include <lib/stdlibx.h>
-#include <lib/stdiox.h>
+#include <libc/stdlibx.h>
+#include <libc/stdiox.h>
 #include <xaninGraphics/xaninGraphics.c>
 
 void pong_get_input(void)

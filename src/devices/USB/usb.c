@@ -1,7 +1,7 @@
 
 #include <devices/USB/usb.h>
 #include <devices/PCI/pci.h>
-#include <lib/stdiox.h>
+#include <libc/stdiox.h>
 
 char* usb_controller_names[4] = 
 {

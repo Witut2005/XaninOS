@@ -1,5 +1,5 @@
 
 #pragma once
 
-#include <libcpp/istream.hpp>
-#include <libcpp/ostream.hpp>
+#include <libcpp/istream.h>
+#include <libcpp/ostream.h>

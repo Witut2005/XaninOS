@@ -2,7 +2,7 @@
 #pragma once
 
 #include <xin_fs/xin.h>
-#include <lib/memory.h>
+#include <libc/memory.h>
 #include <stddef.h>
 
 char *xin_set_current_directory(char *directory)
@@ -201,7 +201,7 @@ void create_file(char *entry_parent_directory)
     if (entry_parent_directory[strlen(entry_parent_directory) - 1] != '/')
     {
         xprintf("%zMISSING / ENDING CHARACTER IN DIRECTORY NAME\n", set_output_color(red, white));
-        exit_process();
+        return;
     }
     
 
@@ -281,7 +281,7 @@ void xin_create_directory(char *entry_path)
     {
         xprintf("%zMISSING / ENDING CHARACTER IN DIRECTORY NAME\n", set_output_color(red, white));
         while (KeyInfo.scan_code != ENTER);
-        exit_process();
+        return;
     }
 
     if (xin_find_entry(entry_path) == nullptr)
@@ -335,7 +335,7 @@ void xin_create_directory(char *entry_path)
     entry->starting_sector = 0x0;
     entry->entry_type = XIN_DIRECTORY;
 
-    exit_process();
+    return;
 }
 
 bool xin_remove_entry(char *entry_name)
@@ -349,7 +349,7 @@ bool xin_remove_entry(char *entry_name)
     {
         xprintf("%zNO SUCH DIRECTORY\n", set_output_color(red, white));
         while (KeyInfo.scan_code != ENTER);
-        exit_process(false);
+        return false;
     }
 
     xprintf("starting addr: 0x%x\n", entry_data->starting_sector + XIN_ENTRY_POINTERS);
@@ -367,7 +367,7 @@ bool xin_remove_entry(char *entry_name)
 
     return true;
 
-    exit_process(true);
+
 }
 
 uint32_t xin_get_start_sector(char *entry_name)

@@ -2,7 +2,7 @@
 #pragma once
 
 #include <stdint.h>
-#include <lib/colors.h>
+#include <libc/colors.h>
 
 #define stderr (white << 4 | red)
 

@@ -1,6 +1,6 @@
 #include <cpuid.h>
-#include <lib/stdiox.h>
-#include <lib/time.h>
+#include <libc/stdiox.h>
+#include <libc/time.h>
 
 
 enum {

@@ -1,8 +1,8 @@
 
-#include <lib/math.h>
-#include <lib/string.h>
-#include <lib/stdiox.h>
-#include <lib/signal.h>
+#include <libc/math.h>
+#include <libc/string.h>
+#include <libc/stdiox.h>
+ 
 #include <headers/macros.h>
 
 

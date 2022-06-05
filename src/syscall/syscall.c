@@ -1,6 +1,6 @@
 
 #include <stdint.h>
-#include <lib/stdiox.h>
+#include <libc/stdiox.h>
 #include <xin_fs/xin.h>
 
 #define return_sys(x)\

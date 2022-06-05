@@ -1,6 +1,6 @@
 #pragma once
 
-#include <lib/hal.h>
+#include <libc/hal.h>
 #include <devices/PCI/pci.h>
 
 uint16_t pci_get_vendor_id(const uint8_t bus, const uint8_t slot, 

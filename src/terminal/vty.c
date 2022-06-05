@@ -2,12 +2,13 @@
 
 #include <terminal/vty.h>
 #include <xaninApps/help.c>
-#include <lib/signal.h>
+ 
 #include <headers/macros.h>
-#include <lib/colors.h>
+#include <libc/colors.h>
 #include <keyboard/key_map.h>
-#include <lib/stdiox.h>
-#include <lib/string.h>
+#include <libc/stdiox.h>
+#include <libc/string.h>
+#include <libc/stdlibx.h>
 
 #define VGA_SCREEN_RESOLUTION 4480
 

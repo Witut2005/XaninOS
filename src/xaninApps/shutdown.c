@@ -1,6 +1,6 @@
 
-#include <lib/hal.h>
-#include <lib/stdiox.h>
+#include <libc/hal.h>
+#include <libc/stdiox.h>
 #include <xin_fs/xanin_fs_saver.c>
 #include <xaninApps/execute_addr.c>
 #include <devices/HARD_DISK/disk.h>

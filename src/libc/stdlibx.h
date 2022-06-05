@@ -1,14 +1,14 @@
 
 #pragma once
 
-#include <lib/hal.h>
+#include <libc/hal.h>
 #include <pit/pit.c>
-#include <lib/time.h>
+#include <libc/time.h>
 #include <terminal/vty.h>
-#include <lib/colors.h>
+#include <libc/colors.h>
 #include <handlers/handlers.c>
-#include <lib/alloc.h>
-#include <lib/string.h>
+#include <libc/alloc.h>
+#include <libc/string.h>
 
 char command_buffer[50];
 char* keyboard_command;
@@ -164,14 +164,14 @@ void swap_int(int *xp, int *yp)
     *yp = temp;
 }
 
-void swap_char(char* *xp, char* yp)
+void swap_char(char* xp, char* yp)
 {
     char temp = *xp;
     *xp = *yp;
     *yp = temp;
 }
 
-void swap_short(uint16_t* *xp, uint16_t* yp)
+void swap_short(uint16_t* xp, uint16_t* yp)
 {
     uint16_t temp = *xp;
     *xp = *yp;

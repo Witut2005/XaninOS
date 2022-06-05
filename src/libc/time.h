@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include <lib/stdlibx.h>
+#include <libc/stdlibx.h>
 
 uint32_t cpu_mhz = 0x0;
 uint32_t cpu_khz = 0x0;

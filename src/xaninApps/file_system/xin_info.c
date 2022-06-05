@@ -25,6 +25,6 @@ void xin_entry_info(char *entry_name)
     }
 
     while (KeyInfo.scan_code != ENTER);
-    exit_process();
+    return;
 }
 

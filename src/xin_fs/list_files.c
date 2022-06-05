@@ -1,7 +1,7 @@
 #pragma once
 
 #include <xaninApps/loadch.c>
-#include <lib/stdiox.h>
+#include <libc/stdiox.h>
 
 void list_files(void)
 {

@@ -1,6 +1,6 @@
 
 #include <stdint.h>
-#include <lib/colors.h>
+#include <libc/colors.h>
 
 /* USE IN CPP FILES NOT IN C BRUH */
 

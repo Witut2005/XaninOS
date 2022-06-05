@@ -1,10 +1,9 @@
 
 
-#include <lib/stdiox.h>
+#include <libc/stdiox.h>
 #include <xin_fs/xin.c>
-#include <lib/memory.h>
-#include <lib/exit_process.h>
-#include <lib/string.h>
+#include <libc/memory.h>
+#include <libc/string.h>
 
 #define VGA_SCREEN_RESOLUTION 4480
 

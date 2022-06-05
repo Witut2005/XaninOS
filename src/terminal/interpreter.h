@@ -1,9 +1,9 @@
 #pragma once
 
 //#include <pong/pong.c>
-#include <lib/stdiox.h>
+#include <libc/stdiox.h>
 #include <xaninApps/help.c>
-#include <lib/colors.h>
+#include <libc/colors.h>
 //#include <xaninApps/ls.c>
 //#include <xaninApps/type.c>
 //#include <xaninApps/note.c>

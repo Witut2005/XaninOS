@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include <lib/stdiox.h>
+#include <libc/stdiox.h>
 
 void loadch(char* address_string)
 {

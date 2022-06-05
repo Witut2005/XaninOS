@@ -1,8 +1,8 @@
 #pragma once
 
-#include <lib/stdiox.h>
-#include <lib/stdlibx.h>
-#include <lib/time.h>
+#include <libc/stdiox.h>
+#include <libc/stdlibx.h>
+#include <libc/time.h>
 
 
 

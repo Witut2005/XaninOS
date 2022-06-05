@@ -3,6 +3,9 @@
 #pragma once
 
 #include <stdint.h>
+#include <stddef.h>
+
+#define nullptr 0x0
 
 
 

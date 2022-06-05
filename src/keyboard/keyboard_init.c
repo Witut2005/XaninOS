@@ -5,7 +5,7 @@
 #define KEYBOARD_TEST_FAILURE 0xfc
 #define KEYBOARD_TEST_SUCCESS 0x55
 
-#include <lib/hal.h>
+#include <libc/hal.h>
 
 
 uint8_t keyboard_self_test()

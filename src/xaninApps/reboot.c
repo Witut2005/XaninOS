@@ -3,7 +3,7 @@
 
  
 #include <stdint.h>
-#include <lib/hal.h>
+#include <libc/hal.h>
 #include <devices/HARD_DISK/disk.h>
 
 

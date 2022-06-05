@@ -1,5 +1,5 @@
 
 #include <stdint.h>
-#include <lib/stdiox.h>
-#include <lib/stdlibx.h>
+#include <libc/stdiox.h>
+#include <libc/stdlibx.h>
 #include <xin_fs/xin.h>

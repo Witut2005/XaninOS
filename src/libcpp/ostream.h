@@ -5,6 +5,8 @@
 #include <libcpp/string.h>
 #include <libcpp/cstdio.h>
 
+#define set_output_color(x,y) (x << 4 | y)
+
 namespace std
 {
 

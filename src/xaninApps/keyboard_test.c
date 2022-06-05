@@ -1,7 +1,7 @@
 
 
-#include <lib/stdiox.h>
-#include <lib/stdlibx.h>
+#include <libc/stdiox.h>
+#include <libc/stdlibx.h>
 #include <handlers/handlers.c>
 
 void keyboard_test(void)

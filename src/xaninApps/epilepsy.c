@@ -1,8 +1,7 @@
 
 
-#include <lib/stdiox.h>
-#include <lib/stdlibx.h>
-#include <lib/exit_process.h>
+#include <libc/stdiox.h>
+#include <libc/stdlibx.h>
 
 void epilepsy(void)
 {
@@ -21,7 +20,7 @@ void epilepsy(void)
 
         if(getchar() == 'q' || getscan() == ENTER || getscan() == ESC)
         {    
-            exit_process();
+            return;
         }
     }
 

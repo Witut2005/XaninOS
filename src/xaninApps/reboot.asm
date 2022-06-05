@@ -1,7 +1,7 @@
 [org 0x10400]
 [bits 16]
 
-;%include "/home/witut/Desktop/xaninOS/programming_libaries/xanin_asm.inc"
+;%include "/home/witut/Desktop/xaninOS/programming_libcaries/xanin_asm.inc"
 
 jmp reboot
 

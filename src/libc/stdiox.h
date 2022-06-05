@@ -4,13 +4,13 @@
 
 #include <stdarg.h>
 #include <stdint.h>
-#include <lib/colors.h>
+#include <libc/colors.h>
 #include <headers/macros.h>
 #include <terminal/vty.h>
-#include <lib/stdlibx.h>
+#include <libc/stdlibx.h>
 
 #include <keyboard/key_map.h>
-#include <lib/string.h>
+#include <libc/string.h>
 
 #define set_output_color(x,y) (x << 4 | y)
 #define cursor_set_position(x, y) (x << 8 | y)

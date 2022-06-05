@@ -5,7 +5,7 @@
 
 #include <stdint.h>
 #include <stddef.h>
-#include <lib/memory.h>
+#include <libc/memory.h>
 
 typedef	uint32_t physical_addr;
 

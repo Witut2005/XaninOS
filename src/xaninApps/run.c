@@ -1,12 +1,11 @@
 
 #pragma once
 
-#include <lib/stdiox.h>
+#include <libc/stdiox.h>
 #include <xin_fs/xin.c>
-#include <lib/memory.h>
+#include <libc/memory.h>
 #include <terminal/interpreter.h>
-#include <lib/exit_process.h>
-#include <lib/string.h>
+#include <libc/string.h>
 
 
 void run(char* file_name)
@@ -24,7 +23,7 @@ void run(char* file_name)
         {
             if((KeyInfo.scan_code == F4_KEY) || (KeyInfo.scan_code == ENTER))
             {
-                exit_process();
+                return;
             }
         }   
     

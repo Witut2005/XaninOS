@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include <lib/stdiox.h>
+#include <libc/stdiox.h>
 
 /* all ports all 8bit with exeception of DATA_REGISTER (16bit) */
 

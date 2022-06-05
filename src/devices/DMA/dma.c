@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include <lib/hal.h>
+#include <libc/hal.h>
 #include <stdint.h>
-#include <lib/stdiox.h>
+#include <libc/stdiox.h>
 #include <devices/DMA/dma.h>
 
 

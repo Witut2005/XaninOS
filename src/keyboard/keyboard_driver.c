@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include <lib/hal.h>
+#include <libc/hal.h>
 #include <terminal/vty.h>
 #include <devices/APIC/apic_registers.h>
 

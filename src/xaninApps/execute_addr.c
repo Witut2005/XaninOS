@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include <lib/stdiox.h>
+#include <libc/stdiox.h>
 
 void execute_addr(uint32_t address)
 {

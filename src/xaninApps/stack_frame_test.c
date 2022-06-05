@@ -1,6 +1,6 @@
 
 #include <stdint.h>
-#include <lib/stdiox.h>
+#include <libc/stdiox.h>
 
 
 void stack_frame_test(uint32_t x, uint32_t y)

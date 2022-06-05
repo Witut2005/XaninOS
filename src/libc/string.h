@@ -2,8 +2,12 @@
 
 #pragma once
 
-#include <lib/math.h>
+#include <libc/math.h>
 #include <stddef.h>
+#include <stdint.h>
+
+#define nullptr 0x0
+#define VGA_TEXT_MEMORY 0xb8000
 
 
 uint32_t strlen(const char* a)

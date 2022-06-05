@@ -1,6 +1,6 @@
 
 #include <devices/VGA/vga.h>
-#include <lib/memory.h>
+#include <libc/memory.h>
 
 void vga_registers_write(uint8_t* registers)
 {

@@ -2,7 +2,7 @@
 #pragma once
 
 #include <stdint.h>
-#include <lib/hal.h>
+#include <libc/hal.h>
 #include <devices/APIC/apic_registers.h>
 
 #define PIT_CHANNEL0 0x40

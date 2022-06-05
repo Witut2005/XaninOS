@@ -3,7 +3,7 @@
 
 
 
-#include <lib/stdiox.h>
+#include <libc/stdiox.h>
 
 void mouse_test(char *x)
 {

@@ -16,23 +16,7 @@ namespace std
         uint8_t current_format_option{'d'};
 
         public:
-        istream& operator >> (ostream_options x)
-        {
-           
-            if(x.option == '\n')
-                xscanf("\n");
-            else if(x.option == 'h')
-                current_format_option = 'h';
-            else if(x.option == 'd')
-                current_format_option = 'd';
-            else if(x.option == 'o')
-                current_format_option = 'o';
-            else if(x.option == 'b')
-                current_format_option = 'b';
-            else 
-                current_format_option = 'd';
-            return (istream&)*this;
-        }
+        
 
         istream& operator>>(int& x)
         {
