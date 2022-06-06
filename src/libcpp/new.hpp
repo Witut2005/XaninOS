@@ -6,14 +6,14 @@
 
 
 
-void* operator new[](size_t size) noexcept
+inline void* operator new[](size_t size) noexcept
 {
     void* p = malloc(size);
     xprintf("size allocated: %d\n", size);
     return p;
 }
 
-void* operator new(size_t size) noexcept
+inline void* operator new(size_t size) noexcept
 {
     void* p = malloc(size);
     xprintf("size allocated: %d\n", size);

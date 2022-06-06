@@ -244,7 +244,9 @@ class ostream
 
 
 
-}cout;
+};
+
+inline ostream cout;
 
 
 }

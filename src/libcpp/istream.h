@@ -144,7 +144,9 @@ namespace std
         }
 
 
-    }cin;
+    };
+    
+    inline istream cin;
 
 
 }

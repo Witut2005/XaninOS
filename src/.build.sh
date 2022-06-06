@@ -51,13 +51,15 @@ cd ..
 #alias xanincpp='i386-elf-g++ -O0 -masm=intel -Wno-builtin-declaration-mismatch -nostdlibc -ffreestanding -Wno-unused-function -fno-rtti -I /home/witut/Desktop/xaninOS/src -c'
 
 shopt -s expand_aliases
-alias xanincpp='i386-elf-g++ -O0 -fno-exceptions -lstdc++ -masm=intel -std=c++14 -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Wno-write-strings -Wno-return-type -fno-rtti -I /home/witut/Desktop/xaninOS/src -c'
+alias xanincpp='i386-elf-g++ -O0 -fno-exceptions -lstdc++ -masm=intel -std=c++17 -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Wno-write-strings -Wno-return-type -fno-rtti -I /home/witut/Desktop/xaninOS/src -c'
 alias xaninc='i386-elf-gcc -O0 -masm=intel -Wno-discarded-qualifiers -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-int-conversion -Wno-unused-function -Wno-div-by-zero -I /home/witut/Desktop/xaninOS/src/ -c'
 
 xanincpp ./chip8/chip8.cpp  -o ./chip8/chip8.o
 xanincpp ./devices/APIC/apic.cpp  -o ./devices/APIC/apic.o
 xanincpp ./test/cpp_test.cpp  -o ./test/cpp_test.o
+xanincpp ./test/cpp_test2.cpp  -o ./test/cpp_test2.o
 xanincpp ./devices/IOAPIC/ioapic.cpp -o ./devices/IOAPIC/ioapic.o
+xanincpp ./c++/algorithm.h -o ./c++/algorithm.o
 
 #xaninc ./lib/c/c_libary.h -o ./lib/c/c_libary.o
 xaninc ./test/testc.c -o ./test/testc.o
@@ -68,6 +70,7 @@ kernel.c \
 ./pit/pit.o \
 ./syscall/syscall.o \
 ./test/cpp_test.o \
+./test/cpp_test2.o \
 ./devices/MOUSE/mouse.o \
 ./devices/APIC/apic.o \
 ./devices/IOAPIC/ioapic.o \

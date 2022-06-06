@@ -30,18 +30,18 @@ namespace std
 
         };
 
-        system_clock system_clock::instance;
+    system_clock system_clock::instance;
 
-time_t system_clock::now()
-{
-    asm("nop");        
-}
+    time_t system_clock::now()
+    {
+        asm("nop");        
+    }
 
 
-system_clock& system_clock::get_instance()
-{
-    return system_clock::instance;
-}
+    system_clock& system_clock::get_instance()
+    {
+        return system_clock::instance;
+    }
 
 
 

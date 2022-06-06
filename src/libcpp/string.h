@@ -98,7 +98,7 @@ class string
     private:
     char* string_data;
 
-}base;
+};
 
 }
 
