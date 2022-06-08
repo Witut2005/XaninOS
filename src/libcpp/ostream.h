@@ -113,11 +113,6 @@ class ostream
         return (ostream&)*this;
     }
 
-    ostream& operator<<(std::string x)
-    {
-        xprintf("%s", x.c_str());
-        return (ostream&)*this;
-    }   
 
     ostream& operator<<(int x)
     {
@@ -205,6 +200,12 @@ class ostream
     ostream& operator<<(const char* x)
     {
         xprintf("%s", x);
+        return (ostream&)*this;
+    }
+
+    ostream& operator<<(std::string x)
+    {
+        xprintf("%s", x.c_str());
         return (ostream&)*this;
     }
 

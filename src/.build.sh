@@ -59,10 +59,9 @@ xanincpp ./devices/APIC/apic.cpp  -o ./devices/APIC/apic.o
 xanincpp ./test/cpp_test.cpp  -o ./test/cpp_test.o
 xanincpp ./test/cpp_test2.cpp  -o ./test/cpp_test2.o
 xanincpp ./devices/IOAPIC/ioapic.cpp -o ./devices/IOAPIC/ioapic.o
-xanincpp ./c++/algorithm.h -o ./c++/algorithm.o
 
 #xaninc ./lib/c/c_libary.h -o ./lib/c/c_libary.o
-xaninc ./test/testc.c -o ./test/testc.o
+#xaninc ./test/testc.c -o ./test/testc.o
 
 i386-elf-gcc -O0 -masm=intel -Wno-discarded-qualifiers -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-int-conversion -Wno-unused-function -Wno-div-by-zero -I /home/witut/Desktop/xaninOS/src \
 kernel.c \

@@ -1,4 +1,7 @@
 
+#include <devices/NIC/ne2000.hpp>
+#include <libcpp/stack.h>
+#include <libcpp/utility.h>
 #include <libcpp/time.hpp>
 #include <libcpp/algorithm.h>
 #include <libcpp/cstring.h>
@@ -25,10 +28,6 @@ void cpp_prog()
 
     std::cout << std::clear;
 
-    std::chrono::system_clock& CLOCK = std::chrono::system_clock::get_instance();
-    std::chrono::system_clock::now();
-
-
     int* p;
     
     p = (int*)malloc(sizeof(int));
@@ -53,6 +52,8 @@ void cpp_prog()
     std::swap<int>(*test_array.begin(), *test_array.end());
     std::min(*test_array.begin(), *test_array.end());
     
+    std::string str_tmp = "hm";
+    std::cout << str_tmp << std::endl;
     
 
     //std::cout << *p << std::endl;
@@ -78,6 +79,7 @@ void cpp_prog()
     std::cout << std::endl;
 
     std::string str("123");
+    std::cout << "STRING SIZE:"<< str.size() << std::endl;
 
 
     std::cout << std::hex << "0x" << str.begin() << std::endl;
@@ -86,6 +88,21 @@ void cpp_prog()
 
     std::cout << std::endl;
 
+    std::pair<char, int> para = std::make_pair('a', 512); 
+    std::pair<char, int>& ref_pair = para;
+
+    std::cout << para.first << " " << para.second << std::endl;
+
+    std::stack<int> stack;
+
+    for(int i = 0; i < 5; i++)
+        stack.push(i);
+
+    while(!stack.empty())
+    {
+        std::cout << stack.top() << std::endl;
+        stack.pop();
+    }
 
     wait_key(ENTER_RELEASE);
     wait_key(ENTER_RELEASE);

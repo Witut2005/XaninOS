@@ -403,18 +403,6 @@ uint32_t strtoi(char* str, uint8_t format)
 
         sum += tmp;
 
-        /*
-        if(str[i] >= '0' && str[i] <= '9')
-            str[i] = str[i] - '0';
-
-        else if(str[i] >= 'a' && str[i] <= 'f')
-            str[i] = str[i] - 'a' + 0xa;
-        
-        else
-            continue;
-        */
-
-        //sum += str[i];        
     }
     
     return sum;

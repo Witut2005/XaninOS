@@ -30,6 +30,7 @@
  */
 
 
+#include <stddef.h>
 
 namespace std
 {

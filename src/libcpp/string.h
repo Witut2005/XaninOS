@@ -53,9 +53,43 @@ class string
         strcpy(string_data, x);
     }
 
+    inline bool operator==(std::string x) 
+    {
+        return strcmp(this->c_str(), x.c_str()) == 0;
+    }
+
+    inline bool operator!=(std::string x) 
+    {
+        return strcmp(this->c_str(), x.c_str()) != 0;
+    }
+
+    std::string operator+(std::string x) 
+    {
+
+        uint32_t size = 0;
+        std::string tmp(*this); 
+
+        
+
+    }
+
     char operator [](uint32_t index)
     {
         return this->string_data[index];
+    }
+
+    uint32_t size()
+    {
+        char* tmp = this->c_str();
+        uint32_t size = 0;
+
+        while(*tmp != '\0')
+        {
+            size++;
+            tmp++;
+        }
+
+        return size;
     }
 
 
@@ -69,6 +103,7 @@ class string
         std::string* delete_ptr = (std::string*)element;
         delete_ptr->string_data = nullptr;
     }
+
 
     char* c_str()
     {
