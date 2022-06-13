@@ -25,6 +25,8 @@
 
 extern void v86_mode_enter(void);
 extern void mouse_enable(void);
+extern void com_port_init(uint16_t divisor);
+extern bool com_status(void);
 
 /*--------------------------------------/
 |wesolego nowego roku :))               |
@@ -155,6 +157,11 @@ void _start(void)
     }
 
     uint8_t* xanin_info_ptr = xanin_information_block_get();
+    
+    com_port_init(0x00C0);
+
+    xprintf("\n----------------------------\n");
+    xprintf("Com port status: 0x%x\n", com_status());
 
 
     while(KeyInfo.scan_code != ENTER);

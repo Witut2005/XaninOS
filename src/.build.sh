@@ -58,6 +58,7 @@ xanincpp ./chip8/chip8.cpp  -o ./chip8/chip8.o
 xanincpp ./devices/APIC/apic.cpp  -o ./devices/APIC/apic.o
 xanincpp ./test/cpp_test.cpp  -o ./test/cpp_test.o
 xanincpp ./test/cpp_test2.cpp  -o ./test/cpp_test2.o
+xanincpp ./devices/COM/com.cpp -o ./devices/COM/ComPort.o
 xanincpp ./devices/IOAPIC/ioapic.cpp -o ./devices/IOAPIC/ioapic.o
 
 #xaninc ./lib/c/c_libary.h -o ./lib/c/c_libary.o
@@ -73,8 +74,8 @@ kernel.c \
 ./devices/MOUSE/mouse.o \
 ./devices/APIC/apic.o \
 ./devices/IOAPIC/ioapic.o \
-./test/testc.o -o kernel.bin
-
+./test/testc.o \
+./devices/COM/ComPort.o -o kernel.bin
 cat ./xaninApps/shutdown ./elf/testc > ./xaninApps/xanin_external_apps
 
 

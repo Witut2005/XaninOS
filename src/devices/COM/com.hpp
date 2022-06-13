@@ -1,0 +1,34 @@
+
+
+
+
+
+
+enum COM_FIELDS
+{
+
+    COM1 = 0x3F8,
+    COM2 = 0x2F8,
+    COM3 = 0x3E8,
+    COM4 = 0x2E8,
+    COM5 = 0x5F8,
+    COM6 = 0x4F8,
+    COM7 = 0x5E8,
+    COM8 = 0x4E8,
+
+    COM_DATA_REGISTER = 0x0,
+    COM_INTERRUPT_REGISTER = 0x1,
+    COM_DLAB0 = 0x0,
+    COM_DLAB1 = 0x1,
+    COM_FIFO = 0x2,
+    COM_INTERRUPT_IDENTIFICATION = 0x2,
+    COM_LINE_CONTROL_REGISTER = 0x3,
+    COM_MODEM_CONTROL_REGISTER = 0x4,
+    COM_SCRATCH_REGISTER = 0x7,
+
+
+    DLAB_ENABLE = 1 << 7
+
+};
+
+
