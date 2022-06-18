@@ -46,6 +46,7 @@ void _start(void)
     set_idt();
     screen_init();                  //init screen management system
 
+
     pmmngr_init(0x200000, 0xF00000);
     pmmngr_init_region(0x200000, 0xFFFFFF);
 
