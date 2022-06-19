@@ -190,6 +190,15 @@ char* bin_to_str(int x, char* buf)
 
 }
 
+char* bcd_to_str(uint8_t x, char* buf)
+{
+
+    buf[0] = (((x & 0xf0) >> 4) + 48); 
+    buf[1] = ((x & 0x0f) + 48); 
+    return buf;
+
+}
+
 void erase_spaces(char* buf)
 {
     for(int i = 0; buf[i] != '\0'; i++)

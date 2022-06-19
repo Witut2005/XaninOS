@@ -22,6 +22,7 @@
 #include <devices/IOAPIC/ioapic.h>
 #include <elf/elf_loader.c>
 #include <devices/ACPI/ACPI.h>
+#include <libc/syslog.h>
 
 extern void v86_mode_enter(void);
 extern void mouse_enable(void);
@@ -180,6 +181,9 @@ void _start(void)
 
     xin_init_fs();
 
+    create_file_kernel("/syslog");
+
+    print_log("kernel succefully loaded :))");
 
     while(1)
     {
