@@ -53,6 +53,7 @@
 #include <xin_fs/xin.c>
 #include <xin_fs/xin_note.c>
 #include <xin_fs/xin_paint.c>
+#include <xin_fs/cat.c>
 
 #include <xaninApps/file_system/xin_info.c>
 #include <elf/elf_loader.c>

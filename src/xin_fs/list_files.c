@@ -1,18 +1,24 @@
 #pragma once
 
-#include <xaninApps/loadch.c>
 #include <libc/stdiox.h>
 
-void list_files(void)
+void list_files(char* path)
 {
-
-    uint32_t current_path_string_len = strlen(xin_current_directory);
 
     char* i = (char*)XIN_ENTRY_TABLE; 
     
     while(*i != '\0')
     {
-        xprintf("%s\n", i); 
+
+        if(strncmp(i, xin_current_directory, strlen(xin_current_directory)) && strlen(path) == 0)
+            xprintf("%s\n", i); 
+
+        if(strlen(path) > 0)
+        {
+            if(strncmp(i, path, strlen(path)))
+                xprintf("%s\n", i);
+        }
+
         i += 64;
     }
 

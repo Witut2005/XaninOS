@@ -1,5 +1,4 @@
 
-#COMPILER
 
 C	= i386-elf-gcc
 CC 	= i386-elf-g++
@@ -13,30 +12,59 @@ APPS = ./xaninApps
 HANDLERS = ./handlers
 
 build:
-	$(ASM) -fbin ./boot/boot.asm
-	$(ASM) -fbin ./boot/kernelLoader.asm
-	$(ASM) -fbin ./xin_fs/xin_pointers.asm
-	$(ASM) -fbin ./xin_fs/entries_table.asm
+
+	@echo [ASM] boot.asm
+	@$(ASM) -fbin ./boot/boot.asm
+
 	
-	$(ASM) -f elf32 ./handlers/keyboard.asm -o ./handlers/keyboard.o
-	$(ASM) -f elf32 ./syscall/syscall.asm -o ./syscall/syscall.o
-	$(ASM) -f elf32 ./pit/pit.asm -o ./pit/pit.o
+	@echo [ASM] boot.asm
+	@$(ASM) -fbin ./boot/kernelLoader.asm
+	
+	@echo [ASM] xin_pointers.asm
+	@$(ASM) -fbin ./xin_fs/xin_pointers.asm
 
-	$(ASM) -fbin ./libc/enter_real_mode.asm -o ./libc/enter_real_mode
+	@echo [ASM] entries_table.asm
+	@$(ASM) -fbin ./xin_fs/entries_table.asm
+	
+	@echo [ASM] keyboard.asm
+	@$(ASM) -f elf32 ./handlers/keyboard.asm -o ./handlers/keyboard.o
 
-	$(ASM) -fbin $(APPS)/shutdown.asm -o $(APPS)/shutdown
-	$(ASM) -fbin $(APPS)/reboot.asm -o $(APPS)/reboot
-	$(ASM) -fbin $(APPS)/syscall_test.asm -o  $(APPS)/syscall_test -w-other
-	$(ASM) -fbin $(APPS)/xanin_apps_space.asm -o $(APPS)/xanin_apps_space
+	@echo [ASM] syscall.asm
+	@$(ASM) -f elf32 ./syscall/syscall.asm -o ./syscall/syscall.o
 
-	$(CC) $(CC_OPTIONS) ./chip8/chip8.cpp -o ./chip8/chip8.o
-	$(CC) $(CC_OPTIONS) ./devices/APIC/apic.cpp -o ./devices/APIC/apic.o
-	$(CC) $(CC_OPTIONS) ./test/cpp_test.cpp -o ./test/cpp_test.o
-	$(CC) $(CC_OPTIONS) ./test/cpp_test2.cpp -o ./test/cpp_test2.o
-	$(CC) $(CC_OPTIONS) ./devices/COM/com.cpp -o ./devices/COM/ComPort.o
-	$(CC) $(CC_OPTIONS) ./devices/IOAPIC/ioapic.cpp -o ./devices/IOAPIC/ioapic.o
+	@echo [ASM] pit.asm
+	@$(ASM) -f elf32 ./pit/pit.asm -o ./pit/pit.o
 
-	$(C) $(C_COMPILE) kernel.c \
+	@echo [ASM] enter_real_mode.asm
+	@$(ASM) -fbin ./libc/enter_real_mode.asm -o ./libc/enter_real_mode
+
+	@echo [ASM] shutdown.asm
+	@$(ASM) -fbin $(APPS)/shutdown.asm -o $(APPS)/shutdown
+
+	@echo [ASM] reboot.asm
+	@$(ASM) -fbin $(APPS)/reboot.asm -o $(APPS)/reboot
+
+	@echo [ASM] syscall_test.asm
+	@$(ASM) -fbin $(APPS)/syscall_test.asm -o  $(APPS)/syscall_test -w-other
+
+	@echo [ASM] xanin_apps_space.asm
+	@$(ASM) -fbin $(APPS)/xanin_apps_space.asm -o $(APPS)/xanin_apps_space
+
+	@echo [CC] chip8.cpp
+	@$(CC) $(CC_OPTIONS) ./chip8/chip8.cpp -o ./chip8/chip8.o
+	@echo [CC] apic.cpp
+	@$(CC) $(CC_OPTIONS) ./devices/APIC/apic.cpp -o ./devices/APIC/apic.o
+	@echo [CC] cpp_test.cpp
+	@$(CC) $(CC_OPTIONS) ./test/cpp_test.cpp -o ./test/cpp_test.o
+	@echo [CC] cpp_test.cpp
+	@$(CC) $(CC_OPTIONS) ./test/cpp_test2.cpp -o ./test/cpp_test2.o
+	@echo [CC] com.cpp
+	@$(CC) $(CC_OPTIONS) ./devices/COM/com.cpp -o ./devices/COM/ComPort.o
+	@echo [CC] ioapic.cpp
+	@$(CC) $(CC_OPTIONS) ./devices/IOAPIC/ioapic.cpp -o ./devices/IOAPIC/ioapic.o
+
+	@echo [C] kernel.c
+	@$(C) $(C_COMPILE) kernel.c \
 	./handlers/keyboard.o \
 	./pit/pit.o \
 	./syscall/syscall.o \
@@ -48,14 +76,13 @@ build:
 	./test/testc.o \
 	./devices/COM/ComPort.o -o kernel.bin
 
-	cat ./xaninApps/shutdown ./elf/testc > ./xaninApps/xanin_external_apps
-	dd if=./xaninApps/xanin_external_apps of=./xaninApps/xanin_apps_space bs=512 count=16 conv=notrunc
-	cat ./boot/boot ./libc/enter_real_mode ./xaninApps/xanin_apps_space ./xin_fs/xin_pointers ./xin_fs/entries_table ./boot/kernelLoader kernel.bin > xanin.bin
+	@cat ./xaninApps/shutdown ./elf/testc > ./xaninApps/xanin_external_apps
+	@dd if=./xaninApps/xanin_external_apps of=./xaninApps/xanin_apps_space bs=512 count=16 conv=notrunc
+	@cat ./boot/boot ./libc/enter_real_mode ./xaninApps/xanin_apps_space ./xin_fs/xin_pointers ./xin_fs/entries_table ./boot/kernelLoader kernel.bin > xanin.bin
 
-	#MOV XANIN.img to BIN
-	dd if=xanin.bin of=xanin.img
-	mv xanin.img -f ../bin
-	mv xanin.bin -f ../bin
+	@dd if=xanin.bin of=xanin.img
+	@mv xanin.img -f ../bin
+	@mv xanin.bin -f ../bin
 
 
 

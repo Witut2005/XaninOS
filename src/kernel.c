@@ -185,6 +185,9 @@ void _start(void)
 
     print_log("kernel succefully loaded :))");
 
+    for(int i = 0; i <= 30; i++)
+        print_log("kernel ready");
+
     while(1)
     {
 

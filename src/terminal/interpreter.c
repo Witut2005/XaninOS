@@ -43,6 +43,11 @@ void scan(void)
         timer_test();
     }
 
+    else if(strcmp(program_name, "cat"))
+    {
+        cat(program_parameters);
+    }
+
     else if(strcmp(program_name,"epilepsy"))
     {
         epilepsy();
@@ -215,7 +220,7 @@ void scan(void)
 
     else if(strcmp(program_name,"ls") || strcmp(program_name,"dir"))
     {
-        list_files();
+        list_files(program_parameters);
     }
     
     else if(strcmp(program_name,"note"))

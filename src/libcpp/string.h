@@ -47,13 +47,13 @@ class string
 
     }
 
-    string operator=(const char* x)
+    string operator = (const char* x)
     {
         realloc(string_data, strlen(string_data), strlen(x));
         strcpy(string_data, x);
     }
 
-    inline bool operator==(std::string x) 
+    inline bool operator == (std::string x) 
     {
         return strcmp(this->c_str(), x.c_str()) == 0;
     }
@@ -63,13 +63,24 @@ class string
         return strcmp(this->c_str(), x.c_str()) != 0;
     }
 
-    std::string operator+(std::string x) 
+    std::string operator + (std::string x) 
     {
 
         uint32_t size = 0;
-        std::string tmp(*this); 
+        std::string tmp = this->c_str(); 
 
+        int i = 0;
         
+        for(; tmp.string_data[i] != '\0'; i++);
+
+        int j = 0;
+        char* tmp_str  = x.c_str();
+
+        for(; tmp_str[j] != '\0'; j++)
+            tmp.string_data[i + j] = tmp_str[j];
+        
+        tmp.string_data[i + j] = tmp_str[j];
+
 
     }
 

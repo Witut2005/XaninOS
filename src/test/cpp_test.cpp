@@ -104,6 +104,12 @@ void cpp_prog()
         stack.pop();
     }
 
+    std::string jed = "jeden ";
+    std::string dwa = "dwa";
+
+    std::cout << "str+str" << std::endl;
+    std::cout << jed + dwa << std::endl;
+
     wait_key(ENTER_RELEASE);
     wait_key(ENTER_RELEASE);
 

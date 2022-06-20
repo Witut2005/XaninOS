@@ -6,11 +6,24 @@
 void print_log(const char * str)
 {
 
-    static int current_line = 0;
+    static int current_line;
 
     xin_entry* file = fopen("/syslog", "w");
 
-    char buf[20] = {'\0'};
+    char buf[80] = {' '};
+
+    if(current_line > 27)
+    {
+        fseek(file, 0);
+
+        for(int i = 0; i < 28; i++)
+            write(file, buf , 80);
+        current_line = 0;
+    }
+
+    fseek(file, current_line * 80);
+
+    buf[79] = '\0';
 
     char separator = ':';
     
@@ -32,5 +45,6 @@ void print_log(const char * str)
 
     write(file, str, strlen(str));
 
+    current_line++;
 
 }
