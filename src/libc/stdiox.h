@@ -12,14 +12,14 @@
 #include <keyboard/key_map.h>
 #include <libc/string.h>
 
-#define set_output_color(x,y) (x << 4 | y)
-#define cursor_set_position(x, y) (x << 8 | y)
+#define set_output_color(x,y) (x << 4 | (y & 0xF))
+#define cursor_set_position(x, y) (x << 8 | (y & 0xF))
 #define stderr ( red << 4 | white)
 
 
 #define VRAM VGA_TEXT_MEMORY
-
 #define VGA_SCREEN_RESOLUTION 4480
+
 
 bool use_backspace = false;
 

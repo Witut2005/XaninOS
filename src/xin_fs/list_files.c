@@ -1,25 +1,53 @@
 #pragma once
 
 #include <libc/stdiox.h>
+#include <xin_fs/xin.c>
 
 void list_files(char* path)
 {
 
-    char* i = (char*)XIN_ENTRY_TABLE; 
-    
-    while(*i != '\0')
+    xin_entry* i = (xin_entry*)XIN_ENTRY_TABLE; 
+
+    int printed_text = 0;
+
+    while(*(char*)i != '\0')
     {
 
-        if(strncmp(i, xin_current_directory, strlen(xin_current_directory)) && strlen(path) == 0)
-            xprintf("%s\n", i); 
+
+        if(strncmp(i->entry_path, xin_current_directory, strlen(xin_current_directory)) && strlen(path) == 0)
+        {
+            printed_text += strlen(i->entry_path);
+
+            if(printed_text >= 70)
+            {
+                printed_text = 0;
+                xprintf("\n");
+            }
+
+            xprintf("%z%s", set_output_color(black, i->entry_type + 0x2), i);
+            xprintf("  ");
+        }
 
         if(strlen(path) > 0)
         {
-            if(strncmp(i, path, strlen(path)))
-                xprintf("%s\n", i);
+            if(strncmp(i->entry_path, path, strlen(path)))
+            {
+                printed_text += strlen(i->entry_path);
+
+                if(printed_text >= 70)
+                {
+                    printed_text = 0;
+                    xprintf("\n");
+                }
+
+                xprintf("%z%s", set_output_color(black, i->entry_type + 0x2), i);
+                xprintf("  ");
+
+            }
         }
 
-        i += 64;
+
+        i++;
     }
 
     while(KeyInfo.scan_code != ENTER);

@@ -265,6 +265,13 @@ void create_file(char *entry_parent_directory)
     char entry_full_name[38] = {0};
     xscanf("%s", new_entry_name);
 
+    if(new_entry_name[strlen(new_entry_name) - 1] == '/')
+    {
+        xprintf("%zFILE NAME CANT BE ENDED WITH / CHARACTER\n", set_output_color(red, white));
+        while (KeyInfo.scan_code != ENTER);
+        return;
+    }
+
     int i;
 
     for (i = 0; entry_parent_directory[i] != '\0'; i++)
