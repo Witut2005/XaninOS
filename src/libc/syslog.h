@@ -3,7 +3,7 @@
 #include <libc/string.h>
 #include <libc/stdlibx.h>
 
-void print_log(const char * str)
+void printk(const char * str)
 {
 
     static int current_line;

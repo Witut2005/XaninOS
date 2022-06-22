@@ -183,10 +183,10 @@ void _start(void)
 
     create_file_kernel("/syslog");
 
-    print_log("kernel succefully loaded :))");
+    printk("kernel succefully loaded :))");
 
     for(int i = 0; i <= 30; i++)
-        print_log("kernel ready");
+        printk("kernel ready");
 
     while(1)
     {

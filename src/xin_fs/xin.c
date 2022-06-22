@@ -312,6 +312,9 @@ void create_file(char *entry_parent_directory)
 
     entry->starting_sector = (uint32_t)write_entry - XIN_ENTRY_POINTERS;
 
+    for(char* i = entry->starting_sector * SECTOR_SIZE; (uint32_t)i < entry->starting_sector * SECTOR_SIZE + 0x10 * SECTOR_SIZE; i++)
+        *i = 0x0;
+    
     disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x12, 8, (uint16_t*)0x800);
     disk_flush(ATA_FIRST_BUS, ATA_MASTER);
 
