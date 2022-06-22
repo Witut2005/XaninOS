@@ -178,6 +178,10 @@ void _start(void)
     for(int i = 0; i < 70; i++)
         disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x1a + i, 1, (uint16_t*)(0x1800 + (i * SECTOR_SIZE)));
 
+    
+    disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x1, 0x1, 0x600);
+    disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x2, 0x1, 0x400);
+
 
     xin_init_fs();
 

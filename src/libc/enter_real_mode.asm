@@ -3,6 +3,7 @@
 
 xanin_saver:
 
+    cli
     mov al, 0x8
     out 0x21, al
 
@@ -58,4 +59,4 @@ xanin_saver:
     dw 0x03FF
     dd 0x0
 
-    times 512 - ($-$$) db 0x0   
+    times 512 - ($-$$) db 0x0  
