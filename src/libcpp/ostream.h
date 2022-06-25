@@ -203,7 +203,7 @@ class ostream
         return (ostream&)*this;
     }
 
-    ostream& operator<<(std::string x)
+    ostream& operator<<(const std::string& x)
     {
         xprintf("%s", x.c_str());
         return (ostream&)*this;

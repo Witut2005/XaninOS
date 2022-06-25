@@ -63,6 +63,7 @@ class string
         return strcmp(this->c_str(), x.c_str()) != 0;
     }
 
+    /*
     std::string operator + (std::string x) 
     {
 
@@ -83,6 +84,7 @@ class string
 
 
     }
+    */
 
     char operator [](uint32_t index)
     {
@@ -116,12 +118,31 @@ class string
     }
 
 
-    char* c_str()
+    char* c_str() const
     {
         return string_data;
     }
 
-    uint32_t length()
+    std::string operator + (std::string second)
+    {
+
+        char* c = (char*)malloc(second.length() + this->length());
+        
+        int i = 0;
+        for(; this->c_str()[i] != '\0'; i++)
+            c[i] = this->c_str()[i];
+        
+        int j = 0;
+        for(; second.c_str()[j] != '\0'; i++, j++)
+            c[i] = second.c_str()[j];
+
+        std::string result(c);
+        return result;
+
+
+    }
+
+    uint32_t length() const
     {
         if(string_data == nullptr)
             return 0;
@@ -130,13 +151,13 @@ class string
     }
 
 
-    uint32_t* begin()
+    uint32_t* begin() const
     {
         return reinterpret_cast<uint32_t*> (string_data);
     }
 
 
-    uint32_t* end()
+    uint32_t* end() const
     {
         return reinterpret_cast<uint32_t*> (string_data + length());
     }

@@ -1,6 +1,7 @@
 
 #pragma once
 #include <stdint.h>
+#include <libcpp/utility.h>
 
 namespace std
 {
@@ -69,6 +70,13 @@ T* find(const T* beg, const T* end, const T value)
     
     return const_cast<T*> (end);
 
+}
+
+template<class T>
+constexpr std::pair<T&&, T&&> minmax(T&& a, T&& b)
+{
+    if (a < b) return std::pair<T&&, T&&>(a, b);
+    else return std::pair<T&&, T&&>(a, b);
 }
 
 

@@ -104,11 +104,25 @@ void cpp_prog()
         stack.pop();
     }
 
-    std::string jed = "jeden ";
-    std::string dwa = "dwa";
+    int first = 100, second = 50;
 
-    std::cout << "str+str" << std::endl;
-    std::cout << jed + dwa << std::endl;
+    std::pair pair_test = std::minmax(first, second);
+
+    pair_test.first = 10;
+    pair_test.second = 5;
+
+    std::cout << std::dec << first << " " << second << std::endl;
+
+    std::cout << "string test" << std::endl;
+
+    std::string jeden_str = "kocham ";
+    std::string dwa_str = "piwko";
+
+    // std::cout << jeden << std::endl;
+    std::cout << dwa_str << std::endl;
+    std::cout << jeden_str << std::endl;
+    std::cout << jeden_str + dwa_str << std::endl;
+
 
     wait_key(ENTER_RELEASE);
     wait_key(ENTER_RELEASE);

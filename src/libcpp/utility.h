@@ -31,13 +31,9 @@ struct pair
     T first;
     X second;
 
-    pair<T, X>(T x, X y) // type deduction
-    {
-        first = x;
-        second = y;
-    }
+    pair<T, X>(T x, X y) : first(x), second(y) {}
 
-    pair<T, X>(const pair<T, X>& copy)
+    pair<T, X>(const pair<T, X>& copy) 
     {
         this->first = copy.first;
         this->second = copy.second;
