@@ -28,6 +28,8 @@ extern void v86_mode_enter(void);
 extern void mouse_enable(void);
 extern void com_port_init(uint16_t divisor);
 extern bool com_status(void);
+extern uint32_t ne2000_iobase_get(void);
+extern uint16_t ne2000_vendorid_get(void);
 
 /*--------------------------------------/
 |wesolego nowego roku :))               |
@@ -165,6 +167,8 @@ void _start(void)
     xprintf("\n----------------------------\n");
     xprintf("Com port status: 0x%x\n", com_status());
 
+    xprintf("ne2000 iobase: 0x%x\n", ne2000_iobase_get());
+    xprintf("ne2000 vendor id: 0x%x\n", ne2000_vendorid_get());
 
     while(KeyInfo.scan_code != ENTER);
 

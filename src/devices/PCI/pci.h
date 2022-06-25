@@ -7,6 +7,8 @@
 #define ENABLE_CONFIGURATION_SPACE_MAPPING 0x80000000
 
 
+#include <stdint.h>
+
 struct pci_device_structure0
 {
 
@@ -41,6 +43,7 @@ struct pci_device_structure0
 
 
 }__attribute__((packed));
+typedef struct pci_device_structure0 pci_device;
  
 struct pci_device_structure1
 {
@@ -104,9 +107,13 @@ struct pci_config_register
     uint8_t pci_function_number;
     uint8_t pci_register_offset;
 
-}pci_config_address;
+};
 
-typedef struct pic_config_register pci_config_register;
+#ifndef __cplusplus
+    typedef struct pci_config_register pci_config_register;
+#endif
+    
+static pci_config_register pci_config_address;
 
 
 enum PCI_DEVICES
@@ -119,7 +126,7 @@ enum PCI_DEVICES
 };
 
 
-char* pci_device_name[15] = 
+static char* pci_device_name[15] = 
 {
     "unclassified",
     "mass storage controller",

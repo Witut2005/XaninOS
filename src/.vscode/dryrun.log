@@ -1,0 +1,62 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory '/home/witut/Desktop/xaninOS/src'
+echo [ASM] boot.asm
+nasm -fbin ./boot/boot.asm
+echo [ASM] boot.asm
+nasm -fbin ./boot/kernelLoader.asm
+echo [ASM] xin_pointers.asm
+nasm -fbin ./xin_fs/xin_pointers.asm
+echo [ASM] entries_table.asm
+nasm -fbin ./xin_fs/entries_table.asm
+echo [ASM] keyboard.asm
+nasm -f elf32 ./handlers/keyboard.asm -o ./handlers/keyboard.o
+echo [ASM] syscall.asm
+nasm -f elf32 ./syscall/syscall.asm -o ./syscall/syscall.o
+echo [ASM] pit.asm
+nasm -f elf32 ./pit/pit.asm -o ./pit/pit.o
+echo [ASM] enter_real_mode.asm
+nasm -fbin ./libc/enter_real_mode.asm -o ./libc/enter_real_mode
+ 
+echo [ASM] shutdown.asm
+nasm -fbin ./xaninApps/shutdown.asm -o ./xaninApps/shutdown
+echo [ASM] reboot.asm
+nasm -fbin ./xaninApps/reboot.asm -o ./xaninApps/reboot
+echo [ASM] syscall_test.asm
+nasm -fbin ./xaninApps/syscall_test.asm -o  ./xaninApps/syscall_test -w-other
+echo [ASM] xanin_apps_space.asm
+nasm -fbin ./xaninApps/xanin_apps_space.asm -o ./xaninApps/xanin_apps_space
+echo [CC] chip8.cpp
+i386-elf-g++ -O0 -fno-exceptions -lstdc++ -masm=intel -std=c++17 -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Wno-write-strings -Wno-return-type -fno-rtti -I /home/witut/Desktop/xaninOS/src -c ./chip8/chip8.cpp -o ./chip8/chip8.o
+echo [CC] apic.cpp
+i386-elf-g++ -O0 -fno-exceptions -lstdc++ -masm=intel -std=c++17 -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Wno-write-strings -Wno-return-type -fno-rtti -I /home/witut/Desktop/xaninOS/src -c ./devices/APIC/apic.cpp -o ./devices/APIC/apic.o
+echo [CC] cpp_test.cpp
+i386-elf-g++ -O0 -fno-exceptions -lstdc++ -masm=intel -std=c++17 -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Wno-write-strings -Wno-return-type -fno-rtti -I /home/witut/Desktop/xaninOS/src -c ./test/cpp_test.cpp -o ./test/cpp_test.o
+echo [CC] cpp_test.cpp
+i386-elf-g++ -O0 -fno-exceptions -lstdc++ -masm=intel -std=c++17 -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Wno-write-strings -Wno-return-type -fno-rtti -I /home/witut/Desktop/xaninOS/src -c ./test/cpp_test2.cpp -o ./test/cpp_test2.o
+echo [CC] com.cpp
+i386-elf-g++ -O0 -fno-exceptions -lstdc++ -masm=intel -std=c++17 -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Wno-write-strings -Wno-return-type -fno-rtti -I /home/witut/Desktop/xaninOS/src -c ./devices/COM/com.cpp -o ./devices/COM/ComPort.o
+echo [CC] ioapic.cpp
+i386-elf-g++ -O0 -fno-exceptions -lstdc++ -masm=intel -std=c++17 -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Wno-write-strings -Wno-return-type -fno-rtti -I /home/witut/Desktop/xaninOS/src -c ./devices/IOAPIC/ioapic.cpp -o ./devices/IOAPIC/ioapic.o
+echo [CC] ne2000.cpp
+i386-elf-g++ -O0 -fno-exceptions -lstdc++ -masm=intel -std=c++17 -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Wno-write-strings -Wno-return-type -fno-rtti -I /home/witut/Desktop/xaninOS/src -c ./devices/NIC/ne2000.cpp -o ./devices/NIC/ne2000.o
+echo [C] kernel.c
+i386-elf-gcc -O0 -masm=intel -Wno-discarded-qualifiers -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-int-conversion -Wno-unused-function -Wno-div-by-zero -Wno-address-of-packed-member -I /home/witut/Desktop/xaninOS/src/ kernel.c \
+./handlers/keyboard.o \
+./pit/pit.o \
+./syscall/syscall.o \
+./test/cpp_test.o \
+./test/cpp_test2.o \
+./devices/MOUSE/mouse.o \
+./devices/APIC/apic.o \
+./devices/NIC/ne2000.o \
+./devices/IOAPIC/ioapic.o \
+./test/testc.o \
+./devices/COM/ComPort.o -o kernel.bin
+cat ./xaninApps/shutdown ./elf/testc > ./xaninApps/xanin_external_apps
+dd if=./xaninApps/xanin_external_apps of=./xaninApps/xanin_apps_space bs=512 count=16 conv=notrunc
+cat ./boot/boot ./libc/enter_real_mode ./xaninApps/xanin_apps_space ./xin_fs/xin_pointers ./xin_fs/entries_table ./boot/kernelLoader kernel.bin > xanin.bin
+dd if=xanin.bin of=xanin.img
+mv xanin.img -f ../bin
+mv xanin.bin -f ../bin
+make: Leaving directory '/home/witut/Desktop/xaninOS/src'
+ 

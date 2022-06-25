@@ -2,6 +2,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <libcpp/ctime.h>
 #include <libcpp/string.h>
 #include <libcpp/cstdio.h>
 
@@ -236,6 +237,16 @@ class ostream
         }
         return (ostream&)*this;
 
+    }
+
+    ostream& operator<< (CmosTime time)
+    {
+        xprintf("%i:%i:%i", time.hour, time.minutes, time.seconds);
+    }
+
+    ostream& operator<< (bcd year)
+    {
+        xprintf("%x", year.bcd_num);
     }
 
     void put(char x)

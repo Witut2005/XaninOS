@@ -1,20 +1,7 @@
 
 #pragma once
 
-struct CmosTime
-{
-    uint8_t seconds; 
-    uint8_t minutes;
-    uint8_t hour;
 
-    uint8_t weekday;
-    uint8_t day_of_month;
-    uint8_t month;
-    uint8_t year;
-    uint8_t century;
-    
-
-}__attribute__((packed));
 
 
 struct time_t
@@ -33,6 +20,11 @@ struct time_t
 };
 
 typedef struct time_t time_t;
+
+struct bcd
+{
+    uint32_t bcd_num;
+};
 
 extern "C"
 {

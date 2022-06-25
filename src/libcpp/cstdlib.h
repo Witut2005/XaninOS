@@ -6,6 +6,21 @@
 #define PMMNGR_BLOCK_SIZE	4096
 #define PMMNGR_BLOCK_ALIGN	PMMNGR_BLOCK_SIZE
 
+struct CmosTime
+{
+    uint8_t seconds; 
+    uint8_t minutes;
+    uint8_t hour;
+
+    uint8_t weekday;
+    uint8_t day_of_month;
+    uint8_t month;
+    uint8_t year;
+    uint8_t century;
+    
+
+}__attribute__((packed));
+
 extern "C"
 {
 
@@ -13,7 +28,7 @@ bool key_pressed(void);
 char getchar(void);
 char getscan(void);
 char* keyboard_buffer_refresh(uint16_t* screen_buffer);
-void time_get();
+void time_get(CmosTime* time);
 uint8_t floppy_type_get_cmos();
 void get_cpu_speed();
 void swap_int(int *xp, int *yp);

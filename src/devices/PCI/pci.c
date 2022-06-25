@@ -3,6 +3,8 @@
 #include <libc/hal.h>
 #include <devices/PCI/pci.h>
 
+
+
 uint16_t pci_get_vendor_id(const uint8_t bus, const uint8_t slot, 
                         const uint8_t function)
 { 
@@ -68,7 +70,7 @@ uint16_t pci_get_device_class(const uint8_t bus, const uint8_t slot,
 }
 
 
-uint32_t pci_get_bar(const uint8_t bus, const uint8_t slot, const uint8_t function)
+uint32_t pci_get_bar(const uint8_t bus, const uint8_t slot, const uint8_t function, const uint8_t bar_number)
 {
     
 
@@ -78,7 +80,7 @@ uint32_t pci_get_bar(const uint8_t bus, const uint8_t slot, const uint8_t functi
     address = (uint32_t)((bus << 16) | 
                         (slot << 11) |
                         (function << 8)|
-                        (0x20) | (uint32_t)ENABLE_CONFIGURATION_SPACE_MAPPING);
+                        (0x10 + 0x4 * bar_number) | (uint32_t)ENABLE_CONFIGURATION_SPACE_MAPPING);
 
     outdIO(PCI_ADDRESS_PORT, address);
     ret = (uint32_t)(indIO(PCI_DATA_PORT));
@@ -238,7 +240,39 @@ uint16_t pci_write_data16(uint32_t configuration_address, uint8_t register_id,
 }
 
 
-uint32_t capabilities_pointer_get(void)
+uint32_t pci_find_device(uint16_t class, pci_device* device_data)
 {
 
+
+
+    uint32_t pci_address_selector = 0x0;
+
+    uint32_t* device_tmp = (uint32_t*)device_data;
+
+    for(pci_address_selector = 0x0; pci_address_selector < 2500000; pci_address_selector+=0x4) 
+    {
+        static uint16_t var, tmp; 
+        tmp = var;
+
+        var = pci_get_data16((pci_address_selector & 0xFF000000) >> 24, (pci_address_selector & 0xFF0000) >> 16, 
+                                            (pci_address_selector & 0xFF00) >> 8, 0xa);
+
+ 
+        if(var == class && tmp != var)   
+        {
+        
+
+            for(int i = 0x0; i <= 0xF; i++)
+                *(device_tmp + i) = pci_get_data32((pci_address_selector & 0xFF000000) >> 24, (pci_address_selector & 0xFF0000) >> 16, 
+                                                    (pci_address_selector & 0xFF00) >> 8, 4 * i);
+            
+            return pci_address_selector;
+        
+        }
+
+    }
+
+    return 0xFFFFFFFF;
+
 }
+

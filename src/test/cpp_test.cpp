@@ -1,5 +1,5 @@
 
-#include <devices/NIC/ne2000.hpp>
+// #include <devices/NIC/ne2000.hpp>
 #include <libcpp/stack.h>
 #include <libcpp/utility.h>
 #include <libcpp/time.hpp>
@@ -123,6 +123,9 @@ void cpp_prog()
     std::cout << jeden_str << std::endl;
     std::cout << jeden_str + dwa_str << std::endl;
 
+    std::cout << "end time of execution: " << std::chrono::system_clock::now() << std::endl;
+
+    std::cout << "end time year" << std::chrono::system_clock::year() << std::endl;
 
     wait_key(ENTER_RELEASE);
     wait_key(ENTER_RELEASE);

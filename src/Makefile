@@ -3,8 +3,8 @@
 C	= i386-elf-gcc
 CC 	= i386-elf-g++
 
-C_OPTIONS = -O0 -masm=intel -Wno-discarded-qualifiers -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-int-conversion -Wno-unused-function -Wno-div-by-zero -I /home/witut/Desktop/xaninOS/src/ -c
-C_COMPILE = -O0 -masm=intel -Wno-discarded-qualifiers -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-int-conversion -Wno-unused-function -Wno-div-by-zero -I /home/witut/Desktop/xaninOS/src/
+C_OPTIONS = -O0 -masm=intel -Wno-discarded-qualifiers -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-int-conversion -Wno-unused-function -Wno-div-by-zero -Wno-address-of-packed-member -I /home/witut/Desktop/xaninOS/src/ -c
+C_COMPILE = -O0 -masm=intel -Wno-discarded-qualifiers -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-int-conversion -Wno-unused-function -Wno-div-by-zero -Wno-address-of-packed-member -I /home/witut/Desktop/xaninOS/src/
 CC_OPTIONS =  -O0 -fno-exceptions -lstdc++ -masm=intel -std=c++17 -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Wno-write-strings -Wno-return-type -fno-rtti -I /home/witut/Desktop/xaninOS/src -c
 ASM	= nasm
 APPS = ./xaninApps
@@ -62,6 +62,9 @@ build:
 	@$(CC) $(CC_OPTIONS) ./devices/COM/com.cpp -o ./devices/COM/ComPort.o
 	@echo [CC] ioapic.cpp
 	@$(CC) $(CC_OPTIONS) ./devices/IOAPIC/ioapic.cpp -o ./devices/IOAPIC/ioapic.o
+	
+	@echo [CC] ne2000.cpp
+	@$(CC) $(CC_OPTIONS) ./devices/NIC/ne2000.cpp -o ./devices/NIC/ne2000.o
 
 	@echo [C] kernel.c
 	@$(C) $(C_COMPILE) kernel.c \
@@ -72,6 +75,7 @@ build:
 	./test/cpp_test2.o \
 	./devices/MOUSE/mouse.o \
 	./devices/APIC/apic.o \
+	./devices/NIC/ne2000.o \
 	./devices/IOAPIC/ioapic.o \
 	./test/testc.o \
 	./devices/COM/ComPort.o -o kernel.bin
@@ -87,7 +91,7 @@ build:
 
 
 run:
-	qemu-system-i386 -drive file=../bin/xanin.img,cache=unsafe -m 512
+	qemu-system-i386 -net nic,model=e1000 -drive file=../bin/xanin.img,cache=unsafe -m 512
 
 curses:
 	qemu-system-i386 -curses -k en-us -m 512 -hda ../bin/xanin.img 

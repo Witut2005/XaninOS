@@ -5,6 +5,8 @@
 #include <libcpp/ctime.h>
 
 
+
+
 namespace std
 {
 
@@ -18,7 +20,8 @@ namespace std
                 
             system_clock(const system_clock&) = delete;   //copy constructor
 
-            static time_t now();
+            static CmosTime now();
+            static bcd year();
             static system_clock& get_instance();
             static time_t to_time_t(time_t);
 
@@ -26,15 +29,25 @@ namespace std
             
             system_clock(){}
 
+            static CmosTime time;
             static system_clock instance;
 
         };
 
     system_clock system_clock::instance;
+    CmosTime system_clock::time;
 
-    time_t system_clock::now()
+    CmosTime system_clock::now()
     {
-        asm("nop");        
+        time_get(&system_clock::time);       
+        return system_clock::time;
+    }
+
+    bcd system_clock::year()
+    {
+        time_get(&system_clock::time);
+        bcd x = {uint32_t(time.century * 0x100 + time.year)};
+        return x;
     }
 
 
