@@ -8,6 +8,7 @@
 void reg_dump(void)
 {
 
+    screen_clear();
 
     asm("mov ebx, [ebp + 4]\n\t"
         "mov %0, ebx"
@@ -60,5 +61,7 @@ void reg_dump(void)
     xprintf("ss: 0x%x\n", SegmentRegister.ss);
     xprintf("fs: 0x%x\n", SegmentRegister.fs);
     xprintf("gs: 0x%x\n", SegmentRegister.gs);
+
+    while(getscan() != ENTER);
 
 }
