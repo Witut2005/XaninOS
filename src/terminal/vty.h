@@ -102,6 +102,8 @@ char program_parameters1[40];
 char program_parameters2[40];
 char program_parameters3[40];
 
+char* argv[5];
+
 char last_used_commands[40];
 char last_used_parameters[40];
 

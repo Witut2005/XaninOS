@@ -186,6 +186,12 @@ void _start(void)
     disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x1, 0x1, 0x600);
     disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x2, 0x1, 0x400);
 
+    argv[0] = program_name;
+    argv[1] = program_parameters;
+    argv[2] = program_parameters1;
+    argv[3] = program_parameters2;
+    argv[4] = program_parameters3;
+
 
     xin_init_fs();
 

@@ -36,6 +36,9 @@ char *xin_get_current_path(char *file_name)
     return xin_current_path;
 }
 
+
+                                            
+
 /* DIRECTORY AND FILES */
 xin_entry *xin_find_entry(char *entry_name)
 {
@@ -58,6 +61,27 @@ xin_entry *xin_find_entry(char *entry_name)
     }
 
     return nullptr;
+}
+
+xin_entry* xin_get_file_pf(char* entry_path) // pf = parent folder
+{
+
+    char* parent_folder = (char*)malloc(sizeof(char) * 40);
+
+    int i;
+    for(i = strlen(entry_path) - 1; entry_path[i] != '/'; i--);
+
+    for(int j = 0; j <= i; j++)
+        parent_folder[j] = entry_path[j];
+
+    return xin_find_entry(parent_folder);
+
+}
+
+void xin_get_file_pf_test(char* entry_path) // pf = parent folder
+{
+    xprintf("parent_folder: %s\n", xin_get_file_pf(entry_path)->entry_path);
+    while(getscan() != ENTER);
 }
 
 uint8_t *xin_find_free_pointer(void)

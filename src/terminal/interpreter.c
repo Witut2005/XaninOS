@@ -12,6 +12,8 @@ char scanf_str[40] = "%s %s %s %s %s";
 
 void scan(void)
 {
+    
+
     for(int i = 0; i < 40; i++)
         program_name[i] = '\0';
     
@@ -79,8 +81,12 @@ void scan(void)
         while(KeyInfo.scan_code != ENTER);
     }
 
+    XANIN_ADD_APP_ENTRY1("pf", xin_get_file_pf_test)
     XANIN_ADD_APP_ENTRY1("help", help)
     XANIN_ADD_APP_ENTRY1("h", help)
+
+    XANIN_ADD_APP_ENTRY2("move", xin_move)
+    XANIN_ADD_APP_ENTRY2("mv", xin_move)
 
     XANIN_ADD_APP_ENTRY1("xin_info", xin_entry_info)
     XANIN_ADD_APP_ENTRY0("cls", screen_clear)
