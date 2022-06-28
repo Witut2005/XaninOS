@@ -65,11 +65,15 @@ xin_entry *xin_find_entry(char *entry_name)
 
 xin_entry* xin_get_file_pf(char* entry_path) // pf = parent folder
 {
+    bool if_folder = false;
+
+    if(entry_path[strlen(entry_path) - 1] == '/')
+        if_folder = true;
 
     char* parent_folder = (char*)malloc(sizeof(char) * 40);
 
     int i;
-    for(i = strlen(entry_path) - 1; entry_path[i] != '/'; i--);
+    for(i = strlen(entry_path) - 1 - if_folder; entry_path[i] != '/'; i--);
 
     for(int j = 0; j <= i; j++)
         parent_folder[j] = entry_path[j];
@@ -260,56 +264,58 @@ void create_file_kernel(char* entry_name)
 }
 
 
-void create_file(char *entry_parent_directory)
+void create_file(char* entry_name)
 {
 
+    bool only_entry_name = true;
+    
+    xin_entry* entry = xin_find_free_entry();
 
-    if (entry_parent_directory[strlen(entry_parent_directory) - 1] != '/')
+    for(int i = strlen(entry_name) - 1; i >= 0; i--)
     {
-        xprintf("%zMISSING / ENDING CHARACTER IN DIRECTORY NAME\n", set_output_color(red, white));
-        return;
+        if(entry_name[i] == '/')
+        {
+            only_entry_name = false;
+            break;
+        }
+    }
+
+    if(only_entry_name)
+    {
+        char* path = xin_get_current_path(entry_name); 
+
+        xprintf("%s\n", path);
+
+        if(xin_find_entry(entry_name) != nullptr)
+        {
+            xprintf("%zFILE WITH THIS NAME EXISTS\n", stderr);
+            while(getscan() != ENTER);
+            return;
+        }
+
+        set_string(entry->entry_path, path);
+
     }
     
-
-    
-    xin_entry* parent = xin_find_entry(entry_parent_directory);
-    
-    if(parent == nullptr || parent->entry_type != XIN_DIRECTORY)
+    else if(xin_get_file_pf(entry_name) != nullptr)
     {
-        xprintf("NO SUCH DIRECTORY\n", set_output_color(red, white));
-        while (KeyInfo.scan_code != ENTER);
+        if(xin_find_entry(entry_name) != nullptr)
+        {
+            xprintf("%zFILE WITH THIS NAME EXISTS\n", stderr);
+            while(getscan() != ENTER);
+            return;
+        }
+
+        set_string(entry->entry_path, entry_name);
+    }
+
+    else
+    {
+        
+        xprintf("%zFILE CREATE FAILURE\n", stderr);
+        while(getscan() != ENTER);
         return;
     }
-
-    xprintf("Your parent directory: %s\n", entry_parent_directory);
-
-
-    xprintf("Your new file name: ");
-    char new_entry_name[38] = {0};
-    char entry_full_name[38] = {0};
-    xscanf("%s", new_entry_name);
-
-    if(new_entry_name[strlen(new_entry_name) - 1] == '/')
-    {
-        xprintf("%zFILE NAME CANT BE ENDED WITH / CHARACTER\n", set_output_color(red, white));
-        while (KeyInfo.scan_code != ENTER);
-        return;
-    }
-
-    int i;
-
-    for (i = 0; entry_parent_directory[i] != '\0'; i++)
-        entry_full_name[i] = entry_parent_directory[i];
-
-    for (int j = 0; new_entry_name[j] != '\0'; j++, i++)
-        entry_full_name[i] = new_entry_name[j];
-
-    if(xin_find_entry(entry_full_name) != nullptr)
-    {
-        xprintf("%zENTRY WITH THIS PATH EXISTS!\n", set_output_color(red,white));
-        while(KeyInfo.scan_code != ENTER);
-    }
-
     /* write entry to xin entry pointers table */
     uint8_t *write_entry = xin_find_free_pointer();
 
@@ -319,11 +325,8 @@ void create_file(char *entry_parent_directory)
     write_entry[15] = XIN_EOF;
 
     /* write entry to xin entry date table */
-    xin_entry *entry = xin_find_free_entry();
 
     time_get(&SystemTime);
-
-    set_string(entry->entry_path, entry_full_name);
 
     entry->creation_date = (uint32_t)((SystemTime.day_of_month << 24) | (SystemTime.month << 16) | (SystemTime.century << 8) | (SystemTime.year)); 
     entry->creation_time = (uint16_t)(SystemTime.hour << 8) | (SystemTime.minutes);
@@ -350,68 +353,84 @@ void create_file(char *entry_parent_directory)
 
 }
 
-void xin_create_directory(char *entry_path)
+void xin_create_directory(char* entry_name)
 {
 
-    if (entry_path[strlen(entry_path) - 1] != '/')
+    bool only_entry_name = true;
+    
+    xin_entry* entry = xin_find_free_entry();
+    
+    if(entry_name[strlen(entry_name) - 1] != '/')
     {
-        xprintf("%zMISSING / ENDING CHARACTER IN DIRECTORY NAME\n", set_output_color(red, white));
-        while (KeyInfo.scan_code != ENTER);
+        xprintf("%zDIRECTORY NAME MUST BE ENDED WITH / CHAR\n", stderr);
+        while(getscan() != ENTER);
         return;
     }
 
-    if (xin_find_entry(entry_path) == nullptr)
+    entry_name[strlen(entry_name) - 1] = ' ';
+
+    for(int i = strlen(entry_name) - 1; i >= 0; i--)
     {
-        xprintf("NO SUCH DIRECTORY\n", set_output_color(red, white));
-        while (KeyInfo.scan_code != ENTER);
+        if(entry_name[i] == '/')
+        {
+            only_entry_name = false;
+            break;
+        }
+    }
+
+    entry_name[strlen(entry_name) - 1] = '/';
+
+    if(only_entry_name)
+    {
+
+        char* path = xin_get_current_path(entry_name); 
+
+        xprintf("%s\n", path);
+
+        if(xin_find_entry(entry_name) != nullptr)
+        {
+            xprintf("%zFILE WITH THIS NAME EXISTS\n", stderr);
+            while(getscan() != ENTER);
+            return;
+        }
+
+        set_string(entry->entry_path, path);
+
+    }
+    
+    else if(xin_get_file_pf(entry_name) != nullptr)
+    {
+        if(xin_find_entry(entry_name) != nullptr)
+        {
+            xprintf("%zFILE WITH THIS NAME EXISTS\n", stderr);
+            while(getscan() != ENTER);
+            return;
+        }
+
+        set_string(entry->entry_path, entry_name);
+    }
+
+    else
+    {
+        
+        xprintf("%zFILE CREATE FAILURE\n", stderr);
+        while(getscan() != ENTER);
         return;
     }
 
-    xin_entry *entry = xin_find_free_entry();
+    /* write entry to xin entry date table */
 
-    xprintf("Your parent directory: %s\n", entry_path);
-    xprintf("Your new directory name: ");
+    time_get(&SystemTime);
 
-    char entry_name[38] = {0};
-    xscanf("%s", entry_name);
-
-    int i = 0;
-
-    for (; entry_path[i] != '\0'; i++);
-
-    for (int j = 0; entry_name[j] != '\0'; i++, j++)
-        entry_path[i] = entry_name[j];
-
-    if (xin_find_entry(entry_path) != nullptr)
-    {
-        xprintf("%zDIRECTORY WITH THIS NAME ALREADY EXISTS\n",
-        set_output_color(red, white));
-        while (KeyInfo.scan_code != ENTER);
-        return;
-    }
-
-    if(entry_path[strlen(entry_path) - 1] != '/')
-    {
-        xprintf("%zMISSING / ENDING CHARACTER IN DIRECTORY NAME\n", set_output_color(red, white));
-        while (KeyInfo.scan_code != ENTER);
-        return;
-    }
-
-    for (int j = 0; j < sizeof(entry->entry_path); j++)
-    {
-        entry->entry_path[j] = entry_path[j];
-    }
-
-    entry->creation_date = 0x0;
-    entry->creation_time = 0x0;
-    entry->modification_date = 0x0;
-    entry->modification_time = 0x0;
+    entry->creation_date = (uint32_t)((SystemTime.day_of_month << 24) | (SystemTime.month << 16) | (SystemTime.century << 8) | (SystemTime.year)); 
+    entry->creation_time = (uint16_t)(SystemTime.hour << 8) | (SystemTime.minutes);
+    entry->modification_date = (uint32_t)((SystemTime.day_of_month << 24) | (SystemTime.month << 16) | (SystemTime.century << 8) | (SystemTime.year)); 
+    entry->modification_time = (uint16_t)(SystemTime.hour << 8) | (SystemTime.minutes);
+    entry->file_info = nullptr;
     entry->entry_permissions = PERMISSION_MAX;
     entry->entry_size = 0x0;
-    entry->starting_sector = 0x0;
     entry->entry_type = XIN_DIRECTORY;
 
-    return;
 }
 
 bool xin_remove_entry(char *entry_name)
