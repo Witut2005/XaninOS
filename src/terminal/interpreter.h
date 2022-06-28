@@ -55,6 +55,7 @@
 #include <xin_fs/xin_paint.c>
 #include <xin_fs/cat.c>
 #include <xin_fs/move.c>
+#include <xin_fs/copy.c>
 
 #include <xaninApps/file_system/xin_info.c>
 #include <elf/elf_loader.c>

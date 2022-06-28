@@ -2,7 +2,7 @@
 
 #include <terminal/interpreter.h>
 
-char scanf_str[40] = "%s %s %s %s %s";
+    char scanf_str[40] = "%s %s %s %s %s";
 
 #define XANIN_ADD_APP_ENTRY0(app_name, exec_name) else if(strcmp(program_name, app_name)) {exec_name();}
 #define XANIN_ADD_APP_ENTRY1(app_name, exec_name) else if(strcmp(program_name, app_name)) {exec_name(program_parameters);}
@@ -10,52 +10,52 @@ char scanf_str[40] = "%s %s %s %s %s";
 #define XANIN_ADD_APP_ENTRY3(app_name, exec_name) else if(strcmp(program_name, app_name)) {exec_name(program_parameters, program_parameters1, program_parameters2);}
 
 
-void scan(void)
-{
-    
+    void scan(void)
+    {
+        
 
-    for(int i = 0; i < 40; i++)
-        program_name[i] = '\0';
-    
-    for(int i = 0; i < 40; i++)
-        program_parameters[i] = '\0';
+        for(int i = 0; i < 40; i++)
+            program_name[i] = '\0';
+        
+        for(int i = 0; i < 40; i++)
+            program_parameters[i] = '\0';
 
-    xscanf(scanf_str,program_name, program_parameters, program_parameters1, program_parameters2, program_parameters3);
-
-
-
-    erase_spaces(program_name);
-    erase_spaces(program_parameters);
-    
-    for(int i = 0; i < sizeof(program_name); i++)
-        last_used_commands[i] = program_name[i];
+        xscanf(scanf_str,program_name, program_parameters, program_parameters1, program_parameters2, program_parameters3);
 
 
-    for(int i = 0; i < sizeof(program_parameters); i++)
-        last_used_parameters[i] = program_parameters[i]; 
 
-    character_blocked = '\0';
-    keyboard_handle = nullptr;
-
-    KeyInfo.character = 0x0;
-    KeyInfo.scan_code = 0x0;
+        erase_spaces(program_name);
+        erase_spaces(program_parameters);
+        
+        for(int i = 0; i < sizeof(program_name); i++)
+            last_used_commands[i] = program_name[i];
 
 
-    if(strcmp(program_name,"zsk"))
-        zsk(program_parameters);
+        for(int i = 0; i < sizeof(program_parameters); i++)
+            last_used_parameters[i] = program_parameters[i]; 
 
-    XANIN_ADD_APP_ENTRY0("timer_test", timer_test)
-    XANIN_ADD_APP_ENTRY1("cat", cat)
-    XANIN_ADD_APP_ENTRY0("epilepsy", epilepsy)
-    XANIN_ADD_APP_ENTRY1("elft", elfreader)
-    XANIN_ADD_APP_ENTRY1("mouse", mouse_test)
-    XANIN_ADD_APP_ENTRY1("hexeditor", hexeditor)
-    XANIN_ADD_APP_ENTRY1("run16", run16)
-    XANIN_ADD_APP_ENTRY1("run", run)
-    XANIN_ADD_APP_ENTRY0("test", cpp_test)
-    XANIN_ADD_APP_ENTRY2("stack_test", stack_frame_test)
-    XANIN_ADD_APP_ENTRY1("cpu_info", cpu_info)
-    XANIN_ADD_APP_ENTRY1("calc", calc)
+        character_blocked = '\0';
+        keyboard_handle = nullptr;
+
+        KeyInfo.character = 0x0;
+        KeyInfo.scan_code = 0x0;
+
+
+        if(strcmp(program_name,"zsk"))
+            zsk(program_parameters);
+
+        XANIN_ADD_APP_ENTRY0("timer_test", timer_test)
+        XANIN_ADD_APP_ENTRY1("cat", cat)
+        XANIN_ADD_APP_ENTRY0("epilepsy", epilepsy)
+        XANIN_ADD_APP_ENTRY1("elft", elfreader)
+        XANIN_ADD_APP_ENTRY1("mouse", mouse_test)
+        XANIN_ADD_APP_ENTRY1("hexeditor", hexeditor)
+        XANIN_ADD_APP_ENTRY1("run16", run16)
+        XANIN_ADD_APP_ENTRY1("run", run)
+        XANIN_ADD_APP_ENTRY0("test", cpp_test)
+        XANIN_ADD_APP_ENTRY2("stack_test", stack_frame_test)
+        XANIN_ADD_APP_ENTRY1("cpu_info", cpu_info)
+        XANIN_ADD_APP_ENTRY1("calc", calc)
     XANIN_ADD_APP_ENTRY1("paint", xin_paint)
     XANIN_ADD_APP_ENTRY0("reg_dump", reg_dump)
     XANIN_ADD_APP_ENTRY1("load", load)
@@ -87,6 +87,9 @@ void scan(void)
 
     XANIN_ADD_APP_ENTRY2("move", xin_move)
     XANIN_ADD_APP_ENTRY2("mv", xin_move)
+
+    XANIN_ADD_APP_ENTRY2("copy", xin_copy)
+    XANIN_ADD_APP_ENTRY2("cp", xin_copy)
 
     XANIN_ADD_APP_ENTRY1("xin_info", xin_entry_info)
     XANIN_ADD_APP_ENTRY0("cls", screen_clear)

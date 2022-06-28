@@ -35,7 +35,7 @@ CmosTime SystemTime;
 #define CMOS_ADDR 0x70
 #define CMOS_DATA 0x71
 
-char* daysLUT[7] = {"Sun","Mon","Tue ","Wed","Thu","Fri","Sat"};
+char* daysLUT[7] = {"Sun","Mon","Tue","Wed","Thu","Fri","Sat"};
 
 bool key_pressed(void)
 {
