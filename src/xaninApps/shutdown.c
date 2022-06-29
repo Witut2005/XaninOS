@@ -4,9 +4,7 @@
 #include <xin_fs/xanin_fs_saver.c>
 #include <xaninApps/execute_addr.c>
 #include <devices/HARD_DISK/disk.h>
-
-uint8_t enter_real_mode_buffer[512];
-uint8_t shutdown_program_buffer[512];
+#include <xin_fs/xin.c>
 
 
 void shutdown(void)

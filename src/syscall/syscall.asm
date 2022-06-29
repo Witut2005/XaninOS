@@ -16,8 +16,8 @@ extern xprintf
 extern putchar
 extern strlen
 extern screen_clear
-extern zsk
-extern shutdown
+;extern zsk
+;extern shutdown
 extern xin_get_start_sector
 
 get_eip:
@@ -98,12 +98,12 @@ _screen_clear:
 
 _shutdown:
     input_on
-    call shutdown
+    ;call shutdown
 
 _zsk:
     input_on
     push esi
-    call zsk
+    ;call zsk
     pop eax
     jmp _end
 

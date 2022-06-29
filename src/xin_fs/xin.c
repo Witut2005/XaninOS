@@ -4,6 +4,10 @@
 #include <xin_fs/xin.h>
 #include <libc/memory.h>
 #include <stddef.h>
+#include <devices/HARD_DISK/disk.h>
+
+static uint8_t enter_real_mode_buffer[512];
+static uint8_t shutdown_program_buffer[512];
 
 char *xin_set_current_directory(char *directory)
 {

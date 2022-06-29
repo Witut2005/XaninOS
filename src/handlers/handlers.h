@@ -22,6 +22,7 @@
 
 #define VGA_TEXT_MEMORY 0xb8000
 
+#include <xaninApps/register_dump.c>
 
 /* KEYBOARD HANDLER DATA */
 uint8_t keyStatus;
