@@ -16,7 +16,6 @@ build:
 	@echo [ASM] boot.asm
 	@$(ASM) -fbin ./boot/boot.asm
 
-	
 	@echo [ASM] boot.asm
 	@$(ASM) -fbin ./boot/kernelLoader.asm
 	
@@ -29,8 +28,9 @@ build:
 	@echo [ASM] keyboard.asm
 	@$(ASM) -f elf32 ./handlers/keyboard.asm -o ./handlers/keyboard.o
 
-	@echo [ASM] syscall.asm
-	@$(ASM) -f elf32 ./syscall/syscall.asm -o ./syscall/syscall.o
+	#@echo [ASM] syscall.asm
+	#@$(ASM) -f elf32 ./syscall/syscall.asm -o ./syscall/syscall.o
+	
 
 	@echo [ASM] pit.asm
 	@$(ASM) -f elf32 ./pit/pit.asm -o ./pit/pit.o
@@ -70,7 +70,6 @@ build:
 	@$(C) $(C_COMPILE) kernel.c \
 	./handlers/keyboard.o \
 	./pit/pit.o \
-	./syscall/syscall.o \
 	./test/cpp_test.o \
 	./test/cpp_test2.o \
 	./devices/MOUSE/mouse.o \
@@ -80,7 +79,7 @@ build:
 	./test/testc.o \
 	./devices/COM/ComPort.o -o kernel.bin
 
-	@cat ./xaninApps/shutdown ./elf/testc > ./xaninApps/xanin_external_apps
+	@cat ./xaninApps/shutdown $(APPS)/syscall_test > ./xaninApps/xanin_external_apps
 	@dd if=./xaninApps/xanin_external_apps of=./xaninApps/xanin_apps_space bs=512 count=16 conv=notrunc
 	@cat ./boot/boot ./libc/enter_real_mode ./xaninApps/xanin_apps_space ./xin_fs/xin_pointers ./xin_fs/entries_table ./boot/kernelLoader kernel.bin > xanin.bin
 

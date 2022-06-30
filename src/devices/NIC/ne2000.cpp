@@ -11,6 +11,15 @@ Ne2000Manager::Ne2000Manager()
     */
 };
 
+void Ne2000Manager::init()
+{
+    pci_find_device(NE2000_PCI_CLASS, &this->pci_info);
+}
+
+pci_device Ne2000Manager::pci_info_get()
+{
+    return this->pci_info;
+}
 
 uint32_t Ne2000Manager::mac_get()
 {

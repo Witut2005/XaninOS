@@ -2,6 +2,11 @@
 #include <stdint.h>
 #include <libc/stdiox.h>
 #include <xin_fs/xin.h>
+#include <app_config.h>
+
+#ifdef ZSK_APP
+#include <xaninApps/zsk.c>
+#endif
 
 #define return_sys(x)\
         asm(\
@@ -119,6 +124,14 @@ uint32_t syscall()
         case 's' + 'x':
         {
             xscanf("%x", (uint32_t*)esi);
+            return_sys(eax);
+        }
+
+        case 'z' + 's' + 'k':
+        {
+            #ifdef ZSK_APP
+            zsk(mkstr(1000));
+            #endif
             return_sys(eax);
         }
 

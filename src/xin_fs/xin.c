@@ -39,29 +39,27 @@ char *xin_get_current_path(char *file_name)
 
     return xin_current_path;
 }
-
-
                                             
 
 /* DIRECTORY AND FILES */
 xin_entry *xin_find_entry(char *entry_name)
 {
+
     for (char *i = XIN_ENTRY_TABLE; (uint32_t)i < XIN_ENTRY_TABLE + (SECTOR_SIZE * 8); i += 32)
     {
         if (strcmp(entry_name, i))
-        {
             return (xin_entry *)i;
-        }
     }
 
     entry_name = xin_get_current_path(entry_name);
 
+    if(strlen(entry_name) > 40)
+        return nullptr;
+
     for (char *i = XIN_ENTRY_TABLE; (uint32_t)i < XIN_ENTRY_TABLE + (SECTOR_SIZE * 8); i += 32)
     {
         if (strcmp(entry_name, i))
-        {
             return (xin_entry *)i;
-        }
     }
 
     return nullptr;
@@ -133,13 +131,6 @@ xin_entry *xin_change_directory(char *new_directory)
         return nullptr;
     }
 
-    /*
-    if(new_directory[0] != '/')
-    {
-        new_directory = xin_get_current_path(new_directory);
-    }
-    */
-
     for (int i = 0; i < sizeof(xin_current_directory); i++)
         xin_current_directory[i] = '\0';
 
@@ -209,8 +200,8 @@ xin_entry *xin_init_fs(void)
     xin_file_create_at_address("/boot.bin",                 0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x3E,0x1,    XIN_FILE, 4);
     xin_file_create_at_address("/tmp.bin",                  0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x80,0x1,    XIN_FILE, 5);
     xin_file_create_at_address("/shutdown.bin",             0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x81,0x1,    XIN_FILE, 6);
-    xin_file_create_at_address("/reboot.bin",               0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x82,0x1,    XIN_FILE, 7);
-    xin_file_create_at_address("/elf.bin",                  0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x82,0x1,    XIN_FILE, 8);
+    //xin_file_create_at_address("/elf.bin",                  0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x82,0x1,    XIN_FILE, 8);
+    xin_file_create_at_address("/syscall_test.bin",         0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x82,0x1,    XIN_FILE, 7);
 
     uint32_t k = 0;
 

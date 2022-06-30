@@ -200,6 +200,7 @@
         XANIN_ADD_APP_ENTRY1("logo", logo_color_change)
         #endif
 
+        XANIN_ADD_APP_ENTRY0("nic_info", nic_info)
 
         else
         {

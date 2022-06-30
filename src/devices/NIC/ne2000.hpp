@@ -3,7 +3,7 @@
 #include <stdint.h>
 #include <devices/PCI/pci.h>
 
-extern "C" int32_t pci_find_device(uint16_t);
+extern "C" int32_t pci_find_device(uint16_t, pci_device*);
 extern "C" uint32_t pci_get_bar(const uint8_t bus, const uint8_t slot, const uint8_t function, const uint8_t bar_number);
 extern "C" uint16_t pci_get_vendor_id(const uint8_t bus, const uint8_t slot, 
                         const uint8_t function);
@@ -52,6 +52,8 @@ class Ne2000Manager
     uint32_t mac_get();
     uint32_t iobase_get();
     uint16_t vendorid_get();
+    void init();
+    pci_device pci_info_get();
 
 
 
@@ -69,6 +71,16 @@ extern "C"
     uint16_t ne2000_vendorid_get(void)
     {
         return Ne2000.vendorid_get();
+    }
+
+    void ne2000_init(void)
+    {
+        Ne2000.init();
+    }
+
+    pci_device ne2000_pci_info_get(void)
+    {
+        Ne2000.pci_info_get();
     }
 
 }

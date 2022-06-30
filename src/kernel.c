@@ -30,6 +30,7 @@ extern void com_port_init(uint16_t divisor);
 extern bool com_status(void);
 extern uint32_t ne2000_iobase_get(void);
 extern uint16_t ne2000_vendorid_get(void);
+extern void ne2000_init(void);
 
 /*--------------------------------------/
 |wesolego nowego roku :))               |
@@ -192,10 +193,12 @@ void _start(void)
     argv[3] = program_parameters2;
     argv[4] = program_parameters3;
 
+    ne2000_init();
 
     xin_init_fs();
 
-    create_file_kernel("/syslog");
+    if(xin_find_entry("/syslog") == nullptr)
+        create_file_kernel("/syslog");
 
     printk("kernel succefully loaded :))");
 

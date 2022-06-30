@@ -20,6 +20,7 @@
 #define VRAM VGA_TEXT_MEMORY
 #define VGA_SCREEN_RESOLUTION 4480
 
+#define mkstr(str) #str
 
 bool use_backspace = false;
 

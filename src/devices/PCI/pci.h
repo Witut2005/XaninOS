@@ -12,6 +12,7 @@
 struct pci_device_structure0
 {
 
+    
     uint16_t vendor_id;
     uint16_t device_id;
     uint16_t command;
@@ -41,6 +42,10 @@ struct pci_device_structure0
     uint8_t minimal_grant;
     uint8_t max_latency;
 
+    uint8_t bus;
+    uint8_t slot;
+    uint8_t function;
+    uint8_t offset;
 
 }__attribute__((packed));
 typedef struct pci_device_structure0 pci_device;

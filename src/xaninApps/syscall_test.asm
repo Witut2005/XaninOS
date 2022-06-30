@@ -11,7 +11,6 @@ print_syscall:
 
 mov dword [return_addr], ebx
 
-
 mov eax, 'p' + 's'
 mov esi, napis
 int 0x80
@@ -29,6 +28,9 @@ mov eax, 'p' + 'x'
 mov esi, esi
 int 0x80
 
+mov eax, 'z' + 's' + 'k'
+int 0x80
+
 jmp $
 
 
@@ -39,4 +41,4 @@ napis: db "xaninOS syscall",0xa,0
 file_name: db "syscall_test.bin",0
 return_addr: resb 4
 
-times 512 - ($-$$) db 0x0
+times 512 - ($-$$) db 0x20
