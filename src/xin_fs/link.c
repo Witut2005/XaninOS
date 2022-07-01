@@ -1,7 +1,7 @@
 
 #include <xin_fs/xin.c>
 
-void xin_link_create(char* file_name,char* link_name)
+void xin_link_create(char* file_name, char* link_name)
 {
 
 
@@ -18,6 +18,9 @@ void xin_link_create(char* file_name,char* link_name)
 
     for(int i = 0; i < sizeof(xin_entry); i++)
         link[i] = file[i];
+
+    if(link_name[0] != '/')
+        link_name = xin_get_current_path(link_name);
 
     for(int i = 0; i < 40; i++)
         link[i] = link_name[i];
