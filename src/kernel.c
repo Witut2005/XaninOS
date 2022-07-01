@@ -220,9 +220,19 @@ void _start(void)
     xprintf("%z_/      _/    _/_/_/  _/    _/  _/  _/    _/    _/_/    _/_/_/     %z%s: %i:%i:%i\n\n\n", set_output_color(logo_back_color, logo_front_color), set_output_color(black,white), daysLUT[SystemTime.weekday], SystemTime.hour, SystemTime.minutes, SystemTime.seconds);                                       
 
 
-    Screen.cursor[8][0] = (uint16_t)('>' | ((black << 4) | white) << 8);
-    Screen.x            = 1;
+
+
+    Screen.x            = 0;
     Screen.y            = 8;
+    
+    
+    //xprintf("%z%s%z >", set_output_color(black, green), xin_current_directory, set_output_color(black, white));
+
+    for(int i = 0; xin_current_directory[i + 1] != '\0'; i++)
+        xprintf("%z%c", set_output_color(black, lblue), xin_current_directory[i]);
+
+    xprintf(">");
+
     character_blocked   = '>';
 
     KeyInfo.scan_code   = 0x0;
