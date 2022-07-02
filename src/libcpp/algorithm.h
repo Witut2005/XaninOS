@@ -33,6 +33,35 @@ constexpr T& min(T& x, T& y)
     return (x < y) ? x : y; 
 }
 
+template<class T>
+constexpr T min_element(T x, T y)
+{
+    auto min = x;
+    
+    for(auto a = x; a != y; a++)
+    {
+        if(*a <= *min)
+            min = a;
+    }
+    
+    return min;
+
+}
+
+template<class T>
+constexpr T max_element(T x, T y)
+{
+    auto max = x;
+    
+    for(auto a = x; a != y; a++)
+    {
+        if(*a >= *max)
+            max = a;
+    }
+    
+    return max;
+}
+
 template<class T, class X>
 constexpr bool equal(const T*  beg, const T*  end, const X*  beg2)
 {

@@ -49,6 +49,10 @@ void cpp_prog()
     std::array<int, 10> test_array  = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
     std::array<int, 10> test_array2 = {9, 8, 7, 6, 5, 4, 3, 2, 1, 0};
 
+    std::cout << "the smallest element: " << *std::min_element(test_array.begin(), test_array.end()) << std::endl;
+
+    std::cout << "the largest element: " << *std::max_element(test_array.begin(), test_array.end()) << std::endl;
+    
     std::swap<int>(*test_array.begin(), *test_array.end());
     std::min(*test_array.begin(), *test_array.end());
     

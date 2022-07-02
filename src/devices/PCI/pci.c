@@ -3,8 +3,6 @@
 #include <libc/hal.h>
 #include <devices/PCI/pci.h>
 
-
-
 uint16_t pci_get_vendor_id(const uint8_t bus, const uint8_t slot, 
                         const uint8_t function)
 { 
@@ -30,8 +28,6 @@ uint8_t pci_get_device_data(const uint8_t bus, const uint8_t slot,
                             const uint8_t function, const uint8_t offset) 
 { 
     
-
-
     uint32_t address;  
     uint8_t ret = 0; 
  
@@ -266,6 +262,11 @@ uint32_t pci_find_device(uint16_t class, pci_device* device_data)
                 *(device_tmp + i) = pci_get_data32((pci_address_selector & 0xFF000000) >> 24, (pci_address_selector & 0xFF0000) >> 16, 
                                                     (pci_address_selector & 0xFF00) >> 8, 4 * i);
             
+            device_data->offset = pci_address_selector & 0xFF;
+            device_data->function = (pci_address_selector >> 8) & 0x7;
+            device_data->slot = (pci_address_selector >> 11) & 0xF;
+            device_data->bus = (pci_address_selector >> 16) & 0xFF;
+
             return pci_address_selector;
         
         }
