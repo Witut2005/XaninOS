@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <headers/macros.h>
 #include <devices/APIC/apic_registers.h>
+#include <xanin_info/info_block.h>
 
 void outbIO(uint16_t port,uint8_t al)
 {
@@ -112,7 +113,7 @@ void io_wait(void)
     asm("out 0x80, al" :: "a"(0x0));
 }
 
-void real_mode_enter(uint16_t segment, uint16_t offset)
+void real_mode_enter(uint16_t segment, uint16_t offset, uint32_t return_address)
 {
 
     /* get segment */
@@ -129,10 +130,32 @@ void real_mode_enter(uint16_t segment, uint16_t offset)
         "and edx, 0xFFFF"
         );
 
+    xanin_info_ptr->program_to_execute = return_address;
+    void (*enter16)(void) = (void(*)(void))0x600;
+    enter16();
+}
+
+void real_mode_enter_no_return(uint16_t segment, uint16_t offset)
+{
+
+    /* get segment */
+    asm (
+        "mov eax, [ebp + 8]\n\t"
+        "mov ebx, eax\n\t"
+        "and ebx, 0xFFFF"
+        );
+
+    /* get offset */
+    asm (
+        "mov eax, [ebp + 12]\n\t"
+        "mov edx, eax\n\t"
+        "and edx, 0xFFFF"
+        );
 
     void (*enter16)(void) = (void(*)(void))0x600;
     enter16();
 }
+
 
 void rdmsr(uint32_t msr_id, uint32_t low, uint32_t high)
 {

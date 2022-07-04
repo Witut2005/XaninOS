@@ -295,7 +295,6 @@ char* xint_to_hex_str(uint32_t x, char* buf, uint8_t how_many_chars)
 
     char hex_values[16] = {'0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f'};
 
-    int i = 0;
 
     if(!x)
     {
@@ -307,10 +306,16 @@ char* xint_to_hex_str(uint32_t x, char* buf, uint8_t how_many_chars)
     
     //uint16_t* debug_cursor = (uint16_t*)0xb8000;
 
-    for(int i = 0; i < how_many_chars; i++)
-        buf[i] = '0';
+    for(int i = 0; i <= how_many_chars; i++)
+    {
+        if(i < how_many_chars)
+            buf[i] = '0';
+        else
+            buf[i] = '\0';
+    }
 
-    for(i = 0; x != 0; i++)
+
+    for(int i = 0; x != 0; i++)
     {
         buf[i] = hex_values[x % 16]; 
         x = x / 16;
@@ -318,7 +323,6 @@ char* xint_to_hex_str(uint32_t x, char* buf, uint8_t how_many_chars)
 
 
     buf = reverse_string(buf);
-    //*(buf + i) = '\0';
     
     return buf;
 

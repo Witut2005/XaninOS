@@ -1,4 +1,4 @@
-make --dry-run --always-make --keep-going --print-directory
+make --dry-run --keep-going --print-directory
 make: Entering directory '/home/witut/Desktop/xaninOS/src'
 echo [ASM] boot.asm
 nasm -fbin ./boot/boot.asm
@@ -10,13 +10,12 @@ echo [ASM] entries_table.asm
 nasm -fbin ./xin_fs/entries_table.asm
 echo [ASM] keyboard.asm
 nasm -f elf32 ./handlers/keyboard.asm -o ./handlers/keyboard.o
-echo [ASM] syscall.asm
-nasm -f elf32 ./syscall/syscall.asm -o ./syscall/syscall.o
+# echo [ASM] syscall.asm
+# nasm -f elf32 ./syscall/syscall.asm -o ./syscall/syscall.o
 echo [ASM] pit.asm
 nasm -f elf32 ./pit/pit.asm -o ./pit/pit.o
 echo [ASM] enter_real_mode.asm
 nasm -fbin ./libc/enter_real_mode.asm -o ./libc/enter_real_mode
- 
 echo [ASM] shutdown.asm
 nasm -fbin ./xaninApps/shutdown.asm -o ./xaninApps/shutdown
 echo [ASM] reboot.asm
@@ -43,7 +42,6 @@ echo [C] kernel.c
 i386-elf-gcc -O0 -masm=intel -Wno-discarded-qualifiers -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-int-conversion -Wno-unused-function -Wno-div-by-zero -Wno-address-of-packed-member -I /home/witut/Desktop/xaninOS/src/ kernel.c \
 ./handlers/keyboard.o \
 ./pit/pit.o \
-./syscall/syscall.o \
 ./test/cpp_test.o \
 ./test/cpp_test2.o \
 ./devices/MOUSE/mouse.o \
@@ -52,7 +50,7 @@ i386-elf-gcc -O0 -masm=intel -Wno-discarded-qualifiers -Wno-builtin-declaration-
 ./devices/IOAPIC/ioapic.o \
 ./test/testc.o \
 ./devices/COM/ComPort.o -o kernel.bin
-cat ./xaninApps/shutdown ./elf/testc > ./xaninApps/xanin_external_apps
+cat ./xaninApps/shutdown ./xaninApps/syscall_test > ./xaninApps/xanin_external_apps
 dd if=./xaninApps/xanin_external_apps of=./xaninApps/xanin_apps_space bs=512 count=16 conv=notrunc
 cat ./boot/boot ./libc/enter_real_mode ./xaninApps/xanin_apps_space ./xin_fs/xin_pointers ./xin_fs/entries_table ./boot/kernelLoader kernel.bin > xanin.bin
 dd if=xanin.bin of=xanin.img

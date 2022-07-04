@@ -115,6 +115,33 @@ xin_entry *xin_find_free_entry(void)
 xin_entry *xin_change_directory(char *new_directory)
 {
 
+    if(strcmp(new_directory, ".."))
+    {
+        if(strcmp(xin_current_directory, "/"))
+            return nullptr;
+        else 
+        {
+            xin_current_directory[strlen(xin_current_directory) - 1] = '\0';
+            int counter = strlen(xin_current_directory) - 1;
+            
+            while(xin_current_directory[counter] != '/')
+            {
+                xin_current_directory[counter] = '\0';
+                counter--;
+            }
+        
+        }
+        xin_entry *xin_new_directory = xin_find_entry(new_directory);
+        return xin_new_directory;
+    }    
+
+    if(new_directory[strlen(new_directory) - 1] != '/')
+    {
+        int name_length = strlen(new_directory); // '\0' before any modification
+        new_directory[name_length + 1] = '\0';
+        new_directory[name_length] = '/';
+    }
+
     xin_entry *xin_new_directory = xin_find_entry(new_directory);
 
     if (xin_new_directory == nullptr)
@@ -354,6 +381,14 @@ void xin_create_directory(char* entry_name)
     bool only_entry_name = true;
     
     xin_entry* entry = xin_find_free_entry();
+    
+    if(entry_name[0] == '/' && entry_name[1] == '/')
+    {
+        xprintf("%zAre you serious? ://", stderr);
+        while(getscan() != ENTER);
+        return;
+    }
+
     
     if(entry_name[strlen(entry_name) - 1] != '/')
     {

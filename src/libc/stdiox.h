@@ -417,6 +417,12 @@ void xprintf(char* str, ... )
                                     Screen.y++;
                                     Screen.x = 0x0;
                                 }
+
+                                if(Screen.y == 28)
+                                {
+                                    Screen.y = 0x0;
+                                    break;
+                                }
                                 
                                 Screen.x++;
                             }

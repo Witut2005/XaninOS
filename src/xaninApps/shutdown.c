@@ -31,10 +31,13 @@ void shutdown(void)
         disk_flush(ATA_FIRST_BUS, ATA_MASTER);
     }
 
+    disk_write(ATA_FIRST_BUS, ATA_MASTER, 0, 1, (uint16_t*)0x7C00);
+    disk_flush(ATA_FIRST_BUS, ATA_MASTER);
+
     //real_mode_enter(0x1000, 0x200); // <-- location in RAM of shutdown program
 
-    real_mode_enter(0x0000, 0x400); // <-- location in RAM of shutdown program
-
+    //real_mode_enter_no_return(0x0000, 0x400); // <-- location in RAM of shutdown program
+    //real_mode_enter(0x0, 0x0, 0x400);
 
     outwIO(0x604, 0x2000);  /* QEMU */
     outwIO(0xB004, 0x2000); /* BOCHS AND OLD QEMU */

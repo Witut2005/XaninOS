@@ -369,15 +369,6 @@ void* realloc(void* ptr,  uint32_t size_old,  uint32_t size_new)
 }
 
 
-uint8_t* xanin_information_block_get(void)
-{   
-    char* tmp = (char*)0x7C00;
-    while(!strcmp(tmp, "XANIN_INFO")){tmp++;};
-
-    return tmp;
-
-
-}
 
 
 

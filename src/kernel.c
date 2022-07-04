@@ -23,6 +23,7 @@
 #include <elf/elf_loader.c>
 #include <devices/ACPI/ACPI.h>
 #include <libc/syslog.h>
+#include <xanin_info/info_block.c>
 
 extern void v86_mode_enter(void);
 extern void mouse_enable(void);
@@ -161,7 +162,7 @@ void _start(void)
 
     }
 
-    uint8_t* xanin_info_ptr = xanin_information_block_get();
+    //xanin_info_ptr = xanin_information_block_get();
     
     com_port_init(0x00C0);
 
@@ -170,6 +171,7 @@ void _start(void)
 
     xprintf("ne2000 iobase: 0x%x\n", ne2000_iobase_get());
     xprintf("ne2000 vendor id: 0x%x\n", ne2000_vendorid_get());
+    xprintf("Xanin Information Block base address: 0x%x\n", xanin_info_ptr);
 
     while(KeyInfo.scan_code != ENTER);
 
@@ -253,6 +255,7 @@ void _start(void)
                     keyboard_command[i] = '\0';
                 break;
             }
+
             scan();
         }   
 

@@ -7,8 +7,8 @@
 
 void reg_dump(void)
 {
-
-    screen_clear();
+    
+    //screen_clear();
 
     asm("mov ebx, [ebp + 4]\n\t"
         "mov %0, ebx"

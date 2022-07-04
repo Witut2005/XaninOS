@@ -14,7 +14,7 @@ uint32_t indIO(uint16_t port);
 void disable_cursor(void);
 void eoi_send(void);
 void io_wait(void);
-void real_mode_enter(uint16_t segment, uint16_t offset);
+void real_mode_enter(uint16_t segment, uint16_t offset, uint32_t return_address);
 void rdmsr(uint32_t msr_id, uint32_t low, uint32_t high);
 void wrmsr(uint32_t msr_id, uint32_t low, uint32_t high);
 

@@ -28,9 +28,9 @@ void floppy_interrupt(void)
 
 void invalid_opcode(void)
 {
-    screen_clear();
+    //screen_clear();
     xprintf("\n%zINVALID OPCODE",set_output_color(red,white));
-    reg_dump();
+    //reg_dump();
     interrupt_disable();
     asm("hlt");
 }

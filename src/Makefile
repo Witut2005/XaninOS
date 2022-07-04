@@ -28,8 +28,8 @@ build:
 	@echo [ASM] keyboard.asm
 	@$(ASM) -f elf32 ./handlers/keyboard.asm -o ./handlers/keyboard.o
 
-	#@echo [ASM] syscall.asm
-	#@$(ASM) -f elf32 ./syscall/syscall.asm -o ./syscall/syscall.o
+	@# echo [ASM] syscall.asm
+	@# $(ASM) -f elf32 ./syscall/syscall.asm -o ./syscall/syscall.o
 	
 
 	@echo [ASM] pit.asm

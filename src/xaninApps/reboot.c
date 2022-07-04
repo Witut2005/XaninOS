@@ -27,8 +27,6 @@ uint16_t idt_16[3] = {0x0, 0x0, 0x0};
     uint8_t s = 12;
     s = s / 0;
 
-    real_mode_enter(0x1000, 0x400);
-
-
+    
 
 }

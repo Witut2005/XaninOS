@@ -63,12 +63,12 @@ int 0x13
 ;kernel_2
 mov word [lba], 0x43 + 0x69 + 0x40
 mov word [offset], 0x6A * 0x200
+mov word [how_many_sectors], 0x50
 
 mov si, DAP
 mov ah, 0x42
 mov dl, [BOOT_DISK_NUMBER]
 int 0x13
-
 
 ;xin_fs structure
 ;mov word [lba], 0x2 + 0x10
@@ -147,6 +147,7 @@ times (0x10 - ( $ - $$ ) % 0x10 ) db 0x00
 
 xanin_information_block: 
     signature: db "XANIN_INFO",0x0
+    program_to_execute: dd 0x0
     base: dd $
     
 
