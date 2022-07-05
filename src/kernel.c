@@ -135,7 +135,6 @@ void _start(void)
 
 
 
-    {
 
     madt_entry_type2* apic_keyboard_redirect = nullptr; 
     madt_entry_type2* apic_pit_redirect      = nullptr; 
@@ -160,9 +159,8 @@ void _start(void)
                                     << APIC_VECTOR | 0x0 << APIC_DELIVERY_MODE | 0x0 << APIC_DESTINATION_MODE 
                                         | 0x0 << APIC_INT_PIN_POLARITY | 0x0 << APIC_INT_MASK, ioapic_id_get());
 
-    }
 
-    //xanin_info_ptr = xanin_information_block_get();
+    xanin_info_ptr = xanin_information_block_get();
     
     com_port_init(0x00C0);
 
@@ -171,7 +169,10 @@ void _start(void)
 
     xprintf("ne2000 iobase: 0x%x\n", ne2000_iobase_get());
     xprintf("ne2000 vendor id: 0x%x\n", ne2000_vendorid_get());
-    xprintf("Xanin Information Block base address: 0x%x\n", xanin_info_ptr);
+    //xprintf("Xanin Information Block base address: 0x%x\n", xanin_info_ptr);
+
+    bootloader_program_buffer = (uint8_t*) malloc(sizeof(uint8_t) * SECTOR_SIZE); //must be before xin_init_fs
+    memcpy(bootloader_program_buffer, (uint8_t*)0x7C00, SECTOR_SIZE);
 
     while(KeyInfo.scan_code != ENTER);
 
@@ -179,15 +180,16 @@ void _start(void)
    
     srand(SystemTime.seconds);
 
-    disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x1a, 1, (uint16_t*)0x1800);
-    disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x1b, 1, (uint16_t*)0x1a00);
 
     for(int i = 0; i < 70; i++)
         disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x1a + i, 1, (uint16_t*)(0x1800 + (i * SECTOR_SIZE)));
 
     
-    disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x1, 0x1, 0x600);
-    disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x2, 0x1, 0x400);
+    disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x1, 0x1, (uint16_t*)0x600);
+    disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x2, 0x1, (uint16_t*)0x400);
+
+    disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x0, 0x1, (uint16_t*)0x7C00);
+
 
     argv[0] = program_name;
     argv[1] = program_parameters;
@@ -196,6 +198,8 @@ void _start(void)
     argv[4] = program_parameters3;
 
     ne2000_init();
+
+
 
     xin_init_fs();
 
@@ -255,6 +259,16 @@ void _start(void)
                     keyboard_command[i] = '\0';
                 break;
             }
+
+            /*
+            if(xanin_info_ptr->program_to_execute != nullptr)
+            {
+                xprintf("%s\n", xanin_info_ptr->signature);
+                xprintf("0x%x\n", xanin_info_ptr->program_to_execute);
+                void(*program_to_execute)(void) = (void(*)(void))xanin_info_ptr->program_to_execute;
+                program_to_execute();
+            }
+            */
 
             scan();
         }   

@@ -45,7 +45,7 @@ void run16(char* file_name)
         for(uint8_t* i = xin_file->starting_sector * SECTOR_SIZE; (uint32_t)i < (xin_file->starting_sector * SECTOR_SIZE) + SECTOR_SIZE; i++, dest++)
             *dest = *i;
 
-        real_mode_enter(0x1000, 0x0, 0x0); // <-- tmp.bin address in memory
+        real_mode_enter_no_return(0x1000, 0x0); // <-- tmp.bin address in memory
 
         
 

@@ -79,7 +79,7 @@ build:
 	./test/testc.o \
 	./devices/COM/ComPort.o -o kernel.bin
 
-	@cat ./xaninApps/shutdown $(APPS)/syscall_test > ./xaninApps/xanin_external_apps
+	@cat ./xaninApps/shutdown $(APPS)/current_app $(APPS)/syscall_test > ./xaninApps/xanin_external_apps
 	@dd if=./xaninApps/xanin_external_apps of=./xaninApps/xanin_apps_space bs=512 count=16 conv=notrunc
 	@cat ./boot/boot ./libc/enter_real_mode ./xaninApps/xanin_apps_space ./xin_fs/xin_pointers ./xin_fs/entries_table ./boot/kernelLoader kernel.bin > xanin.bin
 

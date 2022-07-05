@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Mon Jul  4 15:56:39 2022
+# Make data base, printed on Tue Jul  5 11:42:48 2022
 
 # Variables
 
@@ -97,7 +97,7 @@ LS_COLORS = rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:
 # environment
 XDG_SESSION_DESKTOP = i3
 # environment
-SSH_AUTH_SOCK = /tmp/ssh-CS55DWz09mKG/agent.1915
+SSH_AUTH_SOCK = /tmp/ssh-UgPz12WyJmAo/agent.1903
 # automatic
 %F = $(notdir $%)
 # environment
@@ -111,7 +111,7 @@ PWD = /home/witut/Desktop/xaninOS/src
 # environment
 XDG_SEAT = seat0
 # environment
-SSH_AGENT_PID = 1976
+SSH_AGENT_PID = 1964
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = i3
 # environment
@@ -157,7 +157,7 @@ ASM = nasm
 # makefile (from 'Makefile', line 4)
 CC = i386-elf-g++
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-5411a857-01a4-4ad4-ae37-a257226be439.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-5134af1a-bda7-4321-931d-03f893748349.sock
 # environment
 XDG_SESSION_ID = 2
 # environment
@@ -175,7 +175,7 @@ LIBVIRT_DEFAULT_URI = qemu:///system
 # environment
 LC_TELEPHONE = pl_PL.UTF-8
 # environment
-I3SOCK = /run/user/1000/i3/ipc-socket.1915
+I3SOCK = /run/user/1000/i3/ipc-socket.1903
 # default
 MAKE_COMMAND := make
 # environment
@@ -217,7 +217,7 @@ APPS = ./xaninApps
 # environment
 LC_ALL = C
 # environment
-GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/cff5297e_10a3_4d4a_8eb8_f315d2ab0e85
+GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/1c471be1_ce0a_49a6_91a4_b067a088dd86
 # automatic
 ^F = $(notdir $^)
 # environment
@@ -241,7 +241,7 @@ LANG = C
 # environment
 TERM = xterm-256color
 # environment
-VSCODE_PID = 2104
+VSCODE_PID = 2078
 # variable set hash-table stats:
 # Load=115/1024=11%, Rehash=0, Collisions=20/140=14%
 
@@ -251,9 +251,9 @@ VSCODE_PID = 2104
 
 # Directories
 
-# . (device 2066, inode 10461210): 33 files, no impossibilities.
+# . (device 2066, inode 10461210): 32 files, no impossibilities.
 
-# 33 files, no impossibilities in 1 directories.
+# 32 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -278,8 +278,7 @@ windows:
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
- 
-#  Last modified 2022-07-04 15:56:18.714135327
+#  Last modified 2022-07-05 11:42:09.155523357
 #  File has been updated.
 #  Successfully updated.
 
@@ -296,6 +295,7 @@ build:
 #  File has not been updated.
 #  recipe to execute (from 'Makefile', line 16):
 	@echo [ASM] boot.asm
+ 
 	@$(ASM) -fbin ./boot/boot.asm
 	@echo [ASM] boot.asm
 	@$(ASM) -fbin ./boot/kernelLoader.asm
@@ -349,7 +349,7 @@ build:
 	./devices/IOAPIC/ioapic.o \
 	./test/testc.o \
 	./devices/COM/ComPort.o -o kernel.bin
-	@cat ./xaninApps/shutdown $(APPS)/syscall_test > ./xaninApps/xanin_external_apps
+	@cat ./xaninApps/shutdown $(APPS)/current_app $(APPS)/syscall_test > ./xaninApps/xanin_external_apps
 	@dd if=./xaninApps/xanin_external_apps of=./xaninApps/xanin_apps_space bs=512 count=16 conv=notrunc
 	@cat ./boot/boot ./libc/enter_real_mode ./xaninApps/xanin_apps_space ./xin_fs/xin_pointers ./xin_fs/entries_table ./boot/kernelLoader kernel.bin > xanin.bin
 	@dd if=xanin.bin of=xanin.img
@@ -384,12 +384,12 @@ curses:
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 43 / storage = 360 B / avg = 8 B
-# current buf: size = 8162 B / used = 360 B / count = 43 / avg = 8 B
+# strcache buffers: 1 (0) / strings = 42 / storage = 351 B / avg = 8 B
+# current buf: size = 8162 B / used = 351 B / count = 42 / avg = 8 B
 
-# strcache performance: lookups = 52 / hit rate = 17%
+# strcache performance: lookups = 51 / hit rate = 17%
 # hash-table stats:
-# Load=43/8192=1%, Rehash=0, Collisions=1/52=2%
-# Finished Make data base on Mon Jul  4 15:56:39 2022
+# Load=42/8192=1%, Rehash=0, Collisions=1/51=2%
+# Finished Make data base on Tue Jul  5 11:42:48 2022
 
  

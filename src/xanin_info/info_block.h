@@ -6,7 +6,7 @@
 struct XaninInfoBlock
 {
 
-    char signature[11];
+    char signature[10];
     uint32_t program_to_execute;
 
 };

@@ -205,7 +205,40 @@ void pic_mode_disable(void)
     outbIO(0x23, 0x1);  //force nmi and intr signals through the apic        
 }
 
+static inline void sti(void)
+{
+    asm("sti");
+}
 
+static inline void cli(void)
+{
+    asm("cli");
+}
+
+static inline void stc(void)
+{
+    asm("stc");
+}
+
+static inline void clc(void)
+{
+    asm("clc");
+}
+
+static inline void std(void)
+{
+    asm("std");
+}
+
+static inline void cld(void)
+{
+    asm("cld");
+}
+
+static inline void cmc(void)
+{
+    asm("cmc");
+}
 
 
 

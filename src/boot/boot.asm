@@ -146,8 +146,8 @@ str: db "ERROR your computer doesnt support fully int13 xaninOS cant be loaded",
 times (0x10 - ( $ - $$ ) % 0x10 ) db 0x00
 
 xanin_information_block: 
-    signature: db "XANIN_INFO",0x0
-    program_to_execute: dd 0x0
+    signature: db "XANIN_INFO"
+    program_to_execute: dq 0x0
     base: dd $
     
 
