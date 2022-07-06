@@ -10,6 +10,7 @@ static uint8_t enter_real_mode_buffer[512];
 static uint8_t shutdown_program_buffer[512];
 uint8_t* bootloader_program_buffer;
 
+
 char *xin_set_current_directory(char *directory)
 {
     for (int i = 0; i < sizeof(xin_current_directory); i++)

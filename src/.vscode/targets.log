@@ -1,6 +1,4 @@
 make all --print-data-base --no-builtin-variables --no-builtin-rules --question
-make: *** No rule to make target 'all'.  Stop.
-
 # GNU Make 4.2.1
 # Built for x86_64-pc-linux-gnu
 # Copyright (C) 1988-2016 Free Software Foundation, Inc.
@@ -8,7 +6,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Tue Jul  5 11:42:48 2022
+# Make data base, printed on Wed Jul  6 10:24:36 2022
 
 # Variables
 
@@ -97,7 +95,7 @@ LS_COLORS = rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:
 # environment
 XDG_SESSION_DESKTOP = i3
 # environment
-SSH_AUTH_SOCK = /tmp/ssh-UgPz12WyJmAo/agent.1903
+SSH_AUTH_SOCK = /tmp/ssh-uS0GiJ4LBH2O/agent.1878
 # automatic
 %F = $(notdir $%)
 # environment
@@ -111,7 +109,7 @@ PWD = /home/witut/Desktop/xaninOS/src
 # environment
 XDG_SEAT = seat0
 # environment
-SSH_AGENT_PID = 1964
+SSH_AGENT_PID = 1939
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = i3
 # environment
@@ -157,7 +155,7 @@ ASM = nasm
 # makefile (from 'Makefile', line 4)
 CC = i386-elf-g++
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-5134af1a-bda7-4321-931d-03f893748349.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-55f70be9-ef14-45c1-abbe-ada1e70b847f.sock
 # environment
 XDG_SESSION_ID = 2
 # environment
@@ -175,7 +173,7 @@ LIBVIRT_DEFAULT_URI = qemu:///system
 # environment
 LC_TELEPHONE = pl_PL.UTF-8
 # environment
-I3SOCK = /run/user/1000/i3/ipc-socket.1903
+I3SOCK = /run/user/1000/i3/ipc-socket.1878
 # default
 MAKE_COMMAND := make
 # environment
@@ -217,7 +215,7 @@ APPS = ./xaninApps
 # environment
 LC_ALL = C
 # environment
-GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/1c471be1_ce0a_49a6_91a4_b067a088dd86
+GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/1ccda290_b0a2_4532_9ce4_4b91667d4681
 # automatic
 ^F = $(notdir $^)
 # environment
@@ -241,7 +239,7 @@ LANG = C
 # environment
 TERM = xterm-256color
 # environment
-VSCODE_PID = 2078
+VSCODE_PID = 2051
 # variable set hash-table stats:
 # Load=115/1024=11%, Rehash=0, Collisions=20/140=14%
 
@@ -295,7 +293,6 @@ build:
 #  File has not been updated.
 #  recipe to execute (from 'Makefile', line 16):
 	@echo [ASM] boot.asm
- 
 	@$(ASM) -fbin ./boot/boot.asm
 	@echo [ASM] boot.asm
 	@$(ASM) -fbin ./boot/kernelLoader.asm
@@ -309,6 +306,9 @@ build:
 	@$(ASM) -f elf32 ./handlers/keyboard.asm -o ./handlers/keyboard.o
 	@# echo [ASM] syscall.asm
 	@# $(ASM) -f elf32 ./syscall/syscall.asm -o ./syscall/syscall.o
+ 
+make: *** No rule to make target 'all'.  Stop.
+
 	
 	@echo [ASM] pit.asm
 	@$(ASM) -f elf32 ./pit/pit.asm -o ./pit/pit.o
@@ -390,6 +390,6 @@ curses:
 # strcache performance: lookups = 51 / hit rate = 17%
 # hash-table stats:
 # Load=42/8192=1%, Rehash=0, Collisions=1/51=2%
-# Finished Make data base on Tue Jul  5 11:42:48 2022
+# Finished Make data base on Wed Jul  6 10:24:36 2022
 
  

@@ -156,6 +156,8 @@ extern void cpp_test(void);
 
 #include <xaninApps/nic_info.c>
 
+#include <gyn_cl/gyn.c>
+
 //extern void xagame_test(void);
 //extern void assembler(char* file_name);
 

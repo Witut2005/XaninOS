@@ -215,40 +215,40 @@ void _start(void)
     {
 
 
-    screen_clear();
-    
-    time_get(&SystemTime);
+        screen_clear();
+        
+        time_get(&SystemTime);
 
-    xprintf("%z    _/      _/                      _/              _/_/      _/_/_/       \n", set_output_color(logo_back_color, logo_front_color));
-    xprintf("%z     _/  _/      _/_/_/  _/_/_/        _/_/_/    _/    _/  _/              \n", set_output_color(logo_back_color, logo_front_color));
-    xprintf("%z      _/      _/    _/  _/    _/  _/  _/    _/  _/    _/    _/_/           \n", set_output_color(logo_back_color, logo_front_color));
-    xprintf("%z   _/  _/    _/    _/  _/    _/  _/  _/    _/  _/    _/        _/%z  version 22.07v\n",set_output_color(logo_back_color, logo_front_color), set_output_color(black,white) );
-    xprintf("%z_/      _/    _/_/_/  _/    _/  _/  _/    _/    _/_/    _/_/_/     %z%s: %i:%i:%i\n\n\n", set_output_color(logo_back_color, logo_front_color), set_output_color(black,white), daysLUT[SystemTime.weekday], SystemTime.hour, SystemTime.minutes, SystemTime.seconds);                                       
-
-
+        xprintf("%z    _/      _/                      _/              _/_/      _/_/_/       \n", set_output_color(logo_back_color, logo_front_color));
+        xprintf("%z     _/  _/      _/_/_/  _/_/_/        _/_/_/    _/    _/  _/              \n", set_output_color(logo_back_color, logo_front_color));
+        xprintf("%z      _/      _/    _/  _/    _/  _/  _/    _/  _/    _/    _/_/           \n", set_output_color(logo_back_color, logo_front_color));
+        xprintf("%z   _/  _/    _/    _/  _/    _/  _/  _/    _/  _/    _/        _/%z  version 22.07v\n",set_output_color(logo_back_color, logo_front_color), set_output_color(black,white) );
+        xprintf("%z_/      _/    _/_/_/  _/    _/  _/  _/    _/    _/_/    _/_/_/     %z%s: %i:%i:%i\n\n\n", set_output_color(logo_back_color, logo_front_color), set_output_color(black,white), daysLUT[SystemTime.weekday], SystemTime.hour, SystemTime.minutes, SystemTime.seconds);                                       
 
 
-    Screen.x            = 0;
-    Screen.y            = 8;
-    
-    
-    //xprintf("%z%s%z >", set_output_color(black, green), xin_current_directory, set_output_color(black, white));
-
-    for(int i = 0; xin_current_directory[i + 1] != '\0'; i++)
-        xprintf("%z%c", set_output_color(black, lblue), xin_current_directory[i]);
-
-    xprintf(">");
-
-    character_blocked   = '>';
-
-    KeyInfo.scan_code   = 0x0;
-    KeyInfo.character   = 0x0;
-
-    app_exited          = false;
-    arrows_navigate     = true;
 
 
-    //keyboard_handle = terminal_keyboard;
+        Screen.x            = 0;
+        Screen.y            = 8;
+        
+        
+        //xprintf("%z%s%z >", set_output_color(black, green), xin_current_directory, set_output_color(black, white));
+
+        for(int i = 0; xin_current_directory[i + 1] != '\0'; i++)
+            xprintf("%z%c", set_output_color(black, lblue), xin_current_directory[i]);
+
+        xprintf(">");
+
+        character_blocked   = '>';
+
+        KeyInfo.scan_code   = 0x0;
+        KeyInfo.character   = 0x0;
+
+        app_exited          = false;
+        arrows_navigate     = true;
+
+
+        //keyboard_handle = terminal_keyboard;
 
         while(1)
         {
@@ -269,7 +269,31 @@ void _start(void)
                 program_to_execute();
             }
             */
+            char scanf_str[40] = "%s %s %s %s %s";
 
+            for(int i = 0; i < 40; i++)
+                program_name[i] = '\0';
+            
+            for(int i = 0; i < 40; i++)
+                program_parameters[i] = '\0';
+
+            xscanf(scanf_str,program_name, program_parameters, program_parameters1, program_parameters2, program_parameters3);
+
+
+            erase_spaces(program_name);
+            erase_spaces(program_parameters);
+            
+            for(int i = 0; i < sizeof(program_name); i++)
+                last_used_commands[i] = program_name[i];
+
+
+            for(int i = 0; i < sizeof(program_parameters); i++)
+                last_used_parameters[i] = program_parameters[i]; 
+
+            character_blocked = '\0';
+
+            KeyInfo.character = 0x0;
+            KeyInfo.scan_code = 0x0;
             scan();
         }   
 

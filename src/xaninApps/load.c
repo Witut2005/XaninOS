@@ -2,6 +2,8 @@
 
 #pragma once
 
+// UNSTABLE (BAD OPCODE EXEC) I DONT KNOW WHY ://
+
 
 void load(char* address_string)
 {
