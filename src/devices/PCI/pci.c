@@ -257,15 +257,101 @@ uint32_t pci_find_device(uint16_t class, pci_device* device_data)
         if(var == class && tmp != var)   
         {
         
+            device_data->offset   = pci_address_selector & 0xFF;
+            device_data->function = pci_address_selector >> 8 & 0x7;
+            device_data->slot     = pci_address_selector >> 11 & 0x1F;
+            device_data->bus      = pci_address_selector >> 16 & 0xFF;
 
-            for(int i = 0x0; i <= 0xF; i++)
-                *(device_tmp + i) = pci_get_data32((pci_address_selector & 0xFF000000) >> 24, (pci_address_selector & 0xFF0000) >> 16, 
-                                                    (pci_address_selector & 0xFF00) >> 8, 4 * i);
-            
-            device_data->offset = pci_address_selector & 0xFF;
-            device_data->function = (pci_address_selector >> 8) & 0x7;
-            device_data->slot = (pci_address_selector >> 11) & 0xF;
-            device_data->bus = (pci_address_selector >> 16) & 0xFF;
+            device_data->vendor_id = pci_get_data16(device_data->bus, device_data->slot, 
+                                                        device_data->function, 0x0);
+
+            device_data->device_id = pci_get_data16(device_data->bus, device_data->slot, 
+                                                        device_data->function, 0x2);
+
+
+            device_data->command = pci_get_data16(device_data->bus, device_data->slot, 
+                                                        device_data->function, 0x4);
+
+
+            device_data->status = pci_get_data16(device_data->bus, device_data->slot, 
+                                                        device_data->function, 0x6);
+
+
+            device_data->revision_id = pci_get_data8(device_data->bus, device_data->slot, 
+                                                        device_data->function, 0x8);
+
+
+            device_data->p_interface = pci_get_data8(device_data->bus, device_data->slot, 
+                                                        device_data->function, 0x9);
+
+
+            device_data->subclass = pci_get_data8(device_data->bus, device_data->slot, 
+                                                        device_data->function, 0xA);
+
+
+            device_data->_class = pci_get_data8(device_data->bus, device_data->slot, 
+                                                        device_data->function, 0xb);
+
+
+            device_data->cache_line_size = pci_get_data8(device_data->bus, device_data->slot, 
+                                                        device_data->function, 0xC);
+
+
+            device_data->latency_timer = pci_get_data8(device_data->bus, device_data->slot, 
+                                                        device_data->function, 0xD);
+
+
+            device_data->header_type = pci_get_data8(device_data->bus, device_data->slot, 
+                                                        device_data->function, 0xE);
+
+
+            device_data->base0 = pci_get_data32(device_data->bus, device_data->slot, 
+                                                        device_data->function, 0x10);
+
+
+            device_data->base1 = pci_get_data32(device_data->bus, device_data->slot, 
+                                                        device_data->function, 0x14);
+
+
+            device_data->base2 = pci_get_data32(device_data->bus, device_data->slot, 
+                                                        device_data->function, 0x18);
+
+            device_data->base3 = pci_get_data32(device_data->bus, device_data->slot, 
+                                                        device_data->function, 0x1C);
+
+            device_data->base4 = pci_get_data32(device_data->bus, device_data->slot, 
+                                                        device_data->function, 0x20);
+                                                        
+            device_data->base5 = pci_get_data32(device_data->bus, device_data->slot, 
+                                                        device_data->function, 0x24);
+
+            device_data->card_bus = pci_get_data32(device_data->bus, device_data->slot, 
+                                                        device_data->function, 0x28);
+
+            device_data->subsystem_vendor_id = pci_get_data16(device_data->bus, device_data->slot, 
+                                                        device_data->function, 0x2C);
+
+            device_data->subsystem_id = pci_get_data16(device_data->bus, device_data->slot, 
+                                                        device_data->function, 0x2C + 0x2);
+
+
+            device_data->rom_base = pci_get_data32(device_data->bus, device_data->slot, 
+                                                        device_data->function, 0x30);
+
+            device_data->capabilities_pointer = pci_get_data16(device_data->bus, device_data->slot, 
+                                                        device_data->function, 0x34);
+                                                        
+            device_data->interrupt_line = pci_get_data8(device_data->bus, device_data->slot, 
+                                                        device_data->function, 0x3C);
+
+            device_data->interrupt_pin = pci_get_data8(device_data->bus, device_data->slot, 
+                                                        device_data->function, 0x3C + 0x1);
+
+            device_data->minimal_grant = pci_get_data8(device_data->bus, device_data->slot, 
+                                                        device_data->function, 0x3C + 0x2);
+
+            device_data->max_latency = pci_get_data8(device_data->bus, device_data->slot, 
+                                                        device_data->function, 0x3C + 0x3);
 
             return pci_address_selector;
         

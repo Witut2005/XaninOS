@@ -88,10 +88,7 @@ void xprintf(char* str, ... )
     uint32_t number;
 
 
-    for(int i = 0; i < sizeof(tmp); i++)
-        tmp[i] = '\0';
-
-
+    memset(tmp, '\0', sizeof(tmp));
 
     char* stringPtr;
 
@@ -502,11 +499,8 @@ void xscanf(char* str, ... )
 
     char buffer[50];
 
-    for(int i = 0; i < 50;i++)
-        command_buffer[i] = '\0';
-
-    for(int i = 0; i < 50;i++)
-        buffer[i] = '\0';
+    memset(command_buffer, '\0', sizeof(command_buffer));
+    memset(buffer, '\0', sizeof(buffer));
 
     index = 0x0;
  

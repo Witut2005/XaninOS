@@ -13,12 +13,30 @@ Ne2000Manager::Ne2000Manager()
 
 void Ne2000Manager::init()
 {
-    pci_find_device(NE2000_PCI_CLASS, &this->pci_info);
+    /* zrob w PIC.C wszystko po kolei bez zadnych uin32_t i bla bla bla */
+    /* bad */
+    this->pci_selector = pci_find_device(NE2000_PCI_CLASS, &pci_info);
+
+    this->pci_info.base0 = this->pci_info.base0 & ~ 0x3;
+    
+    /*
+    this->pci_info.bus = this->pci_selector & 0xFF;
+    this->pci_info.function = this->pci_selector >> 8 & 0x7;
+    this->pci_info.device_id = this->pci_selector >> 11 & 0x1F;
+    this->pci_info.bus = this->pci_selector >> 16;
+    */
+
+    /* this is ok 
+    this->pci_info.vendor_id = pci_get_data16(this->pci_info.bus, this->pci_info.slot,
+                                                this->pci_info.function, 0x0);
+    this->pci_info.device_id = pci_get_data16(this->pci_info.bus, this->pci_info.slot,
+                                                this->pci_info.function, 0x2);
+    */
 }
 
-pci_device Ne2000Manager::pci_info_get()
+pci_device* Ne2000Manager::pci_info_get()
 {
-    return this->pci_info;
+    return &this->pci_info;
 }
 
 uint32_t Ne2000Manager::mac_get()
@@ -38,5 +56,7 @@ uint32_t Ne2000Manager::iobase_get()
 
 uint16_t Ne2000Manager::vendorid_get()
 {
-    return pci_get_vendor_id(this->pci_selector >> 16, this->pci_selector >> 11 & 0x1F, this->pci_selector >> 8 & 0x7);
+    //return pci_get_data16(this->pci_info.bus, this->pci_info.slot, this->pci_info.function, 0x0);
+    return this->pci_info.vendor_id;
+
 }

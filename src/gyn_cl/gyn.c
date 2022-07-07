@@ -1,10 +1,7 @@
 
-#include <gyn_cl/gyn.h>
-#include <xin_fs/xin.c>
-#include <libc/stdiox.h>
-#include <libc/memory.h>
+#pragma once
 
-extern void scan(void);
+#include <gyn_cl/gyn.h>
 
 void gyn_interpreter(char* file_to_interpret)
 {
@@ -23,6 +20,10 @@ void gyn_interpreter(char* file_to_interpret)
     gyn_cl_on = true;
     for(int i = 0; i < VGA_HEIGHT; i++)
     {
+
+        for(int i = 0; i < 5; i++)
+            memset(argv[i], '\0', 40);
+
         read(file, command, sizeof(command));
 
         int arg_counter = 0;
@@ -47,11 +48,15 @@ void gyn_interpreter(char* file_to_interpret)
         for(int i = 0; i < 3; i++)
             xprintf("%s(%d)\n", argv[i], strlen(argv[i]));
         */
+
+        if(strcmp(argv[0], "goto"))
+        {
+            fseek(file, VGA_WIDTH * strtoi(argv[1], 10));
+            continue;
+        }
+
         scan();
 
-
-        for(int i = 0; i < 5; i++)
-            memset(argv[i], '\0', 40);
     }
 
     gyn_cl_on = false;

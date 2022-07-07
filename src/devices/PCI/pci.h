@@ -17,7 +17,7 @@ struct pci_device_structure0
     uint16_t device_id;
     uint16_t command;
     uint16_t status;
-    uint16_t revision_id;
+    uint8_t revision_id;
     uint8_t p_interface;
     uint8_t subclass;
     uint8_t _class;
@@ -32,6 +32,7 @@ struct pci_device_structure0
     uint32_t base4;
     uint32_t base5;
     uint32_t card_bus;
+    uint16_t subsystem_vendor_id;
     uint16_t subsystem_id;
     uint32_t rom_base;
     uint8_t capabilities_pointer;

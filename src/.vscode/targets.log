@@ -1,4 +1,6 @@
 make all --print-data-base --no-builtin-variables --no-builtin-rules --question
+make: *** No rule to make target 'all'.  Stop.
+
 # GNU Make 4.2.1
 # Built for x86_64-pc-linux-gnu
 # Copyright (C) 1988-2016 Free Software Foundation, Inc.
@@ -6,7 +8,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Wed Jul  6 10:24:36 2022
+# Make data base, printed on Thu Jul  7 19:39:22 2022
 
 # Variables
 
@@ -95,7 +97,7 @@ LS_COLORS = rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:
 # environment
 XDG_SESSION_DESKTOP = i3
 # environment
-SSH_AUTH_SOCK = /tmp/ssh-uS0GiJ4LBH2O/agent.1878
+SSH_AUTH_SOCK = /tmp/ssh-9CymSixcClMQ/agent.1929
 # automatic
 %F = $(notdir $%)
 # environment
@@ -109,7 +111,7 @@ PWD = /home/witut/Desktop/xaninOS/src
 # environment
 XDG_SEAT = seat0
 # environment
-SSH_AGENT_PID = 1939
+SSH_AGENT_PID = 1990
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = i3
 # environment
@@ -155,7 +157,7 @@ ASM = nasm
 # makefile (from 'Makefile', line 4)
 CC = i386-elf-g++
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-55f70be9-ef14-45c1-abbe-ada1e70b847f.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-900c737a-de99-4f22-a8e0-253027d35e3a.sock
 # environment
 XDG_SESSION_ID = 2
 # environment
@@ -173,7 +175,7 @@ LIBVIRT_DEFAULT_URI = qemu:///system
 # environment
 LC_TELEPHONE = pl_PL.UTF-8
 # environment
-I3SOCK = /run/user/1000/i3/ipc-socket.1878
+I3SOCK = /run/user/1000/i3/ipc-socket.1929
 # default
 MAKE_COMMAND := make
 # environment
@@ -215,7 +217,7 @@ APPS = ./xaninApps
 # environment
 LC_ALL = C
 # environment
-GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/1ccda290_b0a2_4532_9ce4_4b91667d4681
+GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/663a175e_bda6_46bd_b478_a571861242da
 # automatic
 ^F = $(notdir $^)
 # environment
@@ -239,7 +241,7 @@ LANG = C
 # environment
 TERM = xterm-256color
 # environment
-VSCODE_PID = 2051
+VSCODE_PID = 2121
 # variable set hash-table stats:
 # Load=115/1024=11%, Rehash=0, Collisions=20/140=14%
 
@@ -249,9 +251,9 @@ VSCODE_PID = 2051
 
 # Directories
 
-# . (device 2066, inode 10461210): 32 files, no impossibilities.
+# . (device 2066, inode 10461210): 33 files, no impossibilities.
 
-# 32 files, no impossibilities in 1 directories.
+# 33 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -299,6 +301,7 @@ build:
 	
 	@echo [ASM] xin_pointers.asm
 	@$(ASM) -fbin ./xin_fs/xin_pointers.asm
+ 
 	@echo [ASM] entries_table.asm
 	@$(ASM) -fbin ./xin_fs/entries_table.asm
 	
@@ -306,9 +309,6 @@ build:
 	@$(ASM) -f elf32 ./handlers/keyboard.asm -o ./handlers/keyboard.o
 	@# echo [ASM] syscall.asm
 	@# $(ASM) -f elf32 ./syscall/syscall.asm -o ./syscall/syscall.o
- 
-make: *** No rule to make target 'all'.  Stop.
-
 	
 	@echo [ASM] pit.asm
 	@$(ASM) -f elf32 ./pit/pit.asm -o ./pit/pit.o
@@ -384,12 +384,12 @@ curses:
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 42 / storage = 351 B / avg = 8 B
-# current buf: size = 8162 B / used = 351 B / count = 42 / avg = 8 B
+# strcache buffers: 1 (0) / strings = 43 / storage = 358 B / avg = 8 B
+# current buf: size = 8162 B / used = 358 B / count = 43 / avg = 8 B
 
-# strcache performance: lookups = 51 / hit rate = 17%
+# strcache performance: lookups = 52 / hit rate = 17%
 # hash-table stats:
-# Load=42/8192=1%, Rehash=0, Collisions=1/51=2%
-# Finished Make data base on Wed Jul  6 10:24:36 2022
+# Load=43/8192=1%, Rehash=0, Collisions=1/52=2%
+# Finished Make data base on Thu Jul  7 19:39:22 2022
 
  
