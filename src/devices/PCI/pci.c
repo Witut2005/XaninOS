@@ -245,7 +245,7 @@ uint32_t pci_find_device(uint16_t class, pci_device* device_data)
 
     uint32_t* device_tmp = (uint32_t*)device_data;
 
-    for(pci_address_selector = 0x0; pci_address_selector < 2500000; pci_address_selector+=0x4) 
+    for(pci_address_selector = 0x0; pci_address_selector < 2500000; pci_address_selector++) 
     {
         static uint16_t var, tmp; 
         tmp = var;
@@ -304,6 +304,9 @@ uint32_t pci_find_device(uint16_t class, pci_device* device_data)
             device_data->header_type = pci_get_data8(device_data->bus, device_data->slot, 
                                                         device_data->function, 0xE);
 
+
+            device_data->bist = pci_get_data8(device_data->bus, device_data->slot, 
+                                                        device_data->function, 0xF);
 
             device_data->base0 = pci_get_data32(device_data->bus, device_data->slot, 
                                                         device_data->function, 0x10);

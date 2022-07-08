@@ -15,29 +15,39 @@ struct pci_device_structure0
     
     uint16_t vendor_id;
     uint16_t device_id;
+
     uint16_t command;
     uint16_t status;
+    
     uint8_t revision_id;
     uint8_t p_interface;
     uint8_t subclass;
     uint8_t _class;
+    
     uint8_t cache_line_size;
     uint8_t latency_timer;
     uint8_t header_type;
     uint8_t bist;
+    
     uint32_t base0; 
     uint32_t base1;
     uint32_t base2;
     uint32_t base3;
     uint32_t base4;
     uint32_t base5;
+    
     uint32_t card_bus;
+
     uint16_t subsystem_vendor_id;
     uint16_t subsystem_id;
+    
     uint32_t rom_base;
+    
     uint8_t capabilities_pointer;
     uint8_t reserved0[3];
+    
     uint8_t reserved1[4];
+    
     uint8_t interrupt_line;
     uint8_t interrupt_pin;
     uint8_t minimal_grant;

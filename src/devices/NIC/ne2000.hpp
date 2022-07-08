@@ -39,6 +39,23 @@ namespace ne2000
         
     };
 
+    enum NE2000_COMMANDS
+    {
+
+        reset = 0x7
+
+    };
+
+    enum NE2000_PAGES
+    {
+
+        PAGE0 = 0x0,
+        PAGE1 = 0x1,
+        PAGE2 = 0x2, 
+        PAGE3 = 0x3
+
+    };
+
 
 }
 

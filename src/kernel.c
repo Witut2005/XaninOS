@@ -167,8 +167,10 @@ void _start(void)
     xprintf("\n----------------------------\n");
     xprintf("Com port status: 0x%x\n", com_status());
 
+    /*
     xprintf("ne2000 iobase: 0x%x\n", ne2000_iobase_get());
     xprintf("ne2000 vendor id: 0x%x\n", ne2000_vendorid_get());
+    */
     //xprintf("Xanin Information Block base address: 0x%x\n", xanin_info_ptr);
 
     bootloader_program_buffer = (uint8_t*) malloc(sizeof(uint8_t) * SECTOR_SIZE); //must be before xin_init_fs
