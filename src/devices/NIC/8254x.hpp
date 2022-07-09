@@ -11,67 +11,38 @@ extern "C" uint16_t pci_get_data16(const uint8_t bus, const uint8_t slot, const 
 
 #define NE2000_PCI_CLASS 0x0200
 
-namespace ne2000
+namespace nic
 {
 
-    namespace page0 
+    enum NIC_DATA
     {
 
-        enum Ne2000Register
-        {
-            command           = 0x0,
-            cldma0            = 0x1,
-            cldma1            = 0x2,
-            boundary          = 0x3,
-            transmit_status   = 0x4,
-            collsiion_counter = 0x5,
-            fifo              = 0x6,
-            isr               = 0x7,
-            crda0             = 0x8,
-            crda1             = 0x9,
-            id0               = 0xa,
-            id1               = 0xb,
-            receive_status    = 0xc,
-            cntr0             = 0xd,
-            cntr1             = 0xe,
-            cntr2             = 0xf
-        };
-        
-    };
-
-    enum NE2000_COMMANDS
-    {
-
-        reset = 0x7
-
-    };
-
-    enum NE2000_PAGES
-    {
-
-        PAGE0 = 0x0,
-        PAGE1 = 0x1,
-        PAGE2 = 0x2, 
-        PAGE3 = 0x3
+        IOADDR = 0x0, 
+        IODATA = 0x1
 
     };
 
 
 }
 
-class Ne2000Manager
+class Intel8254x
 {
     public:
-    uint32_t iobase;
+    uint32_t* iobase;
+    uint32_t* ioaddr;
+    uint32_t* iodata;
     uint32_t pci_selector;
     pci_device pci_info;
 
-    Ne2000Manager();
+    void write(uint32_t ioaddr, uint32_t value);
+    uint32_t read(void);
+
     uint32_t mac_get();
     uint32_t iobase_get();
     uint16_t vendorid_get();
     void init();
     pci_device* pci_info_get();
+
 
 
 

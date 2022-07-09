@@ -17,7 +17,7 @@ void nic_info(void)
     xprintf("vendor id: 0x%X\n", nic_info->vendor_id);
     xprintf("device id: 0x%X\n", nic_info->device_id);
     
-    xprintf("base: 0x%X\n", pci_get_data32(nic_info->bus, nic_info->slot, nic_info->function, 0x10));
+    xprintf("base: 0x%X\n", nic_info->base0);
 
     xprintf("interrupt line: 0x%X\n", nic_info->interrupt_line);
     xprintf("interrupt pin: 0x%X\n", nic_info->interrupt_pin);

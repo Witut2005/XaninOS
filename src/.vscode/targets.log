@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Fri Jul  8 21:41:55 2022
+# Make data base, printed on Sat Jul  9 14:06:42 2022
 
 # Variables
 
@@ -28,8 +28,6 @@ C_OPTIONS = -O0 -masm=intel -Wno-discarded-qualifiers -Wno-builtin-declaration-m
 XDG_SESSION_CLASS = user
 # environment
 XDG_SESSION_TYPE = x11
-# environment
-VSCODE_LOG_NATIVE = false
 # automatic
 ?D = $(patsubst %/,%,$(dir $?))
 # makefile (from 'Makefile', line 3)
@@ -69,8 +67,6 @@ XDG_DATA_DIRS = /usr/share/i3:/usr/local/share/:/usr/share/:/var/lib/snapd/deskt
 # environment
 DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus
 # environment
-VSCODE_VERBOSE_LOGGING = true
-# environment
 LESSOPEN = | /usr/bin/lesspipe %s
 # environment
 LC_NAME = pl_PL.UTF-8
@@ -87,8 +83,6 @@ GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
 # environment
-VSCODE_LOG_STACK = false
-# environment
 ELECTRON_RUN_AS_NODE = 1
 # default
 .FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync check-symlink load
@@ -97,13 +91,11 @@ LS_COLORS = rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:
 # environment
 XDG_SESSION_DESKTOP = i3
 # environment
-SSH_AUTH_SOCK = /tmp/ssh-wDSfOgNFHhhy/agent.1876
+SSH_AUTH_SOCK = /tmp/ssh-GXmMmR3tDGbp/agent.1906
 # automatic
 %F = $(notdir $%)
 # environment
 DISPLAY = :1
-# environment
-VSCODE_PIPE_LOGGING = true
 # environment
 PWD = /home/witut/Desktop/xaninOS/src
 # default
@@ -111,7 +103,7 @@ PWD = /home/witut/Desktop/xaninOS/src
 # environment
 XDG_SEAT = seat0
 # environment
-SSH_AGENT_PID = 1937
+SSH_AGENT_PID = 1967
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = i3
 # environment
@@ -125,7 +117,7 @@ LESSCLOSE = /usr/bin/lesspipe %s %s
 # environment
 VSCODE_CLI = 1
 # environment
-VSCODE_CODE_CACHE_PATH = /home/witut/.config/Code/CachedData/30d9c6cd9483b2cc586687151bcbcd635f373630
+VSCODE_CODE_CACHE_PATH = /home/witut/.config/Code/CachedData/92d25e35d9bf1a6b16f7d0758f25d48ace11e5b9
 # environment
 LOGNAME = witut
 # environment
@@ -157,8 +149,6 @@ ASM = nasm
 # makefile (from 'Makefile', line 4)
 CC = i386-elf-g++
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-385e87f1-5029-496b-b512-fd5086593bce.sock
-# environment
 XDG_SESSION_ID = 2
 # environment
 USER = witut
@@ -175,7 +165,7 @@ LIBVIRT_DEFAULT_URI = qemu:///system
 # environment
 LC_TELEPHONE = pl_PL.UTF-8
 # environment
-I3SOCK = /run/user/1000/i3/ipc-socket.1876
+I3SOCK = /run/user/1000/i3/ipc-socket.1906
 # default
 MAKE_COMMAND := make
 # environment
@@ -185,7 +175,7 @@ OLDPWD = /home/witut
 # automatic
 *F = $(notdir $*)
 # environment
-VSCODE_IPC_HOOK = /run/user/1000/vscode-1d0b7960-1.68.1-main.sock
+VSCODE_IPC_HOOK = /run/user/1000/vscode-1d0b7960-1.69.0-main.sock
 # makefile
 MAKEFLAGS = pqrR
 # environment
@@ -217,7 +207,7 @@ APPS = ./xaninApps
 # environment
 LC_ALL = C
 # environment
-GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/2fad99af_a7fa_47fa_9493_d43aa489ab62
+GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/64738ed8_abce_4e04_baa2_2a96f002369c
 # automatic
 ^F = $(notdir $^)
 # environment
@@ -241,9 +231,9 @@ LANG = C
 # environment
 TERM = xterm-256color
 # environment
-VSCODE_PID = 2995
+VSCODE_PID = 8062
 # variable set hash-table stats:
-# Load=115/1024=11%, Rehash=0, Collisions=20/140=14%
+# Load=110/1024=11%, Rehash=0, Collisions=19/135=14%
 
 # Pattern-specific Variable Values
 
@@ -278,7 +268,7 @@ windows:
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-07-07 21:07:17.686984735
+#  Last modified 2022-07-09 13:26:58.157902115
 #  File has been updated.
 #  Successfully updated.
 
@@ -294,7 +284,6 @@ build:
 #  Modification time never checked.
 #  File has not been updated.
 #  recipe to execute (from 'Makefile', line 16):
- 
 	@echo [ASM] boot.asm
 	@$(ASM) -fbin ./boot/boot.asm
 	@echo [ASM] boot.asm
@@ -320,6 +309,7 @@ build:
 	@$(ASM) -fbin $(APPS)/reboot.asm -o $(APPS)/reboot
 	@echo [ASM] syscall_test.asm
 	@$(ASM) -fbin $(APPS)/syscall_test.asm -o  $(APPS)/syscall_test -w-other
+ 
 	@echo [ASM] xanin_apps_space.asm
 	@$(ASM) -fbin $(APPS)/xanin_apps_space.asm -o $(APPS)/xanin_apps_space
 	@echo [CC] chip8.cpp
@@ -336,7 +326,7 @@ build:
 	@$(CC) $(CC_OPTIONS) ./devices/IOAPIC/ioapic.cpp -o ./devices/IOAPIC/ioapic.o
 	
 	@echo [CC] ne2000.cpp
-	@$(CC) $(CC_OPTIONS) ./devices/NIC/ne2000.cpp -o ./devices/NIC/ne2000.o
+	@$(CC) $(CC_OPTIONS) ./devices/NIC/8254x.cpp -o ./devices/NIC/8254x.o
 	@echo [C] kernel.c
 	@$(C) $(C_COMPILE) kernel.c \
 	./handlers/keyboard.o \
@@ -345,7 +335,7 @@ build:
 	./test/cpp_test2.o \
 	./devices/MOUSE/mouse.o \
 	./devices/APIC/apic.o \
-	./devices/NIC/ne2000.o \
+	./devices/NIC/8254x.o \
 	./devices/IOAPIC/ioapic.o \
 	./test/testc.o \
 	./devices/COM/ComPort.o -o kernel.bin
@@ -367,7 +357,7 @@ run:
 #  Modification time never checked.
 #  File has not been updated.
 #  recipe to execute (from 'Makefile', line 93):
-	qemu-system-i386 -net nic,model=ne2k_pci -drive file=../bin/xanin.img,cache=unsafe -m 512
+	qemu-system-i386 -net nic -drive file=../bin/xanin.img,cache=unsafe -m 512
 
 curses:
 #  Implicit rule search has not been done.
@@ -390,6 +380,6 @@ curses:
 # strcache performance: lookups = 52 / hit rate = 17%
 # hash-table stats:
 # Load=43/8192=1%, Rehash=0, Collisions=1/52=2%
-# Finished Make data base on Fri Jul  8 21:41:55 2022
+# Finished Make data base on Sat Jul  9 14:06:42 2022
 
  

@@ -64,7 +64,7 @@ build:
 	@$(CC) $(CC_OPTIONS) ./devices/IOAPIC/ioapic.cpp -o ./devices/IOAPIC/ioapic.o
 	
 	@echo [CC] ne2000.cpp
-	@$(CC) $(CC_OPTIONS) ./devices/NIC/ne2000.cpp -o ./devices/NIC/ne2000.o
+	@$(CC) $(CC_OPTIONS) ./devices/NIC/8254x.cpp -o ./devices/NIC/8254x.o
 
 	@echo [C] kernel.c
 	@$(C) $(C_COMPILE) kernel.c \
@@ -74,7 +74,7 @@ build:
 	./test/cpp_test2.o \
 	./devices/MOUSE/mouse.o \
 	./devices/APIC/apic.o \
-	./devices/NIC/ne2000.o \
+	./devices/NIC/8254x.o \
 	./devices/IOAPIC/ioapic.o \
 	./test/testc.o \
 	./devices/COM/ComPort.o -o kernel.bin
@@ -90,7 +90,7 @@ build:
 
 
 run:
-	qemu-system-i386 -net nic,model=ne2k_pci -drive file=../bin/xanin.img,cache=unsafe -m 512
+	qemu-system-i386 -net nic -drive file=../bin/xanin.img,cache=unsafe -m 512
 
 curses:
 	qemu-system-i386 -curses -k en-us -m 512 -hda ../bin/xanin.img 
