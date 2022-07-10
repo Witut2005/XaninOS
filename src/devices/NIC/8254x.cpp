@@ -5,35 +5,70 @@
 #include <libcpp/chal.h>
 #include <libcpp/ostream.h>
 
+#define reset() write(0x0, 0x4000000)
 
-void Intel8254x::write(uint32_t ioaddr, uint32_t value)
+void Intel8254x::write(uint32_t reg, uint32_t value)
 {
-    *(this->ioaddr) = ioaddr;
-    *(this->iodata) = value;
+    *(uint32_t*)(this->iobase + reg) = value;
+    io_wait();
 }
 
-#define reset() write(0x0, 0x4000000)
+uint32_t Intel8254x::read(uint32_t reg)
+{
+    return *(uint32_t*)(this->iobase + reg); 
+}
+
+uint16_t Intel8254x::eeprom_read(uint8_t address)
+{
+
+    uint32_t address32 = static_cast<uint32_t>((address & 0xFFF) << 2);
+
+    address32 = address32 | 0x1;
+
+    this->write(nic::EERD, address32);
+    io_wait();
+    
+    uint16_t ret = this->read(nic::EERD);
+
+    address32 = address32 ^ 0x1;
+
+    this->write(nic::EERD, address32);
+
+    return ret;
+
+}
+
 
 void Intel8254x::init()
 {
 
-    this->pci_selector = pci_find_device(NE2000_PCI_CLASS, &pci_info);
+    this->pci_selector = pci_find_device(INTEL_8254X, &pci_info);
     
-    this->iobase = (uint32_t*)this->pci_info.base0;
+    this->iobase = (uint8_t*)this->pci_info.base0;
 
-    this->ioaddr = this->iobase + nic::IOADDR;
-    this->iodata = this->iobase + nic::IODATA;
 
-    std::cout << std::clear;
+    // std::cout << std::clear;
+    // std::cout << "CONTROL STATE:" << std::hex << this->read(nic::CTRL) << std::endl;
+    // // outdIO(0xC000, 0x0);
+    // std::cout << "CONTROL STATE:" << std::hex << indIO(0xC001) << std::endl;
+    // std::cout << "CONTROL STATE:" << std::hex << this->read(nic::CTRL) << std::endl;
+    // // std::cout << std::hex << this->iobase << std::endl;
 
-    std::cout << std::hex << this->iobase << std::endl;
+    // reset();
 
-    reset();
+    // this->write(nic::EECD, this->read(nic::EECD) | nic::EECD_SK | nic::EECD_CS | nic::EECD_DI);
+
+    // this->write(nic::EECD, this->read(nic::EECD) | nic::EECD_REQ);
+    // while( (this->read(nic::EECD) & nic::EECD_GNT) >> 7 != 1);
+    // this->write(nic::EECD, this->read(nic::EECD) ^ nic::EECD_REQ);
+
+    // // std::cout << "CONTROL STATE:" << std::hex << this->read(nic::CTRL) << std::endl;
     
-    std::cout << "Current value test:" << std::hex << *iobase << std::endl;
+    // std::cout << std::hex << this->eeprom_read(0x0) << std::endl;
+    // std::cout << std::hex << this->eeprom_read(0x1) << std::endl;
+    // std::cout << std::hex << this->eeprom_read(0x2) << std::endl;
 
-
-
+    // while(1);
 
 }
 

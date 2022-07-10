@@ -90,7 +90,7 @@ build:
 
 
 run:
-	qemu-system-i386 -net nic -drive file=../bin/xanin.img,cache=unsafe -m 512
+	qemu-system-i386 -net nic,model=virtio,macaddr=00:00:00:11:11:11 -drive file=../bin/xanin.img,cache=unsafe -m 512
 
 curses:
 	qemu-system-i386 -curses -k en-us -m 512 -hda ../bin/xanin.img 

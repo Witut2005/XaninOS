@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Sat Jul  9 14:06:42 2022
+# Make data base, printed on Sun Jul 10 21:16:51 2022
 
 # Variables
 
@@ -91,7 +91,7 @@ LS_COLORS = rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:
 # environment
 XDG_SESSION_DESKTOP = i3
 # environment
-SSH_AUTH_SOCK = /tmp/ssh-GXmMmR3tDGbp/agent.1906
+SSH_AUTH_SOCK = /tmp/ssh-htlgstJWVzZw/agent.1890
 # automatic
 %F = $(notdir $%)
 # environment
@@ -103,7 +103,7 @@ PWD = /home/witut/Desktop/xaninOS/src
 # environment
 XDG_SEAT = seat0
 # environment
-SSH_AGENT_PID = 1967
+SSH_AGENT_PID = 1951
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = i3
 # environment
@@ -165,7 +165,7 @@ LIBVIRT_DEFAULT_URI = qemu:///system
 # environment
 LC_TELEPHONE = pl_PL.UTF-8
 # environment
-I3SOCK = /run/user/1000/i3/ipc-socket.1906
+I3SOCK = /run/user/1000/i3/ipc-socket.1890
 # default
 MAKE_COMMAND := make
 # environment
@@ -207,7 +207,7 @@ APPS = ./xaninApps
 # environment
 LC_ALL = C
 # environment
-GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/64738ed8_abce_4e04_baa2_2a96f002369c
+GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/8be8dba5_228b_4d2a_b397_b863442b8af1
 # automatic
 ^F = $(notdir $^)
 # environment
@@ -231,7 +231,7 @@ LANG = C
 # environment
 TERM = xterm-256color
 # environment
-VSCODE_PID = 8062
+VSCODE_PID = 3029
 # variable set hash-table stats:
 # Load=110/1024=11%, Rehash=0, Collisions=19/135=14%
 
@@ -268,7 +268,7 @@ windows:
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-07-09 13:26:58.157902115
+#  Last modified 2022-07-10 21:14:39.637690005
 #  File has been updated.
 #  Successfully updated.
 
@@ -296,6 +296,7 @@ build:
 	
 	@echo [ASM] keyboard.asm
 	@$(ASM) -f elf32 ./handlers/keyboard.asm -o ./handlers/keyboard.o
+ 
 	@# echo [ASM] syscall.asm
 	@# $(ASM) -f elf32 ./syscall/syscall.asm -o ./syscall/syscall.o
 	
@@ -309,7 +310,6 @@ build:
 	@$(ASM) -fbin $(APPS)/reboot.asm -o $(APPS)/reboot
 	@echo [ASM] syscall_test.asm
 	@$(ASM) -fbin $(APPS)/syscall_test.asm -o  $(APPS)/syscall_test -w-other
- 
 	@echo [ASM] xanin_apps_space.asm
 	@$(ASM) -fbin $(APPS)/xanin_apps_space.asm -o $(APPS)/xanin_apps_space
 	@echo [CC] chip8.cpp
@@ -357,7 +357,7 @@ run:
 #  Modification time never checked.
 #  File has not been updated.
 #  recipe to execute (from 'Makefile', line 93):
-	qemu-system-i386 -net nic -drive file=../bin/xanin.img,cache=unsafe -m 512
+	qemu-system-i386 -net nic,model=virtio,macaddr=00:00:00:11:11:11 -drive file=../bin/xanin.img,cache=unsafe -m 512
 
 curses:
 #  Implicit rule search has not been done.
@@ -380,6 +380,6 @@ curses:
 # strcache performance: lookups = 52 / hit rate = 17%
 # hash-table stats:
 # Load=43/8192=1%, Rehash=0, Collisions=1/52=2%
-# Finished Make data base on Sat Jul  9 14:06:42 2022
+# Finished Make data base on Sun Jul 10 21:16:51 2022
 
  
