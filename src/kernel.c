@@ -29,9 +29,7 @@ extern void v86_mode_enter(void);
 extern void mouse_enable(void);
 extern void com_port_init(uint16_t divisor);
 extern bool com_status(void);
-extern uint32_t ne2000_iobase_get(void);
-extern uint16_t ne2000_vendorid_get(void);
-extern void ne2000_init(void);
+extern void i8254x_init(void);
 
 /*--------------------------------------/
 |wesolego nowego roku :))               |
@@ -199,7 +197,7 @@ void _start(void)
     argv[3] = program_parameters2;
     argv[4] = program_parameters3;
 
-    ne2000_init();
+    i8254x_init();
 
 
 

@@ -184,11 +184,52 @@ uint8_t pci_write_data8(const uint8_t bus, const uint8_t slot, const uint8_t fun
     outdIO(PCI_ADDRESS_PORT, address);
     outdIO(PCI_DATA_PORT, (indIO(PCI_DATA_PORT) & ~(0x000000FF << ((offset & 0x3) * 8))) | (data << ((offset & 0x3) * 8)));
      
+    io_wait();
     outdIO(PCI_ADDRESS_PORT, address);
     ret = indIO(PCI_DATA_PORT);
 
     return ret;
         
+
+}
+
+
+uint16_t pci_write_data16(const uint8_t bus, const uint8_t slot, const uint8_t function,
+                                        const uint8_t offset, const uint16_t value)
+{
+
+    //pci_set_parameters(pci_config_address, configuration_address);
+
+    const uint32_t shift = ((offset & 0x3) * 8);
+    uint32_t address; 
+    uint16_t ret;
+        
+
+    if(offset & 0x3 <= 2)
+    {
+        address = (uint32_t)((bus << 16) | 
+                            (slot << 11) |
+                            (function << 8)|
+                            (offset & 0xFC) | ENABLE_CONFIGURATION_SPACE_MAPPING) ;
+
+
+        outdIO(PCI_ADDRESS_PORT, address);
+        outdIO(PCI_DATA_PORT, indIO(PCI_DATA_PORT) & ~(0xFFFF << shift) | value << shift);
+
+    }
+
+    else        
+    {
+        pci_write_data8(bus, slot, function, offset, value & 0xFF);
+        pci_write_data8(bus, slot, function, offset+1, value >> 8);
+    }
+
+    io_wait();
+
+    ret = indIO(PCI_DATA_PORT);
+            
+
+    return ret;
 
 }
 
@@ -208,32 +249,6 @@ void pci_write_data32(uint32_t configuration_address, uint8_t register_id, uint3
     outdIO(PCI_DATA_PORT,value);
 }
 
-
-uint16_t pci_write_data16(uint32_t configuration_address, uint8_t register_id, 
-                                        uint8_t register_offset, uint16_t value)
-{
-
-    //pci_set_parameters(pci_config_address, configuration_address);
-
-    uint32_t address; 
-    uint16_t ret;
-     
-    address = (uint32_t)((pci_config_address.pci_bus_number << 16) | 
-                        (pci_config_address.pci_device_number << 11) |
-                        (pci_config_address.pci_function_number << 8)|
-                        (register_id & 0xFC));
-
-
-    address += register_offset;
-
-    outdIO(PCI_ADDRESS_PORT, address);
-    outdIO(PCI_DATA_PORT,value);
-    ret = indIO(PCI_DATA_PORT);
-            
-
-    return ret;
-
-}
 
 
 uint32_t pci_find_device(uint16_t class, pci_device* device_data)
