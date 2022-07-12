@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Mon Jul 11 12:27:04 2022
+# Make data base, printed on Tue Jul 12 20:16:31 2022
 
 # Variables
 
@@ -91,7 +91,7 @@ LS_COLORS = rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:
 # environment
 XDG_SESSION_DESKTOP = i3
 # environment
-SSH_AUTH_SOCK = /tmp/ssh-W0zdnUiAUFfr/agent.1834
+SSH_AUTH_SOCK = /tmp/ssh-k7l5YxUA8omM/agent.1917
 # automatic
 %F = $(notdir $%)
 # environment
@@ -103,7 +103,7 @@ PWD = /home/witut/Desktop/xaninOS/src
 # environment
 XDG_SEAT = seat0
 # environment
-SSH_AGENT_PID = 1895
+SSH_AGENT_PID = 1978
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = i3
 # environment
@@ -143,7 +143,7 @@ MAKECMDGOALS := all
 # environment
 SHLVL = 1
 # makefile (from 'Makefile', line 8)
-CC_OPTIONS = -O0 -fno-exceptions -lstdc++ -masm=intel -std=c++17 -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Wno-write-strings -Wno-return-type -fno-rtti -I /home/witut/Desktop/xaninOS/src -c
+CC_OPTIONS = -O0 -fno-exceptions -lstdc++ -masm=intel -std=c++17 -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Wno-write-strings -Wno-return-type -fno-rtti -fconcepts-ts -I /home/witut/Desktop/xaninOS/src -c
 # makefile (from 'Makefile', line 9)
 ASM = nasm
 # makefile (from 'Makefile', line 4)
@@ -165,11 +165,11 @@ LIBVIRT_DEFAULT_URI = qemu:///system
 # environment
 LC_TELEPHONE = pl_PL.UTF-8
 # environment
-I3SOCK = /run/user/1000/i3/ipc-socket.1834
+I3SOCK = /run/user/1000/i3/ipc-socket.1917
 # default
 MAKE_COMMAND := make
 # environment
-OLDPWD = /home/witut/Downloads/i825xx
+OLDPWD = /home/witut
 # default
 .VARIABLES := 
 # automatic
@@ -207,11 +207,11 @@ APPS = ./xaninApps
 # environment
 LC_ALL = C
 # environment
-GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/d984cd8b_0f17_4039_9c5e_666abbbb8a26
+GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/484a3436_8dad_4914_9449_f42193636a8e
 # automatic
 ^F = $(notdir $^)
 # environment
-GNOME_TERMINAL_SERVICE = :1.25
+GNOME_TERMINAL_SERVICE = :1.24
 # default
 SUFFIXES := 
 # environment
@@ -231,7 +231,7 @@ LANG = C
 # environment
 TERM = xterm-256color
 # environment
-VSCODE_PID = 6677
+VSCODE_PID = 2106
 # variable set hash-table stats:
 # Load=110/1024=11%, Rehash=0, Collisions=19/135=14%
 
@@ -268,7 +268,7 @@ windows:
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-07-11 11:40:49.056750314
+#  Last modified 2022-07-12 10:33:03.6046547
 #  File has been updated.
 #  Successfully updated.
 
@@ -343,6 +343,7 @@ build:
 	@cat ./boot/boot ./libc/enter_real_mode ./xaninApps/xanin_apps_space ./xin_fs/xin_pointers ./xin_fs/entries_table ./boot/kernelLoader kernel.bin > xanin.bin
 	@dd if=xanin.bin of=xanin.img
 	@mv xanin.img -f ../bin
+ 
 	@mv xanin.bin -f ../bin
 
 # Not a target:
@@ -366,7 +367,6 @@ curses:
 	qemu-system-i386 -curses -k en-us -m 512 -hda ../bin/xanin.img 
 
 # files hash-table stats:
- 
 # Load=9/1024=1%, Rehash=0, Collisions=0/19=0%
 # VPATH Search Paths
 
@@ -380,6 +380,6 @@ curses:
 # strcache performance: lookups = 52 / hit rate = 17%
 # hash-table stats:
 # Load=43/8192=1%, Rehash=0, Collisions=1/52=2%
-# Finished Make data base on Mon Jul 11 12:27:04 2022
+# Finished Make data base on Tue Jul 12 20:16:31 2022
 
  

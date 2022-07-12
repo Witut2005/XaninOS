@@ -2,7 +2,7 @@
 #include <libcpp/algorithm.h>
 #include <libcpp/ostream.h>
 #include <libcpp/istream.h>
-#include <libcpp/array.cpp>
+#include <libcpp/array.h>
 #include <libcpp/initializer_list.hpp>
 #include <libcpp/new.hpp>
 void cpp_prog2()

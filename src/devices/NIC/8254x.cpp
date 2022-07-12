@@ -7,6 +7,10 @@
 
 #define reset() write(0x0, 0x4000000)
 
+
+
+
+
 void Intel8254xDriver::write(uint32_t reg, uint32_t value)
 {
     *(uint32_t*)(this->iobase + reg) = value;
@@ -16,6 +20,12 @@ void Intel8254xDriver::write(uint32_t reg, uint32_t value)
 uint32_t Intel8254xDriver::read(uint32_t reg)
 {
     return *(uint32_t*)(this->iobase + reg); 
+}
+
+void Intel8254xDriver::multicast_table_array_clear(void)
+{
+    for(int i = 0 ; i < 0x1FC; i += 4)
+        this->write(nic::MTA + i, 0x0);
 }
 
 uint16_t Intel8254xDriver::eeprom_read(uint8_t address)
@@ -71,8 +81,39 @@ void Intel8254xDriver::init()
     *(uint16_t*)&mac[2] = this->eeprom_read(0x1);
     *(uint16_t*)&mac[4] = this->eeprom_read(0x2);
 
+    /* general configuration (page 389) */
+    this->write(nic::CTRL, this->read(nic::CTRL) | nic::ctrl::ASDE | nic::ctrl::SLU); // step 2
+    this->write(nic::CTRL, this->read(nic::CTRL) & (~nic::ctrl::LRST)); // step 5
+    this->write(nic::CTRL, this->read(nic::CTRL) & (~nic::ctrl::PHY_RST)); // step 6
+    this->write(nic::CTRL, this->read(nic::CTRL) & (~nic::ctrl::ILOS)); // step 7 (can be bad)
+    this->multicast_table_array_clear(); // clear multicast table
+
+    /* enabling interrupts */
+    this->write(nic::IMS, this->read(nic::IMS) | nic::IMS_RXT | nic::IMS_RXO | 
+                    nic::IMS_RXDMT | nic::IMS_RXSEQ | nic::IMS_LSC);
+
+    
+    /* disable VLANs */
+    this->write(nic::CTRL, this->read(nic::CTRL) & (~nic::ctrl::VME));
+
+
+    this->write(nic::RDBAL, (uint32_t)malloc(sizeof(uint8_t) * 4096));
+    this->write(nic::RDLEN, 4096 / 8);
+
+    /* set head and tail to proper values */
+    this->write(nic::RDH, 0x0);
+    this->write(nic::RDT, 4096 / 8);
+
+    /* set receive control register */
+    this->write(nic::RCTL, this->read(nic::RCTL) | (~(0x3 << nic::RCTL_LBM)));
+
+    this->write(nic::RCTL, this->read(nic::RCTL) | nic::RCTL_BAM); // accept broadcast packets
+
     /* enable receiving packets */
     this->write(nic::RCTL, nic::RCTL_EN);
+
+    std::cout << "mask registers status: " << std::bin << this->read(nic::IMS) << std::endl;
+    // while(1);
 
 }
 

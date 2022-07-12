@@ -3,13 +3,18 @@
 
 #include <libcpp/cstring.h>
 #include <libcpp/cstdlib.h>
+#include <libcpp/iterator.h>
 
 namespace std
 {
 
 class string
 {
+    
+
     public: 
+
+    using Type = char;
 
     size_t reserve(uint32_t size)
     {
@@ -151,15 +156,15 @@ class string
     }
 
 
-    uint32_t* begin() const
+    Iterator<char> begin() const
     {
-        return reinterpret_cast<uint32_t*> (string_data);
+        return string_data;
     }
 
 
-    uint32_t* end() const
+    Iterator<char> end() const
     {
-        return reinterpret_cast<uint32_t*> (string_data + length());
+        return string_data + length();
     }
 
     private:

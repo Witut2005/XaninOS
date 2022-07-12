@@ -1,4 +1,6 @@
 
+#pragma once
+
 #include <stdarg.h>
 #include <libcpp/initializer_list.hpp>
 
@@ -91,7 +93,7 @@ class array
     public:
 
     using Type = T;
-    using iterator = ArrayIterator< array<Type, X> >;
+    using iterator = ArrayIterator< array<T, X> >;
 
     array(array& arr)
     {

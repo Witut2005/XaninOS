@@ -17,14 +17,50 @@ namespace nic
 
     enum NIC_DATA
     {
-        IOADDR = 0x0, 
-        IODATA = 0x1,
-        EECD_SK = 0x1,
-        EECD_CS = 0x2,
-        EECD_DI = 0x4,
+        IOADDR   = 0x0, 
+        IODATA   = 0x1,
+        EECD_SK  = 0x1,
+        EECD_CS  = 0x2,
+        EECD_DI  = 0x4,
         EECD_REQ = 0x1 << 6,
         EECD_GNT = 0x1 << 7,
-        RCTL_EN = 0x2
+        RCTL_EN  = 0x2
+    };
+
+    enum ctrl 
+    {
+        FD    = 1 << 0,
+        RESV0 = 1 << 1,
+        LRST  = 1 << 3,
+        RESV1 = 1 << 4,
+        ASDE  = 1 << 5,
+        SLU = 1 << 6,
+        ILOS = 1 << 7,
+        SPEED = 1 << 8,
+        RESV2 = 1 << 10,
+        FRCSPD = 1 << 11,
+        VME = 1 << 30,
+        PHY_RST = 1 << 31
+
+
+    };
+
+    enum IMS_REG
+    {
+
+        IMS_RXO = 0x1 << 6,
+        IMS_RXT = 1 << 7,
+        IMS_RXDMT = 1 << 4,
+        IMS_RXSEQ = 1 << 3,
+        IMS_LSC = 1 << 2
+
+    };
+
+    enum RCTL_REG
+    {
+        RCTL_LBM = 1 << 6,
+        RCTL_BAM = 1 << 15
+
     };
 
     enum NIC_REGISTERS
@@ -51,7 +87,12 @@ namespace nic
         ICS = 0xC8,
         IMS = 0xD0,
         IMC = 0xD8,
-        RCTL = 0x100
+        RCTL = 0x100,
+        MTA = 0x5200,
+        RDBAL = 0x2800,
+        RDLEN = 0x2808,
+        RDH = 0x2810,
+        RDT = 0x2818
 
 
     };
@@ -79,6 +120,7 @@ class Intel8254xDriver
     void init();
     pci_device* pci_info_get();
     uint16_t eeprom_read(uint8_t address);
+    void multicast_table_array_clear(void);
 
 
 

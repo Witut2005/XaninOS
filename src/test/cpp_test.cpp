@@ -11,9 +11,11 @@
 #include <libcpp/string.h>
 #include <libcpp/istream.h>
 #include <keyboard/scan_codes.h>
-#include <libcpp/array.cpp>
+#include <libcpp/array.h>
 #include <libcpp/initializer_list.hpp>
 #include <libcpp/new.hpp>
+#include <libcpp/box.h>
+#include <libcpp/iterator.h>
 
 class Test
 {
@@ -86,8 +88,8 @@ void cpp_prog()
     std::cout << "STRING SIZE:"<< str.size() << std::endl;
 
 
-    std::cout << std::hex << "0x" << str.begin() << std::endl;
-    std::cout << std::hex << "0x" << str.end() << std::endl;
+    // std::cout << std::hex << "0x" << str.begin() << std::endl;
+    // std::cout << std::hex << "0x" << str.end() << std::endl;
 
 
     std::cout << std::endl;
@@ -130,6 +132,13 @@ void cpp_prog()
     std::cout << "end time of execution: " << std::chrono::system_clock::now() << std::endl;
 
     std::cout << "end time year" << std::chrono::system_clock::year() << std::endl;
+
+    std::Box moj_boxik(jeden_str.begin(), jeden_str.end());
+
+    moj_boxik.print();
+    
+
+    
 
     wait_key(ENTER_RELEASE);
     wait_key(ENTER_RELEASE);
