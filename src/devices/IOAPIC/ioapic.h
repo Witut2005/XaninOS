@@ -13,7 +13,8 @@ enum APIC_IOREDTBL_OPTIONS
 
     PIC_PIT_VECTOR        = 0x20,
     PIC_KEYBOARD_VECTOR   = 0x21,
-    
+    PIC_NIC_VECTOR        = 0x20 + 0xB,
+
     APIC_VECTOR           = 0,
     APIC_DELIVERY_MODE    = 8,
     APIC_DESTINATION_MODE = 11,

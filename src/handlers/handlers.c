@@ -26,6 +26,11 @@ void floppy_interrupt(void)
     asm("hlt");
 }
 
+void gowno(void)
+{
+    xprintf("gowno");
+}
+
 void invalid_opcode(void)
 {
     //screen_clear();

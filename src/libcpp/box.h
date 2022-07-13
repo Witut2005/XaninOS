@@ -15,23 +15,18 @@ class Box
 
     public:
 
-    // T* begin()
-    // {
-    //     return first; 
-    // }
+    auto begin()
+    {
+        return first; 
+    }
 
-    // T* end()
-    // {
-    //     return last;
-    // }
+    auto end()
+    {
+        return last;
+    }
 
     Box(Iterator<T> first, Iterator<T> last) : first(first), last(last){}
 
-    void print(void)
-    {
-        for(auto a = this->first; a != this->last; a++)
-            std::cout << *a << " ";
-    }
 
 };
 

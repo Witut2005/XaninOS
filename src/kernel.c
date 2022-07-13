@@ -136,6 +136,7 @@ void _start(void)
 
     madt_entry_type2* apic_keyboard_redirect = nullptr; 
     madt_entry_type2* apic_pit_redirect      = nullptr; 
+    madt_entry_type2* apic_nic_redirect      = nullptr; 
 
 
     for(int i = 0; (*madt_entry_type2_ptr[i]).entry_type == 2; i++)
@@ -146,21 +147,30 @@ void _start(void)
         else if((*madt_entry_type2_ptr[i]).irq_source == 0)
             apic_pit_redirect = madt_entry_type2_ptr[i];
 
+        else if((*madt_entry_type2_ptr[i]).irq_source == 0xB)
+            apic_nic_redirect = madt_entry_type2_ptr[i];
+
     }
 
 
-    ioapic_ioredtbl_configure(apic_keyboard_redirect != nullptr ? apic_keyboard_redirect->global_system_int_table + APIC_IRQ_BASE: PIC_KEYBOARD_VECTOR
+    ioapic_ioredtbl_configure((apic_keyboard_redirect != nullptr ? apic_keyboard_redirect->global_system_int_table + APIC_IRQ_BASE : PIC_KEYBOARD_VECTOR)
                                     << APIC_VECTOR | 0x0 << APIC_DELIVERY_MODE | 0x0 << APIC_DESTINATION_MODE 
                                         | 0x0 << APIC_INT_PIN_POLARITY | 0x0 << APIC_INT_MASK, ioapic_id_get());
 
-    ioapic_ioredtbl_configure(apic_pit_redirect != nullptr ? apic_pit_redirect->global_system_int_table + APIC_IRQ_BASE: PIC_PIT_VECTOR
+    ioapic_ioredtbl_configure((apic_pit_redirect != nullptr ? apic_pit_redirect->global_system_int_table + APIC_IRQ_BASE : PIC_PIT_VECTOR)
                                     << APIC_VECTOR | 0x0 << APIC_DELIVERY_MODE | 0x0 << APIC_DESTINATION_MODE 
                                         | 0x0 << APIC_INT_PIN_POLARITY | 0x0 << APIC_INT_MASK, ioapic_id_get());
 
+    ioapic_ioredtbl_configure((apic_nic_redirect != nullptr ? apic_nic_redirect->global_system_int_table + APIC_IRQ_BASE : PIC_NIC_VECTOR)
+                                    << APIC_VECTOR | 0x0 << APIC_DELIVERY_MODE | 0x0 << APIC_DESTINATION_MODE 
+                                        | 0x0 << APIC_INT_PIN_POLARITY | 0x0 << APIC_INT_MASK, ioapic_id_get());
+
+    xprintf("\n----------------------------\n");
+    xprintf("NIC interrupt line: 0x%x", (apic_nic_redirect != nullptr ? apic_nic_redirect->global_system_int_table + APIC_IRQ_BASE : PIC_NIC_VECTOR));
 
     xanin_info_ptr = xanin_information_block_get();
     
-    com_port_init(0x00C0);
+    // com_port_init(0x00C0);
 
     xprintf("\n----------------------------\n");
     xprintf("Com port status: 0x%x\n", com_status());

@@ -4,6 +4,7 @@
 
 extern pci_device* i8254x_pci_info_get(void);
 extern uint8_t* i8254x_mac_get(void);
+extern uint32_t i8254x_receive_buffer_get(void);
 
 void nic_info(void)
 {
@@ -31,8 +32,11 @@ void nic_info(void)
     uint8_t* mac = i8254x_mac_get();
     for(int i = 0; i < 5; i++)
         xprintf("%x:", mac[i]);
-    xprintf("%x", mac[5]);
+    xprintf("%x\n", mac[5]);
 
+    xprintf("interrupt line (PIC): 0x%x\n", nic_info->interrupt_line);
+
+    xprintf("receive buffer address: 0x%x\n", i8254x_receive_buffer_get());
 
     while(getscan() != ENTER);
 

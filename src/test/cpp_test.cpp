@@ -135,9 +135,8 @@ void cpp_prog()
 
     std::Box moj_boxik(jeden_str.begin(), jeden_str.end());
 
-    moj_boxik.print();
-    
-
+    for(auto a : moj_boxik)
+        std::cout << a;
     
 
     wait_key(ENTER_RELEASE);

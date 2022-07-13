@@ -88,9 +88,6 @@ void Intel8254xDriver::init()
     this->write(nic::CTRL, this->read(nic::CTRL) & (~nic::ctrl::ILOS)); // step 7 (can be bad)
     this->multicast_table_array_clear(); // clear multicast table
 
-    /* enabling interrupts */
-    this->write(nic::IMS, this->read(nic::IMS) | nic::IMS_RXT | nic::IMS_RXO | 
-                    nic::IMS_RXDMT | nic::IMS_RXSEQ | nic::IMS_LSC);
 
     
     /* disable VLANs */
@@ -105,16 +102,38 @@ void Intel8254xDriver::init()
     this->write(nic::RDT, 4096 / 8);
 
     /* set receive control register */
-    this->write(nic::RCTL, this->read(nic::RCTL) | (~(0x3 << nic::RCTL_LBM)));
+    std::cout << std::hex << "SIZE BUFFER: " << this->read(nic::RCTL) << std::endl;
+    this->write(nic::RCTL, this->read(nic::RCTL) & 0xFFFFFF3F); //LBM
+    std::cout << std::hex << "SIZE BUFFER: " << this->read(nic::RCTL) << std::endl;
 
-    this->write(nic::RCTL, this->read(nic::RCTL) | nic::RCTL_BAM); // accept broadcast packets
+    this->write(nic::RCTL, this->read(nic::RCTL) | nic::rctl::BAM); // accept broadcast packets
+    
+    this->write(nic::RCTL, this->read(nic::RCTL) | nic::rctl::BSEX);
+    this->write(nic::RCTL, this->read(nic::RCTL) | (0x3 << 16));  // BSIZE
 
+    std::cout << std::hex << "SIZE BUFFER: " << this->read(nic::RCTL) << std::endl;
+
+    /* enabling interrupts */
+    // this->write(nic::IMS, this->read(nic::IMS) | nic::ims::RXT | nic::ims::RXO | 
+    //                 nic::ims::RXDMT | nic::ims::RXSEQ | nic::ims::LSC);
+
+    this->write(nic::ITR, this->read(nic::ITR) | 0xFFFF);
+    
+    this->write(nic::IMS, this->read(nic::IMS) | 0xFFFFFFFF);
+    
     /* enable receiving packets */
-    this->write(nic::RCTL, nic::RCTL_EN);
+    this->write(nic::RCTL, this->read(nic::RCTL) | nic::RCTL_EN);
 
-    std::cout << "mask registers status: " << std::bin << this->read(nic::IMS) << std::endl;
+    // std::cout << "mask registers status: " << std::bin << this->read(nic::IMS) << std::endl;
+    // xprintf("ad");
+    // while(1)
     // while(1);
 
+}
+
+uint32_t Intel8254xDriver::receive_buffer_get(void)
+{
+    return this->read(nic::RDBAL);
 }
 
 pci_device* Intel8254xDriver::pci_info_get()

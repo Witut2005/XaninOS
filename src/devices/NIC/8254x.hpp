@@ -39,27 +39,30 @@ namespace nic
         SPEED = 1 << 8,
         RESV2 = 1 << 10,
         FRCSPD = 1 << 11,
-        VME = 1 << 30,
+        VME = 1 << 30,        
         PHY_RST = 1 << 31
 
 
     };
 
-    enum IMS_REG
+    enum ims 
     {
 
-        IMS_RXO = 0x1 << 6,
-        IMS_RXT = 1 << 7,
-        IMS_RXDMT = 1 << 4,
-        IMS_RXSEQ = 1 << 3,
-        IMS_LSC = 1 << 2
+        RXO = 0x1 << 6,
+        RXT = 1 << 7,
+        RXDMT = 1 << 4,
+        RXSEQ = 1 << 3,
+        LSC = 1 << 2
 
     };
 
-    enum RCTL_REG
+    enum rctl 
     {
-        RCTL_LBM = 1 << 6,
-        RCTL_BAM = 1 << 15
+        LBM = 1 << 6,
+        BAM = 1 << 15,
+        BSIZE = 1 << 16,
+        BSEX = 1 << 26,
+
 
     };
 
@@ -92,7 +95,8 @@ namespace nic
         RDBAL = 0x2800,
         RDLEN = 0x2808,
         RDH = 0x2810,
-        RDT = 0x2818
+        RDT = 0x2818,
+        RDTR = 0x2820
 
 
     };
@@ -121,6 +125,7 @@ class Intel8254xDriver
     pci_device* pci_info_get();
     uint16_t eeprom_read(uint8_t address);
     void multicast_table_array_clear(void);
+    uint32_t receive_buffer_get(void);
 
 
 
@@ -149,6 +154,11 @@ extern "C"
     uint8_t* i8254x_mac_get(void)
     {
         return Intel8254x.mac_get();
+    }
+
+    uint32_t i8254x_receive_buffer_get(void)
+    {
+        return Intel8254x.receive_buffer_get();
     }
 
 }
