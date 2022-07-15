@@ -58,6 +58,12 @@ class string
         strcpy(string_data, x);
     }
 
+    string operator = (std::string x)
+    {
+        realloc(string_data, strlen(string_data), strlen(x.c_str()));
+        strcpy(string_data, x.c_str());
+    }
+
     inline bool operator == (std::string x) 
     {
         return strcmp(this->c_str(), x.c_str()) == 0;

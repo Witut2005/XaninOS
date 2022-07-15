@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Mon Jul  4 09:42:13 2022
+# Make data base, printed on Fri Jul 15 13:43:40 2022
 
 # Variables
 
@@ -19,15 +19,13 @@ GNUMAKEFLAGS :=
 # automatic
 ?F = $(notdir $?)
 # environment
-DESKTOP_SESSION = i3
+DESKTOP_SESSION = ubuntu
 # default
 .SHELLFLAGS := -c
 # environment
 XDG_SESSION_CLASS = user
 # environment
 XDG_SESSION_TYPE = x11
-# environment
-VSCODE_LOG_NATIVE = false
 # automatic
 ?D = $(patsubst %/,%,$(dir $?))
 # automatic
@@ -35,9 +33,9 @@ VSCODE_LOG_NATIVE = false
 # environment
 XAUTHORITY = /run/user/1000/gdm/Xauthority
 # environment
-GDMSESSION = i3
-# default
-MAKE_VERSION := 4.2.1
+GDMSESSION = ubuntu
+# environment
+XMODIFIERS = @im=ibus
 # makefile
 CURDIR := /home/witut/Desktop/xaninOS
 # makefile
@@ -47,25 +45,29 @@ VTE_VERSION = 6003
 # environment
 VSCODE_NLS_CONFIG = {"locale":"en-us","availableLanguages":{},"_languagePackSupport":true}
 # environment
-_ = /usr/bin/code
+JOURNAL_STREAM = 8:49955
 # environment
-XDG_CONFIG_DIRS = /etc/xdg/xdg-i3:/etc/xdg
+XDG_CONFIG_DIRS = /etc/xdg/xdg-ubuntu:/etc/xdg
 # makefile
 MAKEFILE_LIST := 
 # automatic
 @F = $(notdir $@)
 # environment
+IM_CONFIG_PHASE = 1
+# environment
 USERNAME = witut
 # environment
 MAKELEVEL := 0
 # environment
-MANDATORY_PATH = /usr/share/gconf/i3.mandatory.path
+MANDATORY_PATH = /usr/share/gconf/ubuntu.mandatory.path
 # environment
-XDG_DATA_DIRS = /usr/share/i3:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop
+XDG_DATA_DIRS = /usr/share/ubuntu:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop
 # environment
-DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus
+DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus,guid=2aff6f5afecd894514ba978662d13c8b
 # environment
-VSCODE_VERBOSE_LOGGING = true
+_ = /usr/bin/code
+# environment
+MANAGERPID = 1793
 # environment
 LESSOPEN = | /usr/bin/lesspipe %s
 # environment
@@ -79,35 +81,35 @@ PATH = /home/witut/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:
 # environment
 GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
 # environment
+SESSION_MANAGER = local/linux:@/tmp/.ICE-unix/2003,unix/linux:/tmp/.ICE-unix/2003
+# environment
 XDG_RUNTIME_DIR = /run/user/1000
 # environment
-VSCODE_LOG_STACK = false
+XDG_MENU_PREFIX = gnome-
 # environment
 ELECTRON_RUN_AS_NODE = 1
+# environment
+INVOCATION_ID = ad1ec1d08ebb42e99a14f36c646aa344
 # default
 .FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync check-symlink load
 # environment
 LS_COLORS = rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:
 # environment
-XDG_SESSION_DESKTOP = i3
+XDG_SESSION_DESKTOP = ubuntu
 # environment
-SSH_AUTH_SOCK = /tmp/ssh-IzzIUzYGPSBp/agent.1899
+SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
 # automatic
 %F = $(notdir $%)
 # environment
 DISPLAY = :1
 # environment
-VSCODE_PIPE_LOGGING = true
-# environment
 PWD = /home/witut/Desktop/xaninOS
 # default
 .LOADED := 
 # environment
-XDG_SEAT = seat0
+SSH_AGENT_PID = 1967
 # environment
-SSH_AGENT_PID = 1960
-# environment
-ORIGINAL_XDG_CURRENT_DESKTOP = i3
+ORIGINAL_XDG_CURRENT_DESKTOP = ubuntu:GNOME
 # environment
 GTK_MODULES = gail:atk-bridge
 # environment
@@ -119,7 +121,7 @@ LESSCLOSE = /usr/bin/lesspipe %s %s
 # environment
 VSCODE_CLI = 1
 # environment
-VSCODE_CODE_CACHE_PATH = /home/witut/.config/Code/CachedData/30d9c6cd9483b2cc586687151bcbcd635f373630
+VSCODE_CODE_CACHE_PATH = /home/witut/.config/Code/CachedData/92d25e35d9bf1a6b16f7d0758f25d48ace11e5b9
 # environment
 LOGNAME = witut
 # environment
@@ -130,10 +132,10 @@ APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
 ELECTRON_NO_ATTACH_CONSOLE = 1
 # environment
 VSCODE_HANDLES_UNCAUGHT_ERRORS = true
+# environment
+GNOME_DESKTOP_SESSION_ID = this-is-deprecated
 # automatic
 ^D = $(patsubst %/,%,$(dir $^))
-# environment
-XDG_VTNR = 2
 # environment
 LC_TIME = pl_PL.UTF-8
 # environment
@@ -143,11 +145,13 @@ MAKE = $(MAKE_COMMAND)
 # default
 MAKECMDGOALS := all
 # environment
+QT_IM_MODULE = ibus
+# environment
 SHLVL = 1
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-61c8b7c7-e630-45e4-b931-796ab70e85ad.sock
-# environment
-XDG_SESSION_ID = 2
+GNOME_SHELL_SESSION_MODE = ubuntu
+# default
+MAKE_VERSION := 4.2.1
 # environment
 USER = witut
 # environment
@@ -155,25 +159,21 @@ LC_MONETARY = pl_PL.UTF-8
 # makefile
 .DEFAULT_GOAL := 
 # environment
-XDG_CURRENT_DESKTOP = i3
+XDG_CURRENT_DESKTOP = Unity
 # environment
 LIBVIRT_DEFAULT_URI = qemu:///system
 # automatic
 %D = $(patsubst %/,%,$(dir $%))
 # environment
 LC_TELEPHONE = pl_PL.UTF-8
-# environment
-I3SOCK = /run/user/1000/i3/ipc-socket.1899
 # default
 MAKE_COMMAND := make
-# environment
-OLDPWD = /home/witut/Desktop
 # default
 .VARIABLES := 
 # automatic
 *F = $(notdir $*)
 # environment
-VSCODE_IPC_HOOK = /run/user/1000/vscode-1d0b7960-1.68.1-main.sock
+VSCODE_IPC_HOOK = /run/user/1000/vscode-1d0b7960-1.69.0-main.sock
 # makefile
 MAKEFLAGS = pqrR
 # environment
@@ -189,7 +189,7 @@ LC_PAPER = pl_PL.UTF-8
 # environment
 QT_ACCESSIBILITY = 1
 # environment
-DEFAULTS_PATH = /usr/share/gconf/i3.default.path
+DEFAULTS_PATH = /usr/share/gconf/ubuntu.default.path
 # default
 MAKEFILES := 
 # environment
@@ -201,11 +201,13 @@ LC_MEASUREMENT = pl_PL.UTF-8
 # environment
 LC_ALL = C
 # environment
-GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/51737930_b8ff_4891_b33c_1363ccdce2d5
+DBUS_STARTER_BUS_TYPE = session
+# environment
+GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/d3cc4a2d_567a_4734_8aa5_d5c2911b73e9
 # automatic
 ^F = $(notdir $^)
 # environment
-GNOME_TERMINAL_SERVICE = :1.24
+GNOME_TERMINAL_SERVICE = :1.207
 # default
 SUFFIXES := 
 # environment
@@ -225,9 +227,11 @@ LANG = C
 # environment
 TERM = xterm-256color
 # environment
-VSCODE_PID = 2750
+VSCODE_PID = 43384
+# environment
+DBUS_STARTER_ADDRESS = unix:path=/run/user/1000/bus,guid=2aff6f5afecd894514ba978662d13c8b
 # variable set hash-table stats:
-# Load=107/1024=10%, Rehash=0, Collisions=18/129=14%
+# Load=109/1024=11%, Rehash=0, Collisions=17/131=13%
 
 # Pattern-specific Variable Values
 
@@ -278,7 +282,6 @@ GNUmakefile:
 #  File does not exist.
 #  File has been updated.
 #  Failed to be updated.
- 
 
 # files hash-table stats:
 # Load=6/1024=1%, Rehash=0, Collisions=0/15=0%
@@ -293,7 +296,8 @@ GNUmakefile:
 
 # strcache performance: lookups = 22 / hit rate = 13%
 # hash-table stats:
+ 
 # Load=19/8192=0%, Rehash=0, Collisions=1/22=5%
-# Finished Make data base on Mon Jul  4 09:42:13 2022
+# Finished Make data base on Fri Jul 15 13:43:40 2022
 
  

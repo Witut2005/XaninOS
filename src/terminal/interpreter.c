@@ -177,6 +177,8 @@ void scan(void)
 
     XANIN_ADD_APP_ENTRY1("gyn", gyn_interpreter)
 
+    XANIN_ADD_APP_ENTRY0("screenshot", screenshot)
+
     else
     {
         xprintf("%zUnknown command",set_output_color(red,white));

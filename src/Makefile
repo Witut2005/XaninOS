@@ -66,6 +66,8 @@ build:
 	@echo [CC] ne2000.cpp
 	@$(CC) $(CC_OPTIONS) ./devices/NIC/8254x.cpp -o ./devices/NIC/8254x.o
 
+	@$(CC) $(CC_OPTIONS) ./xaninApps/screenshot.cpp -o ./xaninApps/screenshot.o
+
 	@echo [C] kernel.c
 	@$(C) $(C_COMPILE) kernel.c \
 	./handlers/keyboard.o \
@@ -77,7 +79,8 @@ build:
 	./devices/NIC/8254x.o \
 	./devices/IOAPIC/ioapic.o \
 	./test/testc.o \
-	./devices/COM/ComPort.o -o kernel.bin
+	./devices/COM/ComPort.o \
+	./xaninApps/screenshot.o -o kernel.bin
 
 	@cat ./xaninApps/shutdown $(APPS)/current_app $(APPS)/syscall_test > ./xaninApps/xanin_external_apps
 	@dd if=./xaninApps/xanin_external_apps of=./xaninApps/xanin_apps_space bs=512 count=16 conv=notrunc

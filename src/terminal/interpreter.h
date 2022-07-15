@@ -154,6 +154,8 @@
 extern void cpp_test(void);
 #endif
 
+extern void screenshot(void);
+
 #include <xaninApps/nic_info.c>
 
 #include <gyn_cl/gyn.c>

@@ -165,7 +165,7 @@ xin_entry *xin_change_directory(char *new_directory)
 
     set_string(xin_current_directory, xin_new_directory->entry_path);
 
-    xprintf("your file: %s", xin_current_directory);
+    // xprintf("your file: %s", xin_current_directory);
 
     return xin_new_directory;
 }
@@ -202,7 +202,7 @@ void xin_file_create_at_address(char *path, uint8_t creation_date, uint8_t creat
 
     
 }
-
+// 23:05:22
 void xin_folder_create(char *path, uint8_t creation_date, uint8_t creation_time, uint16_t os_specific,
                        uint8_t modification_date, uint8_t modification_time, uint8_t permissions)
 {
@@ -217,6 +217,7 @@ void xin_folder_create(char *path, uint8_t creation_date, uint8_t creation_time,
     entry_created->entry_permissions = permissions;
     entry_created->entry_size = 0x0;
     entry_created->starting_sector = 0x0;
+    entry_created->entry_type = XIN_DIRECTORY;
 }
 
 xin_entry *xin_init_fs(void)
@@ -231,6 +232,7 @@ xin_entry *xin_init_fs(void)
     xin_file_create_at_address("/shutdown.bin",             0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x81,0x1,    XIN_FILE, 6);
     //xin_file_create_at_address("/elf.bin",                  0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x82,0x1,    XIN_FILE, 8);
     xin_file_create_at_address("/syscall_test.bin",         0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x82,0x1,    XIN_FILE, 7);
+    xin_folder_create("/screenshot/",                       0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX);
 
     uint32_t k = 0;
 
@@ -607,9 +609,8 @@ xin_entry *fopen(char *file_path, const char *mode)
         
         if(file->file_info == nullptr)
             file->file_info = (file_information_block*)malloc(sizeof(file_information_block));
-        
+            
         set_string(file->file_info->rights, mode);
-        
 
         file->file_info->position = 0;
         return file;

@@ -1,0 +1,245 @@
+Date : 2022-07-15 13:43:52
+Directory : /home/witut/Desktop/xaninOS
+Total : 176 files,  9820 codes, 808 comments, 4204 blanks, all 14832 lines
+
+Languages
++-------------------------+------------+------------+------------+------------+------------+
+| language                | files      | code       | comment    | blank      | total      |
++-------------------------+------------+------------+------------+------------+------------+
+| C++                     |         91 |      4,654 |        450 |      1,759 |      6,863 |
+| C                       |         59 |      4,375 |        246 |      2,051 |      6,672 |
+| x86 and x86_64 Assembly |         20 |        622 |        109 |        320 |      1,051 |
+| Markdown                |          4 |         95 |          0 |         42 |        137 |
+| Makefile                |          1 |         73 |          0 |         30 |        103 |
+| Shell Script            |          1 |          1 |          3 |          2 |          6 |
++-------------------------+------------+------------+------------+------------+------------+
+
+Directories
++--------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                               | files      | code       | comment    | blank      | total      |
++--------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                  |        176 |      9,820 |        808 |      4,204 |     14,832 |
+| documentation                                                      |          3 |         56 |          0 |         26 |         82 |
+| programming_libaries                                               |          1 |          6 |          0 |          3 |          9 |
+| src                                                                |        171 |      9,719 |        808 |      4,159 |     14,686 |
+| src/IDT                                                            |          1 |         74 |         10 |         28 |        112 |
+| src/boot                                                           |          4 |        287 |         87 |        147 |        521 |
+| src/chip8                                                          |          3 |        119 |          4 |         95 |        218 |
+| src/devices                                                        |         30 |      2,492 |        357 |        874 |      3,723 |
+| src/devices/ACPI                                                   |          2 |        269 |          2 |         96 |        367 |
+| src/devices/APIC                                                   |          4 |        142 |          2 |         46 |        190 |
+| src/devices/COM                                                    |          2 |         82 |          0 |         38 |        120 |
+| src/devices/DMA                                                    |          2 |        161 |         10 |         64 |        235 |
+| src/devices/HARD_DISK                                              |          4 |        215 |          9 |        118 |        342 |
+| src/devices/IOAPIC                                                 |          3 |        160 |          0 |         58 |        218 |
+| src/devices/MOUSE                                                  |          2 |         88 |         31 |         27 |        146 |
+| src/devices/NIC                                                    |          2 |        214 |         18 |         91 |        323 |
+| src/devices/PCI                                                    |          2 |        346 |          3 |        202 |        551 |
+| src/devices/USB                                                    |          4 |         47 |         49 |         38 |        134 |
+| src/devices/VGA                                                    |          2 |        768 |         32 |         96 |        896 |
+| src/elf                                                            |          2 |         80 |          0 |         40 |        120 |
+| src/game_engine                                                    |          2 |        104 |         14 |         41 |        159 |
+| src/gyn_cl                                                         |          2 |         49 |          4 |         26 |         79 |
+| src/handlers                                                       |          3 |        242 |          6 |         57 |        305 |
+| src/headers                                                        |          1 |          5 |          0 |          5 |         10 |
+| src/keyboard                                                       |          4 |        231 |         18 |         63 |        312 |
+| src/libc                                                           |         16 |      1,546 |         49 |        709 |      2,304 |
+| src/libcpp                                                         |         27 |      1,140 |         82 |        463 |      1,685 |
+| src/pit                                                            |          2 |         48 |         16 |         33 |         97 |
+| src/programming_libaries                                           |          9 |        130 |         15 |         44 |        189 |
+| src/programming_libaries/c                                         |          9 |        130 |         15 |         44 |        189 |
+| src/syscall                                                        |          3 |        172 |         35 |         78 |        285 |
+| src/terminal                                                       |          4 |        411 |         15 |        178 |        604 |
+| src/test                                                           |          3 |        106 |         15 |         67 |        188 |
+| src/xagames                                                        |          1 |         16 |          0 |          8 |         24 |
+| src/xaninApps                                                      |         32 |      1,220 |         35 |        588 |      1,843 |
+| src/xaninApps/file_system                                          |          1 |         24 |          0 |          7 |         31 |
+| src/xaninApps/hexeditor                                            |          2 |        171 |          1 |         81 |        253 |
+| src/xaninApps/pong                                                 |          2 |        186 |          0 |         85 |        271 |
+| src/xaninGraphics                                                  |          2 |         24 |          0 |         13 |         37 |
+| src/xanin_info                                                     |          2 |         20 |          0 |         12 |         32 |
+| src/xin_fs                                                         |         13 |        908 |         17 |        442 |      1,367 |
++--------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++--------------------------------------------------------------------+-------------------------+------------+------------+------------+------------+
+| filename                                                           | language                | code       | comment    | blank      | total      |
++--------------------------------------------------------------------+-------------------------+------------+------------+------------+------------+
+| /home/witut/Desktop/xaninOS/README.md                              | Markdown                |         39 |          0 |         16 |         55 |
+| /home/witut/Desktop/xaninOS/documentation/TODO.md                  | Markdown                |          7 |          0 |          5 |         12 |
+| /home/witut/Desktop/xaninOS/documentation/disk_image.md            | Markdown                |         10 |          0 |          4 |         14 |
+| /home/witut/Desktop/xaninOS/documentation/xanin_coding_style.md    | Markdown                |         39 |          0 |         17 |         56 |
+| /home/witut/Desktop/xaninOS/programming_libaries/xanin_asm.inc     | x86 and x86_64 Assembly |          6 |          0 |          3 |          9 |
+| /home/witut/Desktop/xaninOS/src/.run_linux.sh                      | Shell Script            |          1 |          3 |          2 |          6 |
+| /home/witut/Desktop/xaninOS/src/IDT/idt.c                          | C                       |         74 |         10 |         28 |        112 |
+| /home/witut/Desktop/xaninOS/src/Makefile                           | Makefile                |         73 |          0 |         30 |        103 |
+| /home/witut/Desktop/xaninOS/src/app_config.h                       | C++                     |         33 |          1 |          3 |         37 |
+| /home/witut/Desktop/xaninOS/src/boot/boot.asm                      | x86 and x86_64 Assembly |         91 |         55 |         48 |        194 |
+| /home/witut/Desktop/xaninOS/src/boot/disk_data_loader.asm          | x86 and x86_64 Assembly |         22 |          3 |         14 |         39 |
+| /home/witut/Desktop/xaninOS/src/boot/kernelLoader.asm              | x86 and x86_64 Assembly |        172 |         29 |         84 |        285 |
+| /home/witut/Desktop/xaninOS/src/boot/locateFS.asm                  | x86 and x86_64 Assembly |          2 |          0 |          1 |          3 |
+| /home/witut/Desktop/xaninOS/src/chip8/chip8.cpp                    | C++                     |         58 |          0 |         45 |        103 |
+| /home/witut/Desktop/xaninOS/src/chip8/chip8.hpp                    | C++                     |         39 |          1 |         27 |         67 |
+| /home/witut/Desktop/xaninOS/src/chip8/chip8_opcodes.hpp            | C++                     |         22 |          3 |         23 |         48 |
+| /home/witut/Desktop/xaninOS/src/devices/ACPI/ACPI.c                | C                       |        134 |          0 |         48 |        182 |
+| /home/witut/Desktop/xaninOS/src/devices/ACPI/ACPI.h                | C++                     |        135 |          2 |         48 |        185 |
+| /home/witut/Desktop/xaninOS/src/devices/APIC/apic.cpp              | C++                     |         33 |          2 |         15 |         50 |
+| /home/witut/Desktop/xaninOS/src/devices/APIC/apic.h                | C++                     |          9 |          0 |          3 |         12 |
+| /home/witut/Desktop/xaninOS/src/devices/APIC/apic.hpp              | C++                     |         42 |          0 |         17 |         59 |
+| /home/witut/Desktop/xaninOS/src/devices/APIC/apic_registers.h      | C++                     |         58 |          0 |         11 |         69 |
+| /home/witut/Desktop/xaninOS/src/devices/COM/com.cpp                | C++                     |         61 |          0 |         24 |         85 |
+| /home/witut/Desktop/xaninOS/src/devices/COM/com.hpp                | C++                     |         21 |          0 |         14 |         35 |
+| /home/witut/Desktop/xaninOS/src/devices/DMA/dma.c                  | C                       |         85 |         10 |         32 |        127 |
+| /home/witut/Desktop/xaninOS/src/devices/DMA/dma.h                  | C++                     |         76 |          0 |         32 |        108 |
+| /home/witut/Desktop/xaninOS/src/devices/HARD_DISK/disk.asm         | x86 and x86_64 Assembly |         81 |          3 |         27 |        111 |
+| /home/witut/Desktop/xaninOS/src/devices/HARD_DISK/disk.c           | C                       |         93 |          5 |         62 |        160 |
+| /home/witut/Desktop/xaninOS/src/devices/HARD_DISK/disk.h           | C++                     |         31 |          1 |         20 |         52 |
+| /home/witut/Desktop/xaninOS/src/devices/HARD_DISK/load_kernel.asm  | x86 and x86_64 Assembly |         10 |          0 |          9 |         19 |
+| /home/witut/Desktop/xaninOS/src/devices/IOAPIC/ioapic.cpp          | C++                     |         58 |          0 |         20 |         78 |
+| /home/witut/Desktop/xaninOS/src/devices/IOAPIC/ioapic.h            | C++                     |         21 |          0 |         11 |         32 |
+| /home/witut/Desktop/xaninOS/src/devices/IOAPIC/ioapic.hpp          | C++                     |         81 |          0 |         27 |        108 |
+| /home/witut/Desktop/xaninOS/src/devices/MOUSE/mouse.asm            | x86 and x86_64 Assembly |         12 |          0 |          4 |         16 |
+| /home/witut/Desktop/xaninOS/src/devices/MOUSE/mouse.c              | C                       |         76 |         31 |         23 |        130 |
+| /home/witut/Desktop/xaninOS/src/devices/NIC/8254x.cpp              | C++                     |         88 |         17 |         53 |        158 |
+| /home/witut/Desktop/xaninOS/src/devices/NIC/8254x.hpp              | C++                     |        126 |          1 |         38 |        165 |
+| /home/witut/Desktop/xaninOS/src/devices/PCI/pci.c                  | C                       |        221 |          3 |        160 |        384 |
+| /home/witut/Desktop/xaninOS/src/devices/PCI/pci.h                  | C++                     |        125 |          0 |         42 |        167 |
+| /home/witut/Desktop/xaninOS/src/devices/USB/ehci.c                 | C                       |          0 |          0 |          1 |          1 |
+| /home/witut/Desktop/xaninOS/src/devices/USB/ehci.h                 | C++                     |          0 |          0 |          1 |          1 |
+| /home/witut/Desktop/xaninOS/src/devices/USB/usb.c                  | C                       |         38 |         49 |         23 |        110 |
+| /home/witut/Desktop/xaninOS/src/devices/USB/usb.h                  | C++                     |          9 |          0 |         13 |         22 |
+| /home/witut/Desktop/xaninOS/src/devices/VGA/vga.c                  | C                       |        188 |         14 |         74 |        276 |
+| /home/witut/Desktop/xaninOS/src/devices/VGA/vga.h                  | C++                     |        580 |         18 |         22 |        620 |
+| /home/witut/Desktop/xaninOS/src/devices/mouse.cpp                  | C++                     |          0 |        201 |          0 |        201 |
+| /home/witut/Desktop/xaninOS/src/elf/elf_loader.c                   | C                       |         73 |          0 |         37 |        110 |
+| /home/witut/Desktop/xaninOS/src/elf/elf_loader.h                   | C++                     |          7 |          0 |          3 |         10 |
+| /home/witut/Desktop/xaninOS/src/game_engine/xagame.cpp             | C++                     |         61 |          0 |         25 |         86 |
+| /home/witut/Desktop/xaninOS/src/game_engine/xagame.hpp             | C++                     |         43 |         14 |         16 |         73 |
+| /home/witut/Desktop/xaninOS/src/gyn_cl/gyn.c                       | C                       |         41 |          4 |         20 |         65 |
+| /home/witut/Desktop/xaninOS/src/gyn_cl/gyn.h                       | C++                     |          8 |          0 |          6 |         14 |
+| /home/witut/Desktop/xaninOS/src/handlers/handlers.c                | C                       |        215 |          4 |         39 |        258 |
+| /home/witut/Desktop/xaninOS/src/handlers/handlers.h                | C++                     |         16 |          2 |         13 |         31 |
+| /home/witut/Desktop/xaninOS/src/handlers/keyboard.asm              | x86 and x86_64 Assembly |         11 |          0 |          5 |         16 |
+| /home/witut/Desktop/xaninOS/src/headers/macros.h                   | C++                     |          5 |          0 |          5 |         10 |
+| /home/witut/Desktop/xaninOS/src/kernel.c                           | C                       |        182 |         25 |        108 |        315 |
+| /home/witut/Desktop/xaninOS/src/keyboard/key_map.h                 | C++                     |         56 |         18 |         12 |         86 |
+| /home/witut/Desktop/xaninOS/src/keyboard/keyboard_driver.c         | C                       |        108 |          0 |         35 |        143 |
+| /home/witut/Desktop/xaninOS/src/keyboard/keyboard_init.c           | C                       |         22 |          0 |         16 |         38 |
+| /home/witut/Desktop/xaninOS/src/keyboard/scan_codes.h              | C++                     |         45 |          0 |          0 |         45 |
+| /home/witut/Desktop/xaninOS/src/libc/algorithm.h                   | C++                     |         18 |          0 |          7 |         25 |
+| /home/witut/Desktop/xaninOS/src/libc/alloc.h                       | C++                     |         95 |         10 |         40 |        145 |
+| /home/witut/Desktop/xaninOS/src/libc/assert.h                      | C++                     |         11 |          0 |          4 |         15 |
+| /home/witut/Desktop/xaninOS/src/libc/clock.h                       | C++                     |          1 |          0 |          2 |          3 |
+| /home/witut/Desktop/xaninOS/src/libc/colors.h                      | C++                     |         21 |          1 |          8 |         30 |
+| /home/witut/Desktop/xaninOS/src/libc/enable_sse.asm                | x86 and x86_64 Assembly |          8 |          0 |          3 |         11 |
+| /home/witut/Desktop/xaninOS/src/libc/enter_real_mode.asm           | x86 and x86_64 Assembly |         43 |          0 |         19 |         62 |
+| /home/witut/Desktop/xaninOS/src/libc/hal.h                         | C++                     |        180 |          4 |         61 |        245 |
+| /home/witut/Desktop/xaninOS/src/libc/math.h                        | C++                     |         13 |          0 |         12 |         25 |
+| /home/witut/Desktop/xaninOS/src/libc/memory.h                      | C++                     |         21 |          0 |          9 |         30 |
+| /home/witut/Desktop/xaninOS/src/libc/parameter.h                   | C++                     |          9 |          0 |          5 |         14 |
+| /home/witut/Desktop/xaninOS/src/libc/stdiox.h                      | C                       |        527 |          7 |        263 |        797 |
+| /home/witut/Desktop/xaninOS/src/libc/stdlibx.h                     | C++                     |        272 |          9 |        100 |        381 |
+| /home/witut/Desktop/xaninOS/src/libc/string.h                      | C++                     |        270 |         18 |        138 |        426 |
+| /home/witut/Desktop/xaninOS/src/libc/syslog.h                      | C++                     |         29 |          0 |         22 |         51 |
+| /home/witut/Desktop/xaninOS/src/libc/time.h                        | C++                     |         28 |          0 |         16 |         44 |
+| /home/witut/Desktop/xaninOS/src/libcpp/algorithm.h                 | C++                     |         80 |          0 |         34 |        114 |
+| /home/witut/Desktop/xaninOS/src/libcpp/array.h                     | C++                     |         91 |          0 |         46 |        137 |
+| /home/witut/Desktop/xaninOS/src/libcpp/box.h                       | C++                     |         22 |          0 |         11 |         33 |
+| /home/witut/Desktop/xaninOS/src/libcpp/chal.h                      | C++                     |         17 |          0 |          4 |         21 |
+| /home/witut/Desktop/xaninOS/src/libcpp/cmath.h                     | C++                     |          6 |          0 |          2 |          8 |
+| /home/witut/Desktop/xaninOS/src/libcpp/cmemory.h                   | C++                     |          9 |          0 |          4 |         13 |
+| /home/witut/Desktop/xaninOS/src/libcpp/cstdio.h                    | C++                     |         12 |          0 |          8 |         20 |
+| /home/witut/Desktop/xaninOS/src/libcpp/cstdlib.h                   | C++                     |         43 |          0 |         11 |         54 |
+| /home/witut/Desktop/xaninOS/src/libcpp/cstring.h                   | C++                     |         24 |          0 |          6 |         30 |
+| /home/witut/Desktop/xaninOS/src/libcpp/ctime.h                     | C++                     |         23 |          0 |         12 |         35 |
+| /home/witut/Desktop/xaninOS/src/libcpp/cxin.h                      | C++                     |         14 |          0 |          7 |         21 |
+| /home/witut/Desktop/xaninOS/src/libcpp/fstream.h                   | C++                     |         39 |          0 |         22 |         61 |
+| /home/witut/Desktop/xaninOS/src/libcpp/hal.h                       | C++                     |         47 |          5 |         22 |         74 |
+| /home/witut/Desktop/xaninOS/src/libcpp/if.h                        | C++                     |          8 |          0 |          4 |         12 |
+| /home/witut/Desktop/xaninOS/src/libcpp/initializer_list.hpp        | C++                     |         38 |         42 |         17 |         97 |
+| /home/witut/Desktop/xaninOS/src/libcpp/iostream.h                  | C++                     |          3 |          0 |          2 |          5 |
+| /home/witut/Desktop/xaninOS/src/libcpp/istream.h                   | C++                     |        123 |          0 |         30 |        153 |
+| /home/witut/Desktop/xaninOS/src/libcpp/iterator.h                  | C++                     |         59 |          0 |         24 |         83 |
+| /home/witut/Desktop/xaninOS/src/libcpp/new.hpp                     | C++                     |         16 |         11 |          6 |         33 |
+| /home/witut/Desktop/xaninOS/src/libcpp/ostream.h                   | C++                     |        203 |          0 |         62 |        265 |
+| /home/witut/Desktop/xaninOS/src/libcpp/stack.h                     | C++                     |         36 |          0 |         18 |         54 |
+| /home/witut/Desktop/xaninOS/src/libcpp/string.h                    | C++                     |        108 |         22 |         47 |        177 |
+| /home/witut/Desktop/xaninOS/src/libcpp/terminal_color.hpp          | C++                     |         38 |          0 |          8 |         46 |
+| /home/witut/Desktop/xaninOS/src/libcpp/time.hpp                    | C++                     |         39 |          0 |         31 |         70 |
+| /home/witut/Desktop/xaninOS/src/libcpp/tuple.hpp                   | C++                     |          0 |          0 |          1 |          1 |
+| /home/witut/Desktop/xaninOS/src/libcpp/type_traits.h               | C++                     |          9 |          1 |          4 |         14 |
+| /home/witut/Desktop/xaninOS/src/libcpp/utility.h                   | C++                     |         33 |          1 |         20 |         54 |
+| /home/witut/Desktop/xaninOS/src/pit/pit.asm                        | x86 and x86_64 Assembly |         11 |          0 |          5 |         16 |
+| /home/witut/Desktop/xaninOS/src/pit/pit.c                          | C                       |         37 |         16 |         28 |         81 |
+| /home/witut/Desktop/xaninOS/src/programming_libaries/c/algorithm.h | C++                     |          3 |          0 |          3 |          6 |
+| /home/witut/Desktop/xaninOS/src/programming_libaries/c/assert.h    | C++                     |          5 |          0 |          5 |         10 |
+| /home/witut/Desktop/xaninOS/src/programming_libaries/c/c_libary.h  | C++                     |          0 |         14 |          1 |         15 |
+| /home/witut/Desktop/xaninOS/src/programming_libaries/c/colors.h    | C++                     |         21 |          1 |          9 |         31 |
+| /home/witut/Desktop/xaninOS/src/programming_libaries/c/hal.h       | C++                     |         22 |          0 |          7 |         29 |
+| /home/witut/Desktop/xaninOS/src/programming_libaries/c/stdiox.h    | C                       |         15 |          0 |          5 |         20 |
+| /home/witut/Desktop/xaninOS/src/programming_libaries/c/stdlibx.h   | C++                     |         37 |          0 |          8 |         45 |
+| /home/witut/Desktop/xaninOS/src/programming_libaries/c/string.h    | C++                     |         22 |          0 |          3 |         25 |
+| /home/witut/Desktop/xaninOS/src/programming_libaries/c/time.h      | C++                     |          5 |          0 |          3 |          8 |
+| /home/witut/Desktop/xaninOS/src/syscall/syscall.asm                | x86 and x86_64 Assembly |         78 |          8 |         37 |        123 |
+| /home/witut/Desktop/xaninOS/src/syscall/syscall.c                  | C                       |         89 |         27 |         35 |        151 |
+| /home/witut/Desktop/xaninOS/src/syscall/syscall_test.asm           | x86 and x86_64 Assembly |          5 |          0 |          6 |         11 |
+| /home/witut/Desktop/xaninOS/src/terminal/interpreter.c             | C                       |        141 |          0 |         52 |        193 |
+| /home/witut/Desktop/xaninOS/src/terminal/interpreter.h             | C++                     |        109 |         12 |         45 |        166 |
+| /home/witut/Desktop/xaninOS/src/terminal/vty.c                     | C++                     |         83 |          3 |         43 |        129 |
+| /home/witut/Desktop/xaninOS/src/terminal/vty.h                     | C++                     |         78 |          0 |         38 |        116 |
+| /home/witut/Desktop/xaninOS/src/test.c                             | C                       |          6 |          0 |          5 |         11 |
+| /home/witut/Desktop/xaninOS/src/test/cpp_test.cpp                  | C++                     |         88 |         15 |         55 |        158 |
+| /home/witut/Desktop/xaninOS/src/test/cpp_test2.cpp                 | C++                     |         12 |          0 |          7 |         19 |
+| /home/witut/Desktop/xaninOS/src/test/testc.c                       | C                       |          6 |          0 |          5 |         11 |
+| /home/witut/Desktop/xaninOS/src/xagames/xagame_test.cpp            | C++                     |         16 |          0 |          8 |         24 |
+| /home/witut/Desktop/xaninOS/src/xaninApps/calc.c                   | C                       |         48 |          0 |         22 |         70 |
+| /home/witut/Desktop/xaninOS/src/xaninApps/cpu_info.c               | C                       |        121 |          0 |         42 |        163 |
+| /home/witut/Desktop/xaninOS/src/xaninApps/device_info.c            | C                       |          9 |          5 |         14 |         28 |
+| /home/witut/Desktop/xaninOS/src/xaninApps/disk_load.c              | C                       |          9 |          0 |          3 |         12 |
+| /home/witut/Desktop/xaninOS/src/xaninApps/disk_write.c             | C                       |         10 |          0 |          4 |         14 |
+| /home/witut/Desktop/xaninOS/src/xaninApps/epilepsy.c               | C                       |         19 |          0 |          9 |         28 |
+| /home/witut/Desktop/xaninOS/src/xaninApps/execute_addr.c           | C                       |          8 |          0 |          4 |         12 |
+| /home/witut/Desktop/xaninOS/src/xaninApps/file_system/xin_info.c   | C                       |         24 |          0 |          7 |         31 |
+| /home/witut/Desktop/xaninOS/src/xaninApps/help.c                   | C                       |        128 |          0 |         33 |        161 |
+| /home/witut/Desktop/xaninOS/src/xaninApps/hexeditor/hexeditor.c    | C                       |        167 |          1 |         80 |        248 |
+| /home/witut/Desktop/xaninOS/src/xaninApps/hexeditor/hexeditor.h    | C++                     |          4 |          0 |          1 |          5 |
+| /home/witut/Desktop/xaninOS/src/xaninApps/install.c                | C                       |         11 |          0 |          6 |         17 |
+| /home/witut/Desktop/xaninOS/src/xaninApps/keyboard_test.c          | C                       |         18 |          0 |          9 |         27 |
+| /home/witut/Desktop/xaninOS/src/xaninApps/load.c                   | C                       |         21 |          1 |         21 |         43 |
+| /home/witut/Desktop/xaninOS/src/xaninApps/loadch.c                 | C                       |         18 |          0 |         12 |         30 |
+| /home/witut/Desktop/xaninOS/src/xaninApps/logo.c                   | C                       |         48 |          0 |         23 |         71 |
+| /home/witut/Desktop/xaninOS/src/xaninApps/mouse.c                  | C                       |          5 |         13 |          7 |         25 |
+| /home/witut/Desktop/xaninOS/src/xaninApps/nic_info.c               | C                       |         30 |          0 |         17 |         47 |
+| /home/witut/Desktop/xaninOS/src/xaninApps/pong/pong.c              | C                       |        168 |          0 |         76 |        244 |
+| /home/witut/Desktop/xaninOS/src/xaninApps/pong/pong.h              | C++                     |         18 |          0 |          9 |         27 |
+| /home/witut/Desktop/xaninOS/src/xaninApps/reboot.asm               | x86 and x86_64 Assembly |         28 |          5 |         17 |         50 |
+| /home/witut/Desktop/xaninOS/src/xaninApps/reboot.c                 | C                       |         18 |          0 |         15 |         33 |
+| /home/witut/Desktop/xaninOS/src/xaninApps/register_dump.c          | C                       |         48 |          1 |         19 |         68 |
+| /home/witut/Desktop/xaninOS/src/xaninApps/run.c                    | C                       |         42 |          1 |         22 |         65 |
+| /home/witut/Desktop/xaninOS/src/xaninApps/run16.c                  | C                       |         35 |          1 |         19 |         55 |
+| /home/witut/Desktop/xaninOS/src/xaninApps/shutdown.asm             | x86 and x86_64 Assembly |         12 |          1 |          9 |         22 |
+| /home/witut/Desktop/xaninOS/src/xaninApps/shutdown.c               | C                       |         35 |          2 |         22 |         59 |
+| /home/witut/Desktop/xaninOS/src/xaninApps/stack_frame_test.c       | C                       |         18 |          0 |         13 |         31 |
+| /home/witut/Desktop/xaninOS/src/xaninApps/syscall_test.asm         | x86 and x86_64 Assembly |         25 |          3 |         17 |         45 |
+| /home/witut/Desktop/xaninOS/src/xaninApps/timer_test.c             | C                       |         25 |          0 |         13 |         38 |
+| /home/witut/Desktop/xaninOS/src/xaninApps/xanin_apps_space.asm     | x86 and x86_64 Assembly |          1 |          0 |          2 |          3 |
+| /home/witut/Desktop/xaninOS/src/xaninApps/zsk.c                    | C                       |         49 |          1 |         21 |         71 |
+| /home/witut/Desktop/xaninOS/src/xaninGraphics/xaninGraphics.c      | C                       |         19 |          0 |         10 |         29 |
+| /home/witut/Desktop/xaninOS/src/xaninGraphics/xaninGraphics.h      | C++                     |          5 |          0 |          3 |          8 |
+| /home/witut/Desktop/xaninOS/src/xanin_info/info_block.c            | C                       |          8 |          0 |          6 |         14 |
+| /home/witut/Desktop/xaninOS/src/xanin_info/info_block.h            | C++                     |         12 |          0 |          6 |         18 |
+| /home/witut/Desktop/xaninOS/src/xin_fs/cat.c                       | C                       |         35 |          1 |         24 |         60 |
+| /home/witut/Desktop/xaninOS/src/xin_fs/copy.c                      | C                       |         14 |          0 |         10 |         24 |
+| /home/witut/Desktop/xaninOS/src/xin_fs/entries_table.asm           | x86 and x86_64 Assembly |          2 |          1 |          4 |          7 |
+| /home/witut/Desktop/xaninOS/src/xin_fs/link.c                      | C                       |         18 |          0 |         11 |         29 |
+| /home/witut/Desktop/xaninOS/src/xin_fs/list_files.c                | C                       |         38 |          0 |         18 |         56 |
+| /home/witut/Desktop/xaninOS/src/xin_fs/move.c                      | C                       |         21 |          0 |         11 |         32 |
+| /home/witut/Desktop/xaninOS/src/xin_fs/xanin_fs_saver.c            | C                       |          7 |          0 |          6 |         13 |
+| /home/witut/Desktop/xaninOS/src/xin_fs/xin.c                       | C                       |        463 |          9 |        196 |        668 |
+| /home/witut/Desktop/xaninOS/src/xin_fs/xin.h                       | C++                     |         21 |          0 |         12 |         33 |
+| /home/witut/Desktop/xaninOS/src/xin_fs/xin_entry.h                 | C++                     |         38 |          0 |         17 |         55 |
+| /home/witut/Desktop/xaninOS/src/xin_fs/xin_note.c                  | C                       |        120 |          1 |         68 |        189 |
+| /home/witut/Desktop/xaninOS/src/xin_fs/xin_paint.c                 | C                       |        129 |          4 |         59 |        192 |
+| /home/witut/Desktop/xaninOS/src/xin_fs/xin_pointers.asm            | x86 and x86_64 Assembly |          2 |          1 |          6 |          9 |
+| Total                                                              |                         |      9,820 |        808 |      4,204 |     14,832 |
++--------------------------------------------------------------------+-------------------------+------------+------------+------------+------------+

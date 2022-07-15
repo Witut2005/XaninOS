@@ -1,0 +1,178 @@
+"filename", "language", "Markdown", "x86 and x86_64 Assembly", "C++", "C", "Shell Script", "Makefile", "comment", "blank", "total"
+"/home/witut/Desktop/xaninOS/README.md", "Markdown", 39, 0, 0, 0, 0, 0, 0, 16, 55
+"/home/witut/Desktop/xaninOS/documentation/TODO.md", "Markdown", 7, 0, 0, 0, 0, 0, 0, 5, 12
+"/home/witut/Desktop/xaninOS/documentation/disk_image.md", "Markdown", 10, 0, 0, 0, 0, 0, 0, 4, 14
+"/home/witut/Desktop/xaninOS/documentation/xanin_coding_style.md", "Markdown", 39, 0, 0, 0, 0, 0, 0, 17, 56
+"/home/witut/Desktop/xaninOS/programming_libaries/xanin_asm.inc", "x86 and x86_64 Assembly", 0, 6, 0, 0, 0, 0, 0, 3, 9
+"/home/witut/Desktop/xaninOS/src/.run_linux.sh", "Shell Script", 0, 0, 0, 0, 1, 0, 3, 2, 6
+"/home/witut/Desktop/xaninOS/src/IDT/idt.c", "C", 0, 0, 0, 74, 0, 0, 10, 28, 112
+"/home/witut/Desktop/xaninOS/src/Makefile", "Makefile", 0, 0, 0, 0, 0, 73, 0, 30, 103
+"/home/witut/Desktop/xaninOS/src/app_config.h", "C++", 0, 0, 33, 0, 0, 0, 1, 3, 37
+"/home/witut/Desktop/xaninOS/src/boot/boot.asm", "x86 and x86_64 Assembly", 0, 91, 0, 0, 0, 0, 55, 48, 194
+"/home/witut/Desktop/xaninOS/src/boot/disk_data_loader.asm", "x86 and x86_64 Assembly", 0, 22, 0, 0, 0, 0, 3, 14, 39
+"/home/witut/Desktop/xaninOS/src/boot/kernelLoader.asm", "x86 and x86_64 Assembly", 0, 172, 0, 0, 0, 0, 29, 84, 285
+"/home/witut/Desktop/xaninOS/src/boot/locateFS.asm", "x86 and x86_64 Assembly", 0, 2, 0, 0, 0, 0, 0, 1, 3
+"/home/witut/Desktop/xaninOS/src/chip8/chip8.cpp", "C++", 0, 0, 58, 0, 0, 0, 0, 45, 103
+"/home/witut/Desktop/xaninOS/src/chip8/chip8.hpp", "C++", 0, 0, 39, 0, 0, 0, 1, 27, 67
+"/home/witut/Desktop/xaninOS/src/chip8/chip8_opcodes.hpp", "C++", 0, 0, 22, 0, 0, 0, 3, 23, 48
+"/home/witut/Desktop/xaninOS/src/devices/ACPI/ACPI.c", "C", 0, 0, 0, 134, 0, 0, 0, 48, 182
+"/home/witut/Desktop/xaninOS/src/devices/ACPI/ACPI.h", "C++", 0, 0, 135, 0, 0, 0, 2, 48, 185
+"/home/witut/Desktop/xaninOS/src/devices/APIC/apic.cpp", "C++", 0, 0, 33, 0, 0, 0, 2, 15, 50
+"/home/witut/Desktop/xaninOS/src/devices/APIC/apic.h", "C++", 0, 0, 9, 0, 0, 0, 0, 3, 12
+"/home/witut/Desktop/xaninOS/src/devices/APIC/apic.hpp", "C++", 0, 0, 42, 0, 0, 0, 0, 17, 59
+"/home/witut/Desktop/xaninOS/src/devices/APIC/apic_registers.h", "C++", 0, 0, 58, 0, 0, 0, 0, 11, 69
+"/home/witut/Desktop/xaninOS/src/devices/COM/com.cpp", "C++", 0, 0, 61, 0, 0, 0, 0, 24, 85
+"/home/witut/Desktop/xaninOS/src/devices/COM/com.hpp", "C++", 0, 0, 21, 0, 0, 0, 0, 14, 35
+"/home/witut/Desktop/xaninOS/src/devices/DMA/dma.c", "C", 0, 0, 0, 85, 0, 0, 10, 32, 127
+"/home/witut/Desktop/xaninOS/src/devices/DMA/dma.h", "C++", 0, 0, 76, 0, 0, 0, 0, 32, 108
+"/home/witut/Desktop/xaninOS/src/devices/HARD_DISK/disk.asm", "x86 and x86_64 Assembly", 0, 81, 0, 0, 0, 0, 3, 27, 111
+"/home/witut/Desktop/xaninOS/src/devices/HARD_DISK/disk.c", "C", 0, 0, 0, 93, 0, 0, 5, 62, 160
+"/home/witut/Desktop/xaninOS/src/devices/HARD_DISK/disk.h", "C++", 0, 0, 31, 0, 0, 0, 1, 20, 52
+"/home/witut/Desktop/xaninOS/src/devices/HARD_DISK/load_kernel.asm", "x86 and x86_64 Assembly", 0, 10, 0, 0, 0, 0, 0, 9, 19
+"/home/witut/Desktop/xaninOS/src/devices/IOAPIC/ioapic.cpp", "C++", 0, 0, 58, 0, 0, 0, 0, 20, 78
+"/home/witut/Desktop/xaninOS/src/devices/IOAPIC/ioapic.h", "C++", 0, 0, 21, 0, 0, 0, 0, 11, 32
+"/home/witut/Desktop/xaninOS/src/devices/IOAPIC/ioapic.hpp", "C++", 0, 0, 81, 0, 0, 0, 0, 27, 108
+"/home/witut/Desktop/xaninOS/src/devices/MOUSE/mouse.asm", "x86 and x86_64 Assembly", 0, 12, 0, 0, 0, 0, 0, 4, 16
+"/home/witut/Desktop/xaninOS/src/devices/MOUSE/mouse.c", "C", 0, 0, 0, 76, 0, 0, 31, 23, 130
+"/home/witut/Desktop/xaninOS/src/devices/NIC/8254x.cpp", "C++", 0, 0, 88, 0, 0, 0, 17, 53, 158
+"/home/witut/Desktop/xaninOS/src/devices/NIC/8254x.hpp", "C++", 0, 0, 126, 0, 0, 0, 1, 38, 165
+"/home/witut/Desktop/xaninOS/src/devices/PCI/pci.c", "C", 0, 0, 0, 221, 0, 0, 3, 160, 384
+"/home/witut/Desktop/xaninOS/src/devices/PCI/pci.h", "C++", 0, 0, 125, 0, 0, 0, 0, 42, 167
+"/home/witut/Desktop/xaninOS/src/devices/USB/ehci.c", "C", 0, 0, 0, 0, 0, 0, 0, 1, 1
+"/home/witut/Desktop/xaninOS/src/devices/USB/ehci.h", "C++", 0, 0, 0, 0, 0, 0, 0, 1, 1
+"/home/witut/Desktop/xaninOS/src/devices/USB/usb.c", "C", 0, 0, 0, 38, 0, 0, 49, 23, 110
+"/home/witut/Desktop/xaninOS/src/devices/USB/usb.h", "C++", 0, 0, 9, 0, 0, 0, 0, 13, 22
+"/home/witut/Desktop/xaninOS/src/devices/VGA/vga.c", "C", 0, 0, 0, 188, 0, 0, 14, 74, 276
+"/home/witut/Desktop/xaninOS/src/devices/VGA/vga.h", "C++", 0, 0, 580, 0, 0, 0, 18, 22, 620
+"/home/witut/Desktop/xaninOS/src/devices/mouse.cpp", "C++", 0, 0, 0, 0, 0, 0, 201, 0, 201
+"/home/witut/Desktop/xaninOS/src/elf/elf_loader.c", "C", 0, 0, 0, 73, 0, 0, 0, 37, 110
+"/home/witut/Desktop/xaninOS/src/elf/elf_loader.h", "C++", 0, 0, 7, 0, 0, 0, 0, 3, 10
+"/home/witut/Desktop/xaninOS/src/game_engine/xagame.cpp", "C++", 0, 0, 61, 0, 0, 0, 0, 25, 86
+"/home/witut/Desktop/xaninOS/src/game_engine/xagame.hpp", "C++", 0, 0, 43, 0, 0, 0, 14, 16, 73
+"/home/witut/Desktop/xaninOS/src/gyn_cl/gyn.c", "C", 0, 0, 0, 41, 0, 0, 4, 20, 65
+"/home/witut/Desktop/xaninOS/src/gyn_cl/gyn.h", "C++", 0, 0, 8, 0, 0, 0, 0, 6, 14
+"/home/witut/Desktop/xaninOS/src/handlers/handlers.c", "C", 0, 0, 0, 215, 0, 0, 4, 39, 258
+"/home/witut/Desktop/xaninOS/src/handlers/handlers.h", "C++", 0, 0, 16, 0, 0, 0, 2, 13, 31
+"/home/witut/Desktop/xaninOS/src/handlers/keyboard.asm", "x86 and x86_64 Assembly", 0, 11, 0, 0, 0, 0, 0, 5, 16
+"/home/witut/Desktop/xaninOS/src/headers/macros.h", "C++", 0, 0, 5, 0, 0, 0, 0, 5, 10
+"/home/witut/Desktop/xaninOS/src/kernel.c", "C", 0, 0, 0, 182, 0, 0, 25, 108, 315
+"/home/witut/Desktop/xaninOS/src/keyboard/key_map.h", "C++", 0, 0, 56, 0, 0, 0, 18, 12, 86
+"/home/witut/Desktop/xaninOS/src/keyboard/keyboard_driver.c", "C", 0, 0, 0, 108, 0, 0, 0, 35, 143
+"/home/witut/Desktop/xaninOS/src/keyboard/keyboard_init.c", "C", 0, 0, 0, 22, 0, 0, 0, 16, 38
+"/home/witut/Desktop/xaninOS/src/keyboard/scan_codes.h", "C++", 0, 0, 45, 0, 0, 0, 0, 0, 45
+"/home/witut/Desktop/xaninOS/src/libc/algorithm.h", "C++", 0, 0, 18, 0, 0, 0, 0, 7, 25
+"/home/witut/Desktop/xaninOS/src/libc/alloc.h", "C++", 0, 0, 95, 0, 0, 0, 10, 40, 145
+"/home/witut/Desktop/xaninOS/src/libc/assert.h", "C++", 0, 0, 11, 0, 0, 0, 0, 4, 15
+"/home/witut/Desktop/xaninOS/src/libc/clock.h", "C++", 0, 0, 1, 0, 0, 0, 0, 2, 3
+"/home/witut/Desktop/xaninOS/src/libc/colors.h", "C++", 0, 0, 21, 0, 0, 0, 1, 8, 30
+"/home/witut/Desktop/xaninOS/src/libc/enable_sse.asm", "x86 and x86_64 Assembly", 0, 8, 0, 0, 0, 0, 0, 3, 11
+"/home/witut/Desktop/xaninOS/src/libc/enter_real_mode.asm", "x86 and x86_64 Assembly", 0, 43, 0, 0, 0, 0, 0, 19, 62
+"/home/witut/Desktop/xaninOS/src/libc/hal.h", "C++", 0, 0, 180, 0, 0, 0, 4, 61, 245
+"/home/witut/Desktop/xaninOS/src/libc/math.h", "C++", 0, 0, 13, 0, 0, 0, 0, 12, 25
+"/home/witut/Desktop/xaninOS/src/libc/memory.h", "C++", 0, 0, 21, 0, 0, 0, 0, 9, 30
+"/home/witut/Desktop/xaninOS/src/libc/parameter.h", "C++", 0, 0, 9, 0, 0, 0, 0, 5, 14
+"/home/witut/Desktop/xaninOS/src/libc/stdiox.h", "C", 0, 0, 0, 527, 0, 0, 7, 263, 797
+"/home/witut/Desktop/xaninOS/src/libc/stdlibx.h", "C++", 0, 0, 272, 0, 0, 0, 9, 100, 381
+"/home/witut/Desktop/xaninOS/src/libc/string.h", "C++", 0, 0, 270, 0, 0, 0, 18, 138, 426
+"/home/witut/Desktop/xaninOS/src/libc/syslog.h", "C++", 0, 0, 29, 0, 0, 0, 0, 22, 51
+"/home/witut/Desktop/xaninOS/src/libc/time.h", "C++", 0, 0, 28, 0, 0, 0, 0, 16, 44
+"/home/witut/Desktop/xaninOS/src/libcpp/algorithm.h", "C++", 0, 0, 80, 0, 0, 0, 0, 34, 114
+"/home/witut/Desktop/xaninOS/src/libcpp/array.h", "C++", 0, 0, 91, 0, 0, 0, 0, 46, 137
+"/home/witut/Desktop/xaninOS/src/libcpp/box.h", "C++", 0, 0, 22, 0, 0, 0, 0, 11, 33
+"/home/witut/Desktop/xaninOS/src/libcpp/chal.h", "C++", 0, 0, 17, 0, 0, 0, 0, 4, 21
+"/home/witut/Desktop/xaninOS/src/libcpp/cmath.h", "C++", 0, 0, 6, 0, 0, 0, 0, 2, 8
+"/home/witut/Desktop/xaninOS/src/libcpp/cmemory.h", "C++", 0, 0, 9, 0, 0, 0, 0, 4, 13
+"/home/witut/Desktop/xaninOS/src/libcpp/cstdio.h", "C++", 0, 0, 12, 0, 0, 0, 0, 8, 20
+"/home/witut/Desktop/xaninOS/src/libcpp/cstdlib.h", "C++", 0, 0, 43, 0, 0, 0, 0, 11, 54
+"/home/witut/Desktop/xaninOS/src/libcpp/cstring.h", "C++", 0, 0, 24, 0, 0, 0, 0, 6, 30
+"/home/witut/Desktop/xaninOS/src/libcpp/ctime.h", "C++", 0, 0, 23, 0, 0, 0, 0, 12, 35
+"/home/witut/Desktop/xaninOS/src/libcpp/cxin.h", "C++", 0, 0, 14, 0, 0, 0, 0, 7, 21
+"/home/witut/Desktop/xaninOS/src/libcpp/fstream.h", "C++", 0, 0, 39, 0, 0, 0, 0, 22, 61
+"/home/witut/Desktop/xaninOS/src/libcpp/hal.h", "C++", 0, 0, 47, 0, 0, 0, 5, 22, 74
+"/home/witut/Desktop/xaninOS/src/libcpp/if.h", "C++", 0, 0, 8, 0, 0, 0, 0, 4, 12
+"/home/witut/Desktop/xaninOS/src/libcpp/initializer_list.hpp", "C++", 0, 0, 38, 0, 0, 0, 42, 17, 97
+"/home/witut/Desktop/xaninOS/src/libcpp/iostream.h", "C++", 0, 0, 3, 0, 0, 0, 0, 2, 5
+"/home/witut/Desktop/xaninOS/src/libcpp/istream.h", "C++", 0, 0, 123, 0, 0, 0, 0, 30, 153
+"/home/witut/Desktop/xaninOS/src/libcpp/iterator.h", "C++", 0, 0, 59, 0, 0, 0, 0, 24, 83
+"/home/witut/Desktop/xaninOS/src/libcpp/new.hpp", "C++", 0, 0, 16, 0, 0, 0, 11, 6, 33
+"/home/witut/Desktop/xaninOS/src/libcpp/ostream.h", "C++", 0, 0, 203, 0, 0, 0, 0, 62, 265
+"/home/witut/Desktop/xaninOS/src/libcpp/stack.h", "C++", 0, 0, 36, 0, 0, 0, 0, 18, 54
+"/home/witut/Desktop/xaninOS/src/libcpp/string.h", "C++", 0, 0, 108, 0, 0, 0, 22, 47, 177
+"/home/witut/Desktop/xaninOS/src/libcpp/terminal_color.hpp", "C++", 0, 0, 38, 0, 0, 0, 0, 8, 46
+"/home/witut/Desktop/xaninOS/src/libcpp/time.hpp", "C++", 0, 0, 39, 0, 0, 0, 0, 31, 70
+"/home/witut/Desktop/xaninOS/src/libcpp/tuple.hpp", "C++", 0, 0, 0, 0, 0, 0, 0, 1, 1
+"/home/witut/Desktop/xaninOS/src/libcpp/type_traits.h", "C++", 0, 0, 9, 0, 0, 0, 1, 4, 14
+"/home/witut/Desktop/xaninOS/src/libcpp/utility.h", "C++", 0, 0, 33, 0, 0, 0, 1, 20, 54
+"/home/witut/Desktop/xaninOS/src/pit/pit.asm", "x86 and x86_64 Assembly", 0, 11, 0, 0, 0, 0, 0, 5, 16
+"/home/witut/Desktop/xaninOS/src/pit/pit.c", "C", 0, 0, 0, 37, 0, 0, 16, 28, 81
+"/home/witut/Desktop/xaninOS/src/programming_libaries/c/algorithm.h", "C++", 0, 0, 3, 0, 0, 0, 0, 3, 6
+"/home/witut/Desktop/xaninOS/src/programming_libaries/c/assert.h", "C++", 0, 0, 5, 0, 0, 0, 0, 5, 10
+"/home/witut/Desktop/xaninOS/src/programming_libaries/c/c_libary.h", "C++", 0, 0, 0, 0, 0, 0, 14, 1, 15
+"/home/witut/Desktop/xaninOS/src/programming_libaries/c/colors.h", "C++", 0, 0, 21, 0, 0, 0, 1, 9, 31
+"/home/witut/Desktop/xaninOS/src/programming_libaries/c/hal.h", "C++", 0, 0, 22, 0, 0, 0, 0, 7, 29
+"/home/witut/Desktop/xaninOS/src/programming_libaries/c/stdiox.h", "C", 0, 0, 0, 15, 0, 0, 0, 5, 20
+"/home/witut/Desktop/xaninOS/src/programming_libaries/c/stdlibx.h", "C++", 0, 0, 37, 0, 0, 0, 0, 8, 45
+"/home/witut/Desktop/xaninOS/src/programming_libaries/c/string.h", "C++", 0, 0, 22, 0, 0, 0, 0, 3, 25
+"/home/witut/Desktop/xaninOS/src/programming_libaries/c/time.h", "C++", 0, 0, 5, 0, 0, 0, 0, 3, 8
+"/home/witut/Desktop/xaninOS/src/syscall/syscall.asm", "x86 and x86_64 Assembly", 0, 78, 0, 0, 0, 0, 8, 37, 123
+"/home/witut/Desktop/xaninOS/src/syscall/syscall.c", "C", 0, 0, 0, 89, 0, 0, 27, 35, 151
+"/home/witut/Desktop/xaninOS/src/syscall/syscall_test.asm", "x86 and x86_64 Assembly", 0, 5, 0, 0, 0, 0, 0, 6, 11
+"/home/witut/Desktop/xaninOS/src/terminal/interpreter.c", "C", 0, 0, 0, 141, 0, 0, 0, 52, 193
+"/home/witut/Desktop/xaninOS/src/terminal/interpreter.h", "C++", 0, 0, 109, 0, 0, 0, 12, 45, 166
+"/home/witut/Desktop/xaninOS/src/terminal/vty.c", "C++", 0, 0, 83, 0, 0, 0, 3, 43, 129
+"/home/witut/Desktop/xaninOS/src/terminal/vty.h", "C++", 0, 0, 78, 0, 0, 0, 0, 38, 116
+"/home/witut/Desktop/xaninOS/src/test.c", "C", 0, 0, 0, 6, 0, 0, 0, 5, 11
+"/home/witut/Desktop/xaninOS/src/test/cpp_test.cpp", "C++", 0, 0, 88, 0, 0, 0, 15, 55, 158
+"/home/witut/Desktop/xaninOS/src/test/cpp_test2.cpp", "C++", 0, 0, 12, 0, 0, 0, 0, 7, 19
+"/home/witut/Desktop/xaninOS/src/test/testc.c", "C", 0, 0, 0, 6, 0, 0, 0, 5, 11
+"/home/witut/Desktop/xaninOS/src/xagames/xagame_test.cpp", "C++", 0, 0, 16, 0, 0, 0, 0, 8, 24
+"/home/witut/Desktop/xaninOS/src/xaninApps/calc.c", "C", 0, 0, 0, 48, 0, 0, 0, 22, 70
+"/home/witut/Desktop/xaninOS/src/xaninApps/cpu_info.c", "C", 0, 0, 0, 121, 0, 0, 0, 42, 163
+"/home/witut/Desktop/xaninOS/src/xaninApps/device_info.c", "C", 0, 0, 0, 9, 0, 0, 5, 14, 28
+"/home/witut/Desktop/xaninOS/src/xaninApps/disk_load.c", "C", 0, 0, 0, 9, 0, 0, 0, 3, 12
+"/home/witut/Desktop/xaninOS/src/xaninApps/disk_write.c", "C", 0, 0, 0, 10, 0, 0, 0, 4, 14
+"/home/witut/Desktop/xaninOS/src/xaninApps/epilepsy.c", "C", 0, 0, 0, 19, 0, 0, 0, 9, 28
+"/home/witut/Desktop/xaninOS/src/xaninApps/execute_addr.c", "C", 0, 0, 0, 8, 0, 0, 0, 4, 12
+"/home/witut/Desktop/xaninOS/src/xaninApps/file_system/xin_info.c", "C", 0, 0, 0, 24, 0, 0, 0, 7, 31
+"/home/witut/Desktop/xaninOS/src/xaninApps/help.c", "C", 0, 0, 0, 128, 0, 0, 0, 33, 161
+"/home/witut/Desktop/xaninOS/src/xaninApps/hexeditor/hexeditor.c", "C", 0, 0, 0, 167, 0, 0, 1, 80, 248
+"/home/witut/Desktop/xaninOS/src/xaninApps/hexeditor/hexeditor.h", "C++", 0, 0, 4, 0, 0, 0, 0, 1, 5
+"/home/witut/Desktop/xaninOS/src/xaninApps/install.c", "C", 0, 0, 0, 11, 0, 0, 0, 6, 17
+"/home/witut/Desktop/xaninOS/src/xaninApps/keyboard_test.c", "C", 0, 0, 0, 18, 0, 0, 0, 9, 27
+"/home/witut/Desktop/xaninOS/src/xaninApps/load.c", "C", 0, 0, 0, 21, 0, 0, 1, 21, 43
+"/home/witut/Desktop/xaninOS/src/xaninApps/loadch.c", "C", 0, 0, 0, 18, 0, 0, 0, 12, 30
+"/home/witut/Desktop/xaninOS/src/xaninApps/logo.c", "C", 0, 0, 0, 48, 0, 0, 0, 23, 71
+"/home/witut/Desktop/xaninOS/src/xaninApps/mouse.c", "C", 0, 0, 0, 5, 0, 0, 13, 7, 25
+"/home/witut/Desktop/xaninOS/src/xaninApps/nic_info.c", "C", 0, 0, 0, 30, 0, 0, 0, 17, 47
+"/home/witut/Desktop/xaninOS/src/xaninApps/pong/pong.c", "C", 0, 0, 0, 168, 0, 0, 0, 76, 244
+"/home/witut/Desktop/xaninOS/src/xaninApps/pong/pong.h", "C++", 0, 0, 18, 0, 0, 0, 0, 9, 27
+"/home/witut/Desktop/xaninOS/src/xaninApps/reboot.asm", "x86 and x86_64 Assembly", 0, 28, 0, 0, 0, 0, 5, 17, 50
+"/home/witut/Desktop/xaninOS/src/xaninApps/reboot.c", "C", 0, 0, 0, 18, 0, 0, 0, 15, 33
+"/home/witut/Desktop/xaninOS/src/xaninApps/register_dump.c", "C", 0, 0, 0, 48, 0, 0, 1, 19, 68
+"/home/witut/Desktop/xaninOS/src/xaninApps/run.c", "C", 0, 0, 0, 42, 0, 0, 1, 22, 65
+"/home/witut/Desktop/xaninOS/src/xaninApps/run16.c", "C", 0, 0, 0, 35, 0, 0, 1, 19, 55
+"/home/witut/Desktop/xaninOS/src/xaninApps/shutdown.asm", "x86 and x86_64 Assembly", 0, 12, 0, 0, 0, 0, 1, 9, 22
+"/home/witut/Desktop/xaninOS/src/xaninApps/shutdown.c", "C", 0, 0, 0, 35, 0, 0, 2, 22, 59
+"/home/witut/Desktop/xaninOS/src/xaninApps/stack_frame_test.c", "C", 0, 0, 0, 18, 0, 0, 0, 13, 31
+"/home/witut/Desktop/xaninOS/src/xaninApps/syscall_test.asm", "x86 and x86_64 Assembly", 0, 25, 0, 0, 0, 0, 3, 17, 45
+"/home/witut/Desktop/xaninOS/src/xaninApps/timer_test.c", "C", 0, 0, 0, 25, 0, 0, 0, 13, 38
+"/home/witut/Desktop/xaninOS/src/xaninApps/xanin_apps_space.asm", "x86 and x86_64 Assembly", 0, 1, 0, 0, 0, 0, 0, 2, 3
+"/home/witut/Desktop/xaninOS/src/xaninApps/zsk.c", "C", 0, 0, 0, 49, 0, 0, 1, 21, 71
+"/home/witut/Desktop/xaninOS/src/xaninGraphics/xaninGraphics.c", "C", 0, 0, 0, 19, 0, 0, 0, 10, 29
+"/home/witut/Desktop/xaninOS/src/xaninGraphics/xaninGraphics.h", "C++", 0, 0, 5, 0, 0, 0, 0, 3, 8
+"/home/witut/Desktop/xaninOS/src/xanin_info/info_block.c", "C", 0, 0, 0, 8, 0, 0, 0, 6, 14
+"/home/witut/Desktop/xaninOS/src/xanin_info/info_block.h", "C++", 0, 0, 12, 0, 0, 0, 0, 6, 18
+"/home/witut/Desktop/xaninOS/src/xin_fs/cat.c", "C", 0, 0, 0, 35, 0, 0, 1, 24, 60
+"/home/witut/Desktop/xaninOS/src/xin_fs/copy.c", "C", 0, 0, 0, 14, 0, 0, 0, 10, 24
+"/home/witut/Desktop/xaninOS/src/xin_fs/entries_table.asm", "x86 and x86_64 Assembly", 0, 2, 0, 0, 0, 0, 1, 4, 7
+"/home/witut/Desktop/xaninOS/src/xin_fs/link.c", "C", 0, 0, 0, 18, 0, 0, 0, 11, 29
+"/home/witut/Desktop/xaninOS/src/xin_fs/list_files.c", "C", 0, 0, 0, 38, 0, 0, 0, 18, 56
+"/home/witut/Desktop/xaninOS/src/xin_fs/move.c", "C", 0, 0, 0, 21, 0, 0, 0, 11, 32
+"/home/witut/Desktop/xaninOS/src/xin_fs/xanin_fs_saver.c", "C", 0, 0, 0, 7, 0, 0, 0, 6, 13
+"/home/witut/Desktop/xaninOS/src/xin_fs/xin.c", "C", 0, 0, 0, 463, 0, 0, 9, 196, 668
+"/home/witut/Desktop/xaninOS/src/xin_fs/xin.h", "C++", 0, 0, 21, 0, 0, 0, 0, 12, 33
+"/home/witut/Desktop/xaninOS/src/xin_fs/xin_entry.h", "C++", 0, 0, 38, 0, 0, 0, 0, 17, 55
+"/home/witut/Desktop/xaninOS/src/xin_fs/xin_note.c", "C", 0, 0, 0, 120, 0, 0, 1, 68, 189
+"/home/witut/Desktop/xaninOS/src/xin_fs/xin_paint.c", "C", 0, 0, 0, 129, 0, 0, 4, 59, 192
+"/home/witut/Desktop/xaninOS/src/xin_fs/xin_pointers.asm", "x86 and x86_64 Assembly", 0, 2, 0, 0, 0, 0, 1, 6, 9
+"Total", "-", 95, 622, 4654, 4375, 1, 73, 808, 4204, 14832
