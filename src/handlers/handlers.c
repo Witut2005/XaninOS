@@ -29,6 +29,8 @@ void floppy_interrupt(void)
 void gowno(void)
 {
     xprintf("gowno");
+    xprintf("%zNIC INTERRUPT\n", set_output_color(green,white));
+    while(1);
 }
 
 void invalid_opcode(void)

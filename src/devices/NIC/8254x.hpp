@@ -96,14 +96,55 @@ namespace nic
         RDLEN = 0x2808,
         RDH = 0x2810,
         RDT = 0x2818,
-        RDTR = 0x2820
+        RDTR = 0x2820,
+        TDBAL = 0x3800,
+        TDLEN = 0x3808,
+        TDH = 0x3810,
+        TDT = 0x3818,
+        TCTL = 0x400
 
 
+    };
+
+    enum tctl
+    {
+        EN = 1 << 1,
+        PSP = 1 << 3
     };
 
 
 
 }
+
+struct i8254xReceiveDescriptor
+{
+
+    uint32_t address_low;
+    uint32_t address_high;
+
+    uint16_t length;
+    uint16_t checksum;
+    uint8_t status;
+    uint8_t errors;
+    uint16_t special;
+
+}__attribute__((packed));
+
+
+struct i8254xTransmitDescriptor
+{
+
+    uint32_t address_low;
+    uint32_t address_high;
+
+    uint16_t length;
+    uint8_t cso;
+    uint8_t cmd;
+    uint8_t status;
+    uint8_t css;
+    uint16_t special;
+
+}__attribute__((packed));
 
 class Intel8254xDriver
 {
@@ -118,14 +159,17 @@ class Intel8254xDriver
 
     void write(uint32_t reg, uint32_t value);
     uint32_t read(uint32_t reg);
-    uint8_t* mac_get();
-    uint32_t iobase_get();
-    uint16_t vendorid_get();
-    void init();
-    pci_device* pci_info_get();
+    uint8_t* mac_get(void);
+    uint32_t iobase_get(void);
+    uint16_t vendorid_get(void);
+    void init(void);
+    pci_device* pci_info_get(void);
     uint16_t eeprom_read(uint8_t address);
     void multicast_table_array_clear(void);
     uint32_t receive_buffer_get(void);
+    void receive_packet(void);
+    void send_packet(uint32_t address_low, uint32_t address_high, uint16_t length);
+    void interrupt_handler(void);
 
 
 

@@ -5,10 +5,8 @@
 #include <libcpp/chal.h>
 #include <libcpp/ostream.h>
 
+#define INTEL_8254X_DESCRIPTORS 1024
 #define reset() write(0x0, 0x4000000)
-
-
-
 
 
 void Intel8254xDriver::write(uint32_t reg, uint32_t value)
@@ -75,11 +73,7 @@ void Intel8254xDriver::init()
     while( (this->read(nic::EECD) & nic::EECD_GNT) >> 7 != 1);
     this->write(nic::EECD, this->read(nic::EECD) ^ nic::EECD_REQ);
     
-
-    /* reading mac address */
-    *(uint16_t*)&mac[0] = this->eeprom_read(0x0);
-    *(uint16_t*)&mac[2] = this->eeprom_read(0x1);
-    *(uint16_t*)&mac[4] = this->eeprom_read(0x2);
+    this->mac_get();
 
     /* general configuration (page 389) */
     this->write(nic::CTRL, this->read(nic::CTRL) | nic::ctrl::ASDE | nic::ctrl::SLU); // step 2
@@ -88,18 +82,22 @@ void Intel8254xDriver::init()
     this->write(nic::CTRL, this->read(nic::CTRL) & (~nic::ctrl::ILOS)); // step 7 (can be bad)
     this->multicast_table_array_clear(); // clear multicast table
 
-
     
     /* disable VLANs */
     this->write(nic::CTRL, this->read(nic::CTRL) & (~nic::ctrl::VME));
 
+    /* receive buffer allocation */
+    this->write(nic::RDBAL, (uint32_t)malloc(sizeof(i8254xReceiveDescriptor) * INTEL_8254X_DESCRIPTORS));
+    
+    for(uint8_t* i = (uint8_t*)this->read(nic::RDBAL); (uint32_t)i < this->read(nic::RDBAL) + INTEL_8254X_DESCRIPTORS * sizeof(i8254xReceiveDescriptor); i++)
+        *i = 0x0;
 
-    this->write(nic::RDBAL, (uint32_t)malloc(sizeof(uint8_t) * 4096));
-    this->write(nic::RDLEN, 4096 / 8);
+
+    this->write(nic::RDLEN, INTEL_8254X_DESCRIPTORS * sizeof(i8254xReceiveDescriptor));
 
     /* set head and tail to proper values */
     this->write(nic::RDH, 0x0);
-    this->write(nic::RDT, 4096 / 8);
+    this->write(nic::RDT, INTEL_8254X_DESCRIPTORS);
 
     /* set receive control register */
     std::cout << std::hex << "SIZE BUFFER: " << this->read(nic::RCTL) << std::endl;
@@ -109,25 +107,34 @@ void Intel8254xDriver::init()
     this->write(nic::RCTL, this->read(nic::RCTL) | nic::rctl::BAM); // accept broadcast packets
     
     this->write(nic::RCTL, this->read(nic::RCTL) | nic::rctl::BSEX);
-    this->write(nic::RCTL, this->read(nic::RCTL) | (0x3 << 16));  // BSIZE
+    this->write(nic::RCTL, this->read(nic::RCTL) | (0x1 << 16));  // BSIZE
 
-    std::cout << std::hex << "SIZE BUFFER: " << this->read(nic::RCTL) << std::endl;
-
-    /* enabling interrupts */
-    // this->write(nic::IMS, this->read(nic::IMS) | nic::ims::RXT | nic::ims::RXO | 
-    //                 nic::ims::RXDMT | nic::ims::RXSEQ | nic::ims::LSC);
-
-    this->write(nic::ITR, this->read(nic::ITR) | 0xFFFF);
-    
-    this->write(nic::IMS, this->read(nic::IMS) | 0xFFFFFFFF);
-    
     /* enable receiving packets */
     this->write(nic::RCTL, this->read(nic::RCTL) | nic::RCTL_EN);
 
-    // std::cout << "mask registers status: " << std::bin << this->read(nic::IMS) << std::endl;
-    // xprintf("ad");
-    // while(1)
-    // while(1);
+    /* transmit buffer allocation */
+    this->write(nic::TDBAL, (uint32_t)malloc(sizeof(i8254xTransmitDescriptor) * INTEL_8254X_DESCRIPTORS));
+
+    for(uint8_t* i = (uint8_t*)this->read(nic::TDBAL); (uint32_t)i < this->read(nic::TDBAL) + INTEL_8254X_DESCRIPTORS * sizeof(i8254xTransmitDescriptor); i++)
+        *i = 0x0;
+
+    /* set buffer length */
+    this->write(nic::TDLEN, INTEL_8254X_DESCRIPTORS);
+
+    /* set head and tail to proper values */
+    this->write(nic::TDH, 0x0);
+    this->write(nic::TDT, INTEL_8254X_DESCRIPTORS);
+
+    /* enable transmit packets */
+    this->write(nic::TCTL, this->read(nic::TCTL) | nic::tctl::EN | nic::tctl::PSP);
+
+    /* enabling interrupts */
+    //this->write(nic::IMS, this->read(nic::IMS) | nic::ims::RXT | nic::ims::RXO | 
+    //               nic::ims::RXDMT | nic::ims::RXSEQ | nic::ims::LSC);
+    
+    this->write(nic::IMS, 0xFFFFFFFF);
+
+
 
 }
 
@@ -143,6 +150,9 @@ pci_device* Intel8254xDriver::pci_info_get()
 
 uint8_t* Intel8254xDriver::mac_get()
 {
+    *(uint16_t*)&mac[0] = this->eeprom_read(0x0);
+    *(uint16_t*)&mac[2] = this->eeprom_read(0x1);
+    *(uint16_t*)&mac[4] = this->eeprom_read(0x2);
     return this->mac;
 }
 
@@ -154,4 +164,20 @@ uint32_t Intel8254xDriver::iobase_get()
 uint16_t Intel8254xDriver::vendorid_get()
 {
     return this->pci_info.vendor_id;
+}
+
+void Intel8254xDriver::receive_packet(void)
+{
+
+}
+
+void Intel8254xDriver::send_packet(uint32_t address_low, uint32_t address_high, uint16_t length)
+{
+
+}
+
+void  Intel8254xDriver::interrupt_handler(void)
+{
+    uint16_t interrupt_status = this->read(nic::ICR);
+
 }

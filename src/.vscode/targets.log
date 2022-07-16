@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Fri Jul 15 22:13:53 2022
+# Make data base, printed on Sat Jul 16 11:39:31 2022
 
 # Variables
 
@@ -91,7 +91,7 @@ LS_COLORS = rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:
 # environment
 XDG_SESSION_DESKTOP = i3
 # environment
-SSH_AUTH_SOCK = /tmp/ssh-jvKWFNpdi3ly/agent.4641
+SSH_AUTH_SOCK = /tmp/ssh-uPS9BRxjvY5R/agent.1844
 # automatic
 %F = $(notdir $%)
 # environment
@@ -103,7 +103,7 @@ PWD = /home/witut/Desktop/xaninOS/src
 # environment
 XDG_SEAT = seat0
 # environment
-SSH_AGENT_PID = 4702
+SSH_AGENT_PID = 1906
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = i3
 # environment
@@ -149,7 +149,7 @@ ASM = nasm
 # makefile (from 'Makefile', line 4)
 CC = i386-elf-g++
 # environment
-XDG_SESSION_ID = 8
+XDG_SESSION_ID = 2
 # environment
 USER = witut
 # environment
@@ -165,7 +165,7 @@ LIBVIRT_DEFAULT_URI = qemu:///system
 # environment
 LC_TELEPHONE = pl_PL.UTF-8
 # environment
-I3SOCK = /run/user/1000/i3/ipc-socket.4641
+I3SOCK = /run/user/1000/i3/ipc-socket.1844
 # default
 MAKE_COMMAND := make
 # environment
@@ -207,7 +207,7 @@ APPS = ./xaninApps
 # environment
 LC_ALL = C
 # environment
-GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/9a11f656_6fc2_4c6a_8529_9ed200a5a48c
+GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/85117a92_917a_4174_8d37_9e8875d1ea53
 # automatic
 ^F = $(notdir $^)
 # environment
@@ -231,7 +231,7 @@ LANG = C
 # environment
 TERM = xterm-256color
 # environment
-VSCODE_PID = 5829
+VSCODE_PID = 3256
 # variable set hash-table stats:
 # Load=110/1024=11%, Rehash=0, Collisions=19/135=14%
 
@@ -382,6 +382,6 @@ curses:
 # strcache performance: lookups = 52 / hit rate = 17%
 # hash-table stats:
 # Load=43/8192=1%, Rehash=0, Collisions=1/52=2%
-# Finished Make data base on Fri Jul 15 22:13:53 2022
+# Finished Make data base on Sat Jul 16 11:39:31 2022
 
  
