@@ -106,6 +106,21 @@ namespace nic
 
     };
 
+    enum tdesc_cmd
+    {
+
+        EOP = 1,
+        IFCS = 1 << 1,
+        IC = 1 << 2,
+        RS = 1 << 3,
+        RPS = 1 << 4,
+        RSV = 1 << 4,
+        DEXT = 1 << 5,
+        VLE = 1 << 6,
+        IDE = 1 << 7
+
+    };
+    
     enum tctl
     {
         EN = 1 << 1,
@@ -151,9 +166,10 @@ class Intel8254xDriver
     public:
     uint8_t* iobase;
     uint32_t pci_selector;
-    
     pci_device pci_info;
     uint8_t mac[6];
+    i8254xReceiveDescriptor* receive_buffer;
+    i8254xTransmitDescriptor* transmit_buffer;
     
     //---------------------------------
 
@@ -168,7 +184,7 @@ class Intel8254xDriver
     void multicast_table_array_clear(void);
     uint32_t receive_buffer_get(void);
     void receive_packet(void);
-    void send_packet(uint32_t address_low, uint32_t address_high, uint16_t length);
+    void send_packet(uint32_t address_high, uint32_t address_low, uint16_t length);
     void interrupt_handler(void);
 
 

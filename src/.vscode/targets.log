@@ -1,6 +1,4 @@
 make all --print-data-base --no-builtin-variables --no-builtin-rules --question
-make: *** No rule to make target 'all'.  Stop.
-
 # GNU Make 4.2.1
 # Built for x86_64-pc-linux-gnu
 # Copyright (C) 1988-2016 Free Software Foundation, Inc.
@@ -8,7 +6,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Sat Jul 16 11:39:31 2022
+# Make data base, printed on Sun Jul 17 13:00:38 2022
 
 # Variables
 
@@ -91,7 +89,7 @@ LS_COLORS = rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:
 # environment
 XDG_SESSION_DESKTOP = i3
 # environment
-SSH_AUTH_SOCK = /tmp/ssh-uPS9BRxjvY5R/agent.1844
+SSH_AUTH_SOCK = /tmp/ssh-6U8grSn3Nq9y/agent.1885
 # automatic
 %F = $(notdir $%)
 # environment
@@ -103,7 +101,7 @@ PWD = /home/witut/Desktop/xaninOS/src
 # environment
 XDG_SEAT = seat0
 # environment
-SSH_AGENT_PID = 1906
+SSH_AGENT_PID = 1946
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = i3
 # environment
@@ -165,7 +163,7 @@ LIBVIRT_DEFAULT_URI = qemu:///system
 # environment
 LC_TELEPHONE = pl_PL.UTF-8
 # environment
-I3SOCK = /run/user/1000/i3/ipc-socket.1844
+I3SOCK = /run/user/1000/i3/ipc-socket.1885
 # default
 MAKE_COMMAND := make
 # environment
@@ -207,7 +205,7 @@ APPS = ./xaninApps
 # environment
 LC_ALL = C
 # environment
-GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/85117a92_917a_4174_8d37_9e8875d1ea53
+GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/57e6cb41_3019_4b58_801b_0270ef2fd0a8
 # automatic
 ^F = $(notdir $^)
 # environment
@@ -231,7 +229,7 @@ LANG = C
 # environment
 TERM = xterm-256color
 # environment
-VSCODE_PID = 3256
+VSCODE_PID = 2086
 # variable set hash-table stats:
 # Load=110/1024=11%, Rehash=0, Collisions=19/135=14%
 
@@ -241,9 +239,9 @@ VSCODE_PID = 3256
 
 # Directories
 
-# . (device 2066, inode 10461210): 33 files, no impossibilities.
+# . (device 2066, inode 10461210): 35 files, no impossibilities.
 
-# 33 files, no impossibilities in 1 directories.
+# 35 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -276,11 +274,13 @@ debug:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
- 
 #  recipe to execute (from 'Makefile', line 102):
 	qemu-system-i386 -m 512 -s -S ../bin/xanin.img 
 
 build:
+ 
+make: *** No rule to make target 'all'.  Stop.
+
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
@@ -376,12 +376,12 @@ curses:
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 43 / storage = 358 B / avg = 8 B
-# current buf: size = 8162 B / used = 358 B / count = 43 / avg = 8 B
+# strcache buffers: 1 (0) / strings = 45 / storage = 375 B / avg = 8 B
+# current buf: size = 8162 B / used = 375 B / count = 45 / avg = 8 B
 
-# strcache performance: lookups = 52 / hit rate = 17%
+# strcache performance: lookups = 54 / hit rate = 16%
 # hash-table stats:
-# Load=43/8192=1%, Rehash=0, Collisions=1/52=2%
-# Finished Make data base on Sat Jul 16 11:39:31 2022
+# Load=45/8192=1%, Rehash=0, Collisions=1/54=2%
+# Finished Make data base on Sun Jul 17 13:00:38 2022
 
  

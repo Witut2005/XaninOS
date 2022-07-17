@@ -88,6 +88,7 @@ void Intel8254xDriver::init()
 
     /* receive buffer allocation */
     this->write(nic::RDBAL, (uint32_t)malloc(sizeof(i8254xReceiveDescriptor) * INTEL_8254X_DESCRIPTORS));
+    this->receive_buffer = (i8254xReceiveDescriptor*)(this->read(nic::RDBAL));
     
     for(uint8_t* i = (uint8_t*)this->read(nic::RDBAL); (uint32_t)i < this->read(nic::RDBAL) + INTEL_8254X_DESCRIPTORS * sizeof(i8254xReceiveDescriptor); i++)
         *i = 0x0;
@@ -114,6 +115,7 @@ void Intel8254xDriver::init()
 
     /* transmit buffer allocation */
     this->write(nic::TDBAL, (uint32_t)malloc(sizeof(i8254xTransmitDescriptor) * INTEL_8254X_DESCRIPTORS));
+    this->transmit_buffer = (i8254xTransmitDescriptor*)(this->read(nic::TDBAL));
 
     for(uint8_t* i = (uint8_t*)this->read(nic::TDBAL); (uint32_t)i < this->read(nic::TDBAL) + INTEL_8254X_DESCRIPTORS * sizeof(i8254xTransmitDescriptor); i++)
         *i = 0x0;
@@ -171,8 +173,21 @@ void Intel8254xDriver::receive_packet(void)
 
 }
 
-void Intel8254xDriver::send_packet(uint32_t address_low, uint32_t address_high, uint16_t length)
+void Intel8254xDriver::send_packet(uint32_t address_high, uint32_t address_low, uint16_t length)
 {
+    this->transmit_buffer[this->read(nic::TDT)].address_low = address_low;
+    this->transmit_buffer[this->read(nic::TDT)].address_high = address_high;
+    this->transmit_buffer[this->read(nic::TDT)].cmd = 0xF ^ 0x4;
+
+    uint32_t tdt_old = this->read(nic::TDT);
+    this->write(nic::TDT, (this->read(nic::TDT) + 1) % INTEL_8254X_DESCRIPTORS);
+
+    while(this->transmit_buffer[tdt_old].status & 0xF)    
+    {
+        msleep(1);
+    }
+
+
 
 }
 
