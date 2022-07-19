@@ -179,6 +179,8 @@ void scan(void)
 
     XANIN_ADD_APP_ENTRY0("screenshot", screenshot)
 
+    XANIN_ADD_APP_ENTRY1("xpaint", xin_xpaint)
+
     else
     {
         xprintf("%zUnknown command",set_output_color(red,white));

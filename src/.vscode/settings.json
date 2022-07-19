@@ -7,5 +7,12 @@
         "assert.h": "c",
         "cstdarg": "cpp",
         "cstdint": "cpp"
-    }
+    },
+    "makefile.launchConfigurations": [
+        {
+            "cwd": "/home/witut/Desktop/xaninOS/src",
+            "binaryPath": "/home/witut/Desktop/xaninOS/src/kernel.bin",
+            "binaryArgs": []
+        }
+    ]
 }

@@ -89,7 +89,7 @@ xin_entry* xin_get_file_pf(char* entry_path) // pf = parent folder
 void xin_get_file_pf_test(char* entry_path) // pf = parent folder
 {
     xprintf("parent_folder: %s\n", xin_get_file_pf(entry_path)->entry_path);
-    while(getscan() != ENTER);
+    // while(getscan() != ENTER);
 }
 
 uint8_t *xin_find_free_pointer(void)
@@ -310,12 +310,12 @@ void create_file(char* entry_name)
     {
         char* path = xin_get_current_path(entry_name); 
 
-        xprintf("%s\n", path);
+        // xprintf("%s\n", path);
 
         if(xin_find_entry(entry_name) != nullptr)
         {
             xprintf("%zFILE WITH THIS NAME EXISTS\n", stderr);
-            while(getscan() != ENTER);
+            // while(getscan() != ENTER);
             return;
         }
 
@@ -328,7 +328,7 @@ void create_file(char* entry_name)
         if(xin_find_entry(entry_name) != nullptr)
         {
             xprintf("%zFILE WITH THIS NAME EXISTS\n", stderr);
-            while(getscan() != ENTER);
+            // while(getscan() != ENTER);
             return;
         }
 
@@ -339,7 +339,7 @@ void create_file(char* entry_name)
     {
         
         xprintf("%zFILE CREATE FAILURE\n", stderr);
-        while(getscan() != ENTER);
+        // while(getscan() != ENTER);
         return;
     }
     /* write entry to xin entry pointers table */
@@ -389,7 +389,7 @@ void xin_create_directory(char* entry_name)
     if(entry_name[0] == '/' && entry_name[1] == '/')
     {
         xprintf("%zAre you serious? ://", stderr);
-        while(getscan() != ENTER);
+        // while(getscan() != ENTER);
         return;
     }
 
@@ -397,7 +397,7 @@ void xin_create_directory(char* entry_name)
     if(entry_name[strlen(entry_name) - 1] != '/')
     {
         xprintf("%zDIRECTORY NAME MUST BE ENDED WITH / CHAR\n", stderr);
-        while(getscan() != ENTER);
+        // while(getscan() != ENTER);
         return;
     }
 
@@ -424,7 +424,7 @@ void xin_create_directory(char* entry_name)
         if(xin_find_entry(entry_name) != nullptr)
         {
             xprintf("%zFILE WITH THIS NAME EXISTS\n", stderr);
-            while(getscan() != ENTER);
+            // while(getscan() != ENTER);
             return;
         }
 
@@ -437,7 +437,7 @@ void xin_create_directory(char* entry_name)
         if(xin_find_entry(entry_name) != nullptr)
         {
             xprintf("%zFILE WITH THIS NAME EXISTS\n", stderr);
-            while(getscan() != ENTER);
+            // while(getscan() != ENTER);
             return;
         }
 
@@ -448,7 +448,7 @@ void xin_create_directory(char* entry_name)
     {
         
         xprintf("%zFILE CREATE FAILURE\n", stderr);
-        while(getscan() != ENTER);
+        // while(getscan() != ENTER);
         return;
     }
 

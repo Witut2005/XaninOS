@@ -38,7 +38,7 @@ uint8_t keyboard_map[128] = {
   'm',',','.',
   '/', // slash, or numpad slash if preceded by keycode 224
   ' ', // right Shift
-  '*', // numpad asterisk
+  '\0', // numpad asterisk
   ' ', // left Alt
   ' ', // Spacebar
   ' ',

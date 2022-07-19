@@ -41,5 +41,6 @@ enum special_keys
   _6_KEY = 0x7,
   _7_KEY = 0x8,
   _8_KEY = 0x9,
-  _9_KEY = 0xA
+  _9_KEY = 0xA,
+  PRINT_SCREEN_KEY = 0x37
 };

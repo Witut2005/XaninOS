@@ -134,8 +134,7 @@ void Intel8254xDriver::init()
     //this->write(nic::IMS, this->read(nic::IMS) | nic::ims::RXT | nic::ims::RXO | 
     //               nic::ims::RXDMT | nic::ims::RXSEQ | nic::ims::LSC);
     
-    this->write(nic::IMS, 0xFFFFFFFF);
-
+    // this->write(nic::IMS, 0xFFFFFFFF);
 
 
 }

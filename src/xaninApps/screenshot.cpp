@@ -26,12 +26,11 @@ void screenshot(void)
     xin_entry* file = fopen(std::chrono::time_to_string(time).c_str(), "rw");
 
     uint8_t* data = (uint8_t*)VGA_TEXT_MEMORY;
-
-    for(int i = 0; i < VGA_SCREEN_RESOLUTION; i++)
-        xin::write(file, &data[i], sizeof(uint8_t));
+    xin::write(file, data, VGA_SCREEN_RESOLUTION);
 
     xin_change_directory(current_directory.c_str());
-    while(getscan() != ENTER);
+
+    // while(getscan() != ENTER);
 
 }
 

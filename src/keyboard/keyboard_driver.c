@@ -5,6 +5,7 @@
 #include <terminal/vty.h>
 #include <devices/APIC/apic_registers.h>
 
+extern void screenshot(void);
 
 void keyboard_driver(uint8_t scanCode)
 {
@@ -20,8 +21,8 @@ void keyboard_driver(uint8_t scanCode)
 
     switch(KeyInfo.scan_code)
     {
-        case LSHIFT: {KeyInfo.is_shift = true; KeyInfo.character = '\0'; break;}
-        case LSHIFT_RELEASE: {KeyInfo.is_shift = false; break;}
+        case LSHIFT              : {KeyInfo.is_shift = true; KeyInfo.character = '\0'; break;}
+        case LSHIFT_RELEASE      : {KeyInfo.is_shift = false; break;}
         case BSPC: 
         {
             KeyInfo.is_bspc = true;
@@ -31,24 +32,38 @@ void keyboard_driver(uint8_t scanCode)
             break;            
         }
         
-        case BSPC_RELEASE: {KeyInfo.is_bspc = false; break;}
-        case CAPS: 
+        case BSPC_RELEASE        : {KeyInfo.is_bspc = false; break;}
+        case CAPS                : 
         {
-            KeyInfo.is_caps = KeyInfo.is_caps  ?  false : true; 
+            KeyInfo.is_caps      = KeyInfo.is_caps  ?  false : true; 
             break;
         }
 
-        case ARROW_UP: {KeyInfo.is_up = true;KeyInfo.character = 0x0; break;}
-        case ARROW_UP_RELEASE: {KeyInfo.is_up = false; break;}
+        case ARROW_UP            : {KeyInfo.is_up = true;KeyInfo.character = 0x0; break;}
+        case ARROW_UP_RELEASE    : {KeyInfo.is_up = false; break;}
 
-        case ARROW_DOWN: {KeyInfo.is_down = true; KeyInfo.character = 0x0;break;}
-        case ARROW_DOWN_RELEASE: {KeyInfo.is_down = false; break;}
+        case ARROW_DOWN          : {KeyInfo.is_down = true; KeyInfo.character = 0x0;break;}
+        case ARROW_DOWN_RELEASE  : {KeyInfo.is_down = false; break;}
 
-        case ARROW_RIGHT: {KeyInfo.is_right = true; KeyInfo.character = 0x0;break;}
-        case ARROW_RIGHT_RELEASE: {KeyInfo.is_right = false; break;}
+        case ARROW_RIGHT         : {KeyInfo.is_right = true; KeyInfo.character = 0x0;break;}
+        case ARROW_RIGHT_RELEASE : {KeyInfo.is_right = false; break;}
 
-        case ARROW_LEFT: {KeyInfo.is_left = true;KeyInfo.character = 0x0; break;}
-        case ARROW_LEFT_RELEASE: {KeyInfo.is_left = false; break;}
+        case ARROW_LEFT          : {KeyInfo.is_left = true; KeyInfo.character = 0x0; break;}
+        case ARROW_LEFT_RELEASE  : {KeyInfo.is_left = false; break;}
+        case PRINT_SCREEN_KEY: 
+        {
+            int x_tmp = Screen.x, y_tmp = Screen.y;
+            screenshot(); 
+            *(uint32_t*)APIC_EOI_REGISTER = 0x0; 
+            eoi_send(); 
+            KeyInfo.character = 0x0; 
+            Screen.x = x_tmp;
+            Screen.y = y_tmp;
+
+            break;
+            
+        }
+    
 
     }
 
