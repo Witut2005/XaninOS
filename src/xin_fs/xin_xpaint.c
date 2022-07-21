@@ -133,7 +133,6 @@ void xpaint_input(xchar x)
 
 void xin_xpaint(char* file_name)
 {
-    screen_clear();
 
 
     xin_entry* xin_file = fopen(file_name, "rw");
@@ -148,15 +147,14 @@ void xin_xpaint(char* file_name)
     else
     {
     
-        char* data_pointer = xin_file->starting_sector * SECTOR_SIZE;
+        uint16_t* data_pointer = (uint16_t*)(xin_file->starting_sector * SECTOR_SIZE);
+        screen_clear();
 
-        for(int i = 0; i < VGA_TEXT_MEMORY / 2; i+=2)
-        {
-            xprintf("%z%c", set_output_color(data_pointer[i], data_pointer[i] >> 4), 
-                                                                    data_pointer[i+1]);
-        }
+        uint16_t* screen_cell = (uint16_t*)VGA_TEXT_MEMORY;
 
-        // 13:45:41
+        for(int i = 0; i < VGA_SCREEN_RESOLUTION / 2; i++)
+            screen_cell[i] = (uint16_t) (data_pointer[i]);
+
         Screen.x = 0x0;
         Screen.y = 0x0;
 
@@ -165,15 +163,10 @@ void xin_xpaint(char* file_name)
 
         uint32_t file_data_counter = 0x1;
 
-        data_pointer = (char*)(xin_file->starting_sector * SECTOR_SIZE);
-
-        
         uint8_t* screen_ptr = (uint8_t*)VGA_TEXT_MEMORY;
 
         for(int i = 0; i < VGA_SCREEN_RESOLUTION; i++, screen_ptr += 2)
-        {
             write(xin_file, screen_ptr + 1, 1);
-        }
         
         xin_file->entry_size = file_data_counter;
         

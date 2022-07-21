@@ -59,6 +59,23 @@ char putchar(char character)
 
 }
 
+char putchar_color(uint8_t color, char character)
+{
+
+    Screen.cursor[Screen.y][Screen.x] = (uint16_t) (character + ((((color & 0xF0) << 4) | (color & 0xF)) << 8));
+        
+    Screen.x++;
+
+    if(x == 80)
+    {    
+        Screen.x = 0x0;
+        Screen.y++;
+    }
+           
+
+    return character;
+
+}
 
 
 void print_bcd_number(uint8_t x)

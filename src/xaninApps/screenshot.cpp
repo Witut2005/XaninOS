@@ -28,6 +28,9 @@ void screenshot(void)
     uint8_t* data = (uint8_t*)VGA_TEXT_MEMORY;
     xin::write(file, data, VGA_SCREEN_RESOLUTION);
 
+    // for(uint8_t* i = (uint8_t*)(file->starting_sector * SECTOR_SIZE); (uint32_t)i < file->starting_sector * SECTOR_SIZE + VGA_SCREEN_RESOLUTION; i++, data++)
+    //     *i = *data;
+
     xin_change_directory(current_directory.c_str());
 
     // while(getscan() != ENTER);
