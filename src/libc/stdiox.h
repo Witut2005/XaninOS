@@ -13,7 +13,11 @@
 #include <libc/string.h>
 
 #define set_output_color(x,y) (x << 4 | (y & 0xF))
-#define cursor_set_position(x, y) (x << 8 | (y & 0xF))
+
+#define cursor_set_position(x_new, y_new) \
+Screen.x = x_new; \
+Screen.y = y_new
+
 #define stderr ( red << 4 | white)
 
 
@@ -621,6 +625,33 @@ void xscanf(char* str, ... )
                 
         }
 
+        else if(KeyInfo.scan_code == ARROW_UP)
+        {
+
+            strcpy(keyboard_command, last_used_commands);
+            keyboard_command[strlen(last_used_commands)] = ' ';
+            strcpy(keyboard_command + strlen(last_used_commands) + 1, last_used_parameters);
+
+            int x_new = strlen(last_used_commands) + strlen(last_used_parameters);
+
+            memset(last_used_commands, '\0', sizeof(last_used_commands));
+            memset(last_used_parameters, '\0', sizeof(last_used_parameters));
+            
+            Screen.x = 1;
+
+            uint16_t first_tmp = (uint16_t)Screen.cursor[Screen.y][Screen.x];
+            xprintf("%s", keyboard_command);
+
+
+            index = x_new;
+            Screen.x = x_new;
+
+            Screen.cursor[Screen.y][1] = first_tmp;
+
+            // cpu_halt();
+
+        }
+
         else if(KeyInfo.scan_code == ENTER)
         {
             while(str[str_counter])
@@ -787,27 +818,5 @@ void xscanf(char* str, ... )
 
 }
 
-
-struct xchar
-{
-    char character;
-    uint8_t scan_code;
-};
-
-typedef struct xchar xchar;
-
-xchar inputg(void)
-{
-    KeyInfo.scan_code = 0x0;
-    while(KeyInfo.scan_code == 0x0);
-    
-    xchar x;
-
-    x.character = KeyInfo.character;
-    x.scan_code = KeyInfo.scan_code;
-
-    return x;
-
-}
 
 

@@ -289,16 +289,13 @@ void _start(void)
 
             xscanf(scanf_str,program_name, program_parameters, program_parameters1, program_parameters2, program_parameters3);
 
+            memcpy(last_used_commands, program_name, sizeof(program_name));
+            memcpy(last_used_parameters, program_parameters, sizeof(program_parameters));
+
 
             erase_spaces(program_name);
             erase_spaces(program_parameters);
             
-            for(int i = 0; i < sizeof(program_name); i++)
-                last_used_commands[i] = program_name[i];
-
-
-            for(int i = 0; i < sizeof(program_parameters); i++)
-                last_used_parameters[i] = program_parameters[i]; 
 
             character_blocked = '\0';
 

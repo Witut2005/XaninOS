@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Thu Jul 21 14:05:02 2022
+# Make data base, printed on Sun Jul 24 13:33:55 2022
 
 # Variables
 
@@ -38,8 +38,8 @@ C = i386-elf-gcc
 XAUTHORITY = /run/user/1000/gdm/Xauthority
 # environment
 GDMSESSION = i3
-# environment
-XMODIFIERS = @im=ibus
+# default
+MAKE_VERSION := 4.2.1
 # makefile
 CURDIR := /home/witut/Desktop/xaninOS/src
 # makefile
@@ -51,7 +51,7 @@ VSCODE_NLS_CONFIG = {"locale":"en-us","availableLanguages":{},"_languagePackSupp
 # environment
 _ = /usr/bin/code
 # environment
-XDG_CONFIG_DIRS = /etc/xdg/xdg-i3:/etc/xdg/xdg-ubuntu:/etc/xdg
+XDG_CONFIG_DIRS = /etc/xdg/xdg-i3:/etc/xdg
 # makefile (from 'Makefile', line 1)
 MAKEFILE_LIST :=  Makefile
 # automatic
@@ -63,7 +63,7 @@ MAKELEVEL := 0
 # environment
 MANDATORY_PATH = /usr/share/gconf/i3.mandatory.path
 # environment
-XDG_DATA_DIRS = /usr/share/i3:/usr/share/ubuntu:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop
+XDG_DATA_DIRS = /usr/share/i3:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop
 # environment
 DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus
 # environment
@@ -81,11 +81,7 @@ C_COMPILE = -O0 -masm=intel -Wno-discarded-qualifiers -Wno-builtin-declaration-m
 # environment
 GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
 # environment
-SESSION_MANAGER = local/linux:@/tmp/.ICE-unix/3560,unix/linux:/tmp/.ICE-unix/3560
-# environment
 XDG_RUNTIME_DIR = /run/user/1000
-# environment
-XDG_MENU_PREFIX = gnome-
 # environment
 ELECTRON_RUN_AS_NODE = 1
 # default
@@ -95,7 +91,7 @@ LS_COLORS = rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:
 # environment
 XDG_SESSION_DESKTOP = i3
 # environment
-SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
+SSH_AUTH_SOCK = /tmp/ssh-CP01mUqpU1Nm/agent.1874
 # automatic
 %F = $(notdir $%)
 # environment
@@ -107,7 +103,7 @@ PWD = /home/witut/Desktop/xaninOS/src
 # environment
 XDG_SEAT = seat0
 # environment
-SSH_AGENT_PID = 1993
+SSH_AGENT_PID = 1936
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = i3
 # environment
@@ -132,10 +128,6 @@ APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
 ELECTRON_NO_ATTACH_CONSOLE = 1
 # environment
 VSCODE_HANDLES_UNCAUGHT_ERRORS = true
-# default
-MAKE_VERSION := 4.2.1
-# environment
-GNOME_DESKTOP_SESSION_ID = this-is-deprecated
 # automatic
 ^D = $(patsubst %/,%,$(dir $^))
 # environment
@@ -149,8 +141,6 @@ MAKE = $(MAKE_COMMAND)
 # default
 MAKECMDGOALS := all
 # environment
-QT_IM_MODULE = ibus
-# environment
 SHLVL = 1
 # makefile (from 'Makefile', line 8)
 CC_OPTIONS = -O0 -fno-exceptions -lstdc++ -masm=intel -std=c++17 -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Wno-write-strings -Wno-return-type -fno-rtti -fconcepts-ts -I /home/witut/Desktop/xaninOS/src -c
@@ -159,7 +149,7 @@ ASM = nasm
 # makefile (from 'Makefile', line 4)
 CC = i386-elf-g++
 # environment
-XDG_SESSION_ID = 5
+XDG_SESSION_ID = 2
 # environment
 USER = witut
 # environment
@@ -175,7 +165,7 @@ LIBVIRT_DEFAULT_URI = qemu:///system
 # environment
 LC_TELEPHONE = pl_PL.UTF-8
 # environment
-I3SOCK = /run/user/1000/i3/ipc-socket.4965
+I3SOCK = /run/user/1000/i3/ipc-socket.1874
 # default
 MAKE_COMMAND := make
 # environment
@@ -217,11 +207,11 @@ APPS = ./xaninApps
 # environment
 LC_ALL = C
 # environment
-GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/4dfd9728_5961_463d_a554_e26ac34b1173
+GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/fcab10fa_5268_4926_84a1_64b0ca644f38
 # automatic
 ^F = $(notdir $^)
 # environment
-GNOME_TERMINAL_SERVICE = :1.13
+GNOME_TERMINAL_SERVICE = :1.24
 # default
 SUFFIXES := 
 # environment
@@ -241,9 +231,9 @@ LANG = C
 # environment
 TERM = xterm-256color
 # environment
-VSCODE_PID = 5162
+VSCODE_PID = 2049
 # variable set hash-table stats:
-# Load=115/1024=11%, Rehash=0, Collisions=20/140=14%
+# Load=110/1024=11%, Rehash=0, Collisions=19/135=14%
 
 # Pattern-specific Variable Values
 
@@ -298,9 +288,9 @@ build:
 	@$(ASM) -fbin ./boot/boot.asm
 	@echo [ASM] boot.asm
 	@$(ASM) -fbin ./boot/kernelLoader.asm
+ 
 	
 	@echo [ASM] xin_pointers.asm
- 
 	@$(ASM) -fbin ./xin_fs/xin_pointers.asm
 	@echo [ASM] entries_table.asm
 	@$(ASM) -fbin ./xin_fs/entries_table.asm
@@ -392,6 +382,6 @@ curses:
 # strcache performance: lookups = 54 / hit rate = 16%
 # hash-table stats:
 # Load=45/8192=1%, Rehash=0, Collisions=1/54=2%
-# Finished Make data base on Thu Jul 21 14:05:02 2022
+# Finished Make data base on Sun Jul 24 13:33:55 2022
 
  

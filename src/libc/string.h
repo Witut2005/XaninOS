@@ -25,12 +25,12 @@ uint32_t strlen(const char* a)
     return length;
 }
 
-char* strcpy(char* x, const char* y)
+char* strcpy(char* dest, const char* src)
 {
-    for(; *y != '\0'; x++, y++)
-        *x = *y;
-    *x = *y;
-    return x;
+    for(; *src != '\0'; dest++, src++)
+        *dest = *src;
+    *dest = *src;
+    return dest;
 }
 
 

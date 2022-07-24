@@ -7,13 +7,12 @@
 
 #define VGA_SCREEN_RESOLUTION 4480
 
-
-uint8_t current_color;
+static uint8_t current_color;
+static uint16_t selected_cell;
 
 void paint_input(xchar x)
 {
 
-    static uint16_t selected_cell;
 
     if((uint32_t)&Screen.cursor[Screen.y][Screen.x] < VGA_TEXT_MEMORY)
     {
@@ -164,6 +163,7 @@ void xin_paint(char* file_name)
         Screen.x = 0x0;
         Screen.y = 0x0;
 
+        selected_cell = Screen.cursor[Screen.y][Screen.x];
 
         while(!app_exited)
             paint_input(inputg());
@@ -187,5 +187,6 @@ void xin_paint(char* file_name)
 
     keyboard_handle = nullptr;
     return;
+    // 11:48:24
 
 }

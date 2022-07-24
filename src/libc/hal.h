@@ -240,5 +240,9 @@ static inline void cmc(void)
     asm("cmc");
 }
 
-
+static inline void cpu_halt(void)
+{
+    asm("cli");
+    asm("hlt");
+}
 

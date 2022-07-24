@@ -10,7 +10,7 @@
 #include <libc/alloc.h>
 #include <libc/string.h>
 
-char command_buffer[50];
+char command_buffer[80];
 char* keyboard_command;
 
 struct CmosTime
@@ -370,11 +370,24 @@ void* realloc(void* ptr,  uint32_t size_old,  uint32_t size_new)
 
 
 
+struct xchar
+{
+    char character;
+    uint8_t scan_code;
+};
 
+typedef struct xchar xchar;
 
+xchar inputg(void)
+{
+    KeyInfo.scan_code = 0x0;
+    while(KeyInfo.scan_code == 0x0);
+    
+    xchar x;
 
+    x.character = KeyInfo.character;
+    x.scan_code = KeyInfo.scan_code;
 
+    return x;
 
-
-
-
+}

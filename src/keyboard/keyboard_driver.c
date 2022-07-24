@@ -39,30 +39,33 @@ void keyboard_driver(uint8_t scanCode)
             break;
         }
 
-        case ARROW_UP            : {KeyInfo.is_up = true;KeyInfo.character = 0x0; break;}
-        case ARROW_UP_RELEASE    : {KeyInfo.is_up = false; break;}
+        case ARROW_UP                     : {KeyInfo.is_up = true;KeyInfo.character = 0x0; break;}
+        case ARROW_UP_RELEASE             : {KeyInfo.is_up = false; break;}
 
-        case ARROW_DOWN          : {KeyInfo.is_down = true; KeyInfo.character = 0x0;break;}
-        case ARROW_DOWN_RELEASE  : {KeyInfo.is_down = false; break;}
+        case ARROW_DOWN                   : {KeyInfo.is_down = true; KeyInfo.character = 0x0;break;}
+        case ARROW_DOWN_RELEASE           : {KeyInfo.is_down = false; break;}
 
-        case ARROW_RIGHT         : {KeyInfo.is_right = true; KeyInfo.character = 0x0;break;}
-        case ARROW_RIGHT_RELEASE : {KeyInfo.is_right = false; break;}
+        case ARROW_RIGHT                  : {KeyInfo.is_right = true; KeyInfo.character = 0x0;break;}
+        case ARROW_RIGHT_RELEASE          : {KeyInfo.is_right = false; break;}
 
-        case ARROW_LEFT          : {KeyInfo.is_left = true; KeyInfo.character = 0x0; break;}
-        case ARROW_LEFT_RELEASE  : {KeyInfo.is_left = false; break;}
-        case PRINT_SCREEN_KEY: 
+        case ARROW_LEFT                   : {KeyInfo.is_left = true; KeyInfo.character = 0x0; break;}
+        case ARROW_LEFT_RELEASE           : {KeyInfo.is_left = false; break;}
+        case PRINT_SCREEN_KEY             : 
         {
-            int x_tmp = Screen.x, y_tmp = Screen.y;
+            int x_tmp                     = Screen.x, y_tmp = Screen.y;
             screenshot(); 
             *(uint32_t*)APIC_EOI_REGISTER = 0x0; 
             eoi_send(); 
-            KeyInfo.character = 0x0; 
-            Screen.x = x_tmp;
-            Screen.y = y_tmp;
+            KeyInfo.character             = 0x0; 
+            Screen.x                      = x_tmp;
+            Screen.y                      = y_tmp;
 
             break;
             
         }
+
+        case L_CTRL                       : {KeyInfo.is_ctrl = true; break;}
+        case L_CTRL_RELEASE               : {KeyInfo.is_ctrl = false; break;}
     
 
     }
