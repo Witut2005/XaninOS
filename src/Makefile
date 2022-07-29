@@ -103,5 +103,3 @@ curses:
 debug:
 	qemu-system-i386 -m 512 -s -S ../bin/xanin.img 
 
-windows:
-	qemu-system-i386.exe -m 512 -hda ..\bin\xanin.img

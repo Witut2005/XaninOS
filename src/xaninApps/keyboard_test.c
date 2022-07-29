@@ -16,7 +16,7 @@ void keyboard_test(void)
         Screen.x = 0;
       }
 
-      if(getscan() == ESC)
+      if(KeyInfo.scan_code == ESC)
         break;
       
 

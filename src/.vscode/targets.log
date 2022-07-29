@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Fri Jul 29 12:06:09 2022
+# Make data base, printed on Fri Jul 29 14:53:53 2022
 
 # Variables
 
@@ -91,7 +91,7 @@ LS_COLORS = rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:
 # environment
 XDG_SESSION_DESKTOP = i3
 # environment
-SSH_AUTH_SOCK = /tmp/ssh-OLvHLlmqzEuj/agent.1890
+SSH_AUTH_SOCK = /tmp/ssh-NqGbhKIs8MiN/agent.1828
 # automatic
 %F = $(notdir $%)
 # environment
@@ -103,7 +103,7 @@ PWD = /home/witut/Desktop/xaninOS/src
 # environment
 XDG_SEAT = seat0
 # environment
-SSH_AGENT_PID = 1953
+SSH_AGENT_PID = 1890
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = i3
 # environment
@@ -121,7 +121,7 @@ VSCODE_CODE_CACHE_PATH = /home/witut/.config/Code/CachedData/3b889b090b5ad5793f5
 # environment
 LOGNAME = witut
 # environment
-APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
 # makefile (from 'Makefile', line 6)
 XANIN_PATH = /home/witut/Desktop/xaninOS/src/
 # automatic
@@ -167,7 +167,7 @@ LIBVIRT_DEFAULT_URI = qemu:///system
 # environment
 LC_TELEPHONE = pl_PL.UTF-8
 # environment
-I3SOCK = /run/user/1000/i3/ipc-socket.1890
+I3SOCK = /run/user/1000/i3/ipc-socket.1828
 # default
 MAKE_COMMAND := make
 # environment
@@ -209,7 +209,7 @@ APPS = ./xaninApps
 # environment
 LC_ALL = C
 # environment
-GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/3f19cd19_432c_4a1d_aaee_ac343e2d4346
+GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/f37f0964_e99f_4778_a576_10449d1443f6
 # automatic
 ^F = $(notdir $^)
 # environment
@@ -233,7 +233,7 @@ LANG = C
 # environment
 TERM = xterm-256color
 # environment
-VSCODE_PID = 2069
+VSCODE_PID = 2037
 # variable set hash-table stats:
 # Load=111/1024=11%, Rehash=0, Collisions=19/136=14%
 
@@ -243,9 +243,9 @@ VSCODE_PID = 2069
 
 # Directories
 
-# . (device 2066, inode 10461214): 35 files, no impossibilities.
+# . (device 2066, inode 10461214): 36 files, no impossibilities.
 
-# 35 files, no impossibilities in 1 directories.
+# 36 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -260,17 +260,10 @@ all:
 #  File does not exist.
 #  File has not been updated.
 
-windows:
-#  Implicit rule search has not been done.
-#  Modification time never checked.
-#  File has not been updated.
-#  recipe to execute (from 'Makefile', line 107):
-	qemu-system-i386.exe -m 512 -hda ..\bin\xanin.img
-
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-07-28 11:51:26.732431292
+#  Last modified 2022-07-29 14:53:39.378205375
 #  File has been updated.
 #  Successfully updated.
 
@@ -307,7 +300,6 @@ build:
 	@$(ASM) -fbin ./libc/enter_real_mode.asm -o ./libc/enter_real_mode
 	@echo [ASM] shutdown.asm
 	@$(ASM) -fbin $(APPS)/shutdown.asm -o $(APPS)/shutdown
- 
 	@echo [ASM] reboot.asm
 	@$(ASM) -fbin $(APPS)/reboot.asm -o $(APPS)/reboot
 	@echo [ASM] syscall_test.asm
@@ -348,6 +340,7 @@ build:
 	@cat ./boot/boot ./libc/enter_real_mode ./xaninApps/xanin_apps_space ./xin_fs/xin_pointers ./xin_fs/entries_table ./boot/kernelLoader kernel.bin > xanin.bin
 	@dd if=xanin.bin of=xanin.img
 	@mv xanin.img -f ../bin
+ 
 	@mv xanin.bin -f ../bin
 
 # Not a target:
@@ -371,7 +364,7 @@ curses:
 	qemu-system-i386 -curses -k en-us -m 512 -hda ../bin/xanin.img 
 
 # files hash-table stats:
-# Load=9/1024=1%, Rehash=0, Collisions=0/19=0%
+# Load=8/1024=1%, Rehash=0, Collisions=0/18=0%
 # VPATH Search Paths
 
 # No 'vpath' search paths.
@@ -381,9 +374,9 @@ curses:
 # strcache buffers: 1 (0) / strings = 45 / storage = 375 B / avg = 8 B
 # current buf: size = 8162 B / used = 375 B / count = 45 / avg = 8 B
 
-# strcache performance: lookups = 54 / hit rate = 16%
+# strcache performance: lookups = 53 / hit rate = 15%
 # hash-table stats:
-# Load=45/8192=1%, Rehash=0, Collisions=1/54=2%
-# Finished Make data base on Fri Jul 29 12:06:09 2022
+# Load=45/8192=1%, Rehash=0, Collisions=1/53=2%
+# Finished Make data base on Fri Jul 29 14:53:53 2022
 
  

@@ -21,21 +21,21 @@ void keyboard_driver(uint8_t scanCode)
 
     switch(KeyInfo.scan_code)
     {
-        case LSHIFT              : {KeyInfo.is_shift = true; KeyInfo.character = '\0'; break;}
-        case LSHIFT_RELEASE      : {KeyInfo.is_shift = false; break;}
-        case BSPC: 
+        case LSHIFT                       : {KeyInfo.is_shift = true; KeyInfo.character = '\0'; break;}
+        case LSHIFT_RELEASE               : {KeyInfo.is_shift = false; break;}
+        case BSPC                         : 
         {
-            KeyInfo.is_bspc = true;
+            KeyInfo.is_bspc               = true;
             
             if(keyboard_handle != nullptr)
                 keyboard_handle();
             break;            
         }
         
-        case BSPC_RELEASE        : {KeyInfo.is_bspc = false; break;}
-        case CAPS                : 
+        case BSPC_RELEASE                 : {KeyInfo.is_bspc = false; break;}
+        case CAPS                         : 
         {
-            KeyInfo.is_caps      = KeyInfo.is_caps  ?  false : true; 
+            KeyInfo.is_caps               = KeyInfo.is_caps  ?  false : true; 
             break;
         }
 
@@ -63,6 +63,9 @@ void keyboard_driver(uint8_t scanCode)
             break;
             
         }
+
+        case L_ALT                        : {KeyInfo.is_alt = true; break;}
+        case L_ALT_RELEASE                : {KeyInfo.is_alt = false; break;}
 
         case L_CTRL                       : {KeyInfo.is_ctrl = true; break;}
         case L_CTRL_RELEASE               : {KeyInfo.is_ctrl = false; break;}

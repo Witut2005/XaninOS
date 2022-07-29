@@ -34,6 +34,7 @@ struct key_info_t
     bool is_ctrl;
     bool is_caps;
     bool is_bspc;
+    bool is_alt;
 
     bool is_left;
     bool is_right;
