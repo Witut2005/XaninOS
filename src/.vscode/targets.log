@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Sun Jul 24 13:33:55 2022
+# Make data base, printed on Fri Jul 29 12:06:09 2022
 
 # Variables
 
@@ -20,8 +20,8 @@ GNUMAKEFLAGS :=
 ?F = $(notdir $?)
 # environment
 DESKTOP_SESSION = i3
-# makefile (from 'Makefile', line 6)
-C_OPTIONS = -O0 -masm=intel -Wno-discarded-qualifiers -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-int-conversion -Wno-unused-function -Wno-div-by-zero -Wno-address-of-packed-member -I /home/witut/Desktop/xaninOS/src/ -c
+# makefile (from 'Makefile', line 8)
+C_OPTIONS = -O0 -masm=intel -Wno-discarded-qualifiers -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-int-conversion -Wno-unused-function -Wno-div-by-zero -Wno-address-of-packed-member -I $(XANIN_PATH) -c
 # default
 .SHELLFLAGS := -c
 # environment
@@ -76,8 +76,8 @@ VSCODE_CWD = /home/witut/Desktop/xaninOS/src
 MAKE_HOST := x86_64-pc-linux-gnu
 # environment
 PATH = /home/witut/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/usr/local/i386elfgcc/bin:/usr/local/i386elfgcc/:/usr/local/bochs/bin/:/usr/sbin/
-# makefile (from 'Makefile', line 7)
-C_COMPILE = -O0 -masm=intel -Wno-discarded-qualifiers -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-int-conversion -Wno-unused-function -Wno-div-by-zero -Wno-address-of-packed-member -I /home/witut/Desktop/xaninOS/src/
+# makefile (from 'Makefile', line 9)
+C_COMPILE = -O0 -masm=intel -Wno-discarded-qualifiers -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-int-conversion -Wno-unused-function -Wno-div-by-zero -Wno-address-of-packed-member -I $(XANIN_PATH) 
 # environment
 GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
 # environment
@@ -91,7 +91,7 @@ LS_COLORS = rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:
 # environment
 XDG_SESSION_DESKTOP = i3
 # environment
-SSH_AUTH_SOCK = /tmp/ssh-CP01mUqpU1Nm/agent.1874
+SSH_AUTH_SOCK = /tmp/ssh-OLvHLlmqzEuj/agent.1890
 # automatic
 %F = $(notdir $%)
 # environment
@@ -103,7 +103,7 @@ PWD = /home/witut/Desktop/xaninOS/src
 # environment
 XDG_SEAT = seat0
 # environment
-SSH_AGENT_PID = 1936
+SSH_AGENT_PID = 1953
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = i3
 # environment
@@ -122,6 +122,8 @@ VSCODE_CODE_CACHE_PATH = /home/witut/.config/Code/CachedData/3b889b090b5ad5793f5
 LOGNAME = witut
 # environment
 APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
+# makefile (from 'Makefile', line 6)
+XANIN_PATH = /home/witut/Desktop/xaninOS/src/
 # automatic
 +F = $(notdir $+)
 # environment
@@ -142,9 +144,9 @@ MAKE = $(MAKE_COMMAND)
 MAKECMDGOALS := all
 # environment
 SHLVL = 1
-# makefile (from 'Makefile', line 8)
-CC_OPTIONS = -O0 -fno-exceptions -lstdc++ -masm=intel -std=c++17 -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Wno-write-strings -Wno-return-type -fno-rtti -fconcepts-ts -I /home/witut/Desktop/xaninOS/src -c
-# makefile (from 'Makefile', line 9)
+# makefile (from 'Makefile', line 10)
+CC_OPTIONS = -O0 -fno-exceptions -lstdc++ -masm=intel -std=c++17 -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Wno-write-strings -Wno-return-type -fno-rtti -fconcepts-ts -I $(XANIN_PATH) -c
+# makefile (from 'Makefile', line 11)
 ASM = nasm
 # makefile (from 'Makefile', line 4)
 CC = i386-elf-g++
@@ -165,7 +167,7 @@ LIBVIRT_DEFAULT_URI = qemu:///system
 # environment
 LC_TELEPHONE = pl_PL.UTF-8
 # environment
-I3SOCK = /run/user/1000/i3/ipc-socket.1874
+I3SOCK = /run/user/1000/i3/ipc-socket.1890
 # default
 MAKE_COMMAND := make
 # environment
@@ -182,7 +184,7 @@ MAKEFLAGS = pqrR
 MFLAGS = -pqrR
 # automatic
 *D = $(patsubst %/,%,$(dir $*))
-# makefile (from 'Makefile', line 12)
+# makefile (from 'Makefile', line 14)
 HANDLERS = ./handlers
 # automatic
 +D = $(patsubst %/,%,$(dir $+))
@@ -202,12 +204,12 @@ LC_NUMERIC = pl_PL.UTF-8
 <F = $(notdir $<)
 # environment
 LC_MEASUREMENT = pl_PL.UTF-8
-# makefile (from 'Makefile', line 10)
+# makefile (from 'Makefile', line 12)
 APPS = ./xaninApps
 # environment
 LC_ALL = C
 # environment
-GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/fcab10fa_5268_4926_84a1_64b0ca644f38
+GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/3f19cd19_432c_4a1d_aaee_ac343e2d4346
 # automatic
 ^F = $(notdir $^)
 # environment
@@ -231,9 +233,9 @@ LANG = C
 # environment
 TERM = xterm-256color
 # environment
-VSCODE_PID = 2049
+VSCODE_PID = 2069
 # variable set hash-table stats:
-# Load=110/1024=11%, Rehash=0, Collisions=19/135=14%
+# Load=111/1024=11%, Rehash=0, Collisions=19/136=14%
 
 # Pattern-specific Variable Values
 
@@ -241,7 +243,7 @@ VSCODE_PID = 2049
 
 # Directories
 
-# . (device 2066, inode 10461212): 35 files, no impossibilities.
+# . (device 2066, inode 10461214): 35 files, no impossibilities.
 
 # 35 files, no impossibilities in 1 directories.
 
@@ -262,13 +264,13 @@ windows:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 105):
+#  recipe to execute (from 'Makefile', line 107):
 	qemu-system-i386.exe -m 512 -hda ..\bin\xanin.img
 
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-07-19 15:17:16.534921542
+#  Last modified 2022-07-28 11:51:26.732431292
 #  File has been updated.
 #  Successfully updated.
 
@@ -276,19 +278,18 @@ debug:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 102):
+#  recipe to execute (from 'Makefile', line 104):
 	qemu-system-i386 -m 512 -s -S ../bin/xanin.img 
 
 build:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 16):
+#  recipe to execute (from 'Makefile', line 18):
 	@echo [ASM] boot.asm
 	@$(ASM) -fbin ./boot/boot.asm
 	@echo [ASM] boot.asm
 	@$(ASM) -fbin ./boot/kernelLoader.asm
- 
 	
 	@echo [ASM] xin_pointers.asm
 	@$(ASM) -fbin ./xin_fs/xin_pointers.asm
@@ -306,6 +307,7 @@ build:
 	@$(ASM) -fbin ./libc/enter_real_mode.asm -o ./libc/enter_real_mode
 	@echo [ASM] shutdown.asm
 	@$(ASM) -fbin $(APPS)/shutdown.asm -o $(APPS)/shutdown
+ 
 	@echo [ASM] reboot.asm
 	@$(ASM) -fbin $(APPS)/reboot.asm -o $(APPS)/reboot
 	@echo [ASM] syscall_test.asm
@@ -358,14 +360,14 @@ run:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 96):
-	qemu-system-i386 -net nic,macaddr=24:22:33:44:55:66 -drive file=../bin/xanin.img,cache=unsafe -m 512
+#  recipe to execute (from 'Makefile', line 98):
+	qemu-system-i386 -smp 2 -net nic,macaddr=24:22:33:44:55:66 -drive file=../bin/xanin.img,cache=unsafe -m 512
 
 curses:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 99):
+#  recipe to execute (from 'Makefile', line 101):
 	qemu-system-i386 -curses -k en-us -m 512 -hda ../bin/xanin.img 
 
 # files hash-table stats:
@@ -382,6 +384,6 @@ curses:
 # strcache performance: lookups = 54 / hit rate = 16%
 # hash-table stats:
 # Load=45/8192=1%, Rehash=0, Collisions=1/54=2%
-# Finished Make data base on Sun Jul 24 13:33:55 2022
+# Finished Make data base on Fri Jul 29 12:06:09 2022
 
  

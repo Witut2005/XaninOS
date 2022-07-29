@@ -95,7 +95,7 @@ build:
 
 
 run:
-	qemu-system-i386 -net nic,macaddr=24:22:33:44:55:66 -drive file=../bin/xanin.img,cache=unsafe -m 512
+	qemu-system-i386 -smp 2 -net nic,macaddr=24:22:33:44:55:66 -drive file=../bin/xanin.img,cache=unsafe -m 512
 
 curses:
 	qemu-system-i386 -curses -k en-us -m 512 -hda ../bin/xanin.img 

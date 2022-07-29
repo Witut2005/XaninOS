@@ -1,5 +1,5 @@
 
-#define HELP APP 'y'
+#define HELP_APP 'y'
 #define SHUTDOWN_APP 'y'
 #define REBOOT_APP 'y'
 #define DEVICE_INFO_APP 'y'

@@ -165,14 +165,14 @@ void _start(void)
                                     << APIC_VECTOR | 0x0 << APIC_DELIVERY_MODE | 0x0 << APIC_DESTINATION_MODE 
                                         | 0x0 << APIC_INT_PIN_POLARITY | 0x0 << APIC_INT_MASK, ioapic_id_get());
 
-    xprintf("\n----------------------------\n");
+    xprintf("\n%z----------------------------\n", set_output_color(black, green));
     xprintf("NIC interrupt line: 0x%x", (apic_nic_redirect != nullptr ? apic_nic_redirect->global_system_int_table + APIC_IRQ_BASE : PIC_NIC_VECTOR));
 
     xanin_info_ptr = xanin_information_block_get();
     
     // com_port_init(0x00C0);
 
-    xprintf("\n----------------------------\n");
+    xprintf("\n%z----------------------------\n", set_output_color(black, green));
     xprintf("Com port status: 0x%x\n", com_status());
 
     /*
@@ -183,6 +183,19 @@ void _start(void)
 
     bootloader_program_buffer = (uint8_t*) malloc(sizeof(uint8_t) * SECTOR_SIZE); //must be before xin_init_fs
     memcpy(bootloader_program_buffer, (uint8_t*)0x7C00, SECTOR_SIZE);
+
+
+    xprintf("Press ENTER to continue...\n");
+
+    static int number_of_cores;
+
+    for(int i = 0; i < 10; i++)
+    {
+        if(madt_entry_type0_ptr[i] != nullptr)
+            number_of_cores++;
+    }
+
+    xprintf("Number of cores: %d\n", number_of_cores);
 
     while(KeyInfo.scan_code != ENTER);
 
