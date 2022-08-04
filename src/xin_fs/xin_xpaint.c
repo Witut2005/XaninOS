@@ -93,9 +93,7 @@ void xpaint_input_color(xchar x)
     }
 
     if(x.scan_code == F4_KEY)
-    {
         app_exited = true;
-    }
 
     else if(x.scan_code == ARROW_UP)
     {

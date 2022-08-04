@@ -131,10 +131,10 @@ void Intel8254xDriver::init()
     this->write(nic::TCTL, this->read(nic::TCTL) | nic::tctl::EN | nic::tctl::PSP);
 
     /* enabling interrupts */
-    //this->write(nic::IMS, this->read(nic::IMS) | nic::ims::RXT | nic::ims::RXO | 
+    // this->write(nic::IMS, this->read(nic::IMS) | nic::ims::RXT | nic::ims::RXO | 
     //               nic::ims::RXDMT | nic::ims::RXSEQ | nic::ims::LSC);
     
-    // this->write(nic::IMS, 0xFFFFFFFF);
+    this->write(nic::IMS, 0x1F6DC);
 
 
 }
@@ -169,14 +169,21 @@ uint16_t Intel8254xDriver::vendorid_get()
 
 void Intel8254xDriver::receive_packet(void)
 {
+    while(this->receive_buffer[this->read(nic::RDT)].status & 0x1)
+    {
+        uint8_t* packet = (uint8_t*)this->receive_buffer[this->read(nic::RDT)].address_low;
+        uint16_t packet_lenght = this->receive_buffer[this->read(nic::RDT)].length;
+        xprintf("0x%x 0x%x", (uint32_t)packet, packet_lenght);
+    }
 
 }
 
-void Intel8254xDriver::send_packet(uint32_t address_high, uint32_t address_low, uint16_t length)
+void Intel8254xDriver::send_packet(uint32_t address, uint16_t length)
 {
-    this->transmit_buffer[this->read(nic::TDT)].address_low = address_low;
-    this->transmit_buffer[this->read(nic::TDT)].address_high = address_high;
+    this->transmit_buffer[this->read(nic::TDT)].address_low = address;
+    this->transmit_buffer[this->read(nic::TDT)].address_high = 0x0;
     this->transmit_buffer[this->read(nic::TDT)].cmd = 0xF ^ 0x4;
+    this->transmit_buffer[this->read(nic::TDT)].length = length;
 
     uint32_t tdt_old = this->read(nic::TDT);
     this->write(nic::TDT, (this->read(nic::TDT) + 1) % INTEL_8254X_DESCRIPTORS);

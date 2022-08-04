@@ -37,11 +37,6 @@ int 10h
 int13_read:
 
 
-mov ax, 0x0
-mov ds, ax
-mov bx, 0x35
-mov cx, 0x3
-
 reading_disk:
 
 
@@ -133,10 +128,6 @@ jmp_ker_load:
     mov word [0x0], 0x4242
 
 jmp word 0x2000:0x0000
-
-idt_real:
-dw 0x3ff
-dd 0x0
 
 
 vesa_mode: dw 0x0

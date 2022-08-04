@@ -184,7 +184,7 @@ class Intel8254xDriver
     void multicast_table_array_clear(void);
     uint32_t receive_buffer_get(void);
     void receive_packet(void);
-    void send_packet(uint32_t address_high, uint32_t address_low, uint16_t length);
+    void send_packet(uint32_t address_low, uint16_t length);
     void interrupt_handler(void);
 
 

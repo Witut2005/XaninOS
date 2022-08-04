@@ -9,7 +9,7 @@ parser.add_argument('-src', help='XaninOS image', required=True)
 
 args = parser.parse_args()
 
-command = 'dd if=' + str(args.dest) + ' ' + 'of=' + str(args.src)
+command = 'dd of=' + str(args.dest) + ' ' + 'if=' + str(args.src)
 
 print(command)
 os.system(command)

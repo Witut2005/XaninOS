@@ -168,7 +168,7 @@ void _start(void)
     xprintf("\n%z----------------------------\n", set_output_color(black, green));
     xprintf("NIC interrupt line: 0x%x", (apic_nic_redirect != nullptr ? apic_nic_redirect->global_system_int_table + APIC_IRQ_BASE : PIC_NIC_VECTOR));
 
-    xanin_info_ptr = xanin_information_block_get();
+    // xanin_info_ptr = xanin_information_block_get();
     
     // com_port_init(0x00C0);
 
