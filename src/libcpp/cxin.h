@@ -11,7 +11,7 @@ extern "C"
 
     size_t read(xin_entry* entry, void* buf, size_t count);
     size_t write(xin_entry* entry, void* buf, size_t count);
-    void create_file(char* entry_name);
+    int create_file(char* entry_name);
 
     }
 

@@ -82,7 +82,17 @@ xin_entry* xin_get_file_pf(char* entry_path) // pf = parent folder
     for(int j = 0; j <= i; j++)
         parent_folder[j] = entry_path[j];
 
-    return xin_find_entry(parent_folder);
+    free(parent_folder);
+
+    if(xin_find_entry(parent_folder) != nullptr)
+        return xin_find_entry(parent_folder);   
+
+    if(xin_find_entry(xin_get_current_path(parent_folder)) != nullptr)    
+        xin_find_entry(xin_get_current_path(parent_folder)); 
+
+    return nullptr;
+
+
 
 }
 
@@ -202,7 +212,7 @@ void xin_file_create_at_address(char *path, uint8_t creation_date, uint8_t creat
 
     
 }
-// 23:05:22
+
 void xin_folder_create(char *path, uint8_t creation_date, uint8_t creation_time, uint16_t os_specific,
                        uint8_t modification_date, uint8_t modification_time, uint8_t permissions)
 {
@@ -232,7 +242,9 @@ xin_entry *xin_init_fs(void)
     xin_file_create_at_address("/shutdown.bin",             0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x81,0x1,    XIN_FILE, 6);
     //xin_file_create_at_address("/elf.bin",                  0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x82,0x1,    XIN_FILE, 8);
     xin_file_create_at_address("/syscall_test.bin",         0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x82,0x1,    XIN_FILE, 7);
-    xin_folder_create("/screenshot/",                       0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX);
+    
+    if(xin_find_entry("/screenshot/") == nullptr)
+        xin_folder_create("/screenshot/",                       0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX);
 
     uint32_t k = 0;
 
@@ -290,7 +302,7 @@ void create_file_kernel(char* entry_name)
 }
 
 
-void create_file(char* entry_name)
+int create_file(char* entry_name)
 {
 
     bool only_entry_name = true;
@@ -314,9 +326,9 @@ void create_file(char* entry_name)
 
         if(xin_find_entry(entry_name) != nullptr)
         {
-            xprintf("%zFILE WITH THIS NAME EXISTS\n", stderr);
+            // xprintf("%zFILE WITH THIS NAME EXISTS\n", stderr);
             // while(getscan() != ENTER);
-            return;
+            return XIN_FILE_EXISTS;
         }
 
         set_string(entry->entry_path, path);
@@ -327,9 +339,9 @@ void create_file(char* entry_name)
     {
         if(xin_find_entry(entry_name) != nullptr)
         {
-            xprintf("%zFILE WITH THIS NAME EXISTS\n", stderr);
+            // xprintf("%zFILE WITH THIS NAME EXISTS\n", stderr);
             // while(getscan() != ENTER);
-            return;
+            return XIN_FILE_EXISTS;
         }
 
         set_string(entry->entry_path, entry_name);
@@ -338,9 +350,9 @@ void create_file(char* entry_name)
     else
     {
         
-        xprintf("%zFILE CREATE FAILURE\n", stderr);
+        // xprintf("%zFILE CREATE FAILURE\n", stderr);
         // while(getscan() != ENTER);
-        return;
+        return XANIN_ERROR;
     }
     /* write entry to xin entry pointers table */
     uint8_t *write_entry = xin_find_free_pointer();
@@ -377,9 +389,11 @@ void create_file(char* entry_name)
         disk_flush(ATA_FIRST_BUS, ATA_MASTER);
     }
 
+    return XANIN_OK;
+
 }
 
-void xin_create_directory(char* entry_name)
+int xin_create_directory(char* entry_name)
 {
 
     bool only_entry_name = true;
@@ -388,17 +402,17 @@ void xin_create_directory(char* entry_name)
     
     if(entry_name[0] == '/' && entry_name[1] == '/')
     {
-        xprintf("%zAre you serious? ://", stderr);
+        // xprintf("%zAre you serious? ://", stderr);
         // while(getscan() != ENTER);
-        return;
+        return XIN_FILE_EXISTS;
     }
 
     
     if(entry_name[strlen(entry_name) - 1] != '/')
     {
-        xprintf("%zDIRECTORY NAME MUST BE ENDED WITH / CHAR\n", stderr);
+        // xprintf("%zDIRECTORY NAME MUST BE ENDED WITH / CHAR\n", stderr);
         // while(getscan() != ENTER);
-        return;
+        return XIN_BAD_FOLDER_NAME;
     }
 
     entry_name[strlen(entry_name) - 1] = ' ';
@@ -423,9 +437,9 @@ void xin_create_directory(char* entry_name)
 
         if(xin_find_entry(entry_name) != nullptr)
         {
-            xprintf("%zFILE WITH THIS NAME EXISTS\n", stderr);
+            // xprintf("%zFILE WITH THIS NAME EXISTS\n", stderr);
             // while(getscan() != ENTER);
-            return;
+            return XIN_FILE_EXISTS;
         }
 
         set_string(entry->entry_path, path);
@@ -436,9 +450,9 @@ void xin_create_directory(char* entry_name)
     {
         if(xin_find_entry(entry_name) != nullptr)
         {
-            xprintf("%zFILE WITH THIS NAME EXISTS\n", stderr);
+            // xprintf("%zFILE WITH THIS NAME EXISTS\n", stderr);
             // while(getscan() != ENTER);
-            return;
+            return XIN_FILE_EXISTS;
         }
 
         set_string(entry->entry_path, entry_name);
@@ -447,9 +461,9 @@ void xin_create_directory(char* entry_name)
     else
     {
         
-        xprintf("%zFILE CREATE FAILURE\n", stderr);
+        // xprintf("%zFILE CREATE FAILURE\n", stderr);
         // while(getscan() != ENTER);
-        return;
+        return XANIN_ERROR;
     }
 
     /* write entry to xin entry date table */
@@ -465,9 +479,11 @@ void xin_create_directory(char* entry_name)
     entry->entry_size = 0x0;
     entry->entry_type = XIN_DIRECTORY;
 
+    return XANIN_OK;
+
 }
 
-bool xin_remove_entry(char *entry_name)
+__STATUS sys_xin_remove_entry(char *entry_name)
 {
 
     char *entry_to_delete = (char *)xin_find_entry(entry_name);
@@ -476,12 +492,12 @@ bool xin_remove_entry(char *entry_name)
 
     if (entry_to_delete == nullptr)
     {
-        xprintf("%zNO SUCH DIRECTORY\n", set_output_color(red, white));
-        while (KeyInfo.scan_code != ENTER);
-        return false;
+        // xprintf("%zNO SUCH DIRECTORY\n", set_output_color(red, white));
+        // while (KeyInfo.scan_code != ENTER);
+        return XIN_ENTRY_NOT_FOUND;
     }
 
-    xprintf("starting addr: 0x%x\n", entry_data->starting_sector + XIN_ENTRY_POINTERS);
+    // xprintf("starting addr: 0x%x\n", entry_data->starting_sector + XIN_ENTRY_POINTERS);
 
     if (entry_data->entry_type == XIN_FILE)
     {
@@ -494,7 +510,7 @@ bool xin_remove_entry(char *entry_name)
     for (int i = 0; i < sizeof(xin_entry); i++)
         entry_to_delete[i] = '\0';
 
-    return true;
+    return XANIN_OK;
 
 
 }
@@ -632,15 +648,17 @@ xin_entry *fopen(char *file_path, const char *mode)
     
 
 
-void remove_directory(char* folder_name)
+__STATUS remove_directory(char* folder_name)
 {
 
-    screen_clear();
 
     xin_entry* folder = xin_find_entry(folder_name);
 
     if(folder == nullptr)
+    {
         xprintf("%zNO SUCH DIRECTORY\n", set_output_color(red, white));
+        return XIN_ENTRY_NOT_FOUND;
+    }
 
     char name[40];
     uint32_t name_length;

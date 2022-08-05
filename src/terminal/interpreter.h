@@ -159,6 +159,7 @@ extern void screenshot(void);
 #include <xaninApps/nic_info.c>
 #include <gyn_cl/gyn.c>
 #include <xin_fs/xin_xpaint.c>
+#include <xin_fs/xin_apps.c>
 
 //extern void xagame_test(void);
 //extern void assembler(char* file_name);

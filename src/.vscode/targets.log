@@ -6,7 +6,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Thu Aug  4 07:05:14 2022
+# Make data base, printed on Thu Aug  4 23:03:44 2022
 
 # Variables
 
@@ -36,8 +36,8 @@ C = i386-elf-gcc
 XAUTHORITY = /run/user/1000/gdm/Xauthority
 # environment
 GDMSESSION = i3
-# environment
-XMODIFIERS = @im=ibus
+# default
+MAKE_VERSION := 4.2.1
 # makefile
 CURDIR := /home/witut/Desktop/xaninOS/src
 # makefile
@@ -49,7 +49,7 @@ VSCODE_NLS_CONFIG = {"locale":"en-us","availableLanguages":{},"_languagePackSupp
 # environment
 _ = /usr/bin/code
 # environment
-XDG_CONFIG_DIRS = /etc/xdg/xdg-i3:/etc/xdg/xdg-ubuntu:/etc/xdg
+XDG_CONFIG_DIRS = /etc/xdg/xdg-i3:/etc/xdg
 # makefile (from 'Makefile', line 1)
 MAKEFILE_LIST :=  Makefile
 # automatic
@@ -61,7 +61,7 @@ MAKELEVEL := 0
 # environment
 MANDATORY_PATH = /usr/share/gconf/i3.mandatory.path
 # environment
-XDG_DATA_DIRS = /usr/share/i3:/usr/share/ubuntu:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop
+XDG_DATA_DIRS = /usr/share/i3:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop
 # environment
 DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus
 # environment
@@ -79,11 +79,7 @@ C_COMPILE = -O0 -masm=intel -Wno-discarded-qualifiers -Wno-builtin-declaration-m
 # environment
 GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
 # environment
-SESSION_MANAGER = local/linux:@/tmp/.ICE-unix/2139,unix/linux:/tmp/.ICE-unix/2139
-# environment
 XDG_RUNTIME_DIR = /run/user/1000
-# environment
-XDG_MENU_PREFIX = gnome-
 # environment
 ELECTRON_RUN_AS_NODE = 1
 # default
@@ -93,7 +89,7 @@ LS_COLORS = rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:
 # environment
 XDG_SESSION_DESKTOP = i3
 # environment
-SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
+SSH_AUTH_SOCK = /tmp/ssh-yzaAUzFHYti5/agent.1820
 # automatic
 %F = $(notdir $%)
 # environment
@@ -105,7 +101,7 @@ PWD = /home/witut/Desktop/xaninOS/src
 # environment
 XDG_SEAT = seat0
 # environment
-SSH_AGENT_PID = 2064
+SSH_AGENT_PID = 1882
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = i3
 # environment
@@ -123,7 +119,7 @@ VSCODE_CODE_CACHE_PATH = /home/witut/.config/Code/CachedData/3b889b090b5ad5793f5
 # environment
 LOGNAME = witut
 # environment
-APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
 # makefile (from 'Makefile', line 6)
 XANIN_PATH = /home/witut/Desktop/xaninOS/src/
 # automatic
@@ -132,10 +128,6 @@ XANIN_PATH = /home/witut/Desktop/xaninOS/src/
 ELECTRON_NO_ATTACH_CONSOLE = 1
 # environment
 VSCODE_HANDLES_UNCAUGHT_ERRORS = true
-# default
-MAKE_VERSION := 4.2.1
-# environment
-GNOME_DESKTOP_SESSION_ID = this-is-deprecated
 # automatic
 ^D = $(patsubst %/,%,$(dir $^))
 # environment
@@ -149,8 +141,6 @@ MAKE = $(MAKE_COMMAND)
 # default
 MAKECMDGOALS := all
 # environment
-QT_IM_MODULE = ibus
-# environment
 SHLVL = 1
 # makefile (from 'Makefile', line 10)
 CC_OPTIONS = -O0 -fno-exceptions -lstdc++ -masm=intel -std=c++17 -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Wno-write-strings -Wno-return-type -fno-rtti -fconcepts-ts -I $(XANIN_PATH) -c
@@ -159,7 +149,7 @@ ASM = nasm
 # makefile (from 'Makefile', line 4)
 CC = i386-elf-g++
 # environment
-XDG_SESSION_ID = 4
+XDG_SESSION_ID = 2
 # environment
 USER = witut
 # environment
@@ -175,7 +165,7 @@ LIBVIRT_DEFAULT_URI = qemu:///system
 # environment
 LC_TELEPHONE = pl_PL.UTF-8
 # environment
-I3SOCK = /run/user/1000/i3/ipc-socket.3637
+I3SOCK = /run/user/1000/i3/ipc-socket.1820
 # default
 MAKE_COMMAND := make
 # environment
@@ -217,11 +207,11 @@ APPS = ./xaninApps
 # environment
 LC_ALL = C
 # environment
-GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/499ece98_ebf0_46e7_a721_bbc4781382c1
+GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/d374b298_9b91_4398_bee5_ec626903bb19
 # automatic
 ^F = $(notdir $^)
 # environment
-GNOME_TERMINAL_SERVICE = :1.13
+GNOME_TERMINAL_SERVICE = :1.24
 # default
 SUFFIXES := 
 # environment
@@ -241,9 +231,9 @@ LANG = C
 # environment
 TERM = xterm-256color
 # environment
-VSCODE_PID = 6284
+VSCODE_PID = 2153
 # variable set hash-table stats:
-# Load=116/1024=11%, Rehash=0, Collisions=20/141=14%
+# Load=111/1024=11%, Rehash=0, Collisions=20/137=15%
 
 # Pattern-specific Variable Values
 
@@ -251,9 +241,9 @@ VSCODE_PID = 6284
 
 # Directories
 
-# . (device 2066, inode 10461214): 37 files, no impossibilities.
+# . (device 2066, inode 10461214): 39 files, no impossibilities.
 
-# 37 files, no impossibilities in 1 directories.
+# 39 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -271,7 +261,7 @@ all:
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-08-03 20:18:33.232201236
+#  Last modified 2022-08-04 14:21:20.646170504
 #  File has been updated.
 #  Successfully updated.
 
@@ -279,7 +269,7 @@ debug:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 105):
+#  recipe to execute (from 'Makefile', line 110):
 	qemu-system-i386 -m 512 -s -S ../bin/xanin.img 
 
 build:
@@ -297,9 +287,6 @@ build:
 	@echo [ASM] entries_table.asm
 	@$(ASM) -fbin ./xin_fs/entries_table.asm
 	
- 
-make: *** No rule to make target 'all'.  Stop.
-
 	@echo [ASM] keyboard.asm
 	@$(ASM) -f elf32 ./handlers/keyboard.asm -o ./handlers/keyboard.o
 	@# echo [ASM] syscall.asm
@@ -315,6 +302,9 @@ make: *** No rule to make target 'all'.  Stop.
 	@$(ASM) -fbin $(APPS)/reboot.asm -o $(APPS)/reboot
 	@echo [ASM] syscall_test.asm
 	@$(ASM) -fbin $(APPS)/syscall_test.asm -o  $(APPS)/syscall_test -w-other
+ 
+make: *** No rule to make target 'all'.  Stop.
+
 	@echo [ASM] xanin_apps_space.asm
 	@$(ASM) -fbin $(APPS)/xanin_apps_space.asm -o $(APPS)/xanin_apps_space
 	@echo [CC] chip8.cpp
@@ -348,8 +338,8 @@ make: *** No rule to make target 'all'.  Stop.
 	./xaninApps/screenshot.o -o kernel.bin
 	@cat ./xaninApps/shutdown $(APPS)/current_app $(APPS)/syscall_test > ./xaninApps/xanin_external_apps
 	@dd if=./xaninApps/xanin_external_apps of=./xaninApps/xanin_apps_space bs=512 count=16 conv=notrunc
-	@cat ~/Desktop/yan-bootloader/base.bin ./libc/enter_real_mode ./xaninApps/xanin_apps_space ./xin_fs/xin_pointers ./xin_fs/entries_table ./boot/kernelLoader kernel.bin > xanin.bin
-	@# @cat ./boot/boot ./libc/enter_real_mode ./xaninApps/xanin_apps_space ./xin_fs/xin_pointers ./xin_fs/entries_table ./boot/kernelLoader kernel.bin > xanin.bin
+	
+	@cat ./yan-bootloader/yan.bin ./libc/enter_real_mode ./xaninApps/xanin_apps_space ./xin_fs/xin_pointers ./xin_fs/entries_table ./boot/kernelLoader kernel.bin > xanin.bin
 	@dd if=xanin.bin of=xanin.img
 	@mv xanin.img -f ../bin
 	@mv xanin.bin -f ../bin
@@ -364,14 +354,14 @@ run:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 99):
+#  recipe to execute (from 'Makefile', line 104):
 	qemu-system-i386 -smp 2 -net nic,macaddr=24:22:33:44:55:66 -drive file=../bin/xanin.img,cache=unsafe -m 512
 
 curses:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 102):
+#  recipe to execute (from 'Makefile', line 107):
 	qemu-system-i386 -curses -k en-us -m 512 -hda ../bin/xanin.img 
 
 # files hash-table stats:
@@ -382,12 +372,12 @@ curses:
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 46 / storage = 385 B / avg = 8 B
-# current buf: size = 8162 B / used = 385 B / count = 46 / avg = 8 B
+# strcache buffers: 1 (0) / strings = 48 / storage = 403 B / avg = 8 B
+# current buf: size = 8162 B / used = 403 B / count = 48 / avg = 8 B
 
-# strcache performance: lookups = 54 / hit rate = 14%
+# strcache performance: lookups = 56 / hit rate = 14%
 # hash-table stats:
-# Load=46/8192=1%, Rehash=0, Collisions=1/54=2%
-# Finished Make data base on Thu Aug  4 07:05:14 2022
+# Load=48/8192=1%, Rehash=0, Collisions=1/56=2%
+# Finished Make data base on Thu Aug  4 23:03:44 2022
 
  

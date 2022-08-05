@@ -88,7 +88,7 @@ build:
 	@dd if=./xaninApps/xanin_external_apps of=./xaninApps/xanin_apps_space bs=512 count=16 conv=notrunc
 	
 ifeq ($(boot), legacy)
-	@cat ./boot/boot ./libc/enter_real_mode ./xaninApps/xanin_apps_space ./xin_fs/xin_pointers ./xin_fs/entries_table ./boot/kernelLoader kernel.bin > xanin.bin
+	@cat ./boot/boot ./libc/enter_real_mode ./xaninApps/xanin_apps_space ./xaninApps/blank_sector ./xin_fs/xin_pointers ./xin_fs/entries_table ./boot/kernelLoader kernel.bin > xanin.bin
 else
 	@cat ./yan-bootloader/yan.bin ./libc/enter_real_mode ./xaninApps/xanin_apps_space ./xin_fs/xin_pointers ./xin_fs/entries_table ./boot/kernelLoader kernel.bin > xanin.bin
 endif

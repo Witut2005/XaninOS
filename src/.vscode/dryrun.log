@@ -33,7 +33,6 @@ i386-elf-g++ -O0 -fno-exceptions -lstdc++ -masm=intel -std=c++17 -Wno-builtin-de
 echo [CC] cpp_test.cpp
 i386-elf-g++ -O0 -fno-exceptions -lstdc++ -masm=intel -std=c++17 -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Wno-write-strings -Wno-return-type -fno-rtti -fconcepts-ts -I /home/witut/Desktop/xaninOS/src/ -c ./test/cpp_test2.cpp -o ./test/cpp_test2.o
 echo [CC] com.cpp
- 
 i386-elf-g++ -O0 -fno-exceptions -lstdc++ -masm=intel -std=c++17 -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Wno-write-strings -Wno-return-type -fno-rtti -fconcepts-ts -I /home/witut/Desktop/xaninOS/src/ -c ./devices/COM/com.cpp -o ./devices/COM/ComPort.o
 echo [CC] ioapic.cpp
 i386-elf-g++ -O0 -fno-exceptions -lstdc++ -masm=intel -std=c++17 -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Wno-write-strings -Wno-return-type -fno-rtti -fconcepts-ts -I /home/witut/Desktop/xaninOS/src/ -c ./devices/IOAPIC/ioapic.cpp -o ./devices/IOAPIC/ioapic.o
@@ -55,8 +54,7 @@ i386-elf-gcc -O0 -masm=intel -Wno-discarded-qualifiers -Wno-builtin-declaration-
 ./xaninApps/screenshot.o -o kernel.bin
 cat ./xaninApps/shutdown ./xaninApps/current_app ./xaninApps/syscall_test > ./xaninApps/xanin_external_apps
 dd if=./xaninApps/xanin_external_apps of=./xaninApps/xanin_apps_space bs=512 count=16 conv=notrunc
-cat ~/Desktop/yan-bootloader/base.bin ./libc/enter_real_mode ./xaninApps/xanin_apps_space ./xin_fs/xin_pointers ./xin_fs/entries_table ./boot/kernelLoader kernel.bin > xanin.bin
-# @cat ./boot/boot ./libc/enter_real_mode ./xaninApps/xanin_apps_space ./xin_fs/xin_pointers ./xin_fs/entries_table ./boot/kernelLoader kernel.bin > xanin.bin
+cat ./yan-bootloader/yan.bin ./libc/enter_real_mode ./xaninApps/xanin_apps_space ./xin_fs/xin_pointers ./xin_fs/entries_table ./boot/kernelLoader kernel.bin > xanin.bin
 dd if=xanin.bin of=xanin.img
 mv xanin.img -f ../bin
 mv xanin.bin -f ../bin
