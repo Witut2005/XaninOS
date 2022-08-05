@@ -136,7 +136,7 @@ void scan(void)
         while(KeyInfo.scan_code != ENTER);
     }
 
-    XANIN_ADD_APP_ENTRY1("pf", xin_get_file_pf_test)
+    // XANIN_ADD_APP_ENTRY1("pf", xin_get_file_pf_test)
 
     #ifdef XIN_MOVE_APP
     XANIN_ADD_APP_ENTRY2("move", xin_move_entry)
@@ -180,6 +180,9 @@ void scan(void)
     XANIN_ADD_APP_ENTRY0("screenshot", screenshot)
 
     XANIN_ADD_APP_ENTRY1("xpaint", xin_xpaint)
+
+    XANIN_ADD_APP_ENTRY0("xgm", xagame_test)
+    XANIN_ADD_APP_ENTRY0("tetris", tetris)
 
     else
     {

@@ -1,11 +1,6 @@
 
 #pragma once
 
-#include <libc/stdlibx.h>
-
-uint32_t cpu_mhz = 0x0;
-uint32_t cpu_khz = 0x0;
-
 
 struct time_t
 {
@@ -24,21 +19,8 @@ struct time_t
 
 typedef struct time_t time_t;
 
-void sleep(float seconds)
-{
-    float now = pit_time;
+extern uint32_t cpu_mhz;
+extern uint32_t cpu_khz;
 
-    while(pit_time < now + seconds);
-
-}
-
-void msleep(float miliseconds)
-{
-
-    miliseconds = miliseconds / 1000;
-
-    float now = pit_time;
-
-    while(pit_time < now + miliseconds);
-
-}
+void sleep(float seconds);
+void msleep(float miliseconds);

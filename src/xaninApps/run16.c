@@ -2,7 +2,7 @@
 #pragma once
 
 #include <libc/stdiox.h>
-#include <xin_fs/xin.c>
+#include <xin_fs/xin.h>
 #include <libc/memory.h>
 #include <terminal/interpreter.h>
 #include <libc/string.h>

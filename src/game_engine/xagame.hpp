@@ -1,6 +1,7 @@
 
 #include <stdint.h>
-#include <libc/colors.h>
+
+#define VGA_TEXT_MEMORY 0xb8000
 
 /* USE IN CPP FILES NOT IN C BRUH */
 
@@ -19,6 +20,62 @@ extern screen_t Screen;
 
 namespace xgm
 {
+    namespace color
+    {
+
+
+    enum ColorAttributes
+    {
+        black_text = 0x0, 
+        black = 0x00,
+
+        blue_text = 0x1,
+        blue = 0x10,
+        
+        green_text = 0x2,
+        green = 0x2,
+
+        cyan_text = 0x3,
+        cyan = 0x30,
+
+        red_text = 0x4,
+        red = 0x40,
+
+        magenta_text = 0x5,
+        magenta = 0x50,
+
+        brown_text = 0x6,
+        brown = 0x60,
+
+        lgray_text = 0x7,
+        lgray = 0x70,
+
+        lblue_text = 0x8,
+        lblue = 0x80,
+
+        dgray_text = 0x9,
+        dgray = 0x90,
+
+        lgreen_text = 0xA,
+        lgreen = 0xA0,
+
+        lcyan_text = 0xB,
+        lcyan = 0xB0,
+
+        lred_text = 0xC,
+        lred = 0xC0,
+
+        lmagenta_text = 0xD,
+        lmagenta = 0xD0,
+
+        yellow_text = 0xE,
+        yellow = 0xE0,
+
+        white_text = 0xF,
+        white = 0xF0
+
+    };
+    }
 
 class GeometryObject
 {    
@@ -50,23 +107,15 @@ class rectangle : public GeometryObject
         bool is_destroyed;
 };
 
-extern "C" void __cxa_pure_virtual()
+
+class ScreenManager
 {
-    return;
-}
+    private:
+        uint8_t* screen_pointer;
+    public:
+        ScreenManager(void);
+        uint8_t& operator [](uint32_t index);
+};
 
-}
-
-/*
-extern "C" void class_test(void)
-{
-
-    struct GeometryObject* x;
-    struct rectangle c;
-
-
-    x = &c;
-    x->create(10,10, 20,5, lred);
 
 }
-*/

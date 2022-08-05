@@ -1,7 +1,7 @@
 
 
 #include <libc/stdiox.h>
-#include <xin_fs/xin.c>
+#include <xin_fs/xin.h>
 #include <libc/memory.h>
 #include <libc/string.h>
 

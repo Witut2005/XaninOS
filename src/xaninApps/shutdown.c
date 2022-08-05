@@ -4,7 +4,7 @@
 #include <xin_fs/xanin_fs_saver.c>
 #include <xaninApps/execute_addr.c>
 #include <devices/HARD_DISK/disk.h>
-#include <xin_fs/xin.c>
+#include <xin_fs/xin.h>
 
 
 void shutdown(void)

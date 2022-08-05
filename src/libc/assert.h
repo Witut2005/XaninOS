@@ -1,7 +1,7 @@
 
 #include <libc/stdiox.h>
 
-void assert_func(bool condition, char* file_name, uint32_t line)
+static inline void assert_func(bool condition, char* file_name, uint32_t line)
 {
     if(!condition)
     {

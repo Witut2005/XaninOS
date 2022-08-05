@@ -1,3 +1,6 @@
+
+#pragma once
+
 enum special_keys
 {
   BSPC = 0xE,

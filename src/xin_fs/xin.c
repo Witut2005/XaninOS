@@ -1,15 +1,23 @@
 
-#pragma once
 
 #include <xin_fs/xin.h>
 #include <libc/memory.h>
 #include <stddef.h>
 #include <devices/HARD_DISK/disk.h>
+#include <xin_fs/xin_entry.h>
+#include <libc/string.h>
+#include <libc/stdlibx.h>
+#include <libc/colors.h>
+#include <terminal/vty.h>
+#include <keyboard/scan_codes.h>
 
 static uint8_t enter_real_mode_buffer[512];
 static uint8_t shutdown_program_buffer[512];
 uint8_t* bootloader_program_buffer;
 
+
+char xin_current_path[38] = {'\0'};
+char xin_current_directory[38] = {'\0'};
 
 char *xin_set_current_directory(char *directory)
 {
@@ -47,7 +55,7 @@ char *xin_get_current_path(char *file_name)
 xin_entry *xin_find_entry(char *entry_name)
 {
 
-    for (char *i = XIN_ENTRY_TABLE; (uint32_t)i < XIN_ENTRY_TABLE + (SECTOR_SIZE * 8); i += 32)
+    for (char *i = (char*)XIN_ENTRY_TABLE; (uint32_t)i < XIN_ENTRY_TABLE + (SECTOR_SIZE * 8); i += 32)
     {
         if (strcmp(entry_name, i))
             return (xin_entry *)i;
@@ -58,7 +66,7 @@ xin_entry *xin_find_entry(char *entry_name)
     if(strlen(entry_name) > 40)
         return nullptr;
 
-    for (char *i = XIN_ENTRY_TABLE; (uint32_t)i < XIN_ENTRY_TABLE + (SECTOR_SIZE * 8); i += 32)
+    for (char *i = (char*)XIN_ENTRY_TABLE; (uint32_t)i < XIN_ENTRY_TABLE + (SECTOR_SIZE * 8); i += 32)
     {
         if (strcmp(entry_name, i))
             return (xin_entry *)i;
@@ -377,7 +385,7 @@ int create_file(char* entry_name)
 
     entry->starting_sector = (uint32_t)write_entry - XIN_ENTRY_POINTERS;
 
-    for(char* i = entry->starting_sector * SECTOR_SIZE; (uint32_t)i < entry->starting_sector * SECTOR_SIZE + 0x10 * SECTOR_SIZE; i++)
+    for(char* i = (char*)(entry->starting_sector * SECTOR_SIZE); (uint32_t)i < entry->starting_sector * SECTOR_SIZE + 0x10 * SECTOR_SIZE; i++)
         *i = 0x0;
     
     disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x12, 8, (uint16_t*)0x800);

@@ -3,7 +3,7 @@
 #pragma once
 
 #include <stddef.h>
-#include <xin_fs/xin.c>
+#include <xin_fs/xin.h>
 #include <libc/stdiox.h>
 #include <libc/memory.h>
 

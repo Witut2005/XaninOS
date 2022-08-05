@@ -8,6 +8,7 @@ XANIN_PATH = /home/witut/Desktop/xaninOS/src/
 C_OPTIONS = -O0 -masm=intel -Wno-discarded-qualifiers -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-int-conversion -Wno-unused-function -Wno-div-by-zero -Wno-address-of-packed-member -I $(XANIN_PATH) -c
 C_COMPILE = -O0 -masm=intel -Wno-discarded-qualifiers -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-int-conversion -Wno-unused-function -Wno-div-by-zero -Wno-address-of-packed-member -I $(XANIN_PATH) 
 CC_OPTIONS =  -O0 -fno-exceptions -lstdc++ -masm=intel -std=c++17 -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Wno-write-strings -Wno-return-type -fno-rtti -fconcepts-ts -I $(XANIN_PATH) -c
+C_OPTIONS =  -O0 -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -Wno-discarded-qualifiers -ffreestanding -Wno-unused-function -Wno-return-type -I $(XANIN_PATH) -c
 ASM	= nasm
 APPS = ./xaninApps
 
@@ -70,10 +71,77 @@ build:
 
 	@$(CC) $(CC_OPTIONS) ./xaninApps/screenshot.cpp -o ./xaninApps/screenshot.o
 
+	@echo [CC] xagame.cpp
+	@$(CC) $(CC_OPTIONS) ./game_engine/xagame.cpp -o ./game_engine/xagame.o
+
+	@echo [CC] xagame_test.cpp
+	@$(CC) $(CC_OPTIONS) ./xagames/xagame_test.cpp -o ./xagames/xagame_test.o
+
+	@echo [CC] tetris.cpp
+	@$(CC) $(CC_OPTIONS) ./xagames/tetris.cpp -o ./xagames/tetris.o
+
+ 
+	@#C LIBARIES
+
+	@echo [C] algorithm.c
+	@$(C) $(C_OPTIONS) ./libc/algorithm.c -o ./libc/algorithm.o
+
+	@echo [C] alloc.c
+	@$(C) $(C_OPTIONS) ./libc/alloc.c -o ./libc/alloc.o
+
+	@echo [C] algorithm.c
+	@$(C) $(C_OPTIONS) ./libc/hal.c -o ./libc/hal.o
+
+	@echo [C] algorithm.c
+	@$(C) $(C_OPTIONS) ./libc/math.c -o ./libc/math.o
+
+	@echo [C] algorithm.c
+	@$(C) $(C_OPTIONS) ./libc/memory.c -o ./libc/memory.o
+
+	@echo [C] algorithm.c
+	@$(C) $(C_OPTIONS) ./libc/stdiox.c -o ./libc/stdiox.o
+
+	@echo [C] algorithm.c
+	@$(C) $(C_OPTIONS) ./libc/stdlibx.c -o ./libc/stdlibx.o
+
+	@echo [C] algorithm.c
+	@$(C) $(C_OPTIONS) ./libc/string.c -o ./libc/string.o
+
+	@echo [C] algorithm.c
+	@$(C) $(C_OPTIONS) ./libc/syslog.c -o ./libc/syslog.o
+
+	@echo [C] algorithm.c
+	@$(C) $(C_OPTIONS) ./libc/time.c -o ./libc/time.o
+	
+	@# @echo [C] pit.c
+	@# @$(C) $(C_OPTIONS) ./pit/pit.c -o ./pit/pit.o
+
+	@echo [C] algorithm.c
+	@$(C) $(C_OPTIONS) ./terminal/vty.c -o ./terminal/vty.o
+
+	@echo [C] algorithm.c
+	@$(C) $(C_OPTIONS) ./keyboard/key_map.c -o ./keyboard/key_map.o
+
+	@echo [C] algorithm.c
+	@$(C) $(C_OPTIONS) ./xin_fs/xin.c -o ./xin_fs/xin.o
+
 	@echo [C] kernel.c
 	@$(C) $(C_COMPILE) kernel.c \
+	./libc/algorithm.o \
+	./libc/alloc.o \
+	./libc/hal.o \
+	./libc/math.o \
+	./libc/memory.o \
+	./libc/stdiox.o \
+	./libc/stdlibx.o \
+	./libc/string.o \
+	./libc/syslog.o \
+	./libc/time.o \
+	./terminal/vty.o \
+	./keyboard/key_map.o \
 	./handlers/keyboard.o \
 	./pit/pit.o \
+	./xin_fs/xin.o \
 	./test/cpp_test.o \
 	./test/cpp_test2.o \
 	./devices/MOUSE/mouse.o \
@@ -82,15 +150,18 @@ build:
 	./devices/IOAPIC/ioapic.o \
 	./test/testc.o \
 	./devices/COM/ComPort.o \
-	./xaninApps/screenshot.o -o kernel.bin
+	./xaninApps/screenshot.o \
+	./game_engine/xagame.o \
+	./xagames/xagame_test.o \
+	./xagames/tetris.o -o kernel.bin
 
 	@cat ./xaninApps/shutdown $(APPS)/current_app $(APPS)/syscall_test > ./xaninApps/xanin_external_apps
 	@dd if=./xaninApps/xanin_external_apps of=./xaninApps/xanin_apps_space bs=512 count=16 conv=notrunc
 	
-ifeq ($(boot), legacy)
-	@cat ./boot/boot ./libc/enter_real_mode ./xaninApps/xanin_apps_space ./xaninApps/blank_sector ./xin_fs/xin_pointers ./xin_fs/entries_table ./boot/kernelLoader kernel.bin > xanin.bin
-else
+ifeq ($(boot), yan)
 	@cat ./yan-bootloader/yan.bin ./libc/enter_real_mode ./xaninApps/xanin_apps_space ./xin_fs/xin_pointers ./xin_fs/entries_table ./boot/kernelLoader kernel.bin > xanin.bin
+else
+	@cat ./boot/boot ./libc/enter_real_mode ./xaninApps/xanin_apps_space ./xaninApps/blank_sector ./xin_fs/xin_pointers ./xin_fs/entries_table ./boot/kernelLoader kernel.bin > xanin.bin
 endif
 
 

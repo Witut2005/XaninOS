@@ -1,19 +1,75 @@
-#pragma once
 
-#include <terminal/vty.h>
-#include <xaninApps/help.c>
- 
 #include <headers/macros.h>
 #include <libc/colors.h>
 #include <keyboard/key_map.h>
-#include <libc/stdiox.h>
-#include <libc/string.h>
 #include <libc/stdlibx.h>
 
 #define VGA_SCREEN_RESOLUTION 4480
+#define VGA_TEXT_MEMORY 0xb8000
+#define nullptr 0x0
 
 
+bool cursor_show = false;
+char selected_character; 
+
+typedef void (*keyboard_handle_input)(void);
+
+keyboard_handle_input keyboard_handle = nullptr;
  
+char program_name[40];
+char program_parameters[40];
+char program_parameters1[40];
+char program_parameters2[40];
+char program_parameters3[40];
+
+char* argv[5];
+
+char last_used_commands[40];
+char last_used_parameters[40];
+
+uint8_t index;
+char character_blocked;
+
+uint8_t logo_front_color = yellow;
+uint8_t logo_back_color = black;
+ 
+struct key_info_t
+{
+    uint8_t scan_code;
+    char character;
+
+    bool is_shift;
+    bool is_ctrl;
+    bool is_caps;
+    bool is_bspc;
+    bool is_alt;
+
+    bool is_left;
+    bool is_right;
+    bool is_up;
+    bool is_down;
+    
+    bool is_pressed;
+    bool is_hold;
+
+};
+
+typedef struct key_info_t key_info_t;
+key_info_t KeyInfo;
+
+struct screen_t
+{
+    uint16_t** cursor;
+    uint8_t x;
+    uint8_t y;
+
+};
+
+typedef struct screen_t screen_t;
+screen_t Screen;
+
+uint16_t* screen_buffer[60];
+
 void screen_init(void)
 {
     //screen.cursor = VGA_TEXT_MEMORY;

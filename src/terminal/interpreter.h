@@ -116,7 +116,7 @@
 #include <xaninApps/mouse.c>
 #endif
 
-#include <xin_fs/xin.c>
+#include <xin_fs/xin.h>
 
 #ifdef NOTE_APP
 #include <xin_fs/xin_note.c>
@@ -155,6 +155,8 @@ extern void cpp_test(void);
 #endif
 
 extern void screenshot(void);
+extern void xagame_test(void);
+extern int tetris(void);;
 
 #include <xaninApps/nic_info.c>
 #include <gyn_cl/gyn.c>

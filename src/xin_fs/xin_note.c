@@ -1,7 +1,7 @@
 
 
 #include <libc/stdiox.h>
-#include <xin_fs/xin.c>
+#include <xin_fs/xin.h>
 #include <libc/memory.h>
 #include <terminal/interpreter.h>
 #include <libc/string.h>
@@ -137,7 +137,6 @@ void note_input(xchar x)
 void xin_note(char* file_name)
 {
     screen_clear();
-    use_backspace = true;
 
     xin_entry* xin_file = fopen(file_name, "rw");
 

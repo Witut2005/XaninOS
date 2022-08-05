@@ -3,6 +3,7 @@
 #include <libc/stdiox.h>
 #include <libc/stdlibx.h>
 #include <libc/time.h>
+#include <libc/string.h>
 
 
 

@@ -1,5 +1,5 @@
 
-#include <xin_fs/xin.c>
+#include <xin_fs/xin.h>
 
 void xin_link_create(char* file_name, char* link_name)
 {

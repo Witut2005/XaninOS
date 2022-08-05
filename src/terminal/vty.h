@@ -4,14 +4,15 @@
 
 #include <stdint.h>
 #include <stddef.h>
+#include <stdbool.h>
 
-#define nullptr 0x0
-
+#include <libc/colors.h> 
 
 
 #define SCREEN_WIDTH 28
 #define SCREEN_HEIGHT 80
 #define SCREEN_RESOLUTION (25 * 80)
+#define nullptr 0x0
 
 enum screen_macros
 {
@@ -22,8 +23,8 @@ enum screen_macros
 #define VGA_TEXT_MEMORY 0xb8000
 
 
-uint8_t logo_front_color = magenta;
-uint8_t logo_back_color = black;
+extern uint8_t logo_front_color;
+extern uint8_t logo_back_color;
 
 struct key_info_t
 {
@@ -47,7 +48,7 @@ struct key_info_t
 };
 
 typedef struct key_info_t key_info_t;
-key_info_t KeyInfo;
+extern key_info_t KeyInfo;
 
 struct screen_t
 {
@@ -59,22 +60,19 @@ struct screen_t
 
 typedef struct screen_t screen_t;
 
-screen_t Screen;
+extern screen_t Screen;
 
-uint16_t* screen_buffer[60];
-uint8_t index = 0x0;
-char character_blocked = '\0';
+extern uint16_t* screen_buffer[60];
+extern uint8_t index;
+extern char character_blocked; 
 
 static uint8_t y,x;
+
 void setTerminal();
 void screen_init(void);
 
-bool no_enter = false;
-
-bool arrows_navigate = false;
-bool terminalAppExit = false;
-bool cursor_show = false;
-char selected_character; 
+extern bool cursor_show;
+extern char selected_character; 
 
 #define putchar_at_cursor(x) *cursor = (uint16_t)(x | ((black << 4) | white) << 8)
 
@@ -87,26 +85,21 @@ char selected_character;
         if(KeyInfo.character == from)\
             KeyInfo.character = to
 
-bool caps_on = false;
-bool print_off = false;
-bool key_released = false;
-bool lshift_pressed = false;
-bool in_graphic_mode = false;
 
 typedef void (*keyboard_handle_input)(void);
 
-keyboard_handle_input keyboard_handle = nullptr;
+extern keyboard_handle_input keyboard_handle;
  
-char program_name[40];
-char program_parameters[40];
-char program_parameters1[40];
-char program_parameters2[40];
-char program_parameters3[40];
+extern char program_name[40];
+extern char program_parameters[40];
+extern char program_parameters1[40];
+extern char program_parameters2[40];
+extern char program_parameters3[40];
 
-char* argv[5];
+extern char* argv[5];
 
-char last_used_commands[40];
-char last_used_parameters[40];
+extern char last_used_commands[40];
+extern char last_used_parameters[40];
 
 
 void terminal(void);

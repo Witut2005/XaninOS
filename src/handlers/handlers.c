@@ -4,11 +4,11 @@
  
 #include <libc/hal.h>
 #include <libc/stdiox.h>
-#include <terminal/vty.c>
 #include <headers/macros.h>
 #include <keyboard/key_map.h>
 #include <keyboard/keyboard_driver.c>
 #include <handlers/handlers.h>
+#include <pit/pit.h>
 
 //#include <devices/DMA/dma.c>
 
@@ -53,7 +53,6 @@ void divide_by_zero_exception(void)
 
 void pit_handler(void)
 {
-    pitActive = true;
     //xprintf("h");
     pit_tick(0xFFFF);
     outbIO(0x20, 0x20);

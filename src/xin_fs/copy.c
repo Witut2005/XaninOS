@@ -1,6 +1,6 @@
 
 
-#include <xin_fs/xin.c>
+#include <xin_fs/xin.h>
 
 void xin_copy(char* file_name, char* new_file_name)
 {

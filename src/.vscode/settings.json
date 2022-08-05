@@ -6,7 +6,10 @@
         "colors.h": "c",
         "assert.h": "c",
         "cstdarg": "cpp",
-        "cstdint": "cpp"
+        "cstdint": "cpp",
+        "xin_info.c": "cpp",
+        "apic_registers.h": "c",
+        "hal.h": "c"
     },
     "makefile.launchConfigurations": [
         {

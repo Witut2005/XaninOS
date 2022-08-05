@@ -2,6 +2,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <stddef.h>
 #include <xin_fs/xin_entry.h>
 
 typedef int __STATUS;
@@ -17,9 +18,13 @@ enum XANIN_RETURN_STATUS
 
 };
 
-char xin_current_path[38] = {'\0'};
-char xin_current_directory[38] = {'\0'};
+extern char xin_current_path[38];
+extern char xin_current_directory[38];
 
+static uint8_t enter_real_mode_buffer[512];
+static uint8_t shutdown_program_buffer[512];
+
+extern uint8_t* bootloader_program_buffer;
 
 char* xin_set_current_directory(char* directory);
 char* xin_get_current_directory(void);
@@ -43,3 +48,7 @@ size_t write(xin_entry *entry, void *buf, size_t count);
 size_t read(xin_entry *entry, void *buf, size_t count);
 xin_entry* create(char* file_name);
 void fseek(xin_entry *file, uint32_t new_position);
+xin_entry* xin_get_file_pf(char* entry_path); // pf = parent folder
+xin_entry *xin_find_entry(char *entry_name);
+__STATUS remove_directory(char* folder_name);
+void create_file_kernel(char* entry_name);

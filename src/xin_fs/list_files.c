@@ -1,7 +1,7 @@
 #pragma once
 
 #include <libc/stdiox.h>
-#include <xin_fs/xin.c>
+#include <xin_fs/xin.h>
 
 void list_files(char* path)
 {

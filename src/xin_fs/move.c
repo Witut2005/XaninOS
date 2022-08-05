@@ -1,5 +1,5 @@
 
-#include <xin_fs/xin.c>
+#include <xin_fs/xin.h>
 
 __STATUS xin_move(char* entry_name, char* new_name)
 {

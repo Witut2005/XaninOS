@@ -1,10 +1,9 @@
 
 #include <limits.h>
 #include <stdint.h>
-#include <pit/pit.c>
 #include <IDT/idt.c>
 #include <libc/stdlibx.h>
-#include <terminal/vty.c>
+#include <terminal/vty.h>
 #include <terminal/interpreter.c>
 #include <libc/math.h>
 #include <keyboard/keyboard_init.c>
@@ -13,7 +12,7 @@
 #include <devices/USB/usb.c>
 #include <devices/HARD_DISK/disk.c>
 #include <devices/VGA/vga.c>
-#include <xin_fs/xin.c>
+#include <xin_fs/xin.h>
 #include <libc/algorithm.h>
 #include <libc/assert.h>
 #include <libc/alloc.h>
@@ -24,6 +23,7 @@
 #include <devices/ACPI/ACPI.h>
 #include <libc/syslog.h>
 #include <xanin_info/info_block.c>
+#include <xin_fs/xin.h>
 
 extern void v86_mode_enter(void);
 extern void mouse_enable(void);
@@ -36,6 +36,7 @@ extern void i8254x_init(void);
 |niech xanin rośnie i rośnie            |
 |ja, rok 2021, 31 grudzień, 23:52:35    |
 /--------------------------------------*/
+float pit_time = 0x0;
 
 void _start(void)
 {
@@ -268,7 +269,6 @@ void _start(void)
         KeyInfo.character   = 0x0;
 
         app_exited          = false;
-        arrows_navigate     = true;
 
 
         //keyboard_handle = terminal_keyboard;

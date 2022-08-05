@@ -2,6 +2,8 @@
 #pragma once
 
 #include <libc/stdiox.h>
+#include <libc/string.h>
+#include <keyboard/scan_codes.h>
 
 void help(char* command)
 {

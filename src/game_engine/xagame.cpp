@@ -1,5 +1,7 @@
 
 #include <game_engine/xagame.hpp>
+#include <libc/colors.h>
+
 
 void xgm::rectangle::create(uint32_t x, uint32_t y, uint32_t size_x, uint32_t size_y, uint8_t color)
 {    
@@ -82,4 +84,21 @@ xgm::rectangle::rectangle(uint32_t class_id)
 {
     this->class_id = class_id;
 
+}
+
+
+xgm::ScreenManager::ScreenManager(void)
+{
+    this->screen_pointer = (uint8_t*)VGA_TEXT_MEMORY;
+}
+
+uint8_t& xgm::ScreenManager::operator[](uint32_t index)
+{
+    return this->screen_pointer[index * 2 + 1];
+}
+
+
+extern "C" void __cxa_pure_virtual()
+{
+    return;
 }

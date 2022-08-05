@@ -2,7 +2,7 @@
 #pragma once
 
 #include <terminal/vty.h>
-#include <handlers/handlers.h>
+#include <libc/stdlibx.h>
 
 
 void reg_dump(void)
