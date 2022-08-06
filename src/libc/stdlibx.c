@@ -118,7 +118,7 @@ uint8_t floppy_type_get_cmos(void)
 }
 
 
-static uint32_t randomizer;
+uint32_t randomizer;
 
 
 

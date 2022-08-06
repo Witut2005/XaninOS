@@ -16,13 +16,13 @@ typedef	uint32_t physical_addr;
 //! block alignment
 #define PMMNGR_BLOCK_ALIGN	PMMNGR_BLOCK_SIZE
 //! size of physical memory
-static	uint32_t	_mmngr_memory_size=0;
+uint32_t	_mmngr_memory_size=0;
 //! number of blocks currently in use
-static	uint32_t	_mmngr_used_blocks=0;
+uint32_t	_mmngr_used_blocks=0;
 //! maximum number of available memory blocks
-static	uint32_t	_mmngr_max_blocks=0;
+uint32_t	_mmngr_max_blocks=0;
 //! memory map bit array. Each bit represents a memory block
-static	uint32_t*	_mmngr_memory_map= 0;
+uint32_t*	_mmngr_memory_map= 0;
 
 size_t	pmmngr_get_memory_size () 
 {

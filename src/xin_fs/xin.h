@@ -21,8 +21,8 @@ enum XANIN_RETURN_STATUS
 extern char xin_current_path[38];
 extern char xin_current_directory[38];
 
-static uint8_t enter_real_mode_buffer[512];
-static uint8_t shutdown_program_buffer[512];
+extern uint8_t enter_real_mode_buffer[512];
+extern uint8_t shutdown_program_buffer[512];
 
 extern uint8_t* bootloader_program_buffer;
 

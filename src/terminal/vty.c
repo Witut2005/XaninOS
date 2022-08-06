@@ -30,6 +30,8 @@ char last_used_parameters[40];
 uint8_t index;
 char character_blocked;
 
+uint8_t x = 0, y = 0;
+
 uint8_t logo_front_color = yellow;
 uint8_t logo_back_color = black;
  

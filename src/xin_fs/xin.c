@@ -11,8 +11,8 @@
 #include <terminal/vty.h>
 #include <keyboard/scan_codes.h>
 
-static uint8_t enter_real_mode_buffer[512];
-static uint8_t shutdown_program_buffer[512];
+uint8_t enter_real_mode_buffer[512];
+uint8_t shutdown_program_buffer[512];
 uint8_t* bootloader_program_buffer;
 
 
@@ -261,7 +261,7 @@ xin_entry *xin_init_fs(void)
     
     k = 0;
 
-    for(char* i = (char*)0x10200; i < (char*)0x10200 + 0x200; i++, k++)
+    for(char* i = (char*)0x400; i < (char*)0x400 + SECTOR_SIZE; i++, k++)
         shutdown_program_buffer[k] = *i;
 
     xin_change_directory("/");

@@ -89,40 +89,40 @@ build:
 	@echo [C] alloc.c
 	@$(C) $(C_OPTIONS) ./libc/alloc.c -o ./libc/alloc.o
 
-	@echo [C] algorithm.c
+	@echo [C] hal.c
 	@$(C) $(C_OPTIONS) ./libc/hal.c -o ./libc/hal.o
 
-	@echo [C] algorithm.c
+	@echo [C] math.c
 	@$(C) $(C_OPTIONS) ./libc/math.c -o ./libc/math.o
 
-	@echo [C] algorithm.c
+	@echo [C] memory.c
 	@$(C) $(C_OPTIONS) ./libc/memory.c -o ./libc/memory.o
 
-	@echo [C] algorithm.c
+	@echo [C] stdiox.c
 	@$(C) $(C_OPTIONS) ./libc/stdiox.c -o ./libc/stdiox.o
 
-	@echo [C] algorithm.c
+	@echo [C] stdlibx.c
 	@$(C) $(C_OPTIONS) ./libc/stdlibx.c -o ./libc/stdlibx.o
 
-	@echo [C] algorithm.c
+	@echo [C] string.c
 	@$(C) $(C_OPTIONS) ./libc/string.c -o ./libc/string.o
 
-	@echo [C] algorithm.c
+	@echo [C] syslog.c
 	@$(C) $(C_OPTIONS) ./libc/syslog.c -o ./libc/syslog.o
 
-	@echo [C] algorithm.c
+	@echo [C] time.c
 	@$(C) $(C_OPTIONS) ./libc/time.c -o ./libc/time.o
 	
 	@# @echo [C] pit.c
 	@# @$(C) $(C_OPTIONS) ./pit/pit.c -o ./pit/pit.o
 
-	@echo [C] algorithm.c
+	@echo [C] vty.c
 	@$(C) $(C_OPTIONS) ./terminal/vty.c -o ./terminal/vty.o
 
-	@echo [C] algorithm.c
+	@echo [C] key_map.c
 	@$(C) $(C_OPTIONS) ./keyboard/key_map.c -o ./keyboard/key_map.o
 
-	@echo [C] algorithm.c
+	@echo [C] xin.c
 	@$(C) $(C_OPTIONS) ./xin_fs/xin.c -o ./xin_fs/xin.o
 
 	@echo [C] kernel.c
@@ -154,6 +154,9 @@ build:
 	./game_engine/xagame.o \
 	./xagames/xagame_test.o \
 	./xagames/tetris.o -o kernel.bin
+
+	@echo "\033[0;32mCOMPILATION SUCCESS"
+	@echo "\033[0m"
 
 	@cat ./xaninApps/shutdown $(APPS)/current_app $(APPS)/syscall_test > ./xaninApps/xanin_external_apps
 	@dd if=./xaninApps/xanin_external_apps of=./xaninApps/xanin_apps_space bs=512 count=16 conv=notrunc

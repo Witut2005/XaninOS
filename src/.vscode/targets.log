@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Sat Aug  6 00:01:09 2022
+# Make data base, printed on Sat Aug  6 11:58:14 2022
 
 # Variables
 
@@ -91,7 +91,7 @@ LS_COLORS = rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:
 # environment
 XDG_SESSION_DESKTOP = i3
 # environment
-SSH_AUTH_SOCK = /tmp/ssh-qbod2lJmsk6w/agent.1932
+SSH_AUTH_SOCK = /tmp/ssh-GDePRAvHLAFw/agent.1828
 # automatic
 %F = $(notdir $%)
 # environment
@@ -103,7 +103,7 @@ PWD = /home/witut/Desktop/xaninOS/src
 # environment
 XDG_SEAT = seat0
 # environment
-SSH_AGENT_PID = 1994
+SSH_AGENT_PID = 1890
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = i3
 # environment
@@ -121,7 +121,7 @@ VSCODE_CODE_CACHE_PATH = /home/witut/.config/Code/CachedData/3b889b090b5ad5793f5
 # environment
 LOGNAME = witut
 # environment
-APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
 # makefile (from 'Makefile', line 6)
 XANIN_PATH = /home/witut/Desktop/xaninOS/src/
 # automatic
@@ -151,7 +151,7 @@ ASM = nasm
 # makefile (from 'Makefile', line 4)
 CC = i386-elf-g++
 # environment
-XDG_SESSION_ID = 3
+XDG_SESSION_ID = 2
 # environment
 USER = witut
 # environment
@@ -167,11 +167,11 @@ LIBVIRT_DEFAULT_URI = qemu:///system
 # environment
 LC_TELEPHONE = pl_PL.UTF-8
 # environment
-I3SOCK = /run/user/1000/i3/ipc-socket.1932
+I3SOCK = /run/user/1000/i3/ipc-socket.1828
 # default
 MAKE_COMMAND := make
 # environment
-OLDPWD = /home/witut/Desktop/xaninOS
+OLDPWD = /home/witut
 # default
 .VARIABLES := 
 # automatic
@@ -209,11 +209,11 @@ APPS = ./xaninApps
 # environment
 LC_ALL = C
 # environment
-GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/cdbbc6ea_c325_4e1f_b31b_832f6dc70b29
+GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/192a9227_961d_4c66_b832_3c935dbf8048
 # automatic
 ^F = $(notdir $^)
 # environment
-GNOME_TERMINAL_SERVICE = :1.24
+GNOME_TERMINAL_SERVICE = :1.806
 # default
 SUFFIXES := 
 # environment
@@ -233,7 +233,7 @@ LANG = C
 # environment
 TERM = xterm-256color
 # environment
-VSCODE_PID = 36593
+VSCODE_PID = 16945
 # variable set hash-table stats:
 # Load=111/1024=11%, Rehash=0, Collisions=20/138=14%
 
@@ -263,7 +263,7 @@ all:
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-08-05 23:56:40.453499457
+#  Last modified 2022-08-06 11:58:02.114374928
 #  File has been updated.
 #  Successfully updated.
 
@@ -271,13 +271,12 @@ debug:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 181):
+#  recipe to execute (from 'Makefile', line 184):
 	qemu-system-i386 -m 512 -s -S ../bin/xanin.img 
 
 build:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
- 
 #  File has not been updated.
 #  recipe to execute (from 'Makefile', line 19):
 	@echo [ASM] boot.asm
@@ -309,6 +308,7 @@ build:
 	@$(ASM) -fbin $(APPS)/xanin_apps_space.asm -o $(APPS)/xanin_apps_space
 	@echo [CC] chip8.cpp
 	@$(CC) $(CC_OPTIONS) ./chip8/chip8.cpp -o ./chip8/chip8.o
+ 
 	@echo [CC] apic.cpp
 	@$(CC) $(CC_OPTIONS) ./devices/APIC/apic.cpp -o ./devices/APIC/apic.o
 	@echo [CC] cpp_test.cpp
@@ -334,30 +334,30 @@ build:
 	@$(C) $(C_OPTIONS) ./libc/algorithm.c -o ./libc/algorithm.o
 	@echo [C] alloc.c
 	@$(C) $(C_OPTIONS) ./libc/alloc.c -o ./libc/alloc.o
-	@echo [C] algorithm.c
+	@echo [C] hal.c
 	@$(C) $(C_OPTIONS) ./libc/hal.c -o ./libc/hal.o
-	@echo [C] algorithm.c
+	@echo [C] math.c
 	@$(C) $(C_OPTIONS) ./libc/math.c -o ./libc/math.o
-	@echo [C] algorithm.c
+	@echo [C] memory.c
 	@$(C) $(C_OPTIONS) ./libc/memory.c -o ./libc/memory.o
-	@echo [C] algorithm.c
+	@echo [C] stdiox.c
 	@$(C) $(C_OPTIONS) ./libc/stdiox.c -o ./libc/stdiox.o
-	@echo [C] algorithm.c
+	@echo [C] stdlibx.c
 	@$(C) $(C_OPTIONS) ./libc/stdlibx.c -o ./libc/stdlibx.o
-	@echo [C] algorithm.c
+	@echo [C] string.c
 	@$(C) $(C_OPTIONS) ./libc/string.c -o ./libc/string.o
-	@echo [C] algorithm.c
+	@echo [C] syslog.c
 	@$(C) $(C_OPTIONS) ./libc/syslog.c -o ./libc/syslog.o
-	@echo [C] algorithm.c
+	@echo [C] time.c
 	@$(C) $(C_OPTIONS) ./libc/time.c -o ./libc/time.o
 	
 	@# @echo [C] pit.c
 	@# @$(C) $(C_OPTIONS) ./pit/pit.c -o ./pit/pit.o
-	@echo [C] algorithm.c
+	@echo [C] vty.c
 	@$(C) $(C_OPTIONS) ./terminal/vty.c -o ./terminal/vty.o
-	@echo [C] algorithm.c
+	@echo [C] key_map.c
 	@$(C) $(C_OPTIONS) ./keyboard/key_map.c -o ./keyboard/key_map.o
-	@echo [C] algorithm.c
+	@echo [C] xin.c
 	@$(C) $(C_OPTIONS) ./xin_fs/xin.c -o ./xin_fs/xin.o
 	@echo [C] kernel.c
 	@$(C) $(C_COMPILE) kernel.c \
@@ -388,6 +388,8 @@ build:
 	./game_engine/xagame.o \
 	./xagames/xagame_test.o \
 	./xagames/tetris.o -o kernel.bin
+	@echo "\033[0;32mCOMPILATION SUCCESS"
+	@echo "\033[0m"
 	@cat ./xaninApps/shutdown $(APPS)/current_app $(APPS)/syscall_test > ./xaninApps/xanin_external_apps
 	@dd if=./xaninApps/xanin_external_apps of=./xaninApps/xanin_apps_space bs=512 count=16 conv=notrunc
 	
@@ -406,14 +408,14 @@ run:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 175):
+#  recipe to execute (from 'Makefile', line 178):
 	qemu-system-i386 -smp 2 -net nic,macaddr=24:22:33:44:55:66 -drive file=../bin/xanin.img,cache=unsafe -m 512
 
 curses:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 178):
+#  recipe to execute (from 'Makefile', line 181):
 	qemu-system-i386 -curses -k en-us -m 512 -hda ../bin/xanin.img 
 
 # files hash-table stats:
@@ -430,6 +432,6 @@ curses:
 # strcache performance: lookups = 55 / hit rate = 14%
 # hash-table stats:
 # Load=47/8192=1%, Rehash=0, Collisions=1/55=2%
-# Finished Make data base on Sat Aug  6 00:01:09 2022
+# Finished Make data base on Sat Aug  6 11:58:14 2022
 
  

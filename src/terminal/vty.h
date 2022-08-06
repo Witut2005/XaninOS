@@ -66,7 +66,7 @@ extern uint16_t* screen_buffer[60];
 extern uint8_t index;
 extern char character_blocked; 
 
-static uint8_t y,x;
+extern uint8_t y,x;
 
 void setTerminal();
 void screen_init(void);

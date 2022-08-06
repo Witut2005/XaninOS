@@ -113,45 +113,40 @@ void io_wait(void)
 
 void real_mode_enter(uint16_t segment, uint16_t offset, uint32_t return_address)
 {
-
-    /* get segment */
-    asm (
-        "mov eax, [ebp + 8]\n\t"
-        "mov ebx, eax\n\t"
-        "and ebx, 0xFFFF"
-        );
-
-    /* get offset */
-    asm (
-        "mov eax, [ebp + 12]\n\t"
-        "mov edx, eax\n\t"
-        "and edx, 0xFFFF"
-        );
-
     xanin_info_ptr->program_to_execute = return_address;
-    void (*enter16)(void) = (void(*)(void))0x600;
-    enter16();
+
+    asm (
+        "mov ebx, %0\n\t"
+        "and ebx, 0xFFFF\n\t"
+
+        "mov edx, %1\n\t"
+        "and edx, 0xFFFF\n\t"
+        "jmp 0x600"
+        :
+        : "r" ((uint32_t)segment), "r" ((uint32_t)offset)
+
+        );
+
+
 }
 
 void real_mode_enter_no_return(uint16_t segment, uint16_t offset)
 {
 
-    /* get segment */
     asm (
-        "mov eax, [ebp + 8]\n\t"
-        "mov ebx, eax\n\t"
-        "and ebx, 0xFFFF"
+        "mov ebx, %0\n\t"
+        "and ebx, 0xFFFF\n\t"
+
+        "mov edx, %1\n\t"
+        "and edx, 0xFFFF\n\t"
+        "jmp 0x600"
+        :
+        : "r" ((uint32_t)segment), "r" ((uint32_t)offset)
+
         );
 
-    /* get offset */
-    asm (
-        "mov eax, [ebp + 12]\n\t"
-        "mov edx, eax\n\t"
-        "and edx, 0xFFFF"
-        );
-
-    void (*enter16)(void) = (void(*)(void))0x600;
-    enter16();
+    // void (*enter16)(void) = (void(*)(void))0x600;
+    // enter16();
 }
 
 

@@ -39,7 +39,7 @@ char* keyboard_buffer_refresh(uint16_t* screen_buffer);
 CmosTime* time_get(CmosTime* Time);
 uint8_t floppy_type_get_cmos(void);
 void get_cpu_speed(void);
-static uint32_t randomizer;
+extern uint32_t randomizer;
 void swap_int(int *xp, int *yp);
 void swap_char(char* xp, char* yp);
 void swap_short(uint16_t* xp, uint16_t* yp);

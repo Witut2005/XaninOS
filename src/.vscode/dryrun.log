@@ -1,4 +1,4 @@
-make --dry-run --always-make --keep-going --print-directory
+make --dry-run --keep-going --print-directory
 make: Entering directory '/home/witut/Desktop/xaninOS/src'
 echo [ASM] boot.asm
 nasm -fbin ./boot/boot.asm
@@ -50,29 +50,29 @@ echo [C] algorithm.c
 i386-elf-gcc -O0 -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -Wno-discarded-qualifiers -ffreestanding -Wno-unused-function -Wno-return-type -I /home/witut/Desktop/xaninOS/src/ -c ./libc/algorithm.c -o ./libc/algorithm.o
 echo [C] alloc.c
 i386-elf-gcc -O0 -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -Wno-discarded-qualifiers -ffreestanding -Wno-unused-function -Wno-return-type -I /home/witut/Desktop/xaninOS/src/ -c ./libc/alloc.c -o ./libc/alloc.o
-echo [C] algorithm.c
+echo [C] hal.c
 i386-elf-gcc -O0 -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -Wno-discarded-qualifiers -ffreestanding -Wno-unused-function -Wno-return-type -I /home/witut/Desktop/xaninOS/src/ -c ./libc/hal.c -o ./libc/hal.o
-echo [C] algorithm.c
+echo [C] math.c
 i386-elf-gcc -O0 -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -Wno-discarded-qualifiers -ffreestanding -Wno-unused-function -Wno-return-type -I /home/witut/Desktop/xaninOS/src/ -c ./libc/math.c -o ./libc/math.o
-echo [C] algorithm.c
+echo [C] memory.c
 i386-elf-gcc -O0 -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -Wno-discarded-qualifiers -ffreestanding -Wno-unused-function -Wno-return-type -I /home/witut/Desktop/xaninOS/src/ -c ./libc/memory.c -o ./libc/memory.o
-echo [C] algorithm.c
+echo [C] stdiox.c
 i386-elf-gcc -O0 -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -Wno-discarded-qualifiers -ffreestanding -Wno-unused-function -Wno-return-type -I /home/witut/Desktop/xaninOS/src/ -c ./libc/stdiox.c -o ./libc/stdiox.o
-echo [C] algorithm.c
+echo [C] stdlibx.c
 i386-elf-gcc -O0 -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -Wno-discarded-qualifiers -ffreestanding -Wno-unused-function -Wno-return-type -I /home/witut/Desktop/xaninOS/src/ -c ./libc/stdlibx.c -o ./libc/stdlibx.o
-echo [C] algorithm.c
+echo [C] string.c
 i386-elf-gcc -O0 -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -Wno-discarded-qualifiers -ffreestanding -Wno-unused-function -Wno-return-type -I /home/witut/Desktop/xaninOS/src/ -c ./libc/string.c -o ./libc/string.o
-echo [C] algorithm.c
+echo [C] syslog.c
 i386-elf-gcc -O0 -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -Wno-discarded-qualifiers -ffreestanding -Wno-unused-function -Wno-return-type -I /home/witut/Desktop/xaninOS/src/ -c ./libc/syslog.c -o ./libc/syslog.o
-echo [C] algorithm.c
+echo [C] time.c
 i386-elf-gcc -O0 -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -Wno-discarded-qualifiers -ffreestanding -Wno-unused-function -Wno-return-type -I /home/witut/Desktop/xaninOS/src/ -c ./libc/time.c -o ./libc/time.o
 # @echo [C] pit.c
 # @i386-elf-gcc -O0 -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -Wno-discarded-qualifiers -ffreestanding -Wno-unused-function -Wno-return-type -I /home/witut/Desktop/xaninOS/src/ -c ./pit/pit.c -o ./pit/pit.o
-echo [C] algorithm.c
+echo [C] vty.c
 i386-elf-gcc -O0 -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -Wno-discarded-qualifiers -ffreestanding -Wno-unused-function -Wno-return-type -I /home/witut/Desktop/xaninOS/src/ -c ./terminal/vty.c -o ./terminal/vty.o
-echo [C] algorithm.c
+echo [C] key_map.c
 i386-elf-gcc -O0 -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -Wno-discarded-qualifiers -ffreestanding -Wno-unused-function -Wno-return-type -I /home/witut/Desktop/xaninOS/src/ -c ./keyboard/key_map.c -o ./keyboard/key_map.o
-echo [C] algorithm.c
+echo [C] xin.c
 i386-elf-gcc -O0 -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -Wno-discarded-qualifiers -ffreestanding -Wno-unused-function -Wno-return-type -I /home/witut/Desktop/xaninOS/src/ -c ./xin_fs/xin.c -o ./xin_fs/xin.o
 echo [C] kernel.c
 i386-elf-gcc -O0 -masm=intel -Wno-discarded-qualifiers -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-int-conversion -Wno-unused-function -Wno-div-by-zero -Wno-address-of-packed-member -I /home/witut/Desktop/xaninOS/src/  kernel.c \
@@ -103,6 +103,8 @@ i386-elf-gcc -O0 -masm=intel -Wno-discarded-qualifiers -Wno-builtin-declaration-
 ./game_engine/xagame.o \
 ./xagames/xagame_test.o \
 ./xagames/tetris.o -o kernel.bin
+echo "\033[0;32mCOMPILATION SUCCESS"
+echo "\033[0m"
 cat ./xaninApps/shutdown ./xaninApps/current_app ./xaninApps/syscall_test > ./xaninApps/xanin_external_apps
 dd if=./xaninApps/xanin_external_apps of=./xaninApps/xanin_apps_space bs=512 count=16 conv=notrunc
 cat ./boot/boot ./libc/enter_real_mode ./xaninApps/xanin_apps_space ./xaninApps/blank_sector ./xin_fs/xin_pointers ./xin_fs/entries_table ./boot/kernelLoader kernel.bin > xanin.bin

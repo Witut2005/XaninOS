@@ -4,6 +4,8 @@
 #include <xin_fs/xin.h>
 #include <app_config.h>
 
+extern void run16(char* file_name);
+
 #ifdef ZSK_APP
 #include <xaninApps/zsk.c>
 #endif
@@ -14,8 +16,7 @@
         "pop ecx\n\t"\
         "pop edx\n\t"\
         "pop esi\n\t"\
-        "pop edi\n\t"\    
-        );\
+        "pop edi\n\t");\
         return x
 
 
@@ -139,6 +140,13 @@ uint32_t syscall()
         case 'f' + 'o':
         {
             return_sys(fopen((char*)esi, "rw"));
+        }
+
+        case 0xDEAD:
+        {
+            xprintf("%s", (char*)esi);
+            while(1);
+            run16((char*)esi);
         }
 
 
