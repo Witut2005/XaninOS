@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Sat Aug  6 11:58:14 2022
+# Make data base, printed on Sat Aug  6 21:23:49 2022
 
 # Variables
 
@@ -91,7 +91,7 @@ LS_COLORS = rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:
 # environment
 XDG_SESSION_DESKTOP = i3
 # environment
-SSH_AUTH_SOCK = /tmp/ssh-GDePRAvHLAFw/agent.1828
+SSH_AUTH_SOCK = /tmp/ssh-gDSNx3qQDT7T/agent.1854
 # automatic
 %F = $(notdir $%)
 # environment
@@ -103,7 +103,7 @@ PWD = /home/witut/Desktop/xaninOS/src
 # environment
 XDG_SEAT = seat0
 # environment
-SSH_AGENT_PID = 1890
+SSH_AGENT_PID = 1916
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = i3
 # environment
@@ -121,7 +121,7 @@ VSCODE_CODE_CACHE_PATH = /home/witut/.config/Code/CachedData/3b889b090b5ad5793f5
 # environment
 LOGNAME = witut
 # environment
-APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
 # makefile (from 'Makefile', line 6)
 XANIN_PATH = /home/witut/Desktop/xaninOS/src/
 # automatic
@@ -167,7 +167,7 @@ LIBVIRT_DEFAULT_URI = qemu:///system
 # environment
 LC_TELEPHONE = pl_PL.UTF-8
 # environment
-I3SOCK = /run/user/1000/i3/ipc-socket.1828
+I3SOCK = /run/user/1000/i3/ipc-socket.1854
 # default
 MAKE_COMMAND := make
 # environment
@@ -209,11 +209,11 @@ APPS = ./xaninApps
 # environment
 LC_ALL = C
 # environment
-GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/192a9227_961d_4c66_b832_3c935dbf8048
+GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/55849219_994b_4dd3_9c3b_58d14c736ae0
 # automatic
 ^F = $(notdir $^)
 # environment
-GNOME_TERMINAL_SERVICE = :1.806
+GNOME_TERMINAL_SERVICE = :1.34
 # default
 SUFFIXES := 
 # environment
@@ -233,7 +233,7 @@ LANG = C
 # environment
 TERM = xterm-256color
 # environment
-VSCODE_PID = 16945
+VSCODE_PID = 2323
 # variable set hash-table stats:
 # Load=111/1024=11%, Rehash=0, Collisions=20/138=14%
 
@@ -303,12 +303,12 @@ build:
 	@echo [ASM] reboot.asm
 	@$(ASM) -fbin $(APPS)/reboot.asm -o $(APPS)/reboot
 	@echo [ASM] syscall_test.asm
+ 
 	@$(ASM) -fbin $(APPS)/syscall_test.asm -o  $(APPS)/syscall_test -w-other
 	@echo [ASM] xanin_apps_space.asm
 	@$(ASM) -fbin $(APPS)/xanin_apps_space.asm -o $(APPS)/xanin_apps_space
 	@echo [CC] chip8.cpp
 	@$(CC) $(CC_OPTIONS) ./chip8/chip8.cpp -o ./chip8/chip8.o
- 
 	@echo [CC] apic.cpp
 	@$(CC) $(CC_OPTIONS) ./devices/APIC/apic.cpp -o ./devices/APIC/apic.o
 	@echo [CC] cpp_test.cpp
@@ -432,6 +432,6 @@ curses:
 # strcache performance: lookups = 55 / hit rate = 14%
 # hash-table stats:
 # Load=47/8192=1%, Rehash=0, Collisions=1/55=2%
-# Finished Make data base on Sat Aug  6 11:58:14 2022
+# Finished Make data base on Sat Aug  6 21:23:49 2022
 
  

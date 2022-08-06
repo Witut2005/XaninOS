@@ -8,6 +8,7 @@ extern "C" void msleep(float miliseconds);
 extern "C" void* malloc(uint16_t size);
 
 using namespace xgm;
+using namespace xgm::Renderer;
 
 extern "C" void xagame_test(void)
 {
@@ -20,6 +21,7 @@ extern "C" void xagame_test(void)
 
     ScreenManager manager;
     manager[2] = xgm::color::red | xgm::color::green_text;
+    manager.vertical_line_create(5, xgm::color::yellow);
 
 
     while(1)

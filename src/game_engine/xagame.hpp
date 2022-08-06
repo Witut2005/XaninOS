@@ -1,7 +1,10 @@
 
 #include <stdint.h>
+#include <libcpp/utility.h>
 
 #define VGA_TEXT_MEMORY 0xb8000
+#define VGA_WIDTH 80
+#define VGA_HEIGHT 28
 
 /* USE IN CPP FILES NOT IN C BRUH */
 
@@ -33,7 +36,7 @@ namespace xgm
         blue = 0x10,
         
         green_text = 0x2,
-        green = 0x2,
+        green = 0x20,
 
         cyan_text = 0x3,
         cyan = 0x30,
@@ -77,6 +80,34 @@ namespace xgm
     };
     }
 
+enum class Direction
+{
+    UP, DOWN, LEFT, RIGHT, NONE
+};
+
+struct CollisionInfo
+{
+    bool is_collision;
+    uint8_t color;
+    xgm::Direction side;
+};
+
+CollisionInfo make_collision_info(bool x, uint8_t y, xgm::Direction z);
+
+namespace Renderer
+{
+
+class ScreenManager
+{
+    private:
+        uint8_t* screen_pointer;
+    public:
+        ScreenManager(void);
+        uint8_t& operator [](uint32_t index);
+        void vertical_line_create(uint8_t x, xgm::color::ColorAttributes color);
+};
+}
+
 class GeometryObject
 {    
 
@@ -96,6 +127,13 @@ class rectangle : public GeometryObject
         void move(int32_t x, int32_t y);
         void destroy();
         void rotate_right_90();
+        auto size_get();
+        auto position_get();
+        uint32_t sizex_get();
+        uint32_t sizey_get();
+        uint32_t positionx_get();
+        uint32_t positiony_get();
+        CollisionInfo collision_detect(); 
 
     private:
         uint32_t position_x;
@@ -108,14 +146,6 @@ class rectangle : public GeometryObject
 };
 
 
-class ScreenManager
-{
-    private:
-        uint8_t* screen_pointer;
-    public:
-        ScreenManager(void);
-        uint8_t& operator [](uint32_t index);
-};
 
 
 }
