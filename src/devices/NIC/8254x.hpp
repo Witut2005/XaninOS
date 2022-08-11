@@ -66,6 +66,7 @@ namespace nic
 
     };
 
+
     enum NIC_REGISTERS
     {
 
@@ -93,15 +94,18 @@ namespace nic
         RCTL = 0x100,
         MTA = 0x5200,
         RDBAL = 0x2800,
+        RDBAH = 0x2804,
         RDLEN = 0x2808,
         RDH = 0x2810,
         RDT = 0x2818,
         RDTR = 0x2820,
         TDBAL = 0x3800,
+        TDBAH = 0x3804,
         TDLEN = 0x3808,
         TDH = 0x3810,
         TDT = 0x3818,
-        TCTL = 0x400
+        TCTL = 0x400,
+        TIPG = 0x410
 
 
     };
@@ -124,7 +128,9 @@ namespace nic
     enum tctl
     {
         EN = 1 << 1,
-        PSP = 1 << 3
+        PSP = 1 << 3,
+        CT = 1 << 4,
+        COLD = 1 << 12
     };
 
 
@@ -155,7 +161,7 @@ struct i8254xTransmitDescriptor
     uint16_t length;
     uint8_t cso;
     uint8_t cmd;
-    uint8_t status;
+    uint8_t status; //status and rsv (dext legacy mode)
     uint8_t css;
     uint16_t special;
 
@@ -178,14 +184,17 @@ class Intel8254xDriver
     uint8_t* mac_get(void);
     uint32_t iobase_get(void);
     uint16_t vendorid_get(void);
-    void init(void);
     pci_device* pci_info_get(void);
     uint16_t eeprom_read(uint8_t address);
     void multicast_table_array_clear(void);
     uint32_t receive_buffer_get(void);
+    uint32_t transmit_buffer_get(void);
     void receive_packet(void);
     void send_packet(uint32_t address_low, uint16_t length);
     void interrupt_handler(void);
+    void receive_init(void);
+    void transmit_init(void);
+    void init(void);
 
 
 
@@ -219,6 +228,16 @@ extern "C"
     uint32_t i8254x_receive_buffer_get(void)
     {
         return Intel8254x.receive_buffer_get();
+    }
+
+    uint32_t i8254x_transmit_buffer_get(void)
+    {
+        return Intel8254x.transmit_buffer_get();
+    }
+
+    void i8254x_interrupt_handler(void)
+    {
+        return Intel8254x.interrupt_handler();
     }
 
 }

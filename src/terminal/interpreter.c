@@ -183,6 +183,7 @@ void scan(void)
 
     XANIN_ADD_APP_ENTRY0("xgm", xagame_test)
     XANIN_ADD_APP_ENTRY0("tetris", tetris)
+    XANIN_ADD_APP_ENTRY0("xgl_test", xgl_test)
 
     else
     {

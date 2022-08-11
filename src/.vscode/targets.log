@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Sat Aug  6 21:23:49 2022
+# Make data base, printed on Wed Aug 10 16:14:19 2022
 
 # Variables
 
@@ -91,7 +91,7 @@ LS_COLORS = rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:
 # environment
 XDG_SESSION_DESKTOP = i3
 # environment
-SSH_AUTH_SOCK = /tmp/ssh-gDSNx3qQDT7T/agent.1854
+SSH_AUTH_SOCK = /tmp/ssh-aKZVBTHvkUys/agent.1946
 # automatic
 %F = $(notdir $%)
 # environment
@@ -103,7 +103,7 @@ PWD = /home/witut/Desktop/xaninOS/src
 # environment
 XDG_SEAT = seat0
 # environment
-SSH_AGENT_PID = 1916
+SSH_AGENT_PID = 2008
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = i3
 # environment
@@ -167,7 +167,7 @@ LIBVIRT_DEFAULT_URI = qemu:///system
 # environment
 LC_TELEPHONE = pl_PL.UTF-8
 # environment
-I3SOCK = /run/user/1000/i3/ipc-socket.1854
+I3SOCK = /run/user/1000/i3/ipc-socket.1946
 # default
 MAKE_COMMAND := make
 # environment
@@ -193,6 +193,8 @@ GDK_BACKEND = x11
 # environment
 LC_PAPER = pl_PL.UTF-8
 # environment
+NO_AT_BRIDGE = 1
+# environment
 QT_ACCESSIBILITY = 1
 # environment
 DEFAULTS_PATH = /usr/share/gconf/i3.default.path
@@ -209,11 +211,11 @@ APPS = ./xaninApps
 # environment
 LC_ALL = C
 # environment
-GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/55849219_994b_4dd3_9c3b_58d14c736ae0
+GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/9b42ae5b_a420_485d_b6ec_44b1049ff45b
 # automatic
 ^F = $(notdir $^)
 # environment
-GNOME_TERMINAL_SERVICE = :1.34
+GNOME_TERMINAL_SERVICE = :1.24
 # default
 SUFFIXES := 
 # environment
@@ -233,9 +235,9 @@ LANG = C
 # environment
 TERM = xterm-256color
 # environment
-VSCODE_PID = 2323
+VSCODE_PID = 2184
 # variable set hash-table stats:
-# Load=111/1024=11%, Rehash=0, Collisions=20/138=14%
+# Load=112/1024=11%, Rehash=0, Collisions=20/139=14%
 
 # Pattern-specific Variable Values
 
@@ -243,9 +245,9 @@ VSCODE_PID = 2323
 
 # Directories
 
-# . (device 2066, inode 10461214): 38 files, no impossibilities.
+# . (device 2066, inode 10461214): 39 files, no impossibilities.
 
-# 38 files, no impossibilities in 1 directories.
+# 39 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -275,6 +277,7 @@ debug:
 	qemu-system-i386 -m 512 -s -S ../bin/xanin.img 
 
 build:
+ 
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
@@ -303,7 +306,6 @@ build:
 	@echo [ASM] reboot.asm
 	@$(ASM) -fbin $(APPS)/reboot.asm -o $(APPS)/reboot
 	@echo [ASM] syscall_test.asm
- 
 	@$(ASM) -fbin $(APPS)/syscall_test.asm -o  $(APPS)/syscall_test -w-other
 	@echo [ASM] xanin_apps_space.asm
 	@$(ASM) -fbin $(APPS)/xanin_apps_space.asm -o $(APPS)/xanin_apps_space
@@ -426,12 +428,12 @@ curses:
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 47 / storage = 397 B / avg = 8 B
-# current buf: size = 8162 B / used = 397 B / count = 47 / avg = 8 B
+# strcache buffers: 1 (0) / strings = 48 / storage = 401 B / avg = 8 B
+# current buf: size = 8162 B / used = 401 B / count = 48 / avg = 8 B
 
-# strcache performance: lookups = 55 / hit rate = 14%
+# strcache performance: lookups = 56 / hit rate = 14%
 # hash-table stats:
-# Load=47/8192=1%, Rehash=0, Collisions=1/55=2%
-# Finished Make data base on Sat Aug  6 21:23:49 2022
+# Load=48/8192=1%, Rehash=0, Collisions=1/56=2%
+# Finished Make data base on Wed Aug 10 16:14:19 2022
 
  

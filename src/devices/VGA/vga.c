@@ -1,6 +1,14 @@
 
+#pragma once
+
 #include <devices/VGA/vga.h>
 #include <libc/memory.h>
+
+#define VGA_CRTC_LOCK() outbIO(VGA_CRTC_INDEX_REGISTER, 0x3); \
+                    outbIO(VGA_CRTC_DATA_REGISTER, inbIO(VGA_CRTC_DATA_REGISTER) | 0x80)
+
+#define VGA_CRTC_UNLOCK() outbIO(VGA_CRTC_INDEX_REGISTER, 0x11); \
+                outbIO(VGA_CRTC_DATA_REGISTER, inbIO(VGA_CRTC_DATA_REGISTER) &(~0x80))
 
 void vga_registers_write(uint8_t* registers)
 {
@@ -16,29 +24,27 @@ void vga_registers_write(uint8_t* registers)
         outbIO(VGA_SEQUENCER_DATA_REGISTER, *registers);
     }
 
+
+    VGA_CRTC_UNLOCK();
+
+    // registers[0x03] = registers[0x03] | 0x80;
+    // registers[0x11] = registers[0x11] & ~0x80;
+
     // CRTC
-
-    outbIO(VGA_CRTC_INDEX_REGISTER, 0x3);
-    outbIO(VGA_CRTC_INDEX_REGISTER, inbIO(VGA_CRTC_DATA_REGISTER) | 0x80);
-    
-    outbIO(VGA_CRTC_INDEX_REGISTER, 0x11);
-    outbIO(VGA_CRTC_INDEX_REGISTER, inbIO(VGA_CRTC_DATA_REGISTER) &(~0x80));
-
-    registers[0x03] = registers[0x03] | 0x80;
-    registers[0x11] = registers[0x11] & ~0x80;
-
     for(int i = 0; i < 25; i++, registers++)
     {
         outbIO(VGA_CRTC_INDEX_REGISTER, i);
         outbIO(VGA_CRTC_DATA_REGISTER, *registers); 
     }
 
+    //VGA_GRAPHICS
     for(int i = 0; i < 9; i++, registers++)
     { 
         outbIO(VGA_GRAPHICS_INDEX_REGISTER, i);
         outbIO(VGA_GRAPHICS_DATA_REGISTER, *registers);
     }
 
+    //VGA_)ATTRIBUTE
     for(int i = 0; i < 21; i++, registers++)
     {
         inbIO(VGA_ATTRIBUTE_RESET_REGISTER);
@@ -48,6 +54,9 @@ void vga_registers_write(uint8_t* registers)
 
     inbIO(VGA_ATTRIBUTE_RESET_REGISTER);
     outbIO(VGA_ATTRIBUTE_INDEX_REGISTER, 0x20);
+
+    VGA_CRTC_LOCK();
+
 
 }
 
@@ -268,8 +277,29 @@ void vga_mode_set(uint8_t vga_mode)
             break;
         }
 
+        case VGA_GRAPHICS_320x200x256:
+        {
+            vga_registers_write(g_320x200x256);
+            break;
+        }
+
     }
 
 
+
+}
+
+uint8_t* vga_get_buffer_segment(void)
+{
+    outbIO(VGA_GRAPHICS_INDEX_REGISTER, 0x6);
+    uint8_t segment = (inbIO(VGA_GRAPHICS_DATA_REGISTER) >> 2) & 0x3;
+
+    switch(segment)
+    {
+        case 0: return (uint8_t*)0x0;
+        case 1: return (uint8_t*)0xA0000;
+        case 2: return (uint8_t*)0xB0000;
+        case 3: return (uint8_t*)0xB8000;
+    }
 
 }

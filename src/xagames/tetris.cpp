@@ -50,7 +50,12 @@ extern "C" int tetris(void)
             current_color = 2;
 
         xgm::rectangle object = xgm::rectangle(0); 
-        object.create(20, 5, 2, 3, current_color);
+
+        switch(rand() % 3)
+        {
+            case 0: object.create(40, 1, 2, 2, current_color); break;
+            case 1: object.create(40, 1, 1, 4, current_color); break;
+        }
 
         while(object.positiony_get() + object.sizey_get() < VGA_HEIGHT)
         {

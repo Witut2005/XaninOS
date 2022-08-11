@@ -56,6 +56,8 @@ void _start(void)
 
     init_disk(ATA_FIRST_BUS, ATA_MASTER);
     
+    // vga_mode_set(VGA_GRAPHICS_320x200x256);
+    // uint8_t* vga_pointer = vga_get_buffer_segment();
 
     time_get(&SystemTime);
    

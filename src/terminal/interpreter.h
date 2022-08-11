@@ -154,15 +154,17 @@
 extern void cpp_test(void);
 #endif
 
+
+
 extern void screenshot(void);
 extern void xagame_test(void);
-extern int tetris(void);;
+extern int tetris(void);
 
 #include <xaninApps/nic_info.c>
 #include <gyn_cl/gyn.c>
 #include <xin_fs/xin_xpaint.c>
 #include <xin_fs/xin_apps.c>
-
+#include <xaninApps/xgl_test.c>
 //extern void xagame_test(void);
 //extern void assembler(char* file_name);
 
