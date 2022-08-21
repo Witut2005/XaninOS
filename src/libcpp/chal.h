@@ -18,4 +18,14 @@ void real_mode_enter(uint16_t segment, uint16_t offset, uint32_t return_address)
 void rdmsr(uint32_t msr_id, uint32_t low, uint32_t high);
 void wrmsr(uint32_t msr_id, uint32_t low, uint32_t high);
 
+static inline void sti(void)
+{
+    asm("sti");
+}
+
+static inline void cli(void)
+{
+    asm("cli");
+}
+
 }

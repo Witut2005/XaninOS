@@ -24,6 +24,7 @@
 #include <libc/syslog.h>
 #include <xanin_info/info_block.c>
 #include <xin_fs/xin.h>
+#include <devices/NIC/8254x.h>
 
 extern void v86_mode_enter(void);
 extern void mouse_enable(void);
@@ -51,9 +52,9 @@ void _start(void)
     screen_init();                  //init screen management system
 
 
-    pmmngr_init(0x200000, 0xF00000);
-    pmmngr_init_region(0x200000, 0xFFFFFF);
-
+    pmmngr_init(0x20000, 0xFFFFFF);
+    pmmngr_init_region(0x20000, 0xFFFFFF);
+// 0x8050 1900
     init_disk(ATA_FIRST_BUS, ATA_MASTER);
     
     // vga_mode_set(VGA_GRAPHICS_320x200x256);
@@ -200,10 +201,6 @@ void _start(void)
 
     xprintf("Number of cores: %d\n", number_of_cores);
 
-    while(KeyInfo.scan_code != ENTER);
-
-    xprintf("\n\n");
-   
     srand(SystemTime.seconds);
 
 
@@ -223,19 +220,18 @@ void _start(void)
     argv[3] = program_parameters2;
     argv[4] = program_parameters3;
 
-    i8254x_init();
-
-
-
     xin_init_fs();
 
     if(xin_find_entry("/syslog") == nullptr)
         create_file_kernel("/syslog");
 
-    printk("kernel succefully loaded :))");
+    i8254x_init();
+    i8254x_packet_send(0x0, 128);
+    while(KeyInfo.scan_code != ENTER);
 
-    for(int i = 0; i <= 30; i++)
-        printk("kernel ready");
+    xprintf("\n\n");
+   
+
 
     while(1)
     {

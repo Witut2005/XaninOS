@@ -110,29 +110,27 @@ namespace nic
 
     };
 
-    enum tdesc_cmd
-    {
-
-        EOP = 1,
-        IFCS = 1 << 1,
-        IC = 1 << 2,
-        RS = 1 << 3,
-        RPS = 1 << 4,
-        RSV = 1 << 4,
-        DEXT = 1 << 5,
-        VLE = 1 << 6,
-        IDE = 1 << 7
-
-    };
-    
     enum tctl
     {
         EN = 1 << 1,
         PSP = 1 << 3,
         CT = 1 << 4,
-        COLD = 1 << 12
+        COLD = 1 << 12,
+        NRTU = 1 << 25
     };
 
+    enum CMD
+    {
+        EOP = 1 << 0,
+        IFCS = 1 << 1,
+        IC = 1 << 2,
+        RS = 1 << 3,
+        RPS = 1 << 4,
+        RSV = 1 << 4,
+        DEXT = 1 << 5, 
+        VLE = 1 << 6,
+        IDE = 1 << 6
+    };
 
 
 }
@@ -176,6 +174,7 @@ class Intel8254xDriver
     uint8_t mac[6];
     i8254xReceiveDescriptor* receive_buffer;
     i8254xTransmitDescriptor* transmit_buffer;
+    uint32_t txd_current;
     
     //---------------------------------
 
@@ -238,6 +237,11 @@ extern "C"
     void i8254x_interrupt_handler(void)
     {
         return Intel8254x.interrupt_handler();
+    }
+
+    void i8254x_packet_send(uint32_t address, uint16_t length)
+    {
+        return Intel8254x.send_packet(address, length);
     }
 
 }

@@ -267,7 +267,7 @@ void* malloc(uint16_t size)
 {
     uint8_t* ptr = (uint8_t*)pmmngr_alloc_block();
 
-    for(int i = 1; i < size / 4096; i++)
+    for(int i = 0; i < size / 4096; i++)
         pmmngr_alloc_block();
 
     return ptr;

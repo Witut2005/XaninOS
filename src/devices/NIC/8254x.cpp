@@ -4,8 +4,9 @@
 #include <libcpp/hal.h>
 #include <libcpp/chal.h>
 #include <libcpp/ostream.h>
+#include <libc/syslog.h>
 
-#define INTEL_8254X_DESCRIPTORS 1024
+#define INTEL_8254X_DESCRIPTORS 256
 #define reset() write(0x0, 0x4000000)
 
 
@@ -56,10 +57,6 @@ void Intel8254xDriver::receive_init(void)
     this->write(nic::RDBAH, 0x0);
     this->receive_buffer = (i8254xReceiveDescriptor*)(this->read(nic::RDBAL));
     
-    for(uint8_t* i = (uint8_t*)this->read(nic::RDBAL); (uint32_t)i < this->read(nic::RDBAL) + INTEL_8254X_DESCRIPTORS * sizeof(i8254xReceiveDescriptor); i++)
-        *i = 0x0;
-
-
     this->write(nic::RDLEN, INTEL_8254X_DESCRIPTORS * sizeof(i8254xReceiveDescriptor));
 
     /* set head and tail to proper values */
@@ -86,49 +83,79 @@ void Intel8254xDriver::transmit_init(void)
 
 
     /* transmit buffer allocation */
-    this->transmit_buffer = (i8254xTransmitDescriptor*)malloc(sizeof(i8254xTransmitDescriptor) * INTEL_8254X_DESCRIPTORS);
+    // auto AHA = (i8254xTransmitDescriptor*)malloc(sizeof(i8254xTransmitDescriptor) * INTEL_8254X_DESCRIPTORS); //+ 16);
 
-    for(int i = 0; i < INTEL_8254X_DESCRIPTORS; i++)
-    {
-        this->transmit_buffer[i].address_low = 0x0;
-        this->transmit_buffer[i].address_high = 0x0;
-        this->transmit_buffer[i].length = 0x0;
-        this->transmit_buffer[i].cso = 0x0;
-        this->transmit_buffer[i].cmd = 0x0;
-        this->transmit_buffer[i].status = 0x0;
-        this->transmit_buffer[i].css = 0x0;
-        this->transmit_buffer[i].special = 0x0;
-    }
+    auto transmit_buffer_region =malloc(4096);
+    // this->transmit_buffer = (i8254xTransmitDescriptor*)aha;
 
-    std::cout << std::hex << (uint32_t)this->transmit_buffer << std::endl;
-    std::cout << std::hex << this->transmit_buffer[100].address_low << std::endl;
+
+    // for(int i = 0; i < INTEL_8254X_DESCRIPTORS; i++)
+    // {
+    //     this->transmit_buffer[i].address_low = (uint32_t)&this->transmit_buffer[i];
+    //     this->transmit_buffer[i].address_high = 0x0;
+    //     this->transmit_buffer[i].length = 0x0;
+    //     this->transmit_buffer[i].cso = 0x0;
+    //     this->transmit_buffer[i].cmd = 0x0;
+    //     this->transmit_buffer[i].status = 0x0;
+    //     this->transmit_buffer[i].css = 0x0;
+    //     this->transmit_buffer[i].special = 0x0;
+    // }
+
 
     // while(1);
 
-    this->write(nic::TDBAL, (uint32_t)this->transmit_buffer);
+    this->write(nic::TDBAL, (uint32_t)transmit_buffer_region);//this->transmit_buffer);
     this->write(nic::TDBAH, 0x0);
     // this->transmit_buffer = (i8254xTransmitDescriptor*)(this->read(nic::TDBAL));
-
-    for(uint8_t* i = (uint8_t*)this->read(nic::TDBAL); (uint32_t)i < this->read(nic::TDBAL) + INTEL_8254X_DESCRIPTORS * sizeof(i8254xTransmitDescriptor); i++)
-        *i = 0x0;
-
-    /* set buffer length */
-    this->write(nic::TDLEN, INTEL_8254X_DESCRIPTORS * 16);
 
     /* set head and tail to proper values */
     this->write(nic::TDH, 0x0);
     this->write(nic::TDT, INTEL_8254X_DESCRIPTORS);
 
+    /* set buffer length */
+    this->write(nic::TDLEN, INTEL_8254X_DESCRIPTORS * sizeof(i8254xTransmitDescriptor));
+
+    this->txd_current = 0x0;
+
     /* enable transmit packets */
     this->write(nic::TCTL, this->read(nic::TCTL) | nic::tctl::EN | nic::tctl::PSP);
 
-    this->write(nic::TCTL, 0x10 << 4); //coliision treshold
-    this->write(nic::TCTL, 0x40 << 12); //collision distance
+    // this->write(nic::TCTL, 0x10 << 4); //coliision treshold
+    // this->write(nic::TCTL, 0x40 << 12); //collision distance
 
-    this->write(nic::TIPG, 10 << 0);
-    this->write(nic::TIPG, 10 << 10);
-    this->write(nic::TIPG, 10 << 20);
+    this->write(nic::TIPG, 0x0060200A);
+    // this->transmit_buffer = (i8254xTransmitDescriptor*)transmit_buffer_region;
 
+    sti();
+
+
+
+
+}
+
+void Intel8254xDriver::send_packet(uint32_t address, uint16_t length)
+{
+
+    this->transmit_buffer[this->txd_current].address_low = address;
+    this->transmit_buffer[this->txd_current].address_high = 0x0;
+    this->transmit_buffer[this->txd_current].cmd = nic::CMD::EOP | nic::CMD::IFCS | nic::CMD::RS;// | nic::CMD::RPS;
+    this->transmit_buffer[this->txd_current].length = length;
+
+    this->transmit_buffer[this->txd_current].status = 0x0;
+    this->transmit_buffer[this->txd_current].css = 0x0;
+    this->transmit_buffer[this->txd_current].special = 0x0;
+
+
+    this->write(nic::TDT,(this->txd_current + 1) % INTEL_8254X_DESCRIPTORS);
+    this->txd_current = (this->txd_current + 1) % INTEL_8254X_DESCRIPTORS;
+
+    while(!this->transmit_buffer[this->txd_current].status);
+
+    std::string message = "packet status: ";
+    char buf[40];
+    message = message + int_to_str(this->transmit_buffer[this->txd_current].status, buf);
+
+    printk(message.c_str());
 
 
 
@@ -159,19 +186,19 @@ void Intel8254xDriver::init()
     
     this->mac_get();
 
-    /* general configuration (page 389) */
-    this->write(nic::CTRL, this->read(nic::CTRL) | nic::ctrl::ASDE | nic::ctrl::SLU); // step 2
-    this->write(nic::CTRL, this->read(nic::CTRL) & (~nic::ctrl::LRST)); // step 5
-    this->write(nic::CTRL, this->read(nic::CTRL) & (~nic::ctrl::PHY_RST)); // step 6
-    this->write(nic::CTRL, this->read(nic::CTRL) & (~nic::ctrl::ILOS)); // step 7 (can be bad)
+    // /* general configuration (page 389) */
+    // this->write(nic::CTRL, this->read(nic::CTRL) | nic::ctrl::ASDE | nic::ctrl::SLU); // step 2
+    // this->write(nic::CTRL, this->read(nic::CTRL) & (~nic::ctrl::LRST)); // step 5
+    // this->write(nic::CTRL, this->read(nic::CTRL) & (~nic::ctrl::PHY_RST)); // step 6
+    // this->write(nic::CTRL, this->read(nic::CTRL) & (~nic::ctrl::ILOS)); // step 7 (can be bad)
 
-    this->multicast_table_array_clear(); // clear multicast table
-    this->multicast_table_array_clear(); // clear multicast table
+    // this->multicast_table_array_clear(); // clear multicast table
+    // this->multicast_table_array_clear(); // clear multicast table
     
-    /* disable VLANs */
-    this->write(nic::CTRL, this->read(nic::CTRL) & (~nic::ctrl::VME));
+    // /* disable VLANs */
+    // this->write(nic::CTRL, this->read(nic::CTRL) & (~nic::ctrl::VME));
 
-    this->receive_init();
+    // this->receive_init();
     this->transmit_init();
 
 
@@ -180,10 +207,10 @@ void Intel8254xDriver::init()
                   nic::ims::RXDMT | nic::ims::RXSEQ | nic::ims::LSC);
     
 
-    while(1)
-    {
-        this->send_packet(0x0, 128);
-    }
+    // while(1)
+    // {
+    //     this->send_packet(0x0, 128);
+    // }
 
     // this->write(nic::IMS, 0x1F6DC);
     // this->write(nic::IMS, 0xFFFFFFF0);
@@ -231,32 +258,11 @@ void Intel8254xDriver::receive_packet(void)
     {
         uint8_t* packet = (uint8_t*)this->receive_buffer[this->read(nic::RDT)].address_low;
         uint16_t packet_lenght = this->receive_buffer[this->read(nic::RDT)].length;
-        xprintf("0x%x 0x%x", (uint32_t)packet, packet_lenght);
+        xprintf("0x%x 0x%x\n", (uint32_t)packet, packet_lenght);
     }
 
 }
 
-void Intel8254xDriver::send_packet(uint32_t address, uint16_t length)
-{
-    this->transmit_buffer[this->read(nic::TDT)].address_low = address;
-    this->transmit_buffer[this->read(nic::TDT)].address_high = 0x0;
-    this->transmit_buffer[this->read(nic::TDT)].cmd = 0xF ^ 0x4;
-    this->transmit_buffer[this->read(nic::TDT)].length = length;
-
-    this->transmit_buffer[this->read(nic::TDT)].status = 0x0;
-    this->transmit_buffer[this->read(nic::TDT)].css = 0x0;
-    this->transmit_buffer[this->read(nic::TDT)].special = 0x0;
-
-    uint32_t tdt_old = this->read(nic::TDT);
-    this->write(nic::TDT, (this->read(nic::TDT) + 1) % INTEL_8254X_DESCRIPTORS);
-
-    while(this->transmit_buffer[tdt_old].status & 0xF)    
-    {
-        msleep(1);
-    }
-
-
-}
 
 void  Intel8254xDriver::interrupt_handler(void)
 {
@@ -264,6 +270,6 @@ void  Intel8254xDriver::interrupt_handler(void)
 
     xprintf("ICR STATUS 0x%x", interrupt_status);
 
-    while(1);
+    // while(1);
 
 }
