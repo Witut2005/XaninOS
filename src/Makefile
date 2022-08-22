@@ -80,6 +80,13 @@ build:
 	@echo [CC] tetris.cpp
 	@$(CC) $(CC_OPTIONS) ./xagames/tetris.cpp -o ./xagames/tetris.o
 
+	@echo [CC] bytes.cpp
+	@$(CC) $(CC_OPTIONS) ./libcpp/bytes.cpp -o ./libcpp/bytes.o
+
+	@# @echo [CC] tuple.hpp
+	@# @$(CC) $(CC_OPTIONS) ./libcpp/tuple.hpp -o ./libcpp/tuple.o
+
+	
  
 	@#C LIBARIES
 
@@ -175,7 +182,7 @@ endif
 
 
 run:
-		sudo qemu-system-i386 -smp 2 -net nic -drive file=../bin/xanin.img,cache=unsafe -m 512
+	sudo qemu-system-i386 -smp 2 -drive file=../bin/xanin.img,cache=unsafe -m 512 -net nic
 
 curses:
 	qemu-system-i386 -curses -k en-us -m 512 -hda ../bin/xanin.img 

@@ -226,7 +226,7 @@ void _start(void)
         create_file_kernel("/syslog");
 
     i8254x_init();
-    i8254x_packet_send(0x0, 128);
+    // i8254x_packet_send(0x0, 128);
     while(KeyInfo.scan_code != ENTER);
 
     xprintf("\n\n");

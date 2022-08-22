@@ -16,6 +16,7 @@
 #include <libcpp/new.hpp>
 #include <libcpp/box.h>
 #include <libcpp/iterator.h>
+#include <libcpp/bytes.h>
 
 class Test
 {
@@ -138,6 +139,14 @@ void cpp_prog()
     for(auto a : moj_boxik)
         std::cout << a;
     
+    int x = 0x12345678;
+    Bytes gm = x;
+
+    screen_clear();
+
+    for(auto a : gm)
+        xprintf("0x%x ", a);
+
 
     wait_key(ENTER_RELEASE);
     wait_key(ENTER_RELEASE);

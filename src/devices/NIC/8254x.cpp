@@ -85,21 +85,20 @@ void Intel8254xDriver::transmit_init(void)
     /* transmit buffer allocation */
     // auto AHA = (i8254xTransmitDescriptor*)malloc(sizeof(i8254xTransmitDescriptor) * INTEL_8254X_DESCRIPTORS); //+ 16);
 
-    auto transmit_buffer_region =malloc(4096);
-    // this->transmit_buffer = (i8254xTransmitDescriptor*)aha;
+    auto transmit_buffer_region = malloc(4096); // kompilator zawsze ma racje, prawda? 
 
 
-    // for(int i = 0; i < INTEL_8254X_DESCRIPTORS; i++)
-    // {
-    //     this->transmit_buffer[i].address_low = (uint32_t)&this->transmit_buffer[i];
-    //     this->transmit_buffer[i].address_high = 0x0;
-    //     this->transmit_buffer[i].length = 0x0;
-    //     this->transmit_buffer[i].cso = 0x0;
-    //     this->transmit_buffer[i].cmd = 0x0;
-    //     this->transmit_buffer[i].status = 0x0;
-    //     this->transmit_buffer[i].css = 0x0;
-    //     this->transmit_buffer[i].special = 0x0;
-    // }
+    for(int i = 0; i < INTEL_8254X_DESCRIPTORS; i++)
+    {
+        this->transmit_buffer[i].address_low = (uint32_t)&this->transmit_buffer[i];
+        this->transmit_buffer[i].address_high = 0x0;
+        this->transmit_buffer[i].length = 0x0;
+        this->transmit_buffer[i].cso = 0x0;
+        this->transmit_buffer[i].cmd = 0x0;
+        this->transmit_buffer[i].status = 0x0;
+        this->transmit_buffer[i].css = 0x0;
+        this->transmit_buffer[i].special = 0x0;
+    }
 
 
     // while(1);
@@ -110,7 +109,7 @@ void Intel8254xDriver::transmit_init(void)
 
     /* set head and tail to proper values */
     this->write(nic::TDH, 0x0);
-    this->write(nic::TDT, INTEL_8254X_DESCRIPTORS);
+    this->write(nic::TDT, 0x0);
 
     /* set buffer length */
     this->write(nic::TDLEN, INTEL_8254X_DESCRIPTORS * sizeof(i8254xTransmitDescriptor));
@@ -124,9 +123,8 @@ void Intel8254xDriver::transmit_init(void)
     // this->write(nic::TCTL, 0x40 << 12); //collision distance
 
     this->write(nic::TIPG, 0x0060200A);
-    // this->transmit_buffer = (i8254xTransmitDescriptor*)transmit_buffer_region;
+    this->transmit_buffer = (i8254xTransmitDescriptor*)transmit_buffer_region;
 
-    sti();
 
 
 
@@ -136,26 +134,31 @@ void Intel8254xDriver::transmit_init(void)
 void Intel8254xDriver::send_packet(uint32_t address, uint16_t length)
 {
 
+    screen_clear();
     this->transmit_buffer[this->txd_current].address_low = address;
     this->transmit_buffer[this->txd_current].address_high = 0x0;
-    this->transmit_buffer[this->txd_current].cmd = nic::CMD::EOP | nic::CMD::IFCS | nic::CMD::RS;// | nic::CMD::RPS;
+    this->transmit_buffer[this->txd_current].cmd = nic::CMD::EOP | nic::CMD::IFCS | nic::CMD::RS | nic::CMD::RPS;// | nic::CMD::RPS;
     this->transmit_buffer[this->txd_current].length = length;
 
     this->transmit_buffer[this->txd_current].status = 0x0;
     this->transmit_buffer[this->txd_current].css = 0x0;
+    this->transmit_buffer[this->txd_current].cso = 0x0;
     this->transmit_buffer[this->txd_current].special = 0x0;
 
 
+    auto txd_old = this->txd_current;
     this->write(nic::TDT,(this->txd_current + 1) % INTEL_8254X_DESCRIPTORS);
     this->txd_current = (this->txd_current + 1) % INTEL_8254X_DESCRIPTORS;
 
-    while(!this->transmit_buffer[this->txd_current].status);
+    while(!this->transmit_buffer[txd_old].status);
 
     std::string message = "packet status: ";
     char buf[40];
     message = message + int_to_str(this->transmit_buffer[this->txd_current].status, buf);
 
     printk(message.c_str());
+    xprintf("status: 0x%x\n", this->transmit_buffer[txd_old].status);
+    while(1);
 
 
 
@@ -198,7 +201,7 @@ void Intel8254xDriver::init()
     // /* disable VLANs */
     // this->write(nic::CTRL, this->read(nic::CTRL) & (~nic::ctrl::VME));
 
-    // this->receive_init();
+    this->receive_init();
     this->transmit_init();
 
 
