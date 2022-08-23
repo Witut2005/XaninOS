@@ -1,4 +1,4 @@
-make --dry-run --keep-going --print-directory
+make --dry-run --always-make --keep-going --print-directory
 make: Entering directory '/home/witut/Desktop/xaninOS/src'
 echo [ASM] boot.asm
 nasm -fbin ./boot/boot.asm
@@ -45,8 +45,8 @@ echo [CC] xagame_test.cpp
 i386-elf-g++ -O0 -fno-exceptions -lstdc++ -masm=intel -std=c++17 -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Wno-write-strings -Wno-return-type -fno-rtti -fconcepts-ts -I /home/witut/Desktop/xaninOS/src/ -c ./xagames/xagame_test.cpp -o ./xagames/xagame_test.o
 echo [CC] tetris.cpp
 i386-elf-g++ -O0 -fno-exceptions -lstdc++ -masm=intel -std=c++17 -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Wno-write-strings -Wno-return-type -fno-rtti -fconcepts-ts -I /home/witut/Desktop/xaninOS/src/ -c ./xagames/tetris.cpp -o ./xagames/tetris.o
-echo [CC] bytes.cpp
-i386-elf-g++ -O0 -fno-exceptions -lstdc++ -masm=intel -std=c++17 -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Wno-write-strings -Wno-return-type -fno-rtti -fconcepts-ts -I /home/witut/Desktop/xaninOS/src/ -c ./libcpp/bytes.cpp -o ./libcpp/bytes.o
+# @echo [CC] bytes.cpp
+# @i386-elf-g++ -O0 -fno-exceptions -lstdc++ -masm=intel -std=c++17 -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Wno-write-strings -Wno-return-type -fno-rtti -fconcepts-ts -I /home/witut/Desktop/xaninOS/src/ -c ./libcpp/bytes.cpp -o ./libcpp/bytes.o
 # @echo [CC] tuple.hpp
 # @i386-elf-g++ -O0 -fno-exceptions -lstdc++ -masm=intel -std=c++17 -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Wno-write-strings -Wno-return-type -fno-rtti -fconcepts-ts -I /home/witut/Desktop/xaninOS/src/ -c ./libcpp/tuple.hpp -o ./libcpp/tuple.o
 #C LIBARIES

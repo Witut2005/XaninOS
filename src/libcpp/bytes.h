@@ -20,19 +20,20 @@ class Bytes
         return this->end_of_data;
     }
 
-    // void little_endian(void)
-    // {
-    //     T tmp = 0;
+    void switch_to_little_endian(void)
+    {
+        T tmp = 0;
+        T result = 0;
 
-    //     for(int i = 0; i < sizeof(this->copy); i++)
-    //     {
-    //         tmp = tmp << 8;
-    //         tmp = tmp | (bytes & 0xFF);
-    //         bytes = bytes >> 8;
-    //     }
+        for(int i = 0; i < sizeof(this->copy); i++)
+        {
+            tmp = tmp << 8;
+            tmp = tmp | (this->copy & 0xFF);
+            this->copy = this->copy >> 8;
+        }
 
-    //     this->copy = tmp;
-    // }
+        this->copy = tmp;
+    }
 
     Bytes(T bytes)
     {

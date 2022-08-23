@@ -5,6 +5,7 @@
 #include <libcpp/chal.h>
 #include <libcpp/ostream.h>
 #include <libc/syslog.h>
+#include <libcpp/cmemory.h>
 
 #define INTEL_8254X_DESCRIPTORS 256
 #define reset() write(0x0, 0x4000000)
@@ -109,7 +110,7 @@ void Intel8254xDriver::transmit_init(void)
 
     /* set head and tail to proper values */
     this->write(nic::TDH, 0x0);
-    this->write(nic::TDT, 0x0);
+    this->write(nic::TDT, INTEL_8254X_DESCRIPTORS);
 
     /* set buffer length */
     this->write(nic::TDLEN, INTEL_8254X_DESCRIPTORS * sizeof(i8254xTransmitDescriptor));
@@ -152,15 +153,42 @@ void Intel8254xDriver::send_packet(uint32_t address, uint16_t length)
 
     while(!this->transmit_buffer[txd_old].status);
 
-    std::string message = "packet status: ";
-    char buf[40];
-    message = message + int_to_str(this->transmit_buffer[this->txd_current].status, buf);
+    // std::string message = "network packet status: ";
+    // char buf[40] = {0};
+    // message = message + int_to_str(this->transmit_buffer[txd_old].status, buf);
 
-    printk(message.c_str());
-    xprintf("status: 0x%x\n", this->transmit_buffer[txd_old].status);
-    while(1);
+    // printk(message.c_str());
+    // xprintf("status: 0x%x\n", this->transmit_buffer[txd_old].status);
 
 
+}
+
+void Intel8254xDriver::send_ethernet_frame(uint8_t* mac_destination, uint8_t* mac_source, uint8_t* buffer, uint16_t length)
+{
+    uint8_t* tmp = (uint8_t*)malloc(1518);
+    EthernetFrame* frame = (EthernetFrame*)tmp;
+    
+
+    memcpy(frame->mac_destination, mac_destination, 6);
+    memcpy(frame->mac_source, mac_source, 6);
+
+    frame->ethernet_type = 0x806; // ARP
+
+    tmp = tmp + ETHERNET_FRAME_HEADER_SIZE;
+
+    int i = 0;
+    for(; i < length; i++)
+    {
+        tmp[i] = buffer[i];
+    }
+
+    tmp[i] = 0x0;
+    tmp[i + 1] = 0x20;
+    tmp[i + 2] = 0x20;
+    tmp[i + 3] = 0x3A;
+
+    this->send_packet((uint32_t)frame, length + ETHERNET_FRAME_HEADER_SIZE);
+    free(frame);
 
 }
 
@@ -215,8 +243,20 @@ void Intel8254xDriver::init()
     //     this->send_packet(0x0, 128);
     // }
 
+    this->send_packet(0x0, 128);
+
     // this->write(nic::IMS, 0x1F6DC);
     // this->write(nic::IMS, 0xFFFFFFF0);
+
+
+    uint8_t dest_mac[6] = {0x12,0x34,0x56,0x78,0x9A,0xBC};
+
+    char jj[] = "dupa dupa dupa dupa";
+
+    // while(1)
+    // {
+    //     this->send_ethernet_frame(dest_mac, this->mac_get(), (uint8_t*)jj, 200);
+    // }
 
 
 }

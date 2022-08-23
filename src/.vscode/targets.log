@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Mon Aug 22 21:40:37 2022
+# Make data base, printed on Tue Aug 23 19:12:11 2022
 
 # Variables
 
@@ -91,7 +91,7 @@ LS_COLORS = rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:
 # environment
 XDG_SESSION_DESKTOP = i3
 # environment
-SSH_AUTH_SOCK = /tmp/ssh-rhaYycL0LOUe/agent.1899
+SSH_AUTH_SOCK = /tmp/ssh-yBSM9rZ5StKR/agent.1870
 # automatic
 %F = $(notdir $%)
 # environment
@@ -103,7 +103,7 @@ PWD = /home/witut/Desktop/xaninOS/src
 # environment
 XDG_SEAT = seat0
 # environment
-SSH_AGENT_PID = 1960
+SSH_AGENT_PID = 1931
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = i3
 # environment
@@ -167,7 +167,7 @@ LIBVIRT_DEFAULT_URI = qemu:///system
 # environment
 LC_TELEPHONE = pl_PL.UTF-8
 # environment
-I3SOCK = /run/user/1000/i3/ipc-socket.1899
+I3SOCK = /run/user/1000/i3/ipc-socket.1870
 # default
 MAKE_COMMAND := make
 # environment
@@ -209,7 +209,7 @@ APPS = ./xaninApps
 # environment
 LC_ALL = C
 # environment
-GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/e22904b6_e733_4508_b0d5_4da996a82b70
+GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/74ac289d_6298_4281_b32b_fffeefbd7a68
 # automatic
 ^F = $(notdir $^)
 # environment
@@ -233,7 +233,7 @@ LANG = C
 # environment
 TERM = xterm-256color
 # environment
-VSCODE_PID = 2573
+VSCODE_PID = 2437
 # variable set hash-table stats:
 # Load=111/1024=11%, Rehash=0, Collisions=20/138=14%
 
@@ -243,9 +243,9 @@ VSCODE_PID = 2573
 
 # Directories
 
-# . (device 2066, inode 10461214): 39 files, no impossibilities.
+# . (device 2066, inode 10461214): 38 files, no impossibilities.
 
-# 39 files, no impossibilities in 1 directories.
+# 38 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -263,7 +263,7 @@ all:
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-08-22 21:40:28.366806543
+#  Last modified 2022-08-23 13:51:48.081544292
 #  File has been updated.
 #  Successfully updated.
 
@@ -303,6 +303,7 @@ build:
 	@echo [ASM] reboot.asm
 	@$(ASM) -fbin $(APPS)/reboot.asm -o $(APPS)/reboot
 	@echo [ASM] syscall_test.asm
+ 
 	@$(ASM) -fbin $(APPS)/syscall_test.asm -o  $(APPS)/syscall_test -w-other
 	@echo [ASM] xanin_apps_space.asm
 	@$(ASM) -fbin $(APPS)/xanin_apps_space.asm -o $(APPS)/xanin_apps_space
@@ -312,7 +313,6 @@ build:
 	@$(CC) $(CC_OPTIONS) ./devices/APIC/apic.cpp -o ./devices/APIC/apic.o
 	@echo [CC] cpp_test.cpp
 	@$(CC) $(CC_OPTIONS) ./test/cpp_test.cpp -o ./test/cpp_test.o
- 
 	@echo [CC] cpp_test.cpp
 	@$(CC) $(CC_OPTIONS) ./test/cpp_test2.cpp -o ./test/cpp_test2.o
 	@echo [CC] com.cpp
@@ -329,8 +329,8 @@ build:
 	@$(CC) $(CC_OPTIONS) ./xagames/xagame_test.cpp -o ./xagames/xagame_test.o
 	@echo [CC] tetris.cpp
 	@$(CC) $(CC_OPTIONS) ./xagames/tetris.cpp -o ./xagames/tetris.o
-	@echo [CC] bytes.cpp
-	@$(CC) $(CC_OPTIONS) ./libcpp/bytes.cpp -o ./libcpp/bytes.o
+	@# @echo [CC] bytes.cpp
+	@# @$(CC) $(CC_OPTIONS) ./libcpp/bytes.cpp -o ./libcpp/bytes.o
 	@# @echo [CC] tuple.hpp
 	@# @$(CC) $(CC_OPTIONS) ./libcpp/tuple.hpp -o ./libcpp/tuple.o
 	
@@ -414,7 +414,7 @@ run:
 #  Modification time never checked.
 #  File has not been updated.
 #  recipe to execute (from 'Makefile', line 185):
-	sudo qemu-system-i386 -smp 2 -drive file=../bin/xanin.img,cache=unsafe -m 512 -net nic
+	sudo qemu-system-i386 -smp 2 -drive file=../bin/xanin.img,cache=unsafe -m 512 -net nic -net tap
 
 curses:
 #  Implicit rule search has not been done.
@@ -431,12 +431,12 @@ curses:
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 48 / storage = 401 B / avg = 8 B
-# current buf: size = 8162 B / used = 401 B / count = 48 / avg = 8 B
+# strcache buffers: 1 (0) / strings = 47 / storage = 397 B / avg = 8 B
+# current buf: size = 8162 B / used = 397 B / count = 47 / avg = 8 B
 
-# strcache performance: lookups = 56 / hit rate = 14%
+# strcache performance: lookups = 55 / hit rate = 14%
 # hash-table stats:
-# Load=48/8192=1%, Rehash=0, Collisions=1/56=2%
-# Finished Make data base on Mon Aug 22 21:40:37 2022
+# Load=47/8192=1%, Rehash=0, Collisions=1/55=2%
+# Finished Make data base on Tue Aug 23 19:12:11 2022
 
  

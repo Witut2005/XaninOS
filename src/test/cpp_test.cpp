@@ -147,6 +147,11 @@ void cpp_prog()
     for(auto a : gm)
         xprintf("0x%x ", a);
 
+    // gm.little_endian();
+
+    for(auto a : gm)
+        xprintf("0x%x ", a);
+
 
     wait_key(ENTER_RELEASE);
     wait_key(ENTER_RELEASE);

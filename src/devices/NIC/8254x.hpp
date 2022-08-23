@@ -2,6 +2,7 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <devices/PCI/pci.h>
+#include <devices/network_protocols/ethernet_frame/ethernet_frame.h>
 
 extern "C" int32_t pci_find_device(uint16_t, pci_device*);
 extern "C" uint32_t pci_get_bar(const uint8_t bus, const uint8_t slot, const uint8_t function, const uint8_t bar_number);
@@ -189,7 +190,10 @@ class Intel8254xDriver
     uint32_t receive_buffer_get(void);
     uint32_t transmit_buffer_get(void);
     void receive_packet(void);
+
     void send_packet(uint32_t address_low, uint16_t length);
+    void send_ethernet_frame(uint8_t* mac_destination, uint8_t* mac_source, uint8_t* buffer, uint16_t length);
+
     void interrupt_handler(void);
     void receive_init(void);
     void transmit_init(void);
