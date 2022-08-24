@@ -176,6 +176,7 @@ class Intel8254xDriver
     i8254xReceiveDescriptor* receive_buffer;
     i8254xTransmitDescriptor* transmit_buffer;
     uint32_t txd_current;
+    uint32_t rxd_current;
     
     //---------------------------------
 

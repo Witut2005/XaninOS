@@ -6,6 +6,7 @@
 #include <libcpp/ostream.h>
 #include <libc/syslog.h>
 #include <libcpp/cmemory.h>
+#include <devices/APIC/apic_registers.h>
 
 #define INTEL_8254X_DESCRIPTORS 256
 #define reset() write(0x0, 0x4000000)
@@ -53,10 +54,24 @@ uint16_t Intel8254xDriver::eeprom_read(uint8_t address)
 
 void Intel8254xDriver::receive_init(void)
 {
+
+    this->receive_buffer = (i8254xReceiveDescriptor*)malloc(sizeof(i8254xReceiveDescriptor) * INTEL_8254X_DESCRIPTORS);
+
+    for(int i = 0; i < INTEL_8254X_DESCRIPTORS; i++)
+    {
+        this->receive_buffer[i].address_low = (uint32_t)&this->transmit_buffer[i];
+        this->receive_buffer[i].address_high = 0x0;
+        this->receive_buffer[i].length = 0x0;
+        this->receive_buffer[i].checksum = 0x0;
+        this->receive_buffer[i].status = 0x0;
+        this->receive_buffer[i].errors = 0x0;
+        this->receive_buffer[i].special = 0x0;
+    }
+
     /* receive buffer allocation */
-    this->write(nic::RDBAL, (uint32_t)malloc(sizeof(i8254xReceiveDescriptor) * INTEL_8254X_DESCRIPTORS));
+    this->write(nic::RDBAL, (uint32_t)this->receive_buffer);
     this->write(nic::RDBAH, 0x0);
-    this->receive_buffer = (i8254xReceiveDescriptor*)(this->read(nic::RDBAL));
+
     
     this->write(nic::RDLEN, INTEL_8254X_DESCRIPTORS * sizeof(i8254xReceiveDescriptor));
 
@@ -74,6 +89,8 @@ void Intel8254xDriver::receive_init(void)
     this->write(nic::RCTL, this->read(nic::RCTL) | nic::rctl::BSEX);
     this->write(nic::RCTL, this->read(nic::RCTL) | (0x1 << 16));  // BSIZE
 
+    this->rxd_current = 0x0;
+
     /* enable receiving packets */
     this->write(nic::RCTL, this->read(nic::RCTL) | nic::RCTL_EN);
 
@@ -86,7 +103,8 @@ void Intel8254xDriver::transmit_init(void)
     /* transmit buffer allocation */
     // auto AHA = (i8254xTransmitDescriptor*)malloc(sizeof(i8254xTransmitDescriptor) * INTEL_8254X_DESCRIPTORS); //+ 16);
 
-    auto transmit_buffer_region = malloc(4096); // kompilator zawsze ma racje, prawda? 
+    auto transmit_buffer_region = malloc(sizeof(i8254xTransmitDescriptor) * INTEL_8254X_DESCRIPTORS); // kompilator zawsze ma racje, prawda? 
+    this->transmit_buffer = (i8254xTransmitDescriptor*)transmit_buffer_region;
 
 
     for(int i = 0; i < INTEL_8254X_DESCRIPTORS; i++)
@@ -124,7 +142,6 @@ void Intel8254xDriver::transmit_init(void)
     // this->write(nic::TCTL, 0x40 << 12); //collision distance
 
     this->write(nic::TIPG, 0x0060200A);
-    this->transmit_buffer = (i8254xTransmitDescriptor*)transmit_buffer_region;
 
 
 
@@ -135,7 +152,6 @@ void Intel8254xDriver::transmit_init(void)
 void Intel8254xDriver::send_packet(uint32_t address, uint16_t length)
 {
 
-    screen_clear();
     this->transmit_buffer[this->txd_current].address_low = address;
     this->transmit_buffer[this->txd_current].address_high = 0x0;
     this->transmit_buffer[this->txd_current].cmd = nic::CMD::EOP | nic::CMD::IFCS | nic::CMD::RS | nic::CMD::RPS;// | nic::CMD::RPS;
@@ -152,13 +168,6 @@ void Intel8254xDriver::send_packet(uint32_t address, uint16_t length)
     this->txd_current = (this->txd_current + 1) % INTEL_8254X_DESCRIPTORS;
 
     while(!this->transmit_buffer[txd_old].status);
-
-    // std::string message = "network packet status: ";
-    // char buf[40] = {0};
-    // message = message + int_to_str(this->transmit_buffer[txd_old].status, buf);
-
-    // printk(message.c_str());
-    // xprintf("status: 0x%x\n", this->transmit_buffer[txd_old].status);
 
 
 }
@@ -233,30 +242,27 @@ void Intel8254xDriver::init()
     this->transmit_init();
 
 
+    /* receive delay timer set */
+    this->write(nic::RDTR, 0xFF | (1 << 31));
+
+
     /* enabling interrupts */
     this->write(nic::IMS, this->read(nic::IMS) | nic::ims::RXT | nic::ims::RXO | 
                   nic::ims::RXDMT | nic::ims::RXSEQ | nic::ims::LSC);
     
+    /* enable receiving packets */
+    this->write(nic::RCTL, this->read(nic::RCTL) & (~nic::RCTL_EN));
 
     // while(1)
     // {
     //     this->send_packet(0x0, 128);
     // }
 
-    this->send_packet(0x0, 128);
 
     // this->write(nic::IMS, 0x1F6DC);
     // this->write(nic::IMS, 0xFFFFFFF0);
 
 
-    uint8_t dest_mac[6] = {0x12,0x34,0x56,0x78,0x9A,0xBC};
-
-    char jj[] = "dupa dupa dupa dupa";
-
-    // while(1)
-    // {
-    //     this->send_ethernet_frame(dest_mac, this->mac_get(), (uint8_t*)jj, 200);
-    // }
 
 
 }
@@ -297,12 +303,16 @@ uint16_t Intel8254xDriver::vendorid_get()
 
 void Intel8254xDriver::receive_packet(void)
 {
-    while(this->receive_buffer[this->read(nic::RDT)].status & 0x1)
-    {
-        uint8_t* packet = (uint8_t*)this->receive_buffer[this->read(nic::RDT)].address_low;
-        uint16_t packet_lenght = this->receive_buffer[this->read(nic::RDT)].length;
-        xprintf("0x%x 0x%x\n", (uint32_t)packet, packet_lenght);
-    }
+
+    // this->rxd_current = this->read(nic::RDT) % INTEL_8254X_DESCRIPTORS;
+    // this->rxd_current = (this->rxd_current + 1) % INTEL_8254X_DESCRIPTORS;
+    
+    // {
+    //     uint8_t* packet = (uint8_t*)this->receive_buffer[rxd_current].address_low;
+    //     uint16_t packet_lenght = this->receive_buffer[rxd_current].length;
+    // }
+
+    // this->write(nic::RDT, this->rxd_current);
 
 }
 
@@ -311,8 +321,11 @@ void  Intel8254xDriver::interrupt_handler(void)
 {
     uint16_t interrupt_status = this->read(nic::ICR);
 
-    xprintf("ICR STATUS 0x%x", interrupt_status);
+    if(interrupt_status & 0x80)
+        this->receive_packet();
 
-    // while(1);
+    eoi_send(); // COMPILER IS ALWAYS RIGHT, RIGHT??????!!!!!!!
+    *(uint32_t*)APIC_EOI_REGISTER = 0x0;
+
 
 }

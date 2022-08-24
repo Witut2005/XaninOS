@@ -99,7 +99,9 @@ void eoi_send(void)
 {
 
     if(*(uint32_t*)APIC_SPURIOUS_INTERRUPT_VECTOR_REGISTER & (1 << 8))
-        *(uint32_t*)APIC_EOI_REGISTER = 0x1;
+    {
+        *(uint32_t*)APIC_EOI_REGISTER = 0x0;
+    }
 
     else
         asm("out 0x20, al" :: "a"(0x20));

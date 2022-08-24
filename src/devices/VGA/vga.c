@@ -253,6 +253,7 @@ void setFontVGA(const unsigned char * buffer, int h)
 void vga_mode_set(uint8_t vga_mode)
 {
 
+    /*
     switch(vga_mode)
     {
 
@@ -284,6 +285,7 @@ void vga_mode_set(uint8_t vga_mode)
         }
 
     }
+    */
 
 
 

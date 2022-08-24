@@ -188,5 +188,5 @@ curses:
 	qemu-system-i386 -curses -k en-us -m 512 -hda ../bin/xanin.img 
 
 debug:
-	qemu-system-i386 -m 512 -s -S ../bin/xanin.img 
+	sudo qemu-system-i386 -smp 2 -drive file=../bin/xanin.img,cache=unsafe -m 512 -net nic -net tap -s -S
 
