@@ -242,6 +242,7 @@ void hexeditor(char* file_name)
 
     screen_clear();
 
+    free(data_pointer);
     file_save(file);
 
 

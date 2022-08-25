@@ -22,6 +22,7 @@ class string
     }
 
     string() {string_data = (char*)malloc(PMMNGR_BLOCK_SIZE);} 
+    ~string() {free(string_data);}
 
     string(char* str)
     {

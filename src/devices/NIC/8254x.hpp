@@ -191,10 +191,8 @@ class Intel8254xDriver
     uint32_t receive_buffer_get(void);
     uint32_t transmit_buffer_get(void);
     void receive_packet(void);
-
     void send_packet(uint32_t address_low, uint16_t length);
     void send_ethernet_frame(uint8_t* mac_destination, uint8_t* mac_source, uint8_t* buffer, uint16_t length);
-
     void interrupt_handler(void);
     void receive_init(void);
     void transmit_init(void);
@@ -204,49 +202,4 @@ class Intel8254xDriver
 
 
 
-}Intel8254x;
-
-extern "C"
-{
-
-    uint32_t i8254x_iobase_get(void)
-    {
-        return Intel8254x.iobase_get();
-    }
-
-    void i8254x_init(void)
-    {
-        return Intel8254x.init();
-    }
-
-    pci_device* i8254x_pci_info_get(void)
-    {
-        return Intel8254x.pci_info_get();
-    }
-
-    uint8_t* i8254x_mac_get(void)
-    {
-        return Intel8254x.mac_get();
-    }
-
-    uint32_t i8254x_receive_buffer_get(void)
-    {
-        return Intel8254x.receive_buffer_get();
-    }
-
-    uint32_t i8254x_transmit_buffer_get(void)
-    {
-        return Intel8254x.transmit_buffer_get();
-    }
-
-    void i8254x_interrupt_handler(void)
-    {
-        return Intel8254x.interrupt_handler();
-    }
-
-    void i8254x_packet_send(uint32_t address, uint16_t length)
-    {
-        return Intel8254x.send_packet(address, length);
-    }
-
-}
+};

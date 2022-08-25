@@ -16,7 +16,7 @@ extern "C" void xagame_test(void)
     screen_clear();
 
 
-    rectangle* y = new rectangle(0);
+    rectangle* y = (rectangle*)malloc(sizeof(rectangle));
     y->create(20,5,10,5, yellow);
 
     ScreenManager manager;

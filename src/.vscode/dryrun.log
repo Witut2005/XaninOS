@@ -25,30 +25,32 @@ nasm -fbin ./xaninApps/syscall_test.asm -o  ./xaninApps/syscall_test -w-other
 echo [ASM] xanin_apps_space.asm
 nasm -fbin ./xaninApps/xanin_apps_space.asm -o ./xaninApps/xanin_apps_space
 echo [CC] chip8.cpp
-i386-elf-g++ -O0 -fno-exceptions -lstdc++ -masm=intel -std=c++17 -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Wno-write-strings -Wno-return-type -fno-rtti -fconcepts-ts -I /home/witut/Desktop/xaninOS/src/ -c ./chip8/chip8.cpp -o ./chip8/chip8.o
+i386-elf-g++ -O3 -fno-exceptions -lstdc++ -masm=intel -std=c++17 -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Wno-write-strings -Wno-return-type -fno-rtti -fconcepts-ts -I /home/witut/Desktop/xaninOS/src/ -c ./chip8/chip8.cpp -o ./chip8/chip8.o
 echo [CC] apic.cpp
-i386-elf-g++ -O0 -fno-exceptions -lstdc++ -masm=intel -std=c++17 -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Wno-write-strings -Wno-return-type -fno-rtti -fconcepts-ts -I /home/witut/Desktop/xaninOS/src/ -c ./devices/APIC/apic.cpp -o ./devices/APIC/apic.o
+i386-elf-g++ -O3 -fno-exceptions -lstdc++ -masm=intel -std=c++17 -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Wno-write-strings -Wno-return-type -fno-rtti -fconcepts-ts -I /home/witut/Desktop/xaninOS/src/ -c ./devices/APIC/apic.cpp -o ./devices/APIC/apic.o
 echo [CC] cpp_test.cpp
-i386-elf-g++ -O0 -fno-exceptions -lstdc++ -masm=intel -std=c++17 -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Wno-write-strings -Wno-return-type -fno-rtti -fconcepts-ts -I /home/witut/Desktop/xaninOS/src/ -c ./test/cpp_test.cpp -o ./test/cpp_test.o
+i386-elf-g++ -O3 -fno-exceptions -lstdc++ -masm=intel -std=c++17 -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Wno-write-strings -Wno-return-type -fno-rtti -fconcepts-ts -I /home/witut/Desktop/xaninOS/src/ -c ./test/cpp_test.cpp -o ./test/cpp_test.o
 echo [CC] cpp_test.cpp
-i386-elf-g++ -O0 -fno-exceptions -lstdc++ -masm=intel -std=c++17 -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Wno-write-strings -Wno-return-type -fno-rtti -fconcepts-ts -I /home/witut/Desktop/xaninOS/src/ -c ./test/cpp_test2.cpp -o ./test/cpp_test2.o
+i386-elf-g++ -O3 -fno-exceptions -lstdc++ -masm=intel -std=c++17 -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Wno-write-strings -Wno-return-type -fno-rtti -fconcepts-ts -I /home/witut/Desktop/xaninOS/src/ -c ./test/cpp_test2.cpp -o ./test/cpp_test2.o
 echo [CC] com.cpp
-i386-elf-g++ -O0 -fno-exceptions -lstdc++ -masm=intel -std=c++17 -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Wno-write-strings -Wno-return-type -fno-rtti -fconcepts-ts -I /home/witut/Desktop/xaninOS/src/ -c ./devices/COM/com.cpp -o ./devices/COM/ComPort.o
+i386-elf-g++ -O3 -fno-exceptions -lstdc++ -masm=intel -std=c++17 -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Wno-write-strings -Wno-return-type -fno-rtti -fconcepts-ts -I /home/witut/Desktop/xaninOS/src/ -c ./devices/COM/com.cpp -o ./devices/COM/ComPort.o
 echo [CC] ioapic.cpp
-i386-elf-g++ -O0 -fno-exceptions -lstdc++ -masm=intel -std=c++17 -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Wno-write-strings -Wno-return-type -fno-rtti -fconcepts-ts -I /home/witut/Desktop/xaninOS/src/ -c ./devices/IOAPIC/ioapic.cpp -o ./devices/IOAPIC/ioapic.o
-echo [CC] ne2000.cpp
-i386-elf-g++ -O0 -fno-exceptions -lstdc++ -masm=intel -std=c++17 -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Wno-write-strings -Wno-return-type -fno-rtti -fconcepts-ts -I /home/witut/Desktop/xaninOS/src/ -c ./devices/NIC/8254x.cpp -o ./devices/NIC/8254x.o
-i386-elf-g++ -O0 -fno-exceptions -lstdc++ -masm=intel -std=c++17 -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Wno-write-strings -Wno-return-type -fno-rtti -fconcepts-ts -I /home/witut/Desktop/xaninOS/src/ -c ./xaninApps/screenshot.cpp -o ./xaninApps/screenshot.o
+i386-elf-g++ -O3 -fno-exceptions -lstdc++ -masm=intel -std=c++17 -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Wno-write-strings -Wno-return-type -fno-rtti -fconcepts-ts -I /home/witut/Desktop/xaninOS/src/ -c ./devices/IOAPIC/ioapic.cpp -o ./devices/IOAPIC/ioapic.o
+echo [ASM] 8254x INTERRUPT ENTRY
+nasm -f elf32 ./devices/NIC/8254x_int_handler.asm -o ./devices/NIC/8254x_int_handler.o
+echo [CC] 8254x.cpp
+i386-elf-g++ -O3 -fno-exceptions -lstdc++ -masm=intel -std=c++17 -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Wno-write-strings -Wno-return-type -fno-rtti -fconcepts-ts -I /home/witut/Desktop/xaninOS/src/ -c ./devices/NIC/8254x.cpp -o ./devices/NIC/8254x.o
+i386-elf-g++ -O3 -fno-exceptions -lstdc++ -masm=intel -std=c++17 -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Wno-write-strings -Wno-return-type -fno-rtti -fconcepts-ts -I /home/witut/Desktop/xaninOS/src/ -c ./xaninApps/screenshot.cpp -o ./xaninApps/screenshot.o
 echo [CC] xagame.cpp
-i386-elf-g++ -O0 -fno-exceptions -lstdc++ -masm=intel -std=c++17 -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Wno-write-strings -Wno-return-type -fno-rtti -fconcepts-ts -I /home/witut/Desktop/xaninOS/src/ -c ./game_engine/xagame.cpp -o ./game_engine/xagame.o
+i386-elf-g++ -O3 -fno-exceptions -lstdc++ -masm=intel -std=c++17 -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Wno-write-strings -Wno-return-type -fno-rtti -fconcepts-ts -I /home/witut/Desktop/xaninOS/src/ -c ./game_engine/xagame.cpp -o ./game_engine/xagame.o
 echo [CC] xagame_test.cpp
-i386-elf-g++ -O0 -fno-exceptions -lstdc++ -masm=intel -std=c++17 -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Wno-write-strings -Wno-return-type -fno-rtti -fconcepts-ts -I /home/witut/Desktop/xaninOS/src/ -c ./xagames/xagame_test.cpp -o ./xagames/xagame_test.o
+i386-elf-g++ -O3 -fno-exceptions -lstdc++ -masm=intel -std=c++17 -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Wno-write-strings -Wno-return-type -fno-rtti -fconcepts-ts -I /home/witut/Desktop/xaninOS/src/ -c ./xagames/xagame_test.cpp -o ./xagames/xagame_test.o
 echo [CC] tetris.cpp
-i386-elf-g++ -O0 -fno-exceptions -lstdc++ -masm=intel -std=c++17 -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Wno-write-strings -Wno-return-type -fno-rtti -fconcepts-ts -I /home/witut/Desktop/xaninOS/src/ -c ./xagames/tetris.cpp -o ./xagames/tetris.o
+i386-elf-g++ -O3 -fno-exceptions -lstdc++ -masm=intel -std=c++17 -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Wno-write-strings -Wno-return-type -fno-rtti -fconcepts-ts -I /home/witut/Desktop/xaninOS/src/ -c ./xagames/tetris.cpp -o ./xagames/tetris.o
 # @echo [CC] bytes.cpp
-# @i386-elf-g++ -O0 -fno-exceptions -lstdc++ -masm=intel -std=c++17 -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Wno-write-strings -Wno-return-type -fno-rtti -fconcepts-ts -I /home/witut/Desktop/xaninOS/src/ -c ./libcpp/bytes.cpp -o ./libcpp/bytes.o
+# @i386-elf-g++ -O3 -fno-exceptions -lstdc++ -masm=intel -std=c++17 -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Wno-write-strings -Wno-return-type -fno-rtti -fconcepts-ts -I /home/witut/Desktop/xaninOS/src/ -c ./libcpp/bytes.cpp -o ./libcpp/bytes.o
 # @echo [CC] tuple.hpp
-# @i386-elf-g++ -O0 -fno-exceptions -lstdc++ -masm=intel -std=c++17 -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Wno-write-strings -Wno-return-type -fno-rtti -fconcepts-ts -I /home/witut/Desktop/xaninOS/src/ -c ./libcpp/tuple.hpp -o ./libcpp/tuple.o
+# @i386-elf-g++ -O3 -fno-exceptions -lstdc++ -masm=intel -std=c++17 -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Wno-write-strings -Wno-return-type -fno-rtti -fconcepts-ts -I /home/witut/Desktop/xaninOS/src/ -c ./libcpp/tuple.hpp -o ./libcpp/tuple.o
 #C LIBARIES
 echo [C] algorithm.c
 i386-elf-gcc -O0 -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -Wno-discarded-qualifiers -ffreestanding -Wno-unused-function -Wno-return-type -I /home/witut/Desktop/xaninOS/src/ -c ./libc/algorithm.c -o ./libc/algorithm.o
@@ -99,6 +101,7 @@ i386-elf-gcc -O0 -masm=intel -Wno-discarded-qualifiers -Wno-builtin-declaration-
 ./test/cpp_test2.o \
 ./devices/MOUSE/mouse.o \
 ./devices/APIC/apic.o \
+./devices/NIC/8254x_int_handler.o \
 ./devices/NIC/8254x.o \
 ./devices/IOAPIC/ioapic.o \
 ./test/testc.o \

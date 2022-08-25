@@ -7,7 +7,7 @@ XANIN_PATH = /home/witut/Desktop/xaninOS/src/
 
 C_OPTIONS = -O0 -masm=intel -Wno-discarded-qualifiers -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-int-conversion -Wno-unused-function -Wno-div-by-zero -Wno-address-of-packed-member -I $(XANIN_PATH) -c
 C_COMPILE = -O0 -masm=intel -Wno-discarded-qualifiers -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-int-conversion -Wno-unused-function -Wno-div-by-zero -Wno-address-of-packed-member -I $(XANIN_PATH) 
-CC_OPTIONS =  -O0 -fno-exceptions -lstdc++ -masm=intel -std=c++17 -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Wno-write-strings -Wno-return-type -fno-rtti -fconcepts-ts -I $(XANIN_PATH) -c
+CC_OPTIONS =  -O3 -fno-exceptions -lstdc++ -masm=intel -std=c++17 -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Wno-write-strings -Wno-return-type -fno-rtti -fconcepts-ts -I $(XANIN_PATH) -c
 C_OPTIONS =  -O0 -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -Wno-discarded-qualifiers -ffreestanding -Wno-unused-function -Wno-return-type -I $(XANIN_PATH) -c
 ASM	= nasm
 APPS = ./xaninApps
@@ -66,7 +66,10 @@ build:
 	@echo [CC] ioapic.cpp
 	@$(CC) $(CC_OPTIONS) ./devices/IOAPIC/ioapic.cpp -o ./devices/IOAPIC/ioapic.o
 	
-	@echo [CC] ne2000.cpp
+	@echo [ASM] 8254x INTERRUPT ENTRY
+	@$(ASM) -f elf32 ./devices/NIC/8254x_int_handler.asm -o ./devices/NIC/8254x_int_handler.o
+
+	@echo [CC] 8254x.cpp
 	@$(CC) $(CC_OPTIONS) ./devices/NIC/8254x.cpp -o ./devices/NIC/8254x.o
 
 	@$(CC) $(CC_OPTIONS) ./xaninApps/screenshot.cpp -o ./xaninApps/screenshot.o
@@ -153,6 +156,7 @@ build:
 	./test/cpp_test2.o \
 	./devices/MOUSE/mouse.o \
 	./devices/APIC/apic.o \
+	./devices/NIC/8254x_int_handler.o \
 	./devices/NIC/8254x.o \
 	./devices/IOAPIC/ioapic.o \
 	./test/testc.o \

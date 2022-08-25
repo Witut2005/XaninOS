@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Wed Aug 24 10:32:33 2022
+# Make data base, printed on Thu Aug 25 12:23:26 2022
 
 # Variables
 
@@ -91,7 +91,7 @@ LS_COLORS = rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:
 # environment
 XDG_SESSION_DESKTOP = i3
 # environment
-SSH_AUTH_SOCK = /tmp/ssh-7jxpLudV1X2t/agent.2045
+SSH_AUTH_SOCK = /tmp/ssh-pn4R0LE9h6W2/agent.1902
 # automatic
 %F = $(notdir $%)
 # environment
@@ -103,7 +103,7 @@ PWD = /home/witut/Desktop/xaninOS/src
 # environment
 XDG_SEAT = seat0
 # environment
-SSH_AGENT_PID = 2106
+SSH_AGENT_PID = 1963
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = i3
 # environment
@@ -145,7 +145,7 @@ MAKECMDGOALS := all
 # environment
 SHLVL = 1
 # makefile (from 'Makefile', line 10)
-CC_OPTIONS = -O0 -fno-exceptions -lstdc++ -masm=intel -std=c++17 -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Wno-write-strings -Wno-return-type -fno-rtti -fconcepts-ts -I $(XANIN_PATH) -c
+CC_OPTIONS = -O3 -fno-exceptions -lstdc++ -masm=intel -std=c++17 -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Wno-write-strings -Wno-return-type -fno-rtti -fconcepts-ts -I $(XANIN_PATH) -c
 # makefile (from 'Makefile', line 12)
 ASM = nasm
 # makefile (from 'Makefile', line 4)
@@ -167,7 +167,7 @@ LIBVIRT_DEFAULT_URI = qemu:///system
 # environment
 LC_TELEPHONE = pl_PL.UTF-8
 # environment
-I3SOCK = /run/user/1000/i3/ipc-socket.2045
+I3SOCK = /run/user/1000/i3/ipc-socket.1902
 # default
 MAKE_COMMAND := make
 # environment
@@ -209,11 +209,11 @@ APPS = ./xaninApps
 # environment
 LC_ALL = C
 # environment
-GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/36fd6c28_4f6c_488f_8afa_6b6415ad4c30
+GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/a2708933_cf31_4b07_92f5_b6bd66b08c5a
 # automatic
 ^F = $(notdir $^)
 # environment
-GNOME_TERMINAL_SERVICE = :1.24
+GNOME_TERMINAL_SERVICE = :1.25
 # default
 SUFFIXES := 
 # environment
@@ -233,7 +233,7 @@ LANG = C
 # environment
 TERM = xterm-256color
 # environment
-VSCODE_PID = 2572
+VSCODE_PID = 2209
 # variable set hash-table stats:
 # Load=111/1024=11%, Rehash=0, Collisions=20/138=14%
 
@@ -263,7 +263,7 @@ all:
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-08-24 10:30:03.585875484
+#  Last modified 2022-08-25 12:22:49.303669105
 #  File has been updated.
 #  Successfully updated.
 
@@ -271,7 +271,7 @@ debug:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 191):
+#  recipe to execute (from 'Makefile', line 195):
 	sudo qemu-system-i386 -smp 2 -drive file=../bin/xanin.img,cache=unsafe -m 512 -net nic -net tap -s -S
 
 build:
@@ -319,8 +319,10 @@ build:
 	@echo [CC] ioapic.cpp
 	@$(CC) $(CC_OPTIONS) ./devices/IOAPIC/ioapic.cpp -o ./devices/IOAPIC/ioapic.o
 	
-	@echo [CC] ne2000.cpp
  
+	@echo [ASM] 8254x INTERRUPT ENTRY
+	@$(ASM) -f elf32 ./devices/NIC/8254x_int_handler.asm -o ./devices/NIC/8254x_int_handler.o
+	@echo [CC] 8254x.cpp
 	@$(CC) $(CC_OPTIONS) ./devices/NIC/8254x.cpp -o ./devices/NIC/8254x.o
 	@$(CC) $(CC_OPTIONS) ./xaninApps/screenshot.cpp -o ./xaninApps/screenshot.o
 	@echo [CC] xagame.cpp
@@ -385,6 +387,7 @@ build:
 	./test/cpp_test2.o \
 	./devices/MOUSE/mouse.o \
 	./devices/APIC/apic.o \
+	./devices/NIC/8254x_int_handler.o \
 	./devices/NIC/8254x.o \
 	./devices/IOAPIC/ioapic.o \
 	./test/testc.o \
@@ -413,14 +416,14 @@ run:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 185):
+#  recipe to execute (from 'Makefile', line 189):
 	sudo qemu-system-i386 -smp 2 -drive file=../bin/xanin.img,cache=unsafe -m 512 -net nic -net tap
 
 curses:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 188):
+#  recipe to execute (from 'Makefile', line 192):
 	qemu-system-i386 -curses -k en-us -m 512 -hda ../bin/xanin.img 
 
 # files hash-table stats:
@@ -437,6 +440,6 @@ curses:
 # strcache performance: lookups = 55 / hit rate = 14%
 # hash-table stats:
 # Load=47/8192=1%, Rehash=0, Collisions=1/55=2%
-# Finished Make data base on Wed Aug 24 10:32:33 2022
+# Finished Make data base on Thu Aug 25 12:23:26 2022
 
  

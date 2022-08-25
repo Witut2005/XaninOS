@@ -24,6 +24,12 @@ namespace std
             size = 0;
         }
 
+        ~stack()
+        {
+            free(stack_pointer);
+        }
+
+
 
         void push(T val)
         {

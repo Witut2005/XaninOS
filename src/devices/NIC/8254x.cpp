@@ -250,8 +250,7 @@ void Intel8254xDriver::init()
     this->write(nic::IMS, this->read(nic::IMS) | nic::ims::RXT | nic::ims::RXO | 
                   nic::ims::RXDMT | nic::ims::RXSEQ | nic::ims::LSC);
     
-    /* enable receiving packets */
-    this->write(nic::RCTL, this->read(nic::RCTL) & (~nic::RCTL_EN));
+    // this->write(nic::RCTL, this->read(nic::RCTL) & (~nic::RCTL_EN));
 
     // while(1)
     // {
@@ -304,28 +303,72 @@ uint16_t Intel8254xDriver::vendorid_get()
 void Intel8254xDriver::receive_packet(void)
 {
 
-    // this->rxd_current = this->read(nic::RDT) % INTEL_8254X_DESCRIPTORS;
-    // this->rxd_current = (this->rxd_current + 1) % INTEL_8254X_DESCRIPTORS;
+    this->rxd_current = this->read(nic::RDT) % INTEL_8254X_DESCRIPTORS;
+    this->rxd_current = (this->rxd_current + 1) % INTEL_8254X_DESCRIPTORS;
     
-    // {
-    //     uint8_t* packet = (uint8_t*)this->receive_buffer[rxd_current].address_low;
-    //     uint16_t packet_lenght = this->receive_buffer[rxd_current].length;
-    // }
+    {
+        uint8_t* packet = (uint8_t*)this->receive_buffer[rxd_current].address_low;
+        uint16_t packet_lenght = this->receive_buffer[rxd_current].length;
+    }
 
-    // this->write(nic::RDT, this->rxd_current);
+    this->write(nic::RDT, this->rxd_current);
 
 }
 
 
-void  Intel8254xDriver::interrupt_handler(void)
+void Intel8254xDriver::interrupt_handler(void)
 {
     uint16_t interrupt_status = this->read(nic::ICR);
-
+    
     if(interrupt_status & 0x80)
         this->receive_packet();
 
-    eoi_send(); // COMPILER IS ALWAYS RIGHT, RIGHT??????!!!!!!!
-    *(uint32_t*)APIC_EOI_REGISTER = 0x0;
+}
 
+Intel8254xDriver Intel8254x;
+
+
+extern "C"
+{
+
+    uint32_t i8254x_iobase_get(void)
+    {
+        return Intel8254x.iobase_get();
+    }
+
+    void i8254x_init(void)
+    {
+        return Intel8254x.init();
+    }
+
+    pci_device* i8254x_pci_info_get(void)
+    {
+        return Intel8254x.pci_info_get();
+    }
+
+    uint8_t* i8254x_mac_get(void)
+    {
+        return Intel8254x.mac_get();
+    }
+
+    uint32_t i8254x_receive_buffer_get(void)
+    {
+        return Intel8254x.receive_buffer_get();
+    }
+
+    uint32_t i8254x_transmit_buffer_get(void)
+    {
+        return Intel8254x.transmit_buffer_get();
+    }
+
+    void i8254x_interrupt_handler(void)
+    {
+        return Intel8254x.interrupt_handler();
+    }
+
+    void i8254x_packet_send(uint32_t address, uint16_t length)
+    {
+        return Intel8254x.send_packet(address, length);
+    }
 
 }

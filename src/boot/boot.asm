@@ -70,8 +70,7 @@ mov word [lba], 0x43 + 0x69 + 0x40 + 0x50
 
 mov word [offset], 0x7400
 mov word [segment_num], 0x1000
-
-mov word [how_many_sectors], 0x50
+mov word [how_many_sectors], 0x35
 
 mov si, DAP
 mov ah, 0x42
