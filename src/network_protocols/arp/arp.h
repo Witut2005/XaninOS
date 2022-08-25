@@ -7,7 +7,7 @@
 #define ARP_REQUEST_IP 0x800
 #define ARP_REQUEST_REPLY 0x2
 
-struct arp
+struct AddressResolutionProtocol
 {
     uint16_t hardware_type; // Hardware type
     uint16_t protocol_type; // Protocol type

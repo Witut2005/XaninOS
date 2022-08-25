@@ -2,7 +2,8 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <devices/PCI/pci.h>
-#include <devices/network_protocols/ethernet_frame/ethernet_frame.h>
+#include <network_protocols/ethernet_frame/ethernet_frame.h>
+#include <netapi/network_device.hpp>
 
 extern "C" int32_t pci_find_device(uint16_t, pci_device*);
 extern "C" uint32_t pci_get_bar(const uint8_t bus, const uint8_t slot, const uint8_t function, const uint8_t bar_number);
@@ -166,7 +167,7 @@ struct i8254xTransmitDescriptor
 
 }__attribute__((packed));
 
-class Intel8254xDriver
+class Intel8254xDriver : public NetworkDevice
 {
     public:
     uint8_t* iobase;
@@ -177,8 +178,11 @@ class Intel8254xDriver
     i8254xTransmitDescriptor* transmit_buffer;
     uint32_t txd_current;
     uint32_t rxd_current;
+    uint8_t* last_packet;
     
     //---------------------------------
+
+    ~Intel8254xDriver();
 
     void write(uint32_t reg, uint32_t value);
     uint32_t read(uint32_t reg);
@@ -190,14 +194,15 @@ class Intel8254xDriver
     void multicast_table_array_clear(void);
     uint32_t receive_buffer_get(void);
     uint32_t transmit_buffer_get(void);
-    void receive_packet(void);
-    void send_packet(uint32_t address_low, uint16_t length);
     void send_ethernet_frame(uint8_t* mac_destination, uint8_t* mac_source, uint8_t* buffer, uint16_t length);
     void interrupt_handler(void);
     void receive_init(void);
     void transmit_init(void);
     void init(void);
+    
 
+    virtual uint8_t* receive_packet(void);
+    virtual void send_packet(uint32_t address_low, uint16_t length);
 
 
 

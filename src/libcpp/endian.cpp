@@ -2,16 +2,14 @@
 
 #include <stdint.h>
 
-namespace endian
-{
 
-    template <class T>
-    auto switch_to_big(T value) -> decltype(value);
-    {
-        
-    }
-    
-    template <class T>
-    auto switch_to_little(T value) -> decltype(value);
 
+uint16_t endian_switch(uint16_t nb) {
+    return (nb>>8) | (nb<<8);
 }
+
+uint32_t endian_switch(uint32_t nb) {
+    return ((nb>>24)&0xff)      |
+            ((nb<<8)&0xff0000)   |
+            ((nb>>8)&0xff00)     |
+            ((nb<<24)&0xff000000); }

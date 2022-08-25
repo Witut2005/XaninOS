@@ -40,6 +40,9 @@ echo [ASM] 8254x INTERRUPT ENTRY
 nasm -f elf32 ./devices/NIC/8254x_int_handler.asm -o ./devices/NIC/8254x_int_handler.o
 echo [CC] 8254x.cpp
 i386-elf-g++ -O3 -fno-exceptions -lstdc++ -masm=intel -std=c++17 -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Wno-write-strings -Wno-return-type -fno-rtti -fconcepts-ts -I /home/witut/Desktop/xaninOS/src/ -c ./devices/NIC/8254x.cpp -o ./devices/NIC/8254x.o
+echo [CC] EthernetFrameInterface
+i386-elf-g++ -O3 -fno-exceptions -lstdc++ -masm=intel -std=c++17 -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Wno-write-strings -Wno-return-type -fno-rtti -fconcepts-ts -I /home/witut/Desktop/xaninOS/src/ -c ./network_protocols/ethernet_frame/ethernet_frame.cpp -o ./network_protocols/ethernet_frame/ethernet_frame.o
+echo [CC] screenshot.cpp
 i386-elf-g++ -O3 -fno-exceptions -lstdc++ -masm=intel -std=c++17 -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Wno-write-strings -Wno-return-type -fno-rtti -fconcepts-ts -I /home/witut/Desktop/xaninOS/src/ -c ./xaninApps/screenshot.cpp -o ./xaninApps/screenshot.o
 echo [CC] xagame.cpp
 i386-elf-g++ -O3 -fno-exceptions -lstdc++ -masm=intel -std=c++17 -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Wno-write-strings -Wno-return-type -fno-rtti -fconcepts-ts -I /home/witut/Desktop/xaninOS/src/ -c ./game_engine/xagame.cpp -o ./game_engine/xagame.o
@@ -51,6 +54,8 @@ i386-elf-g++ -O3 -fno-exceptions -lstdc++ -masm=intel -std=c++17 -Wno-builtin-de
 # @i386-elf-g++ -O3 -fno-exceptions -lstdc++ -masm=intel -std=c++17 -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Wno-write-strings -Wno-return-type -fno-rtti -fconcepts-ts -I /home/witut/Desktop/xaninOS/src/ -c ./libcpp/bytes.cpp -o ./libcpp/bytes.o
 # @echo [CC] tuple.hpp
 # @i386-elf-g++ -O3 -fno-exceptions -lstdc++ -masm=intel -std=c++17 -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Wno-write-strings -Wno-return-type -fno-rtti -fconcepts-ts -I /home/witut/Desktop/xaninOS/src/ -c ./libcpp/tuple.hpp -o ./libcpp/tuple.o
+echo [CC] endian.cpp
+i386-elf-g++ -O3 -fno-exceptions -lstdc++ -masm=intel -std=c++17 -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Wno-write-strings -Wno-return-type -fno-rtti -fconcepts-ts -I /home/witut/Desktop/xaninOS/src/ -c ./libcpp/endian.cpp -o ./libcpp/endian.o
 #C LIBARIES
 echo [C] algorithm.c
 i386-elf-gcc -O0 -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -Wno-discarded-qualifiers -ffreestanding -Wno-unused-function -Wno-return-type -I /home/witut/Desktop/xaninOS/src/ -c ./libc/algorithm.c -o ./libc/algorithm.o
@@ -92,6 +97,7 @@ i386-elf-gcc -O0 -masm=intel -Wno-discarded-qualifiers -Wno-builtin-declaration-
 ./libc/string.o \
 ./libc/syslog.o \
 ./libc/time.o \
+./libcpp/endian.o \
 ./terminal/vty.o \
 ./keyboard/key_map.o \
 ./handlers/keyboard.o \

@@ -183,7 +183,7 @@ void Intel8254xDriver::send_ethernet_frame(uint8_t* mac_destination, uint8_t* ma
 
     frame->ethernet_type = 0x806; // ARP
 
-    tmp = tmp + ETHERNET_FRAME_HEADER_SIZE;
+    tmp = tmp + ETHERNET_FRAME_MAC_HEADER_SIZE;
 
     int i = 0;
     for(; i < length; i++)
@@ -196,7 +196,7 @@ void Intel8254xDriver::send_ethernet_frame(uint8_t* mac_destination, uint8_t* ma
     tmp[i + 2] = 0x20;
     tmp[i + 3] = 0x3A;
 
-    this->send_packet((uint32_t)frame, length + ETHERNET_FRAME_HEADER_SIZE);
+    this->send_packet((uint32_t)frame, length + ETHERNET_FRAME_MAC_HEADER_SIZE);
     free(frame);
 
 }
@@ -241,6 +241,7 @@ void Intel8254xDriver::init()
     this->receive_init();
     this->transmit_init();
 
+    this->last_packet = (uint8_t*)malloc(sizeof(uint8_t) * 4096 * 10);
 
     /* receive delay timer set */
     this->write(nic::RDTR, 0xFF | (1 << 31));
@@ -300,18 +301,34 @@ uint16_t Intel8254xDriver::vendorid_get()
     return this->pci_info.vendor_id;
 }
 
-void Intel8254xDriver::receive_packet(void)
+uint8_t* Intel8254xDriver::receive_packet(void)
 {
 
     this->rxd_current = this->read(nic::RDT) % INTEL_8254X_DESCRIPTORS;
     this->rxd_current = (this->rxd_current + 1) % INTEL_8254X_DESCRIPTORS;
     
-    {
-        uint8_t* packet = (uint8_t*)this->receive_buffer[rxd_current].address_low;
-        uint16_t packet_lenght = this->receive_buffer[rxd_current].length;
-    }
+    uint8_t* packet;
+    uint16_t packet_lenght;
+    
+    while(!this->receive_buffer[this->rxd_current].status & 0x1);
 
+    packet = (uint8_t*)this->receive_buffer[rxd_current].address_low;
+    packet_lenght = this->receive_buffer[rxd_current].length;
+
+    memcpy(this->last_packet, packet, packet_lenght);
+
+
+    this->receive_buffer[rxd_current].status = 0x0;
     this->write(nic::RDT, this->rxd_current);
+
+    // screen_clear(); 
+
+    // for(int i = 0; i < packet_lenght; i++)
+    // {
+    //     xprintf("%mX ", last_packet[i]);     
+    // }
+
+    return last_packet;
 
 }
 
@@ -323,6 +340,11 @@ void Intel8254xDriver::interrupt_handler(void)
     if(interrupt_status & 0x80)
         this->receive_packet();
 
+}
+
+Intel8254xDriver::~Intel8254xDriver()
+{
+    free(this->last_packet);
 }
 
 Intel8254xDriver Intel8254x;
@@ -370,5 +392,13 @@ extern "C"
     {
         return Intel8254x.send_packet(address, length);
     }
+
+    void  __cxa_atexit(void)
+    {
+        return;
+    }
+
+    void* __dso_handle;
+
 
 }

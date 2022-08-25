@@ -55,14 +55,19 @@ build:
 
 	@echo [CC] chip8.cpp
 	@$(CC) $(CC_OPTIONS) ./chip8/chip8.cpp -o ./chip8/chip8.o
+
 	@echo [CC] apic.cpp
 	@$(CC) $(CC_OPTIONS) ./devices/APIC/apic.cpp -o ./devices/APIC/apic.o
+
 	@echo [CC] cpp_test.cpp
 	@$(CC) $(CC_OPTIONS) ./test/cpp_test.cpp -o ./test/cpp_test.o
+
 	@echo [CC] cpp_test.cpp
 	@$(CC) $(CC_OPTIONS) ./test/cpp_test2.cpp -o ./test/cpp_test2.o
+
 	@echo [CC] com.cpp
 	@$(CC) $(CC_OPTIONS) ./devices/COM/com.cpp -o ./devices/COM/ComPort.o
+
 	@echo [CC] ioapic.cpp
 	@$(CC) $(CC_OPTIONS) ./devices/IOAPIC/ioapic.cpp -o ./devices/IOAPIC/ioapic.o
 	
@@ -72,6 +77,10 @@ build:
 	@echo [CC] 8254x.cpp
 	@$(CC) $(CC_OPTIONS) ./devices/NIC/8254x.cpp -o ./devices/NIC/8254x.o
 
+	@echo [CC] EthernetFrameInterface
+	@$(CC) $(CC_OPTIONS) ./network_protocols/ethernet_frame/ethernet_frame.cpp -o ./network_protocols/ethernet_frame/ethernet_frame.o
+
+	@echo [CC] screenshot.cpp
 	@$(CC) $(CC_OPTIONS) ./xaninApps/screenshot.cpp -o ./xaninApps/screenshot.o
 
 	@echo [CC] xagame.cpp
@@ -90,6 +99,9 @@ build:
 	@# @$(CC) $(CC_OPTIONS) ./libcpp/tuple.hpp -o ./libcpp/tuple.o
 
 	
+	@echo [CC] endian.cpp
+	@$(CC) $(CC_OPTIONS) ./libcpp/endian.cpp -o ./libcpp/endian.o
+
  
 	@#C LIBARIES
 
@@ -147,6 +159,7 @@ build:
 	./libc/string.o \
 	./libc/syslog.o \
 	./libc/time.o \
+	./libcpp/endian.o \
 	./terminal/vty.o \
 	./keyboard/key_map.o \
 	./handlers/keyboard.o \
