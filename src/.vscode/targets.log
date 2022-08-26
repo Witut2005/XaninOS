@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Thu Aug 25 17:52:35 2022
+# Make data base, printed on Fri Aug 26 16:01:22 2022
 
 # Variables
 
@@ -91,7 +91,7 @@ LS_COLORS = rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:
 # environment
 XDG_SESSION_DESKTOP = i3
 # environment
-SSH_AUTH_SOCK = /tmp/ssh-6WGlFNevPif7/agent.1894
+SSH_AUTH_SOCK = /tmp/ssh-fLotnQCtYGp5/agent.1866
 # automatic
 %F = $(notdir $%)
 # environment
@@ -103,7 +103,7 @@ PWD = /home/witut/Desktop/xaninOS/src
 # environment
 XDG_SEAT = seat0
 # environment
-SSH_AGENT_PID = 1957
+SSH_AGENT_PID = 1927
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = i3
 # environment
@@ -167,7 +167,7 @@ LIBVIRT_DEFAULT_URI = qemu:///system
 # environment
 LC_TELEPHONE = pl_PL.UTF-8
 # environment
-I3SOCK = /run/user/1000/i3/ipc-socket.1894
+I3SOCK = /run/user/1000/i3/ipc-socket.1866
 # default
 MAKE_COMMAND := make
 # environment
@@ -209,7 +209,7 @@ APPS = ./xaninApps
 # environment
 LC_ALL = C
 # environment
-GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/28c8b96d_f6c1_4d92_8e15_73703f8a8dff
+GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/ac58eb9b_4c5c_48b6_b95d_2d12ff24a8da
 # automatic
 ^F = $(notdir $^)
 # environment
@@ -233,7 +233,7 @@ LANG = C
 # environment
 TERM = xterm-256color
 # environment
-VSCODE_PID = 2483
+VSCODE_PID = 2041
 # variable set hash-table stats:
 # Load=111/1024=11%, Rehash=0, Collisions=20/138=14%
 
@@ -263,7 +263,7 @@ all:
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-08-25 17:52:31.396443894
+#  Last modified 2022-08-26 16:01:10.367794539
 #  File has been updated.
 #  Successfully updated.
 
@@ -271,7 +271,7 @@ debug:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 208):
+#  recipe to execute (from 'Makefile', line 210):
 	sudo qemu-system-i386 -smp 2 -drive file=../bin/xanin.img,cache=unsafe -m 512 -net nic -net tap -s -S
 
 build:
@@ -294,10 +294,10 @@ build:
 	@# echo [ASM] syscall.asm
 	@# $(ASM) -f elf32 ./syscall/syscall.asm -o ./syscall/syscall.o
 	
+ 
 	@echo [ASM] pit.asm
 	@$(ASM) -f elf32 ./pit/pit.asm -o ./pit/pit.o
 	@echo [ASM] enter_real_mode.asm
- 
 	@$(ASM) -fbin ./libc/enter_real_mode.asm -o ./libc/enter_real_mode
 	@echo [ASM] shutdown.asm
 	@$(ASM) -fbin $(APPS)/shutdown.asm -o $(APPS)/shutdown
@@ -395,6 +395,8 @@ build:
 	./devices/APIC/apic.o \
 	./devices/NIC/8254x_int_handler.o \
 	./devices/NIC/8254x.o \
+	./network_protocols/ethernet_frame/ethernet_frame.o \
+	./netapi/network_device.o \
 	./devices/IOAPIC/ioapic.o \
 	./test/testc.o \
 	./devices/COM/ComPort.o \
@@ -422,14 +424,14 @@ run:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 202):
+#  recipe to execute (from 'Makefile', line 204):
 	sudo qemu-system-i386 -smp 2 -drive file=../bin/xanin.img,cache=unsafe -m 512 -net nic -net tap
 
 curses:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 205):
+#  recipe to execute (from 'Makefile', line 207):
 	qemu-system-i386 -curses -k en-us -m 512 -hda ../bin/xanin.img 
 
 # files hash-table stats:
@@ -446,6 +448,6 @@ curses:
 # strcache performance: lookups = 57 / hit rate = 14%
 # hash-table stats:
 # Load=49/8192=1%, Rehash=0, Collisions=1/57=2%
-# Finished Make data base on Thu Aug 25 17:52:35 2022
+# Finished Make data base on Fri Aug 26 16:01:22 2022
 
  

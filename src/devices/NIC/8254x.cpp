@@ -172,34 +172,34 @@ void Intel8254xDriver::send_packet(uint32_t address, uint16_t length)
 
 }
 
-void Intel8254xDriver::send_ethernet_frame(uint8_t* mac_destination, uint8_t* mac_source, uint8_t* buffer, uint16_t length)
-{
-    uint8_t* tmp = (uint8_t*)malloc(1518);
-    EthernetFrame* frame = (EthernetFrame*)tmp;
+// void Intel8254xDriver::send_ethernet_frame(uint8_t* mac_destination, uint8_t* mac_source, uint8_t* buffer, uint16_t length)
+// {
+//     uint8_t* tmp = (uint8_t*)malloc(1518);
+//     EthernetFrame* frame = (EthernetFrame*)tmp;
     
 
-    memcpy(frame->mac_destination, mac_destination, 6);
-    memcpy(frame->mac_source, mac_source, 6);
+//     memcpy(frame->mac_destination, mac_destination, 6);
+//     memcpy(frame->mac_source, mac_source, 6);
 
-    frame->ethernet_type = 0x806; // ARP
+//     frame->ethernet_type = 0x806; // ARP
 
-    tmp = tmp + ETHERNET_FRAME_MAC_HEADER_SIZE;
+//     tmp = tmp + ETHERNET_FRAME_MAC_HEADER_SIZE;
 
-    int i = 0;
-    for(; i < length; i++)
-    {
-        tmp[i] = buffer[i];
-    }
+//     int i = 0;
+//     for(; i < length; i++)
+//     {
+//         tmp[i] = buffer[i];
+//     }
 
-    tmp[i] = 0x0;
-    tmp[i + 1] = 0x20;
-    tmp[i + 2] = 0x20;
-    tmp[i + 3] = 0x3A;
+//     tmp[i] = 0x0;
+//     tmp[i + 1] = 0x20;
+//     tmp[i + 2] = 0x20;
+//     tmp[i + 3] = 0x3A;
 
-    this->send_packet((uint32_t)frame, length + ETHERNET_FRAME_MAC_HEADER_SIZE);
-    free(frame);
+//     this->send_packet((uint32_t)frame, length + ETHERNET_FRAME_MAC_HEADER_SIZE);
+//     free(frame);
 
-}
+// }
 
 
 void Intel8254xDriver::init()
@@ -250,7 +250,10 @@ void Intel8254xDriver::init()
     /* enabling interrupts */
     this->write(nic::IMS, this->read(nic::IMS) | nic::ims::RXT | nic::ims::RXO | 
                   nic::ims::RXDMT | nic::ims::RXSEQ | nic::ims::LSC);
+
     
+    
+
     // this->write(nic::RCTL, this->read(nic::RCTL) & (~nic::RCTL_EN));
 
     // while(1)
@@ -342,12 +345,16 @@ void Intel8254xDriver::interrupt_handler(void)
 
 }
 
-Intel8254xDriver::~Intel8254xDriver()
+// Intel8254xDriver::~Intel8254xDriver(void)
+// {
+//     free(this->last_packet);
+// }
+
+uint32_t* Intel8254xDriver::this_return(void)
 {
-    free(this->last_packet);
+    return (uint32_t*)this;
 }
 
-Intel8254xDriver Intel8254x;
 
 
 extern "C"
@@ -358,10 +365,6 @@ extern "C"
         return Intel8254x.iobase_get();
     }
 
-    void i8254x_init(void)
-    {
-        return Intel8254x.init();
-    }
 
     pci_device* i8254x_pci_info_get(void)
     {
@@ -388,17 +391,27 @@ extern "C"
         return Intel8254x.interrupt_handler();
     }
 
+    uint8_t* i8254x_packet_receive(void)
+    {
+        return Intel8254x.receive_packet();
+    }
+
     void i8254x_packet_send(uint32_t address, uint16_t length)
     {
         return Intel8254x.send_packet(address, length);
     }
 
-    void  __cxa_atexit(void)
+    void i8254x_init(void)
     {
-        return;
+        NetworkDevice::add_device(i8254x_packet_receive, i8254x_packet_send, &NetworkSubsystem);
+        return Intel8254x.init();
     }
 
-    void* __dso_handle;
+    uint32_t* i8254x_class_return(void)
+    {
+        return (uint32_t*)Intel8254x.this_return();
+    }
+
 
 
 }

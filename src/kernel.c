@@ -25,6 +25,8 @@
 #include <xanin_info/info_block.c>
 #include <xin_fs/xin.h>
 #include <devices/NIC/8254x.h>
+#include <network_protocols/arp/arp.h>
+#include <network_protocols/ethernet_frame/ethernet_frame.h>
 
 extern void v86_mode_enter(void);
 extern void mouse_enable(void);
@@ -189,6 +191,7 @@ void _start(void)
     memcpy(bootloader_program_buffer, (uint8_t*)0x7C00, SECTOR_SIZE);
 
 
+
     xprintf("Press ENTER to continue...\n");
 
     static int number_of_cores;
@@ -226,6 +229,13 @@ void _start(void)
         create_file_kernel("/syslog");
 
     i8254x_init();
+
+    uint8_t macd[6] = {0xff, 0xff, 0xff, 0xff, 0xff,0xff};
+    uint8_t macs[6] = {0x12, 0x34, 0x56, 0x78, 0x9A, 0xBC};
+    
+    char dd[] = {"dupa"};
+
+    ethernet_frame_send(macd, macs, 0x6969, (uint8_t*)dd, sizeof(dd));
     // i8254x_packet_send(0x0, 128);
     while(KeyInfo.scan_code != ENTER);
 

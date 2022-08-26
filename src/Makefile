@@ -171,6 +171,8 @@ build:
 	./devices/APIC/apic.o \
 	./devices/NIC/8254x_int_handler.o \
 	./devices/NIC/8254x.o \
+	./network_protocols/ethernet_frame/ethernet_frame.o \
+	./netapi/network_device.o \
 	./devices/IOAPIC/ioapic.o \
 	./test/testc.o \
 	./devices/COM/ComPort.o \

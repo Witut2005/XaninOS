@@ -3,6 +3,8 @@
 #include <libc/colors.h>
 
 
+extern "C" void printk(char* str);
+
 
 xgm::CollisionInfo xgm::make_collision_info(bool x, uint8_t y, xgm::Direction z)
 {
@@ -173,5 +175,6 @@ void xgm::Renderer::ScreenManager::vertical_line_create(uint8_t x, xgm::color::C
 
 extern "C" void __cxa_pure_virtual()
 {
+    printk("virtual function execution error");
     return;
 }

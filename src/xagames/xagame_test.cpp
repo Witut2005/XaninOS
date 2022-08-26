@@ -15,16 +15,15 @@ extern "C" void xagame_test(void)
 
     screen_clear();
 
-
     rectangle* y = (rectangle*)malloc(sizeof(rectangle));
     y->create(20,5,10,5, yellow);
 
-    ScreenManager manager;
-    manager[2] = xgm::color::red | xgm::color::green_text;
-    manager.vertical_line_create(5, xgm::color::yellow);
+    // ScreenManager manager;
+    // manager[2] = xgm::color::red | xgm::color::green_text;
+    // manager.vertical_line_create(5, xgm::color::yellow);
 
 
-    while(1)
+    // while(1)
     {
         msleep(1000);
         y->move(0,1);

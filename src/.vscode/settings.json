@@ -9,7 +9,8 @@
         "cstdint": "cpp",
         "xin_info.c": "cpp",
         "apic_registers.h": "c",
-        "hal.h": "c"
+        "hal.h": "c",
+        "8254x.h": "c"
     },
     "makefile.launchConfigurations": [
         {
