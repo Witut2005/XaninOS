@@ -102,6 +102,9 @@ build:
 	@echo [CC] endian.cpp
 	@$(CC) $(CC_OPTIONS) ./libcpp/endian.cpp -o ./libcpp/endian.o
 
+	@echo [CC] network_device.cpp
+	@$(CC) $(CC_OPTIONS) ./netapi/network_device.cpp -o ./netapi/network_device.o
+
  
 	@#C LIBARIES
 

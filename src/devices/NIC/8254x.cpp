@@ -243,10 +243,6 @@ void Intel8254xDriver::init()
 
     this->last_packet = (uint8_t*)malloc(sizeof(uint8_t) * 4096 * 10);
 
-    /* receive delay timer set */
-    this->write(nic::RDTR, 0xFF | (1 << 31));
-
-
     /* enabling interrupts */
     this->write(nic::IMS, this->read(nic::IMS) | nic::ims::RXT | nic::ims::RXO | 
                   nic::ims::RXDMT | nic::ims::RXSEQ | nic::ims::LSC);
@@ -403,7 +399,7 @@ extern "C"
 
     void i8254x_init(void)
     {
-        NetworkDevice::add_device(i8254x_packet_receive, i8254x_packet_send, &NetworkSubsystem);
+        NetworkDevice::add_device(i8254x_packet_receive, i8254x_packet_send, i8254x_mac_get, &NetworkSubsystem);
         return Intel8254x.init();
     }
 

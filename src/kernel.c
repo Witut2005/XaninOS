@@ -27,6 +27,7 @@
 #include <devices/NIC/8254x.h>
 #include <network_protocols/arp/arp.h>
 #include <network_protocols/ethernet_frame/ethernet_frame.h>
+#include <netapi/network_device.h>
 
 extern void v86_mode_enter(void);
 extern void mouse_enable(void);
@@ -235,9 +236,10 @@ void _start(void)
     
     char dd[] = {"dupa"};
 
-    ethernet_frame_send(macd, macs, 0x6969, (uint8_t*)dd, sizeof(dd));
+
     // i8254x_packet_send(0x0, 128);
-    while(KeyInfo.scan_code != ENTER);
+    while(KeyInfo.scan_code != ENTER)
+        ethernet_frame_send(macd, mac_get(), 0x6969, (uint8_t*)dd, sizeof(dd));
 
     xprintf("\n\n");
    

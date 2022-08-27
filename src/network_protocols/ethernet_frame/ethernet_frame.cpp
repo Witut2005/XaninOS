@@ -34,7 +34,7 @@ void EthernetFrameInterface::send(uint8_t* mac_destination, uint8_t* mac_source,
     tmp[i + 3] = 0x3A;
 
 
-    NetworkDevice::send_packet((uint32_t)FrameHeader, length + ETHERNET_FRAME_MAC_HEADER_SIZE, &NetworkSubsystem);
+    NetworkDevice::packet_send((uint32_t)FrameHeader, length + ETHERNET_FRAME_MAC_HEADER_SIZE, &NetworkSubsystem);
 
     free(FrameHeader);
     
