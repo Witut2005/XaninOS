@@ -6,16 +6,17 @@
 #include <libcpp/cstdio.h>
 #include <devices/NIC/8254x.hpp>
 #include <network_protocols/arp/arp.h>
-#include <libcpp/new.hpp>
 
 extern "C" void i8254x_packet_send(uint32_t address, uint16_t length);
 extern "C" uint32_t* i8254x_class_return(void);
+
+
 
 void EthernetFrameInterface::send(uint8_t* mac_destination, uint8_t* mac_source, uint16_t protocol, uint8_t* buffer, uint16_t length)
 {
     
 
-    // xprintf("y");
+    xprintf("y");
     uint8_t* tmp = (uint8_t*)malloc(sizeof(uint8_t) * 1518);
     EthernetFrame* FrameHeader = (EthernetFrame*)tmp;
 
@@ -38,6 +39,7 @@ void EthernetFrameInterface::send(uint8_t* mac_destination, uint8_t* mac_source,
 
 
     NetworkDevice::packet_send((uint32_t)FrameHeader, length + ETHERNET_FRAME_MAC_HEADER_SIZE, &NetworkSubsystem);
+    // i8254x_packet_send((uint32_t)FrameHeader, length + ETHERNET_FRAME_MAC_HEADER_SIZE);
 
     free(FrameHeader);
     
@@ -45,10 +47,11 @@ void EthernetFrameInterface::send(uint8_t* mac_destination, uint8_t* mac_source,
 
 }
 
-EthernetFrame* EthernetFrameInterface::receive(uint8_t* buffer)
+EthernetFrame* EthernetFrameInterface::receive(void)//uint8_t* buffer)
 {
-    EthernetFrame* Frame = new EthernetFrame;
-    uint8_t* tmp = buffer;
+    EthernetFrame* Frame = (EthernetFrame*)malloc(sizeof(EthernetFrame));
+    uint8_t* tmp = (uint8_t*)0x0;//buffer;
+    
 
     memcpy(Frame->mac_destination, tmp, 6);
     tmp = tmp + 6;

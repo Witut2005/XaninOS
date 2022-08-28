@@ -45,8 +45,14 @@ void invalid_opcode(void)
 void divide_by_zero_exception(void)
 {
     screen_clear();
+    int tmp;
+    asm("mov %0, [esp]"
+        : 
+        : "r"(tmp));
+        
     xprintf("\n%zDIVIDE BY ZERO ERROR",set_output_color(red,white));
-    reg_dump();
+    xprintf("0x%x\n", tmp);
+    // reg_dump();
     interrupt_disable();
     asm("hlt");
 }

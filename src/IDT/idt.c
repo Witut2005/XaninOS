@@ -1,7 +1,6 @@
 #pragma once
 
 #include <stdint.h>
-#include <libc/hal.h>
 #include <handlers/handlers.c>
 #include <keyboard/key_map.h>
 #include <syscall/syscall.c>
@@ -27,33 +26,43 @@ extern void i8254x_interrupt_handler_entry(void);
     idtEntries[idt_entry].res = 0x0;\
     idtEntries[idt_entry].P_DPL = 0x8e
 
+
 //extern void _syscall(void);
 
-    /* IDT Register */
-    struct idt_register
-    {
-        uint16_t limit;
-        uint32_t base;
-    }__attribute__((packed));
+/* IDT Register */
+struct idt_register
+{
+    uint16_t limit;
+    uint32_t base;
+}__attribute__((packed));
 
-    /* IDT entry structure */
-    typedef struct
-    {
-        uint16_t off_0_15;
-        uint16_t segment;
-        uint8_t res;
-        uint8_t P_DPL;
-        uint16_t off_16_31;
-    }__attribute__((packed)) IDT;
-
-
-    __attribute__((aligned(0x8))) IDT idtEntries[IDT_HANDLERS];
+/* IDT entry structure */
+typedef struct
+{
+    uint16_t off_0_15;
+    uint16_t segment;
+    uint8_t res;
+    uint8_t P_DPL;
+    uint16_t off_16_31;
+}__attribute__((packed)) IDT;
 
 
+__attribute__((aligned(0x8))) IDT idtEntries[IDT_HANDLERS];
+
+
+// void configure_idt_entry(uint8_t idt_entry, uint32_t offset, uint16_t segment)
+// {
+//     idtEntries[idt_entry].off_0_15 = (uint16_t)(((uint32_t)&offset & 0x0000ffff));
+//     idtEntries[idt_entry].off_16_31 = (uint16_t)((uint32_t)&offset >> 16);
+//     idtEntries[idt_entry].segment = segment;
+//     idtEntries[idt_entry].res = 0x0;
+//     idtEntries[idt_entry].P_DPL = 0x8e;
+// }
 
 void set_idt(void)
 {
 
+    asm("cli");
 
     /* configure IDT entries*/
     configure_idt_entry(0x0, divide_by_zero_exception,CODE_SEGMENT);

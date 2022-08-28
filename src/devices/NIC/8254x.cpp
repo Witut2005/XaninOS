@@ -335,8 +335,8 @@ void Intel8254xDriver::interrupt_handler(void)
 {
     uint16_t interrupt_status = this->read(nic::ICR);
     
-    if(interrupt_status & 0x80)
-        this->receive_packet();
+    // if(interrupt_status & 0x80)
+    //     this->receive_packet();
 
 }
 
@@ -393,19 +393,21 @@ extern "C"
 
     void i8254x_packet_send(uint32_t address, uint16_t length)
     {
-        return Intel8254x.send_packet(address, length);
+        Intel8254x.send_packet(address, length);
+    }
+
+    static uint8_t* i8254x_mac_get_static(void)
+    {
+        return i8254x_mac_get();
     }
 
     void i8254x_init(void)
     {
-        NetworkDevice::add_device(i8254x_packet_receive, i8254x_packet_send, i8254x_mac_get, &NetworkSubsystem);
+        NetworkDevice::add_device(i8254x_packet_receive, i8254x_packet_send, i8254x_mac_get_static(), &NetworkSubsystem);
         return Intel8254x.init();
     }
 
-    uint32_t* i8254x_class_return(void)
-    {
-        return (uint32_t*)Intel8254x.this_return();
-    }
+
 
 
 

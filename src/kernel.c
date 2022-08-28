@@ -36,7 +36,6 @@ extern void v86_mode_enter(void);
 extern void mouse_enable(void);
 extern void com_port_init(uint16_t divisor);
 extern bool com_status(void);
-extern void i8254x_init(void);
 
 /*--------------------------------------/
 |wesolego nowego roku :))               |
@@ -245,12 +244,14 @@ void _start(void)
     AddressResolutionProtocol* arp_test = (AddressResolutionProtocol*)malloc(sizeof(AddressResolutionProtocol));
     prepare_arp_request(arp_test, ARP_ETHERNET, ARP_IP_PROTOCOL, 0x6, 0x4, ARP_GET_MAC, mac_get(), create_ip_address(ip_addr), macd, create_ip_address(ip_dest));
 
-    // screen_clear();
+    screen_clear();
+    
+    xprintf("0x%x\n", mac_get());
+    xprintf("0x%x\n", i8254x_mac_get());
 
-    // i8254x_packet_send(0x0, 128);
-    while(KeyInfo.scan_code != ENTER);
-        // send_arp_request(arp_test)
-        // ethernet_frame_send(macd, mac_get(), 0x6969, (uint8_t*)dd, sizeof(dd));
+    while(KeyInfo.scan_code != ENTER)
+        // send_arp_request(arp_test);
+        ethernet_frame_send(macd, mac_get(), 0x6969, (uint8_t*)dd, sizeof(dd));
 
     xprintf("\n\n");
    
