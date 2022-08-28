@@ -4,8 +4,16 @@
 #include <stdint.h>
 
 #define ARP_ETHERNET 0x1
-#define ARP_REQUEST_IP 0x800
+#define ARP_IP_PROTOCOL 0x800
 #define ARP_REQUEST_REPLY 0x2
+#define ARP_GET_MAC 0x1
+#define ARP_ETHER_TYPE 0x0806
+
+struct ArpTableEntry
+{
+    uint8_t mac_address[6];
+    uint32_t ip_address;
+};
 
 struct AddressResolutionProtocol
 {
@@ -18,9 +26,26 @@ struct AddressResolutionProtocol
     uint32_t source_protocol_address; // Source protocol address - plen bytes (see above). If IPv4 can just be a "u32" type.
     uint8_t destination_hardware_address[6]; // Destination hardware address - hlen bytes (see above)
     uint32_t destination_protocol_address; // Destination protocol address - plen bytes (see above). If IPv4 can just be a "u32" type.
-};
+}__attribute__((packed));
 
 #ifndef __cplusplus
-    typedef struct arp arp;
+    typedef struct AddressResolutionProtocol AddressResolutionProtocol;
+    extern void send_arp_request(AddressResolutionProtocol* arp);
+    extern AddressResolutionProtocol* prepare_arp_request(AddressResolutionProtocol* arp, uint16_t hardware_type, uint16_t protocol_type, 
+                                                    uint8_t hardware_address_length, uint8_t protocol_address_length, uint16_t opcode,
+                                                        uint8_t* source_hardware_address, uint32_t source_protocol_address, uint8_t* destination_hardware_address,
+                                                            uint32_t destination_protocol_address); 
+    extern void arp_reply_handle(AddressResolutionProtocol* arp_header);
+
+
+#else
+    extern "C" void send_arp_request(AddressResolutionProtocol* arp);
+    extern "C" AddressResolutionProtocol* prepare_arp_request(AddressResolutionProtocol* arp, uint16_t hardware_type, uint16_t protocol_type, 
+                                                    uint8_t hardware_address_length, uint8_t protocol_address_length, uint16_t opcode,
+                                                        uint8_t* source_hardware_address, uint32_t source_protocol_address, uint8_t* destination_hardware_address,
+                                                            uint32_t destination_protocol_address);
+   extern "C" void arp_reply_handle(AddressResolutionProtocol* arp_header);
+
 #endif
+
 

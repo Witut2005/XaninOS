@@ -7,6 +7,7 @@
 #include <libc/syslog.h>
 #include <libcpp/cmemory.h>
 #include <devices/APIC/apic_registers.h>
+#include <network_protocols/ethernet_frame/ethernet_frame.hpp>
 
 #define INTEL_8254X_DESCRIPTORS 256
 #define reset() write(0x0, 0x4000000)
@@ -37,18 +38,29 @@ uint16_t Intel8254xDriver::eeprom_read(uint8_t address)
     address32 = address32 | 0x1;
 
     this->write(nic::EERD, address32);
-    io_wait();
+    
+    while(!(this->read(nic::EERD) & (1 << 4)));
     
     uint32_t ret = this->read(nic::EERD);
 
     ret = ret >> 16;
 
-    address32 = address32 ^ 0x1;
-
-    this->write(nic::EERD, address32);
-
     return ret;
 
+}
+
+uint8_t* Intel8254xDriver::mac_get()
+{
+    this->write(nic::EECD, this->read(nic::EECD) | nic::EECD_SK | nic::EECD_CS | nic::EECD_DI);
+
+    /* enable reading from eeprom */
+    this->write(nic::EECD, this->read(nic::EECD) | nic::EECD_REQ);
+    while((this->read(nic::EECD) & nic::EECD_GNT) >> 7 != 1);
+    *(uint16_t*)&mac[0] = this->eeprom_read(0x0);
+    *(uint16_t*)&mac[2] = this->eeprom_read(0x1);
+    *(uint16_t*)&mac[4] = this->eeprom_read(0x2);
+    this->write(nic::EECD, this->read(nic::EECD) ^ nic::EECD_REQ);
+    return this->mac;
 }
 
 
@@ -152,6 +164,8 @@ void Intel8254xDriver::transmit_init(void)
 void Intel8254xDriver::send_packet(uint32_t address, uint16_t length)
 {
 
+    // xprintf("a");
+
     this->transmit_buffer[this->txd_current].address_low = address;
     this->transmit_buffer[this->txd_current].address_high = 0x0;
     this->transmit_buffer[this->txd_current].cmd = nic::CMD::EOP | nic::CMD::IFCS | nic::CMD::RS | nic::CMD::RPS;// | nic::CMD::RPS;
@@ -217,12 +231,7 @@ void Intel8254xDriver::init()
     /* device reset */
     reset();
 
-    this->write(nic::EECD, this->read(nic::EECD) | nic::EECD_SK | nic::EECD_CS | nic::EECD_DI);
 
-    /* enable reading from eeprom */
-    this->write(nic::EECD, this->read(nic::EECD) | nic::EECD_REQ);
-    while((this->read(nic::EECD) & nic::EECD_GNT) >> 7 != 1);
-    this->write(nic::EECD, this->read(nic::EECD) ^ nic::EECD_REQ);
     
     this->mac_get();
 
@@ -282,14 +291,6 @@ pci_device* Intel8254xDriver::pci_info_get()
     return &this->pci_info;
 }
 
-uint8_t* Intel8254xDriver::mac_get()
-{
-    *(uint16_t*)&mac[0] = this->eeprom_read(0x0);
-    *(uint16_t*)&mac[2] = this->eeprom_read(0x1);
-    *(uint16_t*)&mac[4] = this->eeprom_read(0x2);
-    return this->mac;
-}
-
 uint32_t Intel8254xDriver::iobase_get()
 {
     return pci_info.base0;
@@ -320,12 +321,10 @@ uint8_t* Intel8254xDriver::receive_packet(void)
     this->receive_buffer[rxd_current].status = 0x0;
     this->write(nic::RDT, this->rxd_current);
 
-    // screen_clear(); 
+    // EthernetFrameInterface* HandleEthternetFrame = (EthernetFrameInterface*)malloc(sizeof(EthernetFrameInterface));
+    // HandleEthternetFrame->receive(this->last_packet);
 
-    // for(int i = 0; i < packet_lenght; i++)
-    // {
-    //     xprintf("%mX ", last_packet[i]);     
-    // }
+    // free(HandleEthternetFrame);
 
     return last_packet;
 
@@ -369,7 +368,7 @@ extern "C"
 
     uint8_t* i8254x_mac_get(void)
     {
-        return Intel8254x.mac_get();
+        return Intel8254x.mac;
     }
 
     uint32_t i8254x_receive_buffer_get(void)

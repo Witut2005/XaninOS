@@ -80,6 +80,12 @@ build:
 	@echo [CC] EthernetFrameInterface
 	@$(CC) $(CC_OPTIONS) ./network_protocols/ethernet_frame/ethernet_frame.cpp -o ./network_protocols/ethernet_frame/ethernet_frame.o
 
+	@echo [CC] arp.cpp
+	@$(CC) $(CC_OPTIONS) ./network_protocols/arp/arp.cpp -o ./network_protocols/arp/arp.o
+
+	@echo [CC] ip.cpp
+	@$(CC) $(CC_OPTIONS) ./network_protocols/internet_protocol/ip.cpp -o ./network_protocols/internet_protocol/ip.o
+
 	@echo [CC] screenshot.cpp
 	@$(CC) $(CC_OPTIONS) ./xaninApps/screenshot.cpp -o ./xaninApps/screenshot.o
 
@@ -175,6 +181,8 @@ build:
 	./devices/NIC/8254x_int_handler.o \
 	./devices/NIC/8254x.o \
 	./network_protocols/ethernet_frame/ethernet_frame.o \
+	./network_protocols/arp/arp.o \
+	./network_protocols/internet_protocol/ip.o \
 	./netapi/network_device.o \
 	./devices/IOAPIC/ioapic.o \
 	./test/testc.o \
@@ -204,7 +212,9 @@ endif
 
 
 run:
+	# qemu-system-i386 -smp 2 -net nic,macaddr=24:22:33:44:55:66 -drive file=../bin/xanin.img,cache=unsafe -m 512
 	sudo qemu-system-i386 -smp 2 -drive file=../bin/xanin.img,cache=unsafe -m 512 -net nic -net tap
+
 
 curses:
 	qemu-system-i386 -curses -k en-us -m 512 -hda ../bin/xanin.img 

@@ -2,6 +2,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <libcpp/cstdio.h>
 
 struct NetworkHandler
 {
@@ -41,6 +42,8 @@ class NetworkDevice
 
     static void packet_send(uint32_t buffer, uint16_t length, NetworkDevice* device)
     {
+
+        // xprintf("z");
 
         NetworkHandler* tmp = device->NetworkHandlers;
 
