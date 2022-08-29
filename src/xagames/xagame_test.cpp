@@ -15,8 +15,8 @@ extern "C" void xagame_test(void)
 
     screen_clear();
 
-    rectangle* y = (rectangle*)malloc(sizeof(rectangle));
-    y->create(20,5,10,5, yellow);
+    rectangle y(0);// = (rectangle*)malloc(sizeof(rectangle));
+    y.create(20,5,10,5, yellow);
 
     // ScreenManager manager;
     // manager[2] = xgm::color::red | xgm::color::green_text;
@@ -26,7 +26,7 @@ extern "C" void xagame_test(void)
     // while(1)
     {
         msleep(1000);
-        y->move(0,1);
+        y.move(0,1);
     }
 
 }

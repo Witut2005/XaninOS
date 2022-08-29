@@ -89,7 +89,7 @@ void xgm::rectangle::rotate_right_90()
 
 }
 
-xgm::rectangle::rectangle(uint32_t class_id)
+xgm::rectangle::rectangle(uint32_t class_id=0)
 {
     this->class_id = class_id;
 }

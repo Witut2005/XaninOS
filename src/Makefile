@@ -83,6 +83,9 @@ build:
 	@echo [CC] arp.cpp
 	@$(CC) $(CC_OPTIONS) ./network_protocols/arp/arp.cpp -o ./network_protocols/arp/arp.o
 
+	# @echo [C] trouble.cpp
+	# @$(C) $(C_OPTIONS) ./netapi/trouble_variables.c -o ./netapi/trouble_variables.o
+
 	@echo [CC] ip.cpp
 	@$(CC) $(CC_OPTIONS) ./network_protocols/internet_protocol/ip.cpp -o ./network_protocols/internet_protocol/ip.o
 
@@ -108,8 +111,8 @@ build:
 	@echo [CC] endian.cpp
 	@$(CC) $(CC_OPTIONS) ./libcpp/endian.cpp -o ./libcpp/endian.o
 
-	@echo [CC] network_device.cpp
-	@$(CC) $(CC_OPTIONS) ./netapi/network_device.cpp -o ./netapi/network_device.o
+	@echo [C] network_device.cpp
+	@$(C) $(C_OPTIONS) ./netapi/network_device.c -o ./netapi/network_device.o
 
  
 	@#C LIBARIES

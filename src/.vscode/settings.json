@@ -10,7 +10,8 @@
         "xin_info.c": "cpp",
         "apic_registers.h": "c",
         "hal.h": "c",
-        "8254x.h": "c"
+        "8254x.h": "c",
+        "arp.h": "c"
     },
     "makefile.launchConfigurations": [
         {

@@ -3,6 +3,9 @@
 
 xanin_saver:
 
+    mov word [deiks], dx
+    mov word [beiks], bx
+
     cli
     mov al, 0x8
     out 0x21, al
@@ -49,6 +52,9 @@ xanin_saver:
     push 0x0
     push 0x2000
 
+    mov word bx, [beiks]
+    mov word dx, [deiks]
+
     pushf
     push bx
     push dx
@@ -58,5 +64,9 @@ xanin_saver:
     IVT:
     dw 0x03FF
     dd 0x0
+
+    program_addr:
+    beiks: dw 0x0
+    deiks: dw 0x0
 
     times 512 - ($-$$) db 0x0  

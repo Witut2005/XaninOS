@@ -186,6 +186,7 @@ void scan(void)
     XANIN_ADD_APP_ENTRY0("xgl_test", xgl_test)
 
     XANIN_ADD_APP_ENTRY1("arp", arp_table_print)
+    XANIN_ADD_APP_ENTRY1("ping", ping)
 
     else
     {

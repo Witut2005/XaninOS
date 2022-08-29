@@ -83,9 +83,9 @@ void debug_exception(void)
 
 void nmi_interrupt(void)
 {
-    screen_clear();
-    xprintf("%zNMI INTERRUPT", set_output_color(red,white));
-    reg_dump();
+    // screen_clear();
+    // xprintf("%zNMI INTERRUPT", set_output_color(red,white));
+    // reg_dump();
     interrupt_disable();
     asm("hlt");
 }

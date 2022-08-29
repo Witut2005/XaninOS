@@ -20,9 +20,7 @@ int arp_table_print(char* arg)
     uint8_t* tmp = (uint8_t*)table->ip_address;
 
     for(i = 0; i < 3; i++)
-    {
         xprintf("%d.", tmp[i]);
-    }
 
     xprintf("%d", tmp[3]);
     while(KeyInfo.scan_code != ENTER);

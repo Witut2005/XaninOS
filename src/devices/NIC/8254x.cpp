@@ -393,6 +393,7 @@ extern "C"
 
     void i8254x_packet_send(uint32_t address, uint16_t length)
     {
+        // xprintf("\n");
         Intel8254x.send_packet(address, length);
     }
 
@@ -403,8 +404,9 @@ extern "C"
 
     void i8254x_init(void)
     {
-        NetworkDevice::add_device(i8254x_packet_receive, i8254x_packet_send, i8254x_mac_get_static(), &NetworkSubsystem);
+        netapi_add_device(i8254x_packet_receive, i8254x_packet_send, i8254x_mac_get_static());
         return Intel8254x.init();
+        asm("sti");
     }
 
 

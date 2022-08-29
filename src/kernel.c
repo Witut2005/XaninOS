@@ -31,7 +31,6 @@
 #include <network_protocols/arp/arp.h>
 #include <network_protocols/internet_protocol/ip.h>
 
-
 extern void v86_mode_enter(void);
 extern void mouse_enable(void);
 extern void com_port_init(uint16_t divisor);
@@ -177,7 +176,7 @@ void _start(void)
     xprintf("\n%z----------------------------\n", set_output_color(black, green));
     xprintf("NIC interrupt line: 0x%x", (apic_nic_redirect != nullptr ? apic_nic_redirect->global_system_int_table + APIC_IRQ_BASE : PIC_NIC_VECTOR));
 
-    // xanin_info_ptr = xanin_information_block_get();
+    xanin_info_ptr = xanin_information_block_get();
     
     // com_port_init(0x00C0);
 
@@ -241,26 +240,26 @@ void _start(void)
     uint8_t ip_addr[4] = {0x0};
     uint8_t ip_dest[4] = {192,168,0,160};
 
-    AddressResolutionProtocol* arp_test = (AddressResolutionProtocol*)malloc(sizeof(AddressResolutionProtocol));
-    prepare_arp_request(arp_test, ARP_ETHERNET, ARP_IP_PROTOCOL, 0x6, 0x4, ARP_GET_MAC, mac_get(), create_ip_address(ip_addr), macd, create_ip_address(ip_dest));
-
-
-    send_arp_request(arp_test);
-
-    ip_dest[0] = 192;
-    ip_dest[1] = 168;
-    ip_dest[2] = 122;
-    ip_dest[3] = 1;
-
-    prepare_arp_request(arp_test, ARP_ETHERNET, ARP_IP_PROTOCOL, 0x6, 0x4, ARP_GET_MAC, mac_get(), create_ip_address(ip_addr), macd, create_ip_address(ip_dest));
-    send_arp_request(arp_test);
-
     
-    // xprintf("0x%x\n", mac_get());
-    // xprintf("0x%x\n", i8254x_mac_get());
+
+    AddressResolutionProtocol arp_test; //(AddressResolutionProtocol*)malloc(sizeof(AddressResolutionProtocol));
+    prepare_arp_request(&arp_test, ARP_ETHERNET, ARP_IP_PROTOCOL, 0x6, 0x4, ARP_GET_MAC, netapi_mac_get(), create_ip_address(ip_addr), macd, create_ip_address(ip_dest));
+    send_arp_request(&arp_test);
+    // screen_clear();
+
 
     while(KeyInfo.scan_code != ENTER);
-        // ethernet_frame_send(macd, mac_get(), 0x6969, (uint8_t*)dd, sizeof(dd));
+        // sleep(3);
+        // xprintf("a");
+        // prepare_arp_request(&arp_test, ARP_ETHERNET, ARP_IP_PROTOCOL, 0x6, 0x4, ARP_GET_MAC, netapi_mac_get(), create_ip_address(ip_addr), macd, create_ip_address(ip_dest));
+        // send_arp_request(&arp_test);
+    
+    // free(arp_test);
+    
+    // xprintf("0x%x\n", netapi_mac_get());
+    // xprintf("0x%x\n", i8254x_netapi_mac_get());
+
+        // ethernet_frame_send(macd, netapi_mac_get(), 0x6969, (uint8_t*)dd, sizeof(dd));
 
 
 

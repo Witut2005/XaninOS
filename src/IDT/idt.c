@@ -90,15 +90,15 @@ void set_idt(void)
     configure_idt_entry(0x22, pit_handler_init,CODE_SEGMENT);
     configure_idt_entry(0x21, keyboard_handler_init,CODE_SEGMENT);
     
-    configure_idt_entry(0x26, floppy_interrupt,CODE_SEGMENT);
+    // configure_idt_entry(0x26, floppy_interrupt,CODE_SEGMENT);
     configure_idt_entry(0x2B, i8254x_interrupt_handler_entry, CODE_SEGMENT);
-    configure_idt_entry(0x2B + 1, gowno, CODE_SEGMENT);
-    configure_idt_entry(0x2B + 2, gowno, CODE_SEGMENT);
-    configure_idt_entry(0x2B + 3, gowno, CODE_SEGMENT);
-    configure_idt_entry(0x2B + 4, gowno, CODE_SEGMENT);
-    configure_idt_entry(0x2B + 5, gowno, CODE_SEGMENT);
-    configure_idt_entry(0x2B + 6, gowno, CODE_SEGMENT);
-    configure_idt_entry(0x2B + 7, gowno, CODE_SEGMENT);
+    // configure_idt_entry(0x2B + 1, gowno, CODE_SEGMENT);
+    // configure_idt_entry(0x2B + 2, gowno, CODE_SEGMENT);
+    // configure_idt_entry(0x2B + 3, gowno, CODE_SEGMENT);
+    // configure_idt_entry(0x2B + 4, gowno, CODE_SEGMENT);
+    // configure_idt_entry(0x2B + 5, gowno, CODE_SEGMENT);
+    // configure_idt_entry(0x2B + 6, gowno, CODE_SEGMENT);
+    // configure_idt_entry(0x2B + 7, gowno, CODE_SEGMENT);
 
     // configure_idt_entry(0x2C, mouse_handler_init, CODE_SEGMENT);
 

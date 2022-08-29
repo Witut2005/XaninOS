@@ -166,7 +166,7 @@ struct i8254xTransmitDescriptor
 
 }__attribute__((packed));
 
-class Intel8254xDriver : public virtual NetworkDevice
+class Intel8254xDriver 
 {
     public:
     uint8_t* iobase;

@@ -8,6 +8,8 @@
 #include <libc/stdlibx.h>
 #include <libc/math.h>
 #include <keyboard/key_map.h>
+#include <libc/memory.h>
+
 
 uint32_t strlen(const char* a)
 {
@@ -421,4 +423,26 @@ uint32_t strtoi(char* str, uint8_t format)
 
 }
 
+uint32_t str2ipv4(char* str)
+{
+    uint32_t tmp = 0;
+    char str_tmp[4] = {'\0'}; 
 
+    memcpy(str_tmp, str, 3);
+    tmp = (uint8_t)strtoi(str_tmp, 10);
+    tmp = tmp << 8;
+
+    memcpy(str_tmp, str + 4, 3);
+    tmp = tmp | (uint8_t)strtoi(str_tmp, 10);
+    tmp = tmp << 8;
+
+    memcpy(str_tmp, str + 8, 3);
+    tmp = tmp | (uint8_t)strtoi(str_tmp, 10);
+    tmp = tmp << 8;
+
+    memcpy(str_tmp, str + 12, 3);
+    tmp = tmp | (uint8_t)strtoi(str_tmp, 10);
+
+    return tmp;
+
+}

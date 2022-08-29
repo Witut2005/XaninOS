@@ -5,19 +5,21 @@
 #include <libcpp/cmemory.h>
 #include <libcpp/endian.h>
 #include <libcpp/cstdio.h>
+#include <libcpp/cstring.h>
+#include <libcpp/ctime.h>
 
 
 ArpTableEntry ArpTable[10] = {0,0};
+ArpTableEntry LastArpReply = {0,0};
 
 extern "C"
 {
 
     void send_arp_request(AddressResolutionProtocol* arp)
     {
-        // xprintf("x");
-        EthernetFrameInterface* EthernetFrameSubsystem = (EthernetFrameInterface*)malloc(sizeof(EthernetFrameInterface));    
-        EthernetFrameSubsystem->send(arp->destination_hardware_address, arp->source_hardware_address,  ARP_ETHER_TYPE, (uint8_t*)arp, sizeof(AddressResolutionProtocol));
-        free(EthernetFrameSubsystem);
+        xprintf("b");
+        EthernetFrameInterface EthernetFrameSubsystem;// = (EthernetFrameInterface*)malloc(sizeof(EthernetFrameInterface));    
+        EthernetFrameSubsystem.send(arp->destination_hardware_address, arp->source_hardware_address,  ARP_ETHER_TYPE, (uint8_t*)arp, sizeof(AddressResolutionProtocol));
     }
 
     AddressResolutionProtocol* prepare_arp_request(AddressResolutionProtocol* arp, uint16_t hardware_type, uint16_t protocol_type, 
@@ -41,13 +43,18 @@ extern "C"
 
     void arp_reply_handle(AddressResolutionProtocol* arp_header)
     {
+        if(strncmp((char*)arp_header->destination_hardware_address, "\0\0\0\0\0\0", 6))
+            return;
+
+        memcpy(LastArpReply.mac_address, arp_header->source_hardware_address, 6);
+        memcpy(LastArpReply.ip_address, (uint8_t*)&arp_header->source_protocol_address, 4);
 
         auto* i = ArpTable;
-        while(i->ip_address[0] == 0)
+        while(i->ip_address[0] == 0 and *(uint32_t*)i->mac_address == 0)
             i++;
 
         memcpy(i->mac_address, arp_header->source_hardware_address, 6);
-        memcpy(i->ip_address, arp_header->source_hardware_address, 4);
+        memcpy(i->ip_address, (uint8_t*)&arp_header->source_protocol_address, 4);
     }
 
 }

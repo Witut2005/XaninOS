@@ -13,7 +13,7 @@ struct ArpTableEntry
 {
     uint8_t mac_address[6];
     uint8_t ip_address[4];
-};
+}__attribute__((packed));
 
 struct AddressResolutionProtocol
 {
@@ -50,5 +50,6 @@ struct AddressResolutionProtocol
 #endif
 
 extern ArpTableEntry ArpTable[10];
+extern ArpTableEntry LastArpReply;
 
 

@@ -17,6 +17,7 @@ void EthernetFrameInterface::send(uint8_t* mac_destination, uint8_t* mac_source,
 {
     
 
+    // xprintf("c");
     uint8_t* tmp = (uint8_t*)malloc(sizeof(uint8_t) * 1518);
     EthernetFrame* FrameHeader = (EthernetFrame*)tmp;
 
@@ -38,7 +39,7 @@ void EthernetFrameInterface::send(uint8_t* mac_destination, uint8_t* mac_source,
     tmp[i + 3] = 0x3A;
 
 
-    NetworkDevice::packet_send((uint32_t)FrameHeader, length + ETHERNET_FRAME_MAC_HEADER_SIZE, &NetworkSubsystem);
+    netapi_packet_send((uint32_t)FrameHeader, length + ETHERNET_FRAME_MAC_HEADER_SIZE);
     // i8254x_packet_send((uint32_t)FrameHeader, length + ETHERNET_FRAME_MAC_HEADER_SIZE);
 
     free(FrameHeader);
