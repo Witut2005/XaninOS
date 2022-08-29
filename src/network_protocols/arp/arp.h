@@ -12,7 +12,7 @@
 struct ArpTableEntry
 {
     uint8_t mac_address[6];
-    uint32_t ip_address;
+    uint8_t ip_address[4];
 };
 
 struct AddressResolutionProtocol
@@ -30,6 +30,7 @@ struct AddressResolutionProtocol
 
 #ifndef __cplusplus
     typedef struct AddressResolutionProtocol AddressResolutionProtocol;
+    typedef struct ArpTableEntry ArpTableEntry;
     extern void send_arp_request(AddressResolutionProtocol* arp);
     extern AddressResolutionProtocol* prepare_arp_request(AddressResolutionProtocol* arp, uint16_t hardware_type, uint16_t protocol_type, 
                                                     uint8_t hardware_address_length, uint8_t protocol_address_length, uint16_t opcode,
@@ -47,5 +48,7 @@ struct AddressResolutionProtocol
    extern "C" void arp_reply_handle(AddressResolutionProtocol* arp_header);
 
 #endif
+
+extern ArpTableEntry ArpTable[10];
 
 

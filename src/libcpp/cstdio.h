@@ -5,6 +5,7 @@
 #include <libc/colors.h>
 
 #define stderr (white << 4 | red)
+#define stdok (white << 4 | green)
 
 
 extern "C"

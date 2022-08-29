@@ -238,20 +238,31 @@ void _start(void)
     
     char dd[] = {"dupa"};
 
-    uint8_t ip_addr[4] = {192,168,19,12};
-    uint8_t ip_dest[4] = {192,168,0,1};
+    uint8_t ip_addr[4] = {0x0};
+    uint8_t ip_dest[4] = {192,168,0,160};
 
     AddressResolutionProtocol* arp_test = (AddressResolutionProtocol*)malloc(sizeof(AddressResolutionProtocol));
     prepare_arp_request(arp_test, ARP_ETHERNET, ARP_IP_PROTOCOL, 0x6, 0x4, ARP_GET_MAC, mac_get(), create_ip_address(ip_addr), macd, create_ip_address(ip_dest));
 
-    screen_clear();
-    
-    xprintf("0x%x\n", mac_get());
-    xprintf("0x%x\n", i8254x_mac_get());
 
-    while(KeyInfo.scan_code != ENTER)
-        // send_arp_request(arp_test);
-        ethernet_frame_send(macd, mac_get(), 0x6969, (uint8_t*)dd, sizeof(dd));
+    send_arp_request(arp_test);
+
+    ip_dest[0] = 192;
+    ip_dest[1] = 168;
+    ip_dest[2] = 122;
+    ip_dest[3] = 1;
+
+    prepare_arp_request(arp_test, ARP_ETHERNET, ARP_IP_PROTOCOL, 0x6, 0x4, ARP_GET_MAC, mac_get(), create_ip_address(ip_addr), macd, create_ip_address(ip_dest));
+    send_arp_request(arp_test);
+
+    
+    // xprintf("0x%x\n", mac_get());
+    // xprintf("0x%x\n", i8254x_mac_get());
+
+    while(KeyInfo.scan_code != ENTER);
+        // ethernet_frame_send(macd, mac_get(), 0x6969, (uint8_t*)dd, sizeof(dd));
+
+
 
     xprintf("\n\n");
    

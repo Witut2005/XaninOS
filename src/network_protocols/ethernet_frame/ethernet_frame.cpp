@@ -6,6 +6,7 @@
 #include <libcpp/cstdio.h>
 #include <devices/NIC/8254x.hpp>
 #include <network_protocols/arp/arp.h>
+#include <libcpp/ctime.h>
 
 extern "C" void i8254x_packet_send(uint32_t address, uint16_t length);
 extern "C" uint32_t* i8254x_class_return(void);
@@ -16,7 +17,6 @@ void EthernetFrameInterface::send(uint8_t* mac_destination, uint8_t* mac_source,
 {
     
 
-    xprintf("y");
     uint8_t* tmp = (uint8_t*)malloc(sizeof(uint8_t) * 1518);
     EthernetFrame* FrameHeader = (EthernetFrame*)tmp;
 
@@ -47,10 +47,10 @@ void EthernetFrameInterface::send(uint8_t* mac_destination, uint8_t* mac_source,
 
 }
 
-EthernetFrame* EthernetFrameInterface::receive(void)//uint8_t* buffer)
+EthernetFrame* EthernetFrameInterface::receive(uint8_t* buffer)
 {
     EthernetFrame* Frame = (EthernetFrame*)malloc(sizeof(EthernetFrame));
-    uint8_t* tmp = (uint8_t*)0x0;//buffer;
+    uint8_t* tmp = buffer;
     
 
     memcpy(Frame->mac_destination, tmp, 6);
@@ -64,6 +64,9 @@ EthernetFrame* EthernetFrameInterface::receive(void)//uint8_t* buffer)
 
     Frame->data = tmp;
     memcpy(Frame->checksum, tmp, 4);
+
+    // screen_clear();
+    // xprintf("0x%x\n", Frame->ethernet_type);
 
     switch(Frame->ethernet_type)
     {

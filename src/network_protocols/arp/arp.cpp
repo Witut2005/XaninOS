@@ -7,7 +7,7 @@
 #include <libcpp/cstdio.h>
 
 
-static ArpTableEntry ArpTable[10];
+ArpTableEntry ArpTable[10] = {0,0};
 
 extern "C"
 {
@@ -43,11 +43,11 @@ extern "C"
     {
 
         auto* i = ArpTable;
-        while(!i->ip_address)
+        while(i->ip_address[0] == 0)
             i++;
 
         memcpy(i->mac_address, arp_header->source_hardware_address, 6);
-        i->ip_address = arp_header->source_protocol_address;
+        memcpy(i->ip_address, arp_header->source_hardware_address, 4);
     }
 
 }

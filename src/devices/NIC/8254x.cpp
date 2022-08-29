@@ -321,10 +321,10 @@ uint8_t* Intel8254xDriver::receive_packet(void)
     this->receive_buffer[rxd_current].status = 0x0;
     this->write(nic::RDT, this->rxd_current);
 
-    // EthernetFrameInterface* HandleEthternetFrame = (EthernetFrameInterface*)malloc(sizeof(EthernetFrameInterface));
-    // HandleEthternetFrame->receive(this->last_packet);
+    EthernetFrameInterface* HandleEthternetFrame = (EthernetFrameInterface*)malloc(sizeof(EthernetFrameInterface));
+    HandleEthternetFrame->receive(this->last_packet);
 
-    // free(HandleEthternetFrame);
+    free(HandleEthternetFrame);
 
     return last_packet;
 
@@ -335,8 +335,8 @@ void Intel8254xDriver::interrupt_handler(void)
 {
     uint16_t interrupt_status = this->read(nic::ICR);
     
-    // if(interrupt_status & 0x80)
-    //     this->receive_packet();
+    if(interrupt_status & 0x80)
+        this->receive_packet();
 
 }
 

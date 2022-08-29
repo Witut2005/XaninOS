@@ -185,6 +185,8 @@ void scan(void)
     XANIN_ADD_APP_ENTRY0("tetris", tetris)
     XANIN_ADD_APP_ENTRY0("xgl_test", xgl_test)
 
+    XANIN_ADD_APP_ENTRY1("arp", arp_table_print)
+
     else
     {
         xprintf("%zUnknown command",set_output_color(red,white));

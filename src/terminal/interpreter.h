@@ -165,6 +165,7 @@ extern int tetris(void);
 #include <xin_fs/xin_xpaint.c>
 #include <xin_fs/xin_apps.c>
 #include <xaninApps/xgl_test.c>
+#include <xaninApps/arp_table_print.c>
 //extern void xagame_test(void);
 //extern void assembler(char* file_name);
 
