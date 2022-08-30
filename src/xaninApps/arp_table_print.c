@@ -8,6 +8,15 @@ int arp_table_print(char* arg)
     while(table->ip_address[0] == 0x0)
         table++;
 
+    for(int i = 0; i <= 10; i++)
+    {
+        if(i == 10)
+            return 3;
+
+        if(table->ip_address[i] != 0x0 && *(uint32_t*)&table->mac_address[i] != 0x0)
+            break;
+    }
+
     int i = 0;
 
     for(; i < 5; i++)

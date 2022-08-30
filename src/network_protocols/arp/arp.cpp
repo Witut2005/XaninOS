@@ -17,7 +17,6 @@ extern "C"
 
     void send_arp_request(AddressResolutionProtocol* arp)
     {
-        xprintf("b");
         EthernetFrameInterface EthernetFrameSubsystem;// = (EthernetFrameInterface*)malloc(sizeof(EthernetFrameInterface));    
         EthernetFrameSubsystem.send(arp->destination_hardware_address, arp->source_hardware_address,  ARP_ETHER_TYPE, (uint8_t*)arp, sizeof(AddressResolutionProtocol));
     }

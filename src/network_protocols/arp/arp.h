@@ -9,6 +9,9 @@
 #define ARP_GET_MAC 0x1
 #define ARP_ETHER_TYPE 0x0806
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 struct ArpTableEntry
 {
     uint8_t mac_address[6];
@@ -27,6 +30,10 @@ struct AddressResolutionProtocol
     uint8_t destination_hardware_address[6]; // Destination hardware address - hlen bytes (see above)
     uint32_t destination_protocol_address; // Destination protocol address - plen bytes (see above). If IPv4 can just be a "u32" type.
 }__attribute__((packed));
+
+#ifdef __cplusplus
+}
+#endif
 
 #ifndef __cplusplus
     typedef struct AddressResolutionProtocol AddressResolutionProtocol;

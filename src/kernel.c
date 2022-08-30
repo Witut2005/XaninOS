@@ -240,11 +240,11 @@ void _start(void)
     uint8_t ip_addr[4] = {0x0};
     uint8_t ip_dest[4] = {192,168,0,160};
 
-    
+    sleep(2); 
 
-    AddressResolutionProtocol arp_test; //(AddressResolutionProtocol*)malloc(sizeof(AddressResolutionProtocol));
-    prepare_arp_request(&arp_test, ARP_ETHERNET, ARP_IP_PROTOCOL, 0x6, 0x4, ARP_GET_MAC, netapi_mac_get(), create_ip_address(ip_addr), macd, create_ip_address(ip_dest));
-    send_arp_request(&arp_test);
+    // AddressResolutionProtocol arp_test; //(AddressResolutionProtocol*)malloc(sizeof(AddressResolutionProtocol));
+    // prepare_arp_request(&arp_test, ARP_ETHERNET, ARP_IP_PROTOCOL, 0x6, 0x4, ARP_GET_MAC, netapi_mac_get(), create_ip_address(ip_addr), macd, create_ip_address(ip_dest));
+    // send_arp_request(&arp_test);
     // screen_clear();
 
 

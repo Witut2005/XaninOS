@@ -4,6 +4,7 @@
 #include <libc/string.h>
 #include <libc/memory.h>
 #include <netapi/network_device.h>
+#include <libc/endian.h>
 
 
 int ping(char* ip_addr_str)
@@ -15,19 +16,33 @@ int ping(char* ip_addr_str)
 
     AddressResolutionProtocol* arp = (AddressResolutionProtocol*)malloc(sizeof(AddressResolutionProtocol));
     // prepare_arp_request(arp, ARP_ETHERNET, ARP_IP_PROTOCOL, 0x6, 0x4, ARP_GET_MAC, netapi_mac_get(), create_ip_address(ip_addr), macd, ip_dest);
-    prepare_arp_request(arp, ARP_ETHERNET, ARP_IP_PROTOCOL, 0x6, 0x4, ARP_GET_MAC, netapi_mac_get(), create_ip_address(ip_addr), macd, create_ip_address(ip_dest));
-    xprintf("gooo");
-    while(KeyInfo.scan_code != ENTER);
-    send_arp_request(arp);
 
-    // for(int i = 0; i < 4; i++)
+
+    ip_dest = endian_switch32(ip_dest);
+    uint8_t* tmp = (uint8_t*)&ip_dest;
+        
+    xprintf("\n");
+
+
+
+    xprintf("\n\n\n\n");
+
+    for(int i = 0; i < 4; i++)
     {
-        // xprintf("b");
-        // xprintf("c");
-        // if(memcmp(LastArpReply.ip_address, ip_dest, 4))
-        //     xprintf("%zI didnt expected that this host exists lol\n", set_output_color(green,white));
-        // sleep(1);
+
+        prepare_arp_request(arp, ARP_ETHERNET, ARP_IP_PROTOCOL, 0x6, 0x4, ARP_GET_MAC, netapi_mac_get(), create_ip_address(ip_addr), macd, create_ip_address((uint8_t*)&ip_dest));
+        send_arp_request(arp);
+
+        if(memcmp(LastArpReply.ip_address, tmp, 4))
+            xprintf("%z%s host reached\n", set_output_color(green,white), ip_addr_str);
+        else
+            xprintf("%zNo such host\n", set_output_color(red,white));
+
+        sleep(1);
+        ip_addr[3]++;
     }
+
+    while(KeyInfo.scan_code != ENTER);
 
 
 }
