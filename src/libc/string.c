@@ -9,6 +9,7 @@
 #include <libc/math.h>
 #include <keyboard/key_map.h>
 #include <libc/memory.h>
+#include <libc/algorithm.h>
 
 
 uint32_t strlen(const char* a)
@@ -422,6 +423,7 @@ uint32_t strtoi(char* str, uint8_t format)
     return sum;
 
 }
+
 
 uint32_t str2ipv4(char* str)
 {

@@ -87,7 +87,7 @@ build:
 	# @$(C) $(C_OPTIONS) ./netapi/trouble_variables.c -o ./netapi/trouble_variables.o
 
 	@echo [CC] ip.cpp
-	@$(CC) $(CC_OPTIONS) ./network_protocols/internet_protocol/ip.cpp -o ./network_protocols/internet_protocol/ip.o
+	@$(CC) $(CC_OPTIONS) ./network_protocols/internet_protocol/ipv4/ip.cpp -o ./network_protocols/internet_protocol/ipv4/ip.o
 
 	@echo [CC] screenshot.cpp
 	@$(CC) $(CC_OPTIONS) ./xaninApps/screenshot.cpp -o ./xaninApps/screenshot.o

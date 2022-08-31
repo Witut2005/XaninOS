@@ -29,7 +29,7 @@
 #include <network_protocols/ethernet_frame/ethernet_frame.h>
 #include <netapi/network_device.h>
 #include <network_protocols/arp/arp.h>
-#include <network_protocols/internet_protocol/ip.h>
+#include <network_protocols/internet_protocol/ipv4/ip.h>
 
 extern void v86_mode_enter(void);
 extern void mouse_enable(void);
@@ -240,7 +240,10 @@ void _start(void)
     uint8_t ip_addr[4] = {0x0};
     uint8_t ip_dest[4] = {192,168,0,160};
 
-    sleep(2); 
+    for(int i = 0; i < 10; i++)
+    {
+        memset((uint8_t*)&ArpTable[i], 0x0, 10);
+    }
 
     // AddressResolutionProtocol arp_test; //(AddressResolutionProtocol*)malloc(sizeof(AddressResolutionProtocol));
     // prepare_arp_request(&arp_test, ARP_ETHERNET, ARP_IP_PROTOCOL, 0x6, 0x4, ARP_GET_MAC, netapi_mac_get(), create_ip_address(ip_addr), macd, create_ip_address(ip_dest));

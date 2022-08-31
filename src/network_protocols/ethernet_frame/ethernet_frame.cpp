@@ -33,10 +33,10 @@ void EthernetFrameInterface::send(uint8_t* mac_destination, uint8_t* mac_source,
         tmp[i] = buffer[i];
     }
 
-    tmp[i] = 0x0;
-    tmp[i + 1] = 0x20;
-    tmp[i + 2] = 0x20;
-    tmp[i + 3] = 0x3A;
+    // tmp[i] = 0x0;
+    // tmp[i + 1] = 0x20;
+    // tmp[i + 2] = 0x20;
+    // tmp[i + 3] = 0x3A;
 
 
     netapi_packet_send((uint32_t)FrameHeader, length + ETHERNET_FRAME_MAC_HEADER_SIZE);

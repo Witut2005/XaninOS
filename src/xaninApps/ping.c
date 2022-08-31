@@ -1,6 +1,6 @@
 
 #include <network_protocols/arp/arp.h>
-#include <network_protocols/internet_protocol/ip.h>
+#include <network_protocols/internet_protocol/ipv4/ip.h>
 #include <libc/string.h>
 #include <libc/memory.h>
 #include <netapi/network_device.h>
