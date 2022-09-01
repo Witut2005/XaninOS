@@ -9,6 +9,8 @@
 #define ARP_GET_MAC 0x1
 #define ARP_ETHER_TYPE 0x0806
 
+#define ARP_TABLE_ENTRIES 100
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -44,6 +46,7 @@ struct AddressResolutionProtocol
                                                         uint8_t* source_hardware_address, uint32_t source_protocol_address, uint8_t* destination_hardware_address,
                                                             uint32_t destination_protocol_address); 
     extern void arp_reply_handle(AddressResolutionProtocol* arp_header);
+    extern uint8_t* mac_get_from_ip(uint8_t* ip);
 
 
 #else
@@ -52,11 +55,13 @@ struct AddressResolutionProtocol
                                                     uint8_t hardware_address_length, uint8_t protocol_address_length, uint16_t opcode,
                                                         uint8_t* source_hardware_address, uint32_t source_protocol_address, uint8_t* destination_hardware_address,
                                                             uint32_t destination_protocol_address);
-   extern "C" void arp_reply_handle(AddressResolutionProtocol* arp_header);
+    extern "C" void arp_reply_handle(AddressResolutionProtocol* arp_header);
+    extern "C" uint8_t* mac_get_from_ip(uint8_t* ip);
 
 #endif
 
-extern ArpTableEntry ArpTable[10];
+extern ArpTableEntry ArpTable[ARP_TABLE_ENTRIES];
 extern ArpTableEntry LastArpReply;
+extern uint8_t mac_broadcast[];
 
 

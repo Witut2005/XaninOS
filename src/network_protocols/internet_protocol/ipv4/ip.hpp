@@ -9,8 +9,9 @@
 struct Ipv4Header
 {
 
-    uint8_t version : 4;
     uint8_t ihl : 4;
+    uint8_t version : 4;
+
     uint8_t dscp : 6;
     uint8_t ecn : 2;
     uint16_t packet_size;
@@ -31,6 +32,6 @@ class InternetProtocolInterface
 
     public:
     uint32_t create_ip_address(uint8_t ip_address[4]);
-    void ip4_packet_send(uint32_t dest_ip, uint32_t src_ip, uint8_t protocol, uint16_t packet_size, uint8_t* protocol_header);
+    void ip4_packet_send(uint32_t dest_ip, uint32_t src_ip, uint8_t protocol, uint16_t packet_size);
 
 };

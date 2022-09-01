@@ -3,7 +3,6 @@
 
 #include <stdint.h>
 
-extern uint32_t create_ip_address(uint8_t ip_address[4]);
 
 struct Ipv4Header
 {
@@ -23,3 +22,6 @@ struct Ipv4Header
     uint32_t destination_ip_address;
 
 }__attribute__((packed));
+
+extern uint32_t create_ip_address(uint8_t ip_address[4]);
+extern void ipv4_packet_send(uint32_t dest_ip, uint32_t src_ip, uint8_t protocol, uint16_t packet_size);

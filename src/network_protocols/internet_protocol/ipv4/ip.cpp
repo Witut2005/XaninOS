@@ -1,6 +1,11 @@
 
 #include <network_protocols/internet_protocol/ipv4/ip.hpp>
 #include <libcpp/cstdlib.h>
+#include <network_protocols/ethernet_frame/ethernet_frame.hpp>
+#include <network_protocols/arp/arp.h>
+#include <libcpp/endian.h>
+
+#define ETHERNET_TYPE_IPV4 0x800
 
 uint32_t InternetProtocolInterface::create_ip_address(uint8_t ip_address[4])
 {
@@ -10,32 +15,38 @@ uint32_t InternetProtocolInterface::create_ip_address(uint8_t ip_address[4])
 
 }
 
-void InternetProtocolInterface::ip4_packet_send(uint32_t dest_ip, uint32_t src_ip, uint8_t protocol, uint16_t packet_size, uint8_t* protocol_header)
+void InternetProtocolInterface::ip4_packet_send(uint32_t dest_ip, uint32_t src_ip, uint8_t protocol, uint16_t packet_size)
 {
 
-    Ipv4Header* IpHeader = (Ipv4Header*)malloc(sizeof(Ipv4Header));
+    Ipv4Header* IpHeader = (Ipv4Header*)malloc(sizeof(1518));
     IpHeader->version = IPV4_HEADER_VERSION;
     IpHeader->ihl = 0x5;
-    IpHeader->packet_size = packet_size;
+    IpHeader->packet_size = endian_switch(packet_size);
     IpHeader->flags = 0x0;
     IpHeader->time_to_live = 0xFF;
     IpHeader->protocol = protocol;
-    IpHeader->checksum = 0x0; // oj nie wiem czy dobrze
+    IpHeader->identification = 0x0;
+    IpHeader->checksum = packet_size + IpHeader->identification; // oj nie wiem czy dobrze
     IpHeader->source_ip_address = src_ip;
     IpHeader->destination_ip_address= dest_ip;
+    uint8_t* aha = (uint8_t*)IpHeader;
 
 
+    EthernetFrameInterface* NewEthernetFrame = (EthernetFrameInterface*)malloc(sizeof(EthernetFrameInterface));
+    NewEthernetFrame->send(mac_get_from_ip((uint8_t*)&dest_ip) == nullptr ? mac_get_from_ip((uint8_t*)&dest_ip) : mac_broadcast, netapi_mac_get(), ETHERNET_TYPE_IPV4, (uint8_t*)IpHeader, packet_size);
+    free(NewEthernetFrame);
+    free(IpHeader);
 
 
-    switch (protocol)
-    {
-        case USER_DATAGRAM_PROTOCOL: 
-        {
-            UdpHeader* Udp = (UdpHeader*)protocol_header;
+    // switch (protocol)
+    // {
+    //     case USER_DATAGRAM_PROTOCOL: 
+    //     {
+    //         UdpHeader* Udp = (UdpHeader*)protocol_header;
 
-            break;
-        }
-    }
+    //         break;
+    //     }
+    // }
 }
 
 extern "C"
@@ -47,4 +58,12 @@ extern "C"
         free(InternetProtocolSubsystem);
         return tmp;
     }
+
+    void ipv4_packet_send(uint32_t dest_ip, uint32_t src_ip, uint8_t protocol, uint16_t packet_size)
+    {
+        InternetProtocolInterface* InternetProtocolPacket = (InternetProtocolInterface*)malloc(sizeof(InternetProtocolInterface));
+        InternetProtocolPacket->ip4_packet_send(dest_ip, src_ip, protocol, packet_size);
+        free(InternetProtocolPacket);
+    }
+
 }

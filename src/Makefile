@@ -185,7 +185,7 @@ build:
 	./devices/NIC/8254x.o \
 	./network_protocols/ethernet_frame/ethernet_frame.o \
 	./network_protocols/arp/arp.o \
-	./network_protocols/internet_protocol/ip.o \
+	./network_protocols/internet_protocol/ipv4/ip.o \
 	./netapi/network_device.o \
 	./devices/IOAPIC/ioapic.o \
 	./test/testc.o \

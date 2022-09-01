@@ -9,8 +9,10 @@
 #include <libcpp/ctime.h>
 
 
-ArpTableEntry ArpTable[10] = {0,0};
+ArpTableEntry ArpTable[ARP_TABLE_ENTRIES] = {0,0};
 ArpTableEntry LastArpReply = {0,0};
+
+uint8_t mac_broadcast[] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
 
 extern "C"
 {
@@ -55,5 +57,18 @@ extern "C"
         memcpy(i->mac_address, arp_header->source_hardware_address, 6);
         memcpy(i->ip_address, (uint8_t*)&arp_header->source_protocol_address, 4);
     }
+
+    uint8_t* mac_get_from_ip(uint8_t* ip)
+    {
+        for(int i = 0; i < ARP_TABLE_ENTRIES; i++)
+        {
+            if(memcmp(ip, ArpTable[i].ip_address, 4))
+                return ip;
+        }
+        
+        return nullptr;
+
+    }
+
 
 }
