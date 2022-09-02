@@ -83,11 +83,11 @@ build:
 	@echo [CC] arp.cpp
 	@$(CC) $(CC_OPTIONS) ./network_protocols/arp/arp.cpp -o ./network_protocols/arp/arp.o
 
-	# @echo [C] trouble.cpp
-	# @$(C) $(C_OPTIONS) ./netapi/trouble_variables.c -o ./netapi/trouble_variables.o
-
 	@echo [CC] ip.cpp
 	@$(CC) $(CC_OPTIONS) ./network_protocols/internet_protocol/ipv4/ip.cpp -o ./network_protocols/internet_protocol/ipv4/ip.o
+
+	@echo [CC] udp.cpp
+	@$(CC) $(CC_OPTIONS) ./network_protocols/udp/udp.cpp -o ./network_protocols/udp/udp.o
 
 	@echo [CC] screenshot.cpp
 	@$(CC) $(CC_OPTIONS) ./xaninApps/screenshot.cpp -o ./xaninApps/screenshot.o

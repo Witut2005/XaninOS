@@ -15,3 +15,9 @@ struct UdpHeader
     uint16_t checksum;
 
 }__attribute__((packed));
+
+class UserDatagramProtocolInterface
+{
+    public:
+    void ipv4_send(uint16_t dest_port, uint16_t src_port, uint16_t packet_size, uint8_t* data);
+};
