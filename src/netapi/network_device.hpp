@@ -17,6 +17,8 @@ extern "C" void netapi_add_device(uint8_t*(*receive_ptr)(void), void(*send_ptr)(
 extern "C" void netapi_packet_send(uint32_t buffer, uint16_t length);
 extern "C" uint8_t* netapi_packet_receive(void);
 extern "C" uint8_t* netapi_mac_get(void);
+extern "C" void netapi_init(void);
+
 
 // static NetworkHandler NetworkHandlers[10];
 // // extern "C" NetworkHandler* MainNetworkHandler;

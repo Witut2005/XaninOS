@@ -36,7 +36,7 @@ char *xin_get_current_directory(void)
 char *xin_get_current_path(char *file_name)
 {
 
-    for (int j = 0; j < 50; j++)
+    for (int j = 0; j < 38; j++)
         xin_current_path[j] = '\0';
 
     int i = 0x0;

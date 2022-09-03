@@ -263,7 +263,7 @@ void merge_sort(int array[], int first, int last)
 
 }
 
-void* malloc(uint16_t size)
+void* malloc(uint32_t size)
 {
     uint8_t* ptr = (uint8_t*)pmmngr_alloc_block();
 

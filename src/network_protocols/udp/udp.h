@@ -15,3 +15,5 @@ struct UdpHeader
     uint16_t checksum;
 
 }__attribute__((packed));
+
+extern void udp_ipv4_packet_send(uint32_t dest_ip, uint32_t src_ip, uint16_t dest_port, uint16_t src_port, uint16_t packet_size, uint8_t* data);

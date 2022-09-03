@@ -79,7 +79,7 @@ void int_swap(int *xp, int *yp);
 void bubble_sort(int* array, int n);  //syntax bubble_sort(array[], n=size of array)
 void merge(int* array, int first, int middle, int last);
 void merge_sort(int array[], int first, int last);
-void* malloc(uint16_t size);
+void* malloc(uint32_t size);
 void free(void* ptr);
 void* realloc(void* ptr,  uint32_t size_old,  uint32_t size_new);
 

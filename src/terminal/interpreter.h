@@ -169,6 +169,7 @@ extern int tetris(void);
 #include <xaninApps/arp_table_print.c>
 #include <xaninApps/ping.c>
 #include <xaninApps/ip_test.c>
+#include <xaninApps/udp_test.c>
 //extern void xagame_test(void);
 //extern void assembler(char* file_name);
 

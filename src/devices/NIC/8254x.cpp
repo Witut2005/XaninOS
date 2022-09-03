@@ -67,21 +67,23 @@ uint8_t* Intel8254xDriver::mac_get()
 void Intel8254xDriver::receive_init(void)
 {
 
-    this->receive_buffer = (i8254xReceiveDescriptor*)malloc(sizeof(i8254xReceiveDescriptor) * INTEL_8254X_DESCRIPTORS);
+    this->receive_descriptors_buffer = (i8254xReceiveDescriptor*)malloc(sizeof(i8254xReceiveDescriptor) * INTEL_8254X_DESCRIPTORS);
+    const auto receive_buffer_size = 4096;
+    this->receive_buffer = (uint8_t*)malloc(receive_buffer_size * INTEL_8254X_DESCRIPTORS);
 
     for(int i = 0; i < INTEL_8254X_DESCRIPTORS; i++)
     {
-        this->receive_buffer[i].address_low = (uint32_t)&this->transmit_buffer[i];
-        this->receive_buffer[i].address_high = 0x0;
-        this->receive_buffer[i].length = 0x0;
-        this->receive_buffer[i].checksum = 0x0;
-        this->receive_buffer[i].status = 0x0;
-        this->receive_buffer[i].errors = 0x0;
-        this->receive_buffer[i].special = 0x0;
+        this->receive_descriptors_buffer[i].address_low = (uint32_t)&this->receive_buffer[i * receive_buffer_size];
+        this->receive_descriptors_buffer[i].address_high = 0x0;
+        this->receive_descriptors_buffer[i].length = 0x0;
+        this->receive_descriptors_buffer[i].checksum = 0x0;
+        this->receive_descriptors_buffer[i].status = 0x0;
+        this->receive_descriptors_buffer[i].errors = 0x0;
+        this->receive_descriptors_buffer[i].special = 0x0;
     }
 
     /* receive buffer allocation */
-    this->write(nic::RDBAL, (uint32_t)this->receive_buffer);
+    this->write(nic::RDBAL, (uint32_t)this->receive_descriptors_buffer);
     this->write(nic::RDBAH, 0x0);
 
     
@@ -89,7 +91,7 @@ void Intel8254xDriver::receive_init(void)
 
     /* set head and tail to proper values */
     this->write(nic::RDH, 0x0);
-    this->write(nic::RDT, INTEL_8254X_DESCRIPTORS);
+    this->write(nic::RDT, INTEL_8254X_DESCRIPTORS - 1);
 
     /* set receive control register */
     // std::cout << std::hex << "SIZE BUFFER: " << this->read(nic::RCTL) << std::endl;
@@ -115,28 +117,30 @@ void Intel8254xDriver::transmit_init(void)
     /* transmit buffer allocation */
     // auto AHA = (i8254xTransmitDescriptor*)malloc(sizeof(i8254xTransmitDescriptor) * INTEL_8254X_DESCRIPTORS); //+ 16);
 
-    auto transmit_buffer_region = malloc(sizeof(i8254xTransmitDescriptor) * INTEL_8254X_DESCRIPTORS); // kompilator zawsze ma racje, prawda? 
-    this->transmit_buffer = (i8254xTransmitDescriptor*)transmit_buffer_region;
+    auto transmit_descriptors_buffer_region = malloc(sizeof(i8254xTransmitDescriptor) * INTEL_8254X_DESCRIPTORS); // kompilator zawsze ma racje, prawda? 
+    this->transmit_descriptors_buffer = (i8254xTransmitDescriptor*)transmit_descriptors_buffer_region;
 
+    const auto transmit_buffer_size = 4096;
+    this->transmit_buffer = (uint8_t*)malloc(transmit_buffer_size * INTEL_8254X_DESCRIPTORS);
 
     for(int i = 0; i < INTEL_8254X_DESCRIPTORS; i++)
     {
-        this->transmit_buffer[i].address_low = (uint32_t)&this->transmit_buffer[i];
-        this->transmit_buffer[i].address_high = 0x0;
-        this->transmit_buffer[i].length = 0x0;
-        this->transmit_buffer[i].cso = 0x0;
-        this->transmit_buffer[i].cmd = 0x0;
-        this->transmit_buffer[i].status = 0x0;
-        this->transmit_buffer[i].css = 0x0;
-        this->transmit_buffer[i].special = 0x0;
+        this->transmit_descriptors_buffer[i].address_low = (uint32_t)&this->transmit_descriptors_buffer[i * transmit_buffer_size];
+        this->transmit_descriptors_buffer[i].address_high = 0x0;
+        this->transmit_descriptors_buffer[i].length = 0x0;
+        this->transmit_descriptors_buffer[i].cso = 0x0;
+        this->transmit_descriptors_buffer[i].cmd = 0x0;
+        this->transmit_descriptors_buffer[i].status = 0x0;
+        this->transmit_descriptors_buffer[i].css = 0x0;
+        this->transmit_descriptors_buffer[i].special = 0x0;
     }
 
 
     // while(1);
 
-    this->write(nic::TDBAL, (uint32_t)transmit_buffer_region);//this->transmit_buffer);
+    this->write(nic::TDBAL, (uint32_t)transmit_descriptors_buffer_region);//this->transmit_descriptors_buffer);
     this->write(nic::TDBAH, 0x0);
-    // this->transmit_buffer = (i8254xTransmitDescriptor*)(this->read(nic::TDBAL));
+    // this->transmit_descriptors_buffer = (i8254xTransmitDescriptor*)(this->read(nic::TDBAL));
 
     /* set head and tail to proper values */
     this->write(nic::TDH, 0x0);
@@ -166,22 +170,22 @@ void Intel8254xDriver::send_packet(uint32_t address, uint16_t length)
 
     // xprintf("a");
 
-    this->transmit_buffer[this->txd_current].address_low = address;
-    this->transmit_buffer[this->txd_current].address_high = 0x0;
-    this->transmit_buffer[this->txd_current].cmd = nic::CMD::EOP | nic::CMD::IFCS | nic::CMD::RS | nic::CMD::RPS;// | nic::CMD::RPS;
-    this->transmit_buffer[this->txd_current].length = length;
+    this->transmit_descriptors_buffer[this->txd_current].address_low = address;
+    this->transmit_descriptors_buffer[this->txd_current].address_high = 0x0;
+    this->transmit_descriptors_buffer[this->txd_current].cmd = nic::CMD::EOP | nic::CMD::IFCS | nic::CMD::RS | nic::CMD::RPS;// | nic::CMD::RPS;
+    this->transmit_descriptors_buffer[this->txd_current].length = length;
 
-    this->transmit_buffer[this->txd_current].status = 0x0;
-    this->transmit_buffer[this->txd_current].css = 0x0;
-    this->transmit_buffer[this->txd_current].cso = 0x0;
-    this->transmit_buffer[this->txd_current].special = 0x0;
+    this->transmit_descriptors_buffer[this->txd_current].status = 0x0;
+    this->transmit_descriptors_buffer[this->txd_current].css = 0x0;
+    this->transmit_descriptors_buffer[this->txd_current].cso = 0x0;
+    this->transmit_descriptors_buffer[this->txd_current].special = 0x0;
 
 
     auto txd_old = this->txd_current;
     this->write(nic::TDT,(this->txd_current + 1) % INTEL_8254X_DESCRIPTORS);
     this->txd_current = (this->txd_current + 1) % INTEL_8254X_DESCRIPTORS;
 
-    while(!this->transmit_buffer[txd_old].status);
+    while(!this->transmit_descriptors_buffer[txd_old].status);
 
 
 }
@@ -275,14 +279,14 @@ void Intel8254xDriver::init()
 
 }
 
-uint32_t Intel8254xDriver::receive_buffer_get(void)
+uint32_t Intel8254xDriver::receive_descriptors_buffer_get(void)
 {
     return this->read(nic::RDBAL);
 }
 
-uint32_t Intel8254xDriver::transmit_buffer_get(void)
+uint32_t Intel8254xDriver::transmit_descriptors_buffer_get(void)
 {
-    return (uint32_t)this->transmit_buffer;
+    return (uint32_t)this->transmit_descriptors_buffer;
     // return this->read(nic::TDBAL);
 }
 
@@ -310,16 +314,18 @@ uint8_t* Intel8254xDriver::receive_packet(void)
     uint8_t* packet;
     uint16_t packet_lenght;
     
-    while(!this->receive_buffer[this->rxd_current].status & 0x1);
+    while(!this->receive_descriptors_buffer[this->rxd_current].status & 0x1);
+    io_wait();
 
-    packet = (uint8_t*)this->receive_buffer[rxd_current].address_low;
-    packet_lenght = this->receive_buffer[rxd_current].length;
+    packet = (uint8_t*)this->receive_descriptors_buffer[rxd_current].address_low;
+    packet_lenght = this->receive_descriptors_buffer[rxd_current].length;
 
     memcpy(this->last_packet, packet, packet_lenght);
 
 
-    this->receive_buffer[rxd_current].status = 0x0;
+    this->receive_descriptors_buffer[rxd_current].status = 0x0;
     this->write(nic::RDT, this->rxd_current);
+
 
     EthernetFrameInterface* HandleEthternetFrame = (EthernetFrameInterface*)malloc(sizeof(EthernetFrameInterface));
     HandleEthternetFrame->receive(this->last_packet);
@@ -340,20 +346,29 @@ void Intel8254xDriver::interrupt_handler(void)
 
 }
 
-// Intel8254xDriver::~Intel8254xDriver(void)
-// {
-//     free(this->last_packet);
-// }
 
-uint32_t* Intel8254xDriver::this_return(void)
+uint32_t Intel8254xDriver::receive_buffer_get(void)
 {
-    return (uint32_t*)this;
+    return (uint32_t)this->receive_buffer;
 }
 
-
+uint32_t Intel8254xDriver::transmit_buffer_get(void)
+{
+    return (uint32_t)this->transmit_buffer;
+}
 
 extern "C"
 {
+
+    uint32_t i8254x_receive_buffer_get(void)
+    {
+        return Intel8254x.receive_buffer_get();
+    }
+
+    uint32_t i8254x_transmit_buffer_get(void)
+    {
+        return Intel8254x.transmit_buffer_get();
+    }
 
     uint32_t i8254x_iobase_get(void)
     {
@@ -371,18 +386,19 @@ extern "C"
         return Intel8254x.mac;
     }
 
-    uint32_t i8254x_receive_buffer_get(void)
+    uint32_t i8254x_receive_descriptors_buffer_get(void)
     {
-        return Intel8254x.receive_buffer_get();
+        return Intel8254x.receive_descriptors_buffer_get();
     }
 
-    uint32_t i8254x_transmit_buffer_get(void)
+    uint32_t i8254x_transmit_descriptors_buffer_get(void)
     {
-        return Intel8254x.transmit_buffer_get();
+        return Intel8254x.transmit_descriptors_buffer_get();
     }
 
     void i8254x_interrupt_handler(void)
     {
+        // xprintf("i8254x_interrupt");
         return Intel8254x.interrupt_handler();
     }
 
@@ -404,10 +420,12 @@ extern "C"
 
     void i8254x_init(void)
     {
-        netapi_add_device(i8254x_packet_receive, i8254x_packet_send, i8254x_mac_get_static());
+        netapi_add_device(i8254x_packet_receive, i8254x_packet_send, i8254x_mac_get());
         return Intel8254x.init();
         asm("sti");
     }
+
+    
 
 
 

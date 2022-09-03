@@ -38,9 +38,11 @@ int ping(char* ip_addr_str)
         else
             xprintf("%zNo such host\n", set_output_color(red,white));
 
-        sleep(1);
         ip_addr[3]++;
+        msleep(1500);
     }
+
+    free(arp);
 
     while(KeyInfo.scan_code != ENTER);
 

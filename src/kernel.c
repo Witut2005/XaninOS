@@ -58,7 +58,6 @@ void _start(void)
 
     pmmngr_init(0x20000, 0xFFFFFF);
     pmmngr_init_region(0x20000, 0xFFFFFF);
-// 0x8050 1900
     init_disk(ATA_FIRST_BUS, ATA_MASTER);
     
     // vga_mode_set(VGA_GRAPHICS_320x200x256);
@@ -82,9 +81,6 @@ void _start(void)
     xprintf("CHECKSUM CHECK RSDP: ");
     1 == acpi_rsdp_checksum_check(rsdp) ? xprintf("%zVALID", set_output_color(green,white)) : xprintf("%zINVALID", set_output_color(red,white));
     xprintf("\nRSDP address: 0x%x\n", rsdp);
-
-
-    //while(1);
 
     rsdt = rsdp->rsdt_address;
 
@@ -183,16 +179,8 @@ void _start(void)
     xprintf("\n%z----------------------------\n", set_output_color(black, green));
     xprintf("Com port status: 0x%x\n", com_status());
 
-    /*
-    xprintf("ne2000 iobase: 0x%x\n", ne2000_iobase_get());
-    xprintf("ne2000 vendor id: 0x%x\n", ne2000_vendorid_get());
-    */
-    //xprintf("Xanin Information Block base address: 0x%x\n", xanin_info_ptr);
-
     bootloader_program_buffer = (uint8_t*) malloc(sizeof(uint8_t) * SECTOR_SIZE); //must be before xin_init_fs
     memcpy(bootloader_program_buffer, (uint8_t*)0x7C00, SECTOR_SIZE);
-
-
 
     xprintf("Press ENTER to continue...\n");
 
@@ -230,6 +218,7 @@ void _start(void)
     if(xin_find_entry("/syslog") == nullptr)
         create_file_kernel("/syslog");
 
+    netapi_init();
     i8254x_init();
 
     uint8_t macd[6] = {0xff, 0xff, 0xff, 0xff, 0xff,0xff};
@@ -245,24 +234,8 @@ void _start(void)
         memset((uint8_t*)&ArpTable[i], 0x0, 10);
     }
 
-    // AddressResolutionProtocol arp_test; //(AddressResolutionProtocol*)malloc(sizeof(AddressResolutionProtocol));
-    // prepare_arp_request(&arp_test, ARP_ETHERNET, ARP_IP_PROTOCOL, 0x6, 0x4, ARP_GET_MAC, netapi_mac_get(), create_ip_address(ip_addr), macd, create_ip_address(ip_dest));
-    // send_arp_request(&arp_test);
-    // screen_clear();
-
 
     while(KeyInfo.scan_code != ENTER);
-        // sleep(3);
-        // xprintf("a");
-        // prepare_arp_request(&arp_test, ARP_ETHERNET, ARP_IP_PROTOCOL, 0x6, 0x4, ARP_GET_MAC, netapi_mac_get(), create_ip_address(ip_addr), macd, create_ip_address(ip_dest));
-        // send_arp_request(&arp_test);
-    
-    // free(arp_test);
-    
-    // xprintf("0x%x\n", netapi_mac_get());
-    // xprintf("0x%x\n", i8254x_netapi_mac_get());
-
-        // ethernet_frame_send(macd, netapi_mac_get(), 0x6969, (uint8_t*)dd, sizeof(dd));
 
 
 

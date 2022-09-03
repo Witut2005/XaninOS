@@ -4,8 +4,10 @@
 
 extern pci_device* i8254x_pci_info_get(void);
 extern uint8_t* i8254x_mac_get(void);
-extern uint32_t i8254x_receive_buffer_get(void);
+extern uint32_t i8254x_receive_descriptors_buffer_get(void);
+extern uint32_t i8254x_transmit_descriptors_buffer_get(void);
 extern uint32_t i8254x_transmit_buffer_get(void);
+extern uint32_t i8254x_receive_buffer_get(void);
 
 void nic_info(void)
 {
@@ -37,6 +39,8 @@ void nic_info(void)
 
     xprintf("interrupt line (PIC): 0x%x\n", nic_info->interrupt_line);
 
+    xprintf("receive descriptor buffer address: 0x%x\n", i8254x_receive_descriptors_buffer_get());
+    xprintf("transmit descriptor buffer address: 0x%x\n", i8254x_transmit_descriptors_buffer_get());
     xprintf("receive buffer address: 0x%x\n", i8254x_receive_buffer_get());
     xprintf("transmit buffer address: 0x%x\n", i8254x_transmit_buffer_get());
 

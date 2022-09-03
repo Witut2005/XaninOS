@@ -7,7 +7,7 @@
 #include <libcpp/cmemory.h>
 
 #define ETHERNET_TYPE_IPV4 0x800
-#define IPV4_HEADER_SIZE 16
+#define IPV4_HEADER_SIZE 20
 
 uint32_t InternetProtocolInterface::create_ip_address(uint8_t ip_address[4])
 {
@@ -23,7 +23,7 @@ void InternetProtocolInterface::ip4_packet_send(uint32_t dest_ip, uint32_t src_i
     Ipv4Header* IpHeader = (Ipv4Header*)malloc(sizeof(1518));
     IpHeader->version = IPV4_HEADER_VERSION;
     IpHeader->ihl = 0x5;
-    IpHeader->packet_size = endian_switch(packet_size);
+    IpHeader->packet_size = endian_switch(static_cast<uint16_t>(packet_size + IPV4_HEADER_SIZE));
     IpHeader->flags = 0x0;
     IpHeader->time_to_live = 0xFF;
     IpHeader->protocol = protocol;
@@ -32,24 +32,29 @@ void InternetProtocolInterface::ip4_packet_send(uint32_t dest_ip, uint32_t src_i
     IpHeader->source_ip_address = src_ip;
     IpHeader->destination_ip_address= dest_ip;
 
-    uint8_t* packet_data = (uint8_t*)(IpHeader + 1);
-    memcpy(packet_data, data, 1518 - sizeof(Ipv4Header));
 
-    EthernetFrameInterface* NewEthernetFrame = (EthernetFrameInterface*)malloc(sizeof(EthernetFrameInterface));
-    NewEthernetFrame->send(mac_get_from_ip((uint8_t*)&dest_ip) == nullptr ? mac_get_from_ip((uint8_t*)&dest_ip) : mac_broadcast, netapi_mac_get(), ETHERNET_TYPE_IPV4, (uint8_t*)IpHeader, packet_size);
 
 
     switch (protocol)
     {
         case USER_DATAGRAM_PROTOCOL: 
         {
-            uint8_t* protocol_header = reinterpret_cast<uint8_t*>(IpHeader + IPV4_HEADER_SIZE);
+            uint8_t* protocol_header = (uint8_t*)IpHeader;
+            protocol_header = protocol_header + IPV4_HEADER_SIZE;
             UdpHeader* UdpPacket = (UdpHeader*)protocol_header;
+
+            memcpy((uint8_t*)UdpPacket, data, 8);
+            uint8_t* packet_data = (uint8_t*)UdpPacket + sizeof(UdpHeader);
+            memcpy(packet_data, data, 1518 - sizeof(Ipv4Header) - sizeof(UdpHeader));
+
+            EthernetFrameInterface* NewEthernetFrame = (EthernetFrameInterface*)malloc(sizeof(EthernetFrameInterface));
+            NewEthernetFrame->send(mac_get_from_ip((uint8_t*)&dest_ip) == nullptr ? mac_get_from_ip((uint8_t*)&dest_ip) : mac_broadcast, netapi_mac_get(), ETHERNET_TYPE_IPV4, (uint8_t*)IpHeader, packet_size);
+
+            free(NewEthernetFrame);
             break;
         }
     }
 
-    free(NewEthernetFrame);
     free(IpHeader);
 
 }

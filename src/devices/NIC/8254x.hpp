@@ -173,8 +173,13 @@ class Intel8254xDriver
     uint32_t pci_selector;
     pci_device pci_info;
     uint8_t mac[6];
-    i8254xReceiveDescriptor* receive_buffer;
-    i8254xTransmitDescriptor* transmit_buffer;
+
+    i8254xReceiveDescriptor* receive_descriptors_buffer;
+    i8254xTransmitDescriptor* transmit_descriptors_buffer;
+    
+    uint8_t* receive_buffer;
+    uint8_t* transmit_buffer;
+
     uint32_t txd_current;
     uint32_t rxd_current;
     uint8_t* last_packet;
@@ -191,6 +196,8 @@ class Intel8254xDriver
     pci_device* pci_info_get(void);
     uint16_t eeprom_read(uint8_t address);
     void multicast_table_array_clear(void);
+    uint32_t receive_descriptors_buffer_get(void);
+    uint32_t transmit_descriptors_buffer_get(void);
     uint32_t receive_buffer_get(void);
     uint32_t transmit_buffer_get(void);
     // void send_ethernet_frame(uint8_t* mac_destination, uint8_t* mac_source, uint8_t* buffer, uint16_t length);

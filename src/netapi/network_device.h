@@ -5,6 +5,7 @@
 extern uint8_t* netapi_mac_get(void);
 extern void netapi_send_packet(uint32_t address, uint16_t lenght);
 extern uint8_t* netapi_receive_packet(void);
+extern void netapi_init(void);
 
 struct NetworkHandler
 {
