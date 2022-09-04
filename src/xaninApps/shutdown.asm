@@ -11,4 +11,6 @@ shutdown:
 
     jmp $
 
+shutdown_str: db "xanin_shutdown",0xa,0x0
+
 times 512 - ($-$$) db 0x0

@@ -27,33 +27,15 @@ void shutdown(void)
         disk_flush(ATA_FIRST_BUS, ATA_MASTER);
     }
 
-    
-    // disk_write(ATA_FIRST_BUS, ATA_MASTER, 0, 1, (uint16_t*)0x7C00);
-    // disk_flush(ATA_FIRST_BUS, ATA_MASTER);
-
-    //real_mode_enter(0x1000, 0x200); // <-- location in RAM of shutdown program
-
-    // real_mode_enter_no_return(0x0000, 0x400); // <-- location in RAM of shutdown program
-    // run16("/shutdown.bin");
-
-
-    // asm volatile("mov esi, %0\n\t"
-    //     "mov %1, 0xDEAD\n\t"
-    //     "int 0x81"
-    //     :
-    //     : "r" (shutdown_file));
-
-
     xin_entry* xin_file = fopen("/shutdown.bin", "r");
+    disk_read(ATA_FIRST_BUS, ATA_MASTER, xin_file->starting_sector, 1, (uint16_t*)0x400);
 
-    // disk_read(ATA_FIRST_BUS, ATA_MASTER, xin_file->starting_sector, 1, (uint16_t*)0x400);
 
-
+    real_mode_enter_no_return(0x0, 0x400);
     outwIO(0x604, 0x2000);  /* QEMU */
     outwIO(0xB004, 0x2000); /* BOCHS AND OLD QEMU */
     outwIO(0x4004, 0x3400); /* VIRTUALBOX */
 
-    real_mode_enter_no_return(0x0, 0x400);
 
 
     xprintf("goodbye :))\n\n");

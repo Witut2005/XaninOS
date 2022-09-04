@@ -30,6 +30,8 @@
 #include <netapi/network_device.h>
 #include <network_protocols/arp/arp.h>
 #include <network_protocols/internet_protocol/ipv4/ip.h>
+#include <libc/instruction_pointer.h>
+#include <libc/xanin_state.h>
 
 extern void v86_mode_enter(void);
 extern void mouse_enable(void);
@@ -54,6 +56,14 @@ void _start(void)
 
     set_idt();
     screen_init();                  //init screen management system
+
+    xanin_cpu_backup_make();
+    // uint32_t* tmp = (uint32_t*)(0x7c00 + 0x140 + 10);
+
+    // for(int i = 0; i < 8; i++)
+    //     xprintf("0x%x\n", tmp[i]);
+    // tmp = (uint32_t*)(0x7c00 + 0x140 + 10 + 44);
+    // xprintf("0x%x\n", *tmp);
 
 
     pmmngr_init(0x20000, 0xFFFFFF);

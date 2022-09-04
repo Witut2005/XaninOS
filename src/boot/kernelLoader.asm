@@ -246,18 +246,18 @@ times(512 - ( $ - $$ ) % 512) db 0x0
 kernel:
 
 ;macros
-    CODE_SEGMENT equ 0x8    ;0x0 + null_seg
-    DATA_SEGMENT equ 0x10   ;0x0 + null_seg + code_seg
-    STACK_SEGMENT equ 0x18  ;0x0 + null_seg + code_seg + data_seg
+CODE_SEGMENT equ 0x8    ;0x0 + null_seg
+DATA_SEGMENT equ 0x10   ;0x0 + null_seg + code_seg
+STACK_SEGMENT equ 0x18  ;0x0 + null_seg + code_seg + data_seg
 
-    PIC1_COMMAND equ 0x20
-    PIC1_DATA equ 0x21
+PIC1_COMMAND equ 0x20
+PIC1_DATA equ 0x21
 
-    PIC2_COMMAND equ 0xa0
-    PIC2_DATA equ 0xa1
+PIC2_COMMAND equ 0xa0
+PIC2_DATA equ 0xa1
 
-    KEYBOARD_ENCODER equ 0x60
-    ONBOARD_KEY_CONTROLLER equ 0x64
+KEYBOARD_ENCODER equ 0x60
+ONBOARD_KEY_CONTROLLER equ 0x64
 
 
 ;ATA REGISTERS

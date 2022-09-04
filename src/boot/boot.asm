@@ -126,15 +126,6 @@ jmp print_msg
 
 jmp_ker_load:
 
-    mov eax, 0x0000E820
-    mov edx, 0x534D4150
-    mov ebx, 0x0
-    mov ecx, 24
-    mov di, base
-
-    int 0x15
-    ;jmp $
-
     mov ax, 0xA000
     mov ds,ax
     mov word [0x0], 0x4242
@@ -150,8 +141,24 @@ times (0x10 - ( $ - $$ ) % 0x10 ) db 0x00
 
 xanin_information_block: 
     signature: db "XANIN_INFO"
-    program_to_execute: dq 0x0
-    base: dd $
+    eax_r: dd 0x0
+    ecx_r: dd 0x0
+    edx_r: dd 0x0
+    ebx_r: dd 0x0
+    esp_r: dd 0x0
+    ebp_r: dd 0x0
+    esi_r: dd 0x0
+    edi_r: dd 0x0
+
+    ss_r: dw 0x0
+    cs_r: dw 0x0
+    ds_r: dw 0x0
+    es_r: dw 0x0
+    fs_r: dw 0x0
+    gs_r: dw 0x0
+
+    ip_r: dd 0x0
+
     
 
 

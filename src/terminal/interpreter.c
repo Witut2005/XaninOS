@@ -190,6 +190,16 @@ void scan(void)
     XANIN_ADD_APP_ENTRY1("ip_test", ip_test)
     XANIN_ADD_APP_ENTRY1("udp_test", udp_test)
 
+    else if(strcmp("real_mode_fswitch", program_name))
+    {
+        xin_entry* real_mode_enter = fopen("/fast_real_mode_enter.bin", "r");
+        disk_read(ATA_FIRST_BUS, ATA_MASTER, real_mode_enter->starting_sector, 1, (uint16_t*)0x600);
+
+        xin_entry* real_mode_return = fopen("/fast_real_mode_return.bin", "r");
+        disk_read(ATA_FIRST_BUS, ATA_MASTER, real_mode_return->starting_sector, 1, (uint16_t*)0x400);
+        real_mode_fswitch("0x0", "0x0");
+    }
+
     else
     {
         xprintf("%zUnknown command",set_output_color(red,white));

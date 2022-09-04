@@ -1,7 +1,9 @@
-[org 0x600]
 
+[bits 32]
 
-xanin_saver:
+global fast_real_mode_switch
+
+fast_real_mode_switch:
 
     cli
     mov al, 0x8
@@ -47,7 +49,7 @@ xanin_saver:
 
     pushf
     push 0x0
-    push 0x2000
+    push 0x400
 
     pushf
     push bx
@@ -59,4 +61,4 @@ xanin_saver:
     dw 0x03FF
     dd 0x0
 
-    times 512 - ($-$$) db 0x0  
+    fswitch_str: db "xanin_fast_real_mode_enter",0x0

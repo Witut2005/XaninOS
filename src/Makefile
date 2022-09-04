@@ -53,6 +53,15 @@ build:
 	@echo [ASM] xanin_apps_space.asm
 	@$(ASM) -fbin $(APPS)/xanin_apps_space.asm -o $(APPS)/xanin_apps_space
 
+	@echo [ASM] instruction_pointer.asm
+	@$(ASM) -f elf32 ./libc/instruction_pointer.asm -o ./libc/instruction_pointer.o
+
+	@echo [ASM] real_mode_fswitch.asm
+	@$(ASM) -fbin ./libc/real_mode_fswitch.asm -o ./libc/real_mode_fswitch_asm
+
+	@echo [ASM] xanin_state.asm
+	@$(ASM) -f elf32 ./libc/xanin_state.asm -o ./libc/xanin_state.o
+
 	@echo [CC] chip8.cpp
 	@$(CC) $(CC_OPTIONS) ./chip8/chip8.cpp -o ./chip8/chip8.o
 
@@ -73,6 +82,9 @@ build:
 	
 	@echo [ASM] 8254x INTERRUPT ENTRY
 	@$(ASM) -f elf32 ./devices/NIC/8254x_int_handler.asm -o ./devices/NIC/8254x_int_handler.o
+
+	@echo [ASM] fast_return_to_32_mode.asm 
+	@$(ASM) -fbin ./libc/fast_return_to_32_mode.asm -o ./libc/fast_return_to_32_mode
 
 	@echo [CC] 8254x.cpp
 	@$(CC) $(CC_OPTIONS) ./devices/NIC/8254x.cpp -o ./devices/NIC/8254x.o
@@ -107,7 +119,6 @@ build:
 	@# @echo [CC] tuple.hpp
 	@# @$(CC) $(CC_OPTIONS) ./libcpp/tuple.hpp -o ./libcpp/tuple.o
 
-	
 	@echo [CC] endian.cpp
 	@$(CC) $(CC_OPTIONS) ./libcpp/endian.cpp -o ./libcpp/endian.o
 
@@ -159,6 +170,10 @@ build:
 	@echo [C] xin.c
 	@$(C) $(C_OPTIONS) ./xin_fs/xin.c -o ./xin_fs/xin.o
 
+	@echo [C] real_mode_fswitch.c
+	@$(C) $(C_OPTIONS) ./libc/real_mode_fswitch.c -o ./libc/real_mode_fswitch.o
+
+
 	@echo [C] kernel.c
 	@$(C) $(C_COMPILE) kernel.c \
 	./libc/algorithm.o \
@@ -171,6 +186,9 @@ build:
 	./libc/string.o \
 	./libc/syslog.o \
 	./libc/time.o \
+	./libc/xanin_state.o \
+	./libc/instruction_pointer.o \
+	./libc/real_mode_fswitch.o \
 	./libcpp/endian.o \
 	./terminal/vty.o \
 	./keyboard/key_map.o \
@@ -199,7 +217,7 @@ build:
 	@echo "\033[0;32mCOMPILATION SUCCESS"
 	@echo "\033[0m"
 
-	@cat ./xaninApps/shutdown $(APPS)/current_app $(APPS)/syscall_test > ./xaninApps/xanin_external_apps
+	@cat ./xaninApps/shutdown $(APPS)/current_app $(APPS)/syscall_test ./libc/real_mode_fswitch_asm libc/fast_return_to_32_mode > ./xaninApps/xanin_external_apps
 	@dd if=./xaninApps/xanin_external_apps of=./xaninApps/xanin_apps_space bs=512 count=16 conv=notrunc
 	
 ifeq ($(boot), yan)

@@ -250,6 +250,8 @@ xin_entry *xin_init_fs(void)
     xin_file_create_at_address("/shutdown.bin",             0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x2,0x1,    XIN_FILE, 6);
     //xin_file_create_at_address("/elf.bin",                  0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x82,0x1,    XIN_FILE, 8);
     xin_file_create_at_address("/syscall_test.bin",         0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x82,0x1,    XIN_FILE, 7);
+    xin_file_create_at_address("/fast_real_mode_enter.bin", 0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x5,0x1,    XIN_FILE, 8);
+    xin_file_create_at_address("/fast_real_mode_return.bin", 0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x6,0x1,    XIN_FILE, 9);
     
     if(xin_find_entry("/screenshot/") == nullptr)
         xin_folder_create("/screenshot/",                       0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX);

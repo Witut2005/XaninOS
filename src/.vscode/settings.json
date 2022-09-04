@@ -11,7 +11,8 @@
         "apic_registers.h": "c",
         "hal.h": "c",
         "8254x.h": "c",
-        "arp.h": "c"
+        "arp.h": "c",
+        "disk.h": "c"
     },
     "makefile.launchConfigurations": [
         {
