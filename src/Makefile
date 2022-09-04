@@ -217,7 +217,7 @@ build:
 	@echo "\033[0;32mCOMPILATION SUCCESS"
 	@echo "\033[0m"
 
-	@cat ./xaninApps/shutdown $(APPS)/current_app $(APPS)/syscall_test ./libc/real_mode_fswitch_asm libc/fast_return_to_32_mode > ./xaninApps/xanin_external_apps
+	@cat ./xaninApps/shutdown $(APPS)/current_app $(APPS)/syscall_test ./libc/real_mode_fswitch_asm ./libc/fast_return_to_32_mode > ./xaninApps/xanin_external_apps
 	@dd if=./xaninApps/xanin_external_apps of=./xaninApps/xanin_apps_space bs=512 count=16 conv=notrunc
 	
 ifeq ($(boot), yan)

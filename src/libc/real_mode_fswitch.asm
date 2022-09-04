@@ -1,7 +1,7 @@
 
+[org 0x600]
 [bits 32]
 
-global fast_real_mode_switch
 
 fast_real_mode_switch:
 
@@ -62,3 +62,5 @@ fast_real_mode_switch:
     dd 0x0
 
     fswitch_str: db "xanin_fast_real_mode_enter",0x0
+
+times 512 - ($-$$) db 0x0

@@ -86,6 +86,17 @@ void set_idt(void)
     configure_idt_entry(19, simd_floating_point_exception, CODE_SEGMENT);
     configure_idt_entry(20, virtualization_exception,CODE_SEGMENT);
     configure_idt_entry(21, control_protection_exception,CODE_SEGMENT);
+    configure_idt_entry(22, general_protection_exception, CODE_SEGMENT);
+    configure_idt_entry(23, general_protection_exception, CODE_SEGMENT);
+    configure_idt_entry(24, general_protection_exception, CODE_SEGMENT);
+    configure_idt_entry(25, general_protection_exception, CODE_SEGMENT);
+    configure_idt_entry(26, general_protection_exception, CODE_SEGMENT);
+    configure_idt_entry(27, general_protection_exception, CODE_SEGMENT);
+    configure_idt_entry(28, general_protection_exception, CODE_SEGMENT);
+    configure_idt_entry(29, general_protection_exception, CODE_SEGMENT);
+    configure_idt_entry(30, general_protection_exception, CODE_SEGMENT);
+    configure_idt_entry(31, general_protection_exception, CODE_SEGMENT);
+    configure_idt_entry(32, general_protection_exception, CODE_SEGMENT);
     
     configure_idt_entry(0x22, pit_handler_init,CODE_SEGMENT);
     configure_idt_entry(0x21, keyboard_handler_init,CODE_SEGMENT);
