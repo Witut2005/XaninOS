@@ -1,16 +1,16 @@
 
-[org 0x400]
+[org 0x20000]
 
 [bits 16]
 return:
 
-    mov ax, 0x40
+    mov ax, 0x2000
     mov ds, ax
     mov es, ax
 
-    ; mov ax, 0x1f00
-    ; mov ss, ax
-    ; xor sp, sp
+    mov ax, 0x1f00
+    mov ss, ax
+    xor sp, sp
 
     lgdt[_GDT_ADDR] ;LGDT ALWAYS BEFORE ENTERING 32-BIT MODE
 
@@ -18,10 +18,12 @@ return:
     or eax, 0x1
     mov cr0,eax
 
-    jmp dword CODE_SEGMENT:(_bits32)
+
+    jmp dword 0x8:0x425
 
 [bits 32]
 _bits32:
+    jmp $
     mov edi, 0x7C00 + 0x140 + 10
 
     ;general purpose registers
@@ -65,6 +67,7 @@ _GDT_ADDR:
 
 _GDT:
 
+
     ;0x0
     ;null segment
     dd 0x0
@@ -95,11 +98,27 @@ _GDT:
     db 01000000b
     db 0xff
 
-
+    ;0x20
+    ;16bit code segment
+    dd 0x0000ffff 
+    db 0x0
+    db 10011000b
+    db 00001111b
+    db 0x0
+    
+    ;0x28
+    ;16bit data segment
+    dd 0x0000ffff 
+    db 0x0
+    db 10010010b
+    db 00001111b
+    db 0x0
 
 
 
 _GDT_END:
+
+
 
 times 512 - ($-$$) db 0x0
 

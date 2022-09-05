@@ -51,7 +51,7 @@ void note_input(xchar x)
 
         Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | (((black << 4) | white) << 8));
         
-        if((uint32_t)&Screen.cursor[Screen.y - 1][Screen.x] >= VGA_TEXT_MEMORY)
+        if(Screen.y > 0)
             Screen.y--;
 
         Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | (((white << 4) | black) << 8));
@@ -63,7 +63,7 @@ void note_input(xchar x)
 
         Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | (((black << 4) | white) << 8));
         
-        if((uint32_t)&Screen.cursor[Screen.y + 1][Screen.x] <= VGA_TEXT_MEMORY + VGA_SCREEN_RESOLUTION)
+        if(Screen.y < VGA_HEIGHT)
             Screen.y++;
 
         Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | (((white << 4) | black) << 8));
@@ -147,15 +147,21 @@ void xin_note(char* file_name)
         while(KeyInfo.scan_code != ENTER);
 
     }
-        
+    
     else
     {
+        screen_clear();
+
+        for(int i = 0; i < 8; i++)
+            disk_read(ATA_FIRST_BUS, ATA_MASTER, xin_file->starting_sector + i, 1, (xin_file->starting_sector + i) * SECTOR_SIZE);
+        
+        screen_clear();
 
         char* data_pointer = xin_file->starting_sector * SECTOR_SIZE;
 
         uint16_t* bruh_moment = VGA_TEXT_MEMORY;
         
-        for(int i = 0;  i < (VGA_SCREEN_RESOLUTION / 2); i++)
+        for(int i = 0;  i < VGA_SCREEN_RESOLUTION / 2; i++)
             bruh_moment[i] = (uint16_t) (data_pointer[i] + (((black << 4) | white) << 8));
         
 
@@ -163,25 +169,28 @@ void xin_note(char* file_name)
 
         uint32_t file_data_counter = 0x0;
 
-        data_pointer = (char*)(xin_file->starting_sector * SECTOR_SIZE);
+        uint16_t* screen_ptr = (uint16_t*)VGA_TEXT_MEMORY;
 
-        //if(xin_file->os_specific != XIN_READ_ONLY)
+        uint8_t* tmp = (uint8_t*)malloc(VGA_SCREEN_RESOLUTION);
+
+        for(int i = 0; i < VGA_SCREEN_RESOLUTION / 2; i++, screen_ptr++)
         {
+            fseek(xin_file, i);
+            write(xin_file, (char*)screen_ptr, 1);
 
-            uint16_t* screen_ptr = (uint16_t*)VGA_TEXT_MEMORY;
+            tmp[i] = *(char*)screen_ptr;
 
-            for(int i = 0; i < VGA_SCREEN_RESOLUTION; i++, screen_ptr++)
-            {
-                fseek(xin_file, i);
-                write(xin_file, (char*)screen_ptr, 1);
-            }
-
-            xin_file->entry_size = file_data_counter;
         }
 
+        xin_file->entry_size = file_data_counter;
+
+        for(int i = 0; i < 16; i++)
+            disk_write(ATA_FIRST_BUS, ATA_MASTER, xin_file->starting_sector + i, 1, (uint16_t*)(tmp + (i * SECTOR_SIZE)));
+        
+        free(tmp);
+
     }
-
-
+    
     keyboard_handle = nullptr;
-    return;
+
 }

@@ -621,6 +621,12 @@ xin_entry* create(char* file_name)
     entry->file_info = nullptr;
     entry->starting_sector = (uint32_t)write_entry - XIN_ENTRY_POINTERS;
 
+    uint8_t* zero_mregion = (uint8_t*)malloc(512);
+    memset(zero_mregion, 0x0, 512);
+
+    for(int i = 0; i < 16; i++)
+        disk_write(ATA_FIRST_BUS, ATA_MASTER, entry->starting_sector, i, (uint16_t*)zero_mregion);
+
 }
 
 
