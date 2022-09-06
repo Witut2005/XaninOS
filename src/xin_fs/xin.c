@@ -584,6 +584,10 @@ void fclose(xin_entry** file)
 
     *file = nullptr;
 
+//    for(int i = 0; i < *(file)->entry_size / 512 + (*file->entry_size % 512 != 0 ? 1 : 0); i++)
+//        disk_write(ATA_FIRST_BUS, ATA_MASTER, *file->entry_size, )
+
+
 }
 
 

@@ -16,9 +16,8 @@ void note_input(xchar x)
     
 
     if(KeyInfo.scan_code == F4_KEY || KeyInfo.scan_code == ESC)
-    {
         app_exited = true;
-    }
+
 
     else if(x.scan_code == BSPC)
     {       
@@ -75,16 +74,18 @@ void note_input(xchar x)
 
         Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | (((black << 4) | white) << 8));
 
-        Screen.x++;
+        if(Screen.x == 79 && Screen.y == 27)
+            Screen.x--;
 
-        Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | (((white << 4) | black) << 8));
-
-
-        if(Screen.x == 80)
+        else if(Screen.x == 79)
         {
             Screen.x = 0x0;
             Screen.y++;
         }
+
+        Screen.x++;
+
+        Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | (((white << 4) | black) << 8));
 
     }
 
@@ -93,7 +94,10 @@ void note_input(xchar x)
 
         Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | (((black << 4) | white) << 8));
     
-        if(Screen.x == 0)
+        if(Screen.x == 0x0 && Screen.y == 0x0)
+            Screen.x++;
+
+        else if(Screen.x == 0)
         {
             Screen.x = 80;
             Screen.y--;
@@ -125,6 +129,9 @@ void note_input(xchar x)
     {
         if(x.character)
         {
+            if(Screen.x == 79 && Screen.y == 27)
+                Screen.x--;
+                
             char character_saved_tmp = (char)Screen.cursor[Screen.y][Screen.x];
             xprintf("%c", getchar());
             letters_refresh_add(&Screen.cursor[Screen.y][Screen.x], character_saved_tmp);
@@ -143,16 +150,13 @@ void xin_note(char* file_name)
     if(xin_file == nullptr)
     {
         xprintf("Could not open file: %s\n", file_name);
-
         while(KeyInfo.scan_code != ENTER);
-
     }
     
     else
     {
-        screen_clear();
 
-        for(int i = 0; i < 8; i++)
+        for(int i = 0; i < 16; i++)
             disk_read(ATA_FIRST_BUS, ATA_MASTER, xin_file->starting_sector + i, 1, (xin_file->starting_sector + i) * SECTOR_SIZE);
         
         screen_clear();
@@ -170,7 +174,6 @@ void xin_note(char* file_name)
         uint32_t file_data_counter = 0x0;
 
         uint16_t* screen_ptr = (uint16_t*)VGA_TEXT_MEMORY;
-
         uint8_t* tmp = (uint8_t*)malloc(VGA_SCREEN_RESOLUTION);
 
         for(int i = 0; i < VGA_SCREEN_RESOLUTION / 2; i++, screen_ptr++)

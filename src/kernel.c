@@ -228,6 +228,8 @@ void _start(void)
     if(xin_find_entry("/syslog") == nullptr)
         create_file_kernel("/syslog");
 
+    create_file_kernel("/system_space1");
+    create_file_kernel("/system_space2");
     netapi_init();
     i8254x_init();
 
