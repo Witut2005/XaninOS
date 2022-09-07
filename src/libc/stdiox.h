@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include <stdint.h>
 
 #define set_output_color(x,y) (x << 4 | (y & 0xF))
 

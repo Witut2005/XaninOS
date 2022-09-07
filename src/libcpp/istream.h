@@ -148,6 +148,8 @@ namespace std
     
     inline istream cin;
     
+    extern "C" 
+    {
     struct key_info_t
     {
         uint8_t scan_code;
@@ -169,7 +171,8 @@ namespace std
 
     };
 
-    extern "C" key_info_t KeyInfo;
+    extern key_info_t KeyInfo;
 
+    }
 
 }

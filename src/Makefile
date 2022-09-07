@@ -170,6 +170,9 @@ build:
 	@echo [C] xin.c
 	@$(C) $(C_OPTIONS) ./xin_fs/xin.c -o ./xin_fs/xin.o
 
+	@echo [C] edit.c
+	@$(C) $(C_OPTIONS) ./xin_fs/edit.c -o ./xin_fs/edit.o
+
 	@echo [C] real_mode_fswitch.c
 	@$(C) $(C_OPTIONS) ./libc/real_mode_fswitch.c -o ./libc/real_mode_fswitch.o
 
@@ -195,6 +198,7 @@ build:
 	./handlers/keyboard.o \
 	./pit/pit.o \
 	./xin_fs/xin.o \
+	./xin_fs/edit.o \
 	./test/cpp_test.o \
 	./test/cpp_test2.o \
 	./devices/MOUSE/mouse.o \

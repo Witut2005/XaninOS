@@ -582,11 +582,11 @@ void fclose(xin_entry** file)
     (*file)->file_info->position = 0;
     set_string((*file)->file_info->rights, "\0");
 
+
+   for(int i = 0; i < (*file)->entry_size / 512 + ((*file)->entry_size % 512 != 0 ? 1 : 0); i++)
+       disk_write(ATA_FIRST_BUS, ATA_MASTER, (*file)->entry_size, 1, (uint16_t*)((*file)->starting_sector));
+
     *file = nullptr;
-
-//    for(int i = 0; i < *(file)->entry_size / 512 + (*file->entry_size % 512 != 0 ? 1 : 0); i++)
-//        disk_write(ATA_FIRST_BUS, ATA_MASTER, *file->entry_size, )
-
 
 }
 
@@ -637,6 +637,7 @@ xin_entry* create(char* file_name)
 xin_entry *fopen(char *file_path, const char *mode)
 {
 
+
     xin_entry* file = xin_find_entry(file_path);
 
 
@@ -662,6 +663,9 @@ xin_entry *fopen(char *file_path, const char *mode)
         file->file_info->position = 0;
         return file;
     }
+
+    for(int i = 0; i < file->entry_size / 512 + (file->entry_size % 512 != 0 ? 1 : 0); i++)
+       disk_read(ATA_FIRST_BUS, ATA_MASTER, file->entry_size, 1, (uint16_t*)(file->starting_sector));
 
     return nullptr;
 }

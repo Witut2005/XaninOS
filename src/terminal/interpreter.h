@@ -174,5 +174,7 @@ extern int tetris(void);
 //extern void xagame_test(void);
 //extern void assembler(char* file_name);
 
+extern int edit(char* file_name);
+
 void scan(void);
 
