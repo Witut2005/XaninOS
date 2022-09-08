@@ -20,8 +20,10 @@ void edit_input(xchar Input)
         program_buffer[file_position] = '\n';
         file_position++;
         
-        while((uint32_t)cursor != (uint32_t)Screen.cursor[Screen.y][Screen.x])
-            cursor++;
+        cursor = cursor + 80;
+
+        while(((uint32_t)cursor - VGA_TEXT_MEMORY) % 0xA0 != 0)
+            cursor--;
 
         *cursor = (uint16_t)((char)(*cursor) + (((white << 4) | black) << 8));
     }
@@ -75,11 +77,89 @@ void edit_input(xchar Input)
         }
     }
 
+    else if(Input.scan_code == ARROW_UP)
+    {
+        *cursor = (uint16_t)((char)(*cursor) + (((black << 4) | white) << 8));
+
+        while(((uint32_t)cursor - VGA_TEXT_MEMORY) % 0xA0 != 0)
+            cursor--;
+        cursor--;
+
+        {
+
+        int i;
+        int cursor_offset = 0;
+        char where_to_move;
+        
+        for(i = file_position; program_buffer[i] != '\n'; i--);
+        where_to_move = program_buffer[i-1];
+
+        while((char)*cursor != where_to_move) 
+            cursor--;
+
+        }
+            
+
+
+        while(program_buffer[file_position] != '\n')
+            file_position--;
+        file_position--;
+        
+        *cursor = (uint16_t)((char)(*cursor) + (((white << 4) | black) << 8));
+    }
+
+    else if(Input.scan_code == ARROW_DOWN)
+    {
+        *cursor = (uint16_t)((char)(*cursor) + (((black << 4) | white) << 8));
+
+        cursor = cursor + VGA_WIDTH;
+
+        while(((uint32_t)cursor - VGA_TEXT_MEMORY) % 0xA0 != 0)
+            cursor--;
+
+        {
+
+        int i;
+        int cursor_offset = 0;
+        char where_to_move;
+        
+        for(i = file_position; program_buffer[i] != '\n'; i++);
+        i++;
+        for(; program_buffer[i] != '\n'; i++);
+        where_to_move = program_buffer[i-1];
+
+        while((char)*cursor != where_to_move || (char)*(cursor + 1) != '\0') 
+            cursor++;
+
+        }
+            
+
+
+        while(program_buffer[file_position] != '\n')
+            file_position++;
+
+        file_position++;
+        
+        while(program_buffer[file_position] != '\n')
+            file_position++;
+
+        file_position--;
+        
+        *cursor = (uint16_t)((char)(*cursor) + (((white << 4) | black) << 8));
+    }
+    
+
     else if(Input.character != '\0')
     {
         *cursor = (uint16_t)((char)(*cursor) + (((black << 4) | white) << 8));
         xprintf("%c", KeyInfo.character);
+
+        for(int i = file_position; program_buffer[i] != '\n' && program_buffer[i] != '\0'; i++)
+            program_buffer[i + 1] = program_buffer[i];
+
+
         program_buffer[file_position] = KeyInfo.character;
+        
         file_position++;
 
         cursor++;
@@ -119,10 +199,8 @@ int edit(char* file_name)
     while(KeyInfo.scan_code != F4_KEY)
         edit_input(inputg());
 
-    xprintf("\n%d\n", file_position);
-    while(KeyInfo.scan_code != ENTER);
 
-    file->entry_size = file_position;
+    file->entry_size = file_position;//ZLE moze byc przeciez np na poczatku
     fseek(file, 0x0);
     write(file, program_buffer, file_position);
     fclose(&file);

@@ -12,6 +12,8 @@
 void note_input(xchar x)
 {
 
+
+
     static uint8_t selected_character;
     
 
