@@ -7,6 +7,7 @@
 #include <libc/string.h>
 #include <libc/stdlibx.h>
 #include <pit/pit.h>
+#include <libc/memory.h>
 
 char command_buffer[80];
 char* keyboard_command;
@@ -270,6 +271,16 @@ void* malloc(uint32_t size)
     for(int i = 0; i < size / 4096; i++)
         pmmngr_alloc_block();
 
+    return ptr;
+
+}
+
+void* calloc(uint32_t size)
+{
+
+    uint8_t* ptr = (uint8_t*)malloc(size);
+    memset(ptr, 0, size);
+    
     return ptr;
 
 }

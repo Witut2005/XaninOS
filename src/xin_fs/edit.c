@@ -9,9 +9,11 @@
 static uint32_t file_position;
 static char* program_buffer;
 static uint16_t* cursor;
+static int column, line;
 
 void edit_input(xchar Input)
 {
+    *cursor = (uint16_t)((char)(*cursor) + (((white << 4) | black) << 8));
 
     if(Input.scan_code == ENTER)
     {
@@ -94,8 +96,11 @@ void edit_input(xchar Input)
         for(i = file_position; program_buffer[i] != '\n'; i--);
         where_to_move = program_buffer[i-1];
 
-        while((char)*cursor != where_to_move) 
+        while((char)*cursor != where_to_move || (char)*(cursor + 1) != '\0') 
             cursor--;
+
+        if((char)*cursor == '\0')
+            cursor++;
 
         }
             
@@ -131,6 +136,9 @@ void edit_input(xchar Input)
         while((char)*cursor != where_to_move || (char)*(cursor + 1) != '\0') 
             cursor++;
 
+        if((char)*cursor == '\0')
+            cursor--;
+
         }
             
 
@@ -154,8 +162,10 @@ void edit_input(xchar Input)
         *cursor = (uint16_t)((char)(*cursor) + (((black << 4) | white) << 8));
         xprintf("%c", KeyInfo.character);
 
-        for(int i = file_position; program_buffer[i] != '\n' && program_buffer[i] != '\0'; i++)
+        int i;
+        for(i = file_position; program_buffer[i+1] != '\n' && program_buffer[i+1] != '\0'; i++)
             program_buffer[i + 1] = program_buffer[i];
+        program_buffer[i+1] = '\n';
 
 
         program_buffer[file_position] = KeyInfo.character;
@@ -187,22 +197,24 @@ int edit(char* file_name)
         while(KeyInfo.scan_code != ENTER);
     }
     
-    program_buffer = (char*) malloc(VGA_SCREEN_RESOLUTION);
+    program_buffer = (char*) calloc(VGA_SCREEN_RESOLUTION);
     read(file, program_buffer, VGA_SCREEN_RESOLUTION);
 
-    file_position = strlen(program_buffer);
+    file_position = 0x0;
 
     for(int i = 0; i < VGA_SCREEN_RESOLUTION; i++)
         xprintf("%c", program_buffer[i]);
     
 
-    while(KeyInfo.scan_code != F4_KEY)
+    while(KeyInfo.scan_code != F4_KEY && KeyInfo.scan_code != F4_KEY_RELEASE)
         edit_input(inputg());
 
+    xprintf("END\n\n");
 
+    file_position = strlen(program_buffer);
     file->entry_size = file_position;//ZLE moze byc przeciez np na poczatku
     fseek(file, 0x0);
-    write(file, program_buffer, file_position);
+    write(file, program_buffer, 40);
     fclose(&file);
 
     free(program_buffer);

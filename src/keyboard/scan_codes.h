@@ -21,6 +21,7 @@ enum special_keys
   LSHIFT_RELEASE = 0xAA,
   F3_KEY = 0x3D,
   F4_KEY = 0x3E,
+  F4_KEY_RELEASE = 0xBE, 
   L_CTRL = 0x1D,
   L_CTRL_RELEASE = 0x9D,
   DELETE_KEY = 0x53,
