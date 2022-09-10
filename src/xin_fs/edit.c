@@ -5,11 +5,12 @@
 #include <xin_fs/xin.h>
 #include <libc/stdlibx.h>
 #include <libc/string.h>
+#include <libc/memory.h>
 
 static uint32_t file_position;
 static char* program_buffer;
 static uint16_t* cursor;
-static int column, line;
+static int column, current_line;
 
 void edit_input(xchar Input)
 {
@@ -18,66 +19,142 @@ void edit_input(xchar Input)
     if(Input.scan_code == ENTER)
     {
         *cursor = (uint16_t)((char)(*cursor) + (((black << 4) | white) << 8));
-        xprintf("\n");
+
+        char* tmp = (char*)calloc(strlen(program_buffer)) + 1;
+        memcpy(tmp, program_buffer, strlen(program_buffer) + 1);
+
+        int i =  file_position;
+        for(; i < strlen(tmp) + 1; i++)
+            program_buffer[i + 1] = tmp[i];
+
         program_buffer[file_position] = '\n';
+
         file_position++;
         
-        cursor = cursor + 80;
+        cursor = cursor + VGA_WIDTH;
 
         while(((uint32_t)cursor - VGA_TEXT_MEMORY) % 0xA0 != 0)
             cursor--;
+        
+        screen_clear();
+        xprintf("%s", program_buffer);
 
         *cursor = (uint16_t)((char)(*cursor) + (((white << 4) | black) << 8));
     }
 
     else if(Input.scan_code == TAB_KEY)
     {
-        for(int i = 0; i < 3; i++)
-        {
-            xprintf("%c", ' ');
-            program_buffer[file_position] = ' ';
-            file_position++;
-        }
+        *cursor = (uint16_t)((char)(*cursor) + (((black << 4) | white) << 8));
+
+        char* tmp = (char*)calloc(strlen(program_buffer)) + 3;
+        memcpy(tmp, program_buffer, strlen(program_buffer) + 3);
+
+        int i =  file_position;
+        for(; i < strlen(tmp) + 3; i++)
+            program_buffer[i + 3] = tmp[i];
+
+        program_buffer[file_position] = ' ';
+        program_buffer[file_position + 1] = ' ';
+        program_buffer[file_position + 2] = ' ';
+
+        file_position = file_position + 3;;
+
+        screen_clear();
+        xprintf("%s", program_buffer);
+
+
+        cursor = cursor + 3;
+        *cursor = (uint16_t)((char)(*cursor) + (((white << 4) | black) << 8));
     }
 
     else if(Input.scan_code == BSPC)
     {
+        if(!file_position)
+            return;
+
         *cursor = (uint16_t)((char)(*cursor) + (((black << 4) | white) << 8));
 
         int i;
+        char character_to_delete = program_buffer[file_position - 1];
+
         for(i = file_position - 1; program_buffer[i] != '\0'; i++)
             program_buffer[i] = program_buffer[i+1];
+
+        if(character_to_delete == '\n')
+        {
+            current_line--;
+            cursor =  cursor - VGA_WIDTH;
+            while(((uint32_t)cursor - VGA_TEXT_MEMORY) % 0xA0 != 0)
+                cursor--;
+        
+            while((char)(*cursor) != '\0')
+                cursor++;
+        }
+        
+        else
+            cursor--;
+
         program_buffer[i] = '\0';
         
         screen_clear();
 
-        for(int i = 0; i < VGA_SCREEN_RESOLUTION; i++)
-            xprintf("%c", program_buffer[i]);
+        xprintf("%s", program_buffer);
         file_position--;
 
-        cursor--;
         *cursor = (uint16_t)((char)(*cursor) + (((white << 4) | black) << 8));
 
     }
 
     else if(Input.scan_code == ARROW_LEFT)
     {
+    
+        if(!file_position)
+            return;
         *cursor = (uint16_t)((char)(*cursor) + (((black << 4) | white) << 8));
+        
+        if(program_buffer[file_position - 1] == '\n')
+        {
+            current_line--;
+            cursor =  cursor - VGA_WIDTH;
+            while(((uint32_t)cursor - VGA_TEXT_MEMORY) % 0xA0 != 0)
+                cursor--;
+        
+            while((char)(*cursor) != '\0')
+                cursor++;
+        }
+        
+        else 
+            cursor--;
+        
         file_position--;
-        cursor--;
         *cursor = (uint16_t)((char)(*cursor) + (((white << 4) | black) << 8));
+
     }
     
     else if(Input.scan_code == ARROW_RIGHT)
     {
+
+
         if(program_buffer[file_position] != '\0')
         {
             *cursor = (uint16_t)((char)(*cursor) + (((black << 4) | white) << 8));
+            
+            if(program_buffer[file_position] == '\n')
+            {
+                current_line++;
+                while(((uint32_t)cursor - VGA_TEXT_MEMORY) % 0xA0 != 0)
+                    cursor--;
+                cursor = cursor + VGA_WIDTH;
+            }
+            
+            else 
+                cursor++;
+            
             file_position++;
-            cursor++;
             *cursor = (uint16_t)((char)(*cursor) + (((white << 4) | black) << 8));
         }
     }
+
 
     else if(Input.scan_code == ARROW_UP)
     {
@@ -85,7 +162,6 @@ void edit_input(xchar Input)
 
         while(((uint32_t)cursor - VGA_TEXT_MEMORY) % 0xA0 != 0)
             cursor--;
-        cursor--;
 
         {
 
@@ -93,8 +169,18 @@ void edit_input(xchar Input)
         int cursor_offset = 0;
         char where_to_move;
         
-        for(i = file_position; program_buffer[i] != '\n'; i--);
-        where_to_move = program_buffer[i-1];
+        for(i = file_position - 1; program_buffer[i] != '\n'; i--);
+        where_to_move = program_buffer[i];
+
+
+        if(where_to_move == '\n')
+        {
+            cursor = cursor - VGA_WIDTH;
+            while(program_buffer[file_position-1] != '\n')
+                file_position--;
+            file_position--;
+            return;
+        }
 
         while((char)*cursor != where_to_move || (char)*(cursor + 1) != '\0') 
             cursor--;
@@ -125,13 +211,21 @@ void edit_input(xchar Input)
         {
 
         int i;
-        int cursor_offset = 0;
         char where_to_move;
         
-        for(i = file_position; program_buffer[i] != '\n'; i++);
-        i++;
-        for(; program_buffer[i] != '\n'; i++);
-        where_to_move = program_buffer[i-1];
+        for(i = file_position + 1; program_buffer[i] != '\n'; i++);
+        where_to_move = program_buffer[i];
+
+        // xprintf("where to move: 0x%x\n", where_to_move);
+        // while(1);
+
+        if(where_to_move == '\n')
+        {
+            while(program_buffer[file_position] != '\n')
+                file_position++;
+            file_position++;
+            return;
+        }
 
         while((char)*cursor != where_to_move || (char)*(cursor + 1) != '\0') 
             cursor++;
@@ -155,25 +249,32 @@ void edit_input(xchar Input)
         
         *cursor = (uint16_t)((char)(*cursor) + (((white << 4) | black) << 8));
     }
+
+    else if(Input.scan_code == F4_KEY || Input.scan_code == F4_KEY_RELEASE)
+        return;
     
 
     else if(Input.character != '\0')
     {
         *cursor = (uint16_t)((char)(*cursor) + (((black << 4) | white) << 8));
-        xprintf("%c", KeyInfo.character);
 
-        int i;
-        for(i = file_position; program_buffer[i+1] != '\n' && program_buffer[i+1] != '\0'; i++)
-            program_buffer[i + 1] = program_buffer[i];
-        program_buffer[i+1] = '\n';
 
+        char* tmp = (char*)calloc(strlen(program_buffer)) + 1;
+        memcpy(tmp, program_buffer, strlen(program_buffer) + 1);
+
+        int i =  file_position;
+        for(; i < strlen(tmp) + 1; i++)
+            program_buffer[i + 1] = tmp[i];
 
         program_buffer[file_position] = KeyInfo.character;
-        
+
         file_position++;
 
         cursor++;
+        screen_clear();
+        xprintf("%s", program_buffer);
         *cursor = (uint16_t)((char)(*cursor) + (((white << 4) | black) << 8));
+        free(tmp);
         
     }
 
@@ -202,20 +303,26 @@ int edit(char* file_name)
 
     file_position = 0x0;
 
-    for(int i = 0; i < VGA_SCREEN_RESOLUTION; i++)
-        xprintf("%c", program_buffer[i]);
+    xprintf("%s", program_buffer);
     
 
     while(KeyInfo.scan_code != F4_KEY && KeyInfo.scan_code != F4_KEY_RELEASE)
         edit_input(inputg());
 
-    xprintf("END\n\n");
+
 
     file_position = strlen(program_buffer);
-    file->entry_size = file_position;//ZLE moze byc przeciez np na poczatku
+    file->entry_size = file_position;
+
     fseek(file, 0x0);
-    write(file, program_buffer, 40);
-    fclose(&file);
+    write(file, program_buffer, strlen(program_buffer));
+
+    screen_clear();
+    xprintf("%s", program_buffer);
+    while(KeyInfo.scan_code != ENTER);
+    // for(int i = 1; i <= 3; i++)
+    //     xprintf("%d. %s", i, getline(file, i));
+
 
     free(program_buffer);
 

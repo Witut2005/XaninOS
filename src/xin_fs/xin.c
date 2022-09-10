@@ -670,7 +670,37 @@ xin_entry *fopen(char *file_path, const char *mode)
     return nullptr;
 }
     
+char* getline(xin_entry* file, int line_id)
+{
+    char* file_data = (char*)(file->starting_sector * SECTOR_SIZE);
+    char* line = (char*)calloc(200);
 
+    int column = 0;
+    int current_line = 0;
+    int file_offset = 0;
+
+    while(current_line < line_id)
+    {
+        memset(line, 0, 200);
+
+        while(file_data[file_offset] != '\n')
+        {
+            line[column] = file_data[file_offset];
+            column++;
+            file_offset++;
+        }
+        
+        line[column] = '\n';
+        line[column + 1] = '\0';
+        file_offset++;
+
+        column = 0;
+        current_line++;
+    }
+
+    return line;
+
+}
 
 __STATUS remove_directory(char* folder_name)
 {

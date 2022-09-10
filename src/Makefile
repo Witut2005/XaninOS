@@ -157,6 +157,9 @@ build:
 
 	@echo [C] time.c
 	@$(C) $(C_OPTIONS) ./libc/time.c -o ./libc/time.o
+
+	@echo [C] xaninGraphics 
+	@$(C) $(C_OPTIONS) ./xaninGraphics/xaninGraphics.c -o ./xaninGraphics/xaninGraphics.o
 	
 	@# @echo [C] pit.c
 	@# @$(C) $(C_OPTIONS) ./pit/pit.c -o ./pit/pit.o
@@ -195,6 +198,7 @@ build:
 	./libcpp/endian.o \
 	./terminal/vty.o \
 	./keyboard/key_map.o \
+	./xaninGraphics/xaninGraphics.o \
 	./handlers/keyboard.o \
 	./pit/pit.o \
 	./xin_fs/xin.o \

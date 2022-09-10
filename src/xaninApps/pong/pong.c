@@ -3,7 +3,7 @@
 #include <xaninApps/pong/pong.h>
 #include <libc/stdlibx.h>
 #include <libc/stdiox.h>
-#include <xaninGraphics/xaninGraphics.c>
+#include <xaninGraphics/xaninGraphics.h>
 
 void pong_get_input(void)
 {
@@ -170,11 +170,11 @@ void pong_init(void)
 
     screen_clear();
 
-    drawLineX(0,79,0,lgreen);
-    drawLineX(0,79,27,lgreen);
+    draw_line_x(0,79,0,lgreen);
+    draw_line_x(0,79,27,lgreen);
 
-    drawLineY(0,27,0,green);
-    drawLineY(0,27,79,green);
+    draw_line_y(0,27,0,green);
+    draw_line_y(0,27,79,green);
 
     keyboard_handle = pong_get_input;
 

@@ -69,6 +69,8 @@ void keyboard_driver(uint8_t scanCode)
 
         case L_CTRL                       : {KeyInfo.is_ctrl = true; break;}
         case L_CTRL_RELEASE               : {KeyInfo.is_ctrl = false; break;}
+        case F4_KEY                       : {KeyInfo.character = 0x0; break;}
+        case F4_KEY_RELEASE               : {KeyInfo.character = 0x0; break;}
     
 
     }

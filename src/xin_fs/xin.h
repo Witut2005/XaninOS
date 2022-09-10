@@ -53,3 +53,4 @@ xin_entry *xin_find_entry(char *entry_name);
 __STATUS remove_directory(char* folder_name);
 void create_file_kernel(char* entry_name);
 void fclose(xin_entry** file);
+char* getline(xin_entry* file, int line_id);
