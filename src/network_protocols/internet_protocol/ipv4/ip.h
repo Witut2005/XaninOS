@@ -7,8 +7,8 @@
 struct Ipv4Header
 {
 
-    uint8_t version : 4;
     uint8_t ihl : 4;
+    uint8_t version : 4;
     uint8_t dscp : 6;
     uint8_t ecn : 2;
     uint16_t packet_size;
