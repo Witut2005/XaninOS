@@ -39,6 +39,7 @@ void edit_input(xchar Input)
         screen_clear();
         xprintf("%s", program_buffer);
 
+        current_line++;
         *cursor = (uint16_t)((char)(*cursor) + (((white << 4) | black) << 8));
     }
 
@@ -158,12 +159,16 @@ void edit_input(xchar Input)
 
     else if(Input.scan_code == ARROW_UP)
     {
+
+        if(!current_line)
+            return;
+
         *cursor = (uint16_t)((char)(*cursor) + (((black << 4) | white) << 8));
 
         while(((uint32_t)cursor - VGA_TEXT_MEMORY) % 0xA0 != 0)
             cursor--;
 
-        {
+    
 
         int i;
         int cursor_offset = 0;
@@ -173,34 +178,30 @@ void edit_input(xchar Input)
         where_to_move = program_buffer[i];
 
 
-        if(where_to_move == '\n')
-        {
-            cursor = cursor - VGA_WIDTH;
-            while(program_buffer[file_position-1] != '\n')
-                file_position--;
-            file_position--;
-            return;
-        }
-
-        while((char)*cursor != where_to_move || (char)*(cursor + 1) != '\0') 
-            cursor--;
-
-        if((char)*cursor == '\0')
-            cursor++;
-
-        }
-            
-
-
-        while(program_buffer[file_position] != '\n')
+        cursor = cursor - VGA_WIDTH;
+        while(program_buffer[file_position-1] != '\n')
             file_position--;
         file_position--;
+
+        while((char)*cursor != '\0')
+            cursor++;
         
+        current_line--;
         *cursor = (uint16_t)((char)(*cursor) + (((white << 4) | black) << 8));
     }
 
     else if(Input.scan_code == ARROW_DOWN)
     {
+
+        {
+            int i = file_position;
+            for(; program_buffer[i] != '\n'; i++);
+            if(program_buffer[i+1] == '\0')
+                return;
+            if(i >= strlen(program_buffer))
+                return;
+        }
+
         *cursor = (uint16_t)((char)(*cursor) + (((black << 4) | white) << 8));
 
         cursor = cursor + VGA_WIDTH;
@@ -208,7 +209,6 @@ void edit_input(xchar Input)
         while(((uint32_t)cursor - VGA_TEXT_MEMORY) % 0xA0 != 0)
             cursor--;
 
-        {
 
         int i;
         char where_to_move;
@@ -216,37 +216,12 @@ void edit_input(xchar Input)
         for(i = file_position + 1; program_buffer[i] != '\n'; i++);
         where_to_move = program_buffer[i];
 
-        // xprintf("where to move: 0x%x\n", where_to_move);
-        // while(1);
-
-        if(where_to_move == '\n')
-        {
-            while(program_buffer[file_position] != '\n')
-                file_position++;
-            file_position++;
-            return;
-        }
-
-        while((char)*cursor != where_to_move || (char)*(cursor + 1) != '\0') 
-            cursor++;
-
-        if((char)*cursor == '\0')
-            cursor--;
-
-        }
-            
-
-
+ 
         while(program_buffer[file_position] != '\n')
             file_position++;
-
         file_position++;
-        
-        while(program_buffer[file_position] != '\n')
-            file_position++;
 
-        file_position--;
-        
+        current_line++;        
         *cursor = (uint16_t)((char)(*cursor) + (((white << 4) | black) << 8));
     }
 
