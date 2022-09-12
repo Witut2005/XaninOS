@@ -46,7 +46,7 @@ struct AddressResolutionProtocol
                                                         uint8_t* source_hardware_address, uint32_t source_protocol_address, uint8_t* destination_hardware_address,
                                                             uint32_t destination_protocol_address); 
     extern void arp_reply_handle(AddressResolutionProtocol* arp_header);
-    extern uint8_t* mac_get_from_ip(uint8_t* ip);
+    extern uint8_t mac_get_from_ip(uint32_t ip);
 
 
 #else
@@ -56,7 +56,7 @@ struct AddressResolutionProtocol
                                                         uint8_t* source_hardware_address, uint32_t source_protocol_address, uint8_t* destination_hardware_address,
                                                             uint32_t destination_protocol_address);
     extern "C" void arp_reply_handle(AddressResolutionProtocol* arp_header);
-    extern "C" uint8_t* mac_get_from_ip(uint8_t* ip);
+    extern "C" uint8_t mac_get_from_ip(uint32_t ip);
 
 #endif
 

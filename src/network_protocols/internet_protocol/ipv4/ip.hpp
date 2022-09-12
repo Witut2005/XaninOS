@@ -9,15 +9,11 @@
 struct Ipv4Header
 {
 
-    uint8_t ihl : 4;
-    uint8_t version : 4;
-
-    uint8_t dscp : 6;
-    uint8_t ecn : 2;
+    uint8_t version_ihl;
+    uint8_t tos;
     uint16_t packet_size;
     uint16_t identification;
-    uint8_t flags : 3;
-    uint16_t fragment_offset : 13;
+    uint16_t fragment_offset_and_flags;
     uint8_t time_to_live;
     uint8_t protocol; 
     uint16_t checksum;

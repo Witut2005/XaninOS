@@ -171,6 +171,8 @@ extern int tetris(void);
 #include <xaninApps/ip_test.c>
 #include <xaninApps/udp_test.c>
 #include <libc/real_mode_fswitch.h>
+#include <xaninApps/icmp_test.c>
+#include <xaninApps/arp_check.c>
 //extern void xagame_test(void);
 //extern void assembler(char* file_name);
 

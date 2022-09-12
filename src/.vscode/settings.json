@@ -13,7 +13,10 @@
         "8254x.h": "c",
         "arp.h": "c",
         "disk.h": "c",
-        "xin.h": "c"
+        "xin.h": "c",
+        "icmp.h": "c",
+        "string.h": "c",
+        "ip.h": "c"
     },
     "makefile.launchConfigurations": [
         {

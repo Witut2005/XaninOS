@@ -7,14 +7,11 @@
 struct Ipv4Header
 {
 
-    uint8_t ihl : 4;
-    uint8_t version : 4;
-    uint8_t dscp : 6;
-    uint8_t ecn : 2;
+    uint8_t version_ihl;
+    uint8_t tos;
     uint16_t packet_size;
     uint16_t identification;
-    uint8_t flags : 3;
-    uint16_t fragment_offset : 13;
+    uint16_t fragment_offset_and_flags;
     uint8_t time_to_live;
     uint8_t protocol; 
     uint16_t checksum;
@@ -24,4 +21,4 @@ struct Ipv4Header
 }__attribute__((packed));
 
 extern uint32_t create_ip_address(uint8_t ip_address[4]);
-extern void ipv4_packet_send(uint32_t dest_ip, uint32_t src_ip, uint8_t protocol, uint16_t packet_size);
+void ipv4_packet_send(uint32_t dest_ip, uint32_t src_ip, uint8_t protocol, uint16_t packet_size, uint8_t* data);

@@ -190,6 +190,8 @@ void scan(void)
     XANIN_ADD_APP_ENTRY1("ip_test", ip_test)
     XANIN_ADD_APP_ENTRY1("udp_test", udp_test)
     XANIN_ADD_APP_ENTRY1("edit", edit)
+    XANIN_ADD_APP_ENTRY1("icmp_test", icmp_test)
+    XANIN_ADD_APP_ENTRY1("arp_check", arp_check)
 
     else if(strcmp("real_mode_fswitch", program_name))
     {

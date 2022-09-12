@@ -58,15 +58,30 @@ extern "C"
         memcpy(i->ip_address, (uint8_t*)&arp_header->source_protocol_address, 4);
     }
 
-    uint8_t* mac_get_from_ip(uint8_t* ip)
+    uint8_t mac_get_from_ip(uint32_t ip)
     {
+
+        uint8_t* tmp = (uint8_t*)&ip;
+
         for(int i = 0; i < ARP_TABLE_ENTRIES; i++)
         {
-            if(memcmp(ip, ArpTable[i].ip_address, 4))
-                return ip;
+            for(int j = 0; j < 4; j++)
+                xprintf("%d.", tmp[j]);
+            xprintf("\n");
+            tmp = ArpTable[i].ip_address;
+            for(int j = 0; j < 4; j++)
+                xprintf("%d.", tmp[j]);
+            xprintf("\n");
+            // xprintf("%d", *(uint8_t*)&ip);
+            if(memcmp((uint8_t*)&ip, ArpTable[i].ip_address, 4))
+            {
+
+                return i;
+            
+            }
         }
         
-        return nullptr;
+        return 0xFF;
 
     }
 

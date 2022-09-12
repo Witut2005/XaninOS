@@ -3,12 +3,14 @@
 #include <libcpp/cstdlib.h>
 #include <libcpp/cmemory.h>
 #include <libcpp/endian.h>
+#include <libcpp/cstdio.h>
 #include <network_protocols/internet_protocol/ipv4/ip.hpp>
 
 /* everything is zero !!! */
 
 void UserDatagramProtocolInterface::ipv4_send(uint32_t dest_ip, uint32_t src_ip, uint16_t dest_port, uint16_t src_port, uint16_t packet_size, uint8_t* data)
 {
+    xprintf("%d ", packet_size);
     UdpHeader* UdpPacket = (UdpHeader*)malloc(sizeof(1518));
 
     UdpPacket->destination_port = endian_switch(dest_port);
@@ -29,6 +31,7 @@ extern "C"
 
     void udp_ipv4_packet_send(uint32_t dest_ip, uint32_t src_ip, uint16_t dest_port, uint16_t src_port, uint16_t packet_size, uint8_t* data)
     {
+        xprintf("%d ", packet_size);
         UserDatagramProtocolInterface* UdpPacket = (UserDatagramProtocolInterface*)malloc(sizeof(UserDatagramProtocolInterface));
         UdpPacket->ipv4_send(dest_ip, src_ip, dest_port, src_port, packet_size, data);
         free(UdpPacket);

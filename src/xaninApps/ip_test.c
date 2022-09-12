@@ -10,5 +10,5 @@ int ip_test(char* arg)
     uint8_t src_ip[] = {192,168,19,12};
 
     while(KeyInfo.scan_code != ENTER)
-        ipv4_packet_send(create_ip_address(dest_ip), create_ip_address(src_ip), USER_DATAGRAM_PROTOCOL, 0x100);
+        ipv4_packet_send(create_ip_address(dest_ip), create_ip_address(src_ip), USER_DATAGRAM_PROTOCOL, 0x10, (uint8_t*)0x100);
 }

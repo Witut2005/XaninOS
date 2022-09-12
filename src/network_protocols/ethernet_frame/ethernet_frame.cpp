@@ -18,7 +18,7 @@ void EthernetFrameInterface::send(uint8_t* mac_destination, uint8_t* mac_source,
     
 
     // xprintf("c");
-    uint8_t* tmp = (uint8_t*)malloc(sizeof(uint8_t) * 1518);
+    uint8_t* tmp = (uint8_t*)malloc(sizeof(uint8_t) * 2000);
     EthernetFrame* FrameHeader = (EthernetFrame*)tmp;
 
     memcpy(FrameHeader->mac_destination, mac_destination, 6);
