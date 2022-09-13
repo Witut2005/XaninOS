@@ -13,6 +13,7 @@ ArpTableEntry ArpTable[ARP_TABLE_ENTRIES] = {0,0};
 ArpTableEntry LastArpReply = {0,0};
 
 uint8_t mac_broadcast[] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
+uint8_t current_arp_entry = 0x0;
 
 extern "C"
 {
@@ -50,35 +51,23 @@ extern "C"
         memcpy(LastArpReply.mac_address, arp_header->source_hardware_address, 6);
         memcpy(LastArpReply.ip_address, (uint8_t*)&arp_header->source_protocol_address, 4);
 
-        auto* i = ArpTable;
-        while(i->ip_address[0] == 0 and *(uint32_t*)i->mac_address == 0)
-            i++;
 
-        memcpy(i->mac_address, arp_header->source_hardware_address, 6);
-        memcpy(i->ip_address, (uint8_t*)&arp_header->source_protocol_address, 4);
+        memcpy(ArpTable[current_arp_entry].mac_address, arp_header->source_hardware_address, 6);
+        memcpy(ArpTable[current_arp_entry].ip_address, (uint8_t*)&arp_header->source_protocol_address, 4);
     }
 
     uint8_t mac_get_from_ip(uint32_t ip)
     {
 
-        uint8_t* tmp = (uint8_t*)&ip;
+        const ArpTableEntry* table = (ArpTableEntry*)ArpTable;
 
         for(int i = 0; i < ARP_TABLE_ENTRIES; i++)
         {
+            const uint8_t* tmp = (uint8_t*)&table[i].ip_address;
             for(int j = 0; j < 4; j++)
-                xprintf("%d.", tmp[j]);
-            xprintf("\n");
-            tmp = ArpTable[i].ip_address;
-            for(int j = 0; j < 4; j++)
-                xprintf("%d.", tmp[j]);
-            xprintf("\n");
-            // xprintf("%d", *(uint8_t*)&ip);
-            if(memcmp((uint8_t*)&ip, ArpTable[i].ip_address, 4))
-            {
 
+            if(memcmp((uint8_t*)&ip, ArpTable[i].ip_address, 4))
                 return i;
-            
-            }
         }
         
         return 0xFF;

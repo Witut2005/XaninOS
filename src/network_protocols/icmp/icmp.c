@@ -14,6 +14,7 @@ void icmp_ping(uint32_t ip_dest)
     IcmpPacket* packet = (IcmpPacket*)malloc(sizeof(IcmpPacket));
     packet->icmp_type = ICMP_ECHO_REQUEST;
     packet->icmp_code = 0x0;
+    packet->checksum = 0x07FF;
 
     uint8_t ip_src[] = {192,168, 19, 12};
 

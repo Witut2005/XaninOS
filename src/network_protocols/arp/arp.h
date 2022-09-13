@@ -9,7 +9,7 @@
 #define ARP_GET_MAC 0x1
 #define ARP_ETHER_TYPE 0x0806
 
-#define ARP_TABLE_ENTRIES 100
+#define ARP_TABLE_ENTRIES 0xFF 
 
 #ifdef __cplusplus
 extern "C" {
@@ -62,6 +62,7 @@ struct AddressResolutionProtocol
 
 extern ArpTableEntry ArpTable[ARP_TABLE_ENTRIES];
 extern ArpTableEntry LastArpReply;
+extern uint8_t current_arp_entry;
 extern uint8_t mac_broadcast[];
 
 

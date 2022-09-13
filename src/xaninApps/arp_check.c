@@ -6,12 +6,18 @@
 int arp_check(const char* ip_addr_str)
 {
 
+    ArpTableEntry* table = ArpTable;
+
+
     uint32_t ip = str2ipv4(ip_addr_str);
+
 
     int x = mac_get_from_ip(endian_switch32(ip));
 
     if(x != 0xFF)
     {
+
+        xprintf("%zarp entry found\n", set_output_color(green,white));
 
         for(int i = 0; i < 5; i++)
             xprintf("%x:", ArpTable[x].mac_address[i]);
@@ -20,7 +26,7 @@ int arp_check(const char* ip_addr_str)
     }
 
     else
-        xprintf("no such arp table entry\n");
+        xprintf("%zno such arp table entry\n", set_output_color(red,white));
 
 
     while(KeyInfo.scan_code != ENTER);

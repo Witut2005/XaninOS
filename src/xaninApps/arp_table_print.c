@@ -3,7 +3,7 @@
 
 int arp_table_print(char* arg)
 {
-    ArpTableEntry* table = (ArpTableEntry*)ArpTable;
+    const ArpTableEntry* table = (ArpTableEntry*)ArpTable;
     
     while(table->ip_address[0] == 0x0)
         table++;
