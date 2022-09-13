@@ -16,7 +16,8 @@
         "xin.h": "c",
         "icmp.h": "c",
         "string.h": "c",
-        "ip.h": "c"
+        "ip.h": "c",
+        "endian.h": "c"
     },
     "makefile.launchConfigurations": [
         {

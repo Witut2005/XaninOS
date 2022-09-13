@@ -20,7 +20,7 @@ struct IcmpPacket
     uint8_t icmp_code;
     uint16_t checksum;
     uint32_t rest;
-}__attribute__ ((packed));
+}__attribute__ ((packed, aligned(0x2)));
 
 
 

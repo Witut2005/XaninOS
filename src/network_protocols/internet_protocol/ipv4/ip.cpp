@@ -20,6 +20,21 @@ uint32_t InternetProtocolInterface::create_ip_address(uint8_t ip_address[4])
 
 }
 
+extern "C" uint16_t ipv4_checksum_get(uint16_t* data, uint32_t data_size)
+{
+    uint32_t temp = 0;
+
+    for(int i = 0; i < data_size /2; i++)
+        temp += ((data[i] & 0xFF00) >> 8) | ((data[i] & 0x00FF) << 8);
+
+    if(data_size % 2)
+        temp += ((uint16_t)((char*)data)[data_size-1]) << 8;
+    
+    while(temp & 0xFFFF0000)
+        temp = (temp & 0xFFFF) + (temp >> 16);
+    
+    return ((~temp & 0xFF00) >> 8) | ((~temp & 0x00FF) << 8);
+}
 
 void InternetProtocolInterface::ip4_packet_send(uint32_t dest_ip, uint32_t src_ip, uint8_t protocol, uint16_t packet_size, uint8_t* data)
 {
@@ -103,3 +118,4 @@ extern "C"
     }
 
 }
+

@@ -246,6 +246,8 @@ void _start(void)
         memset((uint8_t*)&ArpTable[i], 0x0, 10);
     }
 
+    KeyInfo.is_ctrl = false;
+    KeyInfo.is_shift = false;
 
     while(KeyInfo.scan_code != ENTER);
 
