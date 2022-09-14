@@ -107,7 +107,8 @@ void letters_refresh_add(uint16_t* cursor_current_positon, char character_saved)
     for(uint16_t* i = cursor_current_positon; (uint32_t)i < VGA_TEXT_MEMORY + VGA_SCREEN_RESOLUTION; i++)
     {
         tmp = *(char*)(i);
-        *(char*)(i) = character_saved;
+        *i = (uint16_t)((char)(character_saved) + (((black << 4) | white) << 8));
+
         character_saved = tmp;
     }
 }

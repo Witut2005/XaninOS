@@ -53,6 +53,7 @@ char *xin_get_current_path(char *file_name)
 
 /* DIRECTORY AND FILES */
 xin_entry *xin_find_entry(char *entry_name)
+
 {
 
     for (char *i = (char*)XIN_ENTRY_TABLE; (uint32_t)i < XIN_ENTRY_TABLE + (SECTOR_SIZE * 8); i += 32)
@@ -123,7 +124,7 @@ uint8_t *xin_find_free_pointer(void)
 
 xin_entry *xin_find_free_entry(void)
 {
-    for (char *i = (char *)XIN_ENTRY_TABLE + 64; (uint32_t)i < 0x1800 + (SECTOR_SIZE * 2); i += 64)
+    for (char *i = (char *)XIN_ENTRY_TABLE + 64; (uint32_t)i < XIN_ENTRY_TABLE + (SECTOR_SIZE * 8); i += 64)
     {
         if (*(char *)i == '\0')
             return (xin_entry *)i;

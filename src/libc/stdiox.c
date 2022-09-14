@@ -776,14 +776,17 @@ void xscanf(char* str, ... )
             Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((black << 4) | white) << 8));
             char character_saved = (char)(Screen.cursor[Screen.y][Screen.x]);
             
-            //Screen.cursor[Screen.y][Screen.x + 1] = (uint16_t)(' ' + (((black << 4) | white) << 8));
-
-
 
             xprintf("%c", tmp);
-
+    
             letters_refresh_add(&Screen.cursor[Screen.y][Screen.x], character_saved);
-            keyboard_refresh_add(index, character_saved);
+    
+            uint8_t* tmp_buf = (uint8_t*)calloc(40);
+            memcpy(tmp_buf, keyboard_command, 40);
+
+            for(int i = index; i < 40; i++)
+                keyboard_command[i+1] = tmp_buf[i];
+            
 
 
             Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((white << 4) | white) << 8));

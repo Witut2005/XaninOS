@@ -12,6 +12,8 @@
 void scan(void)
 {
     
+    xprintf("\n%s\n", program_name);
+    while(KeyInfo.scan_code != F4_KEY);
 
     if(strcmp(program_name, "\0"))
     {
@@ -21,6 +23,7 @@ void scan(void)
 
         app_exited = true;
     }
+
 
     #ifdef HELP_APP
     XANIN_ADD_APP_ENTRY1("help", help)

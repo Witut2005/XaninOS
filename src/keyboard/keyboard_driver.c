@@ -64,10 +64,10 @@ void keyboard_driver(uint8_t scanCode)
             
         }
 
-        case L_ALT                        : {KeyInfo.is_alt = true; break;}
+        case L_ALT                        : {KeyInfo.is_alt = true; KeyInfo.character = 0x0; break;}
         case L_ALT_RELEASE                : {KeyInfo.is_alt = false; break;}
 
-        case L_CTRL                       : {KeyInfo.is_ctrl = true; break;}
+        case L_CTRL                       : {KeyInfo.is_ctrl = true; KeyInfo.character = 0x0;break;}
         case L_CTRL_RELEASE               : {KeyInfo.is_ctrl = false; break;}
         case F4_KEY                       : {KeyInfo.character = 0x0; break;}
         case F4_KEY_RELEASE               : {KeyInfo.character = 0x0; break;}

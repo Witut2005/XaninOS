@@ -16,7 +16,35 @@ void edit_input(xchar Input)
 {
     *cursor = (uint16_t)((char)(*cursor) + (((white << 4) | black) << 8));
 
-    if(Input.scan_code == ENTER)
+    if(KeyInfo.is_ctrl == true)
+    {
+        *cursor = (uint16_t)((char)(*cursor) + (((black << 4) | white) << 8));
+    
+        if(Input.character == '$')
+        {
+            while(program_buffer[file_position] != '\n')
+                file_position++;
+
+            while((char)(*cursor) != '\0')
+                cursor++;
+            //msleep(100);
+
+        }
+
+        else if(Input.character == '0')
+        {
+            while(program_buffer[file_position] != '\n' && file_position != 0)
+            {
+                file_position--;
+                cursor--;
+            }
+        }
+
+            *cursor = (uint16_t)((char)(*cursor) + (((white << 4) | black) << 8));
+
+    }
+
+    else if(Input.scan_code == ENTER)
     {
         *cursor = (uint16_t)((char)(*cursor) + (((black << 4) | white) << 8));
 
@@ -294,9 +322,8 @@ int edit(char* file_name)
 
     screen_clear();
     xprintf("%s", program_buffer);
-    while(KeyInfo.scan_code != ENTER);
-    // for(int i = 1; i <= 3; i++)
-    //     xprintf("%d. %s", i, getline(file, i));
+
+    while(KeyInfo.scan_code != F4_KEY);
 
 
     free(program_buffer);
