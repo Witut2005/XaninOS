@@ -12,9 +12,6 @@
 void scan(void)
 {
     
-    xprintf("\n%s\n", program_name);
-    while(KeyInfo.scan_code != F4_KEY);
-
     if(strcmp(program_name, "\0"))
     {
         logo_front_color++;

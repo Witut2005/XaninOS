@@ -508,6 +508,13 @@ void xscanf(char* str, ... )
     character_blocked = (char)Screen.cursor[Screen.y][Screen.x - 1];
 
     char* starting_screen_position = (char*)&Screen.cursor[Screen.y][Screen.x - 1];
+    uint16_t* text_buffer_start = &Screen.cursor[Screen.y][Screen.x];
+
+    uint8_t x_start = Screen.x;
+    uint8_t y_start = Screen.y;
+
+    uint8_t x_current, y_current;
+
 
     start:
 
@@ -597,6 +604,7 @@ void xscanf(char* str, ... )
                     Screen.y++;
                 }
 
+                index++;
 
                 Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | ((white << 4) | black) << 8);    
             }
@@ -773,25 +781,29 @@ void xscanf(char* str, ... )
         {
             char tmp = getchar();
 
-            Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((black << 4) | white) << 8));
-            char character_saved = (char)(Screen.cursor[Screen.y][Screen.x]);
+            Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][index + x_start]) + (((black << 4) | white) << 8));
             
+            for(int i = 0; i < strlen(keyboard_command); i++)
+                *(text_buffer_start + i) = 0x0;
 
-            xprintf("%c", tmp);
-    
-            letters_refresh_add(&Screen.cursor[Screen.y][Screen.x], character_saved);
-    
-            uint8_t* tmp_buf = (uint8_t*)calloc(40);
-            memcpy(tmp_buf, keyboard_command, 40);
+            Screen.x = x_start;
+            Screen.y = y_start;
 
-            for(int i = index; i < 40; i++)
-                keyboard_command[i+1] = tmp_buf[i];
-            
+            uint8_t* tmp_buf = (uint8_t*)calloc(80);
+            memcpy(tmp_buf, keyboard_command, 80);
 
+            if(keyboard_command[index] != '\0')
+            {
+                for(int i = index; i < 50 - 1; i++)
+                    keyboard_command[i+1] = tmp_buf[i];
+            }
 
-            Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((white << 4) | white) << 8));
             keyboard_command[index] = tmp;
+
+            xprintf("%s", keyboard_command);
+
             index++;
+            Screen.x = index + x_start;
 
         }    
     }
