@@ -12,6 +12,15 @@ static char* program_buffer;
 static uint16_t* cursor;
 static int column, current_line;
 
+#define MOVE_CURSOR_TO_FIRST_CHARACTER() while(((uint32_t)cursor - VGA_TEXT_MEMORY) % 0xA0 != 0) \
+            cursor--
+
+#define MOVE_CURSOR_TO_END_OF_LINE() while((char)(*cursor) != '\0') \
+                cursor++
+
+#define MOVE_CURSOR_TO_NEXT_ROW() cursor = cursor + VGA_WIDTH
+#define MOVE_CURSOR_TO_PREVIOUS_ROW() cursor = cursor - VGA_WIDTH
+
 void edit_input(xchar Input)
 {
     *cursor = (uint16_t)((char)(*cursor) + (((white << 4) | black) << 8));
@@ -22,25 +31,22 @@ void edit_input(xchar Input)
     
         if(Input.character == '$')
         {
-            while(program_buffer[file_position] != '\n')
+            while(program_buffer[file_position] != '\n' && program_buffer[file_position] != '\0')
                 file_position++;
 
-            while((char)(*cursor) != '\0')
-                cursor++;
-            //msleep(100);
+            MOVE_CURSOR_TO_END_OF_LINE();
 
         }
 
         else if(Input.character == '0')
         {
-            while(program_buffer[file_position] != '\n' && file_position != 0)
-            {
+            while(program_buffer[file_position-1] != '\n' && file_position != 0)
                 file_position--;
-                cursor--;
-            }
+
+            MOVE_CURSOR_TO_FIRST_CHARACTER();
         }
 
-            *cursor = (uint16_t)((char)(*cursor) + (((white << 4) | black) << 8));
+        *cursor = (uint16_t)((char)(*cursor) + (((white << 4) | black) << 8));
 
     }
 
@@ -59,10 +65,8 @@ void edit_input(xchar Input)
 
         file_position++;
         
-        cursor = cursor + VGA_WIDTH;
-
-        while(((uint32_t)cursor - VGA_TEXT_MEMORY) % 0xA0 != 0)
-            cursor--;
+        MOVE_CURSOR_TO_NEXT_ROW();
+        MOVE_CURSOR_TO_FIRST_CHARACTER();
         
         screen_clear();
         xprintf("%s", program_buffer);
@@ -112,12 +116,11 @@ void edit_input(xchar Input)
         if(character_to_delete == '\n')
         {
             current_line--;
-            cursor =  cursor - VGA_WIDTH;
-            while(((uint32_t)cursor - VGA_TEXT_MEMORY) % 0xA0 != 0)
-                cursor--;
+            MOVE_CURSOR_TO_PREVIOUS_ROW();
+
+            MOVE_CURSOR_TO_FIRST_CHARACTER();
+            MOVE_CURSOR_TO_END_OF_LINE();
         
-            while((char)(*cursor) != '\0')
-                cursor++;
         }
         
         else
@@ -145,11 +148,10 @@ void edit_input(xchar Input)
         {
             current_line--;
             cursor =  cursor - VGA_WIDTH;
-            while(((uint32_t)cursor - VGA_TEXT_MEMORY) % 0xA0 != 0)
-                cursor--;
+
+            MOVE_CURSOR_TO_FIRST_CHARACTER();
+            MOVE_CURSOR_TO_END_OF_LINE();
         
-            while((char)(*cursor) != '\0')
-                cursor++;
         }
         
         else 
@@ -171,9 +173,8 @@ void edit_input(xchar Input)
             if(program_buffer[file_position] == '\n')
             {
                 current_line++;
-                while(((uint32_t)cursor - VGA_TEXT_MEMORY) % 0xA0 != 0)
-                    cursor--;
-                cursor = cursor + VGA_WIDTH;
+                MOVE_CURSOR_TO_PREVIOUS_ROW();
+                MOVE_CURSOR_TO_NEXT_ROW();
             }
             
             else 
@@ -193,10 +194,7 @@ void edit_input(xchar Input)
 
         *cursor = (uint16_t)((char)(*cursor) + (((black << 4) | white) << 8));
 
-        while(((uint32_t)cursor - VGA_TEXT_MEMORY) % 0xA0 != 0)
-            cursor--;
-
-    
+        MOVE_CURSOR_TO_FIRST_CHARACTER();
 
         int i;
         int cursor_offset = 0;
@@ -205,11 +203,10 @@ void edit_input(xchar Input)
         for(i = file_position - 1; program_buffer[i] != '\n'; i--);
         where_to_move = program_buffer[i];
 
+        MOVE_CURSOR_TO_PREVIOUS_ROW();
 
-        cursor = cursor - VGA_WIDTH;
-        while(program_buffer[file_position-1] != '\n')
+        while(program_buffer[file_position] != '\n')
             file_position--;
-        file_position--;
 
         while((char)*cursor != '\0')
             cursor++;
@@ -232,10 +229,8 @@ void edit_input(xchar Input)
 
         *cursor = (uint16_t)((char)(*cursor) + (((black << 4) | white) << 8));
 
-        cursor = cursor + VGA_WIDTH;
-
-        while(((uint32_t)cursor - VGA_TEXT_MEMORY) % 0xA0 != 0)
-            cursor--;
+        MOVE_CURSOR_TO_NEXT_ROW();
+        MOVE_CURSOR_TO_FIRST_CHARACTER();
 
 
         int i;
@@ -245,9 +240,8 @@ void edit_input(xchar Input)
         where_to_move = program_buffer[i];
 
  
-        while(program_buffer[file_position] != '\n')
+        while(program_buffer[file_position-1] != '\n')
             file_position++;
-        file_position++;
 
         current_line++;        
         *cursor = (uint16_t)((char)(*cursor) + (((white << 4) | black) << 8));
@@ -311,8 +305,6 @@ int edit(char* file_name)
 
     while(KeyInfo.scan_code != F4_KEY && KeyInfo.scan_code != F4_KEY_RELEASE)
         edit_input(inputg());
-
-
 
     file_position = strlen(program_buffer);
     file->entry_size = file_position;
