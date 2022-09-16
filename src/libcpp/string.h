@@ -18,7 +18,7 @@ class string
 
     size_t reserve(uint32_t size)
     {
-        string_data = (char*)malloc(size * sizeof(char));
+        string_data = (char*)calloc(size * sizeof(char));
     }
 
     string() {string_data = (char*)malloc(PMMNGR_BLOCK_SIZE);} 
@@ -26,7 +26,7 @@ class string
 
     string(char* str)
     {
-        string_data = (char*)malloc(sizeof(char) * strlen(str));
+        string_data = (char*)calloc(sizeof(char) * strlen(str));
         for(int i = 0; i < strlen(str); i++) 
             string_data[i] = str[i];
          
@@ -35,7 +35,7 @@ class string
     string(const char* str)
     {
 
-        string_data = (char*)malloc(sizeof(char) * strlen((char*)str));
+        string_data = (char*)calloc(sizeof(char) * strlen((char*)str));
         for(int i = 0; i < strlen((char*)str); i++) 
             string_data[i] = str[i];
 
@@ -171,7 +171,7 @@ class string
 
     Iterator<char> end() const
     {
-        return string_data + length();
+        return string_data + strlen(string_data);
     }
 
     private:

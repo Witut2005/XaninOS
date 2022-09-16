@@ -122,35 +122,13 @@ void cpp_prog()
 
     std::cout << "string test" << std::endl;
 
-    std::string jeden_str = "kocham ";
-    std::string dwa_str = "piwko";
 
-    // std::cout << jeden << std::endl;
-    std::cout << dwa_str << std::endl;
-    std::cout << jeden_str << std::endl;
-    std::cout << jeden_str + dwa_str << std::endl;
+    std::string str1 = "jeden";
+    std::string str2 = "jeden";
 
-    std::cout << "end time of execution: " << std::chrono::system_clock::now() << std::endl;
-
-    std::cout << "end time year" << std::chrono::system_clock::year() << std::endl;
-
-    std::Box moj_boxik(jeden_str.begin(), jeden_str.end());
-
-    for(auto a : moj_boxik)
-        std::cout << a;
-    
-    int x = 0x12345678;
-    Bytes gm = x;
-
-    screen_clear();
-
-    for(auto a : gm)
-        xprintf("0x%x ", a);
-
-    // gm.little_endian();
-
-    for(auto a : gm)
-        xprintf("0x%x ", a);
+    xprintf("is equal? %d\n", std::equal(str1.begin(), str1.end(), str2.begin()));
+    // for(auto a = str1.begin(); a != str1.end(); a++)
+    //     std::cout << *a << std::endl;
 
 
     wait_key(ENTER_RELEASE);

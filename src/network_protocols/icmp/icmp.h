@@ -19,7 +19,18 @@ struct IcmpPacket
     uint8_t icmp_type;
     uint8_t icmp_code;
     uint16_t checksum;
-    uint32_t rest;
+
+    union
+    {    
+
+        struct
+        {
+            uint16_t echo_id;
+            uint16_t echo_sequence;
+        }__attribute__((packed));
+        
+        uint32_t rest;
+    };
 }__attribute__ ((packed, aligned(0x2)));
 
 

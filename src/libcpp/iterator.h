@@ -76,7 +76,12 @@ class Iterator
             return i_ptr != x.i_ptr;
         }
 
-    private:
+        uint32_t address(void)
+        {
+            return (uint32_t)i_ptr;
+        }
+
+    // private:
         Type* i_ptr;
 
 

@@ -8,6 +8,7 @@
 #include <libcpp/cmemory.h>
 #include <devices/APIC/apic_registers.h>
 #include <network_protocols/ethernet_frame/ethernet_frame.hpp>
+#include <libcpp/macros.h>
 
 #define INTEL_8254X_DESCRIPTORS 256
 #define reset() write(0x0, 0x4000000)

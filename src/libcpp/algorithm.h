@@ -62,20 +62,6 @@ constexpr T max_element(T x, T y)
     return max;
 }
 
-template<class T, class X>
-constexpr bool equal(const T*  beg, const T*  end, const X*  beg2)
-{
-        
-    for(const T* x = beg; x != end; x++, beg2++)
-    {
-        if(*x != *beg2)
-            return false;
-    }
-
-    return true;
-
-}
-
 
 template<class T> 
 constexpr void swap(T& x, T& y)
@@ -109,5 +95,19 @@ constexpr std::pair<T&&, T&&> minmax(T&& a, T&& b)
 }
 
 
+template<class T, class X>
+bool equal(T beg_first, T end_first, X beg_second)
+{  
+    auto x = beg_first;
+
+    for(;beg_first != end_first; beg_first++, beg_second++)
+    {
+        if(*beg_first != *beg_second)
+            return false;
+    }
+
+    return true;
+
+}
 
 }

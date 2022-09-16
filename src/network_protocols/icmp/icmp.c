@@ -9,16 +9,24 @@ void icmp_message_send(uint8_t icmp_type, uint8_t icmp_code)
 
 }
 
+int static echo_id_global;
+int static echo_seq_global;
+
 void icmp_ping(uint32_t ip_dest)
 {
 
     IcmpPacket* packet = (IcmpPacket*)malloc(sizeof(IcmpPacket));
     packet->icmp_type = ICMP_ECHO_REQUEST;
     packet->icmp_code = 0x0;
-    packet->rest = 0x0;
-    packet->checksum = endian_switch16(ipv4_checksum_get((uint16_t*)packet, sizeof(IcmpPacket)));
+    
+    packet->echo_sequence = endian_switch16(echo_seq_global);
+    packet->echo_id = endian_switch16(echo_id_global);
+    
+    packet->checksum = 0x0;
+    packet->checksum = ipv4_checksum_get((uint16_t*)packet, sizeof(IcmpPacket));
 
-
+    echo_seq_global++;
+    echo_id_global++;
     
 
     uint8_t ip_src[] = {192,168, 19, 12};

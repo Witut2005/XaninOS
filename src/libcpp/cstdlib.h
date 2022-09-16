@@ -45,6 +45,7 @@ void bit_set(uint16_t* address, uint16_t bit_number);
 bool bit_clear(uint16_t* address, uint16_t bit_number);
 void memory_manager_init(void);
 void* malloc(uint32_t size);
+void* calloc(uint32_t size);
 void* realloc(void* ptr, uint32_t size_old, uint32_t size_new);
 void* free(void* ptr);
 void wait_key(uint8_t key);

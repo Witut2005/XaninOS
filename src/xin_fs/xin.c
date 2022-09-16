@@ -665,8 +665,12 @@ xin_entry *fopen(char *file_path, const char *mode)
         return file;
     }
 
-    for(int i = 0; i < file->entry_size / 512 + (file->entry_size % 512 != 0 ? 1 : 0); i++)
-       disk_read(ATA_FIRST_BUS, ATA_MASTER, file->entry_size, 1, (uint16_t*)(file->starting_sector));
+
+    if(file != nullptr)
+    {
+        for(int i = 0; i < file->entry_size / 512 + (file->entry_size % 512 != 0 ? 1 : 0); i++)
+            disk_read(ATA_FIRST_BUS, ATA_MASTER, file->entry_size, 1, (uint16_t*)(file->starting_sector));
+    }
 
     return nullptr;
 }
