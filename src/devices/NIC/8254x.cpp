@@ -9,6 +9,7 @@
 #include <devices/APIC/apic_registers.h>
 #include <network_protocols/ethernet_frame/ethernet_frame.hpp>
 #include <libcpp/macros.h>
+#include <libcpp/utility.h>
 
 #define INTEL_8254X_DESCRIPTORS 256
 #define reset() write(0x0, 0x4000000)
@@ -191,35 +192,6 @@ void Intel8254xDriver::send_packet(uint32_t address, uint16_t length)
 
 }
 
-// void Intel8254xDriver::send_ethernet_frame(uint8_t* mac_destination, uint8_t* mac_source, uint8_t* buffer, uint16_t length)
-// {
-//     uint8_t* tmp = (uint8_t*)malloc(1518);
-//     EthernetFrame* frame = (EthernetFrame*)tmp;
-    
-
-//     memcpy(frame->mac_destination, mac_destination, 6);
-//     memcpy(frame->mac_source, mac_source, 6);
-
-//     frame->ethernet_type = 0x806; // ARP
-
-//     tmp = tmp + ETHERNET_FRAME_MAC_HEADER_SIZE;
-
-//     int i = 0;
-//     for(; i < length; i++)
-//     {
-//         tmp[i] = buffer[i];
-//     }
-
-//     tmp[i] = 0x0;
-//     tmp[i + 1] = 0x20;
-//     tmp[i + 2] = 0x20;
-//     tmp[i + 3] = 0x3A;
-
-//     this->send_packet((uint32_t)frame, length + ETHERNET_FRAME_MAC_HEADER_SIZE);
-//     free(frame);
-
-// }
-
 
 void Intel8254xDriver::init()
 {
@@ -278,6 +250,35 @@ void Intel8254xDriver::init()
 
 
 
+}
+template<class T>
+void Intel8254xDriver::send_range(T range)
+{
+    
+    uint8_t* buffer = (uint8_t*)malloc(range.size());
+
+    for(std::pair<uint32_t, auto> pair = {0, range.begin()}; pair.second != range.end(); pair.first++, pair.second++)
+        buffer[pair.first] = *pair.second;
+
+
+    this->transmit_descriptors_buffer[this->txd_current].address_low = buffer;
+    this->transmit_descriptors_buffer[this->txd_current].address_high = 0x0;
+    this->transmit_descriptors_buffer[this->txd_current].cmd = nic::CMD::EOP | nic::CMD::IFCS | nic::CMD::RS | nic::CMD::RPS;// | nic::CMD::RPS;
+    this->transmit_descriptors_buffer[this->txd_current].length = range.size();
+
+    this->transmit_descriptors_buffer[this->txd_current].status = 0x0;
+    this->transmit_descriptors_buffer[this->txd_current].css = 0x0;
+    this->transmit_descriptors_buffer[this->txd_current].cso = 0x0;
+    this->transmit_descriptors_buffer[this->txd_current].special = 0x0;
+
+
+    auto txd_old = this->txd_current;
+    this->write(nic::TDT,(this->txd_current + 1) % INTEL_8254X_DESCRIPTORS);
+    this->txd_current = (this->txd_current + 1) % INTEL_8254X_DESCRIPTORS;
+
+    while(!this->transmit_descriptors_buffer[txd_old].status);
+    
+    free(buffer);
 }
 
 uint32_t Intel8254xDriver::receive_descriptors_buffer_get(void)

@@ -20,6 +20,7 @@ struct ostream_options
 enum OstreamOptions
 {
     endl = '\n',
+    end_of_text = '\0',
     hex = 'h',
     dec = 'd',
     oct = 'o',
@@ -27,7 +28,6 @@ enum OstreamOptions
     clear ='c'
 
 };
-
 
 
 class ostream 
@@ -40,7 +40,7 @@ class ostream
     ostream& operator<<(OstreamOptions x)
     {
        
-        if(x == endl)
+        if (x == endl)
             xprintf("\n");
         
         else if(x == hex)
@@ -57,6 +57,11 @@ class ostream
         
         else if(x == clear)
             screen_clear();
+        
+        else if(x == end_of_text)
+        {
+            current_format_option = 'd';
+        }
         
         else 
             current_format_option = 'd';
@@ -260,5 +265,23 @@ class ostream
 
 inline ostream cout;
 
+
+template <class X>
+void print(X arg)
+{
+    std::cout << arg;
+}
+
+template <class X, class ... T>
+void print(X arg, T ... args)
+{
+
+    print(arg);
+    print((args)...);
+
+    if(sizeof...(T) == 1)
+        std::cout << std::endl << std::end_of_text;
+
+}
 
 }

@@ -124,11 +124,6 @@ void cpp_prog()
 
 
     std::string str1 = "jeden";
-    std::string str2 = "jeden";
-
-    xprintf("is equal? %d\n", std::equal(str1.begin(), str1.end(), str2.begin()));
-    // for(auto a = str1.begin(); a != str1.end(); a++)
-    //     std::cout << *a << std::endl;
 
 
     wait_key(ENTER_RELEASE);

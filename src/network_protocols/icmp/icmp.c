@@ -20,7 +20,7 @@ void icmp_ping(uint32_t ip_dest)
     packet->icmp_code = 0x0;
     
     packet->echo_sequence = endian_switch16(echo_seq_global);
-    packet->echo_id = endian_switch16(echo_id_global);
+    packet->echo_id = endian_switch16(0x1);
     
     packet->checksum = 0x0;
     packet->checksum = ipv4_checksum_get((uint16_t*)packet, sizeof(IcmpPacket));
@@ -31,7 +31,7 @@ void icmp_ping(uint32_t ip_dest)
 
     uint8_t ip_src[] = {192,168, 19, 12};
 
-    ipv4_packet_send(ip_dest, create_ip_address(ip_src), INTERNET_CONTROL_MESSAGE_PROTOCOL, sizeof(IcmpPacket), (uint8_t*)packet);
+    ipv4_packet_send(ip_dest, create_ip_address(ip_src), INTERNET_CONTROL_MESSAGE_PROTOCOL, sizeof(IcmpPacket), 64, (uint8_t*)packet);
 
 
 }

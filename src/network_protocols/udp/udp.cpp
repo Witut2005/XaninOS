@@ -20,7 +20,7 @@ void UserDatagramProtocolInterface::ipv4_send(uint32_t dest_ip, uint32_t src_ip,
 
     // memcpy((uint8_t*)(UdpPacket + 8), data, packet_size);
     InternetProtocolInterface* IpPacket = (InternetProtocolInterface*)malloc(sizeof(InternetProtocolInterface));
-    IpPacket->ip4_packet_send(dest_ip, src_ip, USER_DATAGRAM_PROTOCOL, packet_size, (uint8_t*)UdpPacket);
+    IpPacket->ip4_packet_send(dest_ip, src_ip, USER_DATAGRAM_PROTOCOL, packet_size, 0xFF, (uint8_t*)UdpPacket);
     free(UdpPacket);
     free(IpPacket);
 }

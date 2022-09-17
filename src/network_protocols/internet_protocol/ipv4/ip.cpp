@@ -36,7 +36,7 @@ extern "C" uint16_t ipv4_checksum_get(uint16_t* data, uint32_t data_size)
     return ((~temp & 0xFF00) >> 8) | ((~temp & 0x00FF) << 8);
 }
 
-void InternetProtocolInterface::ip4_packet_send(uint32_t dest_ip, uint32_t src_ip, uint8_t protocol, uint16_t packet_size, uint8_t* data)
+void InternetProtocolInterface::ip4_packet_send(uint32_t dest_ip, uint32_t src_ip, uint8_t protocol, uint16_t packet_size, uint8_t ttl, uint8_t* data)
 {
     uint16_t final_packet_size = packet_size + IPV4_HEADER_SIZE;
 
@@ -45,7 +45,7 @@ void InternetProtocolInterface::ip4_packet_send(uint32_t dest_ip, uint32_t src_i
     IpHeader->version_ihl |= IPV4_HEADER_VERSION << 4;
     IpHeader->packet_size = endian_switch(static_cast<uint16_t>(packet_size + IPV4_HEADER_SIZE));
     IpHeader->fragment_offset_and_flags = 0x0;
-    IpHeader->time_to_live = 0xFF;
+    IpHeader->time_to_live = ttl;
     IpHeader->protocol = protocol;
     IpHeader->identification = 0x0;
     IpHeader->checksum = endian_switch(static_cast<uint16_t>(packet_size + IpHeader->identification)); // oj nie wiem czy dobrze
@@ -111,10 +111,10 @@ extern "C"
         return tmp;
     }
 
-    void ipv4_packet_send(uint32_t dest_ip, uint32_t src_ip, uint8_t protocol, uint16_t packet_size, uint8_t* data)
+    void ipv4_packet_send(uint32_t dest_ip, uint32_t src_ip, uint8_t protocol, uint16_t packet_size, uint8_t ttl,  uint8_t* data)
     {
         InternetProtocolInterface InternetProtocolPacket;
-        InternetProtocolPacket.ip4_packet_send(dest_ip, src_ip, protocol, (uint16_t)packet_size, data);
+        InternetProtocolPacket.ip4_packet_send(dest_ip, src_ip, protocol, (uint16_t)packet_size, ttl, data);
     }
 
 }

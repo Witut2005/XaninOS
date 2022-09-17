@@ -210,6 +210,9 @@ class Intel8254xDriver
 
     uint8_t* receive_packet(void);
     void send_packet(uint32_t address_low, uint16_t length);
+    
+    template<class T>
+    void send_range(T range);
 
 
 

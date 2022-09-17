@@ -12,7 +12,7 @@ return:
     mov ss, ax
     xor sp, sp
 
-    lgdt[_GDT_ADDR] ;LGDT ALWAYS BEFORE ENTERING 32-BIT MODE
+    ;lgdt[_GDT_ADDR] ;LGDT ALWAYS BEFORE ENTERING 32-BIT MODE
 
     mov eax, cr0
     or eax, 0x1
