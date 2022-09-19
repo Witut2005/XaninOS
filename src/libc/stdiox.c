@@ -268,27 +268,26 @@ void xprintf(char* str, ... )
                     char character;
                     character = (char)va_arg(args,int);
                     
-                    if(character == '\n')
-                    {            
-                        Screen.x = 0x0;
-                        Screen.y++;
-                        continue;
-                    }
-
-                    if(character == '\0')
-                    {
-                        return;
-                    }
-
-                    Screen.cursor[Screen.y][Screen.x] = (uint16_t) (character + (((background_color << 4) | font_color) << 8));
-
                     if(Screen.x == 80)
                     {
                         Screen.y++;
                         Screen.x = 0x0;
                     }
 
-                    Screen.x++;
+                    if(character == '\n')
+                    {            
+                        Screen.x = 0x0;
+                        Screen.y++;
+                    }
+
+                    else if(character == '\0')
+                        return;
+
+                    else 
+                    {
+                        Screen.cursor[Screen.y][Screen.x] = (uint16_t) (character + (((background_color << 4) | font_color) << 8));
+                        Screen.x++;
+                    }
 
                     break;
                 }
@@ -456,6 +455,9 @@ void xprintf(char* str, ... )
 
         else if(str[string_counter] == '\t')
         {
+            for(int i = 0; i < 3; i++)
+                Screen.cursor[Screen.y][Screen.x + i] = (uint16_t)(' ' + (((background_color << 4) | font_color) << 8));
+
             Screen.x += 3;
             string_counter++;
         }

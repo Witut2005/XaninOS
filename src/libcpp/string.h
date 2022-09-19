@@ -75,29 +75,6 @@ class string
         return strcmp(this->c_str(), x.c_str()) != 0;
     }
 
-    /*
-    std::string operator + (std::string x) 
-    {
-
-        uint32_t size = 0;
-        std::string tmp = this->c_str(); 
-
-        int i = 0;
-        
-        for(; tmp.string_data[i] != '\0'; i++);
-
-        int j = 0;
-        char* tmp_str  = x.c_str();
-
-        for(; tmp_str[j] != '\0'; j++)
-            tmp.string_data[i + j] = tmp_str[j];
-        
-        tmp.string_data[i + j] = tmp_str[j];
-
-
-    }
-    */
-
     char operator [](uint32_t index)
     {
         return this->string_data[index];
@@ -126,6 +103,7 @@ class string
     void operator delete (void* element)
     {
         std::string* delete_ptr = (std::string*)element;
+        free(delete_ptr->c_str());
         delete_ptr->string_data = nullptr;
     }
 

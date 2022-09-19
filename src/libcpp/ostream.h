@@ -267,20 +267,54 @@ inline ostream cout;
 
 
 template <class X>
-void print(X arg)
+void print(X&& arg)
 {
     std::cout << arg;
 }
 
 template <class X, class ... T>
-void print(X arg, T ... args)
+void print(const char* str, X&& arg, T&& ... args)
 {
 
-    print(arg);
-    print((args)...);
+    int i = strlen(str);
 
-    if(sizeof...(T) == 1)
-        std::cout << std::endl << std::end_of_text;
+    if(!i)
+        return;
+
+    if(strncmp((char*)str, "{}", 2))
+    {
+        print(arg);
+        print(str+2, (args)...);
+    }
+
+    else if(*str == '%')
+    {
+        if(strncmp((char*)str, "%d", 2))
+        {
+            xprintf("%d", arg);
+        }
+
+        else if(strncmp((char*)str, "%x", 2))
+        {
+            xprintf("%x", arg);
+        }
+
+        else if(strncmp((char*)str, "%b", 2))
+        {
+            xprintf("%b", arg);
+        }
+
+        print(str + 2, (args)...);
+
+    }
+
+    else
+    {
+        xprintf("%c", *str);
+        print(str + 1, arg, (args)...);
+    }
+
+
 
 }
 

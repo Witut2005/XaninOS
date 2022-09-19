@@ -88,9 +88,7 @@ void cpp_prog()
     std::string str("123");
     std::cout << "STRING SIZE:"<< str.size() << std::endl;
 
-
-    // std::cout << std::hex << "0x" << str.begin() << std::endl;
-    // std::cout << std::hex << "0x" << str.end() << std::endl;
+    delete &str;
 
 
     std::cout << std::endl;
@@ -121,9 +119,10 @@ void cpp_prog()
     std::cout << std::dec << first << " " << second << std::endl;
 
     std::cout << "string test" << std::endl;
-
-
     std::string str1 = "jeden";
+    std::string& omg = str1;
+    
+    std::print("ugabuga: {}{}", omg, 10);
 
 
     wait_key(ENTER_RELEASE);
