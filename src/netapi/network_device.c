@@ -18,7 +18,7 @@ void netapi_init(void)
     }
 }
 
-void netapi_add_device(uint8_t*(*receive_ptr)(void), void(*send_ptr)(uint32_t, uint16_t), uint8_t* mac_ptr)
+void netapi_add_device(uint8_t*(*receive_ptr)(void), void(*send_ptr)(uint32_t, uint16_t), uint8_t* mac_ptr, void(*interrupt_handler)(void))
 {
     NetworkHandler* tmp = NetworkHandlers;
     int new_device_id = 0x0;
@@ -100,6 +100,19 @@ uint8_t* netapi_mac_get(void)
 
     return tmp->device_mac;
 }                                                                        
+
+void network_handler(void)
+{
+    NetworkHandler* tmp = NetworkHandlers;
+
+    while(!tmp->is_device_present)
+    {
+        tmp++;
+    }
+
+    return tmp->interrupt_handler();
+
+}
 
     // uint8_t* mac_get(void)
     // {

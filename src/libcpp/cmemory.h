@@ -3,6 +3,12 @@
 #include <stdint.h>
 #include <stddef.h>
 
+#ifdef __x86_64__
+#define PHYSICAL_ADDRESS_MAX 0xFFFFFFFFFFFFFFFF
+#else
+#define PHYSICAL_ADDRESS_MAX 0xFFFFFFFF
+#endif
+
 extern "C"
 {
 

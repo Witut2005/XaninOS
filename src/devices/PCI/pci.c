@@ -251,7 +251,7 @@ void pci_write_data32(uint32_t configuration_address, uint8_t register_id, uint3
 
 
 
-uint32_t pci_find_device(uint16_t class, pci_device* device_data)
+uint32_t pci_find_device(uint16_t class, uint16_t device_id, pci_device* device_data)
 {
 
 
@@ -262,14 +262,17 @@ uint32_t pci_find_device(uint16_t class, pci_device* device_data)
 
     for(pci_address_selector = 0x0; pci_address_selector < 2500000; pci_address_selector++) 
     {
-        static uint16_t var, tmp; 
+        static uint16_t var, tmp, device_id_tmp; 
         tmp = var;
 
         var = pci_get_data16((pci_address_selector & 0xFF000000) >> 24, (pci_address_selector & 0xFF0000) >> 16, 
                                             (pci_address_selector & 0xFF00) >> 8, 0xa);
-
+    
+        device_id_tmp = pci_get_data16((pci_address_selector & 0xFF000000) >> 24, (pci_address_selector & 0xFF0000) >> 16, 
+                                            (pci_address_selector & 0xFF00) >> 8, 0x2);
  
-        if(var == class && tmp != var)   
+
+        if(var == class && tmp != var && device_id == device_id_tmp)   
         {
         
             device_data->offset   = pci_address_selector & 0xFF;

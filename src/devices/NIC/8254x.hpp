@@ -4,7 +4,7 @@
 #include <devices/PCI/pci.h>
 #include <netapi/network_device.hpp>
 
-extern "C" int32_t pci_find_device(uint16_t, pci_device*);
+extern "C" int32_t pci_find_device(uint16_t, uint16_t, pci_device*);
 extern "C" uint32_t pci_get_bar(const uint8_t bus, const uint8_t slot, const uint8_t function, const uint8_t bar_number);
 extern "C" uint16_t pci_get_vendor_id(const uint8_t bus, const uint8_t slot, 
                         const uint8_t function);
@@ -12,6 +12,7 @@ extern "C" uint16_t pci_get_data16(const uint8_t bus, const uint8_t slot, const 
 extern "C" uint16_t pci_write_data16(const uint8_t bus, const uint8_t slot, const uint8_t function, const uint8_t offset, const uint16_t value);
 
 #define INTEL_8254X 0x0200
+#define INTEL_8254X_VENDOR_ID 0x100E
 
 namespace nic
 {
@@ -168,7 +169,10 @@ struct i8254xTransmitDescriptor
 
 class Intel8254xDriver 
 {
+
+
     public:
+    bool is_present;
     uint8_t* iobase;
     uint32_t pci_selector;
     pci_device pci_info;

@@ -10,6 +10,8 @@
 #include <network_protocols/ethernet_frame/ethernet_frame.hpp>
 #include <libcpp/macros.h>
 #include <libcpp/utility.h>
+#include <limits.h>
+#include <libcpp/cmemory.h>
 
 #define INTEL_8254X_DESCRIPTORS 256
 #define reset() write(0x0, 0x4000000)
@@ -35,6 +37,9 @@ void Intel8254xDriver::multicast_table_array_clear(void)
 uint16_t Intel8254xDriver::eeprom_read(uint8_t address)
 {
 
+    if(!this->is_present)
+        return USHRT_MAX;
+
     uint32_t address32 = static_cast<uint32_t>((address << 8));
 
     address32 = address32 | 0x1;
@@ -53,6 +58,10 @@ uint16_t Intel8254xDriver::eeprom_read(uint8_t address)
 
 uint8_t* Intel8254xDriver::mac_get()
 {
+
+    if(!this->is_present)
+        return (uint8_t*)PHYSICAL_ADDRESS_MAX;
+
     this->write(nic::EECD, this->read(nic::EECD) | nic::EECD_SK | nic::EECD_CS | nic::EECD_DI);
 
     /* enable reading from eeprom */
@@ -68,6 +77,9 @@ uint8_t* Intel8254xDriver::mac_get()
 
 void Intel8254xDriver::receive_init(void)
 {
+
+    if(!this->is_present)
+        return;
 
     this->receive_descriptors_buffer = (i8254xReceiveDescriptor*)malloc(sizeof(i8254xReceiveDescriptor) * INTEL_8254X_DESCRIPTORS);
     const auto receive_buffer_size = 4096;
@@ -114,6 +126,9 @@ void Intel8254xDriver::receive_init(void)
 
 void Intel8254xDriver::transmit_init(void)
 {
+
+    if(!this->is_present)
+        return;
 
 
     /* transmit buffer allocation */
@@ -170,6 +185,9 @@ void Intel8254xDriver::transmit_init(void)
 void Intel8254xDriver::send_packet(uint32_t address, uint16_t length)
 {
 
+    if(!is_present)
+        return;
+
     // xprintf("a");
 
     this->transmit_descriptors_buffer[this->txd_current].address_low = address;
@@ -197,7 +215,18 @@ void Intel8254xDriver::init()
 {
 
     /* finding device */
-    this->pci_selector = pci_find_device(INTEL_8254X, &pci_info);
+    this->pci_selector = pci_find_device(INTEL_8254X, 0x100E, &pci_info);
+    if(this->pci_selector == UINT32_MAX)
+    {
+        this->is_present = false;
+        return;
+    }
+
+    else
+        this->is_present = true;
+
+
+
     this->iobase = (uint8_t*)this->pci_info.base0;
 
 
@@ -255,6 +284,9 @@ template<class T>
 void Intel8254xDriver::send_range(T range)
 {
     
+    if(!this->is_present)
+        return;
+
     uint8_t* buffer = (uint8_t*)malloc(range.size());
 
     for(std::pair<uint32_t, auto> pair = {0, range.begin()}; pair.second != range.end(); pair.first++, pair.second++)
@@ -309,6 +341,9 @@ uint16_t Intel8254xDriver::vendorid_get()
 
 uint8_t* Intel8254xDriver::receive_packet(void)
 {
+
+    if(!this->is_present)
+        return (uint8_t*)PHYSICAL_ADDRESS_MAX;
 
     this->rxd_current = this->read(nic::RDT) % INTEL_8254X_DESCRIPTORS;
     this->rxd_current = (this->rxd_current + 1) % INTEL_8254X_DESCRIPTORS;
@@ -422,9 +457,9 @@ extern "C"
 
     void i8254x_init(void)
     {
-        netapi_add_device(i8254x_packet_receive, i8254x_packet_send, i8254x_mac_get());
-        return Intel8254x.init();
-        asm("sti");
+        Intel8254x.init();
+        if(Intel8254x.is_present)
+            netapi_add_device(i8254x_packet_receive, i8254x_packet_send, i8254x_mac_get(), i8254x_interrupt_handler);
     }
 
     
