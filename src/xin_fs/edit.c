@@ -10,7 +10,7 @@
 static uint32_t file_position;
 static char* program_buffer;
 static uint16_t* cursor;
-static int column, current_line;
+static int column, current_line, total_lines;
 
 #define MOVE_CURSOR_TO_FIRST_CHARACTER() while(((uint32_t)cursor - VGA_TEXT_MEMORY) % 0xA0 != 0) \
             cursor--
@@ -65,6 +65,7 @@ void edit_input(xchar Input)
         program_buffer[file_position] = '\n';
 
         file_position++;
+        total_lines++;
         
         MOVE_CURSOR_TO_NEXT_ROW();
         MOVE_CURSOR_TO_FIRST_CHARACTER();
@@ -236,6 +237,40 @@ void edit_input(xchar Input)
 
         current_line++;        
         *cursor = (uint16_t)((char)(*cursor) + (((white << 4) | black) << 8));
+
+
+        if(current_line >= VGA_HEIGHT)
+        {
+            int tmp = total_lines - (current_line - 1);
+            screen_clear();
+
+            int j = 0;
+
+            for(int i = 0; i < tmp; i++)
+            {
+                while(program_buffer[j] != '\n')                
+                    j++;
+                j++;
+            }
+
+            for(int i = 0; i < VGA_HEIGHT; i++)
+            {
+                
+                while(program_buffer[j] != '\n' && program_buffer[j] != '\0')
+                {
+                    xprintf("%c", program_buffer[j]);
+                    j++;
+                }
+
+
+                xprintf("\n");
+
+                i++;
+                j++;
+
+
+            }
+        }
     }
 
     else if(Input.scan_code == F4_KEY || Input.scan_code == F4_KEY_RELEASE)
