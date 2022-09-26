@@ -86,7 +86,7 @@ void _start(void)
     rsdp = get_acpi_rsdp_address_base();
 
 
-    xprintf("%z--------------------\n",set_output_color(black,green));
+    xprintf("%z----------------------------\n", set_output_color(black, green));
     
     xprintf("CHECKSUM CHECK RSDP: ");
     1 == acpi_rsdp_checksum_check(rsdp) ? xprintf("%zVALID", set_output_color(green,white)) : xprintf("%zINVALID", set_output_color(red,white));
@@ -94,7 +94,7 @@ void _start(void)
 
     rsdt = rsdp->rsdt_address;
 
-    xprintf("%z--------------------\n",set_output_color(black,green));
+    xprintf("%z----------------------------\n", set_output_color(black, green));
 
     xprintf("CHECKSUM CHECK RSDT: ");
     1 == acpi_rsdt_checksum_check(rsdt) ? xprintf("%zVALID", set_output_color(green,white)) : xprintf("%zINVALID", set_output_color(red,white));
@@ -103,7 +103,7 @@ void _start(void)
 
     apic_sdt = apic_sdt_find();
 
-    xprintf("%z--------------------\n",set_output_color(black,green));
+    xprintf("%z----------------------------\n", set_output_color(black, green));
 
     xprintf("CHECKSUM CHECK MADT: ");
     1 == acpi_rsdt_checksum_check(rsdt) ? xprintf("%zVALID", set_output_color(green,white)) : xprintf("%zINVALID", set_output_color(red,white));
@@ -116,7 +116,8 @@ void _start(void)
     madt_entries_get(apic_sdt);
 
 
-    xprintf("%z--------------------\n",set_output_color(black,green));
+    xprintf("%z----------------------------\n", set_output_color(black, green));
+    
     xprintf("YOUR IOAPIC\n");
     for(int i = 0; (*madt_entry_type1_ptr[i]).entry_type == 1; i++)
     {        
@@ -132,7 +133,7 @@ void _start(void)
             break;
         }
     }
-    xprintf("%z--------------------\n",set_output_color(black,green));
+    xprintf("%z----------------------------\n", set_output_color(black, green));
 
     apic_enable();
     xprintf("apic state: 0x%x\n", *(uint32_t*)APIC_SPURIOUS_INTERRUPT_VECTOR_REGISTER);
@@ -202,7 +203,7 @@ void _start(void)
             number_of_cores++;
     }
 
-    xprintf("Number of cores: %d\n", number_of_cores);
+    xprintf("Number of CPU cores: %d\n", number_of_cores);
 
     srand(SystemTime.seconds);
 

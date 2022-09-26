@@ -564,83 +564,83 @@ void xscanf(char* str, ... )
             goto start;
         }
 
-        else if(KeyInfo.scan_code == ARROW_RIGHT || KeyInfo.scan_code == ARROW_LEFT)
-        {
+        // else if(KeyInfo.scan_code == ARROW_RIGHT || KeyInfo.scan_code == ARROW_LEFT)
+        // {
             
 
-            if(KeyInfo.scan_code == ARROW_LEFT)
-            {        
+        //     if(KeyInfo.scan_code == ARROW_LEFT)
+        //     {        
         
-                Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | (((black << 4) | white) << 8));
+        //         Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | (((black << 4) | white) << 8));
 
-                if((char)Screen.cursor[Screen.y][Screen.x - 1] == character_blocked)
-                {
-                    goto start;
-                }
+        //         if((char)Screen.cursor[Screen.y][Screen.x - 1] == character_blocked)
+        //         {
+        //             goto start;
+        //         }
 
-                Screen.x--;
+        //         Screen.x--;
         
-                if(index)
-                    index--;
+        //         if(index)
+        //             index--;
 
-                Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | ((white << 4) | black) << 8);
-            }
+        //         Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | ((white << 4) | black) << 8);
+        //     }
 
-            else 
-            {
-                //Screen.cursor[Screen.y][Screen.x] = (uint16_t)(selected_character | ((black << 4) | white) << 8);
+        //     else 
+        //     {
+        //         //Screen.cursor[Screen.y][Screen.x] = (uint16_t)(selected_character | ((black << 4) | white) << 8);
         
-                Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | (((black << 4) | white) << 8));
+        //         Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | (((black << 4) | white) << 8));
         
 
-                if(&Screen.cursor[Screen.y][Screen.x + 1] >= &Screen.cursor[8][79])
-                {
-                    goto start;
-                }
+        //         if(&Screen.cursor[Screen.y][Screen.x + 1] >= &Screen.cursor[8][79])
+        //         {
+        //             goto start;
+        //         }
 
-                Screen.x++;
+        //         Screen.x++;
 
-                if(Screen.x == 80)
-                {
-                    Screen.x = 0;
-                    Screen.y++;
-                }
+        //         if(Screen.x == 80)
+        //         {
+        //             Screen.x = 0;
+        //             Screen.y++;
+        //         }
 
-                index++;
+        //         index++;
 
-                Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | ((white << 4) | black) << 8);    
-            }
+        //         Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | ((white << 4) | black) << 8);    
+        //     }
 
-            KeyInfo.scan_code = 0x0;
+        //     KeyInfo.scan_code = 0x0;
                 
-        }
+        // }
 
-        else if(KeyInfo.scan_code == ARROW_UP)
-        {
+        // else if(KeyInfo.scan_code == ARROW_UP)
+        // {
 
-            strcpy(keyboard_command, last_used_commands);
-            keyboard_command[strlen(last_used_commands)] = ' ';
-            strcpy(keyboard_command + strlen(last_used_commands) + 1, last_used_parameters);
+        //     strcpy(keyboard_command, last_used_commands);
+        //     keyboard_command[strlen(last_used_commands)] = ' ';
+        //     strcpy(keyboard_command + strlen(last_used_commands) + 1, last_used_parameters);
 
-            int x_new = strlen(last_used_commands) + strlen(last_used_parameters);
+        //     int x_new = strlen(last_used_commands) + strlen(last_used_parameters);
 
-            memset(last_used_commands, '\0', sizeof(last_used_commands));
-            memset(last_used_parameters, '\0', sizeof(last_used_parameters));
+        //     memset(last_used_commands, '\0', sizeof(last_used_commands));
+        //     memset(last_used_parameters, '\0', sizeof(last_used_parameters));
             
-            Screen.x = 1;
+        //     Screen.x = 1;
 
-            uint16_t first_tmp = (uint16_t)Screen.cursor[Screen.y][Screen.x];
-            xprintf("%s", keyboard_command);
+        //     uint16_t first_tmp = (uint16_t)Screen.cursor[Screen.y][Screen.x];
+        //     xprintf("%s", keyboard_command);
 
 
-            index = x_new;
-            Screen.x = x_new;
+        //     index = x_new;
+        //     Screen.x = x_new;
 
-            Screen.cursor[Screen.y][1] = first_tmp;
+        //     Screen.cursor[Screen.y][1] = first_tmp;
 
-            // cpu_halt();
+        //     // cpu_halt();
 
-        }
+        // }
 
         else if(KeyInfo.scan_code == ENTER)
         {

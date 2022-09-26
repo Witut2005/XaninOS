@@ -11,6 +11,7 @@ static uint32_t file_position;
 static char* program_buffer;
 static uint16_t* cursor;
 static int column, current_line, total_lines;
+char* begin_of_current_text;
 
 #define MOVE_CURSOR_TO_FIRST_CHARACTER() while(((uint32_t)cursor - VGA_TEXT_MEMORY) % 0xA0 != 0) \
             cursor--
@@ -219,7 +220,7 @@ void edit_input(xchar Input)
         {
             if(total_lines >= VGA_HEIGHT)
             {
-                int tmp = current_line;
+                int tmp = current_line - 1;
                 screen_clear();
 
                 int j = 0;
@@ -231,11 +232,13 @@ void edit_input(xchar Input)
                     j++;
                 }
 
-                while(program_buffer[j] != '\0')
-                {
-                    xprintf("%c", program_buffer[j]);
-                    j++;
-                }
+                begin_of_current_text = &program_buffer[j];
+                xprintf("%s", &program_buffer[j]);
+                // while(program_buffer[j] != '\0')
+                // {
+                //     xprintf("%c", program_buffer[j]);
+                //     j++;
+                // }
             }
         }
 
@@ -260,7 +263,7 @@ void edit_input(xchar Input)
         {
             int i = file_position;
             for(; program_buffer[i] != '\n' && program_buffer[i] != '\0'; i++);
-            if(program_buffer[i+1] == '\0')
+            if(program_buffer[i] == '\0')
                 return;
             if(i >= strlen(program_buffer))
                 return;
@@ -268,6 +271,7 @@ void edit_input(xchar Input)
 
         *cursor = (uint16_t)((char)(*cursor) + (((black << 4) | white) << 8));
 
+        current_line++;        
 
         if(current_line < VGA_HEIGHT)
         {
@@ -281,7 +285,7 @@ void edit_input(xchar Input)
             file_position++;
         file_position++;
 
-        current_line++;        
+        
         *cursor = (uint16_t)((char)(*cursor) + (((white << 4) | black) << 8));
 
 
@@ -299,12 +303,15 @@ void edit_input(xchar Input)
                 j++;
             }
 
-            while(program_buffer[j] != '\0')
-            {
-                xprintf("%c", program_buffer[j]);
-                j++;
-            }
-            current_line++;        
+            begin_of_current_text = &program_buffer[j];
+            xprintf("%s", &program_buffer[j]);
+
+            // while(program_buffer[j] != '\0')
+            // {
+            //     xprintf("%c", program_buffer[j]);
+            //     j++;
+            // }
+
         }
     }
 
@@ -330,7 +337,8 @@ void edit_input(xchar Input)
 
         cursor++;
         screen_clear();
-        xprintf("%s", program_buffer);
+        // xprintf("%s", program_buffer);
+        xprintf("%s", begin_of_current_text);
         *cursor = (uint16_t)((char)(*cursor) + (((white << 4) | black) << 8));
         free(tmp);
         
@@ -368,6 +376,8 @@ int edit(char* file_name)
         if(program_buffer[i] == '\n')
             total_lines++;
     }
+
+    begin_of_current_text = program_buffer;
 
     while(KeyInfo.scan_code != F4_KEY && KeyInfo.scan_code != F4_KEY_RELEASE)
         edit_input(inputg());
