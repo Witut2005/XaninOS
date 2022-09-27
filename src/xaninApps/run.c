@@ -43,19 +43,19 @@ void run(char* file_name)
         uint8_t* where_to_load = 0x10000;
 
 
-        for(uint8_t* i = xin_file->starting_sector * SECTOR_SIZE; (uint32_t)i < (xin_file->starting_sector * SECTOR_SIZE) + SECTOR_SIZE; i++, where_to_load++)
-            *where_to_load = *i;
+        uint8_t* file_data = (uint8_t*)calloc(512);
+        read(xin_file, file_data, 512);
+
+        for(uint8_t* i = file_data; i < (file_data + 512); i++, where_to_load++)
+            *where_to_load = * i;
+            
 
         void (*entry_point)(void) = 0x10000;
 
         asm(
-            "mov ebx, [ebp + 4]\n\t" 
             "call 0x10000"
             );
 
-        entry_point();
-
-        end_exec:
         return;
         
 

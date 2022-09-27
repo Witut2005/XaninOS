@@ -1,4 +1,6 @@
 
+/*
+
 #include <stdint.h>
 #include <libc/stdiox.h>
 #include <xin_fs/xin.h>
@@ -57,33 +59,7 @@ uint32_t syscall()
     uint32_t eip_ret;
    
 
-    /*
-    asm(
-            "mov ebx, [esp + 4]\n\t"
-            "mov [eax], ebx" :: "eax"(&eip_ret)
-        );
 
-    
-
-    asm("mov %0, [esp + 8]\n\t"
-        "ret" 
-        : "=r"(eip_ret)
-        );
-
-
-   
-
-    xprintf("registers:\n");
-    xprintf("eax: 0x%x\n", eax);
-    xprintf("edi: 0x%x\n", edi);
-    xprintf("esi: 0x%x\n", esi);
-    xprintf("edx: 0x%x\n", edx);
-    xprintf("ecx: 0x%x\n", ecx);
-    xprintf("ebx: 0x%x\n", ebx);
-    
-    while(1);
-
-    */
 
     eoi_send();
     interrupt_enable();
@@ -156,3 +132,4 @@ uint32_t syscall()
 
 }
 
+*/

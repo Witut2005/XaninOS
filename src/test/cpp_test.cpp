@@ -124,9 +124,14 @@ void cpp_prog()
     
     std::print("ugabuga: {}{}", omg, 10);
 
+    char* buf = (char*)calloc(50);
+    xscan_range(buf, 10);
+    std::cout << buf << std::endl;
 
     wait_key(ENTER_RELEASE);
     wait_key(ENTER_RELEASE);
+
+    free(buf);
 
 }
 

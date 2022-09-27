@@ -26,3 +26,4 @@ char putchar_color(uint8_t color, char character);
 void print_bcd_number(uint8_t x);
 void xprintf(char* str, ... );
 void xscanf(char* str, ... );
+void xscan_range(char* string_buffer, uint32_t how_many_chars);

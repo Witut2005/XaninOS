@@ -816,3 +816,172 @@ void xscanf(char* str, ... )
 
 
 
+
+void xscan_range(char* string_buffer, uint32_t how_many_chars)
+{
+
+    uint32_t str_counter = 0x0;
+    uint32_t counter = 0x0;
+
+    char* string_pointer;
+
+
+    char* buffer = (char*)calloc(how_many_chars);
+
+    memset(command_buffer, '\0', sizeof(command_buffer));
+
+    index = 0;
+    uint8_t screen_offset = 0;
+ 
+    character_blocked = (char)Screen.cursor[Screen.y][Screen.x - 1];
+
+    char* starting_screen_position = (char*)&Screen.cursor[Screen.y][Screen.x - 1];
+    uint16_t* text_buffer_start = &Screen.cursor[Screen.y][Screen.x];
+
+    uint8_t x_start = Screen.x;
+    uint8_t y_start = Screen.y;
+
+    uint8_t x_current, y_current;
+
+
+    start:
+
+    while(1)
+    {
+
+        if(KeyInfo.is_bspc)
+        {
+            Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((black << 4) | white) << 8));
+
+            if(&Screen.cursor[Screen.y][Screen.x - 1] == (uint16_t*)starting_screen_position)
+            {
+                goto start;
+            }
+
+
+
+            if(!Screen.x)
+            {
+                Screen.y--;
+                Screen.x = 79;
+                return;
+            }
+
+            Screen.x--;
+
+
+
+            if(index)
+                index--;
+            if(screen_offset)
+                screen_offset--;
+
+            command_buffer[index] = '\0';
+            Screen.cursor[Screen.y][Screen.x] = '\0';
+
+            Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((white << 4) | white) << 8));
+
+
+            //msleep(10);
+            KeyInfo.is_bspc = false;
+            letters_refresh(&Screen.cursor[Screen.y][Screen.x]);
+        }
+
+        else if(KeyInfo.scan_code == ENTER)
+        {
+ 
+
+            string_pointer = string_buffer;
+            
+            for(int i = 0; string_pointer[i] != '\0'; i++)
+                string_pointer[i] = '\0';
+
+            for(int i = 0x0; keyboard_command[counter] != '\0' && keyboard_command[counter] != ' '; i++)
+            {
+                buffer[i] = keyboard_command[counter];
+                counter++;
+            }
+                
+                
+            for(int i = 0; buffer[i] != '\0' && buffer[i] != ' '; i++)
+            {
+                if((buffer[i] > 127) || (buffer[i] < 0x20))
+                {
+                    string_pointer[i] = '\0';
+                    goto end;
+                }
+
+                string_pointer[i] = buffer[i];
+            }
+
+            end:
+
+            for(int i = 0x0; i < 50;i++)
+                buffer[i] = '\0';
+
+        
+
+
+        for(int i = 0; i < 50;i++)
+            keyboard_command[i] = '\0';
+
+
+        for(int i = 0x0; i < 50;i++)
+            buffer[i] = 0x0;
+
+        KeyInfo.scan_code = 0x0;
+
+        Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((black << 4) | white) << 8));
+           
+        // for(int i = how_many_chars; i < sizeof(buffer); i++)
+
+
+        xprintf("\n");
+        return;
+
+        }
+
+        else if(KeyInfo.character)
+        {
+            char tmp = getchar();
+
+            Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][index + x_start]) + (((black << 4) | white) << 8));
+            
+            for(int i = 0; i < strlen(keyboard_command); i++)
+                *(text_buffer_start + i) = 0x0;
+
+            Screen.x = x_start;
+            Screen.y = y_start;
+
+            uint8_t* tmp_buf = (uint8_t*)calloc(80);
+            memcpy(tmp_buf, keyboard_command, 80);
+
+            if(keyboard_command[index] != '\0')
+            {
+                for(int i = index; i < 50 - 1; i++)
+                    keyboard_command[i+1] = tmp_buf[i];
+            }
+
+
+
+
+            if(index < how_many_chars)
+            {
+                keyboard_command[index] = tmp;
+                index++;
+            }
+            
+            xprintf("%s", keyboard_command);
+
+            screen_offset++;
+            Screen.x = screen_offset + x_start;
+
+        }    
+    }
+
+
+
+}
+
+
+

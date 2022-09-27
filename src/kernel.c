@@ -217,6 +217,9 @@ void _start(void)
 
     disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x0, 0x1, (uint16_t*)0x7C00);
 
+    disk_read(ATA_FIRST_BUS, ATA_MASTER, 4, 1, 0x82 * SECTOR_SIZE);
+    disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x82, 1, 0x82 * SECTOR_SIZE);
+
 
     argv[0] = program_name;
     argv[1] = program_parameters;

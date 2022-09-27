@@ -1,44 +1,24 @@
 
-;DOESNT WORK
 
 [org 0x10000]
+
 [bits 32]
 
-print_syscall:
+test:
 
-;push dword [ebp + 4]
-;ret
-
-mov dword [return_addr], ebx
-
-mov eax, 'p' + 's'
-mov esi, napis
+mov eax, 4
+mov ebx, 1
+mov ecx, napis
+mov edx, 10
 int 0x80
 
-mov eax, 'f' + 'o'
-mov esi, file_name
-int 0x80
-
-
-mov dword esi, [eax + 59]
-and esi, 0xFF00
-shr esi, 8
-
-mov eax, 'p' + 'x'
-mov esi, esi
-int 0x80
-
-mov eax, 'z' + 's' + 'k'
-int 0x80
+mov eax, 0xb8000
+mov dword [eax], 0x41414141
 
 jmp $
-
-
-push dword [return_addr]
 ret
 
-napis: db "xaninOS syscall",0xa,0
-file_name: db "syscall_test.bin",0
-return_addr: resb 4
+napis: db "xaninOS posix syscall", 0xa,0x0
 
-times 512 - ($-$$) db 0x20
+
+times 512 - ($-$$) db 0x0
