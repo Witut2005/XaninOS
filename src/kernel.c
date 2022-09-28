@@ -58,30 +58,18 @@ void _start(void)
     screen_init();                  //init screen management system
 
     xanin_cpu_backup_make();
-    // uint32_t* tmp = (uint32_t*)(0x7c00 + 0x140 + 10);
-
-    // for(int i = 0; i < 8; i++)
-    //     xprintf("0x%x\n", tmp[i]);
-    // tmp = (uint32_t*)(0x7c00 + 0x140 + 10 + 44);
-    // xprintf("0x%x\n", *tmp);
-
 
     pmmngr_init(0x20000, 0xFFFFFF);
     pmmngr_init_region(0x20000, 0xFFFFFF);
     init_disk(ATA_FIRST_BUS, ATA_MASTER);
     
-    // vga_mode_set(VGA_GRAPHICS_320x200x256);
-    // uint8_t* vga_pointer = vga_get_buffer_segment();
-
     time_get(&SystemTime);
    
     keyboard_init();
     set_pit();
     keyboard_command = command_buffer;
 
-    //xprintf("DETECTING USB CONTROLLERS. PLEASE WAIT...\n");
     //usb_detect();
-    
     
     rsdp = get_acpi_rsdp_address_base();
 
@@ -215,11 +203,13 @@ void _start(void)
     disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x1, 0x1, (uint16_t*)0x600);
     disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x2, 0x1, (uint16_t*)0x400);
 
-    disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x0, 0x1, (uint16_t*)0x7C00);
+    //disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x0, 0x1, (uint16_t*)0x7C00);
 
     disk_read(ATA_FIRST_BUS, ATA_MASTER, 4, 1, 0x82 * SECTOR_SIZE);
     disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x82, 1, 0x82 * SECTOR_SIZE);
 
+    kernel_load_backup = (uint8_t*)calloc(512);
+    memcpy(kernel_load_backup, (uint8_t*)0x20000, SECTOR_SIZE);
 
     argv[0] = program_name;
     argv[1] = program_parameters;
@@ -237,11 +227,7 @@ void _start(void)
     netapi_init();
     i8254x_init();
 
-    uint8_t macd[6] = {0xff, 0xff, 0xff, 0xff, 0xff,0xff};
-    uint8_t macs[6] = {0x12, 0x34, 0x56, 0x78, 0x9A, 0xBC};
     
-    char dd[] = {"dupa"};
-
     uint8_t ip_addr[4] = {0x0};
     uint8_t ip_dest[4] = {192,168,0,160};
 
@@ -254,7 +240,6 @@ void _start(void)
     KeyInfo.is_shift = false;
 
     while(KeyInfo.scan_code != ENTER);
-
 
 
     xprintf("\n\n");

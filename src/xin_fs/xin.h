@@ -25,6 +25,7 @@ extern uint8_t enter_real_mode_buffer[512];
 extern uint8_t shutdown_program_buffer[512];
 
 extern uint8_t* bootloader_program_buffer;
+extern uint8_t* kernel_load_backup;
 
 char* xin_set_current_directory(char* directory);
 char* xin_get_current_directory(void);
@@ -44,6 +45,7 @@ xin_entry* xin_change_directory(char* new_directory);
 
 int xin_entry_resize(uint16_t last_sector);
 xin_entry* fopen(char* file_path, const char* mode);
+int open(char* file_path, uint32_t options);
 size_t write(xin_entry *entry, void *buf, size_t count);
 size_t read(xin_entry *entry, void *buf, size_t count);
 xin_entry* create(char* file_name);

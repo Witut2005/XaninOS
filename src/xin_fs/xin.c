@@ -11,9 +11,12 @@
 #include <terminal/vty.h>
 #include <keyboard/scan_codes.h>
 
+//#define IF_FILE_NOT_EXIST
+
 uint8_t enter_real_mode_buffer[512];
 uint8_t shutdown_program_buffer[512];
 uint8_t* bootloader_program_buffer;
+uint8_t* kernel_load_backup;
 
 
 char xin_current_path[38] = {'\0'};
@@ -242,17 +245,27 @@ void xin_folder_create(char *path, uint8_t creation_date, uint8_t creation_time,
 xin_entry *xin_init_fs(void)
 {
 
-    xin_file_create_at_address("/",                         0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x0, 0x0,    XIN_DIRECTORY, 0);
-    xin_file_create_at_address("/ivt",                      0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x0, 0x3,    XIN_FILE, 1);
-    xin_file_create_at_address("/file_system.bin",          0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x4, 20,     XIN_FILE, 2);
-    xin_file_create_at_address("/enter_real_mode.bin",      0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x1, 0x1,    XIN_FILE, 3);
-    xin_file_create_at_address("/boot.bin",                 0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x3E,0x1,    XIN_FILE, 4);
-    xin_file_create_at_address("/tmp.bin",                  0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x80,0x1,    XIN_FILE, 5);
-    xin_file_create_at_address("/shutdown.bin",             0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x2,0x1,    XIN_FILE, 6);
+    if(xin_find_entry("/") == nullptr)
+        xin_file_create_at_address("/",                         0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x0, 0x0,    XIN_DIRECTORY, 0);
+    if(xin_find_entry("/ivt") == nullptr)
+        xin_file_create_at_address("/ivt",                      0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x0, 0x3,    XIN_FILE, 1);
+    if(xin_find_entry("/file_system.bin") == nullptr)
+        xin_file_create_at_address("/file_system.bin",          0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x4, 20,     XIN_FILE, 2);
+    if(xin_find_entry("/enter_real_mode.bin") == nullptr)
+        xin_file_create_at_address("/enter_real_mode.bin",      0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x1, 0x1,    XIN_FILE, 3);
+    if(xin_find_entry("/boot.bin") == nullptr)
+        xin_file_create_at_address("/boot.bin",                 0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x3E,0x1,    XIN_FILE, 4);
+    if(xin_find_entry("/tmp.bin") == nullptr)
+        xin_file_create_at_address("/tmp.bin",                  0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x80,0x1,    XIN_FILE, 5);
+    if(xin_find_entry("/shutdown.bin") == nullptr)
+        xin_file_create_at_address("/shutdown.bin",             0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x2,0x1,    XIN_FILE, 6);
     //xin_file_create_at_address("/elf.bin",                  0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x82,0x1,    XIN_FILE, 8);
-    xin_file_create_at_address("/syscall_test.bin",         0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x82,0x1,    XIN_FILE, 7);
-    xin_file_create_at_address("/fast_real_mode_enter.bin", 0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x5,0x1,    XIN_FILE, 8);
-    xin_file_create_at_address("/fast_real_mode_return.bin", 0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x6,0x1,    XIN_FILE, 9);
+    if(xin_find_entry("/syscall_test.bin") == nullptr)
+        xin_file_create_at_address("/syscall_test.bin",         0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x83,0x1,    XIN_FILE, 7);
+    if(xin_find_entry("/fast_real_mode_enter.bin") == nullptr)
+        xin_file_create_at_address("/fast_real_mode_enter.bin", 0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x5,0x1,    XIN_FILE, 8);
+    if(xin_find_entry("/fast_real_mode_return.bin") == nullptr)
+        xin_file_create_at_address("/fast_real_mode_return.bin", 0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x6,0x1,    XIN_FILE, 9);
     
     if(xin_find_entry("/screenshot/") == nullptr)
         xin_folder_create("/screenshot/",                       0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX);
@@ -634,45 +647,33 @@ xin_entry* create(char* file_name)
 
 }
 
-
-xin_entry *fopen(char *file_path, const char *mode)
+int open(char* file_path, uint32_t options)
 {
-
 
     xin_entry* file = xin_find_entry(file_path);
 
 
     if (file != nullptr && file->entry_type != XIN_DIRECTORY && file->entry_path[0] != '\0')
     {
-        
+
         if(file->file_info == nullptr)
             file->file_info = (file_information_block*)malloc(sizeof(file_information_block));
-            
-        set_string(file->file_info->rights, mode);
 
-        file->file_info->position = 0;
-        return file;
-    }
-
-    else if(strcmp(mode, "rw") | strcmp(mode, "w"))
-    {
-        file = create(file_path);
-
-        file->file_info = (file_information_block*)malloc(sizeof(file_information_block));
-        set_string(file->file_info->rights, mode);
+        /*
+        if(file != nullptr)
+        {
+            for(int i = 0; i < file->entry_size / 512 + (file->entry_size % 512 != 0 ? 1 : 0); i++)
+                disk_read(ATA_FIRST_BUS, ATA_MASTER, file->entry_size, 1, (uint16_t*)(file->starting_sector * SECTOR_SIZE));
+        }
+        */
         
+            
+        //set_string(file->file_info->rights, mode);
+
         file->file_info->position = 0;
-        return file;
+        return (int)(((uint32_t)(file - XIN_ENTRY_POINTERS)) % sizeof(xin_entry));
     }
-
-
-    if(file != nullptr)
-    {
-        for(int i = 0; i < file->entry_size / 512 + (file->entry_size % 512 != 0 ? 1 : 0); i++)
-            disk_read(ATA_FIRST_BUS, ATA_MASTER, file->entry_size, 1, (uint16_t*)(file->starting_sector));
-    }
-
-    return nullptr;
+    return -1;
 }
     
 char* getline(xin_entry* file, int line_id)
@@ -706,6 +707,47 @@ char* getline(xin_entry* file, int line_id)
     return line;
 
 }
+
+xin_entry *fopen(char *file_path, const char *mode)
+{
+
+
+    xin_entry* file = xin_find_entry(file_path);
+
+
+    if (file != nullptr && file->entry_type != XIN_DIRECTORY && file->entry_path[0] != '\0')
+    {
+        
+        /*
+        for(int i = 0; i < file->entry_size / 512 + (file->entry_size % 512 != 0 ? 1 : 0); i++)
+            disk_read(ATA_FIRST_BUS, ATA_MASTER, file->entry_size, 1, (uint16_t*)((file->starting_sector + i) * SECTOR_SIZE));
+        */
+
+        if(file->file_info == nullptr)
+            file->file_info = (file_information_block*)malloc(sizeof(file_information_block));
+            
+        set_string(file->file_info->rights, mode);
+
+        file->file_info->position = 0;
+        return file;
+    }
+
+    else if(strcmp(mode, "rw") | strcmp(mode, "w"))
+    {
+        file = create(file_path);
+
+        file->file_info = (file_information_block*)malloc(sizeof(file_information_block));
+        set_string(file->file_info->rights, mode);
+        
+        file->file_info->position = 0;
+        return file;
+    }
+
+
+
+    return nullptr;
+}
+    
 
 __STATUS remove_directory(char* folder_name)
 {
