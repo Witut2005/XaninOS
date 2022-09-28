@@ -195,7 +195,7 @@ xin_entry *xin_change_directory(char *new_directory)
 void xin_file_create_at_address(char *path, uint8_t creation_date, uint8_t creation_time,
                                 uint16_t os_specific, uint8_t modification_date,
                                 uint8_t modification_time, uint8_t permissions,
-                                uint8_t starting_sector, uint8_t entry_size, uint8_t entry_type,uint32_t entry_number)
+                                uint32_t starting_sector, uint8_t entry_size, uint8_t entry_type,uint32_t entry_number)
 {
     xin_entry* entry_created = (xin_entry *)((entry_number * 64) + XIN_ENTRY_TABLE);
     set_string(entry_created->entry_path, path);
@@ -247,23 +247,31 @@ xin_entry *xin_init_fs(void)
 
     if(xin_find_entry("/") == nullptr)
         xin_file_create_at_address("/",                         0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x0, 0x0,    XIN_DIRECTORY, 0);
+
     if(xin_find_entry("/ivt") == nullptr)
         xin_file_create_at_address("/ivt",                      0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x0, 0x3,    XIN_FILE, 1);
+
     if(xin_find_entry("/file_system.bin") == nullptr)
         xin_file_create_at_address("/file_system.bin",          0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x4, 20,     XIN_FILE, 2);
+
     if(xin_find_entry("/enter_real_mode.bin") == nullptr)
         xin_file_create_at_address("/enter_real_mode.bin",      0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x1, 0x1,    XIN_FILE, 3);
+
     if(xin_find_entry("/boot.bin") == nullptr)
         xin_file_create_at_address("/boot.bin",                 0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x3E,0x1,    XIN_FILE, 4);
+
     if(xin_find_entry("/tmp.bin") == nullptr)
         xin_file_create_at_address("/tmp.bin",                  0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x80,0x1,    XIN_FILE, 5);
+
     if(xin_find_entry("/shutdown.bin") == nullptr)
         xin_file_create_at_address("/shutdown.bin",             0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x2,0x1,    XIN_FILE, 6);
-    //xin_file_create_at_address("/elf.bin",                  0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x82,0x1,    XIN_FILE, 8);
+
     if(xin_find_entry("/syscall_test.bin") == nullptr)
-        xin_file_create_at_address("/syscall_test.bin",         0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x83,0x1,    XIN_FILE, 7);
+        xin_file_create_at_address("/syscall_test.bin",         0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x500,0x1,    XIN_FILE, 7);
+
     if(xin_find_entry("/fast_real_mode_enter.bin") == nullptr)
         xin_file_create_at_address("/fast_real_mode_enter.bin", 0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x5,0x1,    XIN_FILE, 8);
+
     if(xin_find_entry("/fast_real_mode_return.bin") == nullptr)
         xin_file_create_at_address("/fast_real_mode_return.bin", 0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x6,0x1,    XIN_FILE, 9);
     
@@ -287,6 +295,9 @@ xin_entry *xin_init_fs(void)
 void create_file_kernel(char* entry_name)
 {
 
+
+    if(xin_find_entry(entry_name) != nullptr)
+        return;
 
     /* write entry to xin entry pointers table */
     uint8_t *write_entry = xin_find_free_pointer();
@@ -315,13 +326,9 @@ void create_file_kernel(char* entry_name)
     entry->starting_sector = (uint32_t)write_entry - XIN_ENTRY_POINTERS;
 
     disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x12, 8, (uint16_t*)0x800);
-    disk_flush(ATA_FIRST_BUS, ATA_MASTER);
 
     for(int i = 0; i < 40; i++)
-    {
         disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x1a + i, 1, (uint16_t*)(0x1800 + (i * SECTOR_SIZE)));
-        disk_flush(ATA_FIRST_BUS, ATA_MASTER);
-    }
 
 }
 
@@ -657,21 +664,11 @@ int open(char* file_path, uint32_t options)
     {
 
         if(file->file_info == nullptr)
-            file->file_info = (file_information_block*)malloc(sizeof(file_information_block));
-
-        /*
-        if(file != nullptr)
-        {
-            for(int i = 0; i < file->entry_size / 512 + (file->entry_size % 512 != 0 ? 1 : 0); i++)
-                disk_read(ATA_FIRST_BUS, ATA_MASTER, file->entry_size, 1, (uint16_t*)(file->starting_sector * SECTOR_SIZE));
-        }
-        */
-        
-            
-        //set_string(file->file_info->rights, mode);
+            file->file_info = (file_information_block*)calloc(sizeof(file_information_block));
 
         file->file_info->position = 0;
-        return (int)(((uint32_t)(file - XIN_ENTRY_POINTERS)) % sizeof(xin_entry));
+        int fd = (int)((uint32_t)file - XIN_ENTRY_TABLE) / 64;
+        return fd;
     }
     return -1;
 }

@@ -205,8 +205,9 @@ void _start(void)
 
     //disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x0, 0x1, (uint16_t*)0x7C00);
 
-    disk_read(ATA_FIRST_BUS, ATA_MASTER, 4, 1, 0x82 * SECTOR_SIZE);
-    disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x82, 1, 0x82 * SECTOR_SIZE);
+    
+    disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x4, 1, (uint16_t*)(0x500 * SECTOR_SIZE));
+    disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x500, 1, (uint16_t*)(0x500 * SECTOR_SIZE));
 
     kernel_load_backup = (uint8_t*)calloc(512);
     memcpy(kernel_load_backup, (uint8_t*)0x20000, SECTOR_SIZE);
@@ -219,11 +220,10 @@ void _start(void)
 
     xin_init_fs();
 
-    if(xin_find_entry("/syslog") == nullptr)
-        create_file_kernel("/syslog");
+    create_file_kernel("/syslog");
 
-    create_file_kernel("/system_space1");
-    create_file_kernel("/system_space2");
+    // create_file_kernel("/system_space1");
+    // create_file_kernel("/system_space2");
     netapi_init();
     i8254x_init();
 
@@ -238,6 +238,9 @@ void _start(void)
 
     KeyInfo.is_ctrl = false;
     KeyInfo.is_shift = false;
+    
+    int fd = open("/file_system.bin", 0x0);
+    xprintf("file descritptor id %d\n", (uint32_t)fd);
 
     while(KeyInfo.scan_code != ENTER);
 

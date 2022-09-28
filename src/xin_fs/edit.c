@@ -84,7 +84,7 @@ void edit_input(xchar Input)
         MOVE_CURSOR_TO_FIRST_CHARACTER();
         
         screen_clear();
-        xprintf("%s", program_buffer);
+        xprintf("%s", begin_of_current_text);
 
         current_line++;
         *cursor = (uint16_t)((char)(*cursor) + (((white << 4) | black) << 8));
@@ -131,11 +131,9 @@ void edit_input(xchar Input)
         if(character_to_delete == '\n')
         {
             current_line--;
+            total_lines--;
             MOVE_CURSOR_TO_PREVIOUS_ROW();
-
-            MOVE_CURSOR_TO_FIRST_CHARACTER();
             MOVE_CURSOR_TO_END_OF_LINE();
-        
         }
         
         else
@@ -145,7 +143,7 @@ void edit_input(xchar Input)
         
         screen_clear();
 
-        xprintf("%s", program_buffer);
+        xprintf("%s", begin_of_current_text);
         file_position--;
 
         *cursor = (uint16_t)((char)(*cursor) + (((white << 4) | black) << 8));
@@ -196,6 +194,7 @@ void edit_input(xchar Input)
             file_position++;
             *cursor = (uint16_t)((char)(*cursor) + (((white << 4) | black) << 8));
         }
+        *cursor = (uint16_t)((char)(*cursor) + (((white << 4) | black) << 8));
     }
 
 
@@ -276,17 +275,17 @@ void edit_input(xchar Input)
         if(current_line < VGA_HEIGHT)
         {
             MOVE_CURSOR_TO_NEXT_ROW();
-            MOVE_CURSOR_TO_FIRST_CHARACTER();
         }
+
+        MOVE_CURSOR_TO_FIRST_CHARACTER();
+        
+
 
         int i;
 
         while(program_buffer[file_position] != '\n')
             file_position++;
         file_position++;
-
-        
-        *cursor = (uint16_t)((char)(*cursor) + (((white << 4) | black) << 8));
 
 
         if(current_line >= VGA_HEIGHT)
@@ -306,13 +305,10 @@ void edit_input(xchar Input)
             begin_of_current_text = &program_buffer[j];
             xprintf("%s", &program_buffer[j]);
 
-            // while(program_buffer[j] != '\0')
-            // {
-            //     xprintf("%c", program_buffer[j]);
-            //     j++;
-            // }
-
         }
+
+        *cursor = (uint16_t)((char)(*cursor) + (((white << 4) | black) << 8));
+
     }
 
     else if(Input.scan_code == F4_KEY || Input.scan_code == F4_KEY_RELEASE)
