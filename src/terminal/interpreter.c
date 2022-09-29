@@ -120,16 +120,16 @@ void scan(void)
     XANIN_ADD_APP_ENTRY0("reboot", reboot)
     #endif
 
-    XANIN_ADD_APP_ENTRY1("create", xin_create_file)
-    XANIN_ADD_APP_ENTRY1("mkdir", xin_create_folder)
+    XANIN_ADD_APP_ENTRY1("create", __sys_xin_file_create)
+    XANIN_ADD_APP_ENTRY1("mkdir", __sys_xin_folder_create)
 
     #ifdef SHUTDOWN_APP
     XANIN_ADD_APP_ENTRY0("shutdown", shutdown)
     #endif
     
-    XANIN_ADD_APP_ENTRY1("rm", xin_remove_entry)
-    XANIN_ADD_APP_ENTRY1("rd", xin_remove_directory)
-    XANIN_ADD_APP_ENTRY1("cd", xin_change_directory)
+    XANIN_ADD_APP_ENTRY1("rm", __sys_xin_entry_remove)
+    XANIN_ADD_APP_ENTRY1("rd", __sys_xin_folder_remove)
+    XANIN_ADD_APP_ENTRY1("cd", __sys_xin_folder_change)
 
     else if(strcmp(program_name,"pwd"))
     {
@@ -140,8 +140,8 @@ void scan(void)
     // XANIN_ADD_APP_ENTRY1("pf", xin_get_file_pf_test)
 
     #ifdef XIN_MOVE_APP
-    XANIN_ADD_APP_ENTRY2("move", xin_move_entry)
-    XANIN_ADD_APP_ENTRY2("mv", xin_move_entry)
+    XANIN_ADD_APP_ENTRY2("move", __sys_xin_entry_move)
+    XANIN_ADD_APP_ENTRY2("mv", __sys_xin_entry_move)
     #endif
 
     #ifdef XIN_COPY_APP

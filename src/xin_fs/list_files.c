@@ -14,7 +14,8 @@ void list_files(char* path)
     {
 
 
-        if(strncmp(i->entry_path, xin_current_directory, strlen(xin_current_directory)) && strlen(path) == 0)
+
+        if(strlen(path) == 0)
         {
             printed_text += strlen(i->entry_path);
 
@@ -24,11 +25,16 @@ void list_files(char* path)
                 xprintf("\n");
             }
 
-            xprintf("%z%s", set_output_color(black, i->entry_type + 0x2), i);
-            xprintf("  ");
+            if(strcmp(xin_get_file_pf(i->entry_path)->entry_path, xin_current_directory))
+            {
+                xprintf("%z%s", set_output_color(black, i->entry_type + 0x2), i);
+                xprintf("  ");
+            }
+
         }
 
-        if(strlen(path) > 0)
+
+        else
         {
             if(strncmp(i->entry_path, path, strlen(path)))
             {

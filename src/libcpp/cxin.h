@@ -15,7 +15,7 @@ extern "C"
 
     }
 
-    xin_entry* xin_change_directory(char *new_directory);
+    xin_entry* xin_folder_change(char *new_directory);
     char* xin_get_current_directory(void);
     void fseek(xin_entry* file, uint32_t new_position);
     uint32_t fteel(xin_entry* file);

@@ -18,7 +18,7 @@ void screenshot(void)
     std::string current_directory = xin_get_current_directory();
 
     std::string filename = "/screenshot/";
-    xin_change_directory(filename.c_str());
+    xin_folder_change(filename.c_str());
     
     CmosTime time = std::chrono::system_clock::now();
     xin::create_file(std::chrono::time_to_string(time).c_str());    
@@ -31,7 +31,7 @@ void screenshot(void)
     // for(uint8_t* i = (uint8_t*)(file->starting_sector * SECTOR_SIZE); (uint32_t)i < file->starting_sector * SECTOR_SIZE + VGA_SCREEN_RESOLUTION; i++, data++)
     //     *i = *data;
 
-    xin_change_directory(current_directory.c_str());
+    xin_folder_change(current_directory.c_str());
 
     // while(getscan() != ENTER);
 

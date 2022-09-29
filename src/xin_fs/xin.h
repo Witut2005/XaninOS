@@ -5,6 +5,8 @@
 #include <stddef.h>
 #include <xin_fs/xin_entry.h>
 
+#define XIN_SYSTEM_FOLDER '/'
+
 typedef int __STATUS;
 
 enum XANIN_RETURN_STATUS
@@ -38,8 +40,8 @@ xin_entry* xin_init_fs(void);
 xin_entry* xin_find_free_entry(void);
 
 int create_file(char* entry_name);
-int xin_create_directory(char* entry_name);
-xin_entry* xin_change_directory(char* new_directory);
+int xin_folder_create(char* entry_name);
+xin_entry* xin_folder_change(char* new_directory);
 
 
 
