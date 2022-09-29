@@ -11,6 +11,7 @@
 
 void scan(void)
 {
+
     
     if(strcmp(program_name, "\0"))
     {
