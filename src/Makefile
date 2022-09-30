@@ -128,6 +128,9 @@ build:
 	@echo [C] network_device.cpp
 	@$(C) $(C_OPTIONS) ./netapi/network_device.c -o ./netapi/network_device.o
 
+	@echo [CC] dhcp.cpp
+	@$(CC) $(CC_OPTIONS) ./network_protocols/dhcp/dhcp.cpp -o ./network_protocols/dhcp/dhcp.o
+
  
 	@#C LIBARIES
 

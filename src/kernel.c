@@ -224,17 +224,15 @@ void _start(void)
 
     // create_file_kernel("/system_space1");
     // create_file_kernel("/system_space2");
+    memset((uint8_t*)&ArpTable[0], 0xFF, sizeof(ArpTable[0]));
+    current_arp_entry++;
+
     netapi_init();
     i8254x_init();
 
     
     uint8_t ip_addr[4] = {0x0};
     uint8_t ip_dest[4] = {192,168,0,160};
-
-    for(int i = 0; i < 10; i++)
-    {
-        memset((uint8_t*)&ArpTable[i], 0x0, 10);
-    }
 
     KeyInfo.is_ctrl = false;
     KeyInfo.is_shift = false;
