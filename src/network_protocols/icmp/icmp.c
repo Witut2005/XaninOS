@@ -29,9 +29,9 @@ void icmp_ping(uint32_t ip_dest)
     echo_id_global++;
     
 
-    uint8_t ip_src[] = {192,168, 19, 12};
+    uint32_t ip_src = (192 << 24)  | (168 << 16) | (0<< 8) | 12;
 
-    ipv4_packet_send(ip_dest, create_ip_address(ip_src), INTERNET_CONTROL_MESSAGE_PROTOCOL, sizeof(IcmpPacket), 64, (uint8_t*)packet);
+    ipv4_packet_send(ip_dest, ip_src, INTERNET_CONTROL_MESSAGE_PROTOCOL, 64, (uint8_t*)packet, sizeof(IcmpPacket) + 4 + 0x20 + 20);
 
 
 }

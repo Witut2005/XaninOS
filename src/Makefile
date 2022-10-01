@@ -220,6 +220,7 @@ build:
 	./network_protocols/internet_protocol/ipv4/ip.o \
 	./network_protocols/udp/udp.o \
 	./network_protocols/icmp/icmp.o \
+	./network_protocols/dhcp/dhcp.o \
 	./netapi/network_device.o \
 	./devices/IOAPIC/ioapic.o \
 	./test/testc.o \

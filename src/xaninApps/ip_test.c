@@ -6,9 +6,11 @@
 
 int ip_test(char* arg)
 {
-    uint8_t dest_ip[] = {192,168,0,160};
-    uint8_t src_ip[] = {192,168,19,12};
+    
+    uint32_t ip_dest = str2ipv4(arg); 
+    uint32_t ip_src = (192 << 24)  | (168 << 16) | (0 << 8) | 12;
+
 
     while(KeyInfo.scan_code != ENTER)
-        ipv4_packet_send(create_ip_address(dest_ip), create_ip_address(src_ip), USER_DATAGRAM_PROTOCOL, 0x10, 64, (uint8_t*)0x100);
+        ipv4_packet_send(ip_dest, ip_src, USER_DATAGRAM_PROTOCOL, 0x10, 64, (uint8_t*)0x100);
 }

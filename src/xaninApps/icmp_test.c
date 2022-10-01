@@ -9,7 +9,7 @@ int icmp_test(char* ip_dest_str)
 
     while(KeyInfo.scan_code != ENTER)   
     {
-        icmp_ping(endian_switch32(ip_dest));
+        icmp_ping(ip_dest);
         sleep(1);
     }
 

@@ -1,6 +1,7 @@
 
 #include <network_protocols/internet_protocol/ipv4/ip.hpp>
 #include <network_protocols/icmp/icmp.h>
+#include <network_protocols/dhcp/dhcp.h>
 #include <libcpp/cstdlib.h>
 #include <network_protocols/ethernet_frame/ethernet_frame.hpp>
 #include <network_protocols/arp/arp.h>
@@ -36,7 +37,7 @@ extern "C" uint16_t ipv4_checksum_get(uint16_t* data, uint32_t data_size)
     return ((~temp & 0xFF00) >> 8) | ((~temp & 0x00FF) << 8);
 }
 
-void InternetProtocolInterface::ip4_packet_send(uint32_t dest_ip, uint32_t src_ip, uint8_t protocol, uint16_t packet_size, uint8_t ttl, uint8_t* data)
+void InternetProtocolInterface::ip4_packet_send(uint32_t dest_ip, uint32_t src_ip, uint8_t protocol, uint8_t ttl, uint8_t* data, uint16_t packet_size)
 {
     uint16_t final_packet_size = packet_size + IPV4_HEADER_SIZE;
 
@@ -49,8 +50,8 @@ void InternetProtocolInterface::ip4_packet_send(uint32_t dest_ip, uint32_t src_i
     IpHeader->protocol = protocol;
     IpHeader->identification = 0x0;
     IpHeader->checksum = endian_switch(static_cast<uint16_t>(packet_size + IpHeader->identification)); // oj nie wiem czy dobrze
-    IpHeader->source_ip_address = src_ip;
-    IpHeader->destination_ip_address= dest_ip;
+    IpHeader->source_ip_address = endian_switch(src_ip);
+    IpHeader->destination_ip_address= endian_switch(dest_ip);
 
 
     // xprintf("%d ", *final_packet_size);
@@ -64,10 +65,7 @@ void InternetProtocolInterface::ip4_packet_send(uint32_t dest_ip, uint32_t src_i
             protocol_header = protocol_header + IPV4_HEADER_SIZE;
             UdpHeader* UdpPacket = (UdpHeader*)protocol_header;
 
-            memcpy((uint8_t*)UdpPacket, data, 8);
-            uint8_t* packet_data = (uint8_t*)UdpPacket;
-            packet_data = packet_data + sizeof(UdpHeader);
-            memcpy(packet_data, data, 1518 - sizeof(Ipv4Header) - sizeof(UdpHeader));
+            memcpy((uint8_t*)UdpPacket, data , 1518 - sizeof(Ipv4Header) - sizeof(UdpHeader));
 
             EthernetFrameInterface* NewEthernetFrame = (EthernetFrameInterface*)malloc(sizeof(EthernetFrameInterface));
             
@@ -111,10 +109,10 @@ extern "C"
         return tmp;
     }
 
-    void ipv4_packet_send(uint32_t dest_ip, uint32_t src_ip, uint8_t protocol, uint16_t packet_size, uint8_t ttl,  uint8_t* data)
+    void ipv4_packet_send(uint32_t dest_ip, uint32_t src_ip, uint8_t protocol, uint8_t ttl,  uint8_t* data, uint16_t packet_size)
     {
         InternetProtocolInterface InternetProtocolPacket;
-        InternetProtocolPacket.ip4_packet_send(dest_ip, src_ip, protocol, (uint16_t)packet_size, ttl, data);
+        InternetProtocolPacket.ip4_packet_send(dest_ip, src_ip, protocol, ttl, data, packet_size);
     }
 
 }

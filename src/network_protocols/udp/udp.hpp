@@ -6,6 +6,8 @@
 #define USER_DATAGRAM_PROTOCOL 0x11
 #define UDP_HEADER_SIZE 0x8
 
+#define UDP_BROADCAST 0xFFFFFFFF
+
 struct UdpHeader
 {
 
@@ -19,5 +21,5 @@ struct UdpHeader
 class UserDatagramProtocolInterface
 {
     public:
-    void ipv4_send(uint32_t dest_ip, uint32_t src_ip, uint16_t dest_port, uint16_t src_port, uint16_t packet_size, uint8_t* data);
+    void ipv4_send(uint32_t dest_ip, uint32_t src_ip, uint16_t dest_port, uint16_t src_port, uint8_t* data, uint16_t packet_size);
 };
