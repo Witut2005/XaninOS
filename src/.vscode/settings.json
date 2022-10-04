@@ -17,7 +17,8 @@
         "icmp.h": "c",
         "string.h": "c",
         "ip.h": "c",
-        "endian.h": "c"
+        "endian.h": "c",
+        "network_device.h": "c"
     },
     "makefile.launchConfigurations": [
         {

@@ -459,7 +459,7 @@ extern "C"
     {
         Intel8254x.init();
         if(Intel8254x.is_present)
-            netapi_add_device(i8254x_packet_receive, i8254x_packet_send, i8254x_mac_get(), i8254x_interrupt_handler);
+            netapi_add_device(i8254x_packet_receive, i8254x_packet_send, i8254x_mac_get(), i8254x_interrupt_handler, &Intel8254x.pci_info);
     }
 
     

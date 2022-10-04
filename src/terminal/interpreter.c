@@ -174,7 +174,7 @@ void scan(void)
     XANIN_ADD_APP_ENTRY1("logo", logo_color_change)
     #endif
 
-    XANIN_ADD_APP_ENTRY0("nic_info", nic_info)
+    XANIN_ADD_APP_ENTRY1("nic_info", nic_info)
 
     XANIN_ADD_APP_ENTRY1("gyn", gyn_interpreter)
 
@@ -194,6 +194,7 @@ void scan(void)
     XANIN_ADD_APP_ENTRY1("icmp_test", icmp_test)
     XANIN_ADD_APP_ENTRY1("arp_check", arp_check)
     XANIN_ADD_APP_ENTRY0("dhcp_test", dhcp_test)
+    XANIN_ADD_APP_ENTRY2("netdevice_rename", network_device_rename)
 
     else if(strcmp("real_mode_fswitch", program_name))
     {
