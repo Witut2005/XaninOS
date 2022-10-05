@@ -5,8 +5,8 @@
 #include <libc/stdlibx.h>
 #include <libc/string.h>
     
-static NetworkHandler NetworkHandlersBackup[10];
-static NetworkHandler NetworkHandlers[10];
+NetworkHandler NetworkHandlersBackup[10];
+NetworkHandler NetworkHandlers[10];
 
 void netapi_init(void)
 {

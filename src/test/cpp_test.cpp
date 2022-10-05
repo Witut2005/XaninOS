@@ -17,6 +17,7 @@
 #include <libcpp/box.h>
 #include <libcpp/iterator.h>
 #include <libcpp/bytes.h>
+#include <libcpp/list.h>
 
 class Test
 {
@@ -127,6 +128,12 @@ void cpp_prog()
     char* buf = (char*)calloc(50);
     xscan_range(buf, 10);
     std::cout << buf << std::endl;
+
+    screen_clear();
+
+    std::List MojaLista(123); 
+    MojaLista.push(5);
+    MojaLista.print();
 
     wait_key(ENTER_RELEASE);
     wait_key(ENTER_RELEASE);
