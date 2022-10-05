@@ -58,18 +58,28 @@ class List
 
     void print(void)
     {
-        ListElement* tmp = FirstElement;
+        ListElement* Tmp = FirstElement;
         std::cout << '[';
-        while(tmp->next != nullptr)
+        while(Tmp->next != nullptr)
         {
-            std::cout << tmp->value << ',';
-            tmp = tmp->next;
+            std::cout << Tmp->value << ',';
+            Tmp = Tmp->next;
         }
-        std::cout << tmp->value << ']';
+        std::cout << Tmp->value << ']';
         std::cout << std::endl;
     }
 
-    T pop(void);
+    T pop(void)
+    {
+        ListElement* Tmp = goto_last_element();
+
+        T ret = Tmp->value;
+        Tmp->previous->next = nullptr;
+
+        free(Tmp);
+        return ret;
+    }
+
     T operator[](uint32_t index);
 
     ListElement* operator++(int);

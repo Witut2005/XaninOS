@@ -18,6 +18,7 @@
 #include <libcpp/iterator.h>
 #include <libcpp/bytes.h>
 #include <libcpp/list.h>
+#include <libcpp/map.h>
 
 class Test
 {
@@ -131,9 +132,17 @@ void cpp_prog()
 
     screen_clear();
 
-    std::List MojaLista(123); 
-    MojaLista.push(5);
+    std::List MojaLista(0); 
+    for(int i = 1; i < 10; i++)
+        MojaLista.push(i);
     MojaLista.print();
+
+    std::UnorderedMap<char, int> Mapa;
+    Mapa.insert('a', 10);
+    Mapa.insert('b', 11);
+    Mapa.insert('c', 12);
+
+    xprintf("0x%x\n", Mapa.find('c')->item.second);
 
     wait_key(ENTER_RELEASE);
     wait_key(ENTER_RELEASE);
