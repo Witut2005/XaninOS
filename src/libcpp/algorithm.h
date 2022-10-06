@@ -1,4 +1,5 @@
 
+
 #pragma once
 #include <stdint.h>
 #include <libcpp/utility.h>
@@ -108,6 +109,12 @@ bool equal(T beg_first, T end_first, X beg_second)
 
     return true;
 
+}
+
+template <class T, class X>
+bool equal(T x, X t)
+{
+    return x == t;
 }
 
 }

@@ -10,6 +10,7 @@ template<class K, class V>
 class UnorderedMap
 {
 
+    public:
     struct ListElement
     {
         std::pair<K, V> item;
@@ -67,6 +68,40 @@ class UnorderedMap
         LastItem->next = nullptr;
 
         
+    }
+
+    V pop_end(void)
+    {
+        ListElement* LastItem = goto_last_element();
+        auto tmp = LastItem->value;
+        free(LastItem);
+        return tmp;
+    }
+    
+    void push_front(K key, V value)
+    {
+        ListElement* NewItem = (ListElement*)malloc(sizeof(ListElement));
+        NewItem->next = this->Head;
+        NewItem->previous = nullptr;
+        NewItem->item.first = key;
+        NewItem->item.second = value;
+        Head = NewItem;
+    }
+
+    void print(void)
+    {
+        ListElement* HeadTmp = this->Head;
+
+        std::cout << '[';
+
+        while(HeadTmp->next != nullptr)
+        {
+            std::cout << HeadTmp->item.second << ',';
+            HeadTmp = HeadTmp->next;
+        }
+
+        std::cout << HeadTmp->item.second << ']' << std::endl;
+
     }
 
     V operator[](K key)

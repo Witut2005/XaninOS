@@ -141,8 +141,10 @@ void cpp_prog()
     Mapa.insert('a', 10);
     Mapa.insert('b', 11);
     Mapa.insert('c', 12);
+    Mapa.push_front('o', 13);
+    Mapa.Head->item.second = 1234;
 
-    xprintf("0x%x\n", Mapa.find('c')->item.second);
+    Mapa.print();
 
     wait_key(ENTER_RELEASE);
     wait_key(ENTER_RELEASE);
