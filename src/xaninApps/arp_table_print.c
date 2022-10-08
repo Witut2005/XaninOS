@@ -23,10 +23,10 @@ int arp_table_print(char* arg)
 
             uint8_t* tmp = (uint8_t*)table[i].ip_address;
 
-            for(j = 0; j < 3; j++)
+            for(j = 3; j > 0; j--)
                 xprintf("%d.", tmp[j]);
 
-            xprintf("%d\n", tmp[3]);
+            xprintf("%d\n", tmp[0]);
         }
     }
 

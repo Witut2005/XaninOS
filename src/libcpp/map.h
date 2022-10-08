@@ -30,6 +30,7 @@ class UnorderedMap
         Head->next = nullptr;
         Head->previous = nullptr;
         Tail = Head;
+        this->size = 0;
     }
 
     ListElement* goto_last_element()
@@ -58,7 +59,16 @@ class UnorderedMap
     void insert(K key, V value)
     {
 
+        if(!size)
+        {
+            this->Head->item.first = key;
+            this->Head->item.second = value;
+            this->size++;
+            return;
+        }
+
         ListElement* LastItem = goto_last_element();
+
         LastItem->next = (ListElement*)(malloc(sizeof(ListElement)));
 
         LastItem = LastItem->next;
@@ -66,6 +76,7 @@ class UnorderedMap
         LastItem->item.second = value;
 
         LastItem->next = nullptr;
+        this->size++;
 
         
     }
@@ -77,9 +88,28 @@ class UnorderedMap
         free(LastItem);
         return tmp;
     }
-    
+
+    V pop_front(void)
+    {
+        V ret = this->Head->item.second;
+        auto tmp = this->Head;
+        this->Head = this->Head->next;
+        free(tmp);
+
+        return ret;
+    }
+
     void push_front(K key, V value)
     {
+        if(!size)
+        {
+            this->Head->item.first = key;
+            this->Head->item.second = value;
+            this->size++;
+            return;
+        }
+
+        this->size++;
         ListElement* NewItem = (ListElement*)malloc(sizeof(ListElement));
         NewItem->next = this->Head;
         NewItem->previous = nullptr;
@@ -96,11 +126,11 @@ class UnorderedMap
 
         while(HeadTmp->next != nullptr)
         {
-            std::cout << HeadTmp->item.second << ',';
+            std::cout << '[' << HeadTmp->item.first << ',' << HeadTmp->item.second << "], ";
             HeadTmp = HeadTmp->next;
         }
 
-        std::cout << HeadTmp->item.second << ']' << std::endl;
+        std::cout << '[' << HeadTmp->item.first << ',' << HeadTmp->item.second << "]]" << std::endl;
 
     }
 

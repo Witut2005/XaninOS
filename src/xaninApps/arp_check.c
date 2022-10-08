@@ -12,7 +12,7 @@ int arp_check(const char* ip_addr_str)
     uint32_t ip = str2ipv4(ip_addr_str);
 
 
-    int x = mac_get_from_ip(endian_switch32(ip));
+    int x = mac_get_from_ip(ip);
 
     if(x != 0xFF)
     {

@@ -35,9 +35,9 @@ extern "C"
         arp->protocol_address_length = protocol_address_length;
         arp->opcode = endian_switch(opcode);
         memcpy(arp->source_hardware_address, source_hardware_address, 6);
-        arp->source_protocol_address = source_protocol_address;
+        arp->source_protocol_address = endian_switch(source_protocol_address);
         memcpy(arp->destination_hardware_address, destination_hardware_address, 6);
-        arp->destination_protocol_address = destination_protocol_address;
+        arp->destination_protocol_address = endian_switch(destination_protocol_address);
         return arp;
 
     }
@@ -48,12 +48,20 @@ extern "C"
         if(strncmp((char*)arp_header->destination_hardware_address, "\0\0\0\0\0\0", 6))
             return;
 
+        uint32_t ip_addr = endian_switch(arp_header->source_protocol_address);
+
+        for(int i = 0; i < ARP_TABLE_ENTRIES; i++)
+            if(memcmp(ArpTable[i].mac_address, arp_header->source_hardware_address, 6) && memcmp(ArpTable[i].ip_address, (uint8_t*)&ip_addr, 4))
+                return;
+
+        current_arp_entry++;
+
         memcpy(LastArpReply.mac_address, arp_header->source_hardware_address, 6);
         memcpy(LastArpReply.ip_address, (uint8_t*)&arp_header->source_protocol_address, 4);
 
 
         memcpy(ArpTable[current_arp_entry].mac_address, arp_header->source_hardware_address, 6);
-        memcpy(ArpTable[current_arp_entry].ip_address, (uint8_t*)&arp_header->source_protocol_address, 4);
+        memcpy(ArpTable[current_arp_entry].ip_address, (uint8_t*)&ip_addr, 4);
     }
 
     uint8_t mac_get_from_ip(uint32_t ip)

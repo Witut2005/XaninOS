@@ -141,10 +141,10 @@ void cpp_prog()
     Mapa.insert('a', 10);
     Mapa.insert('b', 11);
     Mapa.insert('c', 12);
-    Mapa.push_front('o', 13);
-    Mapa.Head->item.second = 1234;
+    auto aha = Mapa.pop_front();
 
     Mapa.print();
+    std::cout << aha << std::endl;
 
     wait_key(ENTER_RELEASE);
     wait_key(ENTER_RELEASE);

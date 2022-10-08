@@ -9,8 +9,8 @@ void icmp_message_send(uint8_t icmp_type, uint8_t icmp_code)
 
 }
 
-int static echo_id_global;
-int static echo_seq_global;
+int echo_id_global = 1;
+int echo_seq_global = 1;
 
 void icmp_ping(uint32_t ip_dest)
 {
@@ -29,9 +29,9 @@ void icmp_ping(uint32_t ip_dest)
     echo_id_global++;
     
 
-    uint32_t ip_src = (192 << 24)  | (168 << 16) | (0<< 8) | 12;
+    uint32_t ip_src = (192 << 24)  | (168 << 16) | ( 19 << 8) | 12;
 
-    ipv4_packet_send(ip_dest, ip_src, INTERNET_CONTROL_MESSAGE_PROTOCOL, 64, (uint8_t*)packet, sizeof(IcmpPacket) + 4 + 0x20 + 20);
+    ipv4_packet_send(ip_dest, ip_src, INTERNET_CONTROL_MESSAGE_PROTOCOL, 128, (uint8_t*)packet, sizeof(IcmpPacket) + 0x20);
 
 
 }
