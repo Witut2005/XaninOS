@@ -241,33 +241,17 @@ int xin_folder_create(char* entry_name)
     else if(!only_entry_name && entry_name[0] != '/')
     {
 
-        // char* full_path = xin_get_current_path(entry_name);
+        // return XANIN_ERROR;
+        char full_path[40];
+        memcpy(full_path, xin_get_current_path(entry_name), 40);
 
+        xin_entry* entry_path = xin_find_entry(xin_get_file_pf(full_path)->entry_path);
 
-        // int i;
-        // for(i = strlen(entry_name) - 1; i >= 0; i--)
-        // {
-        //     if(entry_name[i] == '/')
-        //         break;
-        // }
+        if(entry_path == nullptr)
+            return XANIN_ERROR;
 
-        // char tmp[40] = {0};
-
-        // for(int j = 0; j <= i; j++)
-        //     tmp[j] = entry_name[j];
-
-        // xprintf("%s\n", xin_get_current_path(entry_name));
-        // strcpy(tmp, xin_get_current_path(tmp));
-        // xin_entry* entry_path = nullptr; //xin_find_entry(tmp);
-
-        // if(entry_path == nullptr)
-        //     return XANIN_ERROR;
-
-        // strcpy(entry->entry_path, xin_get_current_path(entry_name));
-    }
-
-
-    
+        strcpy(entry->entry_path, full_path);
+    }  
     
     else if(xin_get_file_pf(entry_name) != nullptr)
     {
@@ -280,6 +264,8 @@ int xin_folder_create(char* entry_name)
 
         set_string(entry->entry_path, entry_name);
     }
+    
+
 
     else
     {

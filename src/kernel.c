@@ -237,9 +237,11 @@ void _start(void)
     KeyInfo.is_ctrl = false;
     KeyInfo.is_shift = false;
     
-    int fd = open("/file_system.bin", 0x0);
-    xprintf("file descritptor id %d\n", (uint32_t)fd);
+    // int fd = open("/file_system.bin", 0x0);
+    // xprintf("file descritptor id %d\n", (uint32_t)fd);
 
+    // screen_clear();
+    // interrupt_enable();
     while(KeyInfo.scan_code != ENTER);
 
 
