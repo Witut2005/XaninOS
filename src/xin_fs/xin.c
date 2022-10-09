@@ -59,7 +59,7 @@ xin_entry *xin_find_entry(char *entry_name)
 
 {
 
-    for (char *i = (char*)XIN_ENTRY_TABLE; (uint32_t)i < XIN_ENTRY_TABLE + (SECTOR_SIZE * 8); i += 32)
+    for (char *i = (char*)XIN_ENTRY_TABLE; (uint32_t)i < XIN_ENTRY_TABLE + (SECTOR_SIZE * 8); i += 64)
     {
         if (strcmp(entry_name, i))
             return (xin_entry *)i;
@@ -70,7 +70,7 @@ xin_entry *xin_find_entry(char *entry_name)
     if(strlen(entry_name) > 40)
         return nullptr;
 
-    for (char *i = (char*)XIN_ENTRY_TABLE; (uint32_t)i < XIN_ENTRY_TABLE + (SECTOR_SIZE * 8); i += 32)
+    for (char *i = (char*)XIN_ENTRY_TABLE; (uint32_t)i < XIN_ENTRY_TABLE + (SECTOR_SIZE * 8); i += 64)
     {
         if (strcmp(entry_name, i))
             return (xin_entry *)i;
@@ -79,7 +79,7 @@ xin_entry *xin_find_entry(char *entry_name)
     return nullptr;
 }
 
-xin_entry* xin_get_file_pf(char* entry_path) // pf = parent folder
+xin_entry* xin_get_file_pf(char* entry_path) // pf = parent folder/cr
 {
     bool if_folder = false;
 
@@ -155,8 +155,7 @@ xin_entry *xin_folder_change(char *new_directory)
             }
         
         }
-        xin_entry *xin_new_directory = xin_find_entry(new_directory);
-        return xin_new_directory;
+        return xin_find_entry(xin_current_directory);
     }    
 
     if(new_directory[strlen(new_directory) - 1] != '/')
@@ -219,6 +218,8 @@ int xin_folder_create(char* entry_name)
 
     entry_name[strlen(entry_name) - 1] = '/';
 
+
+
     if(only_entry_name)
     {
 
@@ -236,6 +237,37 @@ int xin_folder_create(char* entry_name)
         set_string(entry->entry_path, path);
 
     }
+
+    else if(!only_entry_name && entry_name[0] != '/')
+    {
+
+        // char* full_path = xin_get_current_path(entry_name);
+
+
+        // int i;
+        // for(i = strlen(entry_name) - 1; i >= 0; i--)
+        // {
+        //     if(entry_name[i] == '/')
+        //         break;
+        // }
+
+        // char tmp[40] = {0};
+
+        // for(int j = 0; j <= i; j++)
+        //     tmp[j] = entry_name[j];
+
+        // xprintf("%s\n", xin_get_current_path(entry_name));
+        // strcpy(tmp, xin_get_current_path(tmp));
+        // xin_entry* entry_path = nullptr; //xin_find_entry(tmp);
+
+        // if(entry_path == nullptr)
+        //     return XANIN_ERROR;
+
+        // strcpy(entry->entry_path, xin_get_current_path(entry_name));
+    }
+
+
+    
     
     else if(xin_get_file_pf(entry_name) != nullptr)
     {
@@ -416,7 +448,38 @@ int create_file(char* entry_name)
         }
     }
 
-    if(only_entry_name)
+    if(!only_entry_name && entry_name[0] != '/')
+    {
+
+        char* full_path = xin_get_current_path(entry_name);
+
+
+        int i;
+        for(i = strlen(entry_name) - 1; i >= 0; i--)
+        {
+            if(entry_name[i] == '/')
+                break;
+        }
+
+        char tmp[40] = {0};
+
+        for(int j = 0; j <= i; j++)
+            tmp[j] = entry_name[j];
+
+        xprintf("%s\n", xin_get_current_path(entry_name));
+        strcpy(tmp, xin_get_current_path(tmp));
+        xin_entry* entry_path = xin_find_entry(tmp);
+
+        if(entry_path == nullptr)
+        {
+            memset(entry, 0, 64); 
+            return XANIN_ERROR;
+        }
+
+        strcpy(entry->entry_path, xin_get_current_path(entry_name));
+    }
+
+    else if(only_entry_name)
     {
         char* path = xin_get_current_path(entry_name); 
 
