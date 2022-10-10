@@ -1,8 +1,8 @@
 
 #include <devices/NIC/8254x.hpp>
-#include <libcpp/cstdio.h>
+#include <libc/stdiox.h>
 #include <libcpp/hal.h>
-#include <libcpp/chal.h>
+#include <libc/hal.h>
 #include <libcpp/ostream.h>
 #include <libc/syslog.h>
 #include <libcpp/cmemory.h>

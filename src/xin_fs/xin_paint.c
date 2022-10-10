@@ -186,6 +186,7 @@ void xin_paint(char* file_name)
     }
 
     keyboard_handle = nullptr;
+    fclose(&xin_file);
     return;
     // 11:48:24
 

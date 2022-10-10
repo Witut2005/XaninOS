@@ -1,7 +1,7 @@
 /*
 #include <libcpp/hal.h>
-#include <libcpp/chal.h>
-#include <libcpp/cstdio.h>
+#include <libc/hal.h>
+#include <libc/stdiox.h>
 
 #define PS2_DATA_REGISTER     0x60
 #define PS2_STATUS_REGISTER   0x64

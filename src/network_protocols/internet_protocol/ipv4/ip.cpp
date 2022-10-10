@@ -7,7 +7,7 @@
 #include <network_protocols/arp/arp.h>
 #include <libcpp/endian.h>
 #include <libcpp/cmemory.h>
-#include <libcpp/cstdio.h>
+#include <libc/stdiox.h>
 
 #define ETHERNET_TYPE_IPV4 0x800
 #define IPV4_HEADER_SIZE 20

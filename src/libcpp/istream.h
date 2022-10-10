@@ -2,7 +2,7 @@
 #pragma once
 
 #include <stdint.h>
-#include <libcpp/cstdio.h>
+#include <libc/stdiox.h>
 #include <libcpp/string.h>
 
 namespace std

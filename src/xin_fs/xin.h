@@ -29,6 +29,11 @@ extern uint8_t shutdown_program_buffer[512];
 extern uint8_t* bootloader_program_buffer;
 extern uint8_t* kernel_load_backup;
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 char* xin_set_current_directory(char* directory);
 char* xin_get_current_directory(void);
 char* xin_get_current_path(char* file_name);
@@ -58,3 +63,7 @@ __STATUS remove_directory(char* folder_name);
 void create_file_kernel(char* entry_name);
 void fclose(xin_entry** file);
 char* getline(xin_entry* file, int line_id);
+
+#ifdef __cplusplus
+}
+#endif

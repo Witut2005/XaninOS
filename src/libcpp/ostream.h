@@ -4,9 +4,7 @@
 #include <stdint.h>
 #include <libcpp/ctime.h>
 #include <libcpp/string.h>
-#include <libcpp/cstdio.h>
-
-#define set_output_color(x,y) (x << 4 | y)
+#include <libc/stdiox.h>
 
 namespace std
 {

@@ -2,7 +2,7 @@
 
 #include <stdint.h>
 #include <stddef.h>
-#include <libcpp/cstdio.h>
+#include <libc/stdiox.h>
 
 enum IoApicInfoRegs
 {

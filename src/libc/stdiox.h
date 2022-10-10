@@ -3,6 +3,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <libc/colors.h>
 
 #define set_output_color(x,y) (x << 4 | (y & 0xF))
 
@@ -20,6 +21,10 @@ Screen.y = y_new
 
 extern char* color_attributes[16];
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void screen_clear(void);
 char putchar(char character);
 char putchar_color(uint8_t color, char character);
@@ -27,3 +32,7 @@ void print_bcd_number(uint8_t x);
 void xprintf(char* str, ... );
 void xscanf(char* str, ... );
 void xscan_range(char* string_buffer, uint32_t how_many_chars);
+
+#ifdef __cplusplus
+}
+#endif

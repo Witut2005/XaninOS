@@ -3,6 +3,10 @@
 
 #include <stdint.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void outbIO(uint16_t port,uint8_t al);
 void outwIO(uint16_t port,uint16_t ax);
 void outdIO(uint16_t port,uint32_t eax);
@@ -24,6 +28,10 @@ void pic_disable(void);
 void sse_enable(void);
 void pic_mode_disable(void);
 
+#ifdef __cplusplus
+}
+#endif
+
 static inline void sti(void)
 {
     asm("sti");
@@ -44,10 +52,10 @@ static inline void clc(void)
     asm("clc");
 }
 
-static inline void std(void)
-{
-    asm("std");
-}
+// static inline void std(void)
+// {
+//     asm("std");
+// }
 
 static inline void cld(void)
 {

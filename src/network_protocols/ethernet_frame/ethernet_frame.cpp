@@ -3,7 +3,7 @@
 #include <libcpp/cstdlib.h>
 #include <libcpp/cmemory.h>
 #include <libcpp/endian.h>
-#include <libcpp/cstdio.h>
+#include <libc/stdiox.h>
 #include <devices/NIC/8254x.hpp>
 #include <network_protocols/arp/arp.h>
 #include <libcpp/ctime.h>

@@ -4,7 +4,7 @@
 #include <libcpp/cstdlib.h>
 #include <libcpp/cmemory.h>
 #include <libcpp/endian.h>
-#include <libcpp/cstdio.h>
+#include <libc/stdiox.h>
 #include <libcpp/cstring.h>
 #include <libcpp/ctime.h>
 

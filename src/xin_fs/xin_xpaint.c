@@ -234,6 +234,7 @@ void xin_xpaint(char* file_name)
 
     else
     {
+        // 48:31
     
         uint16_t* data_pointer = (uint16_t*)(xin_file->starting_sector * SECTOR_SIZE);
         screen_clear();
@@ -257,8 +258,8 @@ void xin_xpaint(char* file_name)
 
         uint8_t* screen_ptr = (uint8_t*)VGA_TEXT_MEMORY;
 
-        for(int i = 0; i < VGA_SCREEN_RESOLUTION; i++, screen_ptr += 2)
-            write(xin_file, screen_ptr + 1, 1);
+        // for(int i = 0; i < VGA_SCREEN_RESOLUTION; i++, screen_ptr += 2)
+        write(xin_file, screen_ptr, VGA_SCREEN_RESOLUTION);
         
         xin_file->entry_size = file_data_counter;
         
@@ -266,6 +267,7 @@ void xin_xpaint(char* file_name)
     }
 
     keyboard_handle = nullptr;
+    fclose(&xin_file);
     return;
 
 }

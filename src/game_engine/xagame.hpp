@@ -1,6 +1,7 @@
 
 #include <stdint.h>
 #include <libcpp/utility.h>
+#include <libc/stdiox.h>
 
 #define VGA_TEXT_MEMORY 0xb8000
 #define VGA_WIDTH 80
@@ -19,7 +20,6 @@ typedef struct screen_t screen_t;
 
 extern screen_t Screen;
 
-#define set_output_color(x,y) (x << 4 | y)
 
 namespace xgm
 {
