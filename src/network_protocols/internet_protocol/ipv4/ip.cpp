@@ -99,8 +99,37 @@ void InternetProtocolInterface::ip4_packet_send(uint32_t dest_ip, uint32_t src_i
 
 }
 
+void InternetProtocolInterface::ipv4_packet_receive(Ipv4Header* PacketData)
+{
+    // screen_clear();
+    // xprintf("0x%x", PacketData->protocol);
+    switch(PacketData->protocol)
+    {
+        case USER_DATAGRAM_PROTOCOL:
+        {
+
+            break;
+        }
+
+        case INTERNET_CONTROL_MESSAGE_PROTOCOL:
+        {
+            asm("int 0x0");
+            break;
+        }
+
+    }
+}
+
+
 extern "C"
 {
+
+    void ipv4_packet_receive(Ipv4Header* PacketData)
+    {
+        InternetProtocolInterface* InternetProtocolSubsystem = (InternetProtocolInterface*)malloc(sizeof(InternetProtocolInterface));
+        InternetProtocolSubsystem->ipv4_packet_receive(PacketData);
+    }
+
     uint32_t create_ip_address(uint8_t ip_address[4])
     {
         InternetProtocolInterface* InternetProtocolSubsystem = (InternetProtocolInterface*)malloc(sizeof(InternetProtocolInterface));

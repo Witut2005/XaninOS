@@ -291,32 +291,11 @@ void free(void* ptr)
     pmmngr_free_block(ptr);
 }
 
-void* realloc(void* ptr,  uint32_t size_old,  uint32_t size_new)
+void* realloc(void* ptr, uint32_t size_new)
 {
 
-    if(size_old % 4096)
-        size_old += 4096;
-
-    if(size_new % 4096)
-        size_new += 4096;
-
-    char* ptr_old = ptr;
-
-    pmmngr_free_block(ptr_old);
-
-    for(uint32_t i = 1; i < size_old / 4096; i++)
-    {
-        pmmngr_free_block(ptr_old + (i * 4096));
-    }
-
-
-    ptr = pmmngr_alloc_block(ptr_old);
-
-    for(uint32_t i = 1; i < size_new / 4096; i++)
-    {
-        pmmngr_alloc_block(ptr + (i * 4096));
-    }
-
+    free(ptr);
+    ptr = (void*)malloc(size_new);
     return ptr;
 
 }

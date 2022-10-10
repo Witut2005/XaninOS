@@ -39,7 +39,7 @@ char* xin_get_current_path(char* file_name);
 xin_entry* xin_init_fs(void);
 xin_entry* xin_find_free_entry(void);
 
-int create_file(char* entry_name);
+int xin_create_file(char* entry_name);
 int xin_folder_create(char* entry_name);
 xin_entry* xin_folder_change(char* new_directory);
 

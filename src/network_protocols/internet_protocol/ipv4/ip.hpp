@@ -28,5 +28,6 @@ class InternetProtocolInterface
     public:
     uint32_t create_ip_address(uint8_t ip_address[4]);
     void ip4_packet_send(uint32_t dest_ip, uint32_t src_ip, uint8_t protocol, uint8_t ttl, uint8_t* data, uint16_t packet_size);
+    void ipv4_packet_receive(Ipv4Header* PacketData);
 
 };

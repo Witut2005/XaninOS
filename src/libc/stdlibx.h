@@ -82,7 +82,7 @@ void merge_sort(int array[], int first, int last);
 void* malloc(uint32_t size);
 void* calloc(uint32_t size);
 void free(void* ptr);
-void* realloc(void* ptr,  uint32_t size_old,  uint32_t size_new);
+void* realloc(void* ptr, uint32_t size_new);
 
 struct xchar
 {

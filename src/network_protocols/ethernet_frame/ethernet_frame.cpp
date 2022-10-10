@@ -7,10 +7,11 @@
 #include <devices/NIC/8254x.hpp>
 #include <network_protocols/arp/arp.h>
 #include <libcpp/ctime.h>
+#include <network_protocols/ethernet_type.h>
+#include <network_protocols/internet_protocol/ipv4/ip.hpp>
 
 extern "C" void i8254x_packet_send(uint32_t address, uint16_t length);
 extern "C" uint32_t* i8254x_class_return(void);
-
 
 
 void EthernetFrameInterface::send(uint8_t* mac_destination, uint8_t* mac_source, uint16_t protocol, uint8_t* buffer, uint16_t length)
@@ -72,7 +73,19 @@ EthernetFrame* EthernetFrameInterface::receive(uint8_t* buffer)
     switch(Frame->ethernet_type)
     {
         case ARP_ETHER_TYPE: 
+        {
             arp_reply_handle((AddressResolutionProtocol*)Frame->data);
+            break;
+        }
+            
+        case ETHERNET_TYPE_IPV4:
+        {
+            uint8_t* data =  (uint8_t*)Frame->data;
+            data = data + ETHERNET_FRAME_MAC_HEADER_SIZE;
+            InternetProtocolInterface* InternetProtocolSubsystem = (InternetProtocolInterface*)malloc(sizeof(InternetProtocolInterface));
+            InternetProtocolSubsystem->ipv4_packet_receive((Ipv4Header*)data);
+            break;
+        }
 
     }
 

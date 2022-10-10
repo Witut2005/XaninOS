@@ -418,7 +418,7 @@ void create_file_kernel(char* entry_name)
 }
 
 
-int create_file(char* entry_name)
+int xin_create_file(char* entry_name)
 {
 
     bool only_entry_name = true;

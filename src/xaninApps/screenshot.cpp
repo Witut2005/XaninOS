@@ -21,7 +21,7 @@ void screenshot(void)
     xin_folder_change(filename.c_str());
     
     CmosTime time = std::chrono::system_clock::now();
-    xin::create_file(std::chrono::time_to_string(time).c_str());    
+    xin::xin_create_file(std::chrono::time_to_string(time).c_str());    
 
     xin_entry* file = fopen(std::chrono::time_to_string(time).c_str(), "rw");
 
