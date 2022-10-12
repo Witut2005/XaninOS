@@ -104,6 +104,9 @@ build:
 	@echo [C] icmp.c
 	@$(C) $(C_OPTIONS) ./network_protocols/icmp/icmp.c -o ./network_protocols/icmp/icmp.o
 
+	@echo [C] sll.c
+	@$(C) $(C_OPTIONS) ./network_protocols/sll/sll.c -o ./network_protocols/sll/sll.o
+
 	@echo [CC] screenshot.cpp
 	@$(CC) $(CC_OPTIONS) ./xaninApps/screenshot.cpp -o ./xaninApps/screenshot.o
 

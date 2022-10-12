@@ -26,17 +26,18 @@ class UnorderedMap
 
     UnorderedMap()
     {
-        Head = (ListElement*)malloc(sizeof(ListElement));
-        Head->next = nullptr;
-        Head->previous = nullptr;
-        Tail = Head;
+        this->Head = (ListElement*)malloc(sizeof(ListElement));
+        this->Tail = (ListElement*)malloc(sizeof(ListElement));
+        this->Head->next = nullptr;
+        this->Head->previous = nullptr;
         this->size = 0;
+        this->Head->next = this->Tail;
     }
 
     ListElement* goto_last_element()
     {
         ListElement* Tmp = Head;
-        while(Tmp->next != nullptr)
+        while(Tmp->next != this->Tail)
         {
             Tmp = Tmp->next;
         }
@@ -46,14 +47,13 @@ class UnorderedMap
     ListElement* find(K key)
     {
         ListElement* Tmp = Head;
-        while(Tmp != nullptr)
+        while(Tmp != Tail)
         {
             if(Tmp->item.first == key)
                 return Tmp;
             Tmp = Tmp->next;
-            
         }
-        return nullptr;
+        return Tail;
     }
 
     void insert(K key, V value)
@@ -75,10 +75,34 @@ class UnorderedMap
         LastItem->item.first = key;
         LastItem->item.second = value;
 
-        LastItem->next = nullptr;
+        LastItem->next = this->Tail;
         this->size++;
 
         
+    }
+
+    V begin(void)
+    {
+        return this->Head;
+    }
+
+    V end(void)
+    {
+        return this->Tail;
+    }
+
+    ListElement* operator ++ (int)
+    {
+        ListElement* Tmp = this->Head;
+        this->Head = this->Head->next;
+
+        return Tmp;
+    }
+
+    ListElement* operator ++ (void)
+    {
+        Head = Head->next;
+        return Head;
     }
 
     V pop_end(void)
@@ -134,9 +158,13 @@ class UnorderedMap
 
     }
 
-    V operator[](K key)
+    V& operator[](K key)
     {
-        return this->find(key);
+        auto ret = this->find(key);
+        if(ret == this->Tail)
+            return (V&)this->Tail;
+        else 
+            return ret->item.second;
     }
 
 

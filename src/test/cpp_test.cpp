@@ -141,10 +141,20 @@ void cpp_prog()
     Mapa.insert('a', 10);
     Mapa.insert('b', 11);
     Mapa.insert('c', 12);
-    auto aha = Mapa.pop_front();
 
-    Mapa.print();
-    std::cout << aha << std::endl;
+    // Mapa.print();
+    auto& tmptmp = Mapa['z'];
+
+    xprintf("0x%x\n", &tmptmp);
+    xprintf("0x%x\n", Mapa.Tail);
+
+    if((uint32_t)tmptmp == (uint32_t)Mapa.Tail)
+        std::cout << "no such element with given key" << std::endl;
+    else
+        std::cout << "value of the given key: " << tmptmp << std::endl;
+
+    // for(auto a : Mapa)
+    //     std::cout << a.second << std::endl
 
     wait_key(ENTER_RELEASE);
     wait_key(ENTER_RELEASE);
