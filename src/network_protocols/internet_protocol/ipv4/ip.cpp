@@ -8,6 +8,7 @@
 #include <libcpp/endian.h>
 #include <libcpp/cmemory.h>
 #include <libc/stdiox.h>
+#include <network_protocols/sll/sll.h>
 
 #define ETHERNET_TYPE_IPV4 0x800
 #define IPV4_HEADER_SIZE 20
@@ -83,6 +84,17 @@ void InternetProtocolInterface::ip4_packet_send(uint32_t dest_ip, uint32_t src_i
             IcmpPacket* Packet = (IcmpPacket*)protocol_header;
 
             memcpy((uint8_t*)Packet, data, packet_size);
+            uint32_t os_ip_address = 192 << 24 |  168 << 16 | 19 << 8 |12;
+
+
+            sll_frame_send(0x4, 0x1, 0x6, ArpTable[mac_get_from_ip(os_ip_address)].mac_address, INTERNET_CONTROL_MESSAGE_PROTOCOL, data, packet_size);
+
+            /*
+            uint8_t* protocol_header = (uint8_t*)IpHeader;
+            protocol_header = protocol_header + IPV4_HEADER_SIZE;
+            IcmpPacket* Packet = (IcmpPacket*)protocol_header;
+
+            memcpy((uint8_t*)Packet, data, packet_size);
 
             EthernetFrameInterface* NewEthernetFrame = (EthernetFrameInterface*)malloc(sizeof(EthernetFrameInterface));
             int arp_table_index = mac_get_from_ip(dest_ip);
@@ -91,7 +103,9 @@ void InternetProtocolInterface::ip4_packet_send(uint32_t dest_ip, uint32_t src_i
 
 
             break;
+            */
         }
+
 
     }
 
