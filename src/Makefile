@@ -137,9 +137,6 @@ build:
  
 	@#C LIBARIES
 
-	@echo [C] algorithm.c
-	@$(C) $(C_OPTIONS) ./libc/algorithm.c -o ./libc/algorithm.o
-
 	@echo [C] alloc.c
 	@$(C) $(C_OPTIONS) ./libc/alloc.c -o ./libc/alloc.o
 
@@ -191,7 +188,6 @@ build:
 
 	@echo [C] kernel.c
 	@$(C) $(C_COMPILE) kernel.c \
-	./libc/algorithm.o \
 	./libc/alloc.o \
 	./libc/hal.o \
 	./libc/math.o \

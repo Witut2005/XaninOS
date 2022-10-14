@@ -10,14 +10,8 @@ uint8_t tmp;
 void hexeditor_input(xchar x)
 {
 
-    static uint8_t selected_character;
-    uint8_t x_save, y_save;
-
-
     if(x.scan_code == F4_KEY || x.scan_code == ESC)
-    {
         app_exited = true;
-    }
 
     else if(x.scan_code == ARROW_UP)
     {
@@ -71,7 +65,7 @@ void hexeditor_input(xchar x)
 
         if(Screen.x == 76)
         {
-            Screen.x = 0xFF;
+            Screen.x = 0x0;
             Screen.y++;
             data_pointer_position++;
         }
@@ -123,7 +117,7 @@ void hexeditor_input(xchar x)
         return;
     }
     
-    else
+    else if(x.character != '\0')
     {
         if((uint32_t)&Screen.cursor[Screen.y][Screen.x] >= VGA_TEXT_MEMORY + VGA_SCREEN_RESOLUTION - 7)
         {
@@ -154,30 +148,29 @@ void hexeditor_input(xchar x)
                 tmp = ((KeyInfo.character - 'a' + 0xa) << 4);
                 data_pointer[data_pointer_position] += tmp;
             }
-
          
-            KeyInfo.character = KeyInfo.character - 'a' + 'A';
-
-            xprintf("%c", getchar());
+            xprintf("%c", x.character);
         }
 
         else if(x.character >= '0' && x.character <= '9')
         {
+            data_pointer[data_pointer_position] = 0x33;
             if(Screen.cursor[Screen.y][Screen.x + 1] == (uint16_t)( ' '| (((black << 4) | white) << 8)))
             {
+
                 data_pointer[data_pointer_position] &= 0xF0;
                 tmp = KeyInfo.character - '0';
-                data_pointer[data_pointer_position] += tmp;
+                data_pointer[data_pointer_position] = data_pointer[data_pointer_position] + tmp;
             }
             
             else
             {
                 data_pointer[data_pointer_position] &= 0x0F;
                 tmp = ((KeyInfo.character - '0') << 4);
-                data_pointer[data_pointer_position] += tmp;
+                data_pointer[data_pointer_position] = data_pointer[data_pointer_position] + tmp;
             }
             
-            xprintf("%c", getchar());
+            xprintf("%c", x.character);
         
         }
             
@@ -187,36 +180,9 @@ void hexeditor_input(xchar x)
             data_pointer_position++;
         }
 
+        x.character = 0;
+
     }  
-    
-
- 
-}
-
-void bytes_print(xin_entry* file)
-{
-
-    screen_clear();
-
-    read(file, data_pointer, VGA_SCREEN_RESOLUTION);
-
-    for(int i = 0; i < 28; i++)
-    {
-        for(int j = 0; j < 26; j++)
-        {
-            xprintf("%mX ", data_pointer[ (26 * i) + j]);
-        }
-        xprintf("\n");
-    }
-    Screen.x = 0;
-    Screen.y = 0;
-
-}
-
-void file_save(xin_entry* file)
-{
-    fseek(file, 0);
-    write(file, data_pointer, 28 * 26);
 }
 
 
@@ -234,16 +200,34 @@ void hexeditor(char* file_name)
         return;
     }
 
-    char* data_pointer = (char*)malloc(28 * 80 * 2);
+    data_pointer = (char*)calloc(VGA_SCREEN_RESOLUTION);
 
-    bytes_print(file);
+
+    screen_clear();
+
+    read(file, data_pointer, VGA_SCREEN_RESOLUTION);
+
+    for(int i = 0; i < 28; i++)
+    {
+        for(int j = 0; j < 26; j++)
+        {
+            xprintf("%mX ", data_pointer[ (26 * i) + j]);
+        }
+        xprintf("\n");
+    }
+
+    fseek(file, 0);
+    Screen.x = 0;
+    Screen.y = 0;
 
     while(!app_exited)hexeditor_input(inputg());
 
     screen_clear();
 
+    fseek(file, 0);
+    write(file, data_pointer, 512);
+    fclose(&file);
     free(data_pointer);
-    file_save(file);
 
 
 }

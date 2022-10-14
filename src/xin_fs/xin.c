@@ -184,7 +184,7 @@ xin_entry *xin_folder_change(char *new_directory)
     for (int i = 0; i < sizeof(xin_current_directory); i++)
         xin_current_directory[i] = '\0';
 
-    set_string(xin_current_directory, xin_new_directory->entry_path);
+    strcpy(xin_current_directory, xin_new_directory->entry_path);
 
     // xprintf("your file: %s", xin_current_directory);
 
@@ -234,7 +234,7 @@ int xin_folder_create(char* entry_name)
             return XIN_FILE_EXISTS;
         }
 
-        set_string(entry->entry_path, path);
+        strcpy(entry->entry_path, path);
 
     }
 
@@ -262,7 +262,7 @@ int xin_folder_create(char* entry_name)
             return XIN_FILE_EXISTS;
         }
 
-        set_string(entry->entry_path, entry_name);
+        strcpy(entry->entry_path, entry_name);
     }
     
 
@@ -299,7 +299,7 @@ void xin_file_create_at_address(char *path, uint8_t creation_date, uint8_t creat
                                 uint32_t starting_sector, uint8_t entry_size, uint8_t entry_type,uint32_t entry_number)
 {
     xin_entry* entry_created = (xin_entry *)((entry_number * 64) + XIN_ENTRY_TABLE);
-    set_string(entry_created->entry_path, path);
+    strcpy(entry_created->entry_path, path);
 
     entry_created->creation_date = creation_date;
     entry_created->creation_time = creation_time;
@@ -397,7 +397,7 @@ void create_file_kernel(char* entry_name)
 
     time_get(&SystemTime);
 
-    set_string(entry->entry_path, entry_name);
+    strcpy(entry->entry_path, entry_name);
 
     entry->creation_date = (uint32_t)((SystemTime.day_of_month << 24) | (SystemTime.month << 16) | (SystemTime.century << 8) | (SystemTime.year)); 
     entry->creation_time = (uint16_t)(SystemTime.hour << 8) | (SystemTime.minutes);
@@ -478,7 +478,7 @@ int xin_create_file(char* entry_name)
             return XIN_FILE_EXISTS;
         }
 
-        set_string(entry->entry_path, path);
+        strcpy(entry->entry_path, path);
 
     }
     
@@ -491,7 +491,7 @@ int xin_create_file(char* entry_name)
             return XIN_FILE_EXISTS;
         }
 
-        set_string(entry->entry_path, entry_name);
+        strcpy(entry->entry_path, entry_name);
     }
 
     else if(xin_get_file_pf(entry_name) != nullptr)
@@ -503,7 +503,7 @@ int xin_create_file(char* entry_name)
             return XIN_FILE_EXISTS;
         }
 
-        set_string(entry->entry_path, entry_name);
+        strcpy(entry->entry_path, entry_name);
     }
 
     else
@@ -538,7 +538,14 @@ int xin_create_file(char* entry_name)
 
     // for(char* i = (char*)(entry->starting_sector * SECTOR_SIZE); (uint32_t)i < entry->starting_sector * SECTOR_SIZE + 0x10 * SECTOR_SIZE; i++)
     //     *i = 0x0;
+
+    uint8_t* zeros = (uint8_t*)calloc(SECTOR_SIZE);
+
+    for(int i = 0; i < 0x10; i++)
+        disk_write(ATA_FIRST_BUS, ATA_MASTER, entry->starting_sector + i, 1, (uint16_t*)zeros);
     
+    free(zeros);
+
     disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x12, 8, (uint16_t*)0x800);
     disk_flush(ATA_FIRST_BUS, ATA_MASTER);
 
@@ -601,6 +608,11 @@ size_t read(xin_entry *entry, void *buf, size_t count)
     char* end = (char *)(entry->file_info->base_address_memory + count + entry->file_info->position);
     char* begin = (char *)(entry->file_info->base_address_memory + entry->file_info->position);
 
+    uint32_t sectors_to_load = entry->starting_sector + ((count + entry->file_info->position) / SECTOR_SIZE) + (count + entry->file_info->position) % SECTOR_SIZE != 0 ? 1 : 0;
+
+    for(int i = 0; i < sectors_to_load; i++)
+        disk_read(ATA_FIRST_BUS, ATA_MASTER, entry->starting_sector + i, 1, (uint16_t*)(entry->file_info->base_address_memory + (i * SECTOR_SIZE)));
+
     for (char *i = begin; i < end; i++, buf++)
     {
         *(char *)buf = *i;
@@ -640,15 +652,61 @@ uint32_t ftell(xin_entry* file)
     return file->file_info->position;
 }
 
+xin_entry *fopen(char *file_path, const char *mode)
+{
+
+
+    xin_entry* file = xin_find_entry(file_path);
+
+
+    if (file != nullptr && file->entry_type != XIN_DIRECTORY && file->entry_path[0] != '\0')
+    {
+        
+        /*
+        for(int i = 0; i < file->entry_size / 512 + (file->entry_size % 512 != 0 ? 1 : 0); i++)
+            disk_read(ATA_FIRST_BUS, ATA_MASTER, file->entry_size, 1, (uint16_t*)((file->starting_sector + i) * SECTOR_SIZE));
+        */
+
+        if(file->file_info == nullptr)
+            file->file_info = (file_information_block*)calloc(sizeof(file_information_block));
+        
+        file->file_info->base_address_memory = (uint8_t*)calloc(SECTOR_SIZE * 0x10);
+
+        // disk_read(ATA_FIRST_BUS, ATA_MASTER, file->starting_sector, 0x1, (uint16_t*)file->file_info->base_address_memory);
+            
+        strcpy(file->file_info->rights, mode);
+
+        file->file_info->position = 0;
+        return file;
+    }
+
+    else if(strcmp(mode, "rw") | strcmp(mode, "w"))
+    {
+        file = create(file_path);
+
+        file->file_info = (file_information_block*)calloc(sizeof(file_information_block));
+        strcpy(file->file_info->rights, mode);
+        file->file_info->base_address_memory = (uint8_t*)calloc(SECTOR_SIZE * 0x10);
+        
+        file->file_info->position = 0;
+        return file;
+    }
+
+
+
+    return nullptr;
+}
+
 
 void fclose(xin_entry** file)
 {
     
     (*file)->file_info->position = 0;
-    set_string((*file)->file_info->rights, "\0");
+    memset((*file)->file_info->rights, '\0', 2);
 
 
-   for(int i = 0; i < (*file)->entry_size / 512 + ((*file)->entry_size % 512 != 0 ? 1 : 0); i++)
+//    for(int i = 0; i < (*file)->entry_size / 512 + ((*file)->entry_size % 512 != 0 ? 1 : 0); i++)
+    for(int i = 0; i < 0x10; i++)
        disk_write(ATA_FIRST_BUS, ATA_MASTER, (*file)->starting_sector + i, 1, (uint16_t*)((*file)->file_info->base_address_memory + (i * SECTOR_SIZE)));
 
     // while(1);
@@ -679,7 +737,7 @@ xin_entry* create(char* file_name)
 
     time_get(&SystemTime);
 
-    set_string(entry->entry_path, entry_full_name);
+    strcpy(entry->entry_path, entry_full_name);
 
     entry->creation_date = (uint32_t)((SystemTime.day_of_month << 24) | (SystemTime.month << 16) | (SystemTime.century << 8) | (SystemTime.year)); 
     entry->creation_time = (uint16_t)(SystemTime.hour << 8) | (SystemTime.minutes);
@@ -721,50 +779,6 @@ int open(char* file_path, uint32_t options)
 
     
 
-
-xin_entry *fopen(char *file_path, const char *mode)
-{
-
-
-    xin_entry* file = xin_find_entry(file_path);
-
-
-    if (file != nullptr && file->entry_type != XIN_DIRECTORY && file->entry_path[0] != '\0')
-    {
-        
-        /*
-        for(int i = 0; i < file->entry_size / 512 + (file->entry_size % 512 != 0 ? 1 : 0); i++)
-            disk_read(ATA_FIRST_BUS, ATA_MASTER, file->entry_size, 1, (uint16_t*)((file->starting_sector + i) * SECTOR_SIZE));
-        */
-
-        if(file->file_info == nullptr)
-            file->file_info = (file_information_block*)malloc(sizeof(file_information_block));
-        
-        file->file_info->base_address_memory = (uint8_t*)calloc(SECTOR_SIZE * 0x10);
-
-        disk_read(ATA_FIRST_BUS, ATA_MASTER, file->starting_sector, 0x1, (uint16_t*)file->file_info->base_address_memory);
-            
-        set_string(file->file_info->rights, mode);
-
-        file->file_info->position = 0;
-        return file;
-    }
-
-    else if(strcmp(mode, "rw") | strcmp(mode, "w"))
-    {
-        file = create(file_path);
-
-        file->file_info = (file_information_block*)malloc(sizeof(file_information_block));
-        set_string(file->file_info->rights, mode);
-        
-        file->file_info->position = 0;
-        return file;
-    }
-
-
-
-    return nullptr;
-}
 
 char* getline(xin_entry* file, int line_id)
 {

@@ -7,7 +7,6 @@
 extern uint32_t strlen(const char* a);
 extern char* strcpy(char* x, const char* y);
 extern char* strncpy(char* x, const char* y, size_t size);
-extern char* set_string(char* ptr, const char* str);
 extern char* reverse_string(char* str);
 extern char* float_to_string(float number, char* str);
 extern uint32_t strcmp(char* a, const char* b);

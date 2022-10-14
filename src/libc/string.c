@@ -9,7 +9,6 @@
 #include <libc/math.h>
 #include <keyboard/key_map.h>
 #include <libc/memory.h>
-#include <libc/algorithm.h>
 
 
 uint32_t strlen(const char* a)
@@ -47,12 +46,6 @@ char* strncpy(char* x, const char* y, size_t size)
 }
 
 
-char* set_string(char* ptr, const char* str)
-{
-    for(int i = 0; i < strlen(str); i++)
-        ptr[i] = str[i];
-    return ptr;
-}
 
 char* reverse_string(char* str)
 {

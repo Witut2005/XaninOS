@@ -15,7 +15,6 @@
 uint32_t strlen(const char* a);
 char* strcpy(char* dest, const char* src);
 char* strncpy(char* x, const char* y, size_t size);
-char* set_string(char* ptr, const char* str);
 char* reverse_string(char* str);
 char* float_to_string(float number, char* str);
 uint32_t strcmp(char* a, const char* b);

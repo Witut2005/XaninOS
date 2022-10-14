@@ -18,10 +18,11 @@ void list_files(char* path)
         {
             printed_text += strlen(i->entry_path);
 
-            if(printed_text >= 70)
+            if(printed_text >= 80)
             {
                 printed_text = 0;
                 xprintf("\n");
+                printed_text += strlen(i->entry_path);
             }
 
             if(strcmp(xin_get_file_pf(i->entry_path)->entry_path, xin_current_directory))
@@ -29,6 +30,7 @@ void list_files(char* path)
                 xprintf("%z%s", set_output_color(black, i->entry_type + 0x2), i);
                 xprintf("  ");
             }
+            printed_text = printed_text + strlen("  ");
         }
 
 
@@ -46,8 +48,10 @@ void list_files(char* path)
 
                 xprintf("%z%s", set_output_color(black, i->entry_type + 0x2), i);
                 xprintf("  ");
-
             }
+            
+            printed_text = printed_text + strlen("  ");
+
         }
 
 

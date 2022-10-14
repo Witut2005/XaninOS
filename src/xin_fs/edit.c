@@ -389,9 +389,9 @@ int edit(char* file_name)
         write(file, "\0", 1);
     
     // screen_clear();
-    // xprintf("%s\n\n\n", program_buffer);
+    // xprintf("program: %s\n", program_buffer);
     // while(KeyInfo.scan_code != ENTER);
-    // xprintf("%s", file->file_info->base_address_memory);
+    // xprintf("fromcio: %s", file->file_info->base_address_memory);
     // while(KeyInfo.scan_code != F4_KEY_RELEASE);
 
     fclose(&file);

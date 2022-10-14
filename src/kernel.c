@@ -13,7 +13,6 @@
 #include <devices/HARD_DISK/disk.c>
 #include <devices/VGA/vga.c>
 #include <xin_fs/xin.h>
-#include <libc/algorithm.h>
 #include <libc/assert.h>
 #include <libc/alloc.h>
 #include <devices/APIC/apic_registers.h>
@@ -237,19 +236,14 @@ void _start(void)
 
 
     // __sys_xin_file_create("/syslog");
-    // xin_create_file("/syslog");
-    // printk("kernel successfully loaded");
+    xin_create_file("/syslog");
+    printk("To wszystko dla Ciebie Babciu <3");
+    printk("Nigdy sie nie poddam");
+    // xin_entry* aha = fopen("/syslog", "rw");
+    // write(aha, "kernel successfully loaded", 20);
+    // fclose(&aha)
     // while(KeyInfo.scan_code != ENTER);
 
-    // memcpy(program_name, "key-test", strlen("key-test"));
-    // scan();
-
-    // while(1)
-    // {
-    //     xprintf("%x", inbIO(0x60));
-    //     msleep(100);
-    //     screen_clear();
-    // }
 
     while(1)
     {

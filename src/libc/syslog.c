@@ -17,6 +17,9 @@ void printk(const char * str)
 
 
     char separator = ':';
+    uint8_t* file_data = (uint8_t*)calloc(512);
+    read(file, file_data, 512);
+    fseek(file, strlen(file_data));
     
     write(file, bcd_to_str(SystemTime.hour, buf), strlen(buf));
 
@@ -39,11 +42,7 @@ void printk(const char * str)
 
     // current_line++;
     free(buf);
-
-    // screen_clear();
-    // xprintf("%s", file->file_info->base_address_memory);
-    fseek(file, 0);
-    // while(KeyInfo.scan_code != ENTER);
+    free(file_data);
 
     fclose(&file);
 }
