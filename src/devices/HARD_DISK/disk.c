@@ -87,8 +87,8 @@ void disk_read(uint16_t base, uint8_t master, uint32_t sector_number,
     
     //disk_status = inbIO(base + ATA_STATUS_REGISTER);
     
-    if(disk_status & 0x1)
-        printk("disk error");
+    // if(disk_status & 0x1)
+    //     printk("disk error");
 
 }
 

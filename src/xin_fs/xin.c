@@ -19,6 +19,7 @@ uint8_t* bootloader_program_buffer;
 uint8_t* kernel_load_backup;
 
 
+uint8_t xin_base_state[100];
 char xin_current_path[38] = {'\0'};
 char xin_current_directory[38] = {'\0'};
 
@@ -81,20 +82,19 @@ xin_entry *xin_find_entry(char *entry_name)
 
 xin_entry* xin_get_file_pf(char* entry_path) // pf = parent folder/cr
 {
+    // xprintf("aaa     ");
     bool if_folder = false;
 
     if(entry_path[strlen(entry_path) - 1] == '/')
         if_folder = true;
 
-    char* parent_folder = (char*)malloc(sizeof(char) * 40);
+    char parent_folder[40] = {0}; 
 
     int i;
     for(i = strlen(entry_path) - 1 - if_folder; entry_path[i] != '/'; i--);
 
     for(int j = 0; j <= i; j++)
         parent_folder[j] = entry_path[j];
-
-    free(parent_folder);
 
     if(xin_find_entry(parent_folder) != nullptr)
         return xin_find_entry(parent_folder);   
@@ -410,10 +410,10 @@ void create_file_kernel(char* entry_name)
 
     entry->starting_sector = (uint32_t)write_entry - XIN_ENTRY_POINTERS;
 
-    disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x12, 8, (uint16_t*)0x800);
+    // disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x12, 8, (uint16_t*)0x800);
 
-    for(int i = 0; i < 40; i++)
-        disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x1a + i, 1, (uint16_t*)(0x1800 + (i * SECTOR_SIZE)));
+    // for(int i = 0; i < 40; i++)
+    //     disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x1a + i, 1, (uint16_t*)(0x1800 + (i * SECTOR_SIZE)));
 
 }
 
@@ -482,6 +482,18 @@ int xin_create_file(char* entry_name)
 
     }
     
+    else if(entry_name[0] == '/')
+    {
+        if(xin_find_entry(entry_name) != nullptr)
+        {
+            // xprintf("%zFILE WITH THIS NAME EXISTS\n", stderr);
+            // while(getscan() != ENTER);
+            return XIN_FILE_EXISTS;
+        }
+
+        set_string(entry->entry_path, entry_name);
+    }
+
     else if(xin_get_file_pf(entry_name) != nullptr)
     {
         if(xin_find_entry(entry_name) != nullptr)
@@ -524,8 +536,8 @@ int xin_create_file(char* entry_name)
 
     entry->starting_sector = (uint32_t)write_entry - XIN_ENTRY_POINTERS;
 
-    for(char* i = (char*)(entry->starting_sector * SECTOR_SIZE); (uint32_t)i < entry->starting_sector * SECTOR_SIZE + 0x10 * SECTOR_SIZE; i++)
-        *i = 0x0;
+    // for(char* i = (char*)(entry->starting_sector * SECTOR_SIZE); (uint32_t)i < entry->starting_sector * SECTOR_SIZE + 0x10 * SECTOR_SIZE; i++)
+    //     *i = 0x0;
     
     disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x12, 8, (uint16_t*)0x800);
     disk_flush(ATA_FIRST_BUS, ATA_MASTER);
@@ -583,8 +595,11 @@ uint32_t xin_get_start_sector(char *entry_name)
 size_t read(xin_entry *entry, void *buf, size_t count)
 {
 
-    char *end = (char *)(entry->starting_sector * SECTOR_SIZE) + entry->file_info->position + count;
-    char* begin = (char *)(entry->starting_sector * SECTOR_SIZE) + entry->file_info->position;
+    // char *end = (char *)(entry->starting_sector * SECTOR_SIZE) + entry->file_info->position + count;
+    // char* begin = (char *)(entry->starting_sector * SECTOR_SIZE) + entry->file_info->position;
+
+    char* end = (char *)(entry->file_info->base_address_memory + count + entry->file_info->position);
+    char* begin = (char *)(entry->file_info->base_address_memory + entry->file_info->position);
 
     for (char *i = begin; i < end; i++, buf++)
     {
@@ -596,11 +611,13 @@ size_t read(xin_entry *entry, void *buf, size_t count)
 size_t write(xin_entry *entry, void *buf, size_t count)
 {
 
-    char *end = (char *)(entry->starting_sector * SECTOR_SIZE) + count + entry->file_info->position;
+    // char *end = (char *)(entry->starting_sector * SECTOR_SIZE) + count + entry->file_info->position;
+    char* end = (char *)(entry->file_info->base_address_memory + count + entry->file_info->position);
 
     uint32_t tmp = entry->file_info->position;
 
-    for (char *i = (char *)(entry->starting_sector * SECTOR_SIZE) + tmp; i < end; i++, buf++)
+    // for (char *i = (char *)(entry->starting_sector * SECTOR_SIZE) + tmp; i < end; i++, buf++)
+    for (char *i = (char *)(entry->file_info->base_address_memory) + tmp; i < end; i++, buf++)
     {
         *i = *(char *)buf;
         entry->file_info->position++;
@@ -632,8 +649,10 @@ void fclose(xin_entry** file)
 
 
    for(int i = 0; i < (*file)->entry_size / 512 + ((*file)->entry_size % 512 != 0 ? 1 : 0); i++)
-       disk_write(ATA_FIRST_BUS, ATA_MASTER, (*file)->entry_size, 1, (uint16_t*)((*file)->starting_sector));
+       disk_write(ATA_FIRST_BUS, ATA_MASTER, (*file)->starting_sector + i, 1, (uint16_t*)((*file)->file_info->base_address_memory + (i * SECTOR_SIZE)));
 
+    // while(1);
+    free((*file)->file_info->base_address_memory);
     *file = nullptr;
 
 }
@@ -701,6 +720,52 @@ int open(char* file_path, uint32_t options)
 }
 
     
+
+
+xin_entry *fopen(char *file_path, const char *mode)
+{
+
+
+    xin_entry* file = xin_find_entry(file_path);
+
+
+    if (file != nullptr && file->entry_type != XIN_DIRECTORY && file->entry_path[0] != '\0')
+    {
+        
+        /*
+        for(int i = 0; i < file->entry_size / 512 + (file->entry_size % 512 != 0 ? 1 : 0); i++)
+            disk_read(ATA_FIRST_BUS, ATA_MASTER, file->entry_size, 1, (uint16_t*)((file->starting_sector + i) * SECTOR_SIZE));
+        */
+
+        if(file->file_info == nullptr)
+            file->file_info = (file_information_block*)malloc(sizeof(file_information_block));
+        
+        file->file_info->base_address_memory = (uint8_t*)calloc(SECTOR_SIZE * 0x10);
+
+        disk_read(ATA_FIRST_BUS, ATA_MASTER, file->starting_sector, 0x1, (uint16_t*)file->file_info->base_address_memory);
+            
+        set_string(file->file_info->rights, mode);
+
+        file->file_info->position = 0;
+        return file;
+    }
+
+    else if(strcmp(mode, "rw") | strcmp(mode, "w"))
+    {
+        file = create(file_path);
+
+        file->file_info = (file_information_block*)malloc(sizeof(file_information_block));
+        set_string(file->file_info->rights, mode);
+        
+        file->file_info->position = 0;
+        return file;
+    }
+
+
+
+    return nullptr;
+}
+
 char* getline(xin_entry* file, int line_id)
 {
     char* file_data = (char*)(file->starting_sector * SECTOR_SIZE);
@@ -732,47 +797,6 @@ char* getline(xin_entry* file, int line_id)
     return line;
 
 }
-
-xin_entry *fopen(char *file_path, const char *mode)
-{
-
-
-    xin_entry* file = xin_find_entry(file_path);
-
-
-    if (file != nullptr && file->entry_type != XIN_DIRECTORY && file->entry_path[0] != '\0')
-    {
-        
-        /*
-        for(int i = 0; i < file->entry_size / 512 + (file->entry_size % 512 != 0 ? 1 : 0); i++)
-            disk_read(ATA_FIRST_BUS, ATA_MASTER, file->entry_size, 1, (uint16_t*)((file->starting_sector + i) * SECTOR_SIZE));
-        */
-
-        if(file->file_info == nullptr)
-            file->file_info = (file_information_block*)malloc(sizeof(file_information_block));
-            
-        set_string(file->file_info->rights, mode);
-
-        file->file_info->position = 0;
-        return file;
-    }
-
-    else if(strcmp(mode, "rw") | strcmp(mode, "w"))
-    {
-        file = create(file_path);
-
-        file->file_info = (file_information_block*)malloc(sizeof(file_information_block));
-        set_string(file->file_info->rights, mode);
-        
-        file->file_info->position = 0;
-        return file;
-    }
-
-
-
-    return nullptr;
-}
-    
 
 __STATUS remove_directory(char* folder_name)
 {

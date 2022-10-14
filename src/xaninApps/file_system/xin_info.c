@@ -16,7 +16,6 @@ void xin_entry_info(char *entry_name)
         xprintf("entry_permissions: 0x%x\n", file->entry_permissions);
         xprintf("entry_size: 0x%x\n", file->entry_size);
         xprintf("starting_sector: 0x%x\n", file->starting_sector);
-        xprintf("file address: 0x%x\n", file->starting_sector * SECTOR_SIZE);
     }
 
     else

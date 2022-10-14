@@ -81,7 +81,7 @@ extern char selected_character;
             key = to
 
 
-#define key_remap(from, to)\
+#define KEYBOARD_DRIVER_KEYBOARD_DRIVER_KEY_REMAP(from, to)\
         if(KeyInfo.character == from)\
             KeyInfo.character = to
 

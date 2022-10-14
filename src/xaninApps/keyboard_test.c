@@ -8,7 +8,7 @@ void keyboard_test(void)
     
     while(1)
     {
-      xprintf("%x", KeyInfo.scan_code);
+      xprintf("%x", inbIO(0x60));
       if(Screen.y >= 30)
       {
         Screen.y = 0;
@@ -21,6 +21,5 @@ void keyboard_test(void)
 
     }
 
-  app_exited = true;
 
 }

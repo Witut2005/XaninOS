@@ -30,12 +30,12 @@ bool elf_check_arch(uint8_t* file)
 
 void elf_load(xin_entry* file)
 {
-    uint8_t* data = file->starting_sector * SECTOR_SIZE;
+    uint8_t* data = file->file_info->base_address_memory;
 
     
     uint8_t* write_to_memory;
     uint8_t* read_from_file;
-    uint32_t file_base = file->starting_sector * SECTOR_SIZE;
+    uint32_t file_base = file->file_info->base_address_memory;
 
     uint16_t phnum = *(uint16_t*)((uint8_t*)data + 0x2C);
 

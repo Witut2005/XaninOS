@@ -33,6 +33,7 @@ struct file_information_block
     char file_name[MAX_PATH];
     char rights[2];
     uint32_t position;
+    uint8_t* base_address_memory;
 
 
 }__attribute__((packed, aligned(64)));

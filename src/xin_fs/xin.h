@@ -6,6 +6,7 @@
 #include <xin_fs/xin_entry.h>
 
 #define XIN_SYSTEM_FOLDER '/'
+#define XIN_BASE_FILE_ADDRESS_TO_LOAD 0x100000
 
 typedef int __STATUS;
 
@@ -20,6 +21,7 @@ enum XANIN_RETURN_STATUS
 
 };
 
+// extern uint8_t xin_base_state[100];
 extern char xin_current_path[38];
 extern char xin_current_directory[38];
 

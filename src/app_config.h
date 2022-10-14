@@ -33,4 +33,5 @@
 #define XIN_INFO_APP 'y'
 #define ELF_LOADER_APP 'y'
 #define CPP_TEST_APP 'y'
+#define CAT_APP 'y'
 

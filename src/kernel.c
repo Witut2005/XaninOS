@@ -25,11 +25,11 @@
 #include <xanin_info/info_block.c>
 #include <xin_fs/xin.h>
 #include <devices/NIC/8254x.h>
-#include <network_protocols/arp/arp.h>
-#include <network_protocols/ethernet_frame/ethernet_frame.h>
+// #include <network_protocols/arp/arp.h>
+// #include <network_protocols/ethernet_frame/ethernet_frame.h>
 #include <netapi/network_device.h>
-#include <network_protocols/arp/arp.h>
-#include <network_protocols/internet_protocol/ipv4/ip.h>
+// #include <network_protocols/arp/arp.h>
+// #include <network_protocols/internet_protocol/ipv4/ip.h>
 #include <libc/instruction_pointer.h>
 #include <libc/xanin_state.h>
 
@@ -220,10 +220,10 @@ void _start(void)
 
     xin_init_fs();
 
-    create_file_kernel("/syslog");
+    // create_file_kernel("/syslog");
 
-    // create_file_kernel("/system_space1");
-    // create_file_kernel("/system_space2");
+    create_file_kernel("/system_space1");
+    create_file_kernel("/system_space2");
     memset((uint8_t*)&ArpTable[0], 0xFF, sizeof(ArpTable[0]));
     current_arp_entry++;
 
@@ -231,23 +231,25 @@ void _start(void)
     i8254x_init();
 
     
-    uint8_t ip_addr[4] = {0x0};
-    uint8_t ip_dest[4] = {192,168,0,160};
-
+    // interrupt_enable();
     KeyInfo.is_ctrl = false;
     KeyInfo.is_shift = false;
-    
-    // int fd = open("/file_system.bin", 0x0);
-    // xprintf("file descritptor id %d\n", (uint32_t)fd);
-
-    // screen_clear();
-    // interrupt_enable();
-    while(KeyInfo.scan_code != ENTER);
 
 
-    xprintf("\n\n");
-   
+    // __sys_xin_file_create("/syslog");
+    // xin_create_file("/syslog");
+    // printk("kernel successfully loaded");
+    // while(KeyInfo.scan_code != ENTER);
 
+    // memcpy(program_name, "key-test", strlen("key-test"));
+    // scan();
+
+    // while(1)
+    // {
+    //     xprintf("%x", inbIO(0x60));
+    //     msleep(100);
+    //     screen_clear();
+    // }
 
     while(1)
     {
@@ -260,7 +262,7 @@ void _start(void)
         xprintf("%z    _/      _/                      _/              _/_/      _/_/_/       \n", set_output_color(logo_back_color, logo_front_color));
         xprintf("%z     _/  _/      _/_/_/  _/_/_/        _/_/_/    _/    _/  _/              \n", set_output_color(logo_back_color, logo_front_color));
         xprintf("%z      _/      _/    _/  _/    _/  _/  _/    _/  _/    _/    _/_/           \n", set_output_color(logo_back_color, logo_front_color));
-        xprintf("%z   _/  _/    _/    _/  _/    _/  _/  _/    _/  _/    _/        _/%z  version 22.09v\n",set_output_color(logo_back_color, logo_front_color), set_output_color(black,white) );
+        xprintf("%z   _/  _/    _/    _/  _/    _/  _/  _/    _/  _/    _/        _/%z  version 22.10v\n",set_output_color(logo_back_color, logo_front_color), set_output_color(black,white) );
         xprintf("%z_/      _/    _/_/_/  _/    _/  _/  _/    _/    _/_/    _/_/_/     %z%s: %i:%i:%i\n\n\n", set_output_color(logo_back_color, logo_front_color), set_output_color(black,white), daysLUT[SystemTime.weekday], SystemTime.hour, SystemTime.minutes, SystemTime.seconds);                                       
 
 

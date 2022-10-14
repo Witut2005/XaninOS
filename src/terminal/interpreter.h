@@ -176,6 +176,7 @@ extern int tetris(void);
 #include <xaninApps/dhcp_test.c>
 #include <xaninApps/network_device_rename.c>
 #include <xaninApps/nic_print.c>
+#include <xaninApps/sll_test.c>
 //extern void xagame_test(void);
 //extern void assembler(char* file_name);
 

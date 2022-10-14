@@ -2,32 +2,23 @@
 #include <xin_fs/xin.h> 
 #include <libc/string.h>
 #include <libc/stdlibx.h>
+#include <libc/stdiox.h>
+#include <terminal/vty.h>
+#include <keyboard/scan_codes.h>
+
+// static uint32_t current_line;
 
 void printk(const char * str)
 {
 
-    int current_line = 0;
+    xin_entry* file = fopen("/syslog", "rw");
 
-    xin_entry* file = fopen("/syslog", "w");
+    char* buf = calloc(80);
 
-    char buf[80] = {' '};
-
-    if(current_line > 27)
-    {
-        fseek(file, 0);
-
-        for(int i = 0; i < 28; i++)
-            write(file, buf , 80);
-        current_line = 0;
-    }
-
-    fseek(file, current_line * 80);
-
-    buf[79] = '\0';
 
     char separator = ':';
     
-    bcd_to_str(SystemTime.hour, buf);
+    write(file, bcd_to_str(SystemTime.hour, buf), strlen(buf));
 
     write(file, bcd_to_str(SystemTime.hour, buf), strlen(buf));
 
@@ -44,7 +35,15 @@ void printk(const char * str)
 
 
     write(file, str, strlen(str));
+    write(file, "\n", 1);
 
-    current_line++;
+    // current_line++;
+    free(buf);
 
+    // screen_clear();
+    // xprintf("%s", file->file_info->base_address_memory);
+    fseek(file, 0);
+    // while(KeyInfo.scan_code != ENTER);
+
+    fclose(&file);
 }

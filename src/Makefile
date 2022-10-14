@@ -7,8 +7,8 @@ XANIN_PATH = /home/witut/Desktop/xaninOS/src/
 
 C_OPTIONS = -O0 -masm=intel -Wno-discarded-qualifiers -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-int-conversion -Wno-unused-function -Wno-div-by-zero -Wno-address-of-packed-member -I $(XANIN_PATH) -c
 C_COMPILE = -O0 -masm=intel -Wno-discarded-qualifiers -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-int-conversion -Wno-unused-function -Wno-div-by-zero -Wno-address-of-packed-member -I $(XANIN_PATH) 
-CC_OPTIONS =  -O3 -fno-exceptions -lstdc++ -masm=intel -std=c++17 -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Wno-write-strings -Wno-return-type -fno-rtti -fconcepts-ts -I $(XANIN_PATH) -c
-C_OPTIONS =  -O0 -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -Wno-discarded-qualifiers -ffreestanding -Wno-unused-function -Wno-return-type -I $(XANIN_PATH) -c
+CC_OPTIONS =  -Os -fno-exceptions -lstdc++ -masm=intel -std=c++17 -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Wno-write-strings -Wno-return-type -fno-rtti -fconcepts-ts -I $(XANIN_PATH) -c
+# C_OPTIONS =  -O0 -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -Wno-discarded-qualifiers -ffreestanding -Wno-unused-function -Wno-return-type -I $(XANIN_PATH) -c
 ASM	= nasm
 APPS = ./xaninApps
 
@@ -224,6 +224,7 @@ build:
 	./network_protocols/udp/udp.o \
 	./network_protocols/icmp/icmp.o \
 	./network_protocols/dhcp/dhcp.o \
+	./network_protocols/sll/sll.o \
 	./netapi/network_device.o \
 	./devices/IOAPIC/ioapic.o \
 	./test/testc.o \

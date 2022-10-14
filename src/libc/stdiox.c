@@ -5,6 +5,7 @@
 #include <terminal/vty.h>
 #include <keyboard/scan_codes.h>
 #include <stdarg.h>
+#include <libc/time.h>
 
 
 
@@ -528,10 +529,7 @@ void xscanf(char* str, ... )
             Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((black << 4) | white) << 8));
 
             if(&Screen.cursor[Screen.y][Screen.x - 1] == (uint16_t*)starting_screen_position)
-            {
                 goto start;
-            }
-
 
 
             if(!Screen.x)
@@ -546,7 +544,7 @@ void xscanf(char* str, ... )
 
 
             if(index)
-                index--;
+                index = index - 1;
 
             command_buffer[index] = '\0';
             Screen.cursor[Screen.y][Screen.x] = '\0';
@@ -554,15 +552,15 @@ void xscanf(char* str, ... )
             Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((white << 4) | white) << 8));
 
 
-            //msleep(10);
+            // msleep(100);
             KeyInfo.is_bspc = false;
-            letters_refresh(&Screen.cursor[Screen.y][Screen.x]);
+            // letters_refresh(&Screen.cursor[Screen.y][Screen.x]);
         }
 
-        else if(KeyInfo.scan_code == LSHIFT)
-        {
-            goto start;
-        }
+        // else if(KeyInfo.scan_code == LSHIFT)
+        // {
+        //     goto start;
+        // }
 
         // else if(KeyInfo.scan_code == ARROW_RIGHT || KeyInfo.scan_code == ARROW_LEFT)
         // {
@@ -782,6 +780,7 @@ void xscanf(char* str, ... )
         else if(KeyInfo.character)
         {
             char tmp = getchar();
+            // char tmp = KeyInfo.character;
 
             Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][index + x_start]) + (((black << 4) | white) << 8));
             
@@ -800,6 +799,7 @@ void xscanf(char* str, ... )
                     keyboard_command[i+1] = tmp_buf[i];
             }
 
+            free(tmp_buf);
             keyboard_command[index] = tmp;
 
             xprintf("%s", keyboard_command);

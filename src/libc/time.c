@@ -1,6 +1,7 @@
 
 #include <stdint.h>
 #include <libc/stdlibx.h>
+// #include <libc/hal.h>
 
 uint32_t cpu_mhz = 0x0;
 uint32_t cpu_khz = 0x0;

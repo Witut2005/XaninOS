@@ -18,7 +18,8 @@
         "string.h": "c",
         "ip.h": "c",
         "endian.h": "c",
-        "network_device.h": "c"
+        "network_device.h": "c",
+        "memory.h": "c"
     },
     "makefile.launchConfigurations": [
         {

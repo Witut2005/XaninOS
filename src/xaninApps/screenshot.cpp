@@ -31,13 +31,10 @@ void screenshot(void)
     write(file, data, VGA_SCREEN_RESOLUTION);
     fclose(&file);
 
-    // for(uint8_t* i = (uint8_t*)(file->starting_sector * SECTOR_SIZE); (uint32_t)i < file->starting_sector * SECTOR_SIZE + VGA_SCREEN_RESOLUTION; i++, data++)
-    //     *i = *data;
 
     xin_folder_change(current_directory);
     free(current_directory);
 
-    // while(getscan() != ENTER);
 
 }
 

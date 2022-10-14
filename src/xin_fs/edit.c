@@ -375,6 +375,7 @@ int edit(char* file_name)
 
     begin_of_current_text = program_buffer;
 
+
     while(KeyInfo.scan_code != F4_KEY && KeyInfo.scan_code != F4_KEY_RELEASE)
         edit_input(inputg());
 
@@ -384,7 +385,17 @@ int edit(char* file_name)
     fseek(file, 0x0);
     write(file, program_buffer, strlen(program_buffer));
 
-    while(KeyInfo.scan_code != F4_KEY);
+    for(int i = 0; i < strlen(file->file_info->base_address_memory) - strlen(program_buffer); i++)
+        write(file, "\0", 1);
+    
+    // screen_clear();
+    // xprintf("%s\n\n\n", program_buffer);
+    // while(KeyInfo.scan_code != ENTER);
+    // xprintf("%s", file->file_info->base_address_memory);
+    // while(KeyInfo.scan_code != F4_KEY_RELEASE);
+
+    fclose(&file);
+
     current_line = 0x0;
     column = 0x0;
     total_lines = 0x0;
