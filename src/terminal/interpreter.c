@@ -2,11 +2,12 @@
 
 #include <terminal/interpreter.h>
 
+int last_command_exit_status;
 
-#define XANIN_ADD_APP_ENTRY0(app_name, exec_name) else if(strcmp(program_name, app_name)) {exec_name();}
-#define XANIN_ADD_APP_ENTRY1(app_name, exec_name) else if(strcmp(program_name, app_name)) {exec_name(program_parameters);}
-#define XANIN_ADD_APP_ENTRY2(app_name, exec_name) else if(strcmp(program_name, app_name)) {exec_name(program_parameters, program_parameters1);}
-#define XANIN_ADD_APP_ENTRY3(app_name, exec_name) else if(strcmp(program_name, app_name)) {exec_name(program_parameters, program_parameters1, program_parameters2);}
+#define XANIN_ADD_APP_ENTRY0(app_name, exec_name) else if(strcmp(program_name, app_name)) {last_command_exit_status = exec_name();}
+#define XANIN_ADD_APP_ENTRY1(app_name, exec_name) else if(strcmp(program_name, app_name)) {last_command_exit_status = exec_name(program_parameters);}
+#define XANIN_ADD_APP_ENTRY2(app_name, exec_name) else if(strcmp(program_name, app_name)) {last_command_exit_status = exec_name(program_parameters, program_parameters1);}
+#define XANIN_ADD_APP_ENTRY3(app_name, exec_name) else if(strcmp(program_name, app_name)) {last_command_exit_status = exec_name(program_parameters, program_parameters1, program_parameters2);}
 
 
 void scan(void)
@@ -60,10 +61,6 @@ void scan(void)
     XANIN_ADD_APP_ENTRY0("test", cpp_test)
     #endif
 
-    #ifdef STACK_FRAME_TEST_APP
-    XANIN_ADD_APP_ENTRY2("stack_test", stack_frame_test)
-    #endif
-
     #ifdef CPU_INFO_APP
     XANIN_ADD_APP_ENTRY1("cpu_info", cpu_info)
     #endif
@@ -82,10 +79,6 @@ void scan(void)
 
     #ifdef LOAD_APP
     XANIN_ADD_APP_ENTRY1("load", load)
-    #endif
-
-    #ifdef INSTALL_APP
-    XANIN_ADD_APP_ENTRY0("install", install)
     #endif
 
     #ifdef DISK_LOAD_APP
@@ -145,13 +138,13 @@ void scan(void)
     #endif
 
     #ifdef XIN_COPY_APP
-    XANIN_ADD_APP_ENTRY2("copy", xin_copy)
-    XANIN_ADD_APP_ENTRY2("cp", xin_copy)
+    XANIN_ADD_APP_ENTRY2("copy", __sys_xin_copy)
+    XANIN_ADD_APP_ENTRY2("cp", __sys_xin_copy)
     #endif
 
     #ifdef XIN_LINK_APP
-    XANIN_ADD_APP_ENTRY2("link", xin_link_create)
-    XANIN_ADD_APP_ENTRY2("lk", xin_link_create)
+    XANIN_ADD_APP_ENTRY2("link", __sys_xin_link_create)
+    XANIN_ADD_APP_ENTRY2("lk", __sys_xin_link_create)
     #endif
 
     #ifdef XIN_INFO_APP
@@ -162,8 +155,8 @@ void scan(void)
     XANIN_ADD_APP_ENTRY0("clear", screen_clear)
 
     #ifdef LIST_FILES_APP
-    XANIN_ADD_APP_ENTRY1("ls", list_files)
-    XANIN_ADD_APP_ENTRY1("dir", list_files)
+    XANIN_ADD_APP_ENTRY1("ls", __sys_xin_list_files)
+    XANIN_ADD_APP_ENTRY1("dir", __sys_xin_list_files)
     #endif
 
     #ifdef NOTE_APP
@@ -219,5 +212,6 @@ void scan(void)
     app_exited = true;
     KeyInfo.character = 0x0;
     KeyInfo.scan_code = 0x0;
+
 
 }

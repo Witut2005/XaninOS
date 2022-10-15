@@ -1,7 +1,7 @@
 
 #include <terminal/vty.h>
 
-void logo_color_change(char* color)
+int logo_color_change(char* color)
 {
 
     if(strcmp(color, "black"))
@@ -66,6 +66,8 @@ void logo_color_change(char* color)
         if(!logo_front_color)
             logo_front_color++;
     }
+
+    return XANIN_OK;
         
 
 }

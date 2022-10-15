@@ -13,7 +13,7 @@
 extern "C" 
 {
 
-void screenshot(void)
+int screenshot(void)
 {
 
     char* current_directory = (char*)calloc(40);
@@ -35,6 +35,7 @@ void screenshot(void)
     xin_folder_change(current_directory);
     free(current_directory);
 
+    return 0;
 
 }
 

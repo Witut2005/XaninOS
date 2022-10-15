@@ -7,7 +7,7 @@
 #include <libc/string.h>
 
 
-void cat(char* file_name)
+int cat(char* file_name)
 {
 
     xin_entry* xin_file = fopen(file_name, "rw");
@@ -15,9 +15,8 @@ void cat(char* file_name)
     if(xin_file == nullptr)
     {
         xprintf("Could not open file: %s\n", file_name);
-
         while(KeyInfo.scan_code != ENTER);
-
+        return XANIN_ERROR;
     }
         
     else
@@ -28,7 +27,7 @@ void cat(char* file_name)
         xprintf("%s", xin_file->file_info->base_address_memory);
         while(KeyInfo.scan_code != ENTER);
         free(file_data);
-
+        return XANIN_OK;
     }
 
 

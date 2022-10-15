@@ -19,7 +19,8 @@
         "ip.h": "c",
         "endian.h": "c",
         "network_device.h": "c",
-        "memory.h": "c"
+        "memory.h": "c",
+        "xin_entry.h": "c"
     },
     "makefile.launchConfigurations": [
         {

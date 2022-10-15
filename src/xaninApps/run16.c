@@ -8,7 +8,7 @@
 #include <libc/string.h>
 
 
-void run16(char* file_name)
+int run16(char* file_name)
 {
     screen_clear();
 
@@ -21,7 +21,7 @@ void run16(char* file_name)
         while(1)
         {
             if((KeyInfo.scan_code == F4_KEY) || (KeyInfo.scan_code == ENTER))
-                return;
+                return XANIN_ERROR;
             
         }   
     
@@ -35,7 +35,7 @@ void run16(char* file_name)
             xprintf("%zYOU CANT RUN DIRECTORY\n",set_output_color(red,white));
             xprintf("%zuse F4 key to exit\n",set_output_color(red,white));
             while(KeyInfo.scan_code != F4_KEY);
-            return;
+            return XANIN_ERROR;
         }
     
         //uint32_t address = (current_program->starting_sector * SECTOR_SIZE);
@@ -51,5 +51,5 @@ void run16(char* file_name)
 
     }
 
-    return;
+    return XANIN_OK;
 }

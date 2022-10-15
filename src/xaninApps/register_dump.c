@@ -5,7 +5,7 @@
 #include <libc/stdlibx.h>
 
 
-void reg_dump(void)
+int reg_dump(void)
 {
     
     //screen_clear();
@@ -63,5 +63,6 @@ void reg_dump(void)
     xprintf("gs: 0x%x\n", SegmentRegister.gs);
 
     while(getscan() != ENTER);
+    return XANIN_OK;
 
 }

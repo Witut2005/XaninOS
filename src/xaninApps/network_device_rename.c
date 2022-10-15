@@ -1,7 +1,7 @@
 
 #include <netapi/network_device.h>
 
-void network_device_rename(char* oldname, char* newname)
+int network_device_rename(char* oldname, char* newname)
 {
 
     NetworkHandler* handler = device_info_get_by_name(oldname);
@@ -10,7 +10,7 @@ void network_device_rename(char* oldname, char* newname)
     {
         xprintf("%zNo Such Device %s\n", stderr, oldname);
         while(KeyInfo.scan_code != ENTER);
-        return;
+        return XANIN_ERROR;
     }
 
     else
@@ -21,11 +21,12 @@ void network_device_rename(char* oldname, char* newname)
         {
             xprintf("%Max Device Name Length Is 49 %s\n", stderr, oldname);
             while(KeyInfo.scan_code != ENTER);
-            return;
+            return XANIN_ERROR;
         }
 
         strcpy(handler->device_name, newname);
     }
 
+    return XANIN_OK;
 
 }

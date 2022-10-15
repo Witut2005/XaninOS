@@ -2,7 +2,6 @@
 
 
 #include <app_config.h>
-
 #include <libc/stdiox.h>
 
 #ifdef HELP_APP
@@ -88,24 +87,12 @@
 #include <xaninApps/disk_write.c>
 #endif
 
-#ifdef INSTALL_APP
-#include <xaninApps/install.c>
-#endif
-
-#ifdef STACK_FRAME_TEST_APP
-#include <xaninApps/stack_frame_test.c>
-#endif
-
 #ifdef RUN_APP
 #include <xaninApps/run.c>
 #endif
 
 #ifdef RUN16_APP
 #include <xaninApps/run16.c>
-#endif
-
-#ifdef LIST_FILES_APP
-#include <xin_fs/list_files.c>
 #endif
 
 #ifdef HEXEDITOR_APP
@@ -116,7 +103,7 @@
 #include <xaninApps/mouse.c>
 #endif
 
-#include <xin_fs/xin.h>
+// #include <xin_fs/xin.h>
 
 #ifdef NOTE_APP
 #include <xin_fs/xin_note.c>
@@ -134,10 +121,6 @@
 #include <xin_fs/move.c>
 #endif
 
-#ifdef XIN_COPY_APP
-#include <xin_fs/copy.c>
-#endif
-
 #ifdef XIN_LINK_APP 
 #include <xin_fs/link.c>
 #endif
@@ -151,13 +134,13 @@
 #endif
 
 #ifdef CPP_TEST_APP
-extern void cpp_test(void);
+int cpp_test(void);
 #endif
 
 
 
-extern void screenshot(void);
-extern void xagame_test(void);
+extern int screenshot(void);
+extern int xagame_test(void);
 extern int tetris(void);
 
 #include <xaninApps/nic_info.c>
@@ -180,7 +163,7 @@ extern int tetris(void);
 //extern void xagame_test(void);
 //extern void assembler(char* file_name);
 
-extern int edit(char* file_name);
-
+int edit(char* file_name);
 void scan(void);
+
 

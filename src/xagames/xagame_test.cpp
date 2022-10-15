@@ -3,14 +3,14 @@
 #include <game_engine/xagame.hpp>
 #include <libc/colors.h>
 
-extern "C" void screen_clear(void);
+extern "C" int screen_clear(void);
 extern "C" void msleep(float miliseconds);
 extern "C" void* malloc(uint16_t size);
 
 using namespace xgm;
 using namespace xgm::Renderer;
 
-extern "C" void xagame_test(void)
+extern "C" int xagame_test(void)
 {
 
     screen_clear();
@@ -28,5 +28,6 @@ extern "C" void xagame_test(void)
         msleep(1000);
         y.move(0,1);
     }
+    return 0;
 
 }

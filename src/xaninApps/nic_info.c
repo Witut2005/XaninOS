@@ -10,7 +10,7 @@ extern uint32_t i8254x_transmit_descriptors_buffer_get(void);
 extern uint32_t i8254x_transmit_buffer_get(void);
 extern uint32_t i8254x_receive_buffer_get(void);
 
-void nic_info(char* network_device_name)
+int nic_info(char* network_device_name)
 {
 
     pci_device* nic_info = i8254x_pci_info_get();
@@ -22,7 +22,7 @@ void nic_info(char* network_device_name)
     {
         xprintf("%zNo Such Device: %s\n", stderr, network_device_name);
         while(KeyInfo.scan_code != ENTER);
-        return;
+        return XANIN_ERROR;
     }
 
     xprintf("0x%x\n", device_info);
@@ -51,7 +51,7 @@ void nic_info(char* network_device_name)
 
 
     while(getscan() != ENTER);
-
+    return XANIN_OK;
 
 
 }

@@ -103,8 +103,9 @@ void elf_load(xin_entry* file)
 
 }
 
-void elfreader(char* filename)
+int elfreader(char* filename)
 {
     xin_entry* file = fopen(filename, "r");
     elf_load(file);
+    return XANIN_OK;
 }

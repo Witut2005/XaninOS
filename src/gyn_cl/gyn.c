@@ -3,22 +3,22 @@
 
 #include <gyn_cl/gyn.h>
 
-void gyn_interpreter(char* file_to_interpret)
+int gyn_interpreter(char* file_to_interpret)
 {
 
     xin_entry* file = fopen(file_to_interpret, "r");
+    uint8_t* data = (uint8_t*)calloc(SECTOR_SIZE);
+    read(file, data, SECTOR_SIZE);
     char* command;
 
     if(file == nullptr)
     {
         xprintf("%zCouldn't open file %s\n", stderr, file_to_interpret);
         while(KeyInfo.scan_code != ENTER);
-        return;
+        return XANIN_ERROR;
     }
 
-        
-    gyn_cl_on = true;
-    for(int i = 1; getline(file, i)[0] != '\0'; i++)
+    for(int i = 1; getline(file, i) != nullptr; i++)
     {
 
         for(int i = 0; i < 5; i++)
@@ -46,12 +46,25 @@ void gyn_interpreter(char* file_to_interpret)
             arg_command_counter++;
         }
 
+        // xprintf("%s %s", argv[0], argv[1]);
+        // while(getscan() != ENTER);
+
         scan();
+        
+        if(last_command_exit_status == XANIN_ERROR)
+        {
+            xprintf("\n%zGYN COMMAND PARSING ERROR: %s\n", stderr, command);
+            while(KeyInfo.scan_code != ENTER);
+            fclose(&file);
+            return XANIN_ERROR;
+        }
+        
         free(command);
 
     }
 
-    gyn_cl_on = false;
     while(KeyInfo.scan_code != ENTER);
+    fclose(&file);
+    return XANIN_OK;
 
 }

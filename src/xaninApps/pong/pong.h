@@ -21,7 +21,7 @@ void pong_init(void);
 void pong_update(void);
 void pong_input(void);
 void pong_get_input(void);
-void pong(void);
+int pong(void);
 void result_screen(char* str);
 void player2_get_input(void);
 void player1_get_input(void);

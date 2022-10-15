@@ -130,7 +130,7 @@ void paint_input(xchar x)
 }
 
 
-void xin_paint(char* file_name)
+int xin_paint(char* file_name)
 {
     screen_clear();
 
@@ -141,7 +141,7 @@ void xin_paint(char* file_name)
     {
         xprintf("Could not open file %s\n", file_name);
         while(KeyInfo.scan_code != ENTER);
-        return;
+        return XANIN_ERROR;
     }
 
     else
@@ -187,7 +187,7 @@ void xin_paint(char* file_name)
 
     keyboard_handle = nullptr;
     fclose(&xin_file);
-    return;
+    return XANIN_OK;
     // 11:48:24
 
 }

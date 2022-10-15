@@ -8,7 +8,7 @@
 #include <libc/string.h>
 
 
-void run(char* file_name)
+int run(char* file_name)
 {
     //screen_clear();
 
@@ -23,7 +23,7 @@ void run(char* file_name)
         {
             if((KeyInfo.scan_code == F4_KEY) || (KeyInfo.scan_code == ENTER))
             {
-                return;
+                return XANIN_ERROR;
             }
         }   
     
@@ -37,7 +37,7 @@ void run(char* file_name)
             xprintf("%zYOU CANT RUN DIRECTORY\n",set_output_color(red,white));
             xprintf("%zuse F4 key to exit\n",set_output_color(red,white));
             while(KeyInfo.scan_code != F4_KEY);
-            return;
+            return XANIN_ERROR;
         }
     
         uint8_t* where_to_load = 0x10000;
@@ -56,7 +56,7 @@ void run(char* file_name)
             "call 0x10000"
             );
 
-        return;
+        return XANIN_OK;
         
 
     }

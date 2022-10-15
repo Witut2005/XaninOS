@@ -8,7 +8,7 @@
 
 
 
-void reboot(void)
+int reboot(void)
 {
 
 uint16_t idt_16[3] = {0x0, 0x0, 0x0};
@@ -30,6 +30,6 @@ uint16_t idt_16[3] = {0x0, 0x0, 0x0};
     uint8_t s = 12;
     s = s / 0;
 
-    
+    return XANIN_OK;
 
 }

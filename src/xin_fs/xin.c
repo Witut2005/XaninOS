@@ -777,12 +777,10 @@ int open(char* file_path, uint32_t options)
     return -1;
 }
 
-    
-
-
-char* getline(xin_entry* file, int line_id)
+char* getline_from_ptr(char* data, int line_id)
 {
-    char* file_data = (char*)(file->starting_sector * SECTOR_SIZE);
+
+    char* file_data = (char*)(data);
     char* line = (char*)calloc(200);
 
     int column = 0;
@@ -795,13 +793,27 @@ char* getline(xin_entry* file, int line_id)
 
         while(file_data[file_offset] != '\n')
         {
+            if(file_data[file_offset] == '\0')
+            {                
+                if(current_line + 1 == line_id)
+                {
+                    line[column] = file_data[file_offset];
+                    column++;
+                    file_offset++;               
+                    break;
+                }
+
+                else
+                    return nullptr;
+                break;
+            }
+
             line[column] = file_data[file_offset];
             column++;
             file_offset++;
         }
         
-        line[column] = '\n';
-        line[column + 1] = '\0';
+        line[column] = '\0';
         file_offset++;
 
         column = 0;
@@ -809,6 +821,56 @@ char* getline(xin_entry* file, int line_id)
     }
 
     return line;
+
+}
+
+
+char* getline(xin_entry* file, int line_id)
+{
+
+    char* file_data = (char*)(file->file_info->base_address_memory);
+    char* line = (char*)calloc(200);
+
+    int column = 0;
+    int current_line = 0;
+    int file_offset = 0;    
+
+    while(current_line < line_id)
+    {
+        memset(line, 0, 200);
+
+        while(file_data[file_offset] != '\n')
+        {
+            if(file_data[file_offset] == '\0')
+            {                
+                if(current_line + 1 == line_id)
+                {
+                    line[column] = file_data[file_offset];
+                    column++;
+                    file_offset++;               
+                    break;
+                }
+
+                else
+                    return nullptr;
+                break;
+            }
+
+            line[column] = file_data[file_offset];
+            column++;
+            file_offset++;
+        }
+        
+        line[column] = '\0';
+        file_offset++;
+
+        column = 0;
+        current_line++;
+    }
+
+    return line;
+
+
 
 }
 

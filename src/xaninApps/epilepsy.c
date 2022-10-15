@@ -3,7 +3,7 @@
 #include <libc/stdiox.h>
 #include <libc/stdlibx.h>
 
-void epilepsy(void)
+int epilepsy(void)
 {
     uint16_t* color_picker = (uint16_t*)VGA_TEXT_MEMORY;
     uint8_t color;
@@ -20,7 +20,7 @@ void epilepsy(void)
 
         if(getchar() == 'q' || getscan() == ENTER || getscan() == ESC)
         {    
-            return;
+            return XANIN_OK;
         }
     }
 

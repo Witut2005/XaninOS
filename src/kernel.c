@@ -24,10 +24,9 @@
 #include <xanin_info/info_block.c>
 #include <xin_fs/xin.h>
 #include <devices/NIC/8254x.h>
-// #include <network_protocols/arp/arp.h>
 // #include <network_protocols/ethernet_frame/ethernet_frame.h>
 #include <netapi/network_device.h>
-// #include <network_protocols/arp/arp.h>
+#include <network_protocols/arp/arp.h>
 // #include <network_protocols/internet_protocol/ipv4/ip.h>
 #include <libc/instruction_pointer.h>
 #include <libc/xanin_state.h>

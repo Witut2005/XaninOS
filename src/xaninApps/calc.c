@@ -16,7 +16,7 @@ enum operation_types
     CALC_POW = 5
 };
 
-void calc(char* options)
+int calc(char* options)
 {
 
     if(strcmp(options, "help"))
@@ -25,7 +25,7 @@ void calc(char* options)
         xprintf("xaninOS developer tools\n");
         xprintf("Simple calculator :))\n");
     	while(KeyInfo.scan_code != ENTER);
-        return;
+        return XANIN_OK;
     }
 
     int operation_type;
@@ -64,6 +64,7 @@ void calc(char* options)
 
     xprintf("\nresult: %d", result);
 
-    end_run:  while(getscan() != ENTER);
+    while(getscan() != ENTER);
+    return XANIN_OK;
 }
 

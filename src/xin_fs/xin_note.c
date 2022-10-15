@@ -143,7 +143,7 @@ void note_input(xchar x)
 
 }
 
-void xin_note(char* file_name)
+int xin_note(char* file_name)
 {
     screen_clear();
 
@@ -153,6 +153,7 @@ void xin_note(char* file_name)
     {
         xprintf("Could not open file: %s\n", file_name);
         while(KeyInfo.scan_code != ENTER);
+        return XANIN_ERROR;
     }
     
     else
@@ -195,7 +196,9 @@ void xin_note(char* file_name)
         free(tmp);
 
     }
+
     
     keyboard_handle = nullptr;
+    return XANIN_OK;
 
 }

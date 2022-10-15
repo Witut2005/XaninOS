@@ -1,6 +1,6 @@
 #include <xin_fs/xin.h>
 
-void xin_entry_info(char *entry_name)
+int xin_entry_info(char *entry_name)
 {
 
     xin_entry* file = fopen(entry_name, "r");
@@ -21,9 +21,11 @@ void xin_entry_info(char *entry_name)
     else
     {
         xprintf("%zNO SUCH FILE\n", set_output_color(red, white));
+        while (KeyInfo.scan_code != ENTER);
+        return XANIN_ERROR;
     }
 
     while (KeyInfo.scan_code != ENTER);
-    return;
+    return XANIN_OK;
 }
 

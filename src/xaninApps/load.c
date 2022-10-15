@@ -5,7 +5,7 @@
 // UNSTABLE (BAD OPCODE EXEC) I DONT KNOW WHY ://
 
 
-void load(char* address_string)
+int load(char* address_string)
 {
 
     screen_clear();
@@ -37,6 +37,7 @@ void load(char* address_string)
     }
 
 	while(KeyInfo.scan_code != ENTER);
+    return XANIN_OK;
 
 
 }

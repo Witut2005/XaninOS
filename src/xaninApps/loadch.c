@@ -4,7 +4,7 @@
 
 #include <libc/stdiox.h>
 
-void loadch(char* address_string)
+int loadch(char* address_string)
 {
 
     screen_clear();
@@ -26,4 +26,5 @@ void loadch(char* address_string)
     }
 
 	while(KeyInfo.scan_code != ENTER);
+    return XANIN_OK;
 }

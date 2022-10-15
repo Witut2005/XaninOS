@@ -68,7 +68,7 @@ enum {
     CPUID_EDX_PBE          = 1 << 31
 };
 
-void cpu_info(char* options)
+int cpu_info(char* options)
 {
 
 
@@ -159,5 +159,6 @@ void cpu_info(char* options)
 
 
     while(getscan() != ENTER);
+    return XANIN_OK;
 
 }

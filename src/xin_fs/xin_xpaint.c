@@ -219,7 +219,7 @@ void xpaint_input_color(xchar x)
 }
 
 
-void xin_xpaint(char* file_name)
+int xin_xpaint(char* file_name)
 {
 
 
@@ -229,7 +229,7 @@ void xin_xpaint(char* file_name)
     {
         xprintf("Could not open file %s\n", file_name);
         while(KeyInfo.scan_code != ENTER);
-        return;
+        return XANIN_ERROR;
     }
 
     else
@@ -268,6 +268,6 @@ void xin_xpaint(char* file_name)
 
     keyboard_handle = nullptr;
     fclose(&xin_file);
-    return;
+    return XANIN_OK;
 
 }

@@ -11,7 +11,7 @@
 
 char* color_attributes[16] = {"black", "blue", "green", "cyan", "red", "magenta", "brown", "lgray", "dgray","lblue", "lgreen", "lcyan", "lred", "lmagenta", "yellow", "white"};
 
-void screen_clear(void)
+int screen_clear(void)
 {
     uint16_t* screen_cleaner = (uint16_t*)VGA_TEXT_MEMORY;
     for(int i = 0; i < (80 * 28); i++)
@@ -22,6 +22,7 @@ void screen_clear(void)
 
     Screen.x = 0;
     Screen.y = 0;
+    return XANIN_OK;
 }
 
 

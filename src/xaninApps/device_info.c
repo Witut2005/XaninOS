@@ -3,14 +3,14 @@
 #include <devices/PCI/pci.c>
 
 
-void get_device_info(void)
+int get_device_info(void)
 {
 
 
     uint32_t pci_selector = 0x0;
 
-    do
-    {
+    // do
+    // {
 
     
 
@@ -19,9 +19,9 @@ void get_device_info(void)
 
         xprintf("%s\n", pci_device_name[device_type]);
 */
-    }while(pci_selector);
+    // }while(pci_selector);
 
-
+    return XANIN_OK;
 
 }
 

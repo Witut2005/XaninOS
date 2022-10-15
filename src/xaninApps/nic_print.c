@@ -1,7 +1,7 @@
 
 #include <netapi/network_device.h>
 
-void nic_print(void)
+int nic_print(void)
 {
 
     NetworkHandler* device_info = NetworkHandlers;
@@ -17,5 +17,6 @@ void nic_print(void)
     }
 
     while(KeyInfo.scan_code != ENTER);
+    return XANIN_OK;
 
 }

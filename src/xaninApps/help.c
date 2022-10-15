@@ -5,7 +5,7 @@
 #include <libc/string.h>
 #include <keyboard/scan_codes.h>
 
-void help(char* command)
+int help(char* command)
 {
 
 
@@ -269,7 +269,8 @@ void help(char* command)
         xprintf("makes screenshot (can be ignited with PrtSc key)");
     }
 
-
+    
     while(KeyInfo.scan_code != ENTER);
+    return XANIN_OK;
 
 }

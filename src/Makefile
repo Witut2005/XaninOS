@@ -71,9 +71,6 @@ build:
 	@echo [CC] cpp_test.cpp
 	@$(CC) $(CC_OPTIONS) ./test/cpp_test.cpp -o ./test/cpp_test.o
 
-	@echo [CC] cpp_test.cpp
-	@$(CC) $(CC_OPTIONS) ./test/cpp_test2.cpp -o ./test/cpp_test2.o
-
 	@echo [CC] com.cpp
 	@$(CC) $(CC_OPTIONS) ./devices/COM/com.cpp -o ./devices/COM/ComPort.o
 

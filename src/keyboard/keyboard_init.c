@@ -18,7 +18,7 @@ uint8_t keyboard_self_test()
 }
 
 
-static inline uint8_t keyboard_init()
+uint8_t keyboard_init()
 {
 
     uint8_t KEYBOARD_TEST_STATUS = keyboard_self_test();

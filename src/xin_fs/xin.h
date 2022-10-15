@@ -10,16 +10,7 @@
 
 typedef int __STATUS;
 
-enum XANIN_RETURN_STATUS
-{
 
-    XANIN_OK = 0x0,
-    XANIN_ERROR = 0x3,
-    XIN_FILE_EXISTS = 0x4,
-    XIN_BAD_FOLDER_NAME = 0x5,
-    XIN_ENTRY_NOT_FOUND = 0x6
-
-};
 
 // extern uint8_t xin_base_state[100];
 extern char xin_current_path[38];
@@ -65,6 +56,7 @@ __STATUS remove_directory(char* folder_name);
 void create_file_kernel(char* entry_name);
 void fclose(xin_entry** file);
 char* getline(xin_entry* file, int line_id);
+char* getline_from_ptr(char* data, int line_id);
 
 #ifdef __cplusplus
 }

@@ -220,7 +220,7 @@ void pong_update(void)
 
 
 
-void pong(void)
+int pong(void)
 {
     pong_init();
 
@@ -240,5 +240,6 @@ void pong(void)
             
         }
     }
+    return XANIN_OK;
 
 }

@@ -186,7 +186,7 @@ void hexeditor_input(xchar x)
 }
 
 
-void hexeditor(char* file_name)
+int hexeditor(char* file_name)
 {
 
 
@@ -197,7 +197,7 @@ void hexeditor(char* file_name)
     {
         xprintf("Can't open file %s\n", file_name);
         while(KeyInfo.scan_code != ENTER);
-        return;
+        return XANIN_ERROR;
     }
 
     data_pointer = (char*)calloc(VGA_SCREEN_RESOLUTION);
@@ -228,6 +228,7 @@ void hexeditor(char* file_name)
     write(file, data_pointer, 512);
     fclose(&file);
     free(data_pointer);
+    return XANIN_OK;
 
 
 }

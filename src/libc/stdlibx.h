@@ -95,3 +95,15 @@ typedef struct xchar xchar;
 xchar inputg(void);
 
 extern bool app_exited;
+extern int last_command_exit_status;
+
+enum XANIN_RETURN_STATUS
+{
+
+    XANIN_OK = 0x0,
+    XANIN_ERROR = 0x3,
+    XIN_FILE_EXISTS = 0x4,
+    XIN_BAD_FOLDER_NAME = 0x5,
+    XIN_ENTRY_NOT_FOUND = 0x6
+
+};

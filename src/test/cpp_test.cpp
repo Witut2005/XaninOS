@@ -167,9 +167,10 @@ void cpp_prog()
 extern "C"
 {
 
-    void cpp_test(void)
+    int cpp_test(void)
     {
         cpp_prog();
+        return 0;
     }
     
 

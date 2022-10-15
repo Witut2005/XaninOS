@@ -120,3 +120,135 @@ __STATUS __sys_xin_folder_change(const char* new_folder_name)
             return XANIN_OK;
     }
 }
+
+
+__STATUS __sys_xin_copy(char* file_name, char* new_file_name)
+{
+
+    xin_entry* entry = xin_find_entry(file_name);
+
+    if(entry == nullptr)
+    {
+        xprintf("%zNO SUCH FILE: %s\n", stderr, file_name);
+        while(KeyInfo.scan_code != ENTER);
+        return XANIN_ERROR;
+    }
+
+    xin_create_file(new_file_name);
+
+    xin_entry* new_entry = xin_find_entry(new_file_name);
+
+    int counter = 0; 
+    char* entry_data = entry->starting_sector * SECTOR_SIZE;
+    char* new_entry_data = new_entry->starting_sector * SECTOR_SIZE;
+    
+    for(; counter <= SECTOR_SIZE * 0x10; counter++)
+    {
+        new_entry_data[counter] = entry_data[counter];
+    }
+    return XANIN_OK;
+}
+
+__STATUS __sys_xin_link_create(char* file_name, char* link_name)
+{
+
+
+    uint8_t* file = (uint8_t*)xin_find_entry(file_name); 
+
+    if(file == nullptr)
+    {
+        xprintf("%zNO SUCH FILE\n", stderr);
+        while(getscan() != ENTER);
+        return XANIN_ERROR;
+    } 
+
+    uint8_t* link = (uint8_t*)xin_find_free_entry();
+
+    for(int i = 0; i < sizeof(xin_entry); i++)
+        link[i] = file[i];
+
+    if(link_name[0] != '/')
+        link_name = xin_get_current_path(link_name);
+
+    for(int i = 0; i < 40; i++)
+        link[i] = link_name[i];
+
+    return XANIN_OK;
+
+}
+
+
+int __sys_xin_list_files(char* path)
+{
+
+    xin_entry* i = (xin_entry*)XIN_ENTRY_TABLE; 
+
+    int printed_text = 0;
+    char* current_path = xin_get_current_path(path);
+
+    while(*(char*)i != '\0')
+    {
+
+
+        if(strlen(path) == 0)
+        {
+            printed_text += strlen(i->entry_path);
+
+            if(printed_text >= 80)
+            {
+                printed_text = 0;
+                xprintf("\n");
+                printed_text += strlen(i->entry_path);
+            }
+
+            if(strcmp(xin_get_file_pf(i->entry_path)->entry_path, xin_current_directory))
+            {
+                xprintf("%z%s", set_output_color(black, i->entry_type + 0x2), i);
+                xprintf("  ");
+            }
+            printed_text = printed_text + strlen("  ");
+        }
+
+
+        else
+        {
+            if(strncmp(i->entry_path, path, strlen(path)))
+            {
+                printed_text += strlen(i->entry_path);
+
+                if(printed_text >= 70)
+                {
+                    printed_text = 0;
+                    xprintf("\n");
+                }
+
+                xprintf("%z%s", set_output_color(black, i->entry_type + 0x2), i);
+                xprintf("  ");
+            }
+
+            else if(strncmp(i->entry_path, current_path, strlen(current_path)))
+            {
+                printed_text += strlen(i->entry_path);
+
+                if(printed_text >= 70)
+                {
+                    printed_text = 0;
+                    xprintf("\n");
+                }
+
+                xprintf("%z%s", set_output_color(black, i->entry_type + 0x2), i);
+                xprintf("  ");
+            }
+            
+            printed_text = printed_text + strlen("  ");
+
+        }
+
+
+        i++;
+    }
+
+    while(KeyInfo.scan_code != ENTER);
+    return XANIN_OK;
+
+}

@@ -14,5 +14,5 @@ struct XaninInfoBlock
 #ifndef __cplusplus
 typedef struct XaninInfoBlock XaninInfoBlock;
 XaninInfoBlock* xanin_information_block_get(void);
-static XaninInfoBlock* xanin_info_ptr;
 #endif
+static XaninInfoBlock* xanin_info_ptr;

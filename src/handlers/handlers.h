@@ -27,4 +27,4 @@
 /* KEYBOARD HANDLER DATA */
 uint8_t keyStatus;
 
-void reg_dump(void);
+int reg_dump(void);

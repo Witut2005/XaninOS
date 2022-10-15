@@ -5,7 +5,7 @@
 #include <xin_fs/xin.h>
 
 
-void shutdown(void)
+int shutdown(void)
 {
 
     uint32_t k = 0;
@@ -46,5 +46,6 @@ void shutdown(void)
 
     interrupt_disable();
     asm("hlt");
+    return XANIN_OK;
 
 }

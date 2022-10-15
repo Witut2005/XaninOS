@@ -11,7 +11,7 @@ void timer_input(void)
         app_exited = true;
 }
 
-void timer_test(void)
+int timer_test(void)
 {
 
     keyboard_handle = timer_input;
@@ -30,9 +30,9 @@ void timer_test(void)
         screen_clear();
         xprintf("%d", current_time);
         current_time++;
-
-        
         msleep(1000);
-
     }
+
+    return XANIN_OK;
+
 }
