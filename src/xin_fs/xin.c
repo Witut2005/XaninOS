@@ -704,7 +704,6 @@ void fclose(xin_entry** file)
     (*file)->file_info->position = 0;
     memset((*file)->file_info->rights, '\0', 2);
 
-
 //    for(int i = 0; i < (*file)->entry_size / 512 + ((*file)->entry_size % 512 != 0 ? 1 : 0); i++)
     for(int i = 0; i < 0x10; i++)
        disk_write(ATA_FIRST_BUS, ATA_MASTER, (*file)->starting_sector + i, 1, (uint16_t*)((*file)->file_info->base_address_memory + (i * SECTOR_SIZE)));

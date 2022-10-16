@@ -118,7 +118,9 @@ void disk_write(uint16_t base, uint8_t master, uint32_t sector_number, uint8_t h
 
 
     outbIO(base + ATA_DRIVE_REGISTER, ((master == ATA_MASTER ? 0xE0 : 0xF0) | 
-                                        ((sector_number >> 24) & 0x0F)));
+                                        ((sector_number & 0x0F000000) >> 24)));
+
+    // outbIO(0x1F6, (sector_number >> 8)| 0xE);
 
     outbIO(base + ATA_ERROR_REGISTER, 0x0);
 	outbIO(base + ATA_SECTOR_COUNT_REGISTER, 0x1);
@@ -136,15 +138,7 @@ void disk_write(uint16_t base, uint8_t master, uint32_t sector_number, uint8_t h
     for(int i = 0; i < how_many_sectors; i++)
     {
         for(int j = 0; j < 256; j++)
-        {
-            //uint16_t readed_data = inwIO(base + ATA_DATA_REGISTER);
-        
             outwIO(base + ATA_DATA_REGISTER, where[j]);
-
-      	    //*where = readed_data;
-      	    //where++;
-        
-        }
     }
     
     //disk_status = inbIO(base + ATA_STATUS_REGISTER);
