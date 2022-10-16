@@ -1,8 +1,7 @@
-
 #include <devices/NIC/8254x.hpp>
 #include <libc/stdiox.h>
 #include <libcpp/hal.h>
-#include <libc/hal.h>
+#include <libcpp/chal.h>
 #include <libcpp/ostream.h>
 #include <libc/syslog.h>
 #include <libcpp/cmemory.h>
@@ -14,7 +13,7 @@
 #include <libcpp/cmemory.h>
 
 #define INTEL_8254X_DESCRIPTORS 256
-#define reset() write(0x0, 0x4000000)
+#define reset() write(0x0, 0x80000000)
 
 
 void Intel8254xDriver::write(uint32_t reg, uint32_t value)
@@ -34,8 +33,31 @@ void Intel8254xDriver::multicast_table_array_clear(void)
         this->write(nic::MTA + i, 0x0);
 }
 
-uint16_t Intel8254xDriver::eeprom_read(uint8_t address)
+bool Intel8254xDriver::is_eeprom_present(void)
 {
+    this->write(nic::EERD, 0x1);
+
+    bool eerprom_exists;
+
+    for(int i = 0; i < 1000 && ! eerprom_exists; i++)
+    {
+            auto val = this->read(nic::EERD);
+            if(val & 0x10)
+                    eerprom_exists = true;
+            else
+                    eerprom_exists = false;
+    }
+    return eerprom_exists;
+
+
+}
+
+__attribute__((fastcall)) uint16_t Intel8254xDriver::eeprom_read(uint8_t address)
+{
+
+    /* enable reading from eeprom */
+    this->write(nic::EECD, this->read(nic::EECD) | nic::EECD_REQ);
+    while((this->read(nic::EECD) & nic::EECD_GNT) >> 7 == 0);
 
     if(!this->is_present)
         return USHRT_MAX;
@@ -52,6 +74,7 @@ uint16_t Intel8254xDriver::eeprom_read(uint8_t address)
 
     ret = ret >> 16;
 
+
     return ret;
 
 }
@@ -59,17 +82,19 @@ uint16_t Intel8254xDriver::eeprom_read(uint8_t address)
 uint8_t* Intel8254xDriver::mac_get()
 {
 
+    // screen_clear();
     if(!this->is_present)
         return (uint8_t*)PHYSICAL_ADDRESS_MAX;
 
-    this->write(nic::EECD, this->read(nic::EECD) | nic::EECD_SK | nic::EECD_CS | nic::EECD_DI);
 
-    /* enable reading from eeprom */
-    this->write(nic::EECD, this->read(nic::EECD) | nic::EECD_REQ);
-    while((this->read(nic::EECD) & nic::EECD_GNT) >> 7 != 1);
     *(uint16_t*)&mac[0] = this->eeprom_read(0x0);
     *(uint16_t*)&mac[2] = this->eeprom_read(0x1);
     *(uint16_t*)&mac[4] = this->eeprom_read(0x2);
+
+    // xprintf("0x%x\n", mac[0]);
+    // xprintf("0x%x\n", this->eeprom_read(0xC));
+    // while(1);
+
     this->write(nic::EECD, this->read(nic::EECD) ^ nic::EECD_REQ);
     return this->mac;
 }
@@ -213,6 +238,11 @@ void Intel8254xDriver::send_packet(uint32_t address, uint16_t length)
 
 void Intel8254xDriver::init()
 {
+    
+    reset();
+
+    for(int i = 0; i < 100; i++)
+        io_wait();
 
     /* finding device */
     this->pci_selector = pci_find_device(INTEL_8254X, 0x100E, &pci_info);
@@ -234,24 +264,21 @@ void Intel8254xDriver::init()
     uint16_t pci_command = pci_get_data16(pci_info.bus, pci_info.slot, pci_info.function, 0x4);
     pci_write_data16(pci_info.bus, pci_info.slot, pci_info.function, 0x4, pci_command | 0x7); 
 
-    /* device reset */
-    reset();
 
-
-    
+    this->write(nic::EECD, this->read(nic::EECD) | nic::EECD_SK | nic::EECD_CS | nic::EECD_DI);
     this->mac_get();
 
     // /* general configuration (page 389) */
-    // this->write(nic::CTRL, this->read(nic::CTRL) | nic::ctrl::ASDE | nic::ctrl::SLU); // step 2
-    // this->write(nic::CTRL, this->read(nic::CTRL) & (~nic::ctrl::LRST)); // step 5
-    // this->write(nic::CTRL, this->read(nic::CTRL) & (~nic::ctrl::PHY_RST)); // step 6
-    // this->write(nic::CTRL, this->read(nic::CTRL) & (~nic::ctrl::ILOS)); // step 7 (can be bad)
+    this->write(nic::CTRL, this->read(nic::CTRL) | nic::ctrl::ASDE | nic::ctrl::SLU); // step 2
+    this->write(nic::CTRL, this->read(nic::CTRL) & (~nic::ctrl::LRST)); // step 5
+    this->write(nic::CTRL, this->read(nic::CTRL) & (~nic::ctrl::PHY_RST)); // step 6
+    this->write(nic::CTRL, this->read(nic::CTRL) & (~nic::ctrl::ILOS)); // step 7 (can be bad)
 
-    // this->multicast_table_array_clear(); // clear multicast table
-    // this->multicast_table_array_clear(); // clear multicast table
+    this->multicast_table_array_clear(); // clear multicast table
+    this->multicast_table_array_clear(); // clear multicast table
     
     // /* disable VLANs */
-    // this->write(nic::CTRL, this->read(nic::CTRL) & (~nic::ctrl::VME));
+    this->write(nic::CTRL, this->read(nic::CTRL) & (~nic::ctrl::VME));
 
     this->receive_init();
     this->transmit_init();
@@ -448,11 +475,6 @@ extern "C"
     {
         // xprintf("\n");
         Intel8254x.send_packet(address, length);
-    }
-
-    static uint8_t* i8254x_mac_get_static(void)
-    {
-        return i8254x_mac_get();
     }
 
     void i8254x_init(void)

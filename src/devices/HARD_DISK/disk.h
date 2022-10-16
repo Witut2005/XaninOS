@@ -5,7 +5,7 @@
 
 /* all ports all 8bit with exeception of DATA_REGISTER (16bit) */
 
-enum AtaRegisters
+enum ATA_REGISTERS
 {
       
     ATA_MASTER = 0x1,
@@ -36,7 +36,7 @@ enum AtaRegisters
 
 
 
-enum AtaCommands
+enum ATA_COMMANDS
 {
 
     ATA_IDENTIFY = 0xEC,

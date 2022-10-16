@@ -3,7 +3,7 @@
 #include <libcpp/endian.h>
 #include <libcpp/cstdlib.h>
 #include <libcpp/cmemory.h>
-#include <netapi/network_device.hpp>
+#include <netapi/network_device.h>
 #include <network_protocols/udp/udp.hpp>
 
 void DynamicHostConfigurationProtocolSubystem::discover_send(void)

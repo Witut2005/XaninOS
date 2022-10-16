@@ -110,7 +110,9 @@ sse_on:
 
 ;https://www.youtube.com/watch?v=EbTNacDhqbA <-- GYNVAEL OSDEV VIDEO #3
 
+
 loader:
+cli
 
 mov word si, [kernel + 0x12]  ;machine type
 cmp si, 0x3
@@ -180,13 +182,14 @@ jmp eax
 
 jmp $ 
 
+gdt_str: db "global_descirptor_table"
+
 times (32 - ( $ - $$ ) % 32 ) db 0x00
 
 _GDT_ADDR:
     dw (_GDT_END - _GDT) - 1 ; size of GDT
     dd _GDT                  ; GDT beginning
 
-gdt_str: db "global_descirptor table"
 
 _GDT:
 

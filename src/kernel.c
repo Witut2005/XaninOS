@@ -46,6 +46,11 @@ float pit_time = 0x0;
 void _start(void)
 {
     
+    interrupt_disable();
+
+    uint32_t* p = (uint32_t*)VGA_TEXT_MEMORY;
+    *p = 0x42424242;
+    
     interrupt_disable();            //disable interrupts while IDT is not configured
 
     disable_cursor();
@@ -68,6 +73,8 @@ void _start(void)
     keyboard_command = command_buffer;
 
     //usb_detect();
+
+    // while(KeyInfo.scan_code != ENTER);
     
     rsdp = get_acpi_rsdp_address_base();
 
@@ -224,6 +231,7 @@ void _start(void)
     create_file_kernel("/system_space2");
     memset((uint8_t*)&ArpTable[0], 0xFF, sizeof(ArpTable[0]));
     current_arp_entry++;
+    
 
     netapi_init();
     i8254x_init();
@@ -240,8 +248,7 @@ void _start(void)
     printk("Nigdy sie nie poddam");
     // xin_entry* aha = fopen("/syslog", "rw");
     // write(aha, "kernel successfully loaded", 20);
-    // fclose(&aha)
-    // while(KeyInfo.scan_code != ENTER);
+    while(KeyInfo.scan_code != ENTER);
 
 
     while(1)

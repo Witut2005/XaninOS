@@ -5,10 +5,11 @@ CC 	= i386-elf-g++
 
 XANIN_PATH = /home/witut/Desktop/xaninOS/src/
 
-C_OPTIONS = -O0 -masm=intel -Wno-discarded-qualifiers -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-int-conversion -Wno-unused-function -Wno-div-by-zero -Wno-address-of-packed-member -I $(XANIN_PATH) -c
-C_COMPILE = -O0 -masm=intel -Wno-discarded-qualifiers -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-int-conversion -Wno-unused-function -Wno-div-by-zero -Wno-address-of-packed-member -I $(XANIN_PATH) 
+# C_OPTIONS  = -O0 -masm=intel -Wno-discarded-qualifiers -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-int-conversion -Wno-unused-function -Wno-div-by-zero -Wno-address-of-packed-member -I $(XANIN_PATH) -c
+C_COMPILE  = -O0 -masm=intel -Wno-discarded-qualifiers -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-int-conversion -Wno-unused-function -Wno-div-by-zero -Wno-address-of-packed-member -I $(XANIN_PATH) 
 CC_OPTIONS =  -Os -fno-exceptions -lstdc++ -masm=intel -std=c++17 -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Wno-write-strings -Wno-return-type -fno-rtti -fconcepts-ts -I $(XANIN_PATH) -c
-# C_OPTIONS =  -O0 -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -Wno-discarded-qualifiers -ffreestanding -Wno-unused-function -Wno-return-type -I $(XANIN_PATH) -c
+C_OPTIONS  =  -O0 -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -Wno-discarded-qualifiers -ffreestanding -Wno-unused-function -Wno-return-type -I $(XANIN_PATH) -c
+
 ASM	= nasm
 APPS = ./xaninApps
 
@@ -61,9 +62,6 @@ build:
 
 	@echo [ASM] xanin_state.asm
 	@$(ASM) -f elf32 ./libc/xanin_state.asm -o ./libc/xanin_state.o
-
-	@echo [CC] chip8.cpp
-	@$(CC) $(CC_OPTIONS) ./chip8/chip8.cpp -o ./chip8/chip8.o
 
 	@echo [CC] apic.cpp
 	@$(CC) $(CC_OPTIONS) ./devices/APIC/apic.cpp -o ./devices/APIC/apic.o
@@ -227,14 +225,20 @@ build:
 	./xagames/xagame_test.o \
 	./xagames/tetris.o -o kernel.bin
 
+	@echo [C] disk_freestanding_driver.c
+	@$(C) $(C_COMPILE) ./boot/disk_freestanding_driver.c ./boot/linker.ld -Ttext 0x700000 -o ./boot/disk_freestanding_driver.o
+	python3 ./utils/align_file.py -file ./boot/disk_freestanding_driver.o
+	
+
 	@echo "\033[0;32mCOMPILATION SUCCESS"
 	@echo "\033[0m"
 
 	@cat ./xaninApps/shutdown $(APPS)/current_app $(APPS)/syscall_test ./libc/real_mode_fswitch_asm ./libc/fast_return_to_32_mode > ./xaninApps/xanin_external_apps
 	@dd if=./xaninApps/xanin_external_apps of=./xaninApps/xanin_apps_space bs=512 count=16 conv=notrunc
 	
-ifeq ($(boot), yan)
-	@cat ./yan-bootloader/yan.bin ./libc/enter_real_mode ./xaninApps/xanin_apps_space ./xin_fs/xin_pointers ./xin_fs/entries_table ./boot/kernelLoader kernel.bin > xanin.bin
+ifeq ($(boot), 3)
+	## @cat ./yan-bootloader/yan.bin ./libc/enter_real_mode ./xaninApps/xanin_apps_space ./xin_fs/xin_pointers ./xin_fs/entries_table ./boot/kernelLoader kernel.bin > xanin.bin
+	@cat ./boot/boot ./libc/enter_real_mode ./xaninApps/xanin_apps_space ./xaninApps/blank_sector ./xin_fs/xin_pointers ./xin_fs/entries_table ./boot/kernelLoader ./boot/disk_freestanding_driver.o kernel.bin > xanin.bin
 else
 	@cat ./boot/boot ./libc/enter_real_mode ./xaninApps/xanin_apps_space ./xaninApps/blank_sector ./xin_fs/xin_pointers ./xin_fs/entries_table ./boot/kernelLoader kernel.bin > xanin.bin
 endif
@@ -248,12 +252,12 @@ endif
 
 run:
 	# qemu-system-i386 -smp 2 -net nic,model=e1000 -drive file=../bin/xanin.img,cache=unsafe -m 512
-	sudo qemu-system-i386 -smp 2 -drive file=../bin/xanin.img,cache=unsafe -m 512 -net nic -net tap
+	sudo qemu-system-i386 -drive file=../bin/xanin.img,cache=unsafe -m 4096 -net nic -net tap
 
 
 curses:
 	qemu-system-i386 -curses -k en-us -m 512 -hda ../bin/xanin.img 
 
 debug:
-	sudo qemu-system-i386 -smp 2 -drive file=../bin/xanin.img,cache=unsafe -m 512 -net nic -net tap -s -S
+	sudo qemu-system-i386 -drive file=../bin/xanin.img,cache=unsafe -m 512 -net nic -net tap -s -S
 

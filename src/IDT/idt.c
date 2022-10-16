@@ -6,7 +6,6 @@
 #include <syscall/posix/posix.c>
 #include <devices/MOUSE/mouse.c>
 
-
 //extern void mouse_handler(void);
 
 extern void mouse_handler_init(void);

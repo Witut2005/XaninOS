@@ -33,7 +33,6 @@ uint8_t inbIO(uint16_t port)
 {
     uint8_t ret;
 
-    asm("in al,dx" :: "d" (port));
     
     asm("in al, %1;"
         "mov %0, al;"

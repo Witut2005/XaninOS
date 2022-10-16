@@ -458,7 +458,7 @@ int xin_create_file(char* entry_name)
 
         if(entry_path == nullptr)
         {
-            memset(entry, 0, 64); 
+            memset((uint8_t*)entry, 0, 64); 
             return XANIN_ERROR;
         }
 

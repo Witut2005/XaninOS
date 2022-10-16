@@ -43,6 +43,7 @@ int nic_info(char* network_device_name)
     xprintf("MAC address: ");
 
     uint8_t* mac = device_info->device_mac;
+    // uint8_t* mac = i8254x_mac_get();
     for(int i = 0; i < 5; i++)
         xprintf("%x:", mac[i]);
     xprintf("%x\n", mac[5]);

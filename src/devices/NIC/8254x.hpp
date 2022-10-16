@@ -2,7 +2,7 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <devices/PCI/pci.h>
-#include <netapi/network_device.hpp>
+#include <netapi/network_device.h>
 #include <devices/PCI/pci.h>
 
 extern "C" int32_t pci_find_device(uint16_t, uint16_t, pci_device*);
@@ -199,7 +199,8 @@ class Intel8254xDriver
     uint32_t iobase_get(void);
     uint16_t vendorid_get(void);
     pci_device* pci_info_get(void);
-    uint16_t eeprom_read(uint8_t address);
+    __attribute__((fastcall))uint16_t eeprom_read(uint8_t address);
+    bool is_eeprom_present(void);
     void multicast_table_array_clear(void);
     uint32_t receive_descriptors_buffer_get(void);
     uint32_t transmit_descriptors_buffer_get(void);

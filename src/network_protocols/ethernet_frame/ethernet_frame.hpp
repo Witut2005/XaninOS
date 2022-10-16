@@ -1,6 +1,6 @@
 
 #include <stdint.h>
-#include <netapi/network_device.hpp>
+#include <netapi/network_device.h>
 #include <network_protocols/ethernet_frame/ethernet_frame.h>
 
 class EthernetFrameInterface
