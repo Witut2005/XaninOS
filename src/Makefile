@@ -227,7 +227,7 @@ build:
 
 	@echo [C] disk_freestanding_driver.c
 	@$(C) $(C_COMPILE) ./boot/disk_freestanding_driver.c ./boot/linker.ld -Ttext 0x700000 -o ./boot/disk_freestanding_driver.o
-	python3 ./utils/align_file.py -file ./boot/disk_freestanding_driver.o
+	python3 ./utils/align_file.py -file ./boot/disk_freestanding_driver.o -size 512
 	
 
 	@echo "\033[0;32mCOMPILATION SUCCESS"
@@ -245,6 +245,7 @@ endif
 
 
 	@dd if=xanin.bin of=xanin.img
+	python3 ./utils/align_file.py -f ./xanin.img -size 800000
 	@mv xanin.img -f ../bin
 	@mv xanin.bin -f ../bin
 

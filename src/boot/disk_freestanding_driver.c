@@ -40,7 +40,9 @@ enum ATA_COMMANDS
 
     ATA_IDENTIFY = 0xEC,
     ATA_READ = 0x20,
+    ATA_EXTENDED_READ = 0x24,
     ATA_WRITE = 0x30,
+    ATA_EXTENDED_WRITE = 0x34,
     ATA_FLUSH = 0xE7
 
 };
@@ -200,23 +202,28 @@ void init_disk(uint16_t base, uint8_t master)
 
 
 void disk_read(uint16_t base, uint8_t master, uint32_t sector_number, 
-                                uint8_t how_many_sectors, uint16_t* where)
+                                uint16_t how_many_sectors, uint16_t* where)
 {
 
 
     uint8_t disk_status;
-    outbIO(base + ATA_DRIVE_REGISTER, ((master == ATA_MASTER ? 0xE0 : 0xF0) | 
-                                        ((sector_number >> 24) & 0x0F)));
 
-    outbIO(base + ATA_ERROR_REGISTER, 0x0);
-	outbIO(base + ATA_SECTOR_COUNT_REGISTER, how_many_sectors);
+    outbIO(base + ATA_DRIVE_REGISTER, ((master == ATA_MASTER ? 0x40 : 0x50)));
+    outbIO(base + ATA_SECTOR_COUNT_REGISTER, how_many_sectors >> 8);
+    
+    /* lba4 - lba6 */
+    outbIO(base + ATA_SECTOR_NUMBER_LOW, 0);
+	outbIO(base + ATA_SECTOR_NUMBER_MID, 0);
+	outbIO(base + ATA_SECTOR_NUMBER_HIGH, 0);
+
+    outbIO(base + ATA_SECTOR_COUNT_REGISTER, how_many_sectors & 0xFF);
 	  
+    /* lba1 - lba3 */
     outbIO(base + ATA_SECTOR_NUMBER_LOW, sector_number & 0xFF);
 	outbIO(base + ATA_SECTOR_NUMBER_MID, (sector_number >> 8) & 0xFF);
 	outbIO(base + ATA_SECTOR_NUMBER_HIGH, (sector_number >> 16) & 0xFF);
 	
-	outbIO(base + ATA_COMMAND_REGISTER, ATA_READ);
-
+	outbIO(base + ATA_COMMAND_REGISTER, ATA_EXTENDED_READ);
 
     disk_status = inbIO(base + ATA_STATUS_REGISTER);
 
@@ -242,14 +249,7 @@ void disk_read(uint16_t base, uint8_t master, uint32_t sector_number,
         }
     }
 
-    
-    disk_status = inbIO(base + ATA_STATUS_REGISTER);
-    
-    if(disk_status & 0x1)
-        print("disk error");
-
 }
-
 
 
 enum ELF_FIELD
@@ -264,7 +264,7 @@ enum ELF_FIELD
 
 void elf_load(void)
 {
-    uint8_t* data = (uint8_t*)(0x20200 + (14 * SECTOR_SIZE));
+    uint8_t* data = (uint8_t*)(0x20200 + (15 * SECTOR_SIZE));
     print(data);
     
     uint8_t* write_to_memory;
@@ -336,11 +336,9 @@ void _start(void)
 
     init_disk(ATA_FIRST_BUS, ATA_MASTER);    
         
-    for(int i = 0; i < 100; i++)
-        disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x2 + 0x80 + 15 + i, 1, (uint16_t*)(0x20200 + ((14 + i)* SECTOR_SIZE)));
+    for(int i = 0; i < 200; i++)
+        disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x2 + 0x80 + 15 + i, 1, (uint16_t*)(0x20200 + ((15 + i)* SECTOR_SIZE)));
 
-    for(int i = 100; i < 200; i++)
-        disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x2 + 0x80 + 15 + i, 1, (uint16_t*)(0x20200 + ((14 + i)* SECTOR_SIZE)));
 
     // for(int i = 200; i < 300; i++)
     //     disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x2 + 0x80 + 15 + i, 1, (uint16_t*)(0x20200 + ((14 + i)* SECTOR_SIZE)));

@@ -42,23 +42,28 @@ void init_disk(uint16_t base, uint8_t master)
 
 
 void disk_read(uint16_t base, uint8_t master, uint32_t sector_number, 
-                                uint8_t how_many_sectors, uint16_t* where)
+                                uint16_t how_many_sectors, uint16_t* where)
 {
 
 
     uint8_t disk_status;
-    outbIO(base + ATA_DRIVE_REGISTER, ((master == ATA_MASTER ? 0xE0 : 0xF0) | 
-                                        ((sector_number >> 24) & 0x0F)));
 
-    outbIO(base + ATA_ERROR_REGISTER, 0x0);
-	outbIO(base + ATA_SECTOR_COUNT_REGISTER, how_many_sectors);
+    outbIO(base + ATA_DRIVE_REGISTER, ((master == ATA_MASTER ? 0x40 : 0x50)));
+    outbIO(base + ATA_SECTOR_COUNT_REGISTER, how_many_sectors >> 8);
+    
+    /* lba4 - lba6 */
+    outbIO(base + ATA_SECTOR_NUMBER_LOW, 0);
+	outbIO(base + ATA_SECTOR_NUMBER_MID, 0);
+	outbIO(base + ATA_SECTOR_NUMBER_HIGH, 0);
+
+    outbIO(base + ATA_SECTOR_COUNT_REGISTER, how_many_sectors & 0xFF);
 	  
+    /* lba1 - lba3 */
     outbIO(base + ATA_SECTOR_NUMBER_LOW, sector_number & 0xFF);
 	outbIO(base + ATA_SECTOR_NUMBER_MID, (sector_number >> 8) & 0xFF);
 	outbIO(base + ATA_SECTOR_NUMBER_HIGH, (sector_number >> 16) & 0xFF);
 	
-	outbIO(base + ATA_COMMAND_REGISTER, ATA_READ);
-
+	outbIO(base + ATA_COMMAND_REGISTER, ATA_EXTENDED_READ);
 
     disk_status = inbIO(base + ATA_STATUS_REGISTER);
 
@@ -84,12 +89,6 @@ void disk_read(uint16_t base, uint8_t master, uint32_t sector_number,
         }
     }
 
-    
-    //disk_status = inbIO(base + ATA_STATUS_REGISTER);
-    
-    // if(disk_status & 0x1)
-    //     printk("disk error");
-
 }
 
 void disk_flush(uint16_t base, uint8_t master)
@@ -97,7 +96,6 @@ void disk_flush(uint16_t base, uint8_t master)
     uint8_t disk_status;
 
     outbIO(base + ATA_DRIVE_REGISTER, (master == ATA_MASTER ? 0xE0 : 0xF0));
-
 	outbIO(base + ATA_COMMAND_REGISTER, ATA_FLUSH);
 
     disk_status = inbIO(base + ATA_STATUS_REGISTER);
@@ -110,35 +108,37 @@ void disk_flush(uint16_t base, uint8_t master)
 
 }
 
-void disk_write(uint16_t base, uint8_t master, uint32_t sector_number, uint8_t how_many_sectors, uint16_t* where)
+
+void disk_write(uint16_t base, uint8_t master, uint32_t sector_number, uint16_t how_many_sectors, uint16_t* where)
 {
 
 
     uint8_t disk_status;
 
 
-    outbIO(base + ATA_DRIVE_REGISTER, ((master == ATA_MASTER ? 0xE0 : 0xF0) | 
-                                        ((sector_number & 0x0F000000) >> 24)));
+    outbIO(base + ATA_DRIVE_REGISTER, ((master == ATA_MASTER ? 0x40 : 0x50)));
+    outbIO(base + ATA_SECTOR_COUNT_REGISTER, how_many_sectors >> 8);
+    
+    /* lba4 - lba6 */
+    outbIO(base + ATA_SECTOR_NUMBER_LOW, 0);
+	outbIO(base + ATA_SECTOR_NUMBER_MID, 0);
+	outbIO(base + ATA_SECTOR_NUMBER_HIGH, 0);
 
-    // outbIO(0x1F6, (sector_number >> 8)| 0xE);
-
-    outbIO(base + ATA_ERROR_REGISTER, 0x0);
-	outbIO(base + ATA_SECTOR_COUNT_REGISTER, 0x1);
+    outbIO(base + ATA_SECTOR_COUNT_REGISTER, how_many_sectors & 0xFF);
 	  
+    /* lba1 - lba3 */
     outbIO(base + ATA_SECTOR_NUMBER_LOW, sector_number & 0xFF);
 	outbIO(base + ATA_SECTOR_NUMBER_MID, (sector_number >> 8) & 0xFF);
 	outbIO(base + ATA_SECTOR_NUMBER_HIGH, (sector_number >> 16) & 0xFF);
 	
-	outbIO(base + ATA_COMMAND_REGISTER, ATA_WRITE);
+	outbIO(base + ATA_COMMAND_REGISTER, ATA_EXTENDED_WRITE);
 
-
-    for(int i = 0; i < 4; i++)
-        inbIO(base + ATA_STATUS_REGISTER);
 
     for(int i = 0; i < how_many_sectors; i++)
     {
         for(int j = 0; j < 256; j++)
             outwIO(base + ATA_DATA_REGISTER, where[j]);
+        disk_flush(base, master);
     }
     
     //disk_status = inbIO(base + ATA_STATUS_REGISTER);
@@ -147,7 +147,5 @@ void disk_write(uint16_t base, uint8_t master, uint32_t sector_number, uint8_t h
     	xprintf("%zDISK ERROR", set_output_color(red,white));
 
 
-    disk_flush(base, master);
 
 }
-

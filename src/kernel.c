@@ -225,32 +225,31 @@ void _start(void)
 
     xin_init_fs();
 
-    // create_file_kernel("/syslog");
 
-    // create_file_kernel("/system_space1");
-    // create_file_kernel("/system_space2");
-    // create_file_kernel("/system_space3");
-    // create_file_kernel("/system_space4");
-    // create_file_kernel("/system_space5");
-    // create_file_kernel("/system_space6");
-    // create_file_kernel("/system_space7");
-    // create_file_kernel("/system_space8");
-    // create_file_kernel("/system_space9");
-    // create_file_kernel("/system_space10");
-    // create_file_kernel("/system_space20");
-    // create_file_kernel("/system_space30");
-    // create_file_kernel("/system_space11");
-    // create_file_kernel("/system_space21");
-    // create_file_kernel("/system_space31");
-    // create_file_kernel("/system_space12");
-    // create_file_kernel("/system_space22");
-    // create_file_kernel("/system_space32");
-    // create_file_kernel("/system_space13");
-    // // create_file_kernel("/system_space225");
-    // // create_file_kernel("/system_space325");
-    // // create_file_kernel("/system_space135");
-    // // create_file_kernel("/system_space235");
-    // // create_file_kernel("/system_space33");
+    create_file_kernel("/system_space1");
+    create_file_kernel("/system_space2");
+    create_file_kernel("/system_space3");
+    create_file_kernel("/system_space4");
+    create_file_kernel("/system_space5");
+    create_file_kernel("/system_space6");
+    create_file_kernel("/system_space7");
+    create_file_kernel("/system_space8");
+    create_file_kernel("/system_space9");
+    create_file_kernel("/system_space10");
+    create_file_kernel("/system_space20");
+    create_file_kernel("/system_space30");
+    create_file_kernel("/system_space11");
+    create_file_kernel("/system_space21");
+    create_file_kernel("/system_space31");
+    create_file_kernel("/system_space12");
+    create_file_kernel("/system_space22");
+    create_file_kernel("/system_space32");
+    create_file_kernel("/system_space13");
+    create_file_kernel("/system_space225");
+    create_file_kernel("/system_space325");
+    create_file_kernel("/system_space135");
+    create_file_kernel("/system_space235");
+    create_file_kernel("/system_space33");
 
     memset((uint8_t*)&ArpTable[0], 0xFF, sizeof(ArpTable[0]));
     current_arp_entry++;
