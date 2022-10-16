@@ -178,8 +178,20 @@ __STATUS __sys_xin_link_create(char* file_name, char* link_name)
 }
 
 
-int __sys_xin_list_files(char* path)
+int __sys_xin_list_files(char** argv)
 {
+    
+    char* options = null_region;
+    char* path = null_region;
+
+    for(int i = 1; argv[i][0] != '\0'; i++)
+    {
+        if(argv[i][0] == '-')
+            options = argv[i];
+        else 
+            path = argv[i];
+    }
+
 
     xin_entry* i = (xin_entry*)XIN_ENTRY_TABLE; 
 
@@ -189,6 +201,11 @@ int __sys_xin_list_files(char* path)
     while(*(char*)i != '\0')
     {
 
+        if(substr_find(i->entry_path, "/.") && !strcmp(options, "-la"))
+        {
+            i++;
+            continue;
+        }
 
         if(strlen(path) == 0)
         {
@@ -222,6 +239,7 @@ int __sys_xin_list_files(char* path)
                     xprintf("\n");
                 }
 
+
                 xprintf("%z%s", set_output_color(black, i->entry_type + 0x2), i);
                 xprintf("  ");
             }
@@ -238,6 +256,7 @@ int __sys_xin_list_files(char* path)
 
                 xprintf("%z%s", set_output_color(black, i->entry_type + 0x2), i);
                 xprintf("  ");
+                
             }
             
             printed_text = printed_text + strlen("  ");

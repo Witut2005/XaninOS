@@ -11,6 +11,7 @@
 
 char command_buffer[80];
 char* keyboard_command;
+uint8_t null_region[20] = {0};
 
 CmosTime SystemTime;
 

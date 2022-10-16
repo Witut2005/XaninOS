@@ -32,3 +32,4 @@ char* int_to_oct_str(int x, char* buf);
 uint32_t atoi(char* str);
 uint32_t strtoi(char* str, uint8_t format);
 uint32_t str2ipv4(char* str);
+char* substr_find(char *str, const char *substr);

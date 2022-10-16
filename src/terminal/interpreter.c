@@ -155,8 +155,14 @@ void scan(void)
     XANIN_ADD_APP_ENTRY0("clear", screen_clear)
 
     #ifdef LIST_FILES_APP
-    XANIN_ADD_APP_ENTRY1("ls", __sys_xin_list_files)
-    XANIN_ADD_APP_ENTRY1("dir", __sys_xin_list_files)
+    
+    else if(strcmp(program_name, "ls"))
+    {
+        __sys_xin_list_files(argv);
+    }
+
+    // XANIN_ADD_APP_ENTRY1("ls", __sys_xin_list_files)
+    // XANIN_ADD_APP_ENTRY1("dir", __sys_xin_list_files)
     #endif
 
     #ifdef NOTE_APP

@@ -96,6 +96,7 @@ xchar inputg(void);
 
 extern bool app_exited;
 extern int last_command_exit_status;
+extern uint8_t null_region[20];
 
 enum XANIN_RETURN_STATUS
 {

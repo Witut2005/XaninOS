@@ -13,6 +13,7 @@ file = open(args.file, 'a')
 
 print('size before aligment: ', file.tell())
 
+
 while file.tell() % args.size != 0:
     file.write('\0')
 

@@ -441,3 +441,15 @@ uint32_t str2ipv4(char* str)
     return tmp;
 
 }
+
+
+char* substr_find(char *str, const char *substr)
+{
+    while(*str != '\0')
+    {
+        if(strncmp(str, substr, strlen(substr)))
+            return str;
+        str++;
+    }
+    return nullptr;
+}
