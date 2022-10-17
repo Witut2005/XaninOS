@@ -311,7 +311,7 @@ void edit_input(xchar Input)
 
     }
 
-    else if(Input.scan_code == F4_KEY || Input.scan_code == F4_KEY_RELEASE)
+    else if(Input.scan_code == F4_KEY || Input.scan_code == F4_KEY_RELEASE || Input.scan_code == ESC)
         return;
     
 
@@ -376,7 +376,7 @@ int edit(char* file_name)
     begin_of_current_text = program_buffer;
 
 
-    while(KeyInfo.scan_code != F4_KEY && KeyInfo.scan_code != F4_KEY_RELEASE)
+    while(KeyInfo.scan_code != F4_KEY && KeyInfo.scan_code != F4_KEY_RELEASE && KeyInfo.scan_code != ESC)
         edit_input(inputg());
 
     file_position = strlen(program_buffer);

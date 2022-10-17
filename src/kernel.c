@@ -200,16 +200,11 @@ void _start(void)
 
     srand(SystemTime.seconds);
 
-
-    for(int i = 0; i < 70; i++)
-        disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x1a + i, 1, (uint16_t*)(0x1800 + (i * SECTOR_SIZE)));
-
     
     disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x1, 0x1, (uint16_t*)0x600);
     disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x2, 0x1, (uint16_t*)0x400);
 
     //disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x0, 0x1, (uint16_t*)0x7C00);
-
     
     disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x4, 1, (uint16_t*)(0x500 * SECTOR_SIZE));
     disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x500, 1, (uint16_t*)(0x500 * SECTOR_SIZE));
@@ -222,6 +217,12 @@ void _start(void)
     argv[2] = program_parameters1;
     argv[3] = program_parameters2;
     argv[4] = program_parameters3;
+
+    for(int i = 0; i < 5; i++)
+        disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x12 + i, 1, (uint16_t*)(0x800 + (i * SECTOR_SIZE)));
+
+    for(int i = 0; i < 10; i++)
+        disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x1a + i, 1, (uint16_t*)(0x1800 + (i * SECTOR_SIZE)));
 
     xin_init_fs();
 
@@ -250,6 +251,16 @@ void _start(void)
     create_file_kernel("/.system_space22");
     create_file_kernel("/.system_space23");
     create_file_kernel("/.system_space24");
+    create_file_kernel("/.system_space25");
+    create_file_kernel("/.system_space26");
+    create_file_kernel("/.system_space27");
+    create_file_kernel("/.system_space28");
+    create_file_kernel("/.system_space29"); 
+    create_file_kernel("/.system_space30");
+    create_file_kernel("/.system_space31");
+    create_file_kernel("/.system_space32");
+    create_file_kernel("/.system_space33");
+    create_file_kernel("/.system_space34");
 
     memset((uint8_t*)&ArpTable[0], 0xFF, sizeof(ArpTable[0]));
     current_arp_entry++;
@@ -267,9 +278,6 @@ void _start(void)
     // __sys_xin_file_create("/syslog");
     xin_create_file("/syslog");
     printk("To wszystko dla Ciebie Babciu <3");
-    printk("Nigdy sie nie poddam");
-    // xin_entry* aha = fopen("/syslog", "rw");
-    // write(aha, "kernel successfully loaded", 20);
     while(KeyInfo.scan_code != ENTER);
 
 

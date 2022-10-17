@@ -18,14 +18,13 @@ int shutdown(void)
     for(char* i = (char*)0x400; i < (char*)0x400 + SECTOR_SIZE; i++, k++)
         *i = shutdown_program_buffer[k];
 
-    disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x12, 8, (uint16_t*)0x800);
-    disk_flush(ATA_FIRST_BUS, ATA_MASTER);
 
-    for(int i = 0; i < 70; i++)
-    {
+    for(int i = 0; i < 5; i++)
+        disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x12 + i, 1, (uint16_t*)(0x800 + (i * SECTOR_SIZE)));
+
+    for(int i = 0; i < 10; i++)
         disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x1a + i, 1, (uint16_t*)(0x1800 + (i * SECTOR_SIZE)));
-        disk_flush(ATA_FIRST_BUS, ATA_MASTER);
-    }
+
 
     xin_entry* xin_file = fopen("/shutdown.bin", "r");
     disk_read(ATA_FIRST_BUS, ATA_MASTER, xin_file->starting_sector, 1, (uint16_t*)0x400);

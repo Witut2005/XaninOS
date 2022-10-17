@@ -71,6 +71,7 @@ __attribute__((fastcall)) uint16_t Intel8254xDriver::eeprom_read(uint8_t address
     while(!(this->read(nic::EERD) & (1 << 4)));
     
     uint32_t ret = this->read(nic::EERD);
+    this->write(nic::EECD, this->read(nic::EECD) ^ nic::EECD_REQ);
 
     ret = ret >> 16;
 
@@ -91,11 +92,6 @@ uint8_t* Intel8254xDriver::mac_get()
     *(uint16_t*)&mac[2] = this->eeprom_read(0x1);
     *(uint16_t*)&mac[4] = this->eeprom_read(0x2);
 
-    // xprintf("0x%x\n", mac[0]);
-    // xprintf("0x%x\n", this->eeprom_read(0xC));
-    // while(1);
-
-    this->write(nic::EECD, this->read(nic::EECD) ^ nic::EECD_REQ);
     return this->mac;
 }
 
@@ -283,7 +279,7 @@ void Intel8254xDriver::init()
     this->receive_init();
     this->transmit_init();
 
-    this->last_packet = (uint8_t*)malloc(sizeof(uint8_t) * 4096 * 10);
+    this->last_packet = (uint8_t*)calloc(sizeof(uint8_t) * 4096 * 10);
 
     /* enabling interrupts */
     this->write(nic::IMS, this->read(nic::IMS) | nic::ims::RXT | nic::ims::RXO | 
