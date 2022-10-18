@@ -33,6 +33,9 @@ void xprintf(char* str, ... );
 void xscanf(char* str, ... );
 void xscan_range(char* string_buffer, uint32_t how_many_chars);
 
+#define scanf xscanf
+#define printf xprintf
+
 #ifdef __cplusplus
 }
 #endif

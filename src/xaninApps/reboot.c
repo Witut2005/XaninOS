@@ -17,7 +17,7 @@ uint16_t idt_16[3] = {0x0, 0x0, 0x0};
     for(int i = 0; i < 5; i++)
         disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x12 + i, 1, (uint16_t*)(0x800 + (i * SECTOR_SIZE)));
 
-    for(int i = 0; i < 10; i++)
+    for(int i = 0; i < 20; i++)
         disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x1a + i, 1, (uint16_t*)(0x1800 + (i * SECTOR_SIZE)));
 
 

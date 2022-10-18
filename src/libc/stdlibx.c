@@ -20,6 +20,12 @@ CmosTime SystemTime;
 
 char* daysLUT[7] = {"Sun","Mon","Tue","Wed","Thu","Fri","Sat"};
 
+extern void kernel_loop(void);
+
+void exit(void)
+{
+    kernel_loop();
+}
 
 void wait_key(uint8_t key)
 {

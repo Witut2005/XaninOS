@@ -5,7 +5,7 @@
 
 #define ARP_ETHERNET 0x1
 #define ARP_IP_PROTOCOL 0x800
-#define ARP_REQUEST_REPLY 0x2
+#define ARP_REPLY 0x2
 #define ARP_GET_MAC 0x1
 #define ARP_ETHER_TYPE 0x0806
 

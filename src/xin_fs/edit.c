@@ -401,5 +401,6 @@ int edit(char* file_name)
     total_lines = 0x0;
 
     free(program_buffer);
+    exit();
 
 }
