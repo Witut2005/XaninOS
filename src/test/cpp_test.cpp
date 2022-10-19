@@ -153,8 +153,16 @@ void cpp_prog()
     else
         std::cout << "value of the given key: " << tmptmp << std::endl;
 
-    // for(auto a : Mapa)
-    //     std::cout << a.second << std::endl
+    screen_clear();
+    std::UnorderedMap<int, int> Ahha = {
+        {1,5},
+        {6,9}
+    };
+
+    Ahha.print();
+
+    //for(auto a : Ahha)
+    //std::cout << a.second << std::endl
 
     wait_key(ENTER_RELEASE);
     wait_key(ENTER_RELEASE);

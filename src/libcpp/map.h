@@ -28,8 +28,8 @@ namespace std
         {
             this->Head = (ListElement *)malloc(sizeof(ListElement));
 
-            this->Head->item.first = (*ListOfElements.begin).first;
-            this->Head->item.second = (*ListOfElements.begin).second;
+            this->Head->item.first = (*ListOfElements.begin()).first;
+            this->Head->item.second = (*ListOfElements.begin()).second;
 
             ListElement* Tmp = this->Head;
 
@@ -42,6 +42,7 @@ namespace std
             }
             Tmp->next = nullptr;
             this->Tail = Tmp;
+            this->Head = this->Head->next;
         }
 
         UnorderedMap()
