@@ -11,13 +11,13 @@ args.add_argument('-size', action='store', type=int, required=True)
 
 args = args.parse_args()
 
-file = open(args.file, 'ab')
+file = open(args.file, 'a')
 
 print('size before aligment: ', file.tell())
 
 
-# while file.tell() % args.size != 0:
-file.write(bytes(np.zeros(args.size - (file.tell() % args.size))))
+while file.tell() % args.size != 0:
+    file.write('\0')
 
 print('size after aligment: ', file.tell())
 

@@ -8,7 +8,8 @@ int keyboard_test(void)
     
     while(1)
     {
-        xprintf("%x", inbIO(0x60));
+        // xprintf("%x", inbIO(0x60));
+        xprintf("%x", KeyInfo.scan_code); 
         if(Screen.y >= 30)
         {
             Screen.y = 0;
@@ -16,7 +17,7 @@ int keyboard_test(void)
         }
 
         if(KeyInfo.scan_code == ESC)
-        break;
+            exit();
     }
     return XANIN_OK;
 }

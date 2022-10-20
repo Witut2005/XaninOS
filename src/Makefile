@@ -8,7 +8,7 @@ XANIN_PATH = /home/witut/Desktop/xaninOS/src/
 # C_OPTIONS  = -O0 -masm=intel -Wno-discarded-qualifiers -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-int-conversion -Wno-unused-function -Wno-div-by-zero -Wno-address-of-packed-member -I $(XANIN_PATH) -c
 C_COMPILE  = -O0 -masm=intel -Wno-discarded-qualifiers -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-int-conversion -Wno-unused-function -Wno-div-by-zero -Wno-address-of-packed-member -I $(XANIN_PATH) 
 CC_OPTIONS =  -Os -fno-exceptions -lstdc++ -masm=intel -std=c++17 -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Wno-write-strings -Wno-return-type -fno-rtti -fconcepts-ts -I $(XANIN_PATH) -c
-C_OPTIONS  =  -Os -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -Wno-discarded-qualifiers -ffreestanding -Wno-unused-function -Wno-return-type -I $(XANIN_PATH) -c
+C_OPTIONS  =  -O0 -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -Wno-discarded-qualifiers -ffreestanding -Wno-unused-function -Wno-return-type -I $(XANIN_PATH) -c
 
 ASM	= nasm
 APPS = ./xaninApps
@@ -35,7 +35,6 @@ build:
 	@# echo [ASM] syscall.asm
 	@# $(ASM) -f elf32 ./syscall/syscall.asm -o ./syscall/syscall.o
 	
-
 	@echo [ASM] pit.asm
 	@$(ASM) -f elf32 ./pit/pit.asm -o ./pit/pit.o
 
@@ -68,6 +67,9 @@ build:
 
 	@echo [CC] cpp_test.cpp
 	@$(CC) $(CC_OPTIONS) ./test/cpp_test.cpp -o ./test/cpp_test.o
+
+	@echo [C] pc_speaker.c
+	@$(C) $(C_OPTIONS) ./devices/PCSPK/pc_speaker.c -o ./devices/PCSPK/pc_speaker.o
 
 	@echo [CC] com.cpp
 	@$(CC) $(CC_OPTIONS) ./devices/COM/com.cpp -o ./devices/COM/ComPort.o
@@ -209,6 +211,7 @@ build:
 	./devices/APIC/apic.o \
 	./devices/NIC/8254x_int_handler.o \
 	./devices/NIC/8254x.o \
+	./devices/PCSPK/pc_speaker.o \
 	./network_protocols/ethernet_frame/ethernet_frame.o \
 	./network_protocols/arp/arp.o \
 	./network_protocols/internet_protocol/ipv4/ip.o \
@@ -253,7 +256,7 @@ endif
 
 run:
 	# qemu-system-i386 -smp 2 -net nic,model=e1000 -drive file=../bin/xanin.img,cache=unsafe -m 512
-	sudo qemu-system-i386 -drive file=../bin/xanin.img,cache=unsafe -m 4096 -net nic -net tap
+	sudo qemu-system-i386 -drive file=../bin/xanin.img,cache=unsafe -m 8192 -netdev user,id=user.0 -device e1000,netdev=user.0
 
 
 curses:

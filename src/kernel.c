@@ -24,6 +24,7 @@
 #include <xanin_info/info_block.c>
 #include <xin_fs/xin.h>
 #include <devices/NIC/8254x.h>
+#include <devices/PCSPK/pc_speaker.h>
 // #include <network_protocols/ethernet_frame/ethernet_frame.h>
 #include <netapi/network_device.h>
 #include <network_protocols/arp/arp.h>
@@ -83,8 +84,6 @@ void kernel_loop(void)
         app_exited          = false;
 
 
-        //keyboard_handle = terminal_keyboard;
-
         while(1)
         {
             if(app_exited)
@@ -138,7 +137,8 @@ void kernel_loop(void)
 void _start(void)
 {
 
-    interrupt_disable();
+    // interrupt_disable();
+    set_idt();
 
     uint32_t *p = (uint32_t *)VGA_TEXT_MEMORY;
     *p = 0x42424242;
@@ -148,7 +148,6 @@ void _start(void)
     disable_cursor();
     screen_clear();
 
-    set_idt();
     screen_init(); // init screen management system
 
     xanin_cpu_backup_make();
@@ -363,7 +362,13 @@ void _start(void)
     // __sys_xin_file_create("/syslog");
     xin_create_file("/syslog");
     printk("To wszystko dla Ciebie Babciu <3");
+    // memcpy(program_name, "key-test", 10);
+    // scan();
+    // while(1)
+    //     beep(1000);
     while (KeyInfo.scan_code != ENTER);
+    // keyboard_init();
+    // keyboard_reset();
 
     kernel_loop();
 

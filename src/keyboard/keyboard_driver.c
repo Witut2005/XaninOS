@@ -151,7 +151,6 @@ void keyboard_driver(uint8_t scanCode)
     if(KeyInfo.scan_code == BSPC)
         KeyInfo.character = '\0';
 
-    *(uint32_t*)APIC_EOI_REGISTER = 0x0;
     eoi_send();
 
 }

@@ -17,8 +17,15 @@ uint8_t keyboard_self_test()
     return inbIO(0x60);
 }
 
+void keyboard_reset(void)
+{
+    outbIO(0x64, KEYBOARD_DISABLE);             // KEYBOARD OFF
+    for(int i = 0; i < 10; i++)
+        io_wait();
+	outbIO(0x64, KEYBOARD_ENABLE);             // KEYBOARD ON
+}
 
-uint8_t keyboard_init()
+uint8_t keyboard_init(void)
 {
 
     uint8_t KEYBOARD_TEST_STATUS = keyboard_self_test();

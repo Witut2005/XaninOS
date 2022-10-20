@@ -69,7 +69,6 @@ void keyboard_handler(void)
     keyStatus = inbIO(KEYBOARD_STATUS_REG); // if status & 1 (ON)
     KeyInfo.scan_code = inbIO(KEYBOARD_DATA_REG); // get KeyInfo.scan_code
     keyboard_driver(KeyInfo.scan_code);
-    outbIO(0x20,0x20);
 }
  
 void debug_exception(void)
@@ -172,8 +171,18 @@ void stack_fault_exception(void)
 }
 
 void general_protection_exception(void)
-{
+{   
+    
     screen_clear();
+
+    // asm("mov ebx, [esp]\n\t"
+    //     "mov %0, ebx"
+    //     :"=r"(aha)
+    //     :
+    //     :"eax", "ebx"
+    //     );     
+    // xprintf("0x%x\n", aha);
+    
     xprintf("\n%zGeneral protection exception\n", set_output_color(red,white));
     reg_dump();
     interrupt_disable();

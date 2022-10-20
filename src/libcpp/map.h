@@ -42,7 +42,11 @@ namespace std
             }
             Tmp->next = nullptr;
             this->Tail = Tmp;
+
+            this->Head->next->previous = this->Head;
             this->Head = this->Head->next;
+            free(this->Head->previous);
+            this->Head->previous = nullptr;
         }
 
         UnorderedMap()

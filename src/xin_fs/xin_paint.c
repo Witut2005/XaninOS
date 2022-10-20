@@ -147,7 +147,9 @@ int xin_paint(char* file_name)
     else
     {
     
-        char* data_pointer = xin_file->starting_sector * SECTOR_SIZE;
+        char* data_pointer = (char*)calloc(VGA_SCREEN_RESOLUTION);//xin_file->starting_sector * SECTOR_SIZE;
+        char* data_pointer_save = data_pointer;
+        read(xin_file, data_pointer, VGA_SCREEN_RESOLUTION);
         
         uint16_t* bruh_moment = VGA_TEXT_MEMORY;
 
@@ -170,11 +172,12 @@ int xin_paint(char* file_name)
 
         uint32_t file_data_counter = 0x1;
 
-        data_pointer = (char*)(xin_file->starting_sector * SECTOR_SIZE);
+        data_pointer = data_pointer_save;
 
         
         uint8_t* screen_ptr = (uint8_t*)VGA_TEXT_MEMORY;
 
+        fseek(xin_file, 0);
         for(int i = 0; i < VGA_SCREEN_RESOLUTION; i++, screen_ptr += 2)
         {
             write(xin_file, screen_ptr + 1, 1);

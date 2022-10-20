@@ -36,7 +36,10 @@ int 10h
 
 int13_read:
 
-
+; D400
+; A000
+; 20000
+; 37400
 reading_disk:
 
 
@@ -68,9 +71,9 @@ int 0x13
 ;kernel_3
 mov word [lba], 0x43 + 0x69 + 0x40 + 0x50
 
-mov word [offset], 0x7400
-mov word [segment_num], 0x1000
-mov word [how_many_sectors], 0xC0
+mov word [offset], 0x0
+mov word [segment_num], 0x1740
+mov word [how_many_sectors], 0xD0
 
 mov si, DAP
 mov ah, 0x42
@@ -100,15 +103,15 @@ int 0x13
 ; int 0x13
 
 ;assembly applications
-mov word [lba], 0x2
-mov word [offset], 0x200
-mov word [segment_num], 0x1000
-mov word [how_many_sectors], 0x10
+; mov word [lba], 0x2
+; mov word [offset], 0x200
+; mov word [segment_num], 0x1000
+; mov word [how_many_sectors], 0x10
 
-mov si, DAP
-mov ah, 0x42
-mov dl, [BOOT_DISK_NUMBER]
-int 0x13
+; mov si, DAP
+; mov ah, 0x42
+; mov dl, [BOOT_DISK_NUMBER]
+; int 0x13
 
 
 
