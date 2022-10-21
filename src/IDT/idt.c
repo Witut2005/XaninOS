@@ -4,7 +4,7 @@
 #include <handlers/handlers.c>
 #include <keyboard/key_map.h>
 #include <syscall/posix/posix.c>
-#include <devices/MOUSE/mouse.c>
+#include <devices/MOUSE/mouse.h>
 
 //extern void mouse_handler(void);
 
@@ -110,7 +110,7 @@ void set_idt(void)
     // configure_idt_entry(0x2B + 6, gowno, CODE_SEGMENT);
     // configure_idt_entry(0x2B + 7, gowno, CODE_SEGMENT);
 
-    // configure_idt_entry(0x2C, mouse_handler_init, CODE_SEGMENT);
+    configure_idt_entry(0x2C, mouse_handler_init, CODE_SEGMENT);
 
     configure_idt_entry(0x80, syscall,CODE_SEGMENT);
     configure_idt_entry(0x50, elf_correctly_loaded,CODE_SEGMENT);

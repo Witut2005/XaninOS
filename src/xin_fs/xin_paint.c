@@ -157,11 +157,6 @@ int xin_paint(char* file_name)
         for(int i = 0;  i < (VGA_SCREEN_RESOLUTION / 2); i++)
             bruh_moment[i] = (uint16_t)(' ' | ((data_pointer[i]) << 8));
 
-        /*
-        for(int i = 0; i < (VGA_SCREEN_RESOLUTION / 2); i++)
-            xprintf("%z ", set_output_color(data_pointer[i + 1], white));
-        */
-        
         Screen.x = 0x0;
         Screen.y = 0x0;
 
@@ -188,9 +183,7 @@ int xin_paint(char* file_name)
 
     }
 
-    keyboard_handle = nullptr;
     fclose(&xin_file);
     return XANIN_OK;
-    // 11:48:24
 
 }

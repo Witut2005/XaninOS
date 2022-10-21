@@ -228,6 +228,7 @@ void _start(void)
     madt_entry_type2 *apic_keyboard_redirect = nullptr;
     madt_entry_type2 *apic_pit_redirect = nullptr;
     madt_entry_type2 *apic_nic_redirect = nullptr;
+    madt_entry_type2 *apic_mouse_redirect = nullptr;
 
     for (int i = 0; (*madt_entry_type2_ptr[i]).entry_type == 2; i++)
     {
@@ -239,6 +240,10 @@ void _start(void)
 
         else if ((*madt_entry_type2_ptr[i]).irq_source == 0xB)
             apic_nic_redirect = madt_entry_type2_ptr[i];
+        
+        // else if ((*madt_entry_type2_ptr[i]).irq_source == 0xB)
+        //     apic_mouse_redirect = madt_entry_type2_ptr[i];
+
     }
 
     ioapic_ioredtbl_configure((apic_keyboard_redirect != nullptr ? apic_keyboard_redirect->global_system_int_table + APIC_IRQ_BASE : PIC_KEYBOARD_VECTOR)
@@ -252,6 +257,11 @@ void _start(void)
                               ioapic_id_get());
 
     ioapic_ioredtbl_configure((apic_nic_redirect != nullptr ? apic_nic_redirect->global_system_int_table + APIC_IRQ_BASE : PIC_NIC_VECTOR)
+                                      << APIC_VECTOR |
+                                  0x0 << APIC_DELIVERY_MODE | 0x0 << APIC_DESTINATION_MODE | 0x0 << APIC_INT_PIN_POLARITY | 0x0 << APIC_INT_MASK,
+                              ioapic_id_get());
+
+    ioapic_ioredtbl_configure((APIC_IRQ_BASE + 0xC)
                                       << APIC_VECTOR |
                                   0x0 << APIC_DELIVERY_MODE | 0x0 << APIC_DESTINATION_MODE | 0x0 << APIC_INT_PIN_POLARITY | 0x0 << APIC_INT_MASK,
                               ioapic_id_get());
@@ -362,10 +372,13 @@ void _start(void)
     // __sys_xin_file_create("/syslog");
     xin_create_file("/syslog");
     printk("To wszystko dla Ciebie Babciu <3");
-    // memcpy(program_name, "key-test", 10);
-    // scan();
     // while(1)
-    //     beep(1000);
+    // beep(1000);
+    mouse_install();
+    // memcpy(program_name, "note", 10);
+    // memcpy(program_parameters, "/syslog", strlen("/syslo"));
+    // scan();
+
     while (KeyInfo.scan_code != ENTER);
     // keyboard_init();
     // keyboard_reset();

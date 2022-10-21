@@ -71,6 +71,12 @@ build:
 	@echo [C] pc_speaker.c
 	@$(C) $(C_OPTIONS) ./devices/PCSPK/pc_speaker.c -o ./devices/PCSPK/pc_speaker.o
 
+	@echo [C] mouse.c
+	@$(C) $(C_OPTIONS) ./devices/MOUSE/mouse.c -o ./devices/MOUSE/mouse.o
+
+	@echo [ASM] mouse.asm
+	@$(ASM) -f elf32 ./devices/MOUSE/mouse.asm -o ./devices/MOUSE/mouse_init.o
+
 	@echo [CC] com.cpp
 	@$(CC) $(CC_OPTIONS) ./devices/COM/com.cpp -o ./devices/COM/ComPort.o
 
@@ -207,6 +213,7 @@ build:
 	./xin_fs/edit.o \
 	./test/cpp_test.o \
 	./test/cpp_test2.o \
+	./devices/MOUSE/mouse_init.o \
 	./devices/MOUSE/mouse.o \
 	./devices/APIC/apic.o \
 	./devices/NIC/8254x_int_handler.o \

@@ -121,10 +121,6 @@
 #include <xin_fs/move.c>
 #endif
 
-#ifdef XIN_LINK_APP 
-#include <xin_fs/link.c>
-#endif
-
 #ifdef XIN_INFO_APP
 #include <xaninApps/file_system/xin_info.c>
 #endif
