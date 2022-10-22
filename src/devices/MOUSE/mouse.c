@@ -7,67 +7,95 @@
 #include <terminal/vty.h>
 
 uint8_t mouse_cycle=0;     //unsigned char
-int8_t mouse_uint8_t[3];    //signed char
+uint8_t mouse_uint8_t[3];    //signed char
 int32_t mouse_x=0;         //signed char
 int32_t mouse_y=0;         //signed char
+uint8_t flip_flop = 0;
+uint32_t packet_limiter_x = 0;
+uint32_t packet_limiter_y = 0;
 
 //Mouse functions
 void my_mouse_handler(void) //struct regs *a_r (not used but just there)
 {
-// 	Screen.cursor[0][0]= (uint16_t)((uint8_t)Screen.cursor[0][0] | (0xF0 << 8));
  
-// 	switch(mouse_cycle)
-//   	{
-// 		case 0:
-//       		mouse_uint8_t[0]=inbIO(0x60);
-//       		mouse_cycle++;
-//       		break;
-//     	case 1:
-//       		mouse_uint8_t[1]=inbIO(0x60);
-//       		mouse_cycle++;
-//      	 	break;
-//     	case 2:
-//       		mouse_uint8_t[2]=inbIO(0x60);
+	switch(mouse_cycle)
+  	{
+		case 0:
+      		mouse_uint8_t[0]=inbIO(0x60);
+      		mouse_cycle++;
+      		break;
+    	case 1:
+      		mouse_uint8_t[1]=inbIO(0x60);
+      		mouse_cycle++;
+     	 	break;
+    	case 2:
+      		mouse_uint8_t[2]=inbIO(0x60);
+			mouse_cycle=0;
+			
 
-// 			if(mouse_uint8_t[0] >> 4 & 1)
-// 				mouse_x = mouse_x - mouse_uint8_t[1];
-// 			else
-// 				mouse_x = mouse_x + mouse_uint8_t[1];
+				if(mouse_uint8_t[2] >= 2) 
+				{
+					if(packet_limiter_y < 1)
+					{
+						packet_limiter_y++;
+						break;
+					}
 
-// 			mouse_y = mouse_uint8_t[2];
-//       // if(mouse_uint8_t[0] >> 5 & 1)
-//       //   mouse_y+=mouse_uint8_t[2] * -1 ;
-//       // else
-//       //   mouse_y+=mouse_uint8_t[2];
+					packet_limiter_y =0 ;
 
-// 			if(mouse_uint8_t[0] & 0x40)
-// 			 	return;
-// 				// xprintf("0x%x\n", mouse_uint8_t[0]);
+					if((mouse_uint8_t[0] & 0x20))
+						mouse_y++;
+					else
+						mouse_y--;
+				}
+				
+				else
+				{
+					if(mouse_uint8_t[1] < 1)
+						break;
 
-// 			mouse_cycle=0;
+					if(packet_limiter_x < 3)
+					{
+						packet_limiter_x++;
+						break;
+					}
+					packet_limiter_x = 0;
 
-// 			if(mouse_y < 0)
-// 				mouse_y=0;
-// 			if(mouse_x < 0)
-// 				mouse_x = 0;
 
-// 			if(mouse_y >= 27)
-// 				mouse_y = 27;
-// 			if(mouse_x >= 79)
-// 				mouse_x = 79;
+					if((mouse_uint8_t[0] & 0x10)) // overflow x AHA
+						mouse_x--;
+					else
+						mouse_x++;
+				}
+				// flip_flop = ~flip_flop;
 
-// 			// screen_clear();
-// 			Screen.y = 0;
-// 			for(int i = 3; i < 10; i++)
-// 				Screen.cursor[Screen.y][i] = 0x0;
-// 			xprintf("x: 0x%d\n", mouse_uint8_t[0] >> 4 & 1);
+			
+			// if(mouse_uint8_t[0] & 0x40)
+			// 	xprintf("0x%x\n", mouse_x);
 
-// 			// for(int i = 3; i < 10; i++)
-// 			// 	Screen.cursor[Screen.y][i] = 0x0;
-// 			// xprintf("y: %d\n", mouse_y);
-// 			// Screen.cursor[0][mouse_x]= (uint16_t)((uint8_t)Screen.cursor[0][mouse_x] | (0xF0 << 8));
-// 			break;
-//   }
+			if(mouse_y < 0)
+				mouse_y=0;
+			if(mouse_x < 0)
+				mouse_x = 0;
+
+			if(mouse_y >= 27)
+				mouse_y = 27;
+			if(mouse_x >= 79)
+				mouse_x = 79;
+
+			// screen_clear();
+			Screen.y = 0;
+			for(int i = 3; i < 10; i++)
+				Screen.cursor[Screen.y][i] = 0x0;
+			xprintf("x: %d\n", mouse_x);
+
+			for(int i = 3; i < 10; i++)
+				Screen.cursor[Screen.y][i] = 0x0;
+			xprintf("y: %d\n", mouse_y);
+
+			// Screen.cursor[mouse_y][mouse_x]= (uint16_t)((uint8_t)Screen.cursor[mouse_y][mouse_x] | (0xF0 << 8));
+			break;
+  }
 
    eoi_send();
 
@@ -119,6 +147,7 @@ void mouse_write(uint8_t a_write) //unsigned char
 	//Finally write
 	outbIO(0x60, a_write);
 }
+
 
 uint8_t mouse_read(void)
 {

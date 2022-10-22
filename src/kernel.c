@@ -374,9 +374,9 @@ void _start(void)
     printk("To wszystko dla Ciebie Babciu <3");
     // while(1)
     // beep(1000);
-    mouse_install();
+    // mouse_install();
     // memcpy(program_name, "note", 10);
-    // memcpy(program_parameters, "/syslog", strlen("/syslo"));
+    // memcpy(program_parameters, "/syslog", strlen("/syslog"));
     // scan();
 
     while (KeyInfo.scan_code != ENTER);

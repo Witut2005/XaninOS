@@ -608,7 +608,10 @@ size_t read(xin_entry *entry, void *buf, size_t count)
     char* end = (char *)(entry->file_info->base_address_memory + count + entry->file_info->position);
     char* begin = (char *)(entry->file_info->base_address_memory + entry->file_info->position);
 
-    uint32_t sectors_to_load = entry->starting_sector + ((count + entry->file_info->position) / SECTOR_SIZE) + (count + entry->file_info->position) % SECTOR_SIZE != 0 ? 1 : 0;
+    uint32_t sectors_to_load = count / SECTOR_SIZE;//entry->starting_sector + ((count + entry->file_info->position) / SECTOR_SIZE) + ((count + entry->file_info->position) % SECTOR_SIZE != 0 ? 1 : 0);
+
+    if(count % SECTOR_SIZE != 0)
+        sectors_to_load++;
 
     for(int i = 0; i < sectors_to_load; i++)
         disk_read(ATA_FIRST_BUS, ATA_MASTER, entry->starting_sector + i, 1, (uint16_t*)(entry->file_info->base_address_memory + (i * SECTOR_SIZE)));
