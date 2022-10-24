@@ -262,8 +262,10 @@ endif
 
 
 run:
-	# qemu-system-i386 -smp 2 -net nic,model=e1000 -drive file=../bin/xanin.img,cache=unsafe -m 512
-	sudo qemu-system-i386 -drive file=../bin/xanin.img,cache=unsafe -m 8192 -netdev user,id=user.0 -device e1000,netdev=user.0
+	@# qemu-system-i386 -smp 2 -net nic,model=e1000 -drive file=../bin/xanin.img,cache=unsafe -m 512
+	sudo qemu-system-i386 -drive file=../bin/xanin.img,cache=unsafe -m 4096 -net nic -net tap
+	# sudo qemu-system-i386 -drive file=../bin/xanin.img,cache=unsafe -m 512
+	@#sudo qemu-system-i386 -drive file=../bin/xanin.img,cache=unsafe -m 8192 -netdev user,id=user.0 -device e1000,netdev=user.0
 
 
 curses:
