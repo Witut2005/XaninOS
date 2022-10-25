@@ -325,6 +325,8 @@ void elf_load(void)
 
     void(*tmp)(void) = entry_point;
 
+    // while(1);
+    asm("cli");
     tmp();
 
 }
@@ -336,7 +338,7 @@ void _start(void)
 
     init_disk(ATA_FIRST_BUS, ATA_MASTER);    
         
-    for(int i = 0; i < 200; i++)
+    for(int i = 0; i < 800; i++)
         disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x2 + 0x80 + 15 + i, 1, (uint16_t*)(0x20200 + ((15 + i)* SECTOR_SIZE)));
 
 

@@ -14,6 +14,7 @@
 
 
 
+extern void kernel_loop(void);
 extern void pit_handler_init(void);
 extern void keyboard_handler_init(void);
 
@@ -187,6 +188,9 @@ void general_protection_exception(void)
     reg_dump();
     interrupt_disable();
     asm("hlt");
+    asm("sti");
+    eoi_send();
+    kernel_loop();
 }
 
 void page_fault_exception(void)

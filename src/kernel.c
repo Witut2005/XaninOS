@@ -140,21 +140,16 @@ void _start(void)
     // interrupt_disable();
     set_idt();
 
-    uint32_t *p = (uint32_t *)VGA_TEXT_MEMORY;
-    *p = 0x42424242;
-
-    interrupt_disable(); // disable interrupts while IDT is not configured
-
     disable_cursor();
     screen_clear();
 
     screen_init(); // init screen management system
 
-    xanin_cpu_backup_make();
+    // xanin_cpu_backup_make();
 
     pmmngr_init(0x20000, 0xFFFFFF);
     pmmngr_init_region(0x20000, 0xFFFFFF);
-    init_disk(ATA_FIRST_BUS, ATA_MASTER);
+    // init_disk(ATA_FIRST_BUS, ATA_MASTER);
 
     time_get(&SystemTime);
 

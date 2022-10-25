@@ -52,11 +52,36 @@ void xpaint_input(void)
             else 
                 return;
 
+            uint8_t font_color = (*cursor >> 8) & 0xF;
             color = color << 4;
-            *cursor = (uint16_t)(color << 8 | (*cursor & 0xFF));
+
+            *cursor = (uint16_t)(((color | font_color) << 8) | (*cursor & 0xFF));
         }
     }
     
+    else if(KeyInfo.is_alt)
+    {
+        if(KeyInfo.character)
+        {
+            uint8_t color = KeyInfo.character;
+
+            if(color >= 'a' && color <= 'f')
+                color = color - 'a' + 0xa;   
+            else if(color >= '0' && color <= '9')
+                color = color - '0';
+            else 
+                return;
+
+            uint8_t background_color = (*cursor >> 12) & 0xF;
+            *cursor = (uint16_t)((color | background_color) << 8 | (*cursor & 0xFF));
+        }
+    }
+    
+    else if(KeyInfo.scan_code == DELETE_KEY)
+    {
+        *cursor = 0;
+    }
+
     else
     {
         if(KeyInfo.character)
@@ -74,13 +99,13 @@ void xpaint_input(void)
     }
     
 
+
     saved_cell = *cursor;
 
     if(!KeyInfo.character)
         *cursor = (set_output_color(black, white) << 8) | '_';
-    msleep(50);
 
-
+    KeyInfo.scan_code = 0x0;
 }
 
 
@@ -99,13 +124,13 @@ int xin_xpaint(char* file_name)
     else
     {
     
-        uint16_t* data_pointer = (uint16_t*)calloc(VGA_SCREEN_RESOLUTION * 4);
-        read(xin_file, data_pointer, VGA_SCREEN_RESOLUTION * 4);
+        uint16_t* data_pointer = (uint16_t*)calloc(VGA_SCREEN_RESOLUTION);
+        read(xin_file, data_pointer, VGA_SCREEN_RESOLUTION);
         screen_clear();
 
         uint16_t* screen_cell = (uint16_t*)VGA_TEXT_MEMORY;
 
-        for(int i = 0; i < VGA_SCREEN_RESOLUTION * 2; i++)
+        for(int i = 0; i < VGA_SCREEN_RESOLUTION; i++)
             screen_cell[i] = (uint16_t) (data_pointer[i]);
 
         cursor = (uint16_t*)VGA_TEXT_MEMORY;
@@ -113,12 +138,13 @@ int xin_xpaint(char* file_name)
 
         while(KeyInfo.scan_code != F4_KEY)
             xpaint_input();
-
+        fseek(xin_file, 0);
+        write(xin_file, (char*)VGA_TEXT_MEMORY, VGA_SCREEN_RESOLUTION);
     }
-    write(xin_file, (void*)VGA_TEXT_MEMORY, VGA_SCREEN_RESOLUTION);
     fclose(&xin_file);
     return XANIN_OK;
 
 }
 
 // 21:16:21
+// 19:51:50
