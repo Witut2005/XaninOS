@@ -138,7 +138,7 @@ int xin_xpaint(char* file_name)
 
         while(KeyInfo.scan_code != F4_KEY)
             xpaint_input();
-        fseek(xin_file, 0);
+        fseek(xin_file, XIN_FILE_BEGIN);
         write(xin_file, (char*)VGA_TEXT_MEMORY, VGA_SCREEN_RESOLUTION);
     }
     fclose(&xin_file);

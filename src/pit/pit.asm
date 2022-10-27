@@ -9,7 +9,5 @@ pit_handler_init:
 	cld
 	call pit_handler
 	popad
-	mov al,0x20
-	out 0x20,al ; SEND EOI TO PIC1
 	iretd
 

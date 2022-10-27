@@ -142,25 +142,28 @@ str: db "ERROR your computer doesnt support fully int13 xaninOS cant be loaded",
 
 times (0x10 - ( $ - $$ ) % 0x10 ) db 0x00
 
-xanin_information_block: 
-    signature: db "XANIN_INFO"
-    eax_r: dd 0x0
-    ecx_r: dd 0x0
-    edx_r: dd 0x0
-    ebx_r: dd 0x0
-    esp_r: dd 0x0
-    ebp_r: dd 0x0
-    esi_r: dd 0x0
-    edi_r: dd 0x0
+first_boot_signature: 
+    sig: db "FIRST_BOOT",0x0
 
-    ss_r: dw 0x0
-    cs_r: dw 0x0
-    ds_r: dw 0x0
-    es_r: dw 0x0
-    fs_r: dw 0x0
-    gs_r: dw 0x0
+; xanin_information_block: 
+;     signature: db "XANIN_INFO"
+;     eax_r: dd 0x0
+;     ecx_r: dd 0x0
+;     edx_r: dd 0x0
+;     ebx_r: dd 0x0
+;     esp_r: dd 0x0
+;     ebp_r: dd 0x0
+;     esi_r: dd 0x0
+;     edi_r: dd 0x0
 
-    ip_r: dd 0x0
+;     ss_r: dw 0x0
+;     cs_r: dw 0x0
+;     ds_r: dw 0x0
+;     es_r: dw 0x0
+;     fs_r: dw 0x0
+;     gs_r: dw 0x0
+
+;     ip_r: dd 0x0
 
     
 

@@ -188,6 +188,10 @@ build:
 	@echo [C] real_mode_fswitch.c
 	@$(C) $(C_OPTIONS) ./libc/real_mode_fswitch.c -o ./libc/real_mode_fswitch.o
 
+	@echo [ASM] xin_extended_table.asm
+	@$(ASM) ./xin_fs/xin_extended_table.asm -o ./xin_fs/xin_extended_table
+
+
 
 	@echo [C] kernel.c
 	@$(C) $(C_COMPILE) kernel.c \
@@ -250,7 +254,8 @@ ifeq ($(boot), 3)
 	## @cat ./yan-bootloader/yan.bin ./libc/enter_real_mode ./xaninApps/xanin_apps_space ./xin_fs/xin_pointers ./xin_fs/entries_table ./boot/kernelLoader kernel.bin > xanin.bin
 	@cat ./boot/boot ./libc/enter_real_mode ./xaninApps/xanin_apps_space ./xaninApps/blank_sector ./xin_fs/xin_pointers ./xin_fs/entries_table ./boot/kernelLoader ./boot/disk_freestanding_driver.o kernel.bin > xanin.bin
 else
-	@cat ./boot/boot ./libc/enter_real_mode ./xaninApps/xanin_apps_space ./xaninApps/blank_sector ./xin_fs/xin_pointers ./xin_fs/entries_table ./boot/kernelLoader kernel.bin > xanin.bin
+	@cat ./boot/boot ./libc/enter_real_mode ./xaninApps/xanin_apps_space ./xaninApps/blank_sector ./xin_fs/xin_pointers ./xin_fs/entries_table ./boot/kernelLoader kernel.bin ./xin_fs/xin_extended_table > xanin.bin
+	python3 ./utils/detect_xin_ext.py -file ../bin/xanin.img
 endif
 
 
@@ -263,8 +268,8 @@ endif
 
 run:
 	@# qemu-system-i386 -smp 2 -net nic,model=e1000 -drive file=../bin/xanin.img,cache=unsafe -m 512
-	sudo qemu-system-i386 -drive file=../bin/xanin.img,cache=unsafe -m 4096 -net nic -net tap
-	# sudo qemu-system-i386 -drive file=../bin/xanin.img,cache=unsafe -m 512
+	sudo qemu-system-i386 -drive file=../bin/xanin.img,cache=unsafe -net nic -net tap -m 256
+	@# sudo qemu-system-i386 -drive file=../bin/xanin.img,cache=unsafe -m 512
 	@#sudo qemu-system-i386 -drive file=../bin/xanin.img,cache=unsafe -m 8192 -netdev user,id=user.0 -device e1000,netdev=user.0
 
 

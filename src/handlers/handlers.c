@@ -60,9 +60,7 @@ void divide_by_zero_exception(void)
 
 void pit_handler(void)
 {
-    //xprintf("h");
     pit_tick(0xFFFF);
-    outbIO(0x20, 0x20);
 }
 
 void keyboard_handler(void)

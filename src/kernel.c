@@ -137,13 +137,26 @@ void kernel_loop(void)
 void _start(void)
 {
 
-    // interrupt_disable();
+    screen_init(); // init screen management system
+    // init_disk(ATA_FIRST_BUS, ATA_MASTER);
+    // if(strcmp("FIRST_BOOT", (const char*)0x7C00 + 0xF0))
+    // {
+    //     disk_write(ATA_FIRST_BUS, ATA_MASTER, 0, 1, (uint16_t*)0x7C00);
+    //     disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x82, 400, (uint16_t*)0x20000);
+    //     reboot();
+    //     xprintf("FIRST_BOOT\n");
+    // }
+
+    // else
+    // {
+    //     xprintf("AHA");
+    // }
+
     set_idt();
 
     disable_cursor();
     screen_clear();
 
-    screen_init(); // init screen management system
 
     // xanin_cpu_backup_make();
 

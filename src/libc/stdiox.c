@@ -553,93 +553,8 @@ void xscanf(char* str, ... )
             Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((white << 4) | white) << 8));
 
 
-            // msleep(100);
             KeyInfo.is_bspc = false;
-            // letters_refresh(&Screen.cursor[Screen.y][Screen.x]);
         }
-
-        // else if(KeyInfo.scan_code == LSHIFT)
-        // {
-        //     goto start;
-        // }
-
-        // else if(KeyInfo.scan_code == ARROW_RIGHT || KeyInfo.scan_code == ARROW_LEFT)
-        // {
-            
-
-        //     if(KeyInfo.scan_code == ARROW_LEFT)
-        //     {        
-        
-        //         Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | (((black << 4) | white) << 8));
-
-        //         if((char)Screen.cursor[Screen.y][Screen.x - 1] == character_blocked)
-        //         {
-        //             goto start;
-        //         }
-
-        //         Screen.x--;
-        
-        //         if(index)
-        //             index--;
-
-        //         Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | ((white << 4) | black) << 8);
-        //     }
-
-        //     else 
-        //     {
-        //         //Screen.cursor[Screen.y][Screen.x] = (uint16_t)(selected_character | ((black << 4) | white) << 8);
-        
-        //         Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | (((black << 4) | white) << 8));
-        
-
-        //         if(&Screen.cursor[Screen.y][Screen.x + 1] >= &Screen.cursor[8][79])
-        //         {
-        //             goto start;
-        //         }
-
-        //         Screen.x++;
-
-        //         if(Screen.x == 80)
-        //         {
-        //             Screen.x = 0;
-        //             Screen.y++;
-        //         }
-
-        //         index++;
-
-        //         Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | ((white << 4) | black) << 8);    
-        //     }
-
-        //     KeyInfo.scan_code = 0x0;
-                
-        // }
-
-        // else if(KeyInfo.scan_code == ARROW_UP)
-        // {
-
-        //     strcpy(keyboard_command, last_used_commands);
-        //     keyboard_command[strlen(last_used_commands)] = ' ';
-        //     strcpy(keyboard_command + strlen(last_used_commands) + 1, last_used_parameters);
-
-        //     int x_new = strlen(last_used_commands) + strlen(last_used_parameters);
-
-        //     memset(last_used_commands, '\0', sizeof(last_used_commands));
-        //     memset(last_used_parameters, '\0', sizeof(last_used_parameters));
-            
-        //     Screen.x = 1;
-
-        //     uint16_t first_tmp = (uint16_t)Screen.cursor[Screen.y][Screen.x];
-        //     xprintf("%s", keyboard_command);
-
-
-        //     index = x_new;
-        //     Screen.x = x_new;
-
-        //     Screen.cursor[Screen.y][1] = first_tmp;
-
-        //     // cpu_halt();
-
-        // }
 
         else if(KeyInfo.scan_code == ENTER)
         {
@@ -809,6 +724,27 @@ void xscanf(char* str, ... )
             Screen.x = index + x_start;
 
         }    
+
+        else if(!KeyInfo.character)
+        {
+            
+            if(Screen.cursor[Screen.y][Screen.x] >> 12 == white)
+                Screen.cursor[Screen.y][Screen.x] = black << 12;
+
+            else
+                Screen.cursor[Screen.y][Screen.x] = white << 12;
+
+            uint16_t miliseconds_counter = 30;
+            while(miliseconds_counter > 0)
+            {
+                if(KeyInfo.character)
+                    break;
+                msleep(1);
+                miliseconds_counter--;
+            }
+
+        }
+
     }
 
 
@@ -883,7 +819,6 @@ void xscan_range(char* string_buffer, uint32_t how_many_chars)
             Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((white << 4) | white) << 8));
 
 
-            //msleep(10);
             KeyInfo.is_bspc = false;
             letters_refresh(&Screen.cursor[Screen.y][Screen.x]);
         }

@@ -50,7 +50,7 @@ static inline void set_pit()
 static inline float pit_tick(uint32_t frequency)
 {
     pit_time += 1 / (float)(PIT_BASE_FREQUENCY / frequency);
-    *(uint32_t*)APIC_EOI_REGISTER = 0x0;
+    eoi_send();
     return pit_time;
 }
 

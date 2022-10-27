@@ -203,6 +203,7 @@ void pong_init(void)
 void pong_update(void)
 {
 
+    pong_get_input();
     player1_get_input();
     player2_get_input();
     ball_update();
