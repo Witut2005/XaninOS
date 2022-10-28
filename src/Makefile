@@ -255,7 +255,7 @@ ifeq ($(boot), 3)
 	@cat ./boot/boot ./libc/enter_real_mode ./xaninApps/xanin_apps_space ./xaninApps/blank_sector ./xin_fs/xin_pointers ./xin_fs/entries_table ./boot/kernelLoader ./boot/disk_freestanding_driver.o kernel.bin > xanin.bin
 else
 	@cat ./boot/boot ./libc/enter_real_mode ./xaninApps/xanin_apps_space ./xaninApps/blank_sector ./xin_fs/xin_pointers ./xin_fs/entries_table ./boot/kernelLoader kernel.bin ./xin_fs/xin_extended_table > xanin.bin
-	python3 ./utils/detect_xin_ext.py -file ../bin/xanin.img
+	python3 ./utils/app_preinstall.py -files aha.txt -image ../bin/xanin.img
 endif
 
 

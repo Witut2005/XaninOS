@@ -1,9 +1,9 @@
 
 import numpy as np
+import argparse
 
 SECTOR_SIZE = 512
 
-import argparse
 args = argparse.ArgumentParser()
 
 args.add_argument('-file', action='store', type=str, required=True)
