@@ -79,14 +79,44 @@ void edit_input(xchar Input)
 
         file_position++;
         total_lines++;
-        
-        MOVE_CURSOR_TO_NEXT_ROW();
-        MOVE_CURSOR_TO_FIRST_CHARACTER();
-        
+        current_line++;
+
+        if(current_line >= VGA_HEIGHT)
+        {
+
+            if(current_line >= VGA_HEIGHT)
+            {
+                int tmp = current_line - (VGA_HEIGHT-1);
+                screen_clear();
+
+                int j = 0;
+
+                for(int i = 0; i < tmp; i++)
+                {
+                    while(program_buffer[j] != '\n')                
+                        j++;
+                    j++;
+                }
+
+                begin_of_current_text = &program_buffer[j];
+                // xprintf("%s", &program_buffer[j]);
+
+            }
+            
+            if(current_line < VGA_HEIGHT)
+                MOVE_CURSOR_TO_NEXT_ROW();
+            MOVE_CURSOR_TO_FIRST_CHARACTER();
+        }
+
+        else
+        {
+            MOVE_CURSOR_TO_NEXT_ROW();
+            MOVE_CURSOR_TO_FIRST_CHARACTER();
+        }
+
         screen_clear();
         xprintf("%s", begin_of_current_text);
 
-        current_line++;
         *cursor = (uint16_t)((char)(*cursor) + (((white << 4) | black) << 8));
     }
 
@@ -155,11 +185,33 @@ void edit_input(xchar Input)
     
         if(!file_position)
             return;
+
         *cursor = (uint16_t)((char)(*cursor) + (((black << 4) | white) << 8));
         
         if(program_buffer[file_position - 1] == '\n')
         {
             current_line--;
+
+            if(total_lines >= VGA_HEIGHT && (uint32_t)cursor == VGA_TEXT_MEMORY)
+            {
+                int tmp = current_line;
+                screen_clear();
+
+                int j = 0;
+
+                for(int i = 0; i < tmp; i++)
+                {
+                    while(program_buffer[j] != '\n')                
+                        j++;
+                    j++;
+                }
+
+                begin_of_current_text = &program_buffer[j];
+                xprintf("%s", begin_of_current_text);
+
+            }
+
+
             MOVE_CURSOR_TO_PREVIOUS_ROW();
             MOVE_CURSOR_TO_END_OF_LINE();
         
@@ -184,15 +236,38 @@ void edit_input(xchar Input)
             if(program_buffer[file_position] == '\n')
             {
                 current_line++;
-                MOVE_CURSOR_TO_FIRST_CHARACTER();
-                MOVE_CURSOR_TO_NEXT_ROW();
-            }
             
+
+                if(current_line >= VGA_HEIGHT)
+                {
+                    int tmp = current_line - (VGA_HEIGHT-1);
+                    screen_clear();
+
+                    int j = 0;
+
+                    for(int i = 0; i < tmp; i++)
+                    {
+                        while(program_buffer[j] != '\n')                
+                            j++;
+                        j++;
+                    }
+
+                    begin_of_current_text = &program_buffer[j];
+                    xprintf("%s", &program_buffer[j]);
+
+                }
+                
+                if(current_line < VGA_HEIGHT)
+                    MOVE_CURSOR_TO_NEXT_ROW();
+                MOVE_CURSOR_TO_FIRST_CHARACTER();
+            
+
+            }
+
             else 
                 cursor++;
             
             file_position++;
-            *cursor = (uint16_t)((char)(*cursor) + (((white << 4) | black) << 8));
         }
         *cursor = (uint16_t)((char)(*cursor) + (((white << 4) | black) << 8));
     }
@@ -273,9 +348,7 @@ void edit_input(xchar Input)
         current_line++;        
 
         if(current_line < VGA_HEIGHT)
-        {
             MOVE_CURSOR_TO_NEXT_ROW();
-        }
 
         MOVE_CURSOR_TO_FIRST_CHARACTER();
         
@@ -330,6 +403,8 @@ void edit_input(xchar Input)
         program_buffer[file_position] = KeyInfo.character;
 
         file_position++;
+
+
 
         cursor++;
         screen_clear();
