@@ -9,13 +9,9 @@ args.add_argument('-files', action='store', type=str, required=True, nargs='+')
 args = args.parse_args()
 
 xin_extended_table = detect_xin_ext(args.image)
-
-print(xin_extended_table)
-# print(args.image)
-file = open(args.image, 'rb+')
-file.write(bytes('HUJJJ', 'ascii'))
-file.seek(xin_extended_table)
-print('aha:', hex(file.tell()))
+print(hex(xin_extended_table))
+file = open(str(args.image), 'rb+')
+file.seek(xin_extended_table + len('xin_extended_table'))
 
 for current_file in args.files:
     aha = open(current_file, 'rb')

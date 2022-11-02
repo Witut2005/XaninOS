@@ -160,6 +160,7 @@ void cpp_prog()
     };
 
     Ahha.print();
+    std::cout << "ARRR: " << test_array[-1] << std::endl;
 
     //for(auto a : Ahha)
     //std::cout << a.second << std::endl

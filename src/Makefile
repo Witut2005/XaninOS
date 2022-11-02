@@ -4,6 +4,7 @@ C	= i386-elf-gcc
 CC 	= i386-elf-g++
 
 XANIN_PATH = /home/witut/Desktop/xaninOS/src/
+XANIN_BINARIES = /home/witut/Desktop/xaninOS/bin
 
 # C_OPTIONS  = -O0 -masm=intel -Wno-discarded-qualifiers -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-int-conversion -Wno-unused-function -Wno-div-by-zero -Wno-address-of-packed-member -I $(XANIN_PATH) -c
 C_COMPILE  = -O0 -masm=intel -Wno-discarded-qualifiers -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-int-conversion -Wno-unused-function -Wno-div-by-zero -Wno-address-of-packed-member -I $(XANIN_PATH) 
@@ -255,7 +256,6 @@ ifeq ($(boot), 3)
 	@cat ./boot/boot ./libc/enter_real_mode ./xaninApps/xanin_apps_space ./xaninApps/blank_sector ./xin_fs/xin_pointers ./xin_fs/entries_table ./boot/kernelLoader ./boot/disk_freestanding_driver.o kernel.bin > xanin.bin
 else
 	@cat ./boot/boot ./libc/enter_real_mode ./xaninApps/xanin_apps_space ./xaninApps/blank_sector ./xin_fs/xin_pointers ./xin_fs/entries_table ./boot/kernelLoader kernel.bin ./xin_fs/xin_extended_table > xanin.bin
-	python3 ./utils/app_preinstall.py -files aha.txt -image ../bin/xanin.img
 endif
 
 
@@ -263,6 +263,7 @@ endif
 	python3 ./utils/align_file.py -f ./xanin.img -size 800000
 	@mv xanin.img -f ../bin
 	@mv xanin.bin -f ../bin
+	python3 ./utils/app_preinstall.py -files aha.txt -image $(XANIN_BINARIES)/xanin.img
 
 
 

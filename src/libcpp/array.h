@@ -122,8 +122,10 @@ class array
         return &arr[X];
     }
 
-    T& operator[](uint32_t index)
+    T& operator[](int32_t index)
     {
+        if(index < 0)
+            return arr[X + index];
         return arr[index];
     }
 

@@ -37,6 +37,8 @@ void scan(void)
     XANIN_ADD_APP_ENTRY1("cat", cat)
     #endif
 
+    XANIN_ADD_APP_ENTRY1("zsk", zsk)
+
     #ifdef EPILEPSY_APP
     XANIN_ADD_APP_ENTRY0("epilepsy", epilepsy)
     #endif

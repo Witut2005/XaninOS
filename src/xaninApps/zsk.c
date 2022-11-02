@@ -49,7 +49,7 @@ void zsk_move(uint32_t delay)
 
 }
 
-void zsk(char* delay_str)
+int zsk(char* delay_str)
 {
     uint32_t delay;
 
@@ -69,4 +69,5 @@ void zsk(char* delay_str)
         zsk_move(delay);
 
     app_exited = true;
+    return XANIN_OK;
 }

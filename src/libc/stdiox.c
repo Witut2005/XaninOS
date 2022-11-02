@@ -491,6 +491,8 @@ void xprintf(char* str, ... )
 
 
 
+
+
 void xscanf(char* str, ... )
 {
 
@@ -512,13 +514,6 @@ void xscanf(char* str, ... )
     character_blocked = (char)Screen.cursor[Screen.y][Screen.x - 1];
 
     char* starting_screen_position = (char*)&Screen.cursor[Screen.y][Screen.x - 1];
-    uint16_t* text_buffer_start = &Screen.cursor[Screen.y][Screen.x];
-
-    uint8_t x_start = Screen.x;
-    uint8_t y_start = Screen.y;
-
-    uint8_t x_current, y_current;
-
 
     start:
 
@@ -530,7 +525,10 @@ void xscanf(char* str, ... )
             Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((black << 4) | white) << 8));
 
             if(&Screen.cursor[Screen.y][Screen.x - 1] == (uint16_t*)starting_screen_position)
+            {
                 goto start;
+            }
+
 
 
             if(!Screen.x)
@@ -545,7 +543,7 @@ void xscanf(char* str, ... )
 
 
             if(index)
-                index = index - 1;
+                index--;
 
             command_buffer[index] = '\0';
             Screen.cursor[Screen.y][Screen.x] = '\0';
@@ -553,7 +551,91 @@ void xscanf(char* str, ... )
             Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((white << 4) | white) << 8));
 
 
+            //msleep(10);
             KeyInfo.is_bspc = false;
+            letters_refresh(&Screen.cursor[Screen.y][Screen.x]);
+        }
+
+        else if(KeyInfo.scan_code == LSHIFT)
+        {
+            goto start;
+        }
+
+        else if(KeyInfo.scan_code == ARROW_RIGHT || KeyInfo.scan_code == ARROW_LEFT)
+        {
+            
+
+            if(KeyInfo.scan_code == ARROW_LEFT)
+            {        
+        
+                Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | (((black << 4) | white) << 8));
+
+                if((char)Screen.cursor[Screen.y][Screen.x - 1] == character_blocked)
+                {
+                    goto start;
+                }
+
+                Screen.x--;
+        
+                if(index)
+                    index--;
+
+                Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | ((white << 4) | black) << 8);
+            }
+
+            else 
+            {
+                //Screen.cursor[Screen.y][Screen.x] = (uint16_t)(selected_character | ((black << 4) | white) << 8);
+        
+                Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | (((black << 4) | white) << 8));
+        
+
+                if(&Screen.cursor[Screen.y][Screen.x + 1] >= &Screen.cursor[8][79])
+                {
+                    goto start;
+                }
+
+                Screen.x++;
+
+                if(Screen.x == 80)
+                {
+                    Screen.x = 0;
+                    Screen.y++;
+                }
+
+
+                Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | ((white << 4) | black) << 8);    
+            }
+
+            KeyInfo.scan_code = 0x0;
+                
+        }
+
+        else if(KeyInfo.scan_code == ARROW_UP)
+        {
+
+            strcpy(keyboard_command, last_used_commands);
+            keyboard_command[strlen(last_used_commands)] = ' ';
+            strcpy(keyboard_command + strlen(last_used_commands) + 1, last_used_parameters);
+
+            int x_new = strlen(last_used_commands) + strlen(last_used_parameters);
+
+            memset(last_used_commands, '\0', sizeof(last_used_commands));
+            memset(last_used_parameters, '\0', sizeof(last_used_parameters));
+            
+            Screen.x = 1;
+
+            uint16_t first_tmp = (uint16_t)Screen.cursor[Screen.y][Screen.x];
+            xprintf("%s", keyboard_command);
+
+
+            index = x_new;
+            Screen.x = x_new;
+
+            Screen.cursor[Screen.y][1] = first_tmp;
+
+            // cpu_halt();
+
         }
 
         else if(KeyInfo.scan_code == ENTER)
@@ -696,60 +778,36 @@ void xscanf(char* str, ... )
         else if(KeyInfo.character)
         {
             char tmp = getchar();
-            // char tmp = KeyInfo.character;
 
-            Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][index + x_start]) + (((black << 4) | white) << 8));
+            Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((black << 4) | white) << 8));
+            char character_saved = (char)(Screen.cursor[Screen.y][Screen.x]);
             
-            for(int i = 0; i < strlen(keyboard_command); i++)
-                *(text_buffer_start + i) = 0x0;
 
-            Screen.x = x_start;
-            Screen.y = y_start;
+            xprintf("%c", tmp);
+    
+            letters_refresh_add(&Screen.cursor[Screen.y][Screen.x], character_saved);
+    
+            uint8_t* tmp_buf = (uint8_t*)calloc(40);
+            memcpy(tmp_buf, keyboard_command, 40);
 
-            uint8_t* tmp_buf = (uint8_t*)calloc(80);
-            memcpy(tmp_buf, keyboard_command, 80);
+            for(int i = index; i < 40; i++)
+                keyboard_command[i+1] = tmp_buf[i];
+            
 
-            if(keyboard_command[index] != '\0')
-            {
-                for(int i = index; i < 50 - 1; i++)
-                    keyboard_command[i+1] = tmp_buf[i];
-            }
 
-            free(tmp_buf);
+            Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((white << 4) | white) << 8));
             keyboard_command[index] = tmp;
-
-            xprintf("%s", keyboard_command);
-
             index++;
-            Screen.x = index + x_start;
 
         }    
-
-        else if(!KeyInfo.character)
-        {
-            
-            if(Screen.cursor[Screen.y][Screen.x] >> 12 == white)
-                Screen.cursor[Screen.y][Screen.x] = black << 12;
-
-            else
-                Screen.cursor[Screen.y][Screen.x] = white << 12;
-
-            uint16_t miliseconds_counter = 30;
-            while(miliseconds_counter > 0)
-            {
-                if(KeyInfo.character)
-                    break;
-                msleep(1);
-                miliseconds_counter--;
-            }
-
-        }
-
     }
 
 
 
 }
+
+
+
 
 
 
