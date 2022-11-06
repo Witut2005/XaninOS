@@ -380,6 +380,11 @@ void _start(void)
     // __sys_xin_file_create("/syslog");
     xin_create_file("/syslog");
     printk("To wszystko dla Ciebie Babciu <3");
+    
+    xin_entry* hh = fopen("/syslog", "a");
+    write(hh, "ugabuga", strlen("ugabuga"));
+    fclose(&hh);
+
     // while(1)
     // beep(1000);
     // mouse_install();

@@ -45,7 +45,7 @@ xin_entry* xin_folder_change(char* new_directory);
 
 
 int xin_entry_resize(uint16_t last_sector);
-xin_entry* fopen(char* file_path, const char* mode);
+xin_entry* fopen(char* file_path, char* mode);
 int open(char* file_path, uint32_t options);
 size_t write(xin_entry *entry, void *buf, size_t count);
 size_t read(xin_entry *entry, void *buf, size_t count);

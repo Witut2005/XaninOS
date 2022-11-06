@@ -602,13 +602,10 @@ uint32_t xin_get_start_sector(char *entry_name)
 size_t read(xin_entry *entry, void *buf, size_t count)
 {
 
-    // char *end = (char *)(entry->starting_sector * SECTOR_SIZE) + entry->file_info->position + count;
-    // char* begin = (char *)(entry->starting_sector * SECTOR_SIZE) + entry->file_info->position;
-
     char* end = (char *)(entry->file_info->base_address_memory + count + entry->file_info->position);
     char* begin = (char *)(entry->file_info->base_address_memory + entry->file_info->position);
 
-    uint32_t sectors_to_load = count / SECTOR_SIZE;//entry->starting_sector + ((count + entry->file_info->position) / SECTOR_SIZE) + ((count + entry->file_info->position) % SECTOR_SIZE != 0 ? 1 : 0);
+    uint32_t sectors_to_load = count / SECTOR_SIZE;
 
     if(count % SECTOR_SIZE != 0)
         sectors_to_load++;
@@ -655,28 +652,43 @@ uint32_t ftell(xin_entry* file)
     return file->file_info->position;
 }
 
-xin_entry *fopen(char *file_path, const char *mode)
+xin_entry *fopen(char *file_path, char *mode)
 {
 
 
     xin_entry* file = xin_find_entry(file_path);
 
+    if(strcmp(mode, "a"))
+    {
+        if(file->file_info == nullptr)
+            file->file_info = (file_information_block*)calloc(sizeof(file_information_block));
 
-    if (file != nullptr && file->entry_type != XIN_DIRECTORY && file->entry_path[0] != '\0')
+        file->file_info->base_address_memory = (uint8_t*)calloc(SECTOR_SIZE * 0x10);
+        strcpy(file->file_info->rights, mode);
+        file->file_info->position = file->entry_size;
+
+        uint32_t sectors_to_load = file->entry_size / SECTOR_SIZE;
+
+        if(file->entry_size % SECTOR_SIZE != 0)
+            sectors_to_load++;
+
+        for(int i = 0; i < sectors_to_load; i++)
+            disk_read(ATA_FIRST_BUS, ATA_MASTER, file->starting_sector + i, 1, (uint16_t*)(file->file_info->base_address_memory + (i * SECTOR_SIZE)));
+
+        
+        return file;
+    }
+
+
+
+    else if (file != nullptr && file->entry_type != XIN_DIRECTORY && file->entry_path[0] != '\0')
     {
         
-        /*
-        for(int i = 0; i < file->entry_size / 512 + (file->entry_size % 512 != 0 ? 1 : 0); i++)
-            disk_read(ATA_FIRST_BUS, ATA_MASTER, file->entry_size, 1, (uint16_t*)((file->starting_sector + i) * SECTOR_SIZE));
-        */
 
         if(file->file_info == nullptr)
             file->file_info = (file_information_block*)calloc(sizeof(file_information_block));
         
         file->file_info->base_address_memory = (uint8_t*)calloc(SECTOR_SIZE * 0x10);
-
-        // disk_read(ATA_FIRST_BUS, ATA_MASTER, file->starting_sector, 0x1, (uint16_t*)file->file_info->base_address_memory);
-            
         strcpy(file->file_info->rights, mode);
 
         file->file_info->position = 0;
@@ -704,6 +716,7 @@ xin_entry *fopen(char *file_path, const char *mode)
 void fclose(xin_entry** file)
 {
     
+    (*file)->entry_size = (*file)->file_info->position;
     (*file)->file_info->position = 0;
     memset((*file)->file_info->rights, '\0', 2);
 
