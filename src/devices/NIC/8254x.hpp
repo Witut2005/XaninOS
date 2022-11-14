@@ -3,9 +3,8 @@
 #include <stdint.h>
 #include <devices/PCI/pci.h>
 #include <netapi/network_device.h>
-#include <devices/PCI/pci.h>
 
-extern "C" int32_t pci_find_device(uint16_t, uint16_t, pci_device*);
+// extern "C" int32_t pci_find_device(uint16_t, uint16_t, pci_device*);
 extern "C" uint32_t pci_get_bar(const uint8_t bus, const uint8_t slot, const uint8_t function, const uint8_t bar_number);
 extern "C" uint16_t pci_get_vendor_id(const uint8_t bus, const uint8_t slot, 
                         const uint8_t function);

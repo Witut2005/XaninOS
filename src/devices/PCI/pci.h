@@ -163,4 +163,14 @@ static char* pci_device_name[15] =
 
 
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+uint32_t pci_find_device(uint16_t, uint16_t, pci_device*);
+
+
+#ifdef __cplusplus
+}
+#endif
 
