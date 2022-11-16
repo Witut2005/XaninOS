@@ -7,7 +7,7 @@
 #include <libcpp/cstring.h>
 #include <libcpp/cmemory.h>
 #include <libcpp/ostream.h>
-#include <libcpp/cstdlib.h>
+#include <libc/stdlibx.h>
 #include <libcpp/string.h>
 #include <libcpp/istream.h>
 #include <keyboard/scan_codes.h>
@@ -19,6 +19,7 @@
 #include <libcpp/bytes.h>
 #include <libcpp/list.h>
 #include <libcpp/map.h>
+#include <libcpp/vector.hpp>
 
 class Test
 {
@@ -165,6 +166,17 @@ void cpp_prog()
     //for(auto a : Ahha)
     //std::cout << a.second << std::endl
 
+    std::vector<int> wekk = {1,2,3,4,5,6,7,8,9,10};
+
+    wekk.pop();
+    wekk.pop();
+    wekk.push(1234);
+    
+    wekk[0] = 1000;
+    wekk[0]++;
+        
+    wekk.print();
+    
     wait_key(ENTER_RELEASE);
     wait_key(ENTER_RELEASE);
 

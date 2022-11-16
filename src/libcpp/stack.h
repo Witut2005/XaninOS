@@ -3,7 +3,7 @@
 #pragma once
 
 #include <stddef.h>
-#include <libcpp/cstdlib.h>
+#include <libc/stdlibx.h>
 
 namespace std
 {
@@ -33,13 +33,13 @@ namespace std
 
         void push(T val)
         {
-            stack_pointer = (T*)realloc(stack_pointer, size,++size);
+            stack_pointer = (T*)realloc(stack_pointer, ++size);
             *(stack_pointer + size - 1) = val; 
         }
 
         void pop()
         {
-            stack_pointer =(T*)realloc(stack_pointer, size, --size);
+            stack_pointer =(T*)realloc(stack_pointer, --size);
         }
 
         T top()

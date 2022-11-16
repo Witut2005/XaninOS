@@ -1,7 +1,7 @@
 
 #include <network_protocols/arp/arp.h>
 #include <network_protocols/ethernet_frame/ethernet_frame.hpp>
-#include <libcpp/cstdlib.h>
+#include <libc/stdlibx.h>
 #include <libcpp/cmemory.h>
 #include <libcpp/endian.h>
 #include <libc/stdiox.h>

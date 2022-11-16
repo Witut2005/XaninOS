@@ -4,7 +4,7 @@
 #include <libcpp/istream.h>
 #include <libcpp/cmemory.h>
 #include <keyboard/scan_codes.h>
-
+#include <libc/stdlibx.h>
 #define VGA_WIDTH 80
 #define VGA_HEIGHT 28
 

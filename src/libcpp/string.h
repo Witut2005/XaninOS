@@ -2,7 +2,7 @@
 #pragma once
 
 #include <libcpp/cstring.h>
-#include <libcpp/cstdlib.h>
+#include <libc/stdlibx.h>
 #include <libcpp/iterator.h>
 
 namespace std
@@ -21,7 +21,7 @@ class string
         string_data = (char*)calloc(size * sizeof(char));
     }
 
-    string() {string_data = (char*)malloc(PMMNGR_BLOCK_SIZE);} 
+    string() {string_data = (char*)malloc(4096);} 
     ~string() {free(string_data);}
 
     string(char* str)
@@ -55,13 +55,13 @@ class string
 
     string operator = (const char* x)
     {
-        realloc(string_data, strlen(string_data), strlen(x));
+        realloc(string_data, strlen(x));
         strcpy(string_data, x);
     }
 
     string operator = (std::string x)
     {
-        realloc(string_data, strlen(string_data), strlen(x.c_str()));
+        realloc(string_data, strlen(x.c_str()));
         strcpy(string_data, x.c_str());
     }
 

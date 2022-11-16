@@ -1,7 +1,7 @@
 
 #include <network_protocols/dhcp/dhcp.h>
 #include <libcpp/endian.h>
-#include <libcpp/cstdlib.h>
+#include <libc/stdlibx.h>
 #include <libcpp/cmemory.h>
 #include <netapi/network_device.h>
 #include <network_protocols/udp/udp.hpp>

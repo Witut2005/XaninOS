@@ -31,22 +31,6 @@ extern char* daysLUT[7];
 extern char command_buffer[80];
 extern char* keyboard_command;
 
-bool key_pressed(void);
-void wait_key(uint8_t key);
-char getchar(void);
-char getscan(void);
-char* keyboard_buffer_refresh(uint16_t* screen_buffer);
-CmosTime* time_get(CmosTime* Time);
-uint8_t floppy_type_get_cmos(void);
-void get_cpu_speed(void);
-extern uint32_t randomizer;
-void swap_int(int *xp, int *yp);
-void swap_char(char* xp, char* yp);
-void swap_short(uint16_t* xp, uint16_t* yp);
-void srand(uint32_t seed);
-// void (*abort_return_address)(void);
-
-uint32_t rand(void);
 
 struct 
 {
@@ -74,16 +58,37 @@ struct
 extern reg_t Register;
 extern seg_t SegmentRegister;
 
-uint32_t memory_map_get_cmos(void);
-void int_swap(int *xp, int *yp);
-void bubble_sort(int* array, int n);  //syntax bubble_sort(array[], n=size of array)
-void merge(int* array, int first, int middle, int last);
-void merge_sort(int array[], int first, int last);
-void* malloc(uint32_t size);
-void* calloc(uint32_t size);
-void free(void* ptr);
-void* realloc(void* ptr, uint32_t size_new);
-void exit(void);
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+extern bool key_pressed(void);
+extern void wait_key(uint8_t key);
+extern char getchar(void);
+extern char getscan(void);
+extern char* keyboard_buffer_refresh(uint16_t* screen_buffer);
+extern CmosTime* time_get(CmosTime* Time);
+extern uint8_t floppy_type_get_cmos(void);
+extern void get_cpu_speed(void);
+extern uint32_t randomizer;
+extern void swap_int(int *xp, int *yp);
+extern void swap_char(char* xp, char* yp);
+extern void swap_short(uint16_t* xp, uint16_t* yp);
+extern void srand(uint32_t seed);
+extern uint32_t memory_map_get_cmos(void);
+extern void int_swap(int *xp, int *yp);
+extern void bubble_sort(int* array, int n);  extern void merge(int* array, int first, int middle, int last);
+extern void merge_sort(int array[], int first, int last);
+extern void* malloc(uint32_t size);
+extern void* calloc(uint32_t size);
+extern void free(void* ptr);
+extern void* realloc(void* ptr, uint32_t size_new);
+extern void exit(void);
+extern uint32_t rand(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 struct xchar
 {

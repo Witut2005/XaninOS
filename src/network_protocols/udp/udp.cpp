@@ -1,6 +1,6 @@
 
 #include <network_protocols/udp/udp.hpp>
-#include <libcpp/cstdlib.h>
+#include <libc/stdlibx.h>
 #include <libcpp/cmemory.h>
 #include <libcpp/endian.h>
 #include <libc/stdiox.h>

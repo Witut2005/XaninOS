@@ -2,7 +2,7 @@
 #include <network_protocols/internet_protocol/ipv4/ip.hpp>
 #include <network_protocols/icmp/icmp.h>
 #include <network_protocols/dhcp/dhcp.h>
-#include <libcpp/cstdlib.h>
+#include <libc/stdlibx.h>
 #include <network_protocols/ethernet_frame/ethernet_frame.hpp>
 #include <network_protocols/arp/arp.h>
 #include <libcpp/endian.h>
