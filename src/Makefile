@@ -266,7 +266,7 @@ endif
 	python3 ./utils/align_file.py -f ./xanin.img -size 800000
 	@mv xanin.img -f ../bin
 	@mv xanin.bin -f ../bin
-	python3 ./utils/app_preinstall.py -files hfusdag aha.txt bha.txt -image $(XANIN_BINARIES)/xanin.img 
+	python3 ./utils/app_preinstall.py -files yhm/ -image $(XANIN_BINARIES)/xanin.img 
 
 
 
