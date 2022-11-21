@@ -29,6 +29,7 @@ xin_filesystem_pointers_begin = int(SECTOR_SIZE * 18)
 xin_filesystem_pointers = int(SECTOR_SIZE * 18 + 0x180)
 xin_filesystem_entries = int(SECTOR_SIZE * 26 + 0xB40 + (64 * 7))
 # file.seek(SECTOR_SIZE * 18 + 0xB00)
+directories = set() 
 
 print('\n\n\n--------------------------------')
 print('XIN FILESYSTEM PREINSTALL PHARSE')
@@ -49,19 +50,12 @@ for current_file in args.files:
             #print(path)
             if(path[-1] != '/'):
                 path = path + '/'
+            directories.add(path)
             for f in files:
                 print(path + f)
                 args.files.append(path + f)
-
-        file.seek(xin_filesystem_entries)
-        file.write(bytes('/' + current_file, 'ascii'))
-        file.seek(xin_filesystem_entries + 38)
-        file.write(bytes(XIN_DIRECTORY, 'ascii'))
-        file.write(bytes(13))
-        file.write(bytes(4))
-        file.write(bytes(4))
-
-        xin_filesystem_entries += XIN_ENTRY_SIZE
+            for d in dirs:
+                directories.add(path + d + '/')
         continue
 
     data = aha.read()
@@ -97,4 +91,14 @@ for current_file in args.files:
 
     aha.close()
 
+    
 print('--------------------------------')
+for d in directories:
+    file.seek(xin_filesystem_entries)
+    file.write(bytes('/' + d, 'ascii'))
+    file.seek(xin_filesystem_entries + 38)
+    file.write(bytes(XIN_DIRECTORY, 'ascii'))
+    file.write(bytes(13))
+    file.write(bytes(4))
+    file.write(bytes(4))
+    xin_filesystem_entries += XIN_ENTRY_SIZE

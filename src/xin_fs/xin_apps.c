@@ -222,7 +222,7 @@ int __sys_xin_list_files(char** argv)
 
             if(strlen(path) == 0)
             {
-                printed_text += strlen(i->entry_path);
+                printed_text += strlen(i->entry_path) + 2;
 
                 if(printed_text >= 80)
                 {
@@ -239,8 +239,10 @@ int __sys_xin_list_files(char** argv)
                 printed_text = printed_text + strlen("  ");
             }
 
+            // if(!strlen(path))
+            //     strcpy(path, xin_get_current_directory());
 
-            else
+            else 
             {
                 if(strncmp(i->entry_path, path, strlen(path)))
                 {

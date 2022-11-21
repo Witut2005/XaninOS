@@ -82,7 +82,9 @@ xin_entry *xin_find_entry(char *entry_name)
 
 xin_entry* xin_get_file_pf(char* entry_path) // pf = parent folder/cr
 {
-    // xprintf("aaa     ");
+    if(entry_path[0] == '\0')
+        return nullptr;
+        
     bool if_folder = false;
 
     if(entry_path[strlen(entry_path) - 1] == '/')
