@@ -253,24 +253,23 @@ void setFontVGA(const unsigned char * buffer, int h)
 void vga_mode_set(uint8_t vga_mode)
 {
 
-    /*
     switch(vga_mode)
     {
 
         
-        case VGA_TEXT_90x60:
-        { 
-            vga_registers_write(g_90x60_text);
-            setFontVGA(g_8x8_font, 8);
-            break;
-        }
+        // case VGA_TEXT_90x60:
+        // { 
+        //     vga_registers_write(g_90x60_text);
+        //     setFontVGA(g_8x8_font, 8);
+        //     break;
+        // }
         
-        case VGA_TEXT_80x25:
-        {
-            vga_registers_write(g_80x25_text);
-            setFontVGA(g_8x16_font, 16);
-            break;
-        }
+        // case VGA_TEXT_80x25:
+        // {
+        //     vga_registers_write(g_80x25_text);
+        //     setFontVGA(g_8x16_font, 16);
+        //     break;
+        // }
 
         case VGA_GRAPHICS_720x480x16:
         {
@@ -285,7 +284,6 @@ void vga_mode_set(uint8_t vga_mode)
         }
 
     }
-    */
 
 
 

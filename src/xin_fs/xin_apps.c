@@ -1,4 +1,6 @@
 
+/*NO GETSCAN BROOOO*/
+
 #include <xin_fs/xin.h>
 
 __STATUS __sys_xin_file_create(char* entry_name)

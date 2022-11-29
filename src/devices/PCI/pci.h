@@ -161,6 +161,15 @@ static char* pci_device_name[15] =
 };
 
 
+struct PciDevicePack 
+{
+    uint8_t number_of_devices;
+    pci_device** devices;
+};
+
+#ifndef __cplusplus
+typedef struct PciDevicePack PciDevicePack;
+#endif
 
 
 #ifdef __cplusplus
@@ -168,7 +177,7 @@ extern "C" {
 #endif
 
 uint32_t pci_find_device(uint16_t, uint16_t, pci_device*);
-
+//PciDevicePack pci_find_devices(uint16_t, uint16_t);
 
 #ifdef __cplusplus
 }

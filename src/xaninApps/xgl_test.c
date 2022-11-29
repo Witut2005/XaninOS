@@ -12,7 +12,7 @@ int xgl_test(void)
     {
         for(int j = 0; j < 200; j++)
         {
-            vga_pointer[i * 200 + j] = ((rand() & 0xFF) >> 2);
+            vga_pointer[i * 200 + j] = ((0xFF & 0xFF) >> 2);
         }
     }
 
