@@ -278,8 +278,8 @@ run:
 
 
 curses:
-	qemu-system-i386 -curses -k en-us -m 512 -hda ../bin/xanin.img 
+	sudo qemu-system-i386 -drive file=../bin/xanin.img,cache=unsafe -net nic,model=e1000 -net tap -m 256 -curses
 
 debug:
-	sudo qemu-system-i386 -drive file=../bin/xanin.img,cache=unsafe -m 512 -net nic -net tap -s -S
+	sudo qemu-system-i386 -drive file=../bin/xanin.img,cache=unsafe -net nic,model=e1000 -net tap -m 256 -s -S
 
