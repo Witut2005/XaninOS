@@ -84,6 +84,9 @@ build:
 	@echo [CC] ioapic.cpp
 	@$(CC) $(CC_OPTIONS) ./devices/IOAPIC/ioapic.cpp -o ./devices/IOAPIC/ioapic.o
 	
+	@echo [CC] xgl.c
+	@$(C) $(C_OPTIONS) ./xgl/xgl.c -o ./xgl/xgl.o
+	
 	@echo [ASM] 8254x INTERRUPT ENTRY
 	@$(ASM) -f elf32 ./devices/NIC/8254x_int_handler.asm -o ./devices/NIC/8254x_int_handler.o
 
@@ -189,6 +192,9 @@ build:
 	@echo [C] edit.c
 	@$(C) $(C_OPTIONS) ./xin_fs/edit.c -o ./xin_fs/edit.o
 
+	@echo [C] vga.c
+	@$(C) $(C_OPTIONS) ./devices/VGA/vga.c -o ./devices/VGA/vga.o
+
 	@echo [C] real_mode_fswitch.c
 	@$(C) $(C_OPTIONS) ./libc/real_mode_fswitch.c -o ./libc/real_mode_fswitch.o
 
@@ -212,6 +218,7 @@ build:
 	./libc/instruction_pointer.o \
 	./libc/real_mode_fswitch.o \
 	./libcpp/endian.o \
+	./devices/VGA/vga.o \
 	./terminal/vty.o \
 	./keyboard/key_map.o \
 	./xaninGraphics/xaninGraphics.o \
