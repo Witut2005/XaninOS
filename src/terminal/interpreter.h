@@ -19,6 +19,17 @@
 //#include <xaninApps/rd.c>
 //#include <xaninApps/touch.c>
 
+#include <xaninApps/file_system/copy_file.c>
+#include <xaninApps/file_system/create_file.c>
+#include <xaninApps/file_system/create_folder.c>
+#include <xaninApps/file_system/entry_remove.c>
+#include <xaninApps/file_system/folder_change.c>
+#include <xaninApps/file_system/folder_remove.c>
+#include <xaninApps/file_system/link_create.c>
+#include <xaninApps/file_system/list_files.c>
+#include <xaninApps/file_system/move.c>
+
+
 #ifdef SHUTDOWN_APP
 #include <xaninApps/shutdown.c>
 #endif

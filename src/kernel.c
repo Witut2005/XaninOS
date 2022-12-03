@@ -11,7 +11,7 @@
 #include <devices/ACPI/ACPI.c>
 #include <devices/USB/usb.c>
 #include <devices/HARD_DISK/disk.c>
-#include <devices/VGA/vga.c>
+#include <devices/VGA/vga.h>
 #include <xin_fs/xin.h>
 #include <libc/assert.h>
 #include <libc/alloc.h>
@@ -62,14 +62,8 @@ void kernel_loop(void)
         xprintf("%z   _/  _/    _/    _/  _/    _/  _/  _/    _/  _/    _/        _/%z  version 22.10v\n",set_output_color(logo_back_color, logo_front_color), set_output_color(black,white) );
         xprintf("%z_/      _/    _/_/_/  _/    _/  _/  _/    _/    _/_/    _/_/_/     %z%s: %i:%i:%i\n\n\n", set_output_color(logo_back_color, logo_front_color), set_output_color(black,white), daysLUT[SystemTime.weekday], SystemTime.hour, SystemTime.minutes, SystemTime.seconds);                                       
 
-
-
-
         Screen.x            = 0;
         Screen.y            = 8;
-        
-        
-        //xprintf("%z%s%z >", set_output_color(black, green), xin_current_directory, set_output_color(black, white));
 
         for(int i = 0; xin_current_directory[i + 1] != '\0'; i++)
             xprintf("%z%c", set_output_color(black, lblue), xin_current_directory[i]);
@@ -167,12 +161,11 @@ void _start(void)
     time_get(&SystemTime);
 
     keyboard_init();
-    set_pit();
+
+    set_pit_divisor(0x8000);
+
+    // set_pit();
     keyboard_command = command_buffer;
-
-    // usb_detect();
-
-    // while(KeyInfo.scan_code != ENTER);
 
     rsdp = get_acpi_rsdp_address_base();
 
@@ -203,8 +196,6 @@ void _start(void)
 
     madt_entries_get(apic_sdt);
 
-    xprintf("%z----------------------------\n", set_output_color(black, green));
-
     xprintf("YOUR IOAPIC\n");
     for (int i = 0; (*madt_entry_type1_ptr[i]).entry_type == 1; i++)
     {
@@ -226,12 +217,31 @@ void _start(void)
     xprintf("apic state: 0x%x\n", *(uint32_t *)APIC_SPURIOUS_INTERRUPT_VECTOR_REGISTER);
 
     static uint32_t ioapic_iso_couter; // iso = interrupt source override
-
+    uint8_t used_irqs[32] = {0xFF};
+    uint8_t used_irqs_counter = 0;
+    
     for (int i = 0; (*madt_entry_type2_ptr[i]).entry_type == 2; i++)
     {
-        xprintf(" %d %d |", (*madt_entry_type2_ptr[i]).irq_source, (*madt_entry_type2_ptr[i]).global_system_int_table);
-        ioapic_iso_couter++;
+        bool is_already_used = false;
+
+        for(int j = 0; j < 32; j++)
+        {
+            if(used_irqs[j] == (*madt_entry_type2_ptr[i]).irq_source)
+            {
+                is_already_used = true;
+                break;
+            }
+        }
+
+        if(!is_already_used)
+        {
+            xprintf(" %d %d |", (*madt_entry_type2_ptr[i]).irq_source, (*madt_entry_type2_ptr[i]).global_system_int_table);
+            ioapic_iso_couter++;
+            used_irqs[used_irqs_counter++] = (*madt_entry_type2_ptr[i]).irq_source;
+        }
     }
+
+    xprintf("\n");
 
     madt_entry_type2 *apic_keyboard_redirect = nullptr;
     madt_entry_type2 *apic_pit_redirect = nullptr;
@@ -291,13 +301,13 @@ void _start(void)
 
     static int number_of_cores;
 
-    for (int i = 0; i < 10; i++)
-    {
-        if (madt_entry_type0_ptr[i] != nullptr)
-            number_of_cores++;
-    }
+    // for (int i = 0; i < 10; i++)
+    // {
+    //     if (madt_entry_type0_ptr[i] != nullptr)
+    //         number_of_cores++;
+    // }
 
-    xprintf("Number of CPU cores: %d\n", number_of_cores);
+    // xprintf("Number of CPU cores: %d\n", number_of_cores);
 
     srand(SystemTime.seconds);
 

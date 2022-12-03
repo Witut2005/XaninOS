@@ -290,6 +290,12 @@ int xin_folder_create(char* entry_name)
     entry->entry_size = 0x0;
     entry->entry_type = XIN_DIRECTORY;
 
+    for(int i = 0; i < 5; i++)
+        disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x12 + i, 1, (uint16_t*)(0x800 + (i * SECTOR_SIZE)));
+
+    for(int i = 0; i < 10; i++)
+        disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x1a + i, 1, (uint16_t*)(0x1800 + (i * SECTOR_SIZE)));
+
     return XANIN_OK;
 
 }
@@ -898,10 +904,7 @@ __STATUS remove_directory(char* folder_name)
     xin_entry* folder = xin_find_entry(folder_name);
 
     if(folder == nullptr)
-    {
-        xprintf("%zNO SUCH DIRECTORY\n", set_output_color(red, white));
         return XIN_ENTRY_NOT_FOUND;
-    }
 
     char name[40];
     uint32_t name_length;
@@ -920,9 +923,12 @@ __STATUS remove_directory(char* folder_name)
                 *j = '\0';
             }
         }
-
-
     }
+
+    memset(folder->entry_path, 0, 40);
+    return XANIN_OK;
+
+
 
 
 }

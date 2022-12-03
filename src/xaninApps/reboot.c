@@ -5,6 +5,7 @@
 #include <stdint.h>
 #include <libc/hal.h>
 #include <devices/HARD_DISK/disk.h>
+#include <devices/ACPI/ACPI.h>
 
 
 
@@ -12,6 +13,7 @@ int reboot(void)
 {
 
 uint16_t idt_16[3] = {0x0, 0x0, 0x0};
+
 
 
     for(int i = 0; i < 5; i++)

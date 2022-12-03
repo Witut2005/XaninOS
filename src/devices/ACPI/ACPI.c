@@ -3,6 +3,23 @@
 
 uint32_t acpi_rdsp_base;
 
+uint8_t madt_entry_type0_counter = 0;
+uint8_t madt_entry_type1_counter = 0;
+uint8_t madt_entry_type2_counter = 0;
+uint8_t madt_entry_type3_counter = 0;
+uint8_t madt_entry_type4_counter = 0;
+uint8_t madt_entry_type5_counter = 0;
+uint8_t madt_entry_type9_counter = 0;
+
+
+const madt_entry_type0** madt_entry_type0_ptr;
+const madt_entry_type1** madt_entry_type1_ptr;
+const madt_entry_type2** madt_entry_type2_ptr;
+const madt_entry_type3** madt_entry_type3_ptr;
+const madt_entry_type4** madt_entry_type4_ptr;
+const madt_entry_type5** madt_entry_type5_ptr;
+const madt_entry_type9** madt_entry_type9_ptr;
+
 bool acpi_rsdp_checksum_check(rsdp_descriptor *header)
 {
     uint8_t sum = 0;
@@ -122,48 +139,26 @@ void madt_entries_get(apic_sdt_entry *apic_entry)
 
     for (int i = 0; i < 0x10; tmp += *(tmp + 1), i++)
     {
-
         if (*tmp == 0)
-        {
-            madt_entry_type0_ptr[madt_entry_type0_counter] = (madt_entry_type0 *)tmp;
-            madt_entry_type0_counter++;
-        }
+            madt_entry_type0_ptr[madt_entry_type0_counter++] = (madt_entry_type0 *)tmp;
 
         else if (*tmp == 1)
-        {
-            madt_entry_type1_ptr[madt_entry_type1_counter] = (madt_entry_type1 *)tmp;
-            madt_entry_type1_counter++;
-        }
+            madt_entry_type1_ptr[madt_entry_type1_counter++] = (madt_entry_type1 *)tmp;
 
         else if (*tmp == 2)
-        {
-            madt_entry_type2_ptr[madt_entry_type2_counter] = (madt_entry_type2 *)tmp;
-            madt_entry_type2_counter++;
-        }
+            madt_entry_type2_ptr[madt_entry_type2_counter++] = (madt_entry_type2 *)tmp;
 
         else if (*tmp == 3)
-        {
-            madt_entry_type3_ptr[madt_entry_type3_counter] = (madt_entry_type3 *)tmp;
-            madt_entry_type3_counter++;
-        }
+            madt_entry_type3_ptr[madt_entry_type3_counter++] = (madt_entry_type3 *)tmp;
 
         else if (*tmp == 4)
-        {
-            madt_entry_type4_ptr[madt_entry_type4_counter] = (madt_entry_type4 *)tmp;
-            madt_entry_type4_counter++;
-        }
+            madt_entry_type4_ptr[madt_entry_type4_counter++] = (madt_entry_type4 *)tmp;
 
         else if (*tmp == 5)
-        {
-            madt_entry_type5_ptr[madt_entry_type5_counter] = (madt_entry_type5 *)tmp;
-            madt_entry_type5_counter++;
-        }
+            madt_entry_type5_ptr[madt_entry_type5_counter++] = (madt_entry_type5 *)tmp;
 
         else if (*tmp == 9)
-        {
-            madt_entry_type9_ptr[madt_entry_type9_counter] = (madt_entry_type9 *)tmp;
-            madt_entry_type9_counter++;
-        }
+            madt_entry_type9_ptr[madt_entry_type9_counter++] = (madt_entry_type9 *)tmp;
     }
 }
 

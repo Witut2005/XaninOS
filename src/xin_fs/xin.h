@@ -58,6 +58,15 @@ void create_file_kernel(char* entry_name);
 void fclose(xin_entry** file);
 char* getline(xin_entry* file, int line_id);
 char* getline_from_ptr(char* data, int line_id);
+__STATUS __sys_xin_file_create(char* entry_name);
+__STATUS __sys_xin_folder_create(char* entry_name);
+__STATUS __sys_xin_entry_move(char* entry_name, char* new_name);
+__STATUS __sys_xin_folder_remove(char* folder_name);
+__STATUS __sys_xin_entry_remove(char* entry_name);
+__STATUS __sys_xin_folder_change(const char* new_folder_name);
+__STATUS __sys_xin_copy(char* file_name, char* new_file_name);
+__STATUS __sys_xin_link_create(char* file_name, char* link_name);
+__STATUS __sys_xin_list_files(char** argv);
 
 #ifdef __cplusplus
 }

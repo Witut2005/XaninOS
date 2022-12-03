@@ -564,9 +564,9 @@ static unsigned char g_8x8_font[2048] =
 }; 
 */
 
-extern unsigned char g_90x60_text[];
-extern unsigned char g_80x25_text[];
-extern unsigned char g_720x480x16[];
+// extern unsigned char g_90x60_text[];
+// extern unsigned char g_80x25_text[];
+// extern unsigned char g_720x480x16[];
 extern unsigned char g_320x200x256[];
 
 #ifdef __cplusplus

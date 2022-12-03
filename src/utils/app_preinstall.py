@@ -21,9 +21,6 @@ args.add_argument('-files', action='store', type=str, required=True, nargs='+')
 args.add_argument('-errors', action='store_true')
 args = args.parse_args()
 
-
-xin_extended_table = detect_xin_ext(args.image)
-print(hex(xin_extended_table))
 file = open(str(args.image), 'rb+')
 xin_filesystem_pointers_begin = int(SECTOR_SIZE * 18)
 xin_filesystem_pointers = int(SECTOR_SIZE * 18 + 0x180)

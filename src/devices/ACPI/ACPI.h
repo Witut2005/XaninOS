@@ -164,21 +164,23 @@ struct madt_entry_type9
 typedef struct madt_entry_type9 madt_entry_type9;
 
 
-uint8_t madt_entry_type0_counter = 0;
-uint8_t madt_entry_type1_counter = 0;
-uint8_t madt_entry_type2_counter = 0;
-uint8_t madt_entry_type3_counter = 0;
-uint8_t madt_entry_type4_counter = 0;
-uint8_t madt_entry_type5_counter = 0;
-uint8_t madt_entry_type9_counter = 0;
+extern uint8_t madt_entry_type0_counter;
+extern uint8_t madt_entry_type1_counter;
+extern uint8_t madt_entry_type2_counter;
+extern uint8_t madt_entry_type3_counter;
+extern uint8_t madt_entry_type4_counter;
+extern uint8_t madt_entry_type5_counter;
+extern uint8_t madt_entry_type9_counter;
 
 
-const madt_entry_type0** madt_entry_type0_ptr;
-const madt_entry_type1** madt_entry_type1_ptr;
-const madt_entry_type2** madt_entry_type2_ptr;
-const madt_entry_type3** madt_entry_type3_ptr;
-const madt_entry_type4** madt_entry_type4_ptr;
-const madt_entry_type5** madt_entry_type5_ptr;
-const madt_entry_type9** madt_entry_type9_ptr;
+extern const madt_entry_type0** madt_entry_type0_ptr;
+extern const madt_entry_type1** madt_entry_type1_ptr;
+extern const madt_entry_type2** madt_entry_type2_ptr;
+extern const madt_entry_type3** madt_entry_type3_ptr;
+extern const madt_entry_type4** madt_entry_type4_ptr;
+extern const madt_entry_type5** madt_entry_type5_ptr;
+extern const madt_entry_type9** madt_entry_type9_ptr;
 
+
+extern uint8_t* used_irqs;
 

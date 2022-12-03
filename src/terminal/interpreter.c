@@ -115,16 +115,17 @@ void scan(void)
     XANIN_ADD_APP_ENTRY0("reboot", reboot)
     #endif
 
-    XANIN_ADD_APP_ENTRY1("create", __sys_xin_file_create)
-    XANIN_ADD_APP_ENTRY1("mkdir", __sys_xin_folder_create)
+    // XANIN_ADD_APP_ENTRY1("create", __sys_xin_file_create)
+    XANIN_ADD_APP_ENTRY1("create", xin_create_file_app)
+    XANIN_ADD_APP_ENTRY1("mkdir", xin_create_folder_app)
 
     #ifdef SHUTDOWN_APP
     XANIN_ADD_APP_ENTRY0("shutdown", shutdown)
     #endif
     
-    XANIN_ADD_APP_ENTRY1("rm", __sys_xin_entry_remove)
-    XANIN_ADD_APP_ENTRY1("rd", __sys_xin_folder_remove)
-    XANIN_ADD_APP_ENTRY1("cd", __sys_xin_folder_change)
+    XANIN_ADD_APP_ENTRY1("rm", xin_entry_remove_app)
+    XANIN_ADD_APP_ENTRY1("rd", xin_folder_remove_app)
+    XANIN_ADD_APP_ENTRY1("cd", xin_folder_change_app)
 
     else if(strcmp(program_name,"pwd"))
     {
@@ -135,18 +136,18 @@ void scan(void)
     // XANIN_ADD_APP_ENTRY1("pf", xin_get_file_pf_test)
 
     #ifdef XIN_MOVE_APP
-    XANIN_ADD_APP_ENTRY2("move", __sys_xin_entry_move)
-    XANIN_ADD_APP_ENTRY2("mv", __sys_xin_entry_move)
+    XANIN_ADD_APP_ENTRY2("move", xin_move_entry_app)
+    XANIN_ADD_APP_ENTRY2("mv", xin_move_entry_app)
     #endif
 
     #ifdef XIN_COPY_APP
-    XANIN_ADD_APP_ENTRY2("copy", __sys_xin_copy)
-    XANIN_ADD_APP_ENTRY2("cp", __sys_xin_copy)
+    XANIN_ADD_APP_ENTRY2("copy", xin_copy_app)
+    XANIN_ADD_APP_ENTRY2("cp", xin_copy_app)
     #endif
 
     #ifdef XIN_LINK_APP
-    XANIN_ADD_APP_ENTRY2("link", __sys_xin_link_create)
-    XANIN_ADD_APP_ENTRY2("lk", __sys_xin_link_create)
+    XANIN_ADD_APP_ENTRY2("link", xin_link_create_app)
+    XANIN_ADD_APP_ENTRY2("lk", xin_link_create_app)
     #endif
 
     #ifdef XIN_INFO_APP
@@ -160,7 +161,7 @@ void scan(void)
     
     else if(strcmp(program_name, "ls"))
     {
-        __sys_xin_list_files(argv);
+        xin_list_files_app(argv);
     }
 
     // XANIN_ADD_APP_ENTRY1("ls", __sys_xin_list_files)
