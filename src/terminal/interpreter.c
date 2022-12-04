@@ -9,6 +9,7 @@ int last_command_exit_status;
 #define XANIN_ADD_APP_ENTRY2(app_name, exec_name) else if(strcmp(program_name, app_name)) {last_command_exit_status = exec_name(program_parameters, program_parameters1);}
 #define XANIN_ADD_APP_ENTRY3(app_name, exec_name) else if(strcmp(program_name, app_name)) {last_command_exit_status = exec_name(program_parameters, program_parameters1, program_parameters2);}
 
+extern bool gyn_cl_on;
 
 void scan(void)
 {
@@ -16,11 +17,12 @@ void scan(void)
     
     if(strcmp(program_name, "\0"))
     {
-        logo_front_color++;
-        if(logo_front_color == 16)
-            logo_front_color = 1;
-
-        app_exited = true;
+        if(!is_logo_color_blocked)
+        {
+            logo_front_color++;
+            if(logo_front_color == 16)
+                logo_front_color = 1;
+        }
     }
 
 
@@ -173,7 +175,7 @@ void scan(void)
     #endif
 
     #ifdef LOGO_APP
-    XANIN_ADD_APP_ENTRY1("logo", logo_color_change)
+    XANIN_ADD_APP_ENTRY2("logo", logo_color_change)
     #endif
 
     XANIN_ADD_APP_ENTRY1("nic_info", nic_info)
@@ -212,8 +214,11 @@ void scan(void)
 
     else
     {
-        xprintf("%zUnknown command",set_output_color(red,white));
-        logo_front_color = red;
+
+        xprintf("%zUnknown command: %s", stderr, program_name);
+        screen_background_color_set(red);
+        msleep(400);
+        last_command_exit_status = XANIN_ERROR;
     }
 
 

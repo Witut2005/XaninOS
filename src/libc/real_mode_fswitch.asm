@@ -18,7 +18,10 @@ fast_real_mode_switch:
     [bits 16]
     prot16:
 
+    jmp $
+
     cli
+    lidt[IVT]
 
     mov eax, 0x28
     mov ds, eax
@@ -34,6 +37,7 @@ fast_real_mode_switch:
     jmp word 0x0:real_mode
 
     real_mode:
+    ; jmp $
     mov sp, 0x2000
 
     mov ax, 0x0
@@ -43,17 +47,27 @@ fast_real_mode_switch:
     mov fs, ax
     mov es, ax
 
-    lidt[IVT]
 
-    sti
+    ; sti
 
-    pushf
-    push 0x0
-    push 0x400
+    ; pushf
+    ; push 0x0
+    ; push 0x400
 
-    pushf
-    push bx
-    push dx
+    ; pushf
+    ; push bx
+    ; push dx
+    
+    mov ax, 0xb800
+    mov cs, ax
+    mov ss, ax
+    mov ds, ax
+    mov es, ax
+
+    mov bx, 0x0
+    mov word [bx], 0x4141
+
+    jmp $
     
     iret
 

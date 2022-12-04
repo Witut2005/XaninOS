@@ -7,9 +7,20 @@
 #include <stdarg.h>
 #include <libc/time.h>
 
-
+#define VGA_SCREEN_RESOLUTION 4480
 
 char* color_attributes[16] = {"black", "blue", "green", "cyan", "red", "magenta", "brown", "lgray", "dgray","lblue", "lgreen", "lcyan", "lred", "lmagenta", "yellow", "white"};
+
+void screen_background_color_set(uint8_t color)
+{
+    uint8_t* vga_ptr = (uint8_t*)VGA_TEXT_MEMORY;
+
+    for(int i = 1; i < VGA_SCREEN_RESOLUTION; i+=2)
+    {
+        vga_ptr[i] &= 0xF;
+        vga_ptr[i] |= color << 4;
+    }
+}
 
 int screen_clear(void)
 {

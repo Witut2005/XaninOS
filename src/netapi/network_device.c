@@ -4,6 +4,8 @@
 #include <libc/stdiox.h>
 #include <libc/stdlibx.h>
 #include <libc/string.h>
+#include <xin_fs/xin.h>
+#include <network_protocols/internet_protocol/ipv4/ip.h>
     
 NetworkHandler NetworkHandlersBackup[10];
 NetworkHandler NetworkHandlers[10];
@@ -137,4 +139,18 @@ NetworkHandler* device_info_get_by_name(char* device_name)
     else
         return tmp;
 
+}
+
+
+uint32_t xanin_ip_get(void)
+{
+    xin_entry* nic_ip = fopen("/config/nic.conf", "rw");
+
+    char* ip_str = (char*)calloc(64);
+    read(nic_ip, ip_str, 15);
+
+    uint32_t ip = str2ipv4(ip_str);
+    free(ip_str);
+
+    return ip;
 }

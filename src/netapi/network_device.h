@@ -28,6 +28,7 @@ void netapi_packet_send(uint32_t buffer, uint16_t length);
 uint8_t* netapi_packet_receive(void);
 uint8_t* netapi_mac_get(void);
 NetworkHandler* device_info_get_by_name(char* device_name);
+uint32_t xanin_ip_get(void);
 
 
 #ifdef __cplusplus 

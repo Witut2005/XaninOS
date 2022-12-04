@@ -3,9 +3,11 @@
 
 #include <gyn_cl/gyn.h>
 
+bool gyn_cl_on = false;
+
 int gyn_interpreter(char* file_to_interpret)
 {
-
+    gyn_cl_on = true;
     xin_entry* file = fopen(file_to_interpret, "r");
     uint8_t* data = (uint8_t*)calloc(SECTOR_SIZE);
     read(file, data, SECTOR_SIZE);
@@ -56,6 +58,7 @@ int gyn_interpreter(char* file_to_interpret)
             xprintf("\n%zGYN COMMAND PARSING ERROR: %s\n", stderr, command);
             while(KeyInfo.scan_code != ENTER);
             fclose(&file);
+            gyn_cl_on = false;
             return XANIN_ERROR;
         }
         
@@ -65,6 +68,7 @@ int gyn_interpreter(char* file_to_interpret)
 
     while(KeyInfo.scan_code != ENTER);
     fclose(&file);
+    gyn_cl_on = false;
     return XANIN_OK;
 
 }

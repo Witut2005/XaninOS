@@ -1,8 +1,15 @@
 
 #include <terminal/vty.h>
 
-int logo_color_change(char* color)
+bool is_logo_color_blocked;
+
+int logo_color_change(char* color, char* options)
 {
+    if(strcmp(options, "block"))
+        is_logo_color_blocked = true;
+    else if(strcmp(options, "unblock")) 
+        is_logo_color_blocked = false;
+
 
     if(strcmp(color, "black"))
         logo_front_color = black;

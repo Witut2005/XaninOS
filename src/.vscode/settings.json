@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "stdiox.h": "c",
-        "pit.h": "c"
+        "pit.h": "c",
+        "xin.h": "c"
     }
 }

@@ -11,7 +11,6 @@ int ping(char* ip_addr_str)
 {
     xprintf("ping %s", ip_addr_str);
     uint32_t ip_dest = str2ipv4(ip_addr_str);
-    uint8_t ip_addr[4] = {0x0};
     uint8_t macd[6] = {0xFF, 0xFF, 0xFF, 0xFF,0xFF, 0xFF};
 
     AddressResolutionProtocol* arp = (AddressResolutionProtocol*)malloc(sizeof(AddressResolutionProtocol));
@@ -30,7 +29,7 @@ int ping(char* ip_addr_str)
     for(int i = 0; i < 4; i++)
     {
 
-        prepare_arp_request(arp, ARP_ETHERNET, ARP_IP_PROTOCOL, 0x6, 0x4, ARP_GET_MAC, netapi_mac_get(), *(uint32_t*)ip_addr, macd, ip_dest);
+        prepare_arp_request(arp, ARP_ETHERNET, ARP_IP_PROTOCOL, 0x6, 0x4, ARP_GET_MAC, netapi_mac_get(), xanin_ip_get(), macd, ip_dest);
         send_arp_request(arp);
 
         if(memcmp(LastArpReply.ip_address, tmp, 4))
@@ -38,7 +37,6 @@ int ping(char* ip_addr_str)
         else
             xprintf("%zNo such host\n", set_output_color(red,white));
 
-        ip_addr[0]++;
         msleep(1500);
     }
 

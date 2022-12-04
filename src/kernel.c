@@ -88,15 +88,7 @@ void kernel_loop(void)
                 break;
             }
 
-            /*
-            if(xanin_info_ptr->program_to_execute != nullptr)
-            {
-                xprintf("%s\n", xanin_info_ptr->signature);
-                xprintf("0x%x\n", xanin_info_ptr->program_to_execute);
-                void(*program_to_execute)(void) = (void(*)(void))xanin_info_ptr->program_to_execute;
-                program_to_execute();
-            }
-            */
+
             char scanf_str[40] = "%s %s %s %s %s";
 
             for(int i = 0; i < 40; i++)
@@ -132,20 +124,6 @@ void _start(void)
 {
 
     screen_init(); // init screen management system
-    // init_disk(ATA_FIRST_BUS, ATA_MASTER);
-    // if(strcmp("FIRST_BOOT", (const char*)0x7C00 + 0xF0))
-    // {
-    //     disk_write(ATA_FIRST_BUS, ATA_MASTER, 0, 1, (uint16_t*)0x7C00);
-    //     disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x82, 400, (uint16_t*)0x20000);
-    //     reboot();
-    //     xprintf("FIRST_BOOT\n");
-    // }
-
-    // else
-    // {
-    //     xprintf("AHA");
-    // }
-
     set_idt();
 
     disable_cursor();
@@ -259,9 +237,6 @@ void _start(void)
         else if ((*madt_entry_type2_ptr[i]).irq_source == 0xB)
             apic_nic_redirect = madt_entry_type2_ptr[i];
         
-        // else if ((*madt_entry_type2_ptr[i]).irq_source == 0xB)
-        //     apic_mouse_redirect = madt_entry_type2_ptr[i];
-
     }
 
     ioapic_ioredtbl_configure((apic_keyboard_redirect != nullptr ? apic_keyboard_redirect->global_system_int_table + APIC_IRQ_BASE : PIC_KEYBOARD_VECTOR)
@@ -288,8 +263,6 @@ void _start(void)
     xprintf("NIC interrupt line: 0x%x", (apic_nic_redirect != nullptr ? apic_nic_redirect->global_system_int_table + APIC_IRQ_BASE : PIC_NIC_VECTOR));
 
     xanin_info_ptr = xanin_information_block_get();
-
-    // com_port_init(0x00C0);
 
     xprintf("\n%z----------------------------\n", set_output_color(black, green));
     xprintf("Com port status: 0x%x\n", com_status());
@@ -390,10 +363,24 @@ void _start(void)
     // __sys_xin_file_create("/syslog");
     xin_create_file("/syslog");
     printk("To wszystko dla Ciebie Babciu <3");
+
+    __sys_xin_folder_create("/config/");
+    __sys_xin_file_create("/config/nic.conf");
+
+    xin_entry* nic_config = fopen("/config/nic.conf", "rw");
+    write(nic_config, "192.168.019.012  //XaninOS nic IP address(USE ALWAYS FULL OCTETS)", ARRAY_LENGTH("192.168.019.012  //XaninOS nic IP address(USE ALWAYS FULL OCTETS"));
+    fclose(&nic_config);
     
-    xin_entry* hh = fopen("/syslog", "a");
-    write(hh, "ugabuga", strlen("ugabuga"));
-    fclose(&hh);
+    xprintf("YOUR IP ADDRESS: ");
+    uint32_t base_ip = xanin_ip_get();
+    // xprintf("%d", base_ip);
+    for(uint8_t i = 3; i > 0; i--)
+    {
+        uint8_t* tmp = (uint8_t*)&base_ip;
+        xprintf("%d.", tmp[i]);
+    }
+
+    xprintf("%d", ((uint8_t*)&base_ip)[0]);
 
     // while(1)
     // beep(1000);
@@ -403,8 +390,6 @@ void _start(void)
     // scan();
 
     while (KeyInfo.scan_code != ENTER);
-    // keyboard_init();
-    // keyboard_reset();
 
     kernel_loop();
 
