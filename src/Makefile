@@ -274,13 +274,14 @@ build:
 	python3 ./utils/align_file.py -f ./xanin.img -size 800000
 	@mv xanin.img -f ../bin
 	@mv xanin.bin -f ../bin
-	python3 ./utils/app_preinstall.py -files yhm/ -image $(XANIN_BINARIES)/xanin.img 
+	python3 ./utils/app_preinstall.py -files yhm/ external_apps/ -image $(XANIN_BINARIES)/xanin.img 
+
 
 
 
 run:
 	@# qemu-system-i386 -smp 2 -net nic,model=e1000 -drive file=../bin/xanin.img,cache=unsafe -m 512
-	sudo qemu-system-i386 -drive file=../bin/xanin.img,cache=unsafe -net nic,model=e1000 -net tap -m 256
+	sudo qemu-system-i386 -drive file=../bin/xanin.img,cache=unsafe -net nic,model=e1000 -net tap -m 256 -vga std
 	@# sudo qemu-system-i386 -drive file=../bin/xanin.img,cache=unsafe -m 512
 	@#sudo qemu-system-i386 -drive file=../bin/xanin.img,cache=unsafe -m 8192 -netdev user,id=user.0 -device e1000,netdev=user.0
 

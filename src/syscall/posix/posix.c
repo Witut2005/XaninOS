@@ -12,14 +12,16 @@ uint32_t syscall()
     uint32_t eax, ecx, edx, ebx, esp, ebp, esi, edi;
     
 
+
+
     asm(
         "push eax\n\t"
         "push edi\n\t"
         "push esi\n\t"
         "push edx\n\t"
         "push ecx\n\t"
-        "push ebx"
-        );
+        "push ebx\n\t"
+       );
 
     asm("pop [ecx]" :: "ecx"(&ebx));
     asm("pop [edx]" :: "edx"(&ecx));
@@ -36,6 +38,13 @@ uint32_t syscall()
 
     switch(eax)
     {
+
+        case __NR_exit:
+        {
+            last_command_exit_status = ebx;
+            exit();
+            break;
+        }
 
         case __NR_read: 
         {

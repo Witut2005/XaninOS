@@ -18,6 +18,17 @@ segment_num: dw 0x2000
 lba: dd 0x2 + 0x10 + 0x30 + 0x40
 lba48: dd 0x0
 
+; VESA_CRTC_INFO_BLOCK:
+; total_number_of_pixels_horizontally: dw 1000
+; horizontal_sync_start: dw 0
+; horizontal_sync_end: dw 999
+; total_number_of_scan_lines: dw 80
+; vertical_sync_start:  dw 0
+; vertical_sync_end:  dw 80
+; flags: db 0
+; pixel_clock: dd 10
+; refresh_rate: dw 10
+
 _loadSector:
 mov [BOOT_DISK_NUMBER], dl
 
