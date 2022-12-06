@@ -20,6 +20,7 @@
 #include <libcpp/list.h>
 #include <libcpp/map.h>
 #include <libcpp/vector.hpp>
+#include <libcpp/set.h>
 
 class Test
 {
@@ -176,7 +177,20 @@ void cpp_prog()
     wekk[0]++;
         
     wekk.print();
+
+    wait_key(ENTER_RELEASE);
+    std::cout << std::clear;
     
+    std::cout << "ABATAKAM" << std::endl;
+    std::List<uint32_t> jmm = {1,2,3,4,5};
+    
+    std::cout << jmm[0] << std::endl;
+
+    /*
+        for(int i = 0; i < jmm.size_get(); i++)
+        std::cout << jmm[i] << std::endl;
+    */
+
     wait_key(ENTER_RELEASE);
     wait_key(ENTER_RELEASE);
 

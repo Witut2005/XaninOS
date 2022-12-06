@@ -23,6 +23,11 @@ class List
 
     public:
 
+    uint32_t size_get(void)
+    {
+        return this->size;
+    }
+
     List(T first)
     {
         size = 0;
@@ -68,6 +73,18 @@ class List
         std::cout << Tmp->value << ']';
         std::cout << std::endl;
     }
+    
+    List(std::initializer_list<T> items)
+    {
+        size = 0;
+        FirstElement = (ListElement*)malloc(sizeof(FirstElement));
+        FirstElement->next = nullptr;
+        FirstElement->previous = nullptr;
+        //FirstElement->value = first;
+
+        for(auto a : items)
+            this->push(a);
+    }
 
     T pop(void)
     {
@@ -80,7 +97,19 @@ class List
         return ret;
     }
 
-    T operator[](uint32_t index);
+    T& operator[](uint32_t index)
+    {
+        ListElement* Tmp = this->FirstElement;
+
+        for(int i = 0; i < index; i++)
+        {
+            if(Tmp->next != nullptr)
+                Tmp = Tmp->next;
+            else
+                return this->goto_last_element()->value;
+        }
+        return Tmp->value;
+    }
 
     ListElement* operator++(int);
     ListElement* operator++(void);
