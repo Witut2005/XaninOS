@@ -23,8 +23,8 @@ args = args.parse_args()
 
 file = open(str(args.image), 'rb+')
 xin_filesystem_pointers_begin = int(SECTOR_SIZE * 18)
-xin_filesystem_pointers = int(SECTOR_SIZE * 18 + 0x180)
-xin_filesystem_entries = int(SECTOR_SIZE * 26 + 0xB40 + (64 * 7))
+xin_filesystem_pointers = int(SECTOR_SIZE * 18 + 0x300)
+xin_filesystem_entries = int(SECTOR_SIZE * 26 + 0xB40 + (64 * 10))
 # file.seek(SECTOR_SIZE * 18 + 0xB00)
 directories = set() 
 

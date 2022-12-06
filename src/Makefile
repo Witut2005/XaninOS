@@ -274,7 +274,7 @@ build:
 	python3 ./utils/align_file.py -f ./xanin.img -size 800000
 	@mv xanin.img -f ../bin
 	@mv xanin.bin -f ../bin
-	python3 ./utils/app_preinstall.py -files yhm/ external_apps/ -image $(XANIN_BINARIES)/xanin.img 
+	python3 ./utils/app_preinstall.py -files yhm/ external_apps/ config/ -image $(XANIN_BINARIES)/xanin.img 
 
 
 

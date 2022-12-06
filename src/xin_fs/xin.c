@@ -60,7 +60,7 @@ xin_entry *xin_find_entry(char *entry_name)
 
 {
 
-    for (char *i = (char*)XIN_ENTRY_TABLE; (uint32_t)i < XIN_ENTRY_TABLE + (SECTOR_SIZE * 8); i += 64)
+    for (char *i = (char*)XIN_ENTRY_TABLE; (uint32_t)i < XIN_ENTRY_TABLE + (SECTOR_SIZE * 50); i += 64)
     {
         if (strcmp(entry_name, i))
             return (xin_entry *)i;
@@ -71,7 +71,7 @@ xin_entry *xin_find_entry(char *entry_name)
     if(strlen(entry_name) > 40)
         return nullptr;
 
-    for (char *i = (char*)XIN_ENTRY_TABLE; (uint32_t)i < XIN_ENTRY_TABLE + (SECTOR_SIZE * 8); i += 64)
+    for (char *i = (char*)XIN_ENTRY_TABLE; (uint32_t)i < XIN_ENTRY_TABLE + (SECTOR_SIZE * 50); i += 64)
     {
         if (strcmp(entry_name, i))
             return (xin_entry *)i;
@@ -118,7 +118,7 @@ void xin_get_file_pf_test(char* entry_path) // pf = parent folder
 
 uint8_t *xin_find_free_pointer(void)
 {
-    for (char *i = (char *)0x800; (uint32_t)i < 0x800 + (SECTOR_SIZE * 4); i++)
+    for (char *i = (char *)0x800; (uint32_t)i < 0x800 + (SECTOR_SIZE * 8); i++)
     {
         if (*(char *)i == '\0')
             return (uint8_t *)i;
@@ -129,7 +129,7 @@ uint8_t *xin_find_free_pointer(void)
 
 xin_entry *xin_find_free_entry(void)
 {
-    for (char *i = (char *)XIN_ENTRY_TABLE + 64; (uint32_t)i < XIN_ENTRY_TABLE + (SECTOR_SIZE * 8); i += 64)
+    for (char *i = (char *)XIN_ENTRY_TABLE + 64; (uint32_t)i < XIN_ENTRY_TABLE + (SECTOR_SIZE * 50); i += 64)
     {
         if (*(char *)i == '\0')
             return (xin_entry *)i;

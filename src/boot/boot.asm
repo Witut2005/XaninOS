@@ -15,7 +15,7 @@ reserved: db 0x0
 how_many_sectors: dw 0x35
 offset: dw 0x0
 segment_num: dw 0x2000
-lba: dd 0x2 + 0x10 + 0x30 + 0x40
+lba: dd 0x9a
 lba48: dd 0x0
 
 ; VESA_CRTC_INFO_BLOCK:
@@ -61,7 +61,7 @@ mov dl, [BOOT_DISK_NUMBER]
 int 0x13
 
 ;kernel_1
-mov word [lba], 0x43 + 0x34 + 0x40
+mov word [lba], 0x9A + 0x35
 mov word [offset], 0x35 * 0x200
 
 mov si, DAP
@@ -70,7 +70,7 @@ mov dl, [BOOT_DISK_NUMBER]
 int 0x13
 
 ;kernel_2
-mov word [lba], 0x43 + 0x69 + 0x40
+mov word [lba], 0x9A + 0x69 
 mov word [offset], 0x6A * 0x200
 mov word [how_many_sectors], 0x50
 
@@ -80,7 +80,7 @@ mov dl, [BOOT_DISK_NUMBER]
 int 0x13
 
 ;kernel_3
-mov word [lba], 0x43 + 0x69 + 0x40 + 0x50
+mov word [lba], 0x9A + 0x69 + 0x50
 
 mov word [offset], 0x0
 mov word [segment_num], 0x1740

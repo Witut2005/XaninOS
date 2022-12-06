@@ -349,6 +349,46 @@ void _start(void)
     create_file_kernel("/.system_space38");
     create_file_kernel("/.system_space39");
     create_file_kernel("/.system_space40");
+    create_file_kernel("/.system_space41");
+    create_file_kernel("/.system_space42");
+    create_file_kernel("/.system_space43");
+    create_file_kernel("/.system_space44");
+    create_file_kernel("/.system_space45");
+    create_file_kernel("/.system_space46");
+    create_file_kernel("/.system_space47");
+    create_file_kernel("/.system_space48");
+    create_file_kernel("/.system_space49");
+    create_file_kernel("/.system_space50");
+    create_file_kernel("/.system_space51");
+    create_file_kernel("/.system_space52");
+    create_file_kernel("/.system_space53");
+    create_file_kernel("/.system_space54");
+    create_file_kernel("/.system_space55");
+    create_file_kernel("/.system_space56");
+    create_file_kernel("/.system_space57");
+    create_file_kernel("/.system_space58");
+    create_file_kernel("/.system_space59");
+    create_file_kernel("/.system_space60");
+    create_file_kernel("/.system_space61");
+    create_file_kernel("/.system_space62");
+    create_file_kernel("/.system_space63");
+    create_file_kernel("/.system_space64");
+    create_file_kernel("/.system_space65");
+    create_file_kernel("/.system_space66");
+    create_file_kernel("/.system_space67");
+    create_file_kernel("/.system_space68");
+    create_file_kernel("/.system_space69");
+    create_file_kernel("/.system_space70");
+    create_file_kernel("/.system_space71");
+    create_file_kernel("/.system_space72");
+    create_file_kernel("/.system_space73");
+    create_file_kernel("/.system_space74");
+    create_file_kernel("/.system_space75");
+    create_file_kernel("/.system_space76");
+    create_file_kernel("/.system_space77");
+    create_file_kernel("/.system_space78");
+    create_file_kernel("/.system_space79");
+    create_file_kernel("/.system_space80");
 
     memset((uint8_t *)&ArpTable[0], 0xFF, sizeof(ArpTable[0]));
     current_arp_entry++;
@@ -364,12 +404,11 @@ void _start(void)
     xin_create_file("/syslog");
     printk("To wszystko dla Ciebie Babciu <3");
 
-    __sys_xin_folder_create("/config/");
-    __sys_xin_file_create("/config/nic.conf");
-
-    xin_entry* nic_config = fopen("/config/nic.conf", "rw");
-    write(nic_config, "192.168.019.012  //XaninOS nic IP address(USE ALWAYS FULL OCTETS)", ARRAY_LENGTH("192.168.019.012  //XaninOS nic IP address(USE ALWAYS FULL OCTETS"));
-    fclose(&nic_config);
+    // __sys_xin_folder_create("/config/");
+    // __sys_xin_file_create("/config/nic.conf");
+    // xin_entry* nic_config = fopen("/config/nic.conf", "rw");
+    // write(nic_config, "192.168.019.012  //XaninOS nic IP address(USE ALWAYS FULL OCTETS)", ARRAY_LENGTH("192.168.019.012  //XaninOS nic IP address(USE ALWAYS FULL OCTETS"));
+    // fclose(&nic_config);
     
     xprintf("YOUR IP ADDRESS: ");
     uint32_t base_ip = xanin_ip_get();
