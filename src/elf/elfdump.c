@@ -1,38 +1,14 @@
 
 #pragma once
 
-#include <elf/elf_loader.h>
 #include <stddef.h>
 
 
-enum ELF_FIELD
-{
-    X86_E_MACHINE = 0x3,
-    ELF_HEADER_SIZE = 0x34,
-    PT_LOAD = 0x1
-};
-
-bool elf_check_magic(uint8_t* data)
-{
-    return strncmp(data + 1, "ELF", 3);// && data[0] == 0x7F;
-}
-
-bool elf_check_arch(uint8_t* file)
-{
-    uint16_t tmp;
-
-    tmp = file[0];
-    tmp += file[1] << 8;
-
-    return tmp == X86_E_MACHINE;
-
-}
-
-void elf_load(xin_entry* file)
+void elf_data_load(xin_entry* file)
 {
     uint8_t* data = (uint8_t*)calloc(file->entry_size * SECTOR_SIZE);
     read(file, data, file->entry_size * SECTOR_SIZE);
-
+    char* magic = data;
     
     uint8_t* write_to_memory;
     uint8_t* read_from_file;
@@ -45,20 +21,6 @@ void elf_load(xin_entry* file)
     uint32_t p_filesz;      //size in bytes of segment in file image
     uint32_t p_memsz;       //size in bytes of segment in memory
     uint32_t entry_point = *(uint32_t*)((uint8_t*)data + 0x18);
-
-    if(!elf_check_magic(data))
-    {
-        xprintf("%zBAD MAGIC\n", stderr);
-        while(inputg().scan_code != ENTER);
-        return;
-    }
-
-    if(!elf_check_arch(data + 0x12))
-    {
-        xprintf("%zBAD ARCH\n", stderr);
-        while(inputg().scan_code != ENTER);
-        return;
-    }
 
     data += ELF_HEADER_SIZE;
     uint32_t load_sum = 0;
@@ -77,39 +39,34 @@ void elf_load(xin_entry* file)
             p_filesz = *(uint32_t*)((uint8_t*)data + 0x10);
             p_memsz  = *(uint32_t*)((uint8_t*)data + 0x14);
 
-            read_from_file = p_offset;
-            write_to_memory = p_vaddr;
-
-        
-            for(int i = 0; i < p_filesz; i++, write_to_memory++, read_from_file++)
-                *write_to_memory = *read_from_file;
-                    
         }
 
         data += 0x20;
         phnum--;
         
     }
+    screen_clear();
 
-    xprintf("LOAD IN FILE: %d\n", load_sum);
+    xprintf("%zExecutable and Linkage File Format Info:\n", set_output_color(green, white));
+    xprintf("--------------------------\n");
+    xprintf("Magic: %s\n", magic);
+    xprintf("--------------------------\n");
+    xprintf("Entry point: 0x%x\n", entry_point);
+    xprintf("--------------------------\n");
+    xprintf("p_offset: 0x%x\n", p_offset);
+    xprintf("--------------------------\n");
+    xprintf("p_vaddr: 0x%x\n", p_vaddr);
+    xprintf("--------------------------\n");
+    xprintf("p_filesz: 0x%x\n", p_filesz);
+    xprintf("--------------------------\n");
+    xprintf("p_memsz: 0x%x\n", p_memsz);
     
-    void(*tmp)(void) = entry_point;
-
-    for(int i = 0; i < 100; i++)
-    {
-        uint8_t* tmp = entry_point + i;
-        xprintf("%mx ", *tmp);
-    }
-
-    //tmp();
-
-
     while(KeyInfo.scan_code != ENTER);
 }
 
-int elfreader(char* filename)
+int elfdump(char* filename)
 {
     xin_entry* file = fopen(filename, "r");
-    elf_load(file);
+    elf_data_load(file);
     return XANIN_OK;
 }

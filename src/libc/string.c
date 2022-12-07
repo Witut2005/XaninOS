@@ -422,21 +422,42 @@ uint32_t str2ipv4(char* str)
 {
     uint32_t tmp = 0;
     char str_tmp[4] = {'\0'}; 
+    uint32_t octet;
 
     memcpy(str_tmp, str, 3);
-    tmp = (uint8_t)strtoi(str_tmp, 10);
-    tmp = tmp << 8;
+
+    octet = strtoi(str_tmp, 10);
+    if(octet > 0xFF)
+        octet = 0xFF;
+
+    tmp = octet << 8;
 
     memcpy(str_tmp, str + 4, 3);
-    tmp = tmp | (uint8_t)strtoi(str_tmp, 10);
+
+    octet = strtoi(str_tmp, 10);
+    if(octet > 0xFF)
+        octet = 0xFF;
+
+    tmp = tmp | octet;
     tmp = tmp << 8;
 
     memcpy(str_tmp, str + 8, 3);
-    tmp = tmp | (uint8_t)strtoi(str_tmp, 10);
+
+    octet = strtoi(str_tmp, 10);
+    if(octet > 0xFF)
+        octet = 0xFF;
+
+    tmp = tmp | octet;
     tmp = tmp << 8;
 
     memcpy(str_tmp, str + 12, 3);
-    tmp = tmp | (uint8_t)strtoi(str_tmp, 10);
+
+    octet = strtoi(str_tmp, 10);
+    if(octet > 0xFF)
+        octet = 0xFF;
+
+    tmp = tmp | octet;
+
 
     return tmp;
 

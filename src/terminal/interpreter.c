@@ -47,6 +47,7 @@ void scan(void)
 
     #ifdef ELF_LOADER_APP 
     XANIN_ADD_APP_ENTRY1("elft", elfreader)
+    XANIN_ADD_APP_ENTRY1("elfdump", elfdump)
     #endif
 
     #ifdef HEXEDITOR_APP

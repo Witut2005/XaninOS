@@ -138,6 +138,7 @@
 
 #ifdef ELF_LOADER_APP
 #include <elf/elf_loader.c>
+#include <elf/elfdump.c>
 #endif
 
 #ifdef CPP_TEST_APP
