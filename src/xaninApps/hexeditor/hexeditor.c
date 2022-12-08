@@ -205,7 +205,7 @@ int hexeditor(char* file_name)
 
     screen_clear();
 
-    read(file, data_pointer, VGA_SCREEN_RESOLUTION);
+    fread(file, data_pointer, VGA_SCREEN_RESOLUTION);
 
     for(int i = 0; i < 28; i++)
     {
@@ -225,7 +225,7 @@ int hexeditor(char* file_name)
     screen_clear();
 
     fseek(file, 0);
-    write(file, data_pointer, 512);
+    fwrite(file, data_pointer, 512);
     fclose(&file);
     free(data_pointer);
     return XANIN_OK;

@@ -44,7 +44,7 @@ int run(char* file_name)
 
 
         uint8_t* file_data = (uint8_t*)calloc(512);
-        read(xin_file, file_data, 512);
+        fread(xin_file, file_data, 512);
 
         for(uint8_t* i = file_data; i < (file_data + 512); i++, where_to_load++)
             *where_to_load = * i;

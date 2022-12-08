@@ -18,27 +18,27 @@ void printk(const char * str)
 
     char separator = ':';
     uint8_t* file_data = (uint8_t*)calloc(512);
-    read(file, file_data, 512);
+    fread(file, file_data, 512);
     fseek(file, strlen(file_data));
     
-    write(file, bcd_to_str(SystemTime.hour, buf), strlen(buf));
+    fwrite(file, bcd_to_str(SystemTime.hour, buf), strlen(buf));
 
-    write(file, bcd_to_str(SystemTime.hour, buf), strlen(buf));
+    fwrite(file, bcd_to_str(SystemTime.hour, buf), strlen(buf));
 
-    write(file, &separator, 1);
+    fwrite(file, &separator, 1);
     
-    write(file, bcd_to_str(SystemTime.minutes, buf), strlen(buf));
+    fwrite(file, bcd_to_str(SystemTime.minutes, buf), strlen(buf));
     
-    write(file, &separator, 1);
-    write(file, bcd_to_str(SystemTime.seconds, buf), strlen(buf));
+    fwrite(file, &separator, 1);
+    fwrite(file, bcd_to_str(SystemTime.seconds, buf), strlen(buf));
 
     
     separator = ' ';
-    write(file, &separator, 1);
+    fwrite(file, &separator, 1);
 
 
-    write(file, str, strlen(str));
-    write(file, "\n", 1);
+    fwrite(file, str, strlen(str));
+    fwrite(file, "\n", 1);
 
     // current_line++;
     free(buf);

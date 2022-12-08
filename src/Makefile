@@ -35,6 +35,9 @@ build:
 
 	@# echo [ASM] syscall.asm
 	@# $(ASM) -f elf32 ./syscall/syscall.asm -o ./syscall/syscall.o
+
+	@ echo [ASM] registers_values_get.asm
+	@ $(ASM) -f elf32 ./libc/registers_values_get.asm -o ./libc/registers_values_get.o
 	
 	@echo [ASM] pit.asm
 	@$(ASM) -f elf32 ./pit/pit.asm -o ./pit/pit.o
@@ -220,6 +223,7 @@ build:
 	./xgl/xgl.o \
 	./libcpp/endian.o \
 	./devices/VGA/vga.o \
+	./libc/registers_values_get.o \
 	./terminal/vty.o \
 	./keyboard/key_map.o \
 	./xaninGraphics/xaninGraphics.o \
@@ -249,10 +253,10 @@ build:
 	./xaninApps/screenshot.o \
 	./game_engine/xagame.o \
 	./xagames/xagame_test.o \
-	./xagames/tetris.o -o kernel.bin
+	./xagames/tetris.o -Ttext 0x700000 -o kernel.bin
 
 	@echo [C] disk_freestanding_driver.c
-	@$(C) $(C_COMPILE) ./boot/disk_freestanding_driver.c ./boot/linker.ld -Ttext 0x600000 -o ./boot/disk_freestanding_driver
+	@$(C) $(C_COMPILE) ./boot/disk_freestanding_driver.c ./boot/linker.ld -Ttext 0xA00000 -o ./boot/disk_freestanding_driver
 	python3 ./utils/align_file.py -file ./boot/disk_freestanding_driver -size 512
 	
 
@@ -275,7 +279,11 @@ build:
 	@mv xanin.img -f ../bin
 	@mv xanin.bin -f ../bin
 	
-	python3 ./utils/app_preinstall.py -files yhm/ external_apps/ config/ -image $(XANIN_BINARIES)/xanin.img 
+	@echo "\033[0;32mCOMPILING XANIN EXTERNAL APPS"
+	@echo "\033[0m"
+	@make -C ./external_apps/
+
+	@python3 ./utils/app_preinstall.py -files yhm/ external_apps/ config/ -image $(XANIN_BINARIES)/xanin.img 
 
 
 

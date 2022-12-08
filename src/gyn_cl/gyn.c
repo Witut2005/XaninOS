@@ -10,7 +10,7 @@ int gyn_interpreter(char* file_to_interpret)
     gyn_cl_on = true;
     xin_entry* file = fopen(file_to_interpret, "r");
     uint8_t* data = (uint8_t*)calloc(SECTOR_SIZE);
-    read(file, data, SECTOR_SIZE);
+    fread(file, data, SECTOR_SIZE);
     char* command;
 
     if(file == nullptr)

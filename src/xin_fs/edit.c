@@ -436,7 +436,7 @@ int edit(char* file_name)
     *cursor = (uint16_t)(*cursor + (((white << 4) | black) << 8));
 
     program_buffer = (char*) calloc(VGA_SCREEN_RESOLUTION);
-    read(file, program_buffer, VGA_SCREEN_RESOLUTION);
+    fread(file, program_buffer, VGA_SCREEN_RESOLUTION);
 
     file_position = 0x0;
 
@@ -458,10 +458,10 @@ int edit(char* file_name)
     file->entry_size = file_position;
 
     fseek(file, 0x0);
-    write(file, program_buffer, strlen(program_buffer));
+    fwrite(file, program_buffer, strlen(program_buffer));
 
     for(int i = 0; i < strlen(file->file_info->base_address_memory) - strlen(program_buffer); i++)
-        write(file, "\0", 1);
+        fwrite(file, "\0", 1);
     
     // screen_clear();
     // xprintf("program: %s\n", program_buffer);

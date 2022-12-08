@@ -31,9 +31,10 @@ bool elf_check_arch(uint8_t* file)
 void elf_load(xin_entry* file)
 {
     uint8_t* data = (uint8_t*)calloc(file->entry_size * SECTOR_SIZE);
-    read(file, data, file->entry_size * SECTOR_SIZE);
+    fread(file, data, file->entry_size * SECTOR_SIZE);
 
-    
+    xprintf("file size: %d\n", file->entry_size);
+
     uint8_t* write_to_memory;
     uint8_t* read_from_file;
     uint32_t file_base = data;
@@ -46,23 +47,24 @@ void elf_load(xin_entry* file)
     uint32_t p_memsz;       //size in bytes of segment in memory
     uint32_t entry_point = *(uint32_t*)((uint8_t*)data + 0x18);
 
-    if(!elf_check_magic(data))
-    {
-        xprintf("%zBAD MAGIC\n", stderr);
-        while(inputg().scan_code != ENTER);
-        return;
-    }
+    // if(!elf_check_magic(data))
+    // {
+    //     xprintf("%zBAD MAGIC\n", stderr);
+    //     while(inputg().scan_code != ENTER);
+    //     return;
+    // }
 
-    if(!elf_check_arch(data + 0x12))
-    {
-        xprintf("%zBAD ARCH\n", stderr);
-        while(inputg().scan_code != ENTER);
-        return;
-    }
+    // if(!elf_check_arch(data + 0x12))
+    // {
+    //     xprintf("%zBAD ARCH\n", stderr);
+    //     while(inputg().scan_code != ENTER);
+    //     return;
+    // }
 
     data += ELF_HEADER_SIZE;
     uint32_t load_sum = 0;
 
+    screen_clear();
 
     while(phnum)
     {
@@ -77,12 +79,12 @@ void elf_load(xin_entry* file)
             p_filesz = *(uint32_t*)((uint8_t*)data + 0x10);
             p_memsz  = *(uint32_t*)((uint8_t*)data + 0x14);
 
-            read_from_file = p_offset;
-            write_to_memory = p_vaddr;
+            read_from_file = (uint8_t*)p_offset;
+            write_to_memory = (uint8_t*)p_vaddr;
 
         
-            for(int i = 0; i < p_filesz; i++, write_to_memory++, read_from_file++)
-                *write_to_memory = *read_from_file;
+            for(int i = 0; i < p_filesz; i++)
+                write_to_memory[i] = read_from_file[i];
                     
         }
 
@@ -91,20 +93,14 @@ void elf_load(xin_entry* file)
         
     }
 
-    xprintf("LOAD IN FILE: %d\n", load_sum);
-    
-    void(*tmp)(void) = entry_point;
-
-    for(int i = 0; i < 100; i++)
-    {
-        uint8_t* tmp = entry_point + i;
-        xprintf("%mx ", *tmp);
-    }
-
-    //tmp();
+    typedef void(*EntryPoint)(void) __attribute__((fastcall));
+    EntryPoint tmp;
+    tmp = entry_point;
+    tmp();
+    while(KeyInfo.scan_code != F4_KEY);
 
 
-    while(KeyInfo.scan_code != ENTER);
+    free(data);
 }
 
 int elfreader(char* filename)

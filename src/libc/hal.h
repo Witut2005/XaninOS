@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -27,6 +28,7 @@ void pic_mask_set(uint16_t port, uint8_t value);
 void pic_disable(void);
 void sse_enable(void);
 void pic_mode_disable(void);
+// extern void __asm_registers_values_get(Registers* Reg);
 
 #ifdef __cplusplus
 }

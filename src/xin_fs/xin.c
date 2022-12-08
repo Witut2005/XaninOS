@@ -18,6 +18,8 @@ uint8_t shutdown_program_buffer[512];
 uint8_t* bootloader_program_buffer;
 uint8_t* kernel_load_backup;
 
+XinFileDescriptor* FileDescriptorTable;
+
 
 uint8_t xin_base_state[100];
 char xin_current_path[38] = {'\0'};
@@ -607,7 +609,7 @@ uint32_t xin_get_start_sector(char *entry_name)
     return xin_file_descriptor->starting_sector;
 }
 
-size_t read(xin_entry *entry, void *buf, size_t count)
+size_t fread(xin_entry *entry, void *buf, size_t count)
 {
 
     char* end = (char *)(entry->file_info->base_address_memory + count + entry->file_info->position);
@@ -628,9 +630,64 @@ size_t read(xin_entry *entry, void *buf, size_t count)
     }
 }
 
-size_t write(xin_entry *entry, void *buf, size_t count)
+size_t read(int fd, void *buf, size_t count)
 {
 
+    if(fd < 0)
+        return 0;
+
+    xin_entry* entry = (xin_entry*)(XIN_ENTRY_TABLE + (fd * XIN_ENTRY_SIZE));
+
+    char* end = (char *)(entry->file_info->base_address_memory + count + entry->file_info->position);
+    char* begin = (char *)(entry->file_info->base_address_memory + entry->file_info->position);
+
+    uint32_t sectors_to_load = count / SECTOR_SIZE;
+
+    if(count % SECTOR_SIZE != 0)
+        sectors_to_load++;
+
+    for(int i = 0; i < sectors_to_load; i++)
+        disk_read(ATA_FIRST_BUS, ATA_MASTER, entry->starting_sector + i, 1, (uint16_t*)(entry->file_info->base_address_memory + (i * SECTOR_SIZE)));
+
+    for (char *i = begin; i < end; i++, buf++)
+    {
+        *(char *)buf = *i;
+        entry->file_info->position++;
+    }
+}
+
+size_t fwrite(xin_entry *entry, void *buf, size_t count)
+{
+
+    // char *end = (char *)(entry->starting_sector * SECTOR_SIZE) + count + entry->file_info->position;
+    char* end = (char *)(entry->file_info->base_address_memory + count + entry->file_info->position);
+
+    uint32_t tmp = entry->file_info->position;
+
+    // for (char *i = (char *)(entry->starting_sector * SECTOR_SIZE) + tmp; i < end; i++, buf++)
+    for (char *i = (char *)(entry->file_info->base_address_memory) + tmp; i < end; i++, buf++)
+    {
+        *i = *(char *)buf;
+        entry->file_info->position++;
+    }
+
+    time_get(&SystemTime);
+
+    entry->modification_date = (uint32_t)((SystemTime.day_of_month << 24) | (SystemTime.month << 16) | (SystemTime.century << 8) | (SystemTime.year)); 
+    entry->modification_time = (uint16_t)(SystemTime.hour << 8) | (SystemTime.minutes);
+
+}
+
+size_t write(int fd, void* buf, size_t count)
+{
+    
+    if(fd < 0)
+        return -1;
+
+    if(!FileDescriptorTable[fd].is_used)
+        return -1;
+
+    xin_entry* entry = (xin_entry*)(XIN_ENTRY_TABLE + (fd * XIN_ENTRY_SIZE));
     // char *end = (char *)(entry->starting_sector * SECTOR_SIZE) + count + entry->file_info->position;
     char* end = (char *)(entry->file_info->base_address_memory + count + entry->file_info->position);
 
@@ -738,6 +795,25 @@ void fclose(xin_entry** file)
 
 }
 
+void close(int fd)
+{
+
+    if(!FileDescriptorTable[fd].is_used)
+        return;
+
+    xin_entry* file = FileDescriptorTable[fd].entry;
+    file->entry_size = file->file_info->position;
+    file->file_info->position = 0;
+    memset(file->file_info->rights, '\0', 2);
+
+//    for(int i = 0; i < (*file)->entry_size / 512 + ((*file)->entry_size % 512 != 0 ? 1 : 0); i++)
+    for(int i = 0; i < 0x10; i++)
+       disk_write(ATA_FIRST_BUS, ATA_MASTER, file->starting_sector + i, 1, (uint16_t*)(file->file_info->base_address_memory + (i * SECTOR_SIZE)));
+
+    // while(1);
+    free(file->file_info->base_address_memory);
+
+}
 
 
 xin_entry* create(char* file_name)
@@ -795,6 +871,9 @@ int open(char* file_path, uint32_t options)
 
         file->file_info->position = 0;
         int fd = (int)((uint32_t)file - XIN_ENTRY_TABLE) / 64;
+        FileDescriptorTable[fd].is_used = true;
+        FileDescriptorTable[fd].entry = file;
+
         return fd;
     }
     return -1;

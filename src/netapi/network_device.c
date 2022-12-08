@@ -147,7 +147,7 @@ uint32_t xanin_ip_get(void)
     xin_entry* nic_ip = fopen("/config/nic.conf", "rw");
 
     char* ip_str = (char*)calloc(64);
-    read(nic_ip, ip_str, 15);
+    fread(nic_ip, ip_str, 15);
 
     uint32_t ip = str2ipv4(ip_str);
     free(ip_str);

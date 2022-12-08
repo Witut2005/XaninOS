@@ -182,7 +182,7 @@ int xin_note(char* file_name)
         for(int i = 0; i < VGA_SCREEN_RESOLUTION / 2; i++, screen_ptr++)
         {
             fseek(xin_file, i);
-            write(xin_file, (char*)screen_ptr, 1);
+            fwrite(xin_file, (char*)screen_ptr, 1);
 
             tmp[i] = *(char*)screen_ptr;
 

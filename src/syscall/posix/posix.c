@@ -5,31 +5,26 @@
 #include <xin_fs/xin.h>
 #include <app_config.h>
 #include <syscall/posix/syscall_number.h>
+#include <libc/stdlibx.h>
+#include <libc/time.h>
+#include <libc/hal.h>
 
-uint32_t syscall()
+uint32_t syscall(void)
 {
    
+
     uint32_t eax, ecx, edx, ebx, esp, ebp, esi, edi;
-    
-
-
 
     asm(
-        "push eax\n\t"
-        "push edi\n\t"
-        "push esi\n\t"
-        "push edx\n\t"
-        "push ecx\n\t"
-        "push ebx\n\t"
-       );
-
-    asm("pop [ecx]" :: "ecx"(&ebx));
-    asm("pop [edx]" :: "edx"(&ecx));
-    asm("pop [ecx]" :: "ecx"(&edx));
-    asm("pop [ecx]" :: "ecx"(&esi));
-    asm("pop [ecx]" :: "ecx"(&edi));
-    asm("pop [ecx]" :: "ecx"(&eax));
-
+        "mov %0, eax;"     
+        "mov %1, ecx;"     
+        "mov %2, edx;"     
+        "mov %3, ebx;"     
+  
+        : "=g"(eax), "=g"(edx), "=g"(edx), "=g"(ebx)
+        :
+        : "ecx", "edx", "ebx"
+    );
 
     uint32_t eip_ret;
    
@@ -54,17 +49,55 @@ uint32_t syscall()
 
         case __NR_write:
         {
-            for(int i = 0; i < edx; i++)
-                xprintf("%c", *(uint8_t*)(ecx + i));
+            if(!FileDescriptorTable[ebx].is_used)
+            {
+                for(int i = 0; i < edx; i++)
+                    xprintf("%c", *(uint8_t*)(ecx + i));    
+            }
+            
+            else
+                write(ebx, (void*)ecx, edx);
 
             break;
         }
         
+        case __NR_open:
+        {
+            int fd;
+            fd = open((char*)ebx, ecx); //edx = mode
+            eax = fd;
+            break;
+        }
+        
+        case __NR_close:
+        {
+            close(ebx);
+            break;
+        }
+        
+        case __NR_mkdir:
+        {
+            __sys_xin_folder_create((char*)ebx);
+            break;
+        }
+
+        case __NR_rmdir:
+        {
+            __sys_xin_folder_remove((char*)ebx);
+            break;
+        }    
+
+
+        case 100:
+        {
+            msleep(5000);
+            break;
+        }
 
 
     }
 
-    
+    return eax;
 
 }
 

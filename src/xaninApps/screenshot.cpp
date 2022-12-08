@@ -28,7 +28,7 @@ int screenshot(void)
     xin_entry* file = fopen(std::chrono::time_to_string(time).c_str(), "rw");
 
     uint8_t* data = (uint8_t*)VGA_TEXT_MEMORY;
-    write(file, data, VGA_SCREEN_RESOLUTION);
+    fwrite(file, data, VGA_SCREEN_RESOLUTION);
     fclose(&file);
 
 

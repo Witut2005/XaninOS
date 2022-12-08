@@ -2,6 +2,7 @@
     "files.associations": {
         "stdiox.h": "c",
         "pit.h": "c",
-        "xin.h": "c"
+        "xin.h": "c",
+        "elf_loader.h": "c"
     }
 }

@@ -5,6 +5,22 @@
 #include <devices/APIC/apic_registers.h>
 #include <xanin_info/info_block.h>
 
+
+struct Registers
+{
+    uint32_t eax;
+    uint32_t ecx;
+    uint32_t edx;
+    uint32_t ebx;
+    uint32_t esp;
+    uint32_t ebp;
+    uint32_t esi;
+    uint32_t edi;
+};
+
+typedef struct Registers Registers;
+extern void __asm_registers_values_get(Registers*);
+
 void outbIO(uint16_t port,uint8_t al)
 {
     asm("outb dx,al" :: "d" (port), "a"(al));
@@ -241,3 +257,7 @@ static inline void cpu_halt(void)
     asm("hlt");
 }
 
+void registers_values_get(Registers* Reg)
+{
+    __asm_registers_values_get(Reg);
+}

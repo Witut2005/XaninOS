@@ -390,6 +390,8 @@ void _start(void)
     create_file_kernel("/.system_space79");
     create_file_kernel("/.system_space80");
 
+    FileDescriptorTable = (XinFileDescriptor*)calloc(sizeof(XinFileDescriptor) * 512);
+
     memset((uint8_t *)&ArpTable[0], 0xFF, sizeof(ArpTable[0]));
     current_arp_entry++;
 
@@ -407,7 +409,7 @@ void _start(void)
     // __sys_xin_folder_create("/config/");
     // __sys_xin_file_create("/config/nic.conf");
     // xin_entry* nic_config = fopen("/config/nic.conf", "rw");
-    // write(nic_config, "192.168.019.012  //XaninOS nic IP address(USE ALWAYS FULL OCTETS)", ARRAY_LENGTH("192.168.019.012  //XaninOS nic IP address(USE ALWAYS FULL OCTETS"));
+    // fwrite(nic_config, "192.168.019.012  //XaninOS nic IP address(USE ALWAYS FULL OCTETS)", ARRAY_LENGTH("192.168.019.012  //XaninOS nic IP address(USE ALWAYS FULL OCTETS"));
     // fclose(&nic_config);
     
     xprintf("YOUR IP ADDRESS: ");
@@ -419,7 +421,8 @@ void _start(void)
         xprintf("%d.", tmp[i]);
     }
 
-    xprintf("%d", ((uint8_t*)&base_ip)[0]);
+    xprintf("%d\n", ((uint8_t*)&base_ip)[0]);
+
 
     // while(1)
     // beep(1000);
