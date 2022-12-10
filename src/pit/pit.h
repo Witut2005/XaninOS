@@ -47,11 +47,11 @@ static inline void set_pit()
 }
 
 
-static inline float pit_tick(uint32_t frequency)
+static inline void pit_tick(uint32_t frequency)
 {
     pit_time += 1 / (float)(PIT_BASE_FREQUENCY / frequency);
     eoi_send();
-    return pit_time;
+    // return pit_time;
 }
 
 

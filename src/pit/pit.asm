@@ -5,9 +5,10 @@ global pit_handler_init
 extern pit_handler
 
 pit_handler_init:
+    pushfd
     pushad
-	cld
 	call pit_handler
 	popad
+	popfd
 	iretd
 

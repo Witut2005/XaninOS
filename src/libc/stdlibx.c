@@ -24,6 +24,8 @@ extern void kernel_loop(void);
 
 void exit(void)
 {
+    interrupt_enable();
+    eoi_send();
     kernel_loop();
 }
 

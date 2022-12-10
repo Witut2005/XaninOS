@@ -96,6 +96,7 @@ void elf_load(xin_entry* file)
     typedef void(*EntryPoint)(void) __attribute__((fastcall));
     EntryPoint tmp;
     tmp = entry_point;
+    interrupt_disable();
     tmp();
     while(KeyInfo.scan_code != F4_KEY);
 

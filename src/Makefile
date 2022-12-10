@@ -33,14 +33,14 @@ build:
 	@echo [ASM] keyboard.asm
 	@$(ASM) -f elf32 ./handlers/keyboard.asm -o ./handlers/keyboard.o
 
-	@# echo [ASM] syscall.asm
-	@# $(ASM) -f elf32 ./syscall/syscall.asm -o ./syscall/syscall.o
-
 	@ echo [ASM] registers_values_get.asm
 	@ $(ASM) -f elf32 ./libc/registers_values_get.asm -o ./libc/registers_values_get.o
 	
 	@echo [ASM] pit.asm
 	@$(ASM) -f elf32 ./pit/pit.asm -o ./pit/pit.o
+
+	@echo [ASM] syscall_entry.asm
+	@$(ASM) -f elf32 ./syscall/syscall_entry.asm -o ./syscall/syscall_entry.o
 
 	@echo [ASM] enter_real_mode.asm
 	@$(ASM) -fbin ./libc/enter_real_mode.asm -o ./libc/enter_real_mode
@@ -229,6 +229,7 @@ build:
 	./xaninGraphics/xaninGraphics.o \
 	./handlers/keyboard.o \
 	./pit/pit.o \
+	./syscall/syscall_entry.o \
 	./xin_fs/xin.o \
 	./xin_fs/edit.o \
 	./test/cpp_test.o \

@@ -9,11 +9,11 @@
 #include <libc/time.h>
 #include <libc/hal.h>
 
-uint32_t syscall(void)
+uint32_t syscall_handle(void)
 {
    
 
-    uint32_t eax, ecx, edx, ebx, esp, ebp, esi, edi;
+    uint32_t eax, ecx, edx, ebx, esi, edi;
 
     asm(
         "mov %0, eax;"     
@@ -21,16 +21,13 @@ uint32_t syscall(void)
         "mov %2, edx;"     
         "mov %3, ebx;"     
   
-        : "=g"(eax), "=g"(edx), "=g"(edx), "=g"(ebx)
+        : "=g"(eax), "=g"(ecx), "=g"(edx), "=g"(ebx)
         :
         : "ecx", "edx", "ebx"
     );
 
-    uint32_t eip_ret;
-   
-    eoi_send();
     interrupt_enable();
-
+   
     switch(eax)
     {
 
@@ -49,6 +46,7 @@ uint32_t syscall(void)
 
         case __NR_write:
         {
+            int how_many_writed;
             if(!FileDescriptorTable[ebx].is_used)
             {
                 for(int i = 0; i < edx; i++)
@@ -56,16 +54,26 @@ uint32_t syscall(void)
             }
             
             else
-                write(ebx, (void*)ecx, edx);
+            {
+                how_many_writed = write(ebx, (void*)ecx, edx);
+                // xprintf("eax: 0x%x\n", eax);
+                // xprintf("ebx: 0x%x\n", ebx);
+                // xprintf("ecx: 0x%x\n", ecx);
+                // xprintf("edx: 0x%x\n", edx);
+                // xprintf("writed: %d\n", how_many_writed);
+            }
 
             break;
         }
         
         case __NR_open:
-        {
-            int fd;
-            fd = open((char*)ebx, ecx); //edx = mode
-            eax = fd;
+        {                
+            // screen_clear();
+            // xprintf("eax: 0x%x\n", eax);
+            // xprintf("ebx: 0x%x\n", ebx);
+            // xprintf("ecx: 0x%x\n", ecx);
+            // xprintf("edx: 0x%x\n", edx);
+            eax = open((char*)ebx, ecx); //edx = mode
             break;
         }
         
@@ -75,7 +83,7 @@ uint32_t syscall(void)
             break;
         }
         
-        case __NR_mkdir:
+        case __NR_mkdir:   
         {
             __sys_xin_folder_create((char*)ebx);
             break;
@@ -97,6 +105,7 @@ uint32_t syscall(void)
 
     }
 
+    interrupt_disable();
     return eax;
 
 }

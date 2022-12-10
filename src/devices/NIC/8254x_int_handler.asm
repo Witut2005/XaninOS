@@ -8,9 +8,11 @@ extern i8254x_interrupt_handler
 %define APIC_EOI_REGISTER 0xFEE000B0
 
 i8254x_interrupt_handler_entry:
+    pushfd
     pushad
     call i8254x_interrupt_handler
     popad
+    popfd
     mov eax, [APIC_SPURIOUS_INTERRUPT_VECTOR_REGISTER]
     and eax, APIC_PRESENT
     cmp eax, APIC_PRESENT

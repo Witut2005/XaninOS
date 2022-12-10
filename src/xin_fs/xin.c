@@ -705,6 +705,8 @@ size_t write(int fd, void* buf, size_t count)
     entry->modification_date = (uint32_t)((SystemTime.day_of_month << 24) | (SystemTime.month << 16) | (SystemTime.century << 8) | (SystemTime.year)); 
     entry->modification_time = (uint16_t)(SystemTime.hour << 8) | (SystemTime.minutes);
 
+    return count;
+
 }
 
 void fseek(xin_entry *file, uint32_t new_position)
@@ -812,6 +814,7 @@ void close(int fd)
 
     // while(1);
     free(file->file_info->base_address_memory);
+    FileDescriptorTable[fd].is_used = false;
 
 }
 

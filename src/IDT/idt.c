@@ -10,6 +10,7 @@
 
 extern void mouse_handler_init(void);
 extern void i8254x_interrupt_handler_entry(void);
+extern void syscall_entry(void);
 
 #define IDT_HANDLERS 256
 #define IDT_SIZE 256 * 8 - 1
@@ -110,10 +111,10 @@ void set_idt(void)
     // configure_idt_entry(0x2B + 6, gowno, CODE_SEGMENT);
     // configure_idt_entry(0x2B + 7, gowno, CODE_SEGMENT);
 
-    configure_idt_entry(0x2C, mouse_handler_init, CODE_SEGMENT);
+    // configure_idt_entry(0x2C, mouse_handler_init, CODE_SEGMENT);
 
-    configure_idt_entry(0x80, syscall,CODE_SEGMENT);
-    configure_idt_entry(0x50, elf_correctly_loaded,CODE_SEGMENT);
+    configure_idt_entry(0x80, syscall_entry,CODE_SEGMENT);
+    // configure_idt_entry(0x50, elf_correctly_loaded,CODE_SEGMENT);
     //configure_idt_entry(0x81, no_handler,CODE_SEGMENT);
     //configure_idt_entry(0xFF, reboot_interrupt,CODE_SEGMENT);
 
