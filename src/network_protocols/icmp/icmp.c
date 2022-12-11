@@ -27,6 +27,7 @@ void icmp_ping(uint32_t ip_dest)
     uint32_t ip_src = (192 << 24)  | (168 << 16) | ( 19 << 8) | 12;
 
     ipv4_packet_send(ip_dest, ip_src, INTERNET_CONTROL_MESSAGE_PROTOCOL, 128, (uint8_t*)packet, sizeof(IcmpPacket));
+    free(packet);
 
 
 }

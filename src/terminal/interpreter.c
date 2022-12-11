@@ -10,6 +10,29 @@ int last_command_exit_status;
 #define XANIN_ADD_APP_ENTRY3(app_name, exec_name) else if(strcmp(program_name, app_name)) {last_command_exit_status = exec_name(program_parameters, program_parameters1, program_parameters2);}
 
 extern bool gyn_cl_on;
+bool is_external_app = false;
+
+void check_external_apps(void)
+{
+    char* external_apps_folder = (char*)calloc(ARRAY_LENGTH("/external_apps/"));
+    memcpy(external_apps_folder, "/external_apps/", ARRAY_LENGTH("/external_apps/"));
+
+    char* app = (char*)calloc(512);
+    memcpy(app, external_apps_folder, strlen(external_apps_folder));
+
+    for(int i = 0; program_name[i] != '\0'; i++)
+        app[ARRAY_LENGTH("/external_apps/") + i - 1] = program_name[i];
+
+    xin_entry* file = fopen(app, "rw");
+
+    if(file != nullptr)
+    {
+        elfreader(app);
+        is_external_app = true;
+    }
+
+
+}
 
 void scan(void)
 {
@@ -47,6 +70,7 @@ void scan(void)
 
     #ifdef ELF_LOADER_APP 
     XANIN_ADD_APP_ENTRY1("elft", elfreader)
+    XANIN_ADD_APP_ENTRY1("elf", elfreader)
     XANIN_ADD_APP_ENTRY1("elfdump", elfdump)
     #endif
 
@@ -216,10 +240,16 @@ void scan(void)
     else
     {
 
-        xprintf("%zUnknown command: %s", stderr, program_name);
-        screen_background_color_set(red);
-        msleep(400);
-        last_command_exit_status = XANIN_ERROR;
+        check_external_apps();
+        
+        if(!is_external_app)
+        {
+            xprintf("%zUnknown command: %s", stderr, program_name);
+            screen_background_color_set(red);
+            msleep(400);
+            last_command_exit_status = XANIN_ERROR;
+        }
+        is_external_app = false;
     }
 
 

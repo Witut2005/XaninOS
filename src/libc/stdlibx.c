@@ -302,9 +302,10 @@ void free(void* ptr)
 
 void* realloc(void* ptr, uint32_t size_new)
 {
-
+    uint8_t* old_ptr = (uint8_t*)ptr;
     free(ptr);
-    ptr = (void*)malloc(size_new);
+    ptr = (void*)calloc(size_new);
+    memcpy(ptr, old_ptr, size_new);
     return ptr;
 
 }

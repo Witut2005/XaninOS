@@ -98,8 +98,6 @@ void elf_load(xin_entry* file)
     tmp = entry_point;
     interrupt_disable();
     tmp();
-    while(KeyInfo.scan_code != F4_KEY);
-
 
     free(data);
 }

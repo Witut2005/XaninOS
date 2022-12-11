@@ -8,6 +8,9 @@
 #include <libc/stdlibx.h>
 #include <libc/time.h>
 #include <libc/hal.h>
+#include <libc/memory.h>
+#include <libc/string.h>
+
 
 uint32_t syscall_handle(void)
 {
@@ -40,7 +43,12 @@ uint32_t syscall_handle(void)
 
         case __NR_read: 
         {
-            xscan_range(ecx, edx);
+            if(!FileDescriptorTable[ebx].is_used)
+                xscan_range(ecx, edx);
+
+            else
+                eax = read(ebx, (void*)ecx, edx);
+
             break;
         }
 
@@ -54,25 +62,14 @@ uint32_t syscall_handle(void)
             }
             
             else
-            {
-                how_many_writed = write(ebx, (void*)ecx, edx);
-                // xprintf("eax: 0x%x\n", eax);
-                // xprintf("ebx: 0x%x\n", ebx);
-                // xprintf("ecx: 0x%x\n", ecx);
-                // xprintf("edx: 0x%x\n", edx);
-                // xprintf("writed: %d\n", how_many_writed);
-            }
+                eax = write(ebx, (void*)ecx, edx);
 
             break;
         }
         
         case __NR_open:
         {                
-            // screen_clear();
-            // xprintf("eax: 0x%x\n", eax);
-            // xprintf("ebx: 0x%x\n", ebx);
-            // xprintf("ecx: 0x%x\n", ecx);
-            // xprintf("edx: 0x%x\n", edx);
+
             eax = open((char*)ebx, ecx); //edx = mode
             break;
         }
@@ -85,7 +82,22 @@ uint32_t syscall_handle(void)
         
         case __NR_mkdir:   
         {
-            __sys_xin_folder_create((char*)ebx);
+            char* folder_name = (char*)ebx;
+            bool allocated_additional_memory = false;
+            
+            if(folder_name[strlen(folder_name) - 1] != '/')
+            {
+                folder_name = (char*)calloc(strlen(folder_name) + 1);
+                memcpy(folder_name, (uint8_t*)ebx, strlen((char*)ebx));
+                folder_name[strlen(folder_name)] = '/';
+                allocated_additional_memory = true;
+            }
+
+            __sys_xin_folder_create((char*)folder_name);
+
+            if(allocated_additional_memory)
+                free(folder_name);
+
             break;
         }
 
@@ -95,6 +107,10 @@ uint32_t syscall_handle(void)
             break;
         }    
 
+        case __NR_creat:
+        {
+            eax = __sys_xin_file_create((char*)ebx);
+        }
 
         case 100:
         {

@@ -2,7 +2,8 @@
 
 section .data
 napis: db "ugabuga",0xa,0x0
-nazwa: db "/ivt", 0x0
+nazwa: db "/folder", 0x0
+filename: db "/folder/aha.txt"
 
 ;stos do kitu
 ;przerwania EHHHH
@@ -15,8 +16,17 @@ section .text
 global _start
 
 _start:
-mov eax, 5
+
+mov eax, 39
 mov ebx, nazwa
+int 0x80
+
+mov eax, 8
+mov ebx, filename
+int 0x80
+
+mov eax, 5
+mov ebx, filename
 mov ecx, 3
 int 0x80
 
