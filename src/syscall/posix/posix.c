@@ -10,7 +10,10 @@
 #include <libc/hal.h>
 #include <libc/memory.h>
 #include <libc/string.h>
+#include <syscall/posix/posix.h>
 
+
+extern int reboot(void);
 
 uint32_t syscall_handle(void)
 {
@@ -110,6 +113,45 @@ uint32_t syscall_handle(void)
         case __NR_creat:
         {
             eax = __sys_xin_file_create((char*)ebx);
+            break;
+        }
+
+        case __NR_link:
+        {
+            eax = __sys_xin_link_create((char*)ebx, (char*)ecx);
+            break;
+        }
+
+        
+        case __NR_reboot:
+        {
+            if(ebx == LINUX_REBOOT_MAGIC1 && (ecx == LINUX_REBOOT_MAGIC2 || ecx == LINUX_REBOOT_MAGIC2A || 
+                                                ecx == LINUX_REBOOT_MAGIC2B || ecx == LINUX_REBOOT_MAGIC2C))
+            {
+                reboot();
+            }
+
+            break;
+        }
+
+        case 0xDE:
+        {
+            break;
+        }
+
+        case 0xDF:
+        {
+            break;
+        }
+
+        case 0xFB:
+        {
+            break;
+        }
+
+        case 0x11D:
+        {
+            break;
         }
 
         case 100:

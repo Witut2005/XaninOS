@@ -47,19 +47,19 @@ void elf_load(xin_entry* file)
     uint32_t p_memsz;       //size in bytes of segment in memory
     uint32_t entry_point = *(uint32_t*)((uint8_t*)data + 0x18);
 
-    // if(!elf_check_magic(data))
-    // {
-    //     xprintf("%zBAD MAGIC\n", stderr);
-    //     while(inputg().scan_code != ENTER);
-    //     return;
-    // }
+    if(!elf_check_magic(data))
+    {
+        xprintf("%zBAD MAGIC\n", stderr);
+        while(inputg().scan_code != ENTER);
+        return;
+    }
 
-    // if(!elf_check_arch(data + 0x12))
-    // {
-    //     xprintf("%zBAD ARCH\n", stderr);
-    //     while(inputg().scan_code != ENTER);
-    //     return;
-    // }
+    if(!elf_check_arch(data + 0x12))
+    {
+        xprintf("%zBAD ARCH\n", stderr);
+        while(inputg().scan_code != ENTER);
+        return;
+    }
 
     data += ELF_HEADER_SIZE;
     uint32_t load_sum = 0;

@@ -5,5 +5,7 @@ all:
 	nasm -f elf32 read.asm -o read.o
 	i386-elf-ld read.o -o read 
 
-	@# gcc -m32 -static puts.c -o puts
+	nasm -f elf32 reboot.asm -o reboot.o
+	i386-elf-ld reboot.o -o reboot 
+
 

@@ -204,7 +204,6 @@ int xin_folder_create(char* entry_name)
     
     if(entry_name[0] == '/' && entry_name[1] == '/')
         return XIN_FILE_EXISTS;
-
     
     if(entry_name[strlen(entry_name) - 1] != '/')
         return XIN_BAD_FOLDER_NAME;
