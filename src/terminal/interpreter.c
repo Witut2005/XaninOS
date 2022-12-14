@@ -23,15 +23,14 @@ void check_external_apps(void)
     for(int i = 0; program_name[i] != '\0'; i++)
         app[ARRAY_LENGTH("/external_apps/") + i - 1] = program_name[i];
 
-    xin_entry* file = fopen(app, "rw");
+    xin_entry* file = fopen(app, "r");
 
-    if(file != nullptr)
+    if(file != nullptr && file->entry_size != 0)
     {
         elfreader(app);
         is_external_app = true;
     }
-
-
+    free(app);
 }
 
 void scan(void)

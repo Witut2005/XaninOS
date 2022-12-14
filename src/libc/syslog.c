@@ -37,7 +37,7 @@ void printk(const char * str)
     fwrite(file, &separator, 1);
 
 
-    fwrite(file, str, strlen(str));
+    fwrite(file, (void*)str, strlen(str));
     fwrite(file, "\n", 1);
 
     // current_line++;

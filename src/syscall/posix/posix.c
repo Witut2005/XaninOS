@@ -104,6 +104,18 @@ uint32_t syscall_handle(void)
             break;
         }
 
+        case __NR_break:
+        {
+            eax = -1;
+            break;
+        }
+
+        case __NR_rename:
+        {
+            __sys_xin_entry_move((char*)ebx, (char*)ecx);
+            break;
+        }
+
         case __NR_rmdir:
         {
             __sys_xin_folder_remove((char*)ebx);
@@ -119,6 +131,8 @@ uint32_t syscall_handle(void)
         case __NR_link:
         {
             eax = __sys_xin_link_create((char*)ebx, (char*)ecx);
+            xprintf("filename: %s\n", (char*)ebx);
+            xprintf("linkname: %s\n", (char*)ecx);
             break;
         }
 
@@ -131,6 +145,12 @@ uint32_t syscall_handle(void)
                 reboot();
             }
 
+            break;
+        }
+
+        case __NR_unlink:
+        {
+            eax = __sys_xin_link_remove((char*)ebx);
             break;
         }
 
@@ -153,6 +173,7 @@ uint32_t syscall_handle(void)
         {
             break;
         }
+
 
         case 100:
         {
