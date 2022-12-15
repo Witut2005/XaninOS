@@ -65,6 +65,7 @@ size_t write(int fd, void *buf, size_t count);
 size_t read(int fd, void *buf, size_t count);
 xin_entry* create(char* file_name);
 void fseek(xin_entry *file, uint32_t new_position);
+void lseek(int fd, uint32_t new_position);
 xin_entry* xin_get_file_pf(char* entry_path); // pf = parent folder
 xin_entry *xin_find_entry(char *entry_name);
 __STATUS remove_directory(char* folder_name);

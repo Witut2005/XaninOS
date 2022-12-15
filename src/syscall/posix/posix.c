@@ -70,9 +70,14 @@ uint32_t syscall_handle(void)
             break;
         }
         
+        case __NR_lseek:
+        {
+            lseek(ebx, ecx);
+            break;
+        }
+
         case __NR_open:
         {                
-
             eax = open((char*)ebx, ecx); //edx = mode
             break;
         }

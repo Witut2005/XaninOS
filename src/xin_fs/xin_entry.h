@@ -25,9 +25,6 @@ enum xin_fs_properties
 
 
 
-
-
-
 struct file_information_block
 {
     char file_name[MAX_PATH];
@@ -50,8 +47,8 @@ struct xin_entry
     uint16_t modification_time;         //51
     uint8_t entry_permissions;          //52
     uint32_t entry_size;                //56
-    uint32_t starting_sector;           //64
-    file_information_block* file_info;  //42
+    uint32_t starting_sector;           //60
+    file_information_block* file_info;  //64
 }__attribute__((packed));
 
 typedef struct xin_entry xin_entry;

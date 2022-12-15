@@ -714,6 +714,13 @@ void fseek(xin_entry *file, uint32_t new_position)
     file->file_info->position = new_position;
 }
 
+void lseek(int fd, uint32_t new_position)
+{
+    if(!FileDescriptorTable[fd].is_used)
+        return;
+    FileDescriptorTable[fd].entry->file_info->position = new_position;
+}
+
 uint32_t ftell(xin_entry* file)
 {
     return file->file_info->position;
