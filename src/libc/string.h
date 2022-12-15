@@ -18,7 +18,7 @@ char* strncpy(char* x, const char* y, size_t size);
 char* reverse_string(char* str);
 char* float_to_string(float number, char* str);
 uint32_t strcmp(char* a, const char* b);
-uint32_t strncmp(char* a, char* b, size_t string_size);
+uint32_t strncmp(char* a, const char* b, size_t string_size);
 char* int_to_str(int x, char* buf);
 char* bin_to_str(int x, char* buf);
 char* bcd_to_str(uint8_t x, char* buf);

@@ -25,13 +25,12 @@ void check_external_apps(void)
 
     xin_entry* file = fopen(app, "r");
 
-    if(file != nullptr)
+    if(file != nullptr && file->entry_size != 0)
     {
         elfreader(app);
         is_external_app = true;
     }
-
-
+    free(app);
 }
 
 void scan(void)

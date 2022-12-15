@@ -864,6 +864,7 @@ xin_entry* create(char* file_name)
     for(int i = 0; i < 16; i++)
         disk_write(ATA_FIRST_BUS, ATA_MASTER, entry->starting_sector, i, (uint16_t*)zero_mregion);
 
+    return entry;
 }
 
 int open(char* file_path, uint32_t options)

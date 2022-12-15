@@ -142,29 +142,46 @@ __STATUS __sys_xin_copy(char* file_name, char* new_file_name)
     return XANIN_OK;
 }
 
+__STATUS __sys_xin_link_remove(char* linkname)
+{
+    xin_entry* file = xin_find_entry(linkname); 
+
+    if(file != nullptr && file->entry_type == XIN_LINK)
+    {
+        memset((uint8_t*)file, 0x0, sizeof(xin_entry));
+        return XANIN_OK;
+    }
+
+    else
+    {
+        return XANIN_ERROR;
+    }
+
+
+}
+
 __STATUS __sys_xin_link_create(char* file_name, char* link_name)
 {
 
 
-    uint8_t* file = (uint8_t*)xin_find_entry(file_name); 
+    xin_entry* file = xin_find_entry(file_name); 
 
     if(file == nullptr)
-    {
-        // xprintf("%zNO SUCH FILE\n", stderr);
-        // while(getscan() != ENTER);
         return XIN_ENTRY_NOT_FOUND;
-    } 
 
-    uint8_t* link = (uint8_t*)xin_find_free_entry();
+    xin_entry* link = xin_find_free_entry();
+    memcpy((uint8_t*)link, (uint8_t*)file, sizeof(xin_entry));
 
-    for(int i = 0; i < sizeof(xin_entry); i++)
-        link[i] = file[i];
+    link->entry_type = XIN_LINK;
+
+    for(int i = 0; i < MAX_PATH; i++)
+        link->entry_path[i] = file->entry_path[i];
 
     if(link_name[0] != '/')
         link_name = xin_get_current_path(link_name);
 
-    for(int i = 0; i < 40; i++)
-        link[i] = link_name[i];
+    for(int i = 0; i < MAX_PATH; i++)
+        link->entry_path[i] = link_name[i];
 
     return XANIN_OK;
 
@@ -193,27 +210,37 @@ __STATUS __sys_xin_list_files(char** argv)
 
     while(i->entry_path[0] != '\0')
     {
-        if(strcmp(options, "-s"))
+
+        if(substr_find(i->entry_path, "/.") && !strcmp(options, "-la"))
         {
-            if(printed_text + strlen(i->entry_path) > VGA_WIDTH)
-            {
-                xprintf("\n");
-                printed_text = 0;
-            }
-            xprintf("%s   ", i->entry_path);
-            printed_text += strlen(i->entry_path) + 4;
+            i++;
+            continue;
         }
+
+        if(!strlen(path))
+        {
+
+            /*
+            printed_text = printed_text + strlen(i->entry_path);
+            if(printed_text >= VGA_WIDTH)
+            {
+                printed_text = 0;
+                xprintf("\n");
+            }
+            */
+
+            if(strcmp(xin_get_file_pf(i->entry_path)->entry_path, xin_current_directory))
+            {
+                xprintf("%z%s", set_output_color(black, i->entry_type + 0x2), i);
+                xprintf("  ");
+            }
+            //printed_text = printed_text + ARRAY_LENGTH("  ");
+        }
+
 
         else 
         {
-
-            if(substr_find(i->entry_path, "/.") && !strcmp(options, "-la"))
-            {
-                i++;
-                continue;
-            }
-
-            if(strlen(path) == 0)
+            if(path[0] == '/')
             {
                 printed_text += strlen(i->entry_path) + 2;
 
@@ -224,58 +251,35 @@ __STATUS __sys_xin_list_files(char** argv)
                     printed_text += strlen(i->entry_path);
                 }
 
-                if(strcmp(xin_get_file_pf(i->entry_path)->entry_path, xin_current_directory))
+                if(strcmp(xin_get_file_pf(i->entry_path)->entry_path, path))
                 {
                     xprintf("%z%s", set_output_color(black, i->entry_type + 0x2), i);
                     xprintf("  ");
                 }
                 printed_text = printed_text + strlen("  ");
+        
             }
-
-
-            else 
+        
+            else
             {
-                if(path[0] == '/')
+                printed_text += strlen(i->entry_path) + 2;
+
+                if(printed_text >= 80)
                 {
-                    printed_text += strlen(i->entry_path) + 2;
-
-                    if(printed_text >= 80)
-                    {
-                        printed_text = 0;
-                        xprintf("\n");
-                        printed_text += strlen(i->entry_path);
-                    }
-
-                    if(strcmp(xin_get_file_pf(i->entry_path)->entry_path, path))
-                    {
-                        xprintf("%z%s", set_output_color(black, i->entry_type + 0x2), i);
-                        xprintf("  ");
-                    }
-                    printed_text = printed_text + strlen("  ");
-            
+                    printed_text = 0;
+                    xprintf("\n");
+                    printed_text += strlen(i->entry_path);
                 }
-            
-                else
+
+                if(strcmp(xin_get_file_pf(i->entry_path)->entry_path, xin_get_current_path(path)))
                 {
-                    printed_text += strlen(i->entry_path) + 2;
-
-                    if(printed_text >= 80)
-                    {
-                        printed_text = 0;
-                        xprintf("\n");
-                        printed_text += strlen(i->entry_path);
-                    }
-
-                    if(strcmp(xin_get_file_pf(i->entry_path)->entry_path, xin_get_current_path(path)))
-                    {
-                        xprintf("%z%s", set_output_color(black, i->entry_type + 0x2), i);
-                        xprintf("  ");
-                    }
-                    printed_text = printed_text + strlen("  ");
-
+                    xprintf("%z%s", set_output_color(black, i->entry_type + 0x2), i);
+                    xprintf("  ");
                 }
+                printed_text = printed_text + strlen("  ");
 
             }
+
         }
 
         i++;

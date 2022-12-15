@@ -3,7 +3,8 @@
 section .data
 napis: db "ugabuga",0xa,0x0
 nazwa: db "/folder", 0x0
-filename: db "/folder/aha.txt"
+filename: db "/folder/aha.txt", 0x0
+new_filename: db "/folder/from.lnk", 0x0
 
 ;stos do kitu
 ;przerwania EHHHH
@@ -48,7 +49,9 @@ mov ecx, napis
 mov edx, 9
 int 0x80
 
-mov eax, 100
+mov eax, 9
+mov ebx, filename
+mov ecx, new_filename
 int 0x80
 
 mov eax, 1

@@ -19,7 +19,7 @@ uint32_t strlen(const char* a)
 
     uint32_t length = 0;
 
-    for(char* i = a; *i != '\0' ;i++)
+    for(const char* i = a; *i != '\0' ;i++)
         length++;
     
 
@@ -118,16 +118,13 @@ uint32_t strcmp(char* a, const char* b)
     return 1;		
 }
 
-uint32_t strncmp(char* a, char* b, size_t string_size)
+uint32_t strncmp(char* a, const char* b, size_t string_size)
 {
-
     for(int i = 0; i < string_size;i ++)
     {
         if(a[i] != b[i])
             return 0;
     }
-
-    
     return 1;		
 }
 
@@ -474,3 +471,6 @@ char* substr_find(char *str, const char *substr)
     }
     return nullptr;
 }
+
+
+
