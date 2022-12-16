@@ -47,6 +47,8 @@ void scan(void)
         }
     }
 
+    XANIN_ADD_APP_ENTRY0("petris", ptetris)
+    XANIN_ADD_APP_ENTRY0("ptetris", ptetris)
 
     #ifdef HELP_APP
     XANIN_ADD_APP_ENTRY1("help", help)
