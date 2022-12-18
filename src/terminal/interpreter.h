@@ -29,6 +29,7 @@
 #include <xaninApps/file_system/list_files.c>
 #include <xaninApps/file_system/move.c>
 #include <xaninApps/tetris/tetris.c>
+#include <xaninApps/start_screen.c>
 
 
 #ifdef SHUTDOWN_APP

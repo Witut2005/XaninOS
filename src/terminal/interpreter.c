@@ -50,6 +50,9 @@ void scan(void)
     XANIN_ADD_APP_ENTRY0("petris", ptetris)
     XANIN_ADD_APP_ENTRY0("ptetris", ptetris)
 
+    XANIN_ADD_APP_ENTRY0("start_screen", start_screen)
+    XANIN_ADD_APP_ENTRY0("screensaver", start_screen)
+
     #ifdef HELP_APP
     XANIN_ADD_APP_ENTRY1("help", help)
     XANIN_ADD_APP_ENTRY1("h", help)
@@ -76,7 +79,7 @@ void scan(void)
     #endif
 
     #ifdef HEXEDITOR_APP
-    XANIN_ADD_APP_ENTRY1("hexeditor", hexeditor)
+    XANIN_ADD_APP_ENTRY2("hexeditor", hexeditor)
     #endif
 
     #ifdef RUN16_APP

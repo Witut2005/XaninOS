@@ -19,6 +19,8 @@ enum special_keys
   ARROW_DOWN_RELEASE = 0xD0,
   LSHIFT = 0x2A,
   LSHIFT_RELEASE = 0xAA,
+  RSHIFT = 0x36,
+  RSHIFT_RELEASE = 0xB6,
   F3_KEY = 0x3D,
   F4_KEY = 0x3E,
   F4_KEY_RELEASE = 0xBE, 
