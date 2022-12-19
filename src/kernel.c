@@ -42,6 +42,16 @@ extern bool com_status(void);
 |niech xanin rośnie i rośnie            |
 |ja, rok 2021, 31 grudzień, 23:52:35    |
 /--------------------------------------*/
+
+/*----------------------------------------------/
+|No i pierwszy rok na mną. Kto by się           | 
+|spodziewał! Babciu byłabyś ze mnie dumna       |
+|gdybyś mogła to wszystko zobaczyć              |
+|To wszystko w końcu przez Ciebie hah <3        |
+|Nigdy się nie poddam, tak jak Ci obiecywałem!  |
+|Ja, rok 2022, 19 grudzień, 21:17:30            |
+/----------------------------------------------*/
+
 float pit_time = 0x0;
 
 void kernel_loop(void)
