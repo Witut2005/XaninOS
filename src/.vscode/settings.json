@@ -3,6 +3,8 @@
         "stdiox.h": "c",
         "pit.h": "c",
         "xin.h": "c",
-        "elf_loader.h": "c"
-    }
+        "elf_loader.h": "c",
+        "cstdio": "c"
+    },
+    "C_Cpp.errorSquiggles": "disabled"
 }

@@ -186,12 +186,16 @@ void hexeditor_input(xchar x)
 }
 
 
-int hexeditor(char* file_name)
+int hexeditor(char* file_name, char* options)
 {
 
 
 
     xin_entry* file = fopen(file_name, "rw");
+    uint32_t hexeditor_offset = 0;
+
+    if(strcmp(options, "-offset"))
+        hexeditor_offset = strtoi(argv[3], 16);
 
     if(file == nullptr)
     {
@@ -205,6 +209,7 @@ int hexeditor(char* file_name)
 
     screen_clear();
 
+    fseek(file, hexeditor_offset);
     fread(file, data_pointer, VGA_SCREEN_RESOLUTION);
 
     for(int i = 0; i < 28; i++)
@@ -216,7 +221,6 @@ int hexeditor(char* file_name)
         xprintf("\n");
     }
 
-    fseek(file, 0);
     Screen.x = 0;
     Screen.y = 0;
 
@@ -224,7 +228,7 @@ int hexeditor(char* file_name)
 
     screen_clear();
 
-    fseek(file, 0);
+    fseek(file, hexeditor_offset);
     fwrite(file, data_pointer, 512);
     fclose(&file);
     free(data_pointer);

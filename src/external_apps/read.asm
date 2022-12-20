@@ -16,12 +16,20 @@ mov ebx, filename
 mov ecx, 3
 int 0x80
 
+cmp eax, 0xFFFFFFFF
+je end
+
 mov [tmp], eax
 
-mov ebx, eax
+mov eax, 19
+mov ebx, [tmp]
+mov ecx, 1
+int 0x80
+
+mov ebx, [tmp] 
 mov eax, 3
 mov ecx, buffer
-mov edx, 9
+mov edx, 8
 int 0x80
 
 mov eax, 6
@@ -36,6 +44,8 @@ int 0x80
 
 mov eax, 100
 int 0x80
+
+end:
 
 mov eax, 1
 int 0x80

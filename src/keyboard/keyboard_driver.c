@@ -57,6 +57,8 @@ void keyboard_driver(uint8_t scanCode)
     {
         case LSHIFT                       : {KeyInfo.is_shift = true; KeyInfo.character = '\0'; break;}
         case LSHIFT_RELEASE               : {KeyInfo.is_shift = false; break;}
+        case RSHIFT                       : {KeyInfo.is_shift = true; KeyInfo.character = '\0'; break;}
+        case RSHIFT_RELEASE               : {KeyInfo.is_shift = false; break;}
         case BSPC                         : {KeyInfo.is_bspc  = true;  break;}
         case BSPC_RELEASE                 : {KeyInfo.is_bspc  = false; break;}
 
