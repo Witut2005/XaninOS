@@ -168,6 +168,9 @@ build:
 	@echo [C] stdlibx.c
 	@$(C) $(C_OPTIONS) ./libc/stdlibx.c -o ./libc/stdlibx.o
 
+	@echo [C] system.c
+	@$(C) $(C_OPTIONS) ./libc/system.c -o ./libc/system.o
+
 	@echo [C] string.c
 	@$(C) $(C_OPTIONS) ./libc/string.c -o ./libc/string.o
 
@@ -216,6 +219,7 @@ build:
 	./libc/stdlibx.o \
 	./libc/string.o \
 	./libc/syslog.o \
+	./libc/system.o \
 	./libc/time.o \
 	./libc/xanin_state.o \
 	./libc/instruction_pointer.o \

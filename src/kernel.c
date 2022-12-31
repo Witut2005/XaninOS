@@ -31,6 +31,7 @@
 // #include <network_protocols/internet_protocol/ipv4/ip.h>
 #include <libc/instruction_pointer.h>
 #include <libc/xanin_state.h>
+#include <libc/system.h>
 
 extern void v86_mode_enter(void);
 extern void mouse_enable(void);
@@ -443,13 +444,10 @@ void _start(void)
 
     xprintf("%d\n", ((uint8_t*)&base_ip)[0]);
 
+    char* bufsys = (char*)calloc(512);
 
-    // while(1)
-    // beep(1000);
-    // mouse_install();
-    // memcpy(program_name, "note", 10);
-    // memcpy(program_parameters, "/syslog", strlen("/syslog"));
-    // scan();
+    system_variable_get(&bufsys, "HOME");
+    xprintf("bufsys: %s\n", bufsys);
 
     while (KeyInfo.scan_code != ENTER);
 
