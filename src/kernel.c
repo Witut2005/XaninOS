@@ -52,6 +52,16 @@ extern bool com_status(void);
 |Ja, rok 2022, 19 grudzień, 21:17:30            |
 /----------------------------------------------*/
 
+/*--------------------------------------/
+|Wesolego nowego roku :))               |
+|Oby był tak samo płodny jak poprzedni  |
+|Niech Xanin rośnie i rośnie            |
+|Nigdy się nie poddawaj mordo           |
+|Przecież przysięgnąłeś Babci, że       |
+|Zobaczy to co stworzysz!!!             |
+|Ja, rok 2022, 31 grudzień, 17:00:45    |
+/--------------------------------------*/
+
 float pit_time = 0x0;
 
 void kernel_loop(void)
