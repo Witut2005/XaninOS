@@ -176,8 +176,14 @@ add esi, 0x20
 loop .ph_loop
 
 mov edi, ebp
+
+mov ax, 0x30
+ltr ax
+
 mov dword eax, [kernel + 0x18]
 
+
+; jmp $
 jmp eax
 
 jmp $ 
@@ -238,6 +244,15 @@ _GDT:
     db 10010010b
     db 00001111b
     db 0x0
+
+    ;0x30     
+    ;XaninOS Task State Segment
+    dd 0x0000ffff 
+    db 0x0
+    db 10001001b
+    db 00001111b
+    db 0x0
+
 
 
 

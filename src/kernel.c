@@ -1,4 +1,5 @@
 
+#include <libc/data_structures.h>
 #include <limits.h>
 #include <stdint.h>
 #include <IDT/idt.c>
@@ -448,6 +449,21 @@ void _start(void)
 
     system_variable_get(&bufsys, "HOME");
     xprintf("bufsys: %s\n", bufsys);
+
+
+    // stack_t* MyStack = stack_create();
+    // for(int i = 0; i < 10; i++)
+    //     stack_push(MyStack, i);
+    // screen_clear();
+    // xprintf("poped value: \n");
+    // for(int i = 0; stack_is_empty(MyStack) != true; i++)
+    // {
+    //     xprintf("%d\n", stack_pop(MyStack));
+    // }
+    // time_offset_t* omg = start();
+    // stop(omg);
+    // xprintf("time offset: %d\n", *omg);
+
 
     while (KeyInfo.scan_code != ENTER);
 

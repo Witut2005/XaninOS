@@ -53,11 +53,10 @@ char getscan(void)
     return tmp;
 }
 
-char* keyboard_buffer_refresh(uint16_t* screen_buffer)
+void keyboard_buffer_refresh(uint16_t* screen_buffer)
 {
     for(int i = 0; i < 50; i++)
         keyboard_command[i] = *(char*)(screen_buffer + i);
-
 }
 
 CmosTime* time_get(CmosTime* Time)

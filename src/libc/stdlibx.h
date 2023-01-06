@@ -5,6 +5,7 @@
 #include <stddef.h>
 #include <stdbool.h>
 
+#define XANIN_PMMNGR_BLOCK_SIZE 4096
 struct CmosTime
 {
     uint8_t seconds; 
@@ -66,7 +67,7 @@ extern bool key_pressed(void);
 extern void wait_key(uint8_t key);
 extern char getchar(void);
 extern char getscan(void);
-extern char* keyboard_buffer_refresh(uint16_t* screen_buffer);
+extern void keyboard_buffer_refresh(uint16_t* screen_buffer);
 extern CmosTime* time_get(CmosTime* Time);
 extern uint8_t floppy_type_get_cmos(void);
 extern void get_cpu_speed(void);

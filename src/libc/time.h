@@ -17,10 +17,16 @@ struct time_t
     
 };
 
+
+#ifndef __cplusplus
 typedef struct time_t time_t;
+typedef uint32_t time_offset_t;
+#endif
 
 extern uint32_t cpu_mhz;
 extern uint32_t cpu_khz;
 
 void sleep(float seconds);
 void msleep(float miliseconds);
+time_offset_t* start(void);
+void stop(time_offset_t* time);

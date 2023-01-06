@@ -47,7 +47,7 @@ char* xin_get_current_path(char* file_name);
 __STATUS sys_xin_remove_entry(char* entry_name);
 char* xin_get_current_path(char* file_name);
 
-xin_entry* xin_init_fs(void);
+void xin_init_fs(void);
 xin_entry* xin_find_free_entry(void);
 
 int xin_create_file(char* entry_name);

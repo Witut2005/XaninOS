@@ -9,7 +9,7 @@ XANIN_BINARIES = /home/witut/Desktop/xaninOS/bin
 # C_OPTIONS  = -O0 -masm=intel -Wno-discarded-qualifiers -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-int-conversion -Wno-unused-function -Wno-div-by-zero -Wno-address-of-packed-member -I $(XANIN_PATH) -c
 C_COMPILE  = -O0 -masm=intel -Wno-discarded-qualifiers -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-int-conversion -Wno-unused-function -Wno-div-by-zero -Wno-address-of-packed-member -I $(XANIN_PATH) 
 CC_OPTIONS =  -O0 -fno-exceptions -lstdc++ -masm=intel -std=c++17 -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Wno-write-strings -Wno-return-type -fno-rtti -fconcepts-ts -I $(XANIN_PATH) -c
-C_OPTIONS  =  -O0 -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function  -I $(XANIN_PATH) -c
+C_OPTIONS  =  -O0 -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Werror=return-type -I $(XANIN_PATH) -c
 
 ASM	= nasm
 APPS = ./xaninApps
@@ -168,6 +168,9 @@ build:
 	@echo [C] stdlibx.c
 	@$(C) $(C_OPTIONS) ./libc/stdlibx.c -o ./libc/stdlibx.o
 
+	@echo [C] data_structures.c
+	@$(C) $(C_OPTIONS) ./libc/data_structures.c -o ./libc/data_structures.o
+
 	@echo [C] system.c
 	@$(C) $(C_OPTIONS) ./libc/system.c -o ./libc/system.o
 
@@ -221,6 +224,7 @@ build:
 	./libc/syslog.o \
 	./libc/system.o \
 	./libc/time.o \
+	./libc/data_structures.o \
 	./libc/xanin_state.o \
 	./libc/instruction_pointer.o \
 	./libc/real_mode_fswitch.o \

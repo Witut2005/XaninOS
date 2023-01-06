@@ -898,5 +898,5 @@ uint8_t* vga_get_buffer_segment(void)
         case 2: return (uint8_t*)0xB0000;
         case 3: return (uint8_t*)0xB8000;
     }
-
+	return (uint8_t*)0xB8000;
 }

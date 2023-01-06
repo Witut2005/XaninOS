@@ -32,6 +32,8 @@ char *xin_set_current_directory(char *directory)
 
     for (int i = 0; directory[i] != '\0'; i++)
         xin_current_directory[i] = directory[i];
+
+    return xin_current_directory;
 }
 
 char *xin_get_current_directory(void)
@@ -336,7 +338,7 @@ void xin_file_create_at_address(char *path, uint8_t creation_date, uint8_t creat
 }
 
 
-xin_entry *xin_init_fs(void)
+void xin_init_fs(void)
 {
 
     if(xin_find_entry("/") == nullptr)
@@ -614,6 +616,9 @@ size_t fread(xin_entry *entry, void *buf, size_t count)
     char* end = (char *)(entry->file_info->base_address_memory + count + entry->file_info->position);
     char* begin = (char *)(entry->file_info->base_address_memory + entry->file_info->position);
 
+    if(entry == nullptr)
+        return 0;
+
     uint32_t sectors_to_load = count / SECTOR_SIZE;
 
     if(count % SECTOR_SIZE != 0)
@@ -627,6 +632,7 @@ size_t fread(xin_entry *entry, void *buf, size_t count)
         *(char *)buf = *i;
         entry->file_info->position++;
     }
+    return count;
 }
 
 size_t read(int fd, void *buf, size_t count)
@@ -660,6 +666,9 @@ size_t fwrite(xin_entry *entry, void *buf, size_t count)
 {
 
     // char *end = (char *)(entry->starting_sector * SECTOR_SIZE) + count + entry->file_info->position;
+    if(entry == nullptr)
+        return 0;
+
     char* end = (char *)(entry->file_info->base_address_memory + count + entry->file_info->position);
 
     uint32_t tmp = entry->file_info->position;
@@ -675,7 +684,7 @@ size_t fwrite(xin_entry *entry, void *buf, size_t count)
 
     entry->modification_date = (uint32_t)((SystemTime.day_of_month << 24) | (SystemTime.month << 16) | (SystemTime.century << 8) | (SystemTime.year)); 
     entry->modification_time = (uint16_t)(SystemTime.hour << 8) | (SystemTime.minutes);
-
+    return count;
 }
 
 size_t write(int fd, void* buf, size_t count)

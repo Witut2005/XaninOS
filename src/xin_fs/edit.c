@@ -478,4 +478,6 @@ int edit(char* file_name)
     free(program_buffer);
     exit();
 
+    return XANIN_OK;
+
 }
