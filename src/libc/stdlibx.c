@@ -19,6 +19,7 @@ CmosTime SystemTime;
 #define CMOS_DATA 0x71
 
 char* daysLUT[7] = {"Sun","Mon","Tue","Wed","Thu","Fri","Sat"};
+uint8_t* null_memory_region;
 
 extern void kernel_loop(void);
 

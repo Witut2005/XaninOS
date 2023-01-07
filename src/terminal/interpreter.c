@@ -1,8 +1,10 @@
 #pragma once
 
 #include <terminal/interpreter.h>
+#include <terminal/terminal.h>
 
 int last_command_exit_status;
+extern terminal_t* kernel_terminal;
 
 #define XANIN_ADD_APP_ENTRY0(app_name, exec_name) else if(strcmp(program_name, app_name)) {last_command_exit_status = exec_name();}
 #define XANIN_ADD_APP_ENTRY1(app_name, exec_name) else if(strcmp(program_name, app_name)) {last_command_exit_status = exec_name(program_parameters);}
@@ -33,9 +35,12 @@ void check_external_apps(void)
     free(app);
 }
 
+
 void scan(void)
 {
 
+    terminal_t* app_terminal = terminal_create();
+    terminal_set(kernel_terminal, app_terminal);
     
     if(strcmp(program_name, "\0"))
     {
@@ -262,5 +267,6 @@ void scan(void)
     KeyInfo.character = 0x0;
     KeyInfo.scan_code = 0x0;
 
+    terminal_destroy(app_terminal, kernel_terminal);
 
 }

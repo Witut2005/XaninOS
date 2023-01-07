@@ -4,7 +4,8 @@
         "pit.h": "c",
         "xin.h": "c",
         "elf_loader.h": "c",
-        "cstdio": "c"
+        "cstdio": "c",
+        "stdlibx.h": "c"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }

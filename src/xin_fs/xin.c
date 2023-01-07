@@ -61,8 +61,9 @@ char *xin_get_current_path(char *file_name)
 
 /* DIRECTORY AND FILES */
 xin_entry *xin_find_entry(char *entry_name)
-
 {
+    if(!strlen(entry_name))
+        return nullptr;
 
     for (char *i = (char*)XIN_ENTRY_TABLE; (uint32_t)i < XIN_ENTRY_TABLE + (SECTOR_SIZE * 50); i += 64)
     {
@@ -105,12 +106,10 @@ xin_entry* xin_get_file_pf(char* entry_path) // pf = parent folder/cr
     if(xin_find_entry(parent_folder) != nullptr)
         return xin_find_entry(parent_folder);   
 
-    if(xin_find_entry(xin_get_current_path(parent_folder)) != nullptr)    
-        xin_find_entry(xin_get_current_path(parent_folder)); 
+    // if(xin_find_entry(xin_get_current_path(parent_folder)) != nullptr)    
+    //     return xin_find_entry(xin_get_current_path(parent_folder)); 
 
     return nullptr;
-
-
 
 }
 

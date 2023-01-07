@@ -168,6 +168,9 @@ build:
 	@echo [C] stdlibx.c
 	@$(C) $(C_OPTIONS) ./libc/stdlibx.c -o ./libc/stdlibx.o
 
+	@echo [C] terminal.c
+	@$(C) $(C_OPTIONS) ./terminal/terminal.c -o ./terminal/terminal.o
+
 	@echo [C] data_structures.c
 	@$(C) $(C_OPTIONS) ./libc/data_structures.c -o ./libc/data_structures.o
 
@@ -233,6 +236,7 @@ build:
 	./devices/VGA/vga.o \
 	./libc/registers_values_get.o \
 	./terminal/vty.o \
+	./terminal/terminal.o \
 	./keyboard/key_map.o \
 	./xaninGraphics/xaninGraphics.o \
 	./handlers/keyboard.o \

@@ -1,4 +1,5 @@
 
+#include <terminal/terminal.h>
 #include <libc/data_structures.h>
 #include <limits.h>
 #include <stdint.h>
@@ -65,6 +66,7 @@ extern bool com_status(void);
 /--------------------------------------*/
 
 float pit_time = 0x0;
+terminal_t* kernel_terminal;
 
 void kernel_loop(void)
 {
@@ -81,7 +83,7 @@ void kernel_loop(void)
         xprintf("%z    _/      _/                      _/              _/_/      _/_/_/       \n", set_output_color(logo_back_color, logo_front_color));
         xprintf("%z     _/  _/      _/_/_/  _/_/_/        _/_/_/    _/    _/  _/              \n", set_output_color(logo_back_color, logo_front_color));
         xprintf("%z      _/      _/    _/  _/    _/  _/  _/    _/  _/    _/    _/_/           \n", set_output_color(logo_back_color, logo_front_color));
-        xprintf("%z   _/  _/    _/    _/  _/    _/  _/  _/    _/  _/    _/        _/%z  version 22.10v\n",set_output_color(logo_back_color, logo_front_color), set_output_color(black,white) );
+        xprintf("%z   _/  _/    _/    _/  _/    _/  _/  _/    _/  _/    _/        _/%z  version 1.0v\n",set_output_color(logo_back_color, logo_front_color), set_output_color(black,white) );
         xprintf("%z_/      _/    _/_/_/  _/    _/  _/  _/    _/    _/_/    _/_/_/     %z%s: %i:%i:%i\n\n\n", set_output_color(logo_back_color, logo_front_color), set_output_color(black,white), daysLUT[SystemTime.weekday], SystemTime.hour, SystemTime.minutes, SystemTime.seconds);                                       
 
         Screen.x            = 0;
@@ -166,6 +168,10 @@ void _start(void)
 
     // set_pit();
     keyboard_command = command_buffer;
+
+    null_memory_region = (uint8_t*)calloc(VGA_SCREEN_RESOLUTION);
+    kernel_terminal = terminal_create();
+    terminal_set((terminal_t*)null_memory_region, kernel_terminal);
 
     rsdp = get_acpi_rsdp_address_base();
 
@@ -412,6 +418,7 @@ void _start(void)
     create_file_kernel("/.system_space79");
     create_file_kernel("/.system_space80");
 
+
     FileDescriptorTable = (XinFileDescriptor*)calloc(sizeof(XinFileDescriptor) * 512);
 
     memset((uint8_t *)&ArpTable[0], 0xFF, sizeof(ArpTable[0]));
@@ -450,6 +457,7 @@ void _start(void)
     system_variable_get(&bufsys, "HOME");
     xprintf("bufsys: %s\n", bufsys);
 
+    
 
     // stack_t* MyStack = stack_create();
     // for(int i = 0; i < 10; i++)

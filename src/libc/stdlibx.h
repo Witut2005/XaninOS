@@ -32,7 +32,7 @@ extern char* daysLUT[7];
 extern char command_buffer[80];
 extern char* keyboard_command;
 
-
+extern uint8_t* null_memory_region;
 struct 
 {
     uint32_t eax;

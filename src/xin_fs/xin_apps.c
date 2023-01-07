@@ -208,6 +208,13 @@ __STATUS __sys_xin_list_files(char** argv)
     int printed_text = 0;
     char* current_path = xin_get_current_path(path);
 
+    if(xin_find_entry(path) == nullptr && strlen(path) > 0)
+    {
+        xprintf("%zNO SUCH DIRECTORY\n", stderr);
+        while(KeyInfo.scan_code != ENTER);
+        return XANIN_OK;
+    }
+
     while(i->entry_path[0] != '\0')
     {
 
@@ -219,24 +226,15 @@ __STATUS __sys_xin_list_files(char** argv)
 
         if(!strlen(path))
         {
-
-            /*
-            printed_text = printed_text + strlen(i->entry_path);
-            if(printed_text >= VGA_WIDTH)
+            if(xin_get_file_pf(i->entry_path) != nullptr)
             {
-                printed_text = 0;
-                xprintf("\n");
+                if(strcmp(xin_get_file_pf(i->entry_path)->entry_path, xin_current_directory))
+                {
+                    xprintf("%z%s", set_output_color(black, i->entry_type + 0x2), i);
+                    xprintf("   ");
+                }
             }
-            */
-
-            if(strcmp(xin_get_file_pf(i->entry_path)->entry_path, xin_current_directory))
-            {
-                xprintf("%z%s", set_output_color(black, i->entry_type + 0x2), i);
-                xprintf("  ");
-            }
-            //printed_text = printed_text + ARRAY_LENGTH("  ");
         }
-
 
         else 
         {

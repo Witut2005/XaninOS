@@ -14,7 +14,8 @@ Screen.y = y_new
 #define stderr ( red << 4 | white)
 #define ARRAY_LENGTH(x) sizeof(x) / sizeof(x[0])
 
-#define VRAM VGA_TEXT_MEMORY
+#define VRAM 0xb8000
+#define VGA_TEXT_MEMORY 0xb8000
 #define VGA_SCREEN_RESOLUTION 4480
 
 #define mkstr(str) #str
