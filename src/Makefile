@@ -168,6 +168,9 @@ build:
 	@echo [C] stdlibx.c
 	@$(C) $(C_OPTIONS) ./libc/stdlibx.c -o ./libc/stdlibx.o
 
+	@echo [C] tui.c
+	@$(C) $(C_OPTIONS) ./tui/tui.c -o ./tui/tui.o
+
 	@echo [C] terminal.c
 	@$(C) $(C_OPTIONS) ./terminal/terminal.c -o ./terminal/terminal.o
 
@@ -231,6 +234,7 @@ build:
 	./libc/xanin_state.o \
 	./libc/instruction_pointer.o \
 	./libc/real_mode_fswitch.o \
+	./tui/tui.o \
 	./xgl/xgl.o \
 	./libcpp/endian.o \
 	./devices/VGA/vga.o \

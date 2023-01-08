@@ -171,6 +171,7 @@ extern int tetris(void);
 #include <xaninApps/nic_print.c>
 #include <xaninApps/sll_test.c>
 #include <xaninApps/zsk.c>
+#include <xaninApps/tui_test.c>
 //extern void xagame_test(void);
 //extern void assembler(char* file_name);
 
