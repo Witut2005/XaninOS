@@ -6,15 +6,18 @@
 #include <libc/hal.h>
 #include <devices/HARD_DISK/disk.h>
 #include <devices/ACPI/ACPI.h>
+#include <libc/stdiox.h>
+#include <terminal/terminal.h>
 
-
+extern terminal_t* kernel_terminal;
 
 int reboot(void)
 {
 
 uint16_t idt_16[3] = {0x0, 0x0, 0x0};
 
-
+    free(kernel_terminal);
+    screen_clear();
 
     for(int i = 0; i < 5; i++)
         disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x12 + i, 1, (uint16_t*)(0x800 + (i * SECTOR_SIZE)));

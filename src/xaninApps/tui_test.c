@@ -1,27 +1,50 @@
 
 #include <tui/tui.h>
 #include <libc/colors.h>
+#include <xin_fs/xin.h>
+
+char* app_current_folder;
 
 void hfs(char* omg)
 {
     screen_clear();
-    xprintf("selected option: %s\n", omg);
+    XinChildrenEntries* hoho = xin_get_children_entries("/config/");
+    strcpy(app_current_folder, omg);
+    int status = __sys_xin_folder_change(omg);
+
 }
 
 int my_tui_app(void)
 {
-    table_t* omg = table_create(5, 5, 5, 5, black, white);
-    table_insert(omg, 0, "pi", black, white);
 
-    table_t* fro = table_create(20, 5, 5, 15, black, white);
-    table_insert(fro , 0, "ok", black, white);
-    char* data = (char*)calloc(20);
-    xprintf("data: %s", table_get_row_data(fro, 4, data));
+    app_current_folder = (char*)calloc(XANIN_PMMNGR_BLOCK_SIZE);
+    strcpy(app_current_folder, "/");
 
-    table_add_handler(fro, hfs);
+    while(KeyInfo.scan_code != F4_KEY) 
+    {
+        XinChildrenEntries* hoho = xin_get_children_entries_type(app_current_folder, XIN_DIRECTORY);
+        
+        table_t* fro = table_create(0,0, hoho->how_many, 40, black, white);
 
-    table_row_select(fro);
+        if(fro == nullptr)
+        {
+            screen_clear();
+            xprintf("No folders");
+            while(KeyInfo.scan_code != F4_KEY);
+            break;
+        }
 
-    while(KeyInfo.scan_code != ENTER);
+        else
+        {
+            for(int i = 0; i < hoho->how_many; i++)
+                table_insert(fro , i, hoho->children[i]->entry_path, black, white);
+
+            char* data = (char*)calloc(MAX_PATH);
+
+            table_add_handler(fro, hfs);
+            table_row_select(fro);
+        }
+    }
+
     
 }

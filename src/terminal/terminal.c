@@ -15,6 +15,8 @@ void terminal_set(terminal_t* previous, terminal_t* terminal)
         previous->y = Screen.y;
     }
 
+    screen_clear();
+
     for(int i = 0; i < VGA_SCREEN_RESOLUTION; i++)
         *(uint8_t*)(VGA_TEXT_MEMORY+i) = terminal->buffer[i];
 

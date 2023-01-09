@@ -172,6 +172,7 @@ void _start(void)
     null_memory_region = (uint8_t*)calloc(VGA_SCREEN_RESOLUTION);
     kernel_terminal = terminal_create();
     terminal_set((terminal_t*)null_memory_region, kernel_terminal);
+    screen_clear();
 
     rsdp = get_acpi_rsdp_address_base();
 

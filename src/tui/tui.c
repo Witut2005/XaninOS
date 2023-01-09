@@ -15,6 +15,9 @@ void screen_cell_set(uint8_t x, uint8_t y, char character, uint8_t background_co
 
 table_t* table_create(uint16_t x, uint16_t y, uint8_t number_of_rows, uint8_t row_size, uint8_t background_color, uint8_t foreground_color)
 {
+    if((!number_of_rows) || (!row_size))
+        return (table_t*)nullptr;
+
     table_t* tmp = (table_t*)calloc(sizeof(table_t));
 
     tmp->x = x;
@@ -91,7 +94,7 @@ void table_row_select(table_t* Table)
 
         if(UserInput.scan_code == ARROW_UP)
         {
-            if(cursor_y == Table->y+1)
+            if(current_row - 1 < 0)
                 continue;
 
             table_get_row_data(Table, current_row, buffer);
@@ -110,7 +113,7 @@ void table_row_select(table_t* Table)
 
         else if(UserInput.scan_code == ARROW_DOWN)
         {
-            if(cursor_y >= Table->y + 3 + Table->number_of_rows)
+            if(current_row + 1 == Table->number_of_rows)
                 continue;
             table_get_row_data(Table, current_row, buffer);
 

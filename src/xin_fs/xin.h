@@ -18,8 +18,15 @@ struct XinFileDescriptor
     xin_entry* entry;
 };
 
+struct XinChildrenEntries
+{
+    xin_entry** children;
+    uint32_t how_many;
+};
+
 #ifndef __cplusplus
 typedef struct XinFileDescriptor XinFileDescriptor;
+typedef struct XinChildrenEntries XinChildrenEntries;
 #endif
 
 
@@ -84,6 +91,8 @@ __STATUS __sys_xin_copy(char* file_name, char* new_file_name);
 __STATUS __sys_xin_link_create(char* file_name, char* link_name);
 __STATUS __sys_xin_list_files(char** argv);
 __STATUS __sys_xin_link_remove(char* linkname);
+XinChildrenEntries* xin_get_children_entries(char* folder);
+XinChildrenEntries* xin_get_children_entries_type(char* folder, uint8_t type);
 
 #ifdef __cplusplus
 }

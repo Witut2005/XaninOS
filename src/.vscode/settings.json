@@ -5,7 +5,8 @@
         "xin.h": "c",
         "elf_loader.h": "c",
         "cstdio": "c",
-        "stdlibx.h": "c"
+        "stdlibx.h": "c",
+        "tui.h": "c"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }

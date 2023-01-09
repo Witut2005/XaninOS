@@ -1025,8 +1025,64 @@ __STATUS remove_directory(char* folder_name)
     memset(folder->entry_path, 0, 40);
     return XANIN_OK;
 
+}
 
+XinChildrenEntries* xin_get_children_entries(char* folder)
+{
 
+    if(xin_find_entry(folder) == nullptr || strlen(folder) == 0)
+        return (XinChildrenEntries*)nullptr;
+
+    XinChildrenEntries* Children = (XinChildrenEntries*)calloc(sizeof(XinChildrenEntries));
+    Children->children = (xin_entry**)calloc(sizeof(xin_entry*));
+    xin_entry* i = (xin_entry*)XIN_ENTRY_TABLE; 
+
+    uint32_t finded_entries = 0;
+    while(i->entry_path[0] != '\0')
+    {
+        
+        if(strcmp(xin_get_file_pf(i->entry_path)->entry_path, folder))
+        {
+            if(!strcmp(i->entry_path, folder))
+            {
+                Children->children[finded_entries] = i;
+                finded_entries++;
+                Children->children = (xin_entry**)realloc(Children->children, sizeof(xin_entry*) * (finded_entries));
+            }
+        }
+        i++;
+    }
+    Children->how_many = finded_entries;
+    return Children;
 
 }
 
+XinChildrenEntries* xin_get_children_entries_type(char* folder, uint8_t type)
+{
+
+    if(xin_find_entry(folder) == nullptr || strlen(folder) == 0)
+        return (XinChildrenEntries*)nullptr;
+
+    XinChildrenEntries* Children = (XinChildrenEntries*)calloc(sizeof(XinChildrenEntries));
+    Children->children = (xin_entry**)calloc(sizeof(xin_entry*));
+    xin_entry* i = (xin_entry*)XIN_ENTRY_TABLE; 
+
+    uint32_t finded_entries = 0;
+    while(i->entry_path[0] != '\0')
+    {
+        
+        if(strcmp(xin_get_file_pf(i->entry_path)->entry_path, folder))
+        {
+            if((!strcmp(i->entry_path, folder)) && (i->entry_type == type))
+            {
+                Children->children[finded_entries] = i;
+                finded_entries++;
+                Children->children = (xin_entry**)realloc(Children->children, sizeof(xin_entry*) * (finded_entries));
+            }
+        }
+        i++;
+    }
+    Children->how_many = finded_entries;
+    return Children;
+
+}
