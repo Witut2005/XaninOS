@@ -260,21 +260,11 @@ __STATUS __sys_xin_list_files(char** argv)
         
             else
             {
-                // printed_text += strlen(i->entry_path) + 2;
-
-                // if(printed_text >= 80)
-                // {
-                //     printed_text = 0;
-                //     xprintf("\n");
-                //     printed_text += strlen(i->entry_path);
-                // }
-
                 if(strcmp(xin_get_file_pf(i->entry_path)->entry_path, xin_get_current_path(path)))
                 {
                     xprintf("%z%s", set_output_color(black, i->entry_type + 0x2), i);
                     xprintf("  ");
                 }
-                // printed_text = printed_text + strlen("  ");
 
             }
 
@@ -283,7 +273,6 @@ __STATUS __sys_xin_list_files(char** argv)
         i++;
     }
 
-    while(KeyInfo.scan_code != ENTER);
     return XANIN_OK;
 
 }
