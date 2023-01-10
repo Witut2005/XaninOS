@@ -1057,6 +1057,38 @@ XinChildrenEntries* xin_get_children_entries(char* folder)
 
 }
 
+char* xin_get_entry_name(char* path)
+{
+    char* tmp = (char*)calloc(MAX_PATH);
+
+    if(path[0] == '/' && strlen(path) == 1)
+    {
+        free(tmp);
+        return "/";
+    }
+
+    if(!strlen(path))
+    {
+        free(tmp);
+        return nullptr;
+    }
+
+    int index = strlen(path)-1;
+
+    if(path[strlen(path)-1] == '/')
+        index--;
+    
+    for(; path[index-1] != '/'; index--);
+
+    for(int i = 0; i < MAX_PATH; i++)
+        tmp[i] = path[index+i];
+
+    if(path[strlen(path)-1] == '/')
+        tmp[strlen(tmp)] = '/';
+
+    return tmp;
+}
+
 XinChildrenEntries* xin_get_children_entries_type(char* folder, uint8_t type)
 {
 
@@ -1084,5 +1116,4 @@ XinChildrenEntries* xin_get_children_entries_type(char* folder, uint8_t type)
     }
     Children->how_many = finded_entries;
     return Children;
-
 }

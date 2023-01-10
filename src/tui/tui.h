@@ -56,6 +56,7 @@ void table_insert(table_t* Table, uint8_t row_id, char* data, uint8_t background
 void table_row_select(table_t* Table);
 char* table_get_row_data(table_t* Table, uint8_t row_id, char* buffer);
 void table_add_handler(table_t* Table, void(*handler)(char*));
+void table_destroy(table_t* Table);
 
 #ifdef __cplusplus
 }

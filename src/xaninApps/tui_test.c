@@ -16,7 +16,12 @@ void hfs(char* omg)
 
 int my_tui_app(void)
 {
+    
+    char* piwko = xin_get_entry_name("/config/nic.conf");
+    xprintf("%s\n", piwko);
 
+    while(inputg().scan_code != ENTER);
+    
     app_current_folder = (char*)calloc(XANIN_PMMNGR_BLOCK_SIZE);
     strcpy(app_current_folder, "/");
 
@@ -24,7 +29,7 @@ int my_tui_app(void)
     {
         XinChildrenEntries* hoho = xin_get_children_entries_type(app_current_folder, XIN_DIRECTORY);
         
-        table_t* fro = table_create(0,0, hoho->how_many, 40, black, white);
+        table_t* fro = table_create(0,0, hoho->how_many, 20, black, white);
 
         if(fro == nullptr)
         {
@@ -37,7 +42,7 @@ int my_tui_app(void)
         else
         {
             for(int i = 0; i < hoho->how_many; i++)
-                table_insert(fro , i, hoho->children[i]->entry_path, black, white);
+                table_insert(fro , i, hoho->children[i]->entry_path, black, hoho->children[i]->entry_type);
 
             char* data = (char*)calloc(MAX_PATH);
 
@@ -46,5 +51,4 @@ int my_tui_app(void)
         }
     }
 
-    
 }

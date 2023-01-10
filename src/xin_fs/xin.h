@@ -93,6 +93,7 @@ __STATUS __sys_xin_list_files(char** argv);
 __STATUS __sys_xin_link_remove(char* linkname);
 XinChildrenEntries* xin_get_children_entries(char* folder);
 XinChildrenEntries* xin_get_children_entries_type(char* folder, uint8_t type);
+char* xin_get_entry_name(char* path);
 
 #ifdef __cplusplus
 }
