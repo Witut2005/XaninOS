@@ -144,6 +144,10 @@ xin_entry *xin_find_free_entry(void)
 xin_entry *xin_folder_change(char *new_directory)
 {
 
+    char* tmp = (char*)calloc(MAX_PATH);
+    strcpy(tmp, new_directory);
+    new_directory = tmp;
+
     if(strcmp(new_directory, ".."))
     {
         if(strcmp(xin_current_directory, "/"))
@@ -176,13 +180,21 @@ xin_entry *xin_folder_change(char *new_directory)
     {
         // xprintf("%zNO SUCH DIRECTORY\n", set_output_color(red, white));
         // while (KeyInfo.scan_code != ENTER);
+        free(new_directory);
         return nullptr;
     }
 
-    if (new_directory[strlen(new_directory) - 1] != '/')
+    else if(xin_new_directory->entry_type != XIN_DIRECTORY)
+    {
+        free(new_directory);
+        return nullptr;
+    }
+
+    else if (new_directory[strlen(new_directory) - 1] != '/')
     {
         // xprintf("%zMISSING / ENDING CHARACTER IN DIRECTORY NAME\n", set_output_color(red, white));
         // while (KeyInfo.scan_code != ENTER);
+        free(new_directory);
         return nullptr;
     }
 
@@ -193,6 +205,7 @@ xin_entry *xin_folder_change(char *new_directory)
 
     // xprintf("your file: %s", xin_current_directory);
 
+    free(new_directory);
     return xin_new_directory;
 }
 
@@ -1027,36 +1040,6 @@ __STATUS remove_directory(char* folder_name)
 
 }
 
-XinChildrenEntries* xin_get_children_entries(char* folder)
-{
-
-    if(xin_find_entry(folder) == nullptr || strlen(folder) == 0)
-        return (XinChildrenEntries*)nullptr;
-
-    XinChildrenEntries* Children = (XinChildrenEntries*)calloc(sizeof(XinChildrenEntries));
-    Children->children = (xin_entry**)calloc(sizeof(xin_entry*));
-    xin_entry* i = (xin_entry*)XIN_ENTRY_TABLE; 
-
-    uint32_t finded_entries = 0;
-    while(i->entry_path[0] != '\0')
-    {
-        
-        if(strcmp(xin_get_file_pf(i->entry_path)->entry_path, folder))
-        {
-            if(!strcmp(i->entry_path, folder))
-            {
-                Children->children[finded_entries] = i;
-                finded_entries++;
-                Children->children = (xin_entry**)realloc(Children->children, sizeof(xin_entry*) * (finded_entries));
-            }
-        }
-        i++;
-    }
-    Children->how_many = finded_entries;
-    return Children;
-
-}
-
 char* xin_get_entry_name(char* path)
 {
     char* tmp = (char*)calloc(MAX_PATH);
@@ -1083,10 +1066,43 @@ char* xin_get_entry_name(char* path)
     for(int i = 0; i < MAX_PATH; i++)
         tmp[i] = path[index+i];
 
-    if(path[strlen(path)-1] == '/')
-        tmp[strlen(tmp)] = '/';
+    // if(path[strlen(path)-1] == '/')
+        // tmp[strlen(tmp)] = '/';
 
     return tmp;
+}
+
+XinChildrenEntries* xin_get_children_entries(char* folder, bool show_hidden)
+{
+
+    if(xin_find_entry(folder) == nullptr || strlen(folder) == 0)
+        return (XinChildrenEntries*)nullptr;
+
+    XinChildrenEntries* Children = (XinChildrenEntries*)calloc(sizeof(XinChildrenEntries));
+    Children->children = (xin_entry**)calloc(sizeof(xin_entry*));
+    xin_entry* i = (xin_entry*)XIN_ENTRY_TABLE; 
+
+    uint32_t finded_entries = 0;
+    while(i->entry_path[0] != '\0')
+    {
+        
+        if(strcmp(xin_get_file_pf(i->entry_path)->entry_path, folder))
+        {
+            if(!strcmp(i->entry_path, folder))
+            {
+                if(xin_get_entry_name(i->entry_path)[0] != '.' || show_hidden)
+                {
+                    Children->children[finded_entries] = i;
+                    finded_entries++;
+                    Children->children = (xin_entry**)realloc(Children->children, sizeof(xin_entry*) * (finded_entries));
+                }
+            }
+        }
+        i++;
+    }
+    Children->how_many = finded_entries;
+    return Children;
+
 }
 
 XinChildrenEntries* xin_get_children_entries_type(char* folder, uint8_t type)

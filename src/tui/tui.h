@@ -8,9 +8,15 @@ struct table_t
     uint16_t x;
     uint16_t y;
     uint16_t number_of_rows;
+
+    uint16_t sites;
+
     uint16_t row_size;
     uint8_t background_color;
     uint8_t foreground_color;
+    
+    char*** row_data;
+
     void (*handler)(char*);
 };
 
@@ -51,10 +57,10 @@ static inline char screen_cell_get_character(uint8_t x, uint8_t y)
 }
 
 void screen_cell_set(uint8_t x, uint8_t y, char character, uint8_t background_color, uint8_t foreground_color);
-table_t* table_create(uint16_t x, uint16_t y, uint8_t number_of_rows, uint8_t row_size, uint8_t background_color, uint8_t foreground_color);
-void table_insert(table_t* Table, uint8_t row_id, char* data, uint8_t background_color, uint8_t foreground_color);
+table_t* table_create(uint16_t x, uint16_t y, uint8_t number_of_rows, uint8_t row_size, uint8_t background_color, uint8_t foreground_color, uint8_t number_of_sites);
+void table_insert(table_t* Table, uint8_t row_id, char* data, uint8_t background_color, uint8_t foreground_color, uint8_t page_id);
 void table_row_select(table_t* Table);
-char* table_get_row_data(table_t* Table, uint8_t row_id, char* buffer);
+char* table_get_row_data(table_t* Table, uint8_t row_id, uint8_t page_id);
 void table_add_handler(table_t* Table, void(*handler)(char*));
 void table_destroy(table_t* Table);
 

@@ -106,10 +106,10 @@ __STATUS __sys_xin_folder_change(const char* new_folder_name)
 
     if(folder_entry == nullptr)
     {
-        // xprintf("%zCANT CHANGE DIRECTORY (SYSCALL EXIT STATUS = 3)\n", stderr);
-        // while(KeyInfo.scan_code != ENTER);
-        return XIN_ENTRY_NOT_FOUND;
+        return XANIN_ERROR;
     }
+
+
 
     return XANIN_OK;
 }

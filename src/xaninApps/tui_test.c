@@ -5,31 +5,38 @@
 
 char* app_current_folder;
 
+extern int edit(char* file_name);
+
 void hfs(char* omg)
 {
     screen_clear();
-    XinChildrenEntries* hoho = xin_get_children_entries("/config/");
-    strcpy(app_current_folder, omg);
-    int status = __sys_xin_folder_change(omg);
+    xprintf("option: %s\n", omg);
+    while(1);
+    // XinChildrenEntries* hoho = xin_get_children_entries(omg, false);
+    // strcpy(app_current_folder, omg);
+    // int status = __sys_xin_folder_change(omg);
+
+
+    // if(status == XANIN_ERROR)
+    // {
+    //     edit(omg);
+    // }
 
 }
 
 int my_tui_app(void)
 {
     
-    char* piwko = xin_get_entry_name("/config/nic.conf");
-    xprintf("%s\n", piwko);
-
-    while(inputg().scan_code != ENTER);
-    
     app_current_folder = (char*)calloc(XANIN_PMMNGR_BLOCK_SIZE);
     strcpy(app_current_folder, "/");
 
     while(KeyInfo.scan_code != F4_KEY) 
     {
-        XinChildrenEntries* hoho = xin_get_children_entries_type(app_current_folder, XIN_DIRECTORY);
+        XinChildrenEntries* hoho = xin_get_children_entries(app_current_folder, false);
         
-        table_t* fro = table_create(0,0, hoho->how_many, 20, black, white);
+        table_t* fro = table_create(0,0, 10, 40, black, white, 1);
+
+        // while(1);
 
         if(fro == nullptr)
         {
@@ -41,12 +48,22 @@ int my_tui_app(void)
 
         else
         {
-            for(int i = 0; i < hoho->how_many; i++)
-                table_insert(fro , i, hoho->children[i]->entry_path, black, hoho->children[i]->entry_type);
 
-            char* data = (char*)calloc(MAX_PATH);
+            for(int i = 0; i < 5; i++)
+            {
+                for(int j = 0; j < 10; j++)
+                {
+                    if(i * 10 + j < hoho->how_many)
+                        table_insert(fro , j, hoho->children[j + i * 10]->entry_path, black, hoho->children[j + i * 10]->entry_type + 2, i);
+                }
+            }
 
-            table_add_handler(fro, hfs);
+
+
+            // char* data = (char*)calloc(MAX_PATH);
+
+            // table_add_handler(fro, hfs);
+            // while(1);
             table_row_select(fro);
         }
     }

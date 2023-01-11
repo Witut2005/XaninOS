@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <xin_fs/xin_entry.h>
+#include <stdbool.h>
 
 #define XIN_SYSTEM_FOLDER '/'
 #define XIN_BASE_FILE_ADDRESS_TO_LOAD 0x100000
@@ -91,7 +92,7 @@ __STATUS __sys_xin_copy(char* file_name, char* new_file_name);
 __STATUS __sys_xin_link_create(char* file_name, char* link_name);
 __STATUS __sys_xin_list_files(char** argv);
 __STATUS __sys_xin_link_remove(char* linkname);
-XinChildrenEntries* xin_get_children_entries(char* folder);
+XinChildrenEntries* xin_get_children_entries(char* folder, bool show_hidden);
 XinChildrenEntries* xin_get_children_entries_type(char* folder, uint8_t type);
 char* xin_get_entry_name(char* path);
 
