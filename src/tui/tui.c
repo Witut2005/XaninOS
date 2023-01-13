@@ -29,6 +29,14 @@ table_t* table_create(uint16_t x, uint16_t y, uint8_t number_of_rows, uint8_t ro
     tmp->sites = number_of_sites;
 
     tmp->row_data = (char***)calloc(sizeof(char**) * number_of_sites);
+    tmp->row_background_color = (uint8_t**)calloc(sizeof(uint8_t*) * number_of_sites);
+    tmp->row_foreground_color = (uint8_t**)calloc(sizeof(uint8_t*) * number_of_sites);
+
+    for(int i = 0; i < number_of_sites; i++)
+    {
+        tmp->row_background_color[i] = (uint8_t*)calloc(sizeof(uint8_t) * number_of_rows);
+        tmp->row_foreground_color[i] = (uint8_t*)calloc(sizeof(uint8_t) * number_of_rows);
+    }
 
     for(int i = 0; i < number_of_sites; i++)
     {
@@ -67,7 +75,10 @@ void table_insert(table_t* Table, uint8_t row_id, char* data, uint8_t background
             screen_cell_set(Table->x+1+i, Table->y+1+row_id, data[i], background_color, foreground_color);
         Table->row_data[page_id][row_id][i] = data[i];
     }
-    // xprintf("given data: %s\n", Table->row_data);
+
+    Table->row_background_color[page_id][row_id] = background_color;
+    Table->row_foreground_color[page_id][row_id] = foreground_color;
+
 }
 
 char* table_get_row_data(table_t* Table, uint8_t row_id, uint8_t page_id)
@@ -87,7 +98,6 @@ void table_row_select(table_t* Table)
     uint8_t current_row = 0;
     uint8_t current_page = 0;
 
-    ScreenCell SavedCell = {screen_cell_get_foreground_color(Table->x+1, Table->y+1), screen_cell_get_background_color(Table->x+1, Table->y+1), screen_cell_get_character(Table->x+1, Table->y+1)};
     xchar UserInput;
     char* buffer;
 
@@ -102,8 +112,10 @@ void table_row_select(table_t* Table)
 
         if(UserInput.scan_code == ARROW_RIGHT)
         {
-            if(current_page + 1 < Table->sites)
+            if(current_page < Table->sites)
                 current_page++;
+            else
+                continue;
 
             current_row = 0;
             cursor_y = Table->y + 1;
@@ -112,39 +124,48 @@ void table_row_select(table_t* Table)
             for(int i = 0; i < Table->number_of_rows; i++)
             {            
                 for(int j = 0; j < Table->row_size-2; j++)
-                    screen_cell_set(cursor_x+1+j, cursor_y + i, '\0', SavedCell.background_color, SavedCell.foreground_color);
+                    screen_cell_set(cursor_x+1+j, cursor_y + i, '\0', black, black);
             }
 
             for(int i = 0; i < Table->number_of_rows; i++)
             {            
-
                 buffer = table_get_row_data(Table, i, current_page);
 
                 for(int j = 0; j < Table->row_size-2; j++)
-                    screen_cell_set(cursor_x+1+j, cursor_y + i, buffer[j], SavedCell.background_color, SavedCell.foreground_color);
+                    screen_cell_set(cursor_x+1+j, cursor_y + i, buffer[j], Table->row_background_color[current_page][i], Table->row_foreground_color[current_page][i]);
             }
+
+            buffer = table_get_row_data(Table, 0, current_page);
+            for(int i = 1; i < Table->row_size-1; i++)
+                screen_cell_set(cursor_x+i, cursor_y, buffer[i-1], white, black);
         }
 
         else if(UserInput.scan_code == ARROW_LEFT)
         {
             if(current_page > 0)
                 current_page--;
+            else
+                continue;
 
             current_row = 0;
-
-            buffer = table_get_row_data(Table, current_row, current_page);
-
-            for(int i = 1; i < Table->row_size-2; i++)
-                screen_cell_set(cursor_x+i, cursor_y, buffer[i-1], SavedCell.background_color, SavedCell.foreground_color);
-
             cursor_y = Table->y + 1;
             cursor_x = Table->x;
 
-            SavedCell.foreground_color = screen_cell_get_foreground_color(Table->x+1, cursor_y);
-            SavedCell.background_color = screen_cell_get_background_color(Table->x+1, cursor_y);
+            for(int i = 0; i < Table->number_of_rows; i++)
+            {            
+                for(int j = 0; j < Table->row_size-2; j++)
+                    screen_cell_set(cursor_x+1+j, cursor_y + i, '\0', black, black);
+            }
 
-            buffer = table_get_row_data(Table, --current_row, current_page);
+            for(int i = 0; i < Table->number_of_rows; i++)
+            {            
+                buffer = table_get_row_data(Table, i, current_page);
 
+                for(int j = 0; j < Table->row_size-2; j++)
+                    screen_cell_set(cursor_x+1+j, cursor_y + i, buffer[j], Table->row_background_color[current_page][i], Table->row_foreground_color[current_page][i]);
+            }
+
+            buffer = table_get_row_data(Table, 0, current_page);
             for(int i = 1; i < Table->row_size-1; i++)
                 screen_cell_set(cursor_x+i, cursor_y, buffer[i-1], white, black);
         }
@@ -157,12 +178,9 @@ void table_row_select(table_t* Table)
             buffer = table_get_row_data(Table, current_row, current_page);
 
             for(int i = 1; i < Table->row_size-1; i++)
-                screen_cell_set(cursor_x+i, cursor_y, buffer[i-1], SavedCell.background_color, SavedCell.foreground_color);
+                screen_cell_set(cursor_x+i, cursor_y, buffer[i-1], Table->row_background_color[current_page][current_row], Table->row_foreground_color[current_page][current_row]);
 
             cursor_y--;
-
-            SavedCell.foreground_color = screen_cell_get_foreground_color(Table->x+1, cursor_y);
-            SavedCell.background_color = screen_cell_get_background_color(Table->x+1, cursor_y);
 
             buffer = table_get_row_data(Table, --current_row, current_page);
 
@@ -179,13 +197,9 @@ void table_row_select(table_t* Table)
             buffer = table_get_row_data(Table, current_row, current_page);
 
             for(int i = 1; i < Table->row_size-1; i++)
-                screen_cell_set(cursor_x+i, cursor_y, buffer[i-1], SavedCell.background_color, SavedCell.foreground_color);
+                screen_cell_set(cursor_x+i, cursor_y, buffer[i-1], Table->row_background_color[current_page][current_row], Table->row_foreground_color[current_page][current_row]);
 
             cursor_y++;
-
-            SavedCell.foreground_color = screen_cell_get_foreground_color(Table->x+1, cursor_y);
-            SavedCell.background_color = screen_cell_get_background_color(Table->x+1, cursor_y);
-
             buffer = table_get_row_data(Table, ++current_row, current_page);
 
             for(int i = 1; i < Table->row_size-1; i++)
@@ -193,6 +207,10 @@ void table_row_select(table_t* Table)
         }
 
     }
+    
+    for(int i = 1; i < Table->row_size-1; i++)
+        screen_cell_set(cursor_x+i, cursor_y, buffer[i-1], Table->row_background_color[current_page][current_row], Table->row_foreground_color[current_page][current_row]);
+
     Table->handler(table_get_row_data(Table, current_row, current_page));
     KeyInfo.scan_code = 0;
 }

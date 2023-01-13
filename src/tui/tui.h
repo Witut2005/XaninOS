@@ -16,6 +16,8 @@ struct table_t
     uint8_t foreground_color;
     
     char*** row_data;
+    uint8_t** row_background_color;
+    uint8_t** row_foreground_color;
 
     void (*handler)(char*);
 };
