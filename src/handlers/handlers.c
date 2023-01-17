@@ -172,7 +172,7 @@ void stack_fault_exception(void)
 void general_protection_exception(void)
 {   
     
-    screen_clear();
+    // screen_clear();
 
     // asm("mov ebx, [esp]\n\t"
     //     "mov %0, ebx"
@@ -183,12 +183,14 @@ void general_protection_exception(void)
     // xprintf("0x%x\n", aha);
     
     xprintf("\n%zGeneral protection exception\n", set_output_color(red,white));
-    reg_dump();
-    interrupt_disable();
-    asm("hlt");
-    asm("sti");
-    eoi_send();
-    kernel_loop();
+    // reg_dump();
+    // interrupt_disable();
+    // asm("hlt");
+    // asm("sti");
+    // eoi_send();
+    // interrupt_enable();
+    exit();
+    // kernel_loop();
 }
 
 void page_fault_exception(void)

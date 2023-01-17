@@ -21,6 +21,8 @@
 #include <libcpp/map.h>
 #include <libcpp/vector.hpp>
 #include <libcpp/set.h>
+#include <libcpp/fstream.h>
+#include <libcpp/regex.h>
 
 class Test
 {
@@ -190,6 +192,17 @@ void cpp_prog()
         for(int i = 0; i < jmm.size_get(); i++)
         std::cout << jmm[i] << std::endl;
     */
+
+    std::fstream piwko("fromcio_tomcio.txt", "rw");
+    if(piwko.good())
+    {
+        piwko.write("\t\t\t", 3);
+        std::cout << "FSTREAM OK" << std::endl;
+    }
+    piwko.close();
+
+    char state[2][6] = {"false", "true"};
+    std::cout << "REGEX TEST: " << state[std::regex_match("om g", "o.\\sg")] << std::endl;
 
     wait_key(ENTER_RELEASE);
     wait_key(ENTER_RELEASE);

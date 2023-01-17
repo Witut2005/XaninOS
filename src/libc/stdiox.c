@@ -244,6 +244,36 @@ void xprintf(char* str, ... )
                             continue;
                         }
 
+                        else if(stringPtr[i] == '\r')
+                        {
+                            Screen.x = 0;
+                            continue;
+                        }
+
+                        else if(stringPtr[i] == '\t')
+                        {
+                            for(int j = 0; j < 3; j++)
+                            {
+                                if(Screen.x + j == 80)
+                                {
+                                    Screen.x = 0;
+                                    Screen.y++;
+                                }
+                                Screen.cursor[Screen.y][Screen.x + j] = (uint16_t)(' ' + (((background_color << 4) | font_color) << 8));
+                            }
+
+                            Screen.x += 3;
+                            continue;
+                        }
+
+
+                        else if(str[string_counter] == '\\')
+                        {
+                            Screen.cursor[Screen.y][Screen.x] = (uint16_t)('\\' + (((background_color << 4) | font_color) << 8));
+                            continue;
+                        }
+
+
                         Screen.cursor[Screen.y][Screen.x] = (uint16_t) (stringPtr[i] + (((background_color << 4) | font_color) << 8));
                         if(Screen.x == 80)
                         {
@@ -251,8 +281,7 @@ void xprintf(char* str, ... )
                             Screen.x = 0x0;
                         }
                         Screen.x++;
-                    
-
+                
                     }
 
                     break;
@@ -469,11 +498,19 @@ void xprintf(char* str, ... )
         else if(str[string_counter] == '\t')
         {
             for(int i = 0; i < 3; i++)
+            {
+                if(Screen.x + i == 80)
+                {
+                    Screen.x = 0;
+                    Screen.y++;
+                }
                 Screen.cursor[Screen.y][Screen.x + i] = (uint16_t)(' ' + (((background_color << 4) | font_color) << 8));
+            }
 
             Screen.x += 3;
             string_counter++;
         }
+
 
         else if(str[string_counter] == '\\')
         {

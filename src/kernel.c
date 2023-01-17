@@ -101,7 +101,6 @@ void kernel_loop(void)
 
         app_exited          = false;
 
-
         while(1)
         {
             if(app_exited)
@@ -454,9 +453,10 @@ void _start(void)
     xprintf("%d\n", ((uint8_t*)&base_ip)[0]);
 
     char* bufsys = (char*)calloc(512);
+    xprintf("allocated memory: 0x%x\n", bufsys);
 
-    system_variable_get(&bufsys, "HOME");
-    xprintf("bufsys: %s\n", bufsys);
+    // system_variable_get(&bufsys, "HOME");
+    // xprintf("bufsys: %s\n", bufsys);
 
     
 

@@ -46,6 +46,7 @@ extern XinFileDescriptor* FileDescriptorTable;
 
 #ifdef __cplusplus
 extern "C" {
+namespace xin{
 #endif
 
 char* xin_set_current_directory(char* directory);
@@ -97,5 +98,6 @@ XinChildrenEntries* xin_get_children_entries_type(char* folder, uint8_t type);
 char* xin_get_entry_name(char* path);
 
 #ifdef __cplusplus
+}
 }
 #endif

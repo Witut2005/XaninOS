@@ -112,7 +112,7 @@ void table_row_select(table_t* Table)
 
         if(UserInput.scan_code == ARROW_RIGHT)
         {
-            if(current_page < Table->sites)
+            if(current_page < Table->sites-1)
                 current_page++;
             else
                 continue;
@@ -222,5 +222,23 @@ void table_destroy(table_t* Table)
         for(int j = Table->x; j < Table->x + Table->row_size; j++)
             Screen.cursor[i][j] = 0;
     }
+    
+    for(int i = 0; i < Table->sites; i++)
+    {
+        for(int j = 0; j < Table->number_of_rows; j++)
+            free(Table->row_data[i][j]);
+        free(Table->row_data[i]);
+    }
+
+    for(int i = 0; i < Table->sites; i++)
+    {
+        free(Table->row_background_color[i]);
+        free(Table->row_foreground_color[i]);
+    }
+
+    free(Table->row_data);
+    free(Table->row_background_color);
+    free(Table->row_foreground_color);
+
     free(Table);
 }

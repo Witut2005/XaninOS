@@ -1,54 +1,105 @@
 
 
-#include <libcpp/cxin.h>
+#include <xin_fs/xin.h>
 
 namespace std
 {
 
+    struct FileStreamBitFlags 
+    {
+        uint8_t failbit:1;
+        uint8_t eofbit:1;
+    };
 
     class fstream
     {
 
         private:
             xin_entry* file; 
+            uint32_t input_position_sequence;
+            uint32_t output_position_sequence;
+            FileStreamBitFlags FstreamFlags;
 
 
         public:
-            explicit fstream(char* file_name = nullptr, const char* flags = nullptr)
+            fstream(char* file_name = nullptr, char* flags = nullptr)
             {
-                if(file_name != nullptr) 
-                    file = fopen(file_name, flags);
+                if(file_name != nullptr && flags != nullptr) 
+                    this->file = xin::fopen(file_name, flags);
             }
 
-            void open(char* file_path, const char* flags)
+            void open(char* file_path, char* flags)
             {
-                file = fopen(file_path, flags);
+                this->file = xin::fopen(file_path, flags);
+            }
+
+            bool good() 
+            {
+                this->FstreamFlags.failbit = this->file == nullptr;
+            }
+
+            void close() 
+            {
+                xin::fclose(&this->file);
+            }
+
+            size_t read(void* buf, size_t count) 
+            {
+                count = xin::fread(this->file, buf, count);
+                if(!count)
+                    this->FstreamFlags.failbit = true;
+            }
+
+            size_t write(void* buf, size_t count) 
+            {
+                count = xin::fwrite(this->file, buf, count);
+                if(!count)
+                    this->FstreamFlags.failbit = true;
+            }
+
+            size_t write(const void* buf, size_t count) 
+            {
+                count = xin::fwrite(this->file, (void*)buf, count);
+                if(!count)
+                    this->FstreamFlags.failbit = true;
             }
 
 
-            void close()
+            fstream& operator >> (char* buf) 
             {
-                fclose(&file);
+                uint32_t count = xin::fread(this->file,buf, 1);
+                if(!count)
+                    this->FstreamFlags.failbit = true;
             }
 
-            size_t read(void* buf, size_t count)
+            fstream& operator << (char* buf) 
             {
-                xin::read(file, buf, count);
+                uint32_t count = xin::fwrite(this->file,buf, 1);
+                if(!count)
+                    this->FstreamFlags.failbit = true;
             }
 
-            size_t write(void* buf, size_t count)
+            char get(void) 
             {
-                xin::write(file, buf, count);
+                char buf[1];
+                uint32_t count = xin::fread(this->file, buf, 1);
+
+                if(!count)
+                    this->FstreamFlags.failbit = true;
+
+                return buf[0];
             }
 
-            fstream& operator >> (char* buf)
+            void put(char x) 
             {
-                xin::read(file,buf, 1);
+                uint32_t count = xin::fwrite(this->file, &x, 1);
+                if(!count)
+                    this->FstreamFlags.failbit = true;
             }
 
-            fstream& operator << (char* buf)
+            FileStreamBitFlags rdstate() const
             {
-                xin::write(file,buf, 1);
+                return this->FstreamFlags;
             }
 
 

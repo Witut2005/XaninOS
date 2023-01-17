@@ -462,12 +462,6 @@ int edit(char* file_name)
 
     for(int i = 0; i < strlen(file->file_info->base_address_memory) - strlen(program_buffer); i++)
         fwrite(file, "\0", 1);
-    
-    // screen_clear();
-    // xprintf("program: %s\n", program_buffer);
-    // while(KeyInfo.scan_code != ENTER);
-    // xprintf("fromcio: %s", file->file_info->base_address_memory);
-    // while(KeyInfo.scan_code != F4_KEY_RELEASE);
 
     fclose(&file);
 
@@ -476,7 +470,6 @@ int edit(char* file_name)
     total_lines = 0x0;
 
     free(program_buffer);
-    exit();
 
     return XANIN_OK;
 

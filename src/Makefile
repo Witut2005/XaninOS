@@ -86,9 +86,13 @@ build:
 
 	@echo [CC] ioapic.cpp
 	@$(CC) $(CC_OPTIONS) ./devices/IOAPIC/ioapic.cpp -o ./devices/IOAPIC/ioapic.o
+
+	@echo [CC] regex.cpp
+	@$(CC) $(CC_OPTIONS) ./libcpp/regex.cpp -o ./libcpp/regex.o 
 	
-	@echo [CC] xgl.c
+	@echo [C] xgl.c
 	@$(C) $(C_OPTIONS) ./xgl/xgl.c -o ./xgl/xgl.o
+
 	
 	@echo [ASM] 8254x INTERRUPT ENTRY
 	@$(ASM) -f elf32 ./devices/NIC/8254x_int_handler.asm -o ./devices/NIC/8254x_int_handler.o
@@ -234,6 +238,7 @@ build:
 	./libc/xanin_state.o \
 	./libc/instruction_pointer.o \
 	./libc/real_mode_fswitch.o \
+	./libcpp/regex.o \
 	./tui/tui.o \
 	./xgl/xgl.o \
 	./libcpp/endian.o \
@@ -270,7 +275,7 @@ build:
 	./xaninApps/screenshot.o \
 	./game_engine/xagame.o \
 	./xagames/xagame_test.o \
-	./xagames/tetris.o -Ttext 0x700000 -o kernel.bin
+	./xagames/tetris.o -Ttext 0xB00000 -o kernel.bin
 
 	@echo [C] disk_freestanding_driver.c
 	@$(C) $(C_COMPILE) ./boot/disk_freestanding_driver.c ./boot/linker.ld -Ttext 0xA00000 -o ./boot/disk_freestanding_driver

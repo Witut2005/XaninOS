@@ -475,7 +475,7 @@ int xin_create_file(char* entry_name)
         for(int j = 0; j <= i; j++)
             tmp[j] = entry_name[j];
 
-        xprintf("%s\n", xin_get_current_path(entry_name));
+        // xprintf("%s\n", xin_get_current_path(entry_name));
         strcpy(tmp, xin_get_current_path(tmp));
         xin_entry* entry_path = xin_find_entry(tmp);
 
@@ -790,7 +790,7 @@ xin_entry *fopen(char *file_path, char *mode)
         return file;
     }
 
-    else if(strcmp(mode, "rw") | strcmp(mode, "w"))
+    else if(strcmp(mode, "rw") || strcmp(mode, "w"))
     {
         file = create(file_path);
 
