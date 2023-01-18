@@ -23,6 +23,7 @@
 #include <libcpp/set.h>
 #include <libcpp/fstream.h>
 #include <libcpp/regex.h>
+#include <libcpp/memory.h>
 
 class Test
 {
@@ -203,6 +204,11 @@ void cpp_prog()
 
     char state[2][6] = {"false", "true"};
     std::cout << "REGEX TEST: " << state[std::regex_match("om g", "o.\\sg")] << std::endl;
+
+    int mm = 10;
+    shared_ptr<int> my_ptr(&mm);
+
+    std::cout << "shared_ptr value: " << *my_ptr << std::endl;
 
     wait_key(ENTER_RELEASE);
     wait_key(ENTER_RELEASE);
