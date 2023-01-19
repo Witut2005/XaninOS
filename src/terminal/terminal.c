@@ -38,6 +38,7 @@ terminal_t* terminal_create(void)
 
 void terminal_destroy(terminal_t* terminal, terminal_t* new_terminal)
 {
+    free(terminal->buffer);
     free(terminal);
     terminal_set((terminal_t*)null_memory_region, new_terminal);
 }

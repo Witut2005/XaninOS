@@ -39,9 +39,13 @@ void check_external_apps(void)
 void scan(void)
 {
 
-    terminal_t* app_terminal = terminal_create();
-    terminal_set(kernel_terminal, app_terminal);
+    screen_clear();
+    // terminal_t* app_terminal = terminal_create();
+    // terminal_set(kernel_terminal, app_terminal);
     
+    // for(int i = 0; i < VGA_SCREEN_RESOLUTION; i++)
+    //     app_terminal->buffer[i] = 0x0;
+
     if(strcmp(program_name, "\0"))
     {
         if(!is_logo_color_blocked)
@@ -268,6 +272,6 @@ void scan(void)
     KeyInfo.character = 0x0;
     KeyInfo.scan_code = 0x0;
 
-    terminal_destroy(app_terminal, kernel_terminal);
+    // terminal_destroy(app_terminal, kernel_terminal);
 
 }

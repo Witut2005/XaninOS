@@ -3,49 +3,8 @@
 
 #include <stdint.h>
 
-struct PointerAddressCounter
+namespace std
 {
-    uint8_t* address;
-    uint32_t counter;
-};
-
-template <class T>
-class shared_ptr
-{
-
-    private:
-        T* ptr;
-        static PointerAddressCounter ShareCounter;
-
-    public:
-
-        shared_ptr(T* given_ptr)
-        {
-            this->ptr = given_ptr; 
-            this->ShareCounter.counter++;            
-        }
-
-        T* get(void)
-        {
-            return this->ptr;
-        }
-    
-        shared_ptr& operator = (T* given_ptr)
-        {
-            this->ptr = given_ptr;
-            return *this;
-        }
-
-        T operator * (void)
-        {
-            return *ptr;
-        }
-
-};
-
-template <class T>
-PointerAddressCounter shared_ptr<T>::ShareCounter;
-
 
 template <class T>
 class unique_ptr 
@@ -53,14 +12,15 @@ class unique_ptr
 
     private:
         T* ptr;
-        static PointerAddressCounter UniqueCounter;
 
     public:
 
-        unique_ptr(T* given_ptr)
+        unique_ptr(const unique_ptr&) = delete;
+        unique_ptr& operator = (const unique_ptr&) = delete;
+
+        unique_ptr()
         {
-            ptr = given_ptr; 
-            this->UniqueCounter.counter++;            
+            return;
         }
 
         T* get(void)
@@ -68,21 +28,85 @@ class unique_ptr
             return this->ptr;
         }
     
-        unique_ptr& operator = (T* given_ptr)
-        {
-            this->ptr = given_ptr;
-            return *this;
-        }
-
-        T operator * (void)
+        T& operator * (void)
         {
             return *ptr;
         }
 
+        ~unique_ptr()
+        {
+            free(this->ptr);
+        }
+
+        template <class K, class X>
+        friend void make_unique(unique_ptr<K>& ptr, X obj);
+
 };
 
+template <class K, class X>
+void make_unique(unique_ptr<K>& ptr, X obj)
+{
+    ptr.ptr = (X*)calloc(sizeof(X));
+    *(ptr.ptr) = obj;
+}
+
 template <class T>
-PointerAddressCounter unique_ptr<T>::UniqueCounter;
+class shared_ptr
+{
+
+    private:
+        T* ptr;
+        uint32_t share_count;
+
+    public:
+
+        uint32_t get_share_count() const
+        {
+            return this->share_count;
+        }
+
+        shared_ptr(){this->share_count = 1;}
+
+        shared_ptr(const shared_ptr<T>& copy)
+        {
+            *this = copy;
+            share_count++;
+        }
+
+        T* get(void) const
+        {
+            return this->ptr;
+        }
+
+        T& operator * (void)
+        {
+            return *ptr;
+        }
+
+        bool used()
+        {
+            return this->is_used;
+        }
+
+        ~shared_ptr()
+        {
+            this->share_count--;
+
+            if(!this->share_count)
+            {
+                free(this->ptr);
+            }
+        }
+
+        template <class K, class X>
+        friend void make_shared(shared_ptr<K>& ptr, X obj);
+
+        template <class X>
+        friend class weak_ptr;
+};
+
+
+
 
 template <class T>
 class weak_ptr 
@@ -90,14 +114,34 @@ class weak_ptr
 
     private:
         T* ptr;
-        static PointerAddressCounter WeakCounter;
+        shared_ptr<T> parent;
+        const uint32_t* share_count;
 
     public:
 
-        weak_ptr(T* given_ptr)
+        uint32_t get_share_count()
         {
-            this->ptr = given_ptr; 
-            this->WeakCounter.counter++;            
+            return *this->share_count;
+        }
+
+        weak_ptr(){}
+
+        weak_ptr(const weak_ptr<T>& copy)
+        {
+            *this = copy;
+        }
+
+        weak_ptr& operator = (const weak_ptr<T>& copy)
+        {
+            *this = copy;
+        }
+
+        weak_ptr& operator = (shared_ptr<T>& copy)
+        {
+            this->ptr = copy.get();
+            this->share_count = &copy.share_count; 
+            this->parent = copy;
+            return *this;
         }
 
         T* get(void)
@@ -105,18 +149,34 @@ class weak_ptr
             return this->ptr;
         }
     
-        weak_ptr& operator = (T* given_ptr)
+        ~weak_ptr()
         {
-            this->ptr = given_ptr;
-            return *this;
+            if(!this->share_count)
+                free(this->ptr);
         }
 
-        T operator * (void)
+        shared_ptr<T>* lock()
         {
-            return *ptr;
+            if(!(*this->share_count))
+                return nullptr;
+            else
+            {
+                return &this->parent;
+            }
         }
+
 
 };
 
-template <class T>
-PointerAddressCounter weak_ptr<T>::WeakCounter;
+template <class K, class X>
+void make_shared(shared_ptr<K>& ptr, X obj)
+{
+    ptr.ptr = (X*)calloc(sizeof(X));
+    *(ptr.ptr) = obj;
+}
+
+
+
+
+}
+

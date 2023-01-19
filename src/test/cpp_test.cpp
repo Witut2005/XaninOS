@@ -206,12 +206,29 @@ void cpp_prog()
     std::cout << "REGEX TEST: " << state[std::regex_match("om g", "o.\\sg")] << std::endl;
 
     int mm = 10;
-    shared_ptr<int> my_ptr(&mm);
 
-    std::cout << "shared_ptr value: " << *my_ptr << std::endl;
+    std::weak_ptr<int> weak;
+    {
+    std::shared_ptr<int> shr1;
+    std::make_shared(shr1, mm);
 
-    wait_key(ENTER_RELEASE);
-    wait_key(ENTER_RELEASE);
+    weak = shr1;
+
+
+    if(weak.lock() == nullptr)
+        std::cout << "no shared mordo :))" << std::endl;
+    else
+        std::cout << "weak ptr value: " << *weak.lock()->get() << std::endl;
+    }
+
+    
+    if(weak.lock() == nullptr)
+        std::cout << "no shared mordo :))" << std::endl;
+    else
+        std::cout << "weak ptr value: " << *weak.lock()->get() << std::endl;
+
+
+    while(inputg().scan_code != ENTER);
 
     free(buf);
 

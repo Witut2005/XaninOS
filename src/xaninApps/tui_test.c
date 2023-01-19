@@ -6,6 +6,7 @@
 static char* app_current_folder;
 static char** app_parent_folder;
 static uint32_t app_parent_folder_counter;
+static bool exit_tui_test_app;
 
 extern int edit(char* file_name);
 
@@ -43,8 +44,10 @@ void hfs(char* omg)
     int status = __sys_xin_folder_change(app_current_folder);
 
     if(status == XANIN_ERROR)
+    {
         edit(omg);
-
+        exit_tui_test_app = true;
+    }
 }
 
 int my_tui_app(void)
@@ -61,7 +64,7 @@ int my_tui_app(void)
     while(KeyInfo.scan_code != F4_KEY) 
     {
         XinChildrenEntries* hoho = xin_get_children_entries(app_current_folder, false);
-        table_t* fro = table_create(0,0, 10, 40, black, white, TUI_TEST_SITES);
+        table_t* fro = table_create(0,0, 10, 80, black, white, TUI_TEST_SITES);
 
         if(fro == nullptr)
         {
@@ -91,6 +94,9 @@ int my_tui_app(void)
         table_destroy(fro);
         free(hoho);
         free(fro);
+
+        if(exit_tui_test_app)
+            break;
     }
 
     for(int i = 0; i<app_parent_folder_counter; i++)
@@ -98,7 +104,6 @@ int my_tui_app(void)
 
     free(app_parent_folder);
     free(app_current_folder);
-    exit();
 
     return XANIN_OK;
 

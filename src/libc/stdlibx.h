@@ -59,6 +59,16 @@ struct
 extern reg_t Register;
 extern seg_t SegmentRegister;
 
+struct xchar
+{
+    char character;
+    uint8_t scan_code;
+};
+
+#ifndef __cplusplus
+typedef struct xchar xchar;
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -86,20 +96,13 @@ extern void free(void* ptr);
 extern void* realloc(void* ptr, uint32_t size_new);
 extern void exit(void);
 extern uint32_t rand(void);
+xchar inputg(void);
 
 #ifdef __cplusplus
 }
 #endif
 
-struct xchar
-{
-    char character;
-    uint8_t scan_code;
-};
 
-typedef struct xchar xchar;
-
-xchar inputg(void);
 
 extern bool app_exited;
 extern int last_command_exit_status;
