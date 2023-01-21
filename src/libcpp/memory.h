@@ -149,12 +149,6 @@ class weak_ptr
             return this->ptr;
         }
     
-        ~weak_ptr()
-        {
-            if(!this->share_count)
-                free(this->ptr);
-        }
-
         shared_ptr<T>* lock()
         {
             if(!(*this->share_count))

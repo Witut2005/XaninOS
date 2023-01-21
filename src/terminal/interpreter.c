@@ -58,7 +58,7 @@ void scan(void)
 
     XANIN_ADD_APP_ENTRY0("petris", ptetris)
     XANIN_ADD_APP_ENTRY0("ptetris", ptetris)
-    XANIN_ADD_APP_ENTRY0("tui_test", my_tui_app)
+    XANIN_ADD_APP_ENTRY1("explorer", explorer)
 
     XANIN_ADD_APP_ENTRY0("start_screen", start_screen)
     XANIN_ADD_APP_ENTRY0("screensaver", start_screen)

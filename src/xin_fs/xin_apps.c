@@ -90,8 +90,6 @@ __STATUS __sys_xin_entry_remove(char* entry_name)
 
     if(status == XIN_ENTRY_NOT_FOUND)
     {
-        // xprintf("%zENTRY NOT FOUND: %s\n", stderr, entry_name);
-        // while(KeyInfo.scan_code != ENTER);
         return XIN_ENTRY_NOT_FOUND;
     }
 
@@ -215,16 +213,15 @@ __STATUS __sys_xin_list_files(char** argv)
         return XANIN_OK;
     }
 
-    while(i->entry_path[0] != '\0')
+    while((uint32_t)i < XIN_ENTRY_TABLE + SECTOR_SIZE * 10)
     {
-
-        if(substr_find(i->entry_path, "/.") && !strcmp(options, "-la"))
+        
+        if((substr_find(i->entry_path, "/.") && !strcmp(options, "-la")) || (!i->entry_path))
         {
             i++;
-            continue;
+            continue; 
         }
-
-        if(!strlen(path))
+        else if(!strlen(path))
         {
             if(xin_get_file_pf(i->entry_path) != nullptr)
             {

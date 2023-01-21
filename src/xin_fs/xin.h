@@ -50,7 +50,7 @@ namespace xin{
 #endif
 
 char* xin_set_current_directory(char* directory);
-char* xin_get_current_directory(void);
+const char* const xin_get_current_directory(void);
 char* xin_get_current_path(char* file_name);
 
 __STATUS sys_xin_remove_entry(char* entry_name);

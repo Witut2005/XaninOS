@@ -25,7 +25,7 @@ uint8_t xin_base_state[100];
 char xin_current_path[38] = {'\0'};
 char xin_current_directory[38] = {'\0'};
 
-char *xin_set_current_directory(char *directory)
+char* xin_set_current_directory(char *directory)
 {
     for (int i = 0; i < sizeof(xin_current_directory); i++)
         xin_current_directory[i] = '\0';
@@ -36,7 +36,7 @@ char *xin_set_current_directory(char *directory)
     return xin_current_directory;
 }
 
-char *xin_get_current_directory(void)
+const char* const xin_get_current_directory(void)
 {
     return xin_current_directory;
 }
@@ -586,29 +586,23 @@ int xin_create_file(char* entry_name)
 __STATUS sys_xin_remove_entry(char *entry_name)
 {
 
-    char *entry_to_delete = (char *)xin_find_entry(entry_name);
+    xin_entry* entry_data = xin_find_entry(entry_name);
 
-    xin_entry *entry_data = (xin_entry *)entry_to_delete;
-
-    if (entry_to_delete == nullptr)
-    {
-        // xprintf("%zNO SUCH DIRECTORY\n", set_output_color(red, white));
-        // while (KeyInfo.scan_code != ENTER);
+    if (entry_data == nullptr)
         return XIN_ENTRY_NOT_FOUND;
-    }
 
-    // xprintf("starting addr: 0x%x\n", entry_data->starting_sector + XIN_ENTRY_POINTERS);
-
-    if (entry_data->entry_type == XIN_FILE)
+    else if (entry_data->entry_type == XIN_FILE)
     {
         for (char *i = (char *)entry_data->starting_sector + XIN_ENTRY_POINTERS;
                 (uint32_t)i < entry_data->starting_sector + XIN_ENTRY_POINTERS + 16; i++)
             *i = XIN_UNALLOCATED;
         
+        char* tmp = (char*)entry_data;
+
+        for (int i = 0; i < 64; i++)
+            tmp[i] = '\0';
     }
 
-    for (int i = 0; i < sizeof(xin_entry); i++)
-        entry_to_delete[i] = '\0';
 
     return XANIN_OK;
 
@@ -1083,10 +1077,10 @@ XinChildrenEntries* xin_get_children_entries(char* folder, bool show_hidden)
     xin_entry* i = (xin_entry*)XIN_ENTRY_TABLE; 
 
     uint32_t finded_entries = 0;
-    while(i->entry_path[0] != '\0')
+
+    while((uint32_t)i < XIN_ENTRY_TABLE + SECTOR_SIZE * 10)
     {
-        
-        if(strcmp(xin_get_file_pf(i->entry_path)->entry_path, folder))
+        if(strcmp(xin_get_file_pf(i->entry_path)->entry_path, folder) && i->entry_path[0])
         {
             if(!strcmp(i->entry_path, folder))
             {
@@ -1116,10 +1110,10 @@ XinChildrenEntries* xin_get_children_entries_type(char* folder, uint8_t type)
     xin_entry* i = (xin_entry*)XIN_ENTRY_TABLE; 
 
     uint32_t finded_entries = 0;
-    while(i->entry_path[0] != '\0')
+    while((uint32_t)i < XIN_ENTRY_TABLE + SECTOR_SIZE * 10)
     {
-        
-        if(strcmp(xin_get_file_pf(i->entry_path)->entry_path, folder))
+
+        if(strcmp(xin_get_file_pf(i->entry_path)->entry_path, folder) && i->entry_path[0])
         {
             if((!strcmp(i->entry_path, folder)) && (i->entry_type == type))
             {

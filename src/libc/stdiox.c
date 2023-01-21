@@ -546,6 +546,7 @@ void xscanf(char* str, ... )
 
     uint32_t str_counter = 0x0;
     uint32_t counter = 0x0;
+    KeyInfo.scan_code = 0;
 
     char* string_pointer;
 
@@ -865,6 +866,7 @@ void xscan_range(char* string_buffer, uint32_t how_many_chars)
 
     uint32_t str_counter = 0x0;
     uint32_t counter = 0x0;
+    KeyInfo.scan_code = 0;
 
     char* string_pointer;
 
