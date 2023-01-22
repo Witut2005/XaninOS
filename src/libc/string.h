@@ -10,7 +10,9 @@
 #define nullptr 0x0
 #define VGA_TEXT_MEMORY 0xb8000
 
-
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 uint32_t strlen(const char* a);
 char* strcpy(char* dest, const char* src);
@@ -33,3 +35,8 @@ uint32_t atoi(char* str);
 uint32_t strtoi(char* str, uint8_t format);
 uint32_t str2ipv4(char* str);
 char* substr_find(char *str, const char *substr);
+char* strconcat(char* str1, char* buf); //concatenate str1 and buf (first str1)
+
+#ifdef __cplusplus
+}
+#endif

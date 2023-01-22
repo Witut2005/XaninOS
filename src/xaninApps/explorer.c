@@ -16,6 +16,13 @@ extern int edit(char* file_name);
 void handle_selected_option(char* option)
 {
 
+        // table_insert(fro , 0, "remove", black, white, 0);
+        // table_insert(fro , 1, "rename", black, white, 0);
+        // table_insert(fro , 2, "link", black, white, 0);
+        // table_insert(fro , 3, "copy", black, white, 0);
+        // table_insert(fro , 4, "info", black, white, 0);
+        // table_insert(fro , 5, "edit", black, white, 0);
+
     if(strcmp(option, "remove"))
     {
         xprintf("selected file: %s\n", selected_file);
@@ -34,6 +41,44 @@ void handle_selected_option(char* option)
         free(new_name);
     }
 
+    else if(strcmp(option, "link"))
+    {
+        char* new_name = (char*)calloc(MAX_PATH);
+        Screen.y = 25;
+
+        xprintf("where do you want to create a link entry: ");
+        xscanf("%s", new_name);
+
+        xprintf("\ngiven name: %s\n", new_name);
+        // while(1);
+
+        int status;
+        if(new_name[0] != '/')
+            status = __sys_xin_link_create(selected_file, xin_get_current_path(new_name));
+        else
+            status = __sys_xin_link_create(selected_file, new_name);
+        
+        free(new_name);
+    }
+
+    else if(strcmp(option, "copy"))
+    {
+        char* new_name = (char*)calloc(MAX_PATH);
+        Screen.y = 23;
+
+        xprintf("where do you want to create a copy entry: ");
+        xscanf("%s", new_name);
+
+        xprintf("selected file: %s\n", selected_file);
+        xprintf("new file: %s\n", new_name[0] != '/' ? xin_get_current_path(new_name) : new_name);
+        // msleep(3000);
+
+        __sys_xin_copy(selected_file, new_name);
+        
+        free(new_name);
+    }
+
+
     else if(strcmp(option, "edit"))
     {
         edit(selected_file);
@@ -49,6 +94,7 @@ void handle_selected_option(char* option)
         xprintf("new file: %s\n", xin_get_current_path(new_name));
         free(new_name);
     }
+
 
 }
 
@@ -102,10 +148,13 @@ void hfs(char* omg)
 
     if(status == XANIN_ERROR)
     {
-        table_t* fro = table_create(0, 15, 5, 20, black, white, 1);
+        table_t* fro = table_create(0, 15, 6, 20, black, white, 1);
         table_insert(fro , 0, "remove", black, white, 0);
         table_insert(fro , 1, "rename", black, white, 0);
-        table_insert(fro , 2, "edit", black, white, 0);
+        table_insert(fro , 2, "link", black, white, 0);
+        table_insert(fro , 3, "copy", black, white, 0);
+        table_insert(fro , 4, "info", black, white, 0);
+        table_insert(fro , 5, "edit", black, white, 0);
 
         selected_file = omg;
         table_add_handler(fro,handle_selected_option);

@@ -77,13 +77,12 @@ void kernel_loop(void)
 
 
         screen_clear();
-        
         time_get(&SystemTime);
 
         xprintf("%z    _/      _/                      _/              _/_/      _/_/_/       \n", set_output_color(logo_back_color, logo_front_color));
         xprintf("%z     _/  _/      _/_/_/  _/_/_/        _/_/_/    _/    _/  _/              \n", set_output_color(logo_back_color, logo_front_color));
         xprintf("%z      _/      _/    _/  _/    _/  _/  _/    _/  _/    _/    _/_/           \n", set_output_color(logo_back_color, logo_front_color));
-        xprintf("%z   _/  _/    _/    _/  _/    _/  _/  _/    _/  _/    _/        _/%z  version 1.0v\n",set_output_color(logo_back_color, logo_front_color), set_output_color(black,white) );
+        xprintf("%z   _/  _/    _/    _/  _/    _/  _/  _/    _/  _/    _/        _/%z   version 1.0v\n",set_output_color(logo_back_color, logo_front_color), set_output_color(black,white) );
         xprintf("%z_/      _/    _/_/_/  _/    _/  _/  _/    _/    _/_/    _/_/_/     %z%s: %i:%i:%i\n\n\n", set_output_color(logo_back_color, logo_front_color), set_output_color(black,white), daysLUT[SystemTime.weekday], SystemTime.hour, SystemTime.minutes, SystemTime.seconds);                                       
 
         Screen.x            = 0;
@@ -452,13 +451,8 @@ void _start(void)
 
     xprintf("%d\n", ((uint8_t*)&base_ip)[0]);
 
-    char* bufsys = (char*)calloc(512);
-    xprintf("allocated memory: 0x%x\n", bufsys);
-
     // system_variable_get(&bufsys, "HOME");
     // xprintf("bufsys: %s\n", bufsys);
-
-    
 
     // stack_t* MyStack = stack_create();
     // for(int i = 0; i < 10; i++)
@@ -472,6 +466,10 @@ void _start(void)
     // time_offset_t* omg = start();
     // stop(omg);
     // xprintf("time offset: %d\n", *omg);
+
+    // char* hm = (char*)calloc(10);
+    // strcpy(hm, "piwko");
+    // xprintf("%s\n", strconcat("/", hm);
 
 
     while (KeyInfo.scan_code != ENTER);

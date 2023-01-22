@@ -472,5 +472,23 @@ char* substr_find(char *str, const char *substr)
     return nullptr;
 }
 
+char* strconcat(char* str1, char* buf) //concatenate str1 and buf (first str1)
+{
+    char* tmp = (char*)calloc(XANIN_PMMNGR_BLOCK_SIZE);
 
+    strcpy(tmp, buf);
+
+    int i = 0;
+    
+    for(; i < strlen(str1); i++)
+        buf[i] = str1[i];
+
+    for(; i < strlen(buf) + strlen(buf); i++)
+        buf[i] = tmp[i - strlen(str1)];
+
+    buf[i] = '\0';
+
+    free(tmp);
+    return buf;
+}
 

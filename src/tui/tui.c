@@ -17,6 +17,9 @@ table_t* table_create(uint16_t x, uint16_t y, uint8_t number_of_rows, uint8_t ro
 {
     if((!number_of_rows) || (!row_size))
         return (table_t*)nullptr;
+    
+    if(number_of_sites > 9)
+        number_of_sites = 9;
 
     table_t* tmp = (table_t*)calloc(sizeof(table_t));
 
@@ -60,6 +63,10 @@ table_t* table_create(uint16_t x, uint16_t y, uint8_t number_of_rows, uint8_t ro
         screen_cell_set(x, y+i, '|', background_color, foreground_color);            
         screen_cell_set(x + row_size-1, y+i, '|', background_color, foreground_color);            
     }
+
+    screen_cell_set(x, y, '0', background_color, foreground_color);
+    screen_cell_set(x+1, y, '/', background_color, foreground_color);
+    screen_cell_set(x+2, y, (char)(number_of_sites + '0' - 1), background_color, foreground_color);
 
     return tmp;
 }
@@ -138,6 +145,10 @@ void table_row_select(table_t* Table)
             buffer = table_get_row_data(Table, 0, current_page);
             for(int i = 1; i < Table->row_size-1; i++)
                 screen_cell_set(cursor_x+i, cursor_y, buffer[i-1], white, black);
+
+            screen_cell_set(Table->x, Table->y, (char)(current_page + '0'), Table->background_color, Table->foreground_color);
+            screen_cell_set(Table->x+1, Table->y, '/', Table->background_color, Table->foreground_color);
+            screen_cell_set(Table->x+2, Table->y, (char)(Table->sites + '0' - 1), Table->background_color, Table->foreground_color);
         }
 
         else if(UserInput.scan_code == ARROW_LEFT)
@@ -168,6 +179,10 @@ void table_row_select(table_t* Table)
             buffer = table_get_row_data(Table, 0, current_page);
             for(int i = 1; i < Table->row_size-1; i++)
                 screen_cell_set(cursor_x+i, cursor_y, buffer[i-1], white, black);
+
+            screen_cell_set(Table->x, Table->y, (char)(current_page + '0'), Table->background_color, Table->foreground_color);
+            screen_cell_set(Table->x+1, Table->y, '/', Table->background_color, Table->foreground_color);
+            screen_cell_set(Table->x+2, Table->y, (char)(Table->sites + '0' - 1), Table->background_color, Table->foreground_color);
         }
         
         else if(UserInput.scan_code == ARROW_UP)

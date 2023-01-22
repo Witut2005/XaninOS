@@ -119,24 +119,28 @@ __STATUS __sys_xin_copy(char* file_name, char* new_file_name)
     xin_entry* entry = xin_find_entry(file_name);
 
     if(entry == nullptr)
-    {
-        // xprintf("%zNO SUCH FILE: %s\n", stderr, file_name);
-        // while(KeyInfo.scan_code != ENTER);
         return XIN_ENTRY_NOT_FOUND;
-    }
 
-    xin_create_file(new_file_name);
+    int status = __sys_xin_file_create(new_file_name);
 
-    xin_entry* new_entry = xin_find_entry(new_file_name);
+    if(status != XANIN_OK)
+        return status;
 
-    int counter = 0; 
-    char* entry_data = entry->starting_sector * SECTOR_SIZE;
-    char* new_entry_data = new_entry->starting_sector * SECTOR_SIZE;
+    xin_entry* file = fopen(file_name, "r");
+    xin_entry* file_created = fopen(new_file_name, "rw");
+
+    char* entry_data = (char*)calloc(SECTOR_SIZE);
     
-    for(; counter <= SECTOR_SIZE * 0x10; counter++)
+    for(int counter = 0; counter < file->entry_size / SECTOR_SIZE; counter++)
     {
-        new_entry_data[counter] = entry_data[counter];
+        fread(file, entry_data, SECTOR_SIZE);
+        fwrite(file_created, entry_data, SECTOR_SIZE);
     }
+
+    free(entry_data);
+    fclose(&file);
+    fclose(&file_created);
+
     return XANIN_OK;
 }
 
@@ -213,7 +217,7 @@ __STATUS __sys_xin_list_files(char** argv)
         return XANIN_OK;
     }
 
-    while((uint32_t)i < XIN_ENTRY_TABLE + SECTOR_SIZE * 10)
+    while((uint32_t)i < XIN_ENTRY_TABLE + SECTOR_SIZE * 50)
     {
         
         if((substr_find(i->entry_path, "/.") && !strcmp(options, "-la")) || (!i->entry_path))
