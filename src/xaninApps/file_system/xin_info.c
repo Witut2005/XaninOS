@@ -16,6 +16,14 @@ int xin_entry_info(char *entry_name)
         xprintf("entry_permissions: 0x%x\n", file->entry_permissions);
         xprintf("entry_size: 0x%x\n", file->entry_size);
         xprintf("starting_sector: 0x%x\n", file->starting_sector);
+
+        fseek(file, 412);
+        fread(file, calloc(512), 512);
+        xprintf("memory block[0] state (begin): %d\n", xin_get_memory_block_state(file)[0].begin);
+        xprintf("memory block[0] state (end): %d\n", xin_get_memory_block_state(file)[0].end);
+
+        xprintf("memory block[1] state (begin): %d\n", xin_get_memory_block_state(file)[1].begin);
+        xprintf("memory block[1] state (end): %d\n", xin_get_memory_block_state(file)[1].end);
     }
 
     else

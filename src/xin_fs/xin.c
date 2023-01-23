@@ -622,7 +622,7 @@ uint32_t xin_get_start_sector(char *entry_name)
 size_t fread(xin_entry *entry, void *buf, size_t count)
 {
 
-    char* end = (char *)(entry->file_info->base_address_memory + count + entry->file_info->position);
+    char* end = (char *)(entry->file_info->base_address_memory + entry->file_info->position + count);
     char* begin = (char *)(entry->file_info->base_address_memory + entry->file_info->position);
 
     if(entry == nullptr)
@@ -635,6 +635,22 @@ size_t fread(xin_entry *entry, void *buf, size_t count)
 
     for(int i = 0; i < sectors_to_load; i++)
         disk_read(ATA_FIRST_BUS, ATA_MASTER, entry->starting_sector + i, 1, (uint16_t*)(entry->file_info->base_address_memory + (i * SECTOR_SIZE)));
+
+    uint32_t initial_position = entry->file_info->position;
+    for(int i = initial_position; i < initial_position + count; i++)
+    {
+        if(i == initial_position) //initial position 
+            entry->file_info->EntryMemoryBlockState[i / SECTOR_SIZE].begin = initial_position;
+
+        if(!(i % SECTOR_SIZE)) //first byte of sector
+            entry->file_info->EntryMemoryBlockState[i / SECTOR_SIZE].begin = 0;
+
+        if(!(i % (SECTOR_SIZE - 1))) //last byte of sector
+            entry->file_info->EntryMemoryBlockState[i / SECTOR_SIZE].end = SECTOR_SIZE;
+        
+        if((i + 1) == initial_position + count)
+            entry->file_info->EntryMemoryBlockState[i / SECTOR_SIZE].end = (i + 1) % (SECTOR_SIZE * (i / SECTOR_SIZE) == 0 ? 1 : (SECTOR_SIZE * (i / SECTOR_SIZE)));
+    }
 
     for (char *i = begin; i < end; i++, buf++)
     {
@@ -665,6 +681,22 @@ size_t read(int fd, void *buf, size_t count)
     for(int i = 0; i < sectors_to_load; i++)
         disk_read(ATA_FIRST_BUS, ATA_MASTER, entry->starting_sector + i, 1, (uint16_t*)(entry->file_info->base_address_memory + (i * SECTOR_SIZE)));
 
+    uint32_t initial_position = entry->file_info->position;
+    for(int i = initial_position; i < initial_position + count; i++)
+    {
+        if(i == initial_position) //initial position 
+            entry->file_info->EntryMemoryBlockState[i / SECTOR_SIZE].begin = initial_position;
+
+        if(!(i % SECTOR_SIZE)) //first byte of sector
+            entry->file_info->EntryMemoryBlockState[i / SECTOR_SIZE].begin = 0;
+
+        if(!(i % (SECTOR_SIZE - 1))) //last byte of sector
+            entry->file_info->EntryMemoryBlockState[i / SECTOR_SIZE].end = SECTOR_SIZE;
+        
+        if((i + 1) == initial_position + count)
+            entry->file_info->EntryMemoryBlockState[i / SECTOR_SIZE].end = (i + 1) % (SECTOR_SIZE * (i / SECTOR_SIZE) == 0 ? 1 : (SECTOR_SIZE * (i / SECTOR_SIZE)));
+    }
+
     for (char *i = begin; i < end; i++, buf++)
     {
         *(char *)buf = *i;
@@ -682,9 +714,23 @@ size_t fwrite(xin_entry *entry, void *buf, size_t count)
 
     char* end = (char *)(entry->file_info->base_address_memory + count + entry->file_info->position);
 
-    uint32_t tmp = entry->file_info->position;
+    uint32_t initial_position = entry->file_info->position;
+    for(int i = initial_position; i < initial_position + count; i++)
+    {
+        if(i == initial_position) //initial position 
+            entry->file_info->EntryMemoryBlockState[i / SECTOR_SIZE].begin = initial_position;
 
-    // for (char *i = (char *)(entry->starting_sector * SECTOR_SIZE) + tmp; i < end; i++, buf++)
+        if(!(i % SECTOR_SIZE)) //first byte of sector
+            entry->file_info->EntryMemoryBlockState[i / SECTOR_SIZE].begin = 0;
+
+        if(!(i % (SECTOR_SIZE - 1))) //last byte of sector
+            entry->file_info->EntryMemoryBlockState[i / SECTOR_SIZE].end = SECTOR_SIZE;
+        
+        if((i + 1) == initial_position + count)
+            entry->file_info->EntryMemoryBlockState[i / SECTOR_SIZE].end = (i + 1) % (SECTOR_SIZE * (i / SECTOR_SIZE) == 0 ? 1 : (SECTOR_SIZE * (i / SECTOR_SIZE)));
+    }
+
+    uint32_t tmp = entry->file_info->position;
     for (char *i = (char *)(entry->file_info->base_address_memory) + tmp; i < end; i++, buf++)
     {
         *i = *(char *)buf;
@@ -711,9 +757,23 @@ size_t write(int fd, void* buf, size_t count)
     // char *end = (char *)(entry->starting_sector * SECTOR_SIZE) + count + entry->file_info->position;
     char* end = (char *)(entry->file_info->base_address_memory + count + entry->file_info->position);
 
-    uint32_t tmp = entry->file_info->position;
+    uint32_t initial_position = entry->file_info->position;
+    for(int i = initial_position; i < initial_position + count; i++)
+    {
+        if(i == initial_position) //initial position 
+            entry->file_info->EntryMemoryBlockState[i / SECTOR_SIZE].begin = initial_position;
 
-    // for (char *i = (char *)(entry->starting_sector * SECTOR_SIZE) + tmp; i < end; i++, buf++)
+        if(!(i % SECTOR_SIZE)) //first byte of sector
+            entry->file_info->EntryMemoryBlockState[i / SECTOR_SIZE].begin = 0;
+
+        if(!(i % (SECTOR_SIZE - 1))) //last byte of sector
+            entry->file_info->EntryMemoryBlockState[i / SECTOR_SIZE].end = SECTOR_SIZE;
+        
+        if((i + 1) == initial_position + count)
+            entry->file_info->EntryMemoryBlockState[i / SECTOR_SIZE].end = (i + 1) % (SECTOR_SIZE * (i / SECTOR_SIZE) == 0 ? 1 : (SECTOR_SIZE * (i / SECTOR_SIZE)));
+    }
+
+    uint32_t tmp = entry->file_info->position;
     for (char *i = (char *)(entry->file_info->base_address_memory) + tmp; i < end; i++, buf++)
     {
         *i = *(char *)buf;
@@ -727,6 +787,11 @@ size_t write(int fd, void* buf, size_t count)
 
     return count;
 
+}
+
+const MemoryBlocksUsed* const xin_get_memory_block_state(xin_entry* entry)
+{
+    return entry->file_info->EntryMemoryBlockState;
 }
 
 void fseek(xin_entry *file, uint32_t new_position)
@@ -749,7 +814,6 @@ uint32_t ftell(xin_entry* file)
 xin_entry *fopen(char *file_path, char *mode)
 {
 
-
     xin_entry* file = xin_find_entry(file_path);
 
     if(strcmp(mode, "a"))
@@ -758,6 +822,7 @@ xin_entry *fopen(char *file_path, char *mode)
             file->file_info = (file_information_block*)calloc(sizeof(file_information_block));
 
         file->file_info->base_address_memory = (uint8_t*)calloc(SECTOR_SIZE * 0x10);
+        file->file_info->EntryMemoryBlockState = (MemoryBlocksUsed*)calloc(sizeof(MemoryBlocksUsed) * 0x10);
         strcpy(file->file_info->rights, mode);
         file->file_info->position = file->entry_size;
 
@@ -769,11 +834,8 @@ xin_entry *fopen(char *file_path, char *mode)
         for(int i = 0; i < sectors_to_load; i++)
             disk_read(ATA_FIRST_BUS, ATA_MASTER, file->starting_sector + i, 1, (uint16_t*)(file->file_info->base_address_memory + (i * SECTOR_SIZE)));
 
-        
         return file;
     }
-
-
 
     else if (file != nullptr && file->entry_type != XIN_DIRECTORY && file->entry_path[0] != '\0')
     {
@@ -783,6 +845,7 @@ xin_entry *fopen(char *file_path, char *mode)
             file->file_info = (file_information_block*)calloc(sizeof(file_information_block));
         
         file->file_info->base_address_memory = (uint8_t*)calloc(SECTOR_SIZE * 0x10);
+        file->file_info->EntryMemoryBlockState = (MemoryBlocksUsed*)calloc(sizeof(MemoryBlocksUsed) * 0x10);
         strcpy(file->file_info->rights, mode);
 
         file->file_info->position = 0;
@@ -795,7 +858,7 @@ xin_entry *fopen(char *file_path, char *mode)
 
         file->file_info = (file_information_block*)calloc(sizeof(file_information_block));
         strcpy(file->file_info->rights, mode);
-        file->file_info->base_address_memory = (uint8_t*)calloc(SECTOR_SIZE * 0x10);
+        file->file_info->EntryMemoryBlockState = (MemoryBlocksUsed*)calloc(sizeof(MemoryBlocksUsed) * 0x10);
         
         file->file_info->position = 0;
         return file;
@@ -813,11 +876,17 @@ void fclose(xin_entry** file)
     (*file)->entry_size = (*file)->file_info->position;
     (*file)->file_info->position = 0;
 
+    uint8_t* tmp = (uint8_t*)calloc(SECTOR_SIZE);
         
     if(!strcmp((*file)->file_info->rights, "r"))
     {
         for(int i = 0; i < 0x10; i++)
+        {
+            // if(!(*file)->file_info->used_memory_blocks[i])
+            //     fread((*file), tmp, SECTOR_SIZE);
+            // file->file_info->EntryMemoryBlockState = (MemoryBlocksUsed*)calloc(sizeof(MemoryBlocksUsed) * 0x10);
             disk_write(ATA_FIRST_BUS, ATA_MASTER, (*file)->starting_sector + i, 1, (uint16_t*)((*file)->file_info->base_address_memory + (i * SECTOR_SIZE)));
+        }
     }
 
     memset((*file)->file_info->rights, '\0', 2);

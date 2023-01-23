@@ -2,6 +2,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <stdbool.h>
 
 enum xin_fs_properties
 {
@@ -23,7 +24,15 @@ enum xin_fs_properties
 
 };
 
+struct MemoryBlocksUsed
+{
+    uint16_t begin;
+    uint16_t end;
+};
 
+#ifndef __cplusplus
+typedef struct MemoryBlocksUsed MemoryBlocksUsed;
+#endif
 
 struct file_information_block
 {
@@ -31,11 +40,12 @@ struct file_information_block
     char rights[2];
     uint32_t position;
     uint8_t* base_address_memory;
-
-
+    MemoryBlocksUsed* EntryMemoryBlockState;
 }__attribute__((packed, aligned(64)));
 
+#ifndef __cplusplus
 typedef struct file_information_block file_information_block;
+#endif
 
 struct xin_entry
 {
@@ -51,4 +61,6 @@ struct xin_entry
     file_information_block* file_info;  //64
 }__attribute__((packed));
 
+#ifndef __cplusplus
 typedef struct xin_entry xin_entry;
+#endif

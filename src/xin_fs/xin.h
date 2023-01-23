@@ -96,6 +96,7 @@ __STATUS __sys_xin_link_remove(char* linkname);
 XinChildrenEntries* xin_get_children_entries(char* folder, bool show_hidden);
 XinChildrenEntries* xin_get_children_entries_type(char* folder, uint8_t type);
 char* xin_get_entry_name(char* path);
+const MemoryBlocksUsed* const xin_get_memory_block_state(xin_entry* entry);
 
 #ifdef __cplusplus
 }
