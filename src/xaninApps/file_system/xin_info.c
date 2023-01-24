@@ -17,14 +17,13 @@ int xin_entry_info(char *entry_name)
         xprintf("entry_size: 0x%x\n", file->entry_size);
         xprintf("starting_sector: 0x%x\n", file->starting_sector);
 
-        fseek(file, 10);
-        fwrite(file, "12345", 5);
+        char* buffer = (char*)calloc(17);
+        fseek(file, 0);
+        fread(file, buffer, 16);
 
-        xprintf("memory block[0] state (begin): %d\n", xin_get_memory_block_state(file)[0].begin);
-        xprintf("memory block[0] state (end): %d\n", xin_get_memory_block_state(file)[0].end);
+        xprintf("first 16 chars in file: %s", buffer);
 
-        xprintf("memory block[1] state (begin): %d\n", xin_get_memory_block_state(file)[1].begin);
-        xprintf("memory block[1] state (end): %d\n", xin_get_memory_block_state(file)[1].end);
+
     }
 
     else

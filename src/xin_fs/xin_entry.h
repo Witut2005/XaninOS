@@ -40,7 +40,8 @@ struct file_information_block
     char rights[2];
     uint32_t position;
     uint8_t* base_address_memory;
-    MemoryBlocksUsed* EntryMemoryBlockState;
+    bool* sector_in_use;
+
 }__attribute__((packed, aligned(64)));
 
 #ifndef __cplusplus
