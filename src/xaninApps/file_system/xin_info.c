@@ -17,8 +17,9 @@ int xin_entry_info(char *entry_name)
         xprintf("entry_size: 0x%x\n", file->entry_size);
         xprintf("starting_sector: 0x%x\n", file->starting_sector);
 
-        fseek(file, 412);
-        fread(file, calloc(512), 512);
+        fseek(file, 10);
+        fwrite(file, "12345", 5);
+
         xprintf("memory block[0] state (begin): %d\n", xin_get_memory_block_state(file)[0].begin);
         xprintf("memory block[0] state (end): %d\n", xin_get_memory_block_state(file)[0].end);
 
@@ -32,6 +33,8 @@ int xin_entry_info(char *entry_name)
         while (KeyInfo.scan_code != ENTER);
         return XANIN_ERROR;
     }
+
+    fclose(&file);
 
     while (KeyInfo.scan_code != ENTER);
     return XANIN_OK;
