@@ -336,7 +336,7 @@ void _start(void)
 
     init_disk(ATA_FIRST_BUS, ATA_MASTER);    
         
-    for(int i = 0; i < 800; i++)
+    for(int i = 0; i < 1000; i++)
         disk_read(ATA_FIRST_BUS, ATA_MASTER, 0xA9 + i, 1, (uint16_t*)(0x20200 + ((15 + i)* SECTOR_SIZE)));
 
 

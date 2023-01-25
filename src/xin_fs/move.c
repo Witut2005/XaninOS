@@ -14,7 +14,7 @@ __STATUS xin_move(char* entry_name, char* new_name)
         return XIN_ENTRY_NOT_FOUND;
     }
 
-    xin_entry* entry = xin_find_entry(entry_name);
+    XinEntry* entry = xin_find_entry(entry_name);
 
     int i;
     if(new_name[0] == '/')

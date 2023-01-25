@@ -7,7 +7,7 @@
 
 void system_variable_get(char** buf, char* value)
 {
-    xin_entry* file = fopen("/config/variables.conf", "r");
+    XinEntry* file = fopen("/config/variables.conf", "r");
 
     char* line = calloc(512);
     //for(int i = 1; getline(file,i) != nullptr; i++)

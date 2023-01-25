@@ -25,7 +25,7 @@ void check_external_apps(void)
     for(int i = 0; program_name[i] != '\0'; i++)
         app[ARRAY_LENGTH("/external_apps/") + i - 1] = program_name[i];
 
-    xin_entry* file = fopen(app, "r");
+    XinEntry* file = fopen(app, "r");
 
     if(file != nullptr && file->entry_size != 0)
     {
@@ -164,7 +164,7 @@ void scan(void)
     XANIN_ADD_APP_ENTRY0("shutdown", shutdown)
     #endif
     
-    XANIN_ADD_APP_ENTRY1("rm", xin_entry_remove_app)
+    XANIN_ADD_APP_ENTRY1("rm", XinEntry_remove_app)
     XANIN_ADD_APP_ENTRY1("rd", xin_folder_remove_app)
     XANIN_ADD_APP_ENTRY1("cd", xin_folder_change_app)
 
@@ -192,7 +192,7 @@ void scan(void)
     #endif
 
     #ifdef XIN_INFO_APP
-    XANIN_ADD_APP_ENTRY1("xin_info", xin_entry_info)
+    XANIN_ADD_APP_ENTRY1("xin_info", XinEntry_info)
     #endif
 
     XANIN_ADD_APP_ENTRY0("cls", screen_clear)
@@ -243,10 +243,10 @@ void scan(void)
 
     else if(strcmp("real_mode_fswitch", program_name))
     {
-        xin_entry* real_mode_enter = fopen("/fast_real_mode_enter.bin", "r");
+        XinEntry* real_mode_enter = fopen("/fast_real_mode_enter.bin", "r");
         disk_read(ATA_FIRST_BUS, ATA_MASTER, real_mode_enter->starting_sector, 1, (uint16_t*)0x600);
 
-        xin_entry* real_mode_return = fopen("/fast_real_mode_return.bin", "r");
+        XinEntry* real_mode_return = fopen("/fast_real_mode_return.bin", "r");
         disk_read(ATA_FIRST_BUS, ATA_MASTER, real_mode_return->starting_sector, 1, (uint16_t*)0x400);
         real_mode_fswitch("0x0", "0x0");
     }

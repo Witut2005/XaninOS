@@ -117,7 +117,7 @@ uint32_t syscall_handle(void)
 
         case __NR_rename:
         {
-            __sys_xin_entry_move((char*)ebx, (char*)ecx);
+            __sys_XinEntry_move((char*)ebx, (char*)ecx);
             break;
         }
 

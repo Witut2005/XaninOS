@@ -144,7 +144,7 @@ NetworkHandler* device_info_get_by_name(char* device_name)
 
 uint32_t xanin_ip_get(void)
 {
-    xin_entry* nic_ip = fopen("/config/nic.conf", "rw");
+    XinEntry* nic_ip = fopen("/config/nic.conf", "rw");
 
     char* ip_str = (char*)calloc(64);
     fread(nic_ip, ip_str, 15);

@@ -249,7 +249,7 @@ int help(char* command)
     else if(strcmp(command, "xin_info"))
     {
         xprintf("command syntax: xin_info file_name\n");
-        xprintf("prints info about xin_entry\n");
+        xprintf("prints info about XinEntry\n");
     }
 
     else if(strcmp(command, "xpaint"))

@@ -28,7 +28,7 @@ bool elf_check_arch(uint8_t* file)
 
 }
 
-void elf_load(xin_entry* file)
+void elf_load(XinEntry* file)
 {
     uint8_t* data = (uint8_t*)calloc(file->entry_size * SECTOR_SIZE);
     fread(file, data, file->entry_size * SECTOR_SIZE);
@@ -112,7 +112,7 @@ void elf_load(xin_entry* file)
 
 int elfreader(char* filename)
 {
-    xin_entry* file = fopen(filename, "r");
+    XinEntry* file = fopen(filename, "r");
     elf_load(file);
     return XANIN_OK;
 }

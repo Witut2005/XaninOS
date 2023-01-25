@@ -26,7 +26,7 @@ void handle_selected_option(char* option)
     if(strcmp(option, "remove"))
     {
         xprintf("selected file: %s\n", selected_file);
-        __sys_xin_entry_remove(selected_file);
+        __sys_XinEntry_remove(selected_file);
         // while(1);
     }
 
@@ -36,7 +36,7 @@ void handle_selected_option(char* option)
         Screen.y = 25;
         xprintf("New file name: ");
         xscanf("%s", new_name);
-        __sys_xin_entry_move(selected_file, xin_get_current_path(new_name));
+        __sys_XinEntry_move(selected_file, xin_get_current_path(new_name));
 
         free(new_name);
     }

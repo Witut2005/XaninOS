@@ -11,7 +11,7 @@
 void printk(const char * str)
 {
 
-    xin_entry* file = fopen("/syslog", "rw");
+    XinEntry* file = fopen("/syslog", "rw");
 
     char* buf = calloc(80);
 

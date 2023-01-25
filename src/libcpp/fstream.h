@@ -15,7 +15,7 @@ namespace std
     {
 
         private:
-            xin_entry* file; 
+            XinEntry* file; 
             uint32_t input_position_sequence;
             uint32_t output_position_sequence;
             FileStreamBitFlags FstreamFlags;

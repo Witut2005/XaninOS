@@ -2,15 +2,17 @@
 
 #pragma once
 
-int load(char* address_string)
+int load(char* file_name)
 {
 
     screen_clear();
 
+    XinEntry* File = fopen(file_name, "rw");
 
-    uint32_t address = strtoi(address_string, 16);
+    uint8_t* file_data = (uint8_t*)calloc(File->entry_size);
+    fread(File, file_data, File->entry_size);
 
-    char* data_pointer = (char*)(address);
+    char* data_pointer = (char*)file_data;
 
 
     for(int i = 0; i < 28; i++)

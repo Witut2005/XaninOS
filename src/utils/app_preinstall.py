@@ -62,6 +62,7 @@ for current_file in args.files:
     file_lenght = int(len(data) / SECTOR_SIZE)
     if(len(data) % 512 != 0):
         file_lenght += 1 
+    
     print('file lenght(in sectors):', file_lenght)
     if(file_lenght == 0):
         file_lenght += 1
@@ -74,13 +75,13 @@ for current_file in args.files:
     
     file.seek(xin_filesystem_entries)
     file.write(bytes('/' + current_file, 'ascii'))
-    file.seek(xin_filesystem_entries + 38)
+    file.seek(xin_filesystem_entries + 38) #entry path
     file.write(bytes(XIN_FILE, 'ascii'))
     file.write(bytes(13))
-    file.write(file_lenght.to_bytes(4, 'little'))
-    file.write((xin_filesystem_pointers - xin_filesystem_pointers_begin).to_bytes(4, 'little'))
+    file.write(len(data).to_bytes(4, 'little')) #entry size
+    file.write((xin_filesystem_pointers - xin_filesystem_pointers_begin).to_bytes(4, 'little')) #first sector #first sector #first sector #first sector
     
-    file.seek(SECTOR_SIZE * (xin_filesystem_pointers - xin_filesystem_pointers_begin))
+    file.seek(SECTOR_SIZE * (xin_filesystem_pointers - xin_filesystem_pointers_begin)) #write data to image
     file.write(data)
 
     xin_filesystem_entries += XIN_ENTRY_SIZE

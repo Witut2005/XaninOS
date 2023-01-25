@@ -135,7 +135,7 @@ int xin_paint(char* file_name)
     screen_clear();
 
 
-    xin_entry* xin_file = fopen(file_name, "rw");
+    XinEntry* xin_file = fopen(file_name, "rw");
 
     if(xin_file == nullptr)
     {

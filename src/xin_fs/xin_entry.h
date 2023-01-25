@@ -34,21 +34,20 @@ struct MemoryBlocksUsed
 typedef struct MemoryBlocksUsed MemoryBlocksUsed;
 #endif
 
-struct file_information_block
+struct FileInformationBlock 
 {
     char file_name[MAX_PATH];
     char rights[2];
     uint32_t position;
     uint8_t* base_address_memory;
     bool* sector_in_use;
-
 }__attribute__((packed, aligned(64)));
 
 #ifndef __cplusplus
-typedef struct file_information_block file_information_block;
+typedef struct FileInformationBlock FileInformationBlock;
 #endif
 
-struct xin_entry
+struct XinEntry
 {
     char entry_path[MAX_PATH];          //38
     uint8_t entry_type;                 //39
@@ -59,9 +58,9 @@ struct xin_entry
     uint8_t entry_permissions;          //52
     uint32_t entry_size;                //56
     uint32_t starting_sector;           //60
-    file_information_block* file_info;  //64
+    FileInformationBlock* FileInfo; //64
 }__attribute__((packed));
 
 #ifndef __cplusplus
-typedef struct xin_entry xin_entry;
+typedef struct XinEntry XinEntry;
 #endif

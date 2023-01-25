@@ -436,7 +436,7 @@ void _start(void)
 
     // __sys_xin_folder_create("/config/");
     // __sys_xin_file_create("/config/nic.conf");
-    // xin_entry* nic_config = fopen("/config/nic.conf", "rw");
+    // XinEntry* nic_config = fopen("/config/nic.conf", "rw");
     // fwrite(nic_config, "192.168.019.012  //XaninOS nic IP address(USE ALWAYS FULL OCTETS)", ARRAY_LENGTH("192.168.019.012  //XaninOS nic IP address(USE ALWAYS FULL OCTETS"));
     // fclose(&nic_config);
     

@@ -25,7 +25,7 @@ int screenshot(void)
     CmosTime time = std::chrono::system_clock::now();
     xin::xin_create_file(std::chrono::time_to_string(time).c_str());    
 
-    xin_entry* file = xin::fopen(std::chrono::time_to_string(time).c_str(), "rw");
+    XinEntry* file = xin::fopen(std::chrono::time_to_string(time).c_str(), "rw");
 
     uint8_t* data = (uint8_t*)VGA_TEXT_MEMORY;
     xin::fwrite(file, data, VGA_SCREEN_RESOLUTION);

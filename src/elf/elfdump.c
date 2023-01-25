@@ -3,7 +3,7 @@
 
 #include <stddef.h>
 
-void elf_data_load(xin_entry* file)
+void elf_data_load(XinEntry* file)
 {
     uint8_t* data = (uint8_t*)calloc(file->entry_size * SECTOR_SIZE);
     fread(file, data, file->entry_size * SECTOR_SIZE);
@@ -68,7 +68,7 @@ void elf_data_load(xin_entry* file)
 int elfdump(char* filename)
 {
     screen_clear();
-    xin_entry* file = fopen(filename, "r");
+    XinEntry* file = fopen(filename, "r");
     elf_data_load(file);
     return XANIN_OK;
 }

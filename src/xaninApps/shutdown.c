@@ -26,7 +26,7 @@ int shutdown(void)
         disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x1a + i, 1, (uint16_t*)(0x1800 + (i * SECTOR_SIZE)));
 
 
-    xin_entry* xin_file = fopen("/shutdown.bin", "r");
+    XinEntry* xin_file = fopen("/shutdown.bin", "r");
     disk_read(ATA_FIRST_BUS, ATA_MASTER, xin_file->starting_sector, 1, (uint16_t*)0x400);
 
 

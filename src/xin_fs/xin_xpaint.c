@@ -112,7 +112,7 @@ void xpaint_input(void)
 int xin_xpaint(char* file_name)
 {
 
-    xin_entry* xin_file = fopen(file_name, "rw");
+    XinEntry* xin_file = fopen(file_name, "rw");
 
     if(xin_file == nullptr)
     {

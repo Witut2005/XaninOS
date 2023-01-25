@@ -56,7 +56,7 @@ __STATUS __sys_xin_folder_create(char* entry_name)
 }
 
 
-__STATUS __sys_xin_entry_move(char* entry_name, char* new_name)
+__STATUS __sys_XinEntry_move(char* entry_name, char* new_name)
 {
     
     __STATUS status = xin_move(entry_name, new_name);
@@ -84,7 +84,7 @@ __STATUS __sys_xin_folder_remove(char* folder_name)
 }
 
 
-__STATUS __sys_xin_entry_remove(char* entry_name)
+__STATUS __sys_XinEntry_remove(char* entry_name)
 {
     __STATUS status = sys_xin_remove_entry(entry_name);
 
@@ -100,7 +100,7 @@ __STATUS __sys_xin_entry_remove(char* entry_name)
 
 __STATUS __sys_xin_folder_change(const char* new_folder_name)
 {
-    xin_entry* folder_entry = xin_folder_change(new_folder_name);
+    XinEntry* folder_entry = xin_folder_change(new_folder_name);
 
     if(folder_entry == nullptr)
     {
@@ -116,7 +116,7 @@ __STATUS __sys_xin_folder_change(const char* new_folder_name)
 __STATUS __sys_xin_copy(char* file_name, char* new_file_name)
 {
 
-    xin_entry* entry = xin_find_entry(file_name);
+    XinEntry* entry = xin_find_entry(file_name);
 
     if(entry == nullptr)
         return XIN_ENTRY_NOT_FOUND;
@@ -126,8 +126,8 @@ __STATUS __sys_xin_copy(char* file_name, char* new_file_name)
     if(status != XANIN_OK)
         return status;
 
-    xin_entry* file = fopen(file_name, "r");
-    xin_entry* file_created = fopen(new_file_name, "rw");
+    XinEntry* file = fopen(file_name, "r");
+    XinEntry* file_created = fopen(new_file_name, "rw");
 
     char* entry_data = (char*)calloc(SECTOR_SIZE);
     
@@ -146,11 +146,11 @@ __STATUS __sys_xin_copy(char* file_name, char* new_file_name)
 
 __STATUS __sys_xin_link_remove(char* linkname)
 {
-    xin_entry* file = xin_find_entry(linkname); 
+    XinEntry* file = xin_find_entry(linkname); 
 
     if(file != nullptr && file->entry_type == XIN_LINK)
     {
-        memset((uint8_t*)file, 0x0, sizeof(xin_entry));
+        memset((uint8_t*)file, 0x0, sizeof(XinEntry));
         return XANIN_OK;
     }
 
@@ -166,13 +166,13 @@ __STATUS __sys_xin_link_create(char* file_name, char* link_name)
 {
 
 
-    xin_entry* file = xin_find_entry(file_name); 
+    XinEntry* file = xin_find_entry(file_name); 
 
     if(file == nullptr)
         return XIN_ENTRY_NOT_FOUND;
 
-    xin_entry* link = xin_find_free_entry();
-    memcpy((uint8_t*)link, (uint8_t*)file, sizeof(xin_entry));
+    XinEntry* link = xin_find_free_entry();
+    memcpy((uint8_t*)link, (uint8_t*)file, sizeof(XinEntry));
 
     link->entry_type = XIN_LINK;
 
@@ -205,7 +205,7 @@ __STATUS __sys_xin_list_files(char** argv)
     }
 
 
-    xin_entry* i = (xin_entry*)XIN_ENTRY_TABLE; 
+    XinEntry* i = (XinEntry*)XIN_ENTRY_TABLE; 
 
     int printed_text = 0;
     char* current_path = xin_get_current_path(path);
