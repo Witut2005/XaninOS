@@ -856,7 +856,7 @@ void fclose(XinEntry** file)
     {
         for(int i = 0; i < 0x10; i++)
         {
-            if((*file)->FileInfo->sector_in_use)
+            if(!(*file)->FileInfo->sector_in_use[i])
             {
                 fseek((*file), i * SECTOR_SIZE);
                 fread((*file), tmp, SECTOR_SIZE);
