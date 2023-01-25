@@ -2,7 +2,7 @@
 
 #pragma once
 
-int load(char* file_name)
+int load_file(char* file_name)
 {
 
     screen_clear();
@@ -12,8 +12,8 @@ int load(char* file_name)
     uint8_t* file_data = (uint8_t*)calloc(File->entry_size);
     fread(File, file_data, File->entry_size);
 
+    uint32_t address = (uint32_t)file_data;
     char* data_pointer = (char*)file_data;
-
 
     for(int i = 0; i < 28; i++)
     {
