@@ -122,7 +122,7 @@ void table_row_select(table_t* Table)
             if(current_page < Table->sites-1)
                 current_page++;
             else
-                continue;
+                current_page = 0;
 
             current_row = 0;
             cursor_y = Table->y + 1;
@@ -156,7 +156,7 @@ void table_row_select(table_t* Table)
             if(current_page > 0)
                 current_page--;
             else
-                continue;
+                current_page = Table->sites - 1;
 
             current_row = 0;
             cursor_y = Table->y + 1;

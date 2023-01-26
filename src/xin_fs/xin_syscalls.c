@@ -2,6 +2,12 @@
 /*NO GETSCAN BROOOO*/
 
 #include <xin_fs/xin.h>
+#include <libc/stdlibx.h>
+#include <libc/memory.h>
+#include <libc/colors.h>
+#include <libc/stdiox.h>
+#include <libc/string.h>
+
 
 __STATUS __sys_xin_file_create(char* entry_name)
 {
@@ -55,22 +61,40 @@ __STATUS __sys_xin_folder_create(char* entry_name)
     return XANIN_OK;
 }
 
-
-__STATUS __sys_XinEntry_move(char* entry_name, char* new_name)
+__STATUS __sys_xin_entry_move(char* entry_name, char* new_name)
 {
-    
-    __STATUS status = xin_move(entry_name, new_name);
 
-    if(status == XIN_ENTRY_NOT_FOUND)
+    if(xin_get_file_pf(new_name) == nullptr)
     {
-        // xprintf("%zENTRY NOT FOUND: %s\n", stderr, entry_name);    
-        // while(KeyInfo.scan_code != ENTER);
+         return XIN_ENTRY_NOT_FOUND;
+    }
+
+    if(xin_find_entry(entry_name) == nullptr)
+    {
         return XIN_ENTRY_NOT_FOUND;
     }
+
+    XinEntry* entry = xin_find_entry(entry_name);
+
+    int i;
+    if(new_name[0] == '/')
+    {
+        for(i = 0; new_name[i] != '\0'; i++)
+            entry->entry_path[i] = new_name[i];
+    }
+    else
+    {
+        for(i = 0; xin_get_current_path(new_name)[i] != '\0'; i++)
+            entry->entry_path[i] = xin_get_current_path(new_name)[i];
+
+    }
+
+    entry->entry_path[i] = '\0';
 
     return XANIN_OK;
 
 }
+
 
 __STATUS __sys_xin_folder_remove(char* folder_name)
 {
@@ -84,14 +108,12 @@ __STATUS __sys_xin_folder_remove(char* folder_name)
 }
 
 
-__STATUS __sys_XinEntry_remove(char* entry_name)
+__STATUS __sys_xin_entry_remove(char* entry_name)
 {
     __STATUS status = sys_xin_remove_entry(entry_name);
 
     if(status == XIN_ENTRY_NOT_FOUND)
-    {
         return XIN_ENTRY_NOT_FOUND;
-    }
 
     return XANIN_OK;
 
@@ -100,14 +122,10 @@ __STATUS __sys_XinEntry_remove(char* entry_name)
 
 __STATUS __sys_xin_folder_change(const char* new_folder_name)
 {
-    XinEntry* folder_entry = xin_folder_change(new_folder_name);
+    XinEntry* folder_entry = xin_folder_change((char*)new_folder_name);
 
     if(folder_entry == nullptr)
-    {
         return XANIN_ERROR;
-    }
-
-
 
     return XANIN_OK;
 }
@@ -154,10 +172,7 @@ __STATUS __sys_xin_link_remove(char* linkname)
         return XANIN_OK;
     }
 
-    else
-    {
-        return XANIN_ERROR;
-    }
+    return XANIN_ERROR;
 
 
 }
@@ -211,11 +226,7 @@ __STATUS __sys_xin_list_files(char** argv)
     char* current_path = xin_get_current_path(path);
 
     if(xin_find_entry(path) == nullptr && strlen(path) > 0)
-    {
-        xprintf("%zNO SUCH DIRECTORY\n", stderr);
-        while(KeyInfo.scan_code != ENTER);
-        return XANIN_OK;
-    }
+        return XANIN_ERROR;
 
     while((uint32_t)i < XIN_ENTRY_TABLE + SECTOR_SIZE * 50)
     {

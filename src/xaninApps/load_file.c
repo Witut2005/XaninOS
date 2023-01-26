@@ -2,8 +2,13 @@
 
 #pragma once
 
-int load_file(char* file_name)
+int load_file(char* file_name, char* options)
 {
+
+    uint32_t offset = 0;
+
+    if(strcmp(options, "-offset"))
+        offset = strtoi(argv[3], 16);
 
     screen_clear();
 
@@ -12,8 +17,8 @@ int load_file(char* file_name)
     uint8_t* file_data = (uint8_t*)calloc(File->entry_size);
     fread(File, file_data, File->entry_size);
 
-    uint32_t address = (uint32_t)file_data;
-    char* data_pointer = (char*)file_data;
+    uint32_t address = (uint32_t)file_data + offset;
+    char* data_pointer = (char*)file_data + offset;
 
     for(int i = 0; i < 28; i++)
     {

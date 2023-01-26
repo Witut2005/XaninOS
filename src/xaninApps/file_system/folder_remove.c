@@ -7,6 +7,6 @@ int xin_folder_remove_app(char* folder_name)
     if(status == XIN_ENTRY_NOT_FOUND)
     {
         xprintf("%zNO SUCH FOLDER: %s\n", stderr, folder_name);
-        while(KeyInfo.scan_code != ENTER);
+        while(inputg().scan_code != ENTER);
     }
 }

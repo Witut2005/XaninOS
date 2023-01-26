@@ -6,6 +6,11 @@
 #include <stdbool.h>
 
 #define XANIN_PMMNGR_BLOCK_SIZE 4096
+
+#ifndef nullptr
+#define nullptr 0x0
+#endif
+
 struct CmosTime
 {
     uint8_t seconds; 
@@ -108,13 +113,9 @@ extern bool app_exited;
 extern int last_command_exit_status;
 extern uint8_t null_region[20];
 
+
 enum XANIN_RETURN_STATUS
 {
-
     XANIN_OK = 0x0,
     XANIN_ERROR = 0x3,
-    XIN_FILE_EXISTS = 0x4,
-    XIN_BAD_FOLDER_NAME = 0x5,
-    XIN_ENTRY_NOT_FOUND = 0x6
-
 };

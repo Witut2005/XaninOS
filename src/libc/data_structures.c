@@ -2,8 +2,6 @@
 #include <libc/stdlibx.h>
 #include <libc/data_structures.h>
 
-#define nullptr 0
-
 stack_t* stack_create(void)
 {
     stack_t* StackCreated = (stack_t*)calloc(sizeof(stack_t));

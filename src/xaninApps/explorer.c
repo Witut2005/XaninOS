@@ -10,23 +10,16 @@ static bool exit_tui_test_app;
 static char* selected_file;
 
 extern int edit(char* file_name);
+extern int xin_info(char *entry_name);
 
 #define TUI_TEST_SITES 2
 
 void handle_selected_option(char* option)
 {
-
-        // table_insert(fro , 0, "remove", black, white, 0);
-        // table_insert(fro , 1, "rename", black, white, 0);
-        // table_insert(fro , 2, "link", black, white, 0);
-        // table_insert(fro , 3, "copy", black, white, 0);
-        // table_insert(fro , 4, "info", black, white, 0);
-        // table_insert(fro , 5, "edit", black, white, 0);
-
     if(strcmp(option, "remove"))
     {
         xprintf("selected file: %s\n", selected_file);
-        __sys_XinEntry_remove(selected_file);
+        __sys_xin_entry_remove(selected_file);
         // while(1);
     }
 
@@ -36,7 +29,7 @@ void handle_selected_option(char* option)
         Screen.y = 25;
         xprintf("New file name: ");
         xscanf("%s", new_name);
-        __sys_XinEntry_move(selected_file, xin_get_current_path(new_name));
+        __sys_xin_entry_move(selected_file, xin_get_current_path(new_name));
 
         free(new_name);
     }
@@ -93,6 +86,11 @@ void handle_selected_option(char* option)
         __sys_xin_file_create(new_name);
         xprintf("new file: %s\n", xin_get_current_path(new_name));
         free(new_name);
+    }
+
+    else if(strcmp(option, "info"))
+    {
+        xin_info(selected_file);
     }
 
 
@@ -173,10 +171,13 @@ int explorer(char* parent_folder)
     selected_file = nullptr;
     exit_tui_test_app = false;
 
+    char* initial_folder = (char*)calloc(MAX_PATH);
+    xin_get_current_directory(initial_folder);
+
     app_current_folder = (char*)calloc(80);
 
     if(!strlen(parent_folder))
-        strcpy(app_current_folder, xin_get_current_directory()); 
+        xin_get_current_directory(app_current_folder);
 
 
     else if(parent_folder[strlen(parent_folder) - 1] != '/')
@@ -246,6 +247,9 @@ int explorer(char* parent_folder)
 
     free(app_parent_folder);
     free(app_current_folder);
+
+    __sys_xin_folder_change(initial_folder);
+    free(initial_folder);
 
     return XANIN_OK;
 

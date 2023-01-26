@@ -11,6 +11,7 @@
 #include <libc/memory.h>
 #include <libc/string.h>
 #include <syscall/posix/posix.h>
+#include <xin_fs/xin_syscalls.h>
 
 
 extern int reboot(void);
@@ -117,7 +118,7 @@ uint32_t syscall_handle(void)
 
         case __NR_rename:
         {
-            __sys_XinEntry_move((char*)ebx, (char*)ecx);
+            __sys_xin_entry_move((char*)ebx, (char*)ecx);
             break;
         }
 

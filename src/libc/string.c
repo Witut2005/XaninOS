@@ -377,13 +377,16 @@ uint32_t atoi(char* str)
 
 
 
-uint32_t strtoi(char* str, uint8_t format)
+uint32_t strtoi(const char* str, uint8_t format)
 {
 
     uint32_t sum = 0;
 
     if(format > 16) 
         format = 16;
+
+    if(format == 16 && strncmp((char*)str, "0x", 2))
+        str += 2;
 
     uint16_t* tmp_text = (uint16_t*)VGA_TEXT_MEMORY;
     uint8_t digit_counter = strlen(str);

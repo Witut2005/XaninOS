@@ -36,9 +36,9 @@ char* xin_set_current_directory(char *directory)
     return xin_current_directory;
 }
 
-const char* const xin_get_current_directory(void)
+void xin_get_current_directory(char* buf)
 {
-    return xin_current_directory;
+    memcpy((uint8_t*)buf, (uint8_t*)xin_current_directory, MAX_PATH);
 }
 
 char *xin_get_current_path(char *file_name)

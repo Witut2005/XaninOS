@@ -208,6 +208,9 @@ build:
 	@echo [C] xin.c
 	@$(C) $(C_OPTIONS) ./xin_fs/xin.c -o ./xin_fs/xin.o
 
+	@echo [C] xin_syscalls.c
+	@$(C) $(C_OPTIONS) ./xin_fs/xin_syscalls.c -o ./xin_fs/xin_syscalls.o
+
 	@echo [C] edit.c
 	@$(C) $(C_OPTIONS) ./xin_fs/edit.c -o ./xin_fs/edit.o
 
@@ -252,6 +255,7 @@ build:
 	./pit/pit.o \
 	./syscall/syscall_entry.o \
 	./xin_fs/xin.o \
+	./xin_fs/xin_syscalls.o \
 	./xin_fs/edit.o \
 	./test/cpp_test.o \
 	./test/cpp_test2.o \

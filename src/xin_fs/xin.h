@@ -11,6 +11,15 @@
 #define XIN_FILE_BEGIN 0
 #define XIN_ENTRY_SIZE 64
 
+enum XIN_RETURN_STATUS
+{
+
+    XIN_FILE_EXISTS = 0x4,
+    XIN_BAD_FOLDER_NAME = 0x5,
+    XIN_ENTRY_NOT_FOUND = 0x6
+
+};
+
 typedef int __STATUS;
 
 struct XinFileDescriptor
@@ -50,7 +59,7 @@ namespace xin{
 #endif
 
 char* xin_set_current_directory(char* directory);
-const char* const xin_get_current_directory(void);
+void xin_get_current_directory(char* buf);
 char* xin_get_current_path(char* file_name);
 
 __STATUS sys_xin_remove_entry(char* entry_name);
@@ -62,9 +71,6 @@ XinEntry* xin_find_free_entry(void);
 int xin_create_file(char* entry_name);
 int xin_folder_create(char* entry_name);
 XinEntry* xin_folder_change(char* new_directory);
-
-
-
 int XinEntry_resize(uint16_t last_sector);
 XinEntry* fopen(char* file_path, char* mode);
 int open(char* file_path, uint32_t options);
@@ -76,23 +82,13 @@ XinEntry* create(char* file_name);
 void fseek(XinEntry *file, uint32_t new_position);
 void lseek(int fd, uint32_t new_position);
 XinEntry* xin_get_file_pf(char* entry_path); // pf = parent folder
-XinEntry *xin_find_entry(char *entry_name);
+XinEntry* xin_find_entry(char *entry_name);
 __STATUS remove_directory(char* folder_name);
 void create_file_kernel(char* entry_name);
 void fclose(XinEntry** file);
 void close(int fd);
 char* getline(XinEntry* file, int line_id);
 char* getline_from_ptr(char* data, int line_id);
-__STATUS __sys_xin_file_create(char* entry_name);
-__STATUS __sys_xin_folder_create(char* entry_name);
-__STATUS __sys_XinEntry_move(char* entry_name, char* new_name);
-__STATUS __sys_xin_folder_remove(char* folder_name);
-__STATUS __sys_XinEntry_remove(char* entry_name);
-__STATUS __sys_xin_folder_change(const char* new_folder_name);
-__STATUS __sys_xin_copy(char* file_name, char* new_file_name);
-__STATUS __sys_xin_link_create(char* file_name, char* link_name);
-__STATUS __sys_xin_list_files(char** argv);
-__STATUS __sys_xin_link_remove(char* linkname);
 XinChildrenEntries* xin_get_children_entries(char* folder, bool show_hidden);
 XinChildrenEntries* xin_get_children_entries_type(char* folder, uint8_t type);
 char* xin_get_entry_name(char* path);

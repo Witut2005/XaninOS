@@ -52,7 +52,7 @@ bool Intel8254xDriver::is_eeprom_present(void)
 
 }
 
-__attribute__((fastcall)) uint16_t Intel8254xDriver::eeprom_read(uint8_t address)
+uint16_t Intel8254xDriver::eeprom_read(uint8_t address)
 {
 
     /* enable reading from eeprom */
@@ -397,7 +397,7 @@ uint8_t* Intel8254xDriver::receive_packet(void)
 }
 
 
-void Intel8254xDriver::interrupt_handler(void)
+void Intel8254xDriver::interrupt_handler(void) 
 {
     uint16_t interrupt_status = this->read(nic::ICR);
     
@@ -406,15 +406,19 @@ void Intel8254xDriver::interrupt_handler(void)
 
 }
 
-
-uint32_t Intel8254xDriver::receive_buffer_get(void)
+uint32_t Intel8254xDriver::receive_buffer_get(void) const
 {
     return (uint32_t)this->receive_buffer;
 }
 
-uint32_t Intel8254xDriver::transmit_buffer_get(void)
+uint32_t Intel8254xDriver::transmit_buffer_get(void) const
 {
     return (uint32_t)this->transmit_buffer;
+}
+
+bool Intel8254xDriver::is_device_present(void) const
+{
+    return this->is_present;
 }
 
 extern "C"
@@ -443,7 +447,7 @@ extern "C"
 
     uint8_t* i8254x_mac_get(void)
     {
-        return Intel8254x.mac;
+        return Intel8254x.mac_get();
     }
 
     uint32_t i8254x_receive_descriptors_buffer_get(void)
@@ -476,8 +480,8 @@ extern "C"
     void i8254x_init(void)
     {
         Intel8254x.init();
-        if(Intel8254x.is_present)
-            netapi_add_device(i8254x_packet_receive, i8254x_packet_send, i8254x_mac_get(), i8254x_interrupt_handler, &Intel8254x.pci_info);
+        if(Intel8254x.is_device_present())
+            netapi_add_device(i8254x_packet_receive, i8254x_packet_send, i8254x_mac_get(), i8254x_interrupt_handler, Intel8254x.pci_info_get());
     }
 
     

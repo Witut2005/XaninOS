@@ -7,7 +7,8 @@
         "cstdio": "c",
         "stdlibx.h": "c",
         "tui.h": "c",
-        "XinEntry.h": "c"
+        "XinEntry.h": "c",
+        "xin_syscalls.h": "c"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }

@@ -171,7 +171,7 @@ class Intel8254xDriver
 {
 
 
-    public:
+    private:
     bool is_present;
     uint8_t* iobase;
     uint32_t pci_selector;
@@ -191,26 +191,25 @@ class Intel8254xDriver
     //---------------------------------
 
     // ~Intel8254xDriver(void);
-
+    public:
     void write(uint32_t reg, uint32_t value);
     uint32_t read(uint32_t reg);
     uint8_t* mac_get(void);
     uint32_t iobase_get(void);
     uint16_t vendorid_get(void);
     pci_device* pci_info_get(void);
-    __attribute__((fastcall))uint16_t eeprom_read(uint8_t address);
+    uint16_t eeprom_read(uint8_t address);
     bool is_eeprom_present(void);
     void multicast_table_array_clear(void);
     uint32_t receive_descriptors_buffer_get(void);
     uint32_t transmit_descriptors_buffer_get(void);
-    uint32_t receive_buffer_get(void);
-    uint32_t transmit_buffer_get(void);
-    // void send_ethernet_frame(uint8_t* mac_destination, uint8_t* mac_source, uint8_t* buffer, uint16_t length);
-    uint32_t* this_return(void); 
+    uint32_t receive_buffer_get(void) const;
+    uint32_t transmit_buffer_get(void) const;
     void interrupt_handler(void);
     void receive_init(void);
     void transmit_init(void);
     void init(void);
+    bool is_device_present(void) const;
     
 
     uint8_t* receive_packet(void);
@@ -218,9 +217,6 @@ class Intel8254xDriver
     
     template<class T>
     void send_range(T range);
-
-
-
 
 };
 

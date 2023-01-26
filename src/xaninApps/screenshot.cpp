@@ -17,7 +17,8 @@ int screenshot(void)
 {
 
     char* current_directory = (char*)calloc(40);
-    memcpy((uint8_t*)current_directory, (uint8_t*)xin::xin_get_current_directory(), 40);
+
+    xin::xin_get_current_directory(current_directory);
 
     std::string filename = "/screenshot/";
     xin::xin_folder_change(filename.c_str());

@@ -128,11 +128,7 @@
 #endif
 
 #ifdef CAT_APP
-#include <xin_fs/cat.c>
-#endif
-
-#ifdef XIN_MOVE_APP
-#include <xin_fs/move.c>
+#include <xaninApps/file_system/cat.c>
 #endif
 
 #ifdef XIN_INFO_APP
@@ -157,7 +153,6 @@ extern int tetris(void);
 #include <xaninApps/nic_info.c>
 #include <gyn_cl/gyn.c>
 #include <xin_fs/xin_xpaint.c>
-#include <xin_fs/xin_apps.c>
 #include <xaninApps/xgl_test.c>
 
 #include <xaninApps/arp_table_print.c>

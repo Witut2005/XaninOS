@@ -1,5 +1,5 @@
 
-#include <xin_fs/xin.h>
+#include <xin_fs/xin_syscalls.h>
 
 __STATUS xin_copy_app(char* file_name, char* new_file_name)
 {
@@ -10,7 +10,7 @@ __STATUS xin_copy_app(char* file_name, char* new_file_name)
     else if(status == XIN_ENTRY_NOT_FOUND)
     {
         xprintf("%zFILE NOT FOUND: %s\n", stderr, file_name);
-        while(KeyInfo.scan_code != ENTER);
+        while(inputg().scan_code != ENTER);
     }
 
     return status;

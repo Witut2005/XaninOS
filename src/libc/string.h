@@ -32,7 +32,7 @@ uint32_t hex_str_to_int(char* str);
 char* xint_to_hex_str(uint32_t x, char* buf, uint8_t how_many_chars);
 char* int_to_oct_str(int x, char* buf);
 uint32_t atoi(char* str);
-uint32_t strtoi(char* str, uint8_t format);
+uint32_t strtoi(const char* str, uint8_t format);
 uint32_t str2ipv4(char* str);
 char* substr_find(char *str, const char *substr);
 char* strconcat(char* str1, char* buf); //concatenate str1 and buf (first str1)

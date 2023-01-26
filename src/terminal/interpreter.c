@@ -62,7 +62,7 @@ void scan(void)
 
     XANIN_ADD_APP_ENTRY0("start_screen", start_screen)
     XANIN_ADD_APP_ENTRY0("screensaver", start_screen)
-    XANIN_ADD_APP_ENTRY1("load_file", load_file)
+    XANIN_ADD_APP_ENTRY2("load_file", load_file)
 
     #ifdef HELP_APP
     XANIN_ADD_APP_ENTRY1("help", help)
@@ -193,7 +193,7 @@ void scan(void)
     #endif
 
     #ifdef XIN_INFO_APP
-    XANIN_ADD_APP_ENTRY1("xin_info", XinEntry_info)
+    XANIN_ADD_APP_ENTRY1("xin_info", xin_info)
     #endif
 
     XANIN_ADD_APP_ENTRY0("cls", screen_clear)
