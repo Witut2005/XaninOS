@@ -127,8 +127,9 @@ class rectangle : public GeometryObject
         void move(int32_t x, int32_t y);
         void destroy();
         void rotate_right_90();
-        auto size_get();
-        auto position_get();
+        void cell_remove(uint8_t x, uint8_t y);
+        std::pair<uint32_t, uint32_t> size_get();
+        std::pair<uint32_t, uint32_t> position_get();
         uint32_t sizex_get();
         uint32_t sizey_get();
         uint32_t positionx_get();
@@ -142,6 +143,8 @@ class rectangle : public GeometryObject
         uint32_t size_y;
         uint32_t color;
         uint32_t class_id;
+        uint8_t blank_cells_counter;
+        std::pair<uint8_t, uint8_t>* BlankCells;
         bool is_destroyed;
 };
 

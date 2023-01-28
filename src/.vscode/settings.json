@@ -10,5 +10,12 @@
         "XinEntry.h": "c",
         "xin_syscalls.h": "c"
     },
-    "C_Cpp.errorSquiggles": "disabled"
+    "C_Cpp.errorSquiggles": "disabled",
+    "makefile.launchConfigurations": [
+        {
+            "cwd": "/home/witut/Desktop/xaninOS/src/boot",
+            "binaryPath": "/home/witut/Desktop/xaninOS/src/boot/disk_freestanding_driver",
+            "binaryArgs": []
+        }
+    ]
 }

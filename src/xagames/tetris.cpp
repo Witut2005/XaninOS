@@ -25,12 +25,25 @@ bool if_row_achieved(int row)
 void row_down(int row)
 {
 
+    
+    uint8_t* vram_copy = (uint8_t*)calloc(VGA_SCREEN_RESOLUTION);
+    memcpy(vram_copy, (uint8_t*)VGA_TEXT_MEMORY, VGA_SCREEN_RESOLUTION);
+
     xgm::Renderer::ScreenManager TetrisScreen;
     for(int i = 0; i < VGA_WIDTH; i++)
         TetrisScreen[row * VGA_WIDTH + i] = xgm::color::black;
+
+    // screen_clear();
     
-    memcpy((uint8_t*)(VGA_TEXT_MEMORY + (VGA_WIDTH * 2)), (uint8_t*)VGA_TEXT_MEMORY, VGA_WIDTH * 2);
-    memset((uint8_t*)(VGA_TEXT_MEMORY), 0x0, VGA_WIDTH * 2);
+    if(!row)
+    {
+        free(vram_copy);
+        return;
+    }
+
+    memcpy((uint8_t*)VGA_TEXT_MEMORY + (VGA_WIDTH * 2), (uint8_t*)vram_copy, row * VGA_WIDTH * 2);
+
+    free(vram_copy);
 
 }
 
@@ -49,16 +62,41 @@ extern "C" int tetris(void)
 
     while(1)
     {
+
+        TetrisScreen.vertical_line_create(19 + 5, xgm::color::lgreen);
+        TetrisScreen.vertical_line_create(59 - 5, xgm::color::lgreen);
+
         if(current_color == 15)
             current_color = 2;
 
         xgm::rectangle object = xgm::rectangle(0); 
 
-
-        switch(rand() % 3)
+        switch(rand() % 5)
         {
             case 0: object.create(40, 1, 2, 2, current_color); break;
             case 1: object.create(40, 1, 1, 4, current_color); break;
+            case 2: {
+                object.create(40, 1, 3, 2, current_color); 
+                object.cell_remove(0,0);
+                object.cell_remove(2,0);
+                break;
+            }
+
+            case 3:{
+                object.create(40, 1, 2, 3, current_color);
+                object.cell_remove(1, 0);
+                object.cell_remove(1, 1);
+                break;
+            }
+
+            case 4:{
+                object.create(40, 1, 3, 2, current_color);
+                object.cell_remove(0,0);
+                object.cell_remove(2, 1);
+                break;
+            }
+
+
         }
 
         while(object.positiony_get() + object.sizey_get() < VGA_HEIGHT)
@@ -68,8 +106,11 @@ extern "C" int tetris(void)
             Screen.x = 0;
             Screen.y = 5;
 
-            if(CollisionStatus.side != xgm::Direction::NONE)
-                xprintf("colision status: %d", CollisionStatus.side);
+            // if(CollisionStatus.side != xgm::Direction::NONE)
+            // {
+            //     xprintf("colision status: %d\n", CollisionStatus.side);
+            //     xprintf("color : %d\n", CollisionStatus.color >> 4);
+            // }
 
             if(CollisionStatus.side == xgm::Direction::DOWN)
                 break;
@@ -77,20 +118,19 @@ extern "C" int tetris(void)
             if(std::KeyInfo.scan_code == ARROW_LEFT)
             {
                 if(CollisionStatus.side != xgm::Direction::LEFT)
-                    object.move(-1, 1);
-                else
-                    object.move(0,1);
+                    object.move(-1, 0);
             }
             else if(std::KeyInfo.scan_code == ARROW_RIGHT)
             {
                 if(CollisionStatus.side != xgm::Direction::RIGHT)
-                    object.move(1,1);
-                else
-                    object.move(0,1);
+                    object.move(1,0);
             }
             
-            else 
+            CollisionStatus = object.collision_detect();
+
+            if(CollisionStatus.side != xgm::Direction::DOWN)
                 object.move(0,1);
+
             msleep(150);
         
         }
@@ -109,10 +149,8 @@ extern "C" int tetris(void)
             }
 
             if(is_line_full)
-            {
-                for(int j = 25; j < 53; j++)
-                    TetrisScreen[i * VGA_WIDTH + j] = xgm::color::black;
-            }
+                row_down(i);
+
 
         }
 
