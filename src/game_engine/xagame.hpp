@@ -102,9 +102,11 @@ class ScreenManager
     private:
         uint8_t* screen_pointer;
     public:
+        static bool screen_cells[VGA_HEIGHT][VGA_WIDTH];
         ScreenManager(void);
         uint8_t& operator [](uint32_t index);
         void vertical_line_create(uint8_t x, xgm::color::ColorAttributes color);
+        void screen_clear(void);
 };
 }
 
@@ -130,11 +132,12 @@ class rectangle : public GeometryObject
         void cell_remove(uint8_t x, uint8_t y);
         std::pair<uint32_t, uint32_t> size_get();
         std::pair<uint32_t, uint32_t> position_get();
-        uint32_t sizex_get();
-        uint32_t sizey_get();
+        uint32_t sizex_get() const;
+        uint32_t sizey_get() const;
         uint32_t positionx_get();
         uint32_t positiony_get();
         CollisionInfo collision_detect(); 
+        bool** BlankCells;
 
     private:
         uint32_t position_x;
@@ -143,11 +146,8 @@ class rectangle : public GeometryObject
         uint32_t size_y;
         uint32_t color;
         uint32_t class_id;
-        uint8_t blank_cells_counter;
-        std::pair<uint8_t, uint8_t>* BlankCells;
         bool is_destroyed;
 };
-
 
 
 

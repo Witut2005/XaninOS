@@ -50,11 +50,9 @@ void row_down(int row)
 extern "C" int tetris(void)
 {
 
-    bool screen_cells[28][22] = {0};
-
     xgm::Renderer::ScreenManager TetrisScreen;
 
-    screen_clear();
+    TetrisScreen.screen_clear();
     uint8_t current_color = 5;
 
     TetrisScreen.vertical_line_create(19 + 5, xgm::color::lgreen);
@@ -70,6 +68,7 @@ extern "C" int tetris(void)
             current_color = 2;
 
         xgm::rectangle object = xgm::rectangle(0); 
+        xprintf("AHA\n");
 
         switch(rand() % 5)
         {
@@ -99,6 +98,22 @@ extern "C" int tetris(void)
 
         }
 
+        Screen.y = 4;
+        Screen.x = 0;
+
+        xprintf("AHA\n");
+    
+        for(int i = 0; i < object.sizey_get(); i++)
+        {
+            for(int j = 0; j < object.sizex_get(); j++)
+            {
+                xprintf("%d ", object.BlankCells[i][j]);
+            }
+            xprintf("\n");
+        }
+
+        while(1);
+
         while(object.positiony_get() + object.sizey_get() < VGA_HEIGHT)
         {
             xgm::CollisionInfo CollisionStatus = object.collision_detect();
@@ -106,11 +121,11 @@ extern "C" int tetris(void)
             Screen.x = 0;
             Screen.y = 5;
 
-            // if(CollisionStatus.side != xgm::Direction::NONE)
-            // {
-            //     xprintf("colision status: %d\n", CollisionStatus.side);
-            //     xprintf("color : %d\n", CollisionStatus.color >> 4);
-            // }
+            if(CollisionStatus.side != xgm::Direction::NONE)
+            {
+                xprintf("colision status: %d\n", CollisionStatus.side);
+                xprintf("color : %d\n", CollisionStatus.color >> 4);
+            }
 
             if(CollisionStatus.side == xgm::Direction::DOWN)
                 break;
