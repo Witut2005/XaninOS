@@ -150,12 +150,10 @@ void _start(void)
 
     disable_cursor();
     screen_clear();
+    uint8_t ppmngr_bitmap[0x2000];
 
-
-    // xanin_cpu_backup_make();
-
-    pmmngr_init(0x20000, 0xFFFFFF);
-    pmmngr_init_region(0x20000, 0xFFFFFF);
+    pmmngr_init(0x10000, ppmngr_bitmap);
+    pmmngr_init_region(0x0, 0xFFFFFF);
     // init_disk(ATA_FIRST_BUS, ATA_MASTER);
 
     time_get(&SystemTime);
@@ -171,6 +169,7 @@ void _start(void)
     kernel_terminal = terminal_create();
     terminal_set((terminal_t*)null_memory_region, kernel_terminal);
     screen_clear();
+
 
     rsdp = get_acpi_rsdp_address_base();
 
@@ -316,11 +315,8 @@ void _start(void)
 
     // disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x0, 0x1, (uint16_t*)0x7C00);
 
-    disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x4, 1, (uint16_t *)(0x500 * SECTOR_SIZE));
-    disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x500, 1, (uint16_t *)(0x500 * SECTOR_SIZE));
-
-    kernel_load_backup = (uint8_t *)calloc(512);
-    memcpy(kernel_load_backup, (uint8_t *)0x20000, SECTOR_SIZE);
+    // disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x4, 1, (uint16_t *)(0x500 * SECTOR_SIZE));
+    // disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x500, 1, (uint16_t *)(0x500 * SECTOR_SIZE));
 
     argv[0] = program_name;
     argv[1] = program_parameters;

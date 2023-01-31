@@ -56,6 +56,7 @@ int run(char* file_name)
             "call 0x10000"
             );
 
+        free(file_data);
         return XANIN_OK;
         
 

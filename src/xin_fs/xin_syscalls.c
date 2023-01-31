@@ -147,13 +147,10 @@ __STATUS __sys_xin_copy(char* file_name, char* new_file_name)
     XinEntry* file = fopen(file_name, "r");
     XinEntry* file_created = fopen(new_file_name, "rw");
 
-    char* entry_data = (char*)calloc(SECTOR_SIZE);
+    char* entry_data = (char*)calloc(file->entry_size);
     
-    for(int counter = 0; counter < file->entry_size / SECTOR_SIZE; counter++)
-    {
-        fread(file, entry_data, SECTOR_SIZE);
-        fwrite(file_created, entry_data, SECTOR_SIZE);
-    }
+    fread(file, entry_data, file->entry_size);
+    fwrite(file_created, entry_data, file->entry_size);
 
     free(entry_data);
     fclose(&file);

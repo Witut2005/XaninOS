@@ -279,7 +279,7 @@ void Intel8254xDriver::init()
     this->receive_init();
     this->transmit_init();
 
-    this->last_packet = (uint8_t*)calloc(sizeof(uint8_t) * 4096 * 10);
+    this->last_packet = (uint8_t*)calloc(sizeof(uint8_t) * 4096);
 
     /* enabling interrupts */
     this->write(nic::IMS, this->read(nic::IMS) | nic::ims::RXT | nic::ims::RXO | 

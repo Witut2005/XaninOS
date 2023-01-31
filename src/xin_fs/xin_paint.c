@@ -179,9 +179,10 @@ int xin_paint(char* file_name)
         }
         
         xin_file->entry_size = file_data_counter;
-        
+        free(data_pointer);
 
     }
+
 
     fclose(&xin_file);
     return XANIN_OK;
