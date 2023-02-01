@@ -50,5 +50,8 @@ enum special_keys
   _9_KEY = 0xA,
   PRINT_SCREEN_KEY = 0x37,
   L_ALT = 0x38,
-  L_ALT_RELEASE = 0xB8
+  L_ALT_RELEASE = 0xB8,
+  SPACE = 0x39,
+  SPACE_RELEASE = 0xB9
+
 };

@@ -57,7 +57,58 @@ char *xin_get_current_path(char *file_name)
 
     return xin_current_path;
 }
+
+
+uint8_t *xin_find_free_pointer(void)
+{
+    for (char *i = (char *)0x800; (uint32_t)i < 0x800 + (SECTOR_SIZE * 8); i++)
+    {
+        if (*(char *)i == '\0')
+            return (uint8_t *)i;
+    }
+
+    return nullptr;
+}
+
+uint8_t *xin_find_free_pointer_with_given_size(uint32_t size)
+{
+    for (uint8_t*i = (uint8_t*)0x800; (uint32_t)i < 0x800 + (SECTOR_SIZE * 8); i++)
+    {
+        if (*i == XIN_UNALLOCATED)
+        {
+            bool ok = true;
+            for(int j = 0; j < size; j++)
+            {
+                if(i[j] != XIN_UNALLOCATED) 
+                {
+                    ok = false;
+                    break;
+                }
+            }
+
+            if(ok)
+                return i;
+        }
+    }
+    return nullptr;
+}
+
                                             
+void xin_entry_resize(XinEntry* entry, uint32_t new_size)
+{
+    uint8_t* xin_pointer_table_entry = (uint8_t*)(XIN_ENTRY_POINTERS + entry->starting_sector);
+    uint32_t sectors = entry->entry_size / SECTOR_SIZE + (entry->entry_size % SECTOR_SIZE != 0 ? 1 : 0);
+
+    for(int i = 0; i < sectors; i++)
+        xin_pointer_table_entry[i] = XIN_UNALLOCATED;
+
+    sectors = new_size / SECTOR_SIZE + (new_size % SECTOR_SIZE != 0 ? 1 : 0);
+    xin_pointer_table_entry = xin_find_free_pointer_with_given_size(sectors);
+
+    for(int i = 0; i < sectors; i++)
+        xin_pointer_table_entry[i] = XIN_ALLOCATED;
+
+}
 
 /* DIRECTORY AND FILES */
 XinEntry *xin_find_entry(char *entry_name)
@@ -119,16 +170,6 @@ void xin_get_file_pf_test(char* entry_path) // pf = parent folder
     // while(getscan() != ENTER);
 }
 
-uint8_t *xin_find_free_pointer(void)
-{
-    for (char *i = (char *)0x800; (uint32_t)i < 0x800 + (SECTOR_SIZE * 8); i++)
-    {
-        if (*(char *)i == '\0')
-            return (uint8_t *)i;
-    }
-
-    return nullptr;
-}
 
 XinEntry *xin_find_free_entry(void)
 {
@@ -441,7 +482,7 @@ void create_file_kernel(char* entry_name)
 }
 
 
-int xin_create_file(char* entry_name)
+int xin_file_create(char* entry_name)
 {
 
     bool only_entry_name = true;
@@ -540,7 +581,7 @@ int xin_create_file(char* entry_name)
         return XANIN_ERROR;
     }
     /* write entry to xin entry pointers table */
-    uint8_t *write_entry = xin_find_free_pointer();
+    uint8_t *write_entry = xin_find_free_pointer_with_given_size(16);
 
     for (int i = 0; i < 15; i++)
         write_entry[i] = XIN_ALLOCATED;
@@ -557,7 +598,7 @@ int xin_create_file(char* entry_name)
     entry->modification_time = (uint16_t)(SystemTime.hour << 8) | (SystemTime.minutes);
     entry->FileInfo = nullptr;
     entry->entry_permissions = PERMISSION_MAX;
-    entry->entry_size = 0x0;
+    entry->entry_size = SECTOR_SIZE * 0x10;
     entry->entry_type = XIN_FILE;
 
     entry->starting_sector = (uint32_t)write_entry - XIN_ENTRY_POINTERS;
@@ -830,12 +871,19 @@ XinEntry *fopen(char *file_path, char *mode)
 
     else if(strcmp(mode, "rw") || strcmp(mode, "w"))
     {
-        file = create(file_path);
+        int status = xin_file_create(file_path);
 
-        strcpy(file->FileInfo->rights, mode);
-        file->FileInfo->sector_in_use = (bool*)calloc(0x10 * sizeof(bool));
-        file->FileInfo->position = 0;
-        return file;
+        if(status == XANIN_OK)
+        {
+            file = xin_find_entry(file_path);
+            strcpy(file->FileInfo->rights, mode);
+            file->FileInfo->sector_in_use = (bool*)calloc(0x10 * sizeof(bool));
+            file->FileInfo->position = 0;
+            return file;
+        }
+
+        else
+            return nullptr;
     }
 
 
@@ -847,8 +895,8 @@ XinEntry *fopen(char *file_path, char *mode)
 void fclose(XinEntry** file)
 {
     
-    (*file)->entry_size = (*file)->FileInfo->position;
-    (*file)->FileInfo->position = 0;
+    if((*file)->FileInfo->position > (*file)->entry_size)
+        (*file)->entry_size = (*file)->FileInfo->position;
 
     uint8_t* tmp = (uint8_t*)calloc(SECTOR_SIZE);
         
@@ -871,6 +919,9 @@ void fclose(XinEntry** file)
     free((*file)->FileInfo->base_address_memory);
     free((*file)->FileInfo);
     free(tmp);
+    
+    xin_entry_resize(*file, (*file)->entry_size);
+
     *file = nullptr;
 
 }
@@ -894,48 +945,6 @@ void close(int fd)
     free(file->FileInfo->base_address_memory);
     FileDescriptorTable[fd].is_used = false;
 
-}
-
-
-XinEntry* create(char* file_name)
-{
-
-    char* entry_full_name;
-
-    entry_full_name = xin_get_current_path(file_name);
-
-    /* write entry to xin entry pointers table */
-    uint8_t *write_entry = xin_find_free_pointer();
-
-    for (int i = 0; i < 15; i++)
-        write_entry[i] = XIN_ALLOCATED;
-
-    write_entry[15] = XIN_EOF;
-
-    /* write entry to xin entry date table */
-    XinEntry *entry = xin_find_free_entry();
-
-    time_get(&SystemTime);
-
-    strcpy(entry->entry_path, entry_full_name);
-
-    entry->creation_date = (uint32_t)((SystemTime.day_of_month << 24) | (SystemTime.month << 16) | (SystemTime.century << 8) | (SystemTime.year)); 
-    entry->creation_time = (uint16_t)(SystemTime.hour << 8) | (SystemTime.minutes);
-    entry->modification_date = (uint32_t)((SystemTime.day_of_month << 24) | (SystemTime.month << 16) | (SystemTime.century << 8) | (SystemTime.year)); 
-    entry->modification_time = (uint16_t)(SystemTime.hour << 8) | (SystemTime.minutes);
-
-    entry->entry_permissions = PERMISSION_MAX;
-    entry->entry_size = 0x0;
-    entry->entry_type = XIN_FILE;
-    entry->FileInfo = nullptr;
-    entry->starting_sector = (uint32_t)write_entry - XIN_ENTRY_POINTERS;
-
-    uint8_t* zero_mregion = (uint8_t*)calloc(512);
-
-    for(int i = 0; i < 16; i++)
-        disk_write(ATA_FIRST_BUS, ATA_MASTER, entry->starting_sector, i, (uint16_t*)zero_mregion);
-
-    return entry;
 }
 
 int open(char* file_path, uint32_t options)

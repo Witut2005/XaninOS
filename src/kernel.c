@@ -427,7 +427,7 @@ void _start(void)
     KeyInfo.is_shift = false;
 
     // __sys_xin_file_create("/syslog");
-    xin_create_file("/syslog");
+    xin_file_create("/syslog");
     printk("To wszystko dla Ciebie Babciu <3");
 
     // __sys_xin_folder_create("/config/");

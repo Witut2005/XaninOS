@@ -58,10 +58,10 @@ extern "C"
         current_arp_entry++;
 
         memcpy(LastArpReply.mac_address, arp_header->source_hardware_address, 6);
-        memcpy(LastArpReply.ip_address, (uint8_t*)&arp_header->source_protocol_address, 4);
+        memcpy(LastArpReply.ip_address, (uint8_t*)&ip_addr, 4);
 
-        memcpy(ArpTable[current_arp_entry].mac_address, arp_header->source_hardware_address, 6);
-        memcpy(ArpTable[current_arp_entry].ip_address, (uint8_t*)&ip_addr, 4);
+        memcpy(ArpTable[current_arp_entry].mac_address, LastArpReply.mac_address, 6);
+        memcpy(ArpTable[current_arp_entry].ip_address, LastArpReply.ip_address, 4);
 
         if(endian_switch(arp_header->destination_protocol_address) == xanin_ip_address)
         {

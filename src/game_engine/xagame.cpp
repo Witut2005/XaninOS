@@ -2,6 +2,7 @@
 #include <game_engine/xagame.hpp>
 #include <libc/colors.h>
 #include <libc/stdlibx.h>
+#include <libcpp/algorithm.h>
 
 
 extern "C" void printk(char* str);
@@ -10,7 +11,8 @@ bool xgm::Renderer::ScreenManager::screen_cells[VGA_HEIGHT][VGA_WIDTH] = {false}
 
 xgm::CollisionInfo xgm::make_collision_info(bool x, uint8_t y, xgm::Direction z)
 {
-    xgm::CollisionInfo instance = {x,y,z};
+    xgm::CollisionInfo instance = {x,y, z == xgm::Direction::RIGHT, z == xgm::Direction::LEFT, 
+                                    z == xgm::Direction::UP, z == xgm::Direction::DOWN};
     return instance;
 }
 
@@ -118,17 +120,20 @@ void xgm::rectangle::rotate_right_90()
     uint32_t size_x_tmp = this->size_x;
     this->size_x = this->size_y;
     this->size_y = size_x_tmp;
+    
 
-    // bool** blank_cells_tmp = (bool**)calloc(sizeof(bool*) * this->size_y);
+    {
+        auto deallocate = BlankCells;
+        auto tmp = std::matrix90_rotate_left<bool>(BlankCells, this->size_y, this->size_x);
+        BlankCells = tmp;
 
-    // for(int i = 0; i < this->size_y; i++)
-    //     blank_cells_tmp[i] = (bool*)calloc(sizeof(bool) * this->size_x);
 
-    // for(int i = 0; i < this->size_y; i++)
-    // {
-    //     for(int j = 0; j < this->size_x; j++)
-    //         blank_cells_tmp[i][j] = BlankCells[i][j];
-    // }
+        for(int i = 0; i < this->size_x; i++)
+            free(deallocate[i]);
+
+        free(deallocate);
+
+    }
 
     for(int i = 0; i < this->size_y; i++)
     {
@@ -197,7 +202,7 @@ xgm::CollisionInfo xgm::rectangle::collision_detect()
     {
         if(!this->BlankCells[0][i])
             if(xgm::Renderer::ScreenManager::screen_cells[this->position_y - 1][this->position_x + i])
-            return xgm::make_collision_info(true, XgmScreen[((this->position_y - 1) * VGA_WIDTH) + this->position_x + i], xgm::Direction::UP);
+                return xgm::make_collision_info(true, XgmScreen[((this->position_y - 1) * VGA_WIDTH) + this->position_x + i], xgm::Direction::UP);
     }
 
     for(int i = 0; i < this->size_x; i++)

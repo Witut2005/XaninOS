@@ -385,7 +385,7 @@ uint32_t strtoi(const char* str, uint8_t format)
     if(format > 16) 
         format = 16;
 
-    if(format == 16 && strncmp((char*)str, "0x", 2))
+    if(format == 16 && (strncmp((char*)str, "0x", 2) || strncmp((char*)str, "0b", 2) || strncmp((char*)str, "0o", 2)))
         str += 2;
 
     uint16_t* tmp_text = (uint16_t*)VGA_TEXT_MEMORY;

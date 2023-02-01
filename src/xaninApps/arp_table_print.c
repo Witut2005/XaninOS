@@ -14,6 +14,8 @@ int arp_table_print(char* arg)
         {
             int j = 0;
 
+            xprintf("%d: ", i);
+
             for(; j < 5; j++)
                 xprintf("%mX:", table[i].mac_address[j]);
 

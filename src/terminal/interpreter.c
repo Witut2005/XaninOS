@@ -57,6 +57,7 @@ void scan(void)
     }
 
     XANIN_ADD_APP_ENTRY0("memtest", memory_test)
+    // XANIN_ADD_APP_ENTRY0("grapher", grapher)
     XANIN_ADD_APP_ENTRY0("petris", ptetris)
     XANIN_ADD_APP_ENTRY0("ptetris", ptetris)
     XANIN_ADD_APP_ENTRY1("explorer", explorer)

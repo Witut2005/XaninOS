@@ -119,36 +119,42 @@ extern "C" int tetris(void)
 
             CollisionStatus = object.collision_detect();
 
-            if(CollisionStatus.side == xgm::Direction::DOWN)
+            if(CollisionStatus.down)
                 break;
 
-            if(std::KeyInfo.scan_code == ARROW_LEFT)
+            if(std::KeyInfo.scan_code == SPACE_RELEASE)
             {
-                if(CollisionStatus.side != xgm::Direction::LEFT)
+                object.rotate_right_90();
+                std::KeyInfo.scan_code = (uint8_t)NULL;
+            }
+            
+            else if(std::KeyInfo.scan_code == ARROW_LEFT)
+            {
+                if(!CollisionStatus.left)
                     object.move(-1, 0);
             }
 
             else if(std::KeyInfo.scan_code == ARROW_RIGHT)
             {
-                if(CollisionStatus.side != xgm::Direction::RIGHT)
+            if(!CollisionStatus.right)
                     object.move(1,0);
             }
 
             else if(std::KeyInfo.scan_code == ARROW_DOWN)
             {
-                while(object.collision_detect().side != xgm::Direction::DOWN && ((object.positiony_get() + object.sizey_get()) < VGA_HEIGHT))
+                while(!object.collision_detect().down && ((object.positiony_get() + object.sizey_get()) < VGA_HEIGHT))
                     object.move(0, 1);
                 msleep(500);
             }
 
-            if(object.collision_detect().side != xgm::Direction::DOWN && ((object.positiony_get() + object.sizey_get()) < VGA_HEIGHT))
+            if(!object.collision_detect().down && ((object.positiony_get() + object.sizey_get()) < VGA_HEIGHT))
                 object.move(0,1);
 
             // if(object.positiony_get() + object.sizey_get() != VGA_HEIGHT)
             // else
             //     break;
                 
-            msleep(250);
+            msleep(300);
         
         }
 

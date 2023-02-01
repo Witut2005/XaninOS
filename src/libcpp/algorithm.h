@@ -117,4 +117,42 @@ bool equal(T x, X t)
     return x == t;
 }
 
+template<class T>
+T** matrix90_rotate_left(T** matrix, uint32_t x, uint32_t y)
+{
+    T** tmp = (T**)calloc(sizeof(T*) * x);
+
+    for(int i = 0; i < x; i++)
+        tmp[i] = (T*)calloc(sizeof(T) * y);
+     
+    for(std::pair<uint32_t, uint32_t>x_vals(0, x - 1); x_vals.first < x; x_vals.first++, x_vals.second--)
+    {                                    
+        for(int i = 0; i < y; i++)
+            tmp[x_vals.first][i] = matrix[i][x_vals.second];
+    }
+
+    return tmp;
+
 }
+
+template<class T>
+T** matrix90_rotate_right(T** matrix, uint32_t x, uint32_t y)
+{
+    T** tmp = (T**)calloc(sizeof(T*) * x);
+
+    for(int i = 0; i < x; i++)
+        tmp[i] = (T*)calloc(sizeof(T) * y);
+     
+    for(int i = 0; i < x; i++)
+    {                                    
+        for(std::pair<int, int> para(0, y-1); para.first < y; para.first++, para.second--)
+            tmp[i][para.first] = matrix[para.second][i];
+    }
+
+    return tmp;
+
+}
+
+}
+
+// extern "C" int** matrix90rotate32(int** matrix, uint32_t x, uint32_t y);

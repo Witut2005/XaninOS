@@ -187,6 +187,12 @@ build:
 	@echo [C] string.c
 	@$(C) $(C_OPTIONS) ./libc/string.c -o ./libc/string.o
 
+	@echo [CC] algorithm.c
+	@$(CC) $(CC_OPTIONS) ./libcpp/algorithm.cpp -o ./libcpp/algorithm.o
+
+	@echo [C] algorithm.c
+	@$(C) $(C_OPTIONS) ./libc/algorithm.c -o ./libc/algorithm.o
+
 	@echo [C] syslog.c
 	@$(C) $(C_OPTIONS) ./libc/syslog.c -o ./libc/syslog.o
 
@@ -241,6 +247,8 @@ build:
 	./libc/xanin_state.o \
 	./libc/instruction_pointer.o \
 	./libc/real_mode_fswitch.o \
+	./libc/algorithm.o \
+	./libcpp/algorithm.o \
 	./libcpp/regex.o \
 	./tui/tui.o \
 	./xgl/xgl.o \

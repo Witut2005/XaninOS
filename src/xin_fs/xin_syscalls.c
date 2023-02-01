@@ -12,7 +12,7 @@
 __STATUS __sys_xin_file_create(char* entry_name)
 {
 
-    int status = xin_create_file(entry_name); 
+    int status = xin_file_create(entry_name); 
 
     if(status == XIN_FILE_EXISTS)
     {

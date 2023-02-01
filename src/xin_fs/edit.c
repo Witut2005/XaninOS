@@ -455,7 +455,6 @@ int edit(char* file_name)
         edit_input(inputg());
 
     file_position = strlen(program_buffer);
-    file->entry_size = file_position;
 
     fseek(file, 0x0);
     fwrite(file, program_buffer, strlen(program_buffer));

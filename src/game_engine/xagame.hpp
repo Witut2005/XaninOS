@@ -89,7 +89,21 @@ struct CollisionInfo
 {
     bool is_collision;
     uint8_t color;
-    xgm::Direction side;
+    
+    union
+    {
+        struct 
+        {
+            bool right : 1;
+            bool left : 1;
+            bool up : 1;
+            bool down : 1;
+        };
+
+        uint8_t collision_side : 4;
+
+    };
+
 };
 
 CollisionInfo make_collision_info(bool x, uint8_t y, xgm::Direction z);

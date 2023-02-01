@@ -743,6 +743,9 @@ void xscanf(char* str, ... )
                             
                             *number = strtoi(buffer, 10);                       
 
+                            if(buffer[0] == '-')
+                                *number = *number * -1;
+
                             break;
                         }
 
@@ -769,6 +772,9 @@ void xscanf(char* str, ... )
                             }
                             
                             *number = strtoi(buffer, 16);                       
+                            
+                            if(buffer[0] == '-')
+                                *number = *number * -1;
 
                             break;
                         }
