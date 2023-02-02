@@ -61,6 +61,53 @@ void row_down(int row)
 
 }
 
+static xgm::rectangle object(0);
+
+extern "C" void tetris_keyboard_handler(void)
+{
+    
+    xgm::CollisionInfo CollisionStatus;
+
+    CollisionStatus = object.collision_detect();
+
+    if(CollisionStatus.down)
+        return;
+
+    if(std::KeyInfo.scan_code == SPACE)
+    {
+
+        // xgm::ColissionDetector tmp(object.positionx_get(), object.positiony_get(), object.sizey_get(), object.sizex_get());
+
+        // if(!tmp.check(object.color_get()))
+            object.rotate_right_90();
+    
+    }
+
+    else if(std::KeyInfo.scan_code == ARROW_LEFT)
+    {
+        if(!CollisionStatus.left)
+            object.move(-1, 0);
+    }
+
+    else if(std::KeyInfo.scan_code == ARROW_RIGHT)
+    {
+        if(!CollisionStatus.right)
+            object.move(1,0);
+    }
+    
+    else if(std::KeyInfo.scan_code == S_KEY)
+        screen_clear();
+
+    else if(std::KeyInfo.scan_code == ARROW_DOWN)
+    {
+        while(!object.collision_detect().down && ((object.positiony_get() + object.sizey_get()) < VGA_HEIGHT))
+            object.move(0, 1);
+    }
+
+
+}
+
+
 extern "C" int tetris(void)
 {
 
@@ -69,17 +116,16 @@ extern "C" int tetris(void)
     TetrisScreen.screen_clear();
     uint8_t current_color = 5;
     uint32_t score = 0;
+    
+    KEYBOARD_KEYSTROKE_HANLDER_LOAD(tetris_keyboard_handler);
 
     while(1)
     {
 
-        TetrisScreen.vertical_line_create(19 + 10, xgm::color::lgreen);
-        TetrisScreen.vertical_line_create(59 - 10, xgm::color::lgreen);
 
         if(current_color == 15)
             current_color = 2;
 
-        xgm::rectangle object = xgm::rectangle(0); 
 
         if(TetrisScreen.screen_cells[0][40])
             break;
@@ -115,47 +161,29 @@ extern "C" int tetris(void)
 
         while(object.positiony_get() + object.sizey_get() < VGA_HEIGHT)
         {
-            xgm::CollisionInfo CollisionStatus;
 
-            CollisionStatus = object.collision_detect();
+            Screen.x = 0;
+            Screen.y = 5;
 
-            if(CollisionStatus.down)
-                break;
+            xprintf("position x: %d\n", object.positionx_get());
+            xprintf("position y: %d\n", object.positiony_get());
 
-            if(std::KeyInfo.scan_code == SPACE_RELEASE)
-            {
-                object.rotate_right_90();
-                std::KeyInfo.scan_code = (uint8_t)NULL;
-            }
-            
-            else if(std::KeyInfo.scan_code == ARROW_LEFT)
-            {
-                if(!CollisionStatus.left)
-                    object.move(-1, 0);
-            }
+            TetrisScreen.vertical_line_create(19 + 10, xgm::color::lgreen);
+            TetrisScreen.vertical_line_create(59 - 10, xgm::color::lgreen);
 
-            else if(std::KeyInfo.scan_code == ARROW_RIGHT)
-            {
-            if(!CollisionStatus.right)
-                    object.move(1,0);
-            }
+            for(int i = 1; i < 3; i++)
+                TetrisScreen.vertical_line_create(19 + 10 - i, xgm::color::black);
 
-            else if(std::KeyInfo.scan_code == ARROW_DOWN)
-            {
-                while(!object.collision_detect().down && ((object.positiony_get() + object.sizey_get()) < VGA_HEIGHT))
-                    object.move(0, 1);
-                msleep(500);
-            }
+            for(int i = 1; i < 3; i++)
+                TetrisScreen.vertical_line_create(59 - 10 + i, xgm::color::black);
 
-            if(!object.collision_detect().down && ((object.positiony_get() + object.sizey_get()) < VGA_HEIGHT))
-                object.move(0,1);
+            // if(!object.collision_detect().down) //&& ((object.positiony_get() + object.sizey_get()) < VGA_HEIGHT))
+            //     object.move(0,1);
 
-            // if(object.positiony_get() + object.sizey_get() != VGA_HEIGHT)
             // else
             //     break;
-                
-            msleep(300);
-        
+
+            msleep(200);
         }
 
         for(int i = 0; i < VGA_HEIGHT; i++)
@@ -187,6 +215,7 @@ extern "C" int tetris(void)
 
     Screen.y = 14;
     Screen.x = 35;
+    KEYBOARD_KEYSTROKE_HANLDER_UNLOAD();
     xprintf("Your score: %d\n", score);
     while(inputg().scan_code != ENTER);
 

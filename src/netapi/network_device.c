@@ -152,5 +152,8 @@ uint32_t xanin_ip_get(void)
     uint32_t ip = str2ipv4(ip_str);
     free(ip_str);
 
+    if(!ip)
+        return ((192 << 24) | (168 << 16) | (19 << 8) | (12));
+
     return ip;
 }

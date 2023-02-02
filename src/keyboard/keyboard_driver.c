@@ -153,6 +153,9 @@ void keyboard_driver(uint8_t scanCode)
     if(KeyInfo.scan_code == BSPC)
         KeyInfo.character = '\0';
 
+    if(keyboard_handle != nullptr)
+        keyboard_handle();
+
     eoi_send();
 
 }

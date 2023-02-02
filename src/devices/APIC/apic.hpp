@@ -7,14 +7,14 @@ class AdvancedProgrammableInterruptContoller
 {
 
     public:
-    void write(uint32_t address, uint32_t value);
-    uint32_t read(uint32_t address);
-    bool enable();
-    bool disable();
-    void set_spurious_vector_number(uint32_t vector);
-    void lvt_set();
+    static void write(uint32_t address, uint32_t value);     //APIC write
+    static uint32_t read(uint32_t address);                  //APIC read
+    static bool enable();                                    //enables APIC
+    static bool disable();                                   //disables APIC
+    static void set_spurious_vector_number(uint32_t vector); //set INT to be issued when delivering spurious interrupt
+    static void lvt_timer_set();                             //specifies interrupt delivery when the APIC timer signals an interrupt
 
-}Apic;
+};
 
 
 extern "C"
@@ -22,36 +22,36 @@ extern "C"
 
     void apic_write(uint32_t address, uint32_t value)
     {
-        Apic.write(address, value);
+        AdvancedProgrammableInterruptContoller::write(address, value);
     }
 
     bool apic_enable(void)
     {
-        Apic.enable();
-        Apic.set_spurious_vector_number(0xFF);
+        AdvancedProgrammableInterruptContoller::enable();
+        AdvancedProgrammableInterruptContoller::set_spurious_vector_number(0xFF);
         return true;
     }
 
     bool apic_disable(void)
     {
-        Apic.disable();
+        AdvancedProgrammableInterruptContoller::disable();
         return false;
     }
 
     uint32_t apic_read(uint32_t address)
     {
-        return Apic.read(address);
+        return AdvancedProgrammableInterruptContoller::read(address);
     }
 
     void apic_set_spurious_vector_number(uint32_t vector_number)
     {
-        Apic.set_spurious_vector_number(vector_number);
+        AdvancedProgrammableInterruptContoller::set_spurious_vector_number(vector_number);
     }
 
 
     void apic_lvt_set(void)
     {
-        Apic.lvt_set();
+        AdvancedProgrammableInterruptContoller::lvt_timer_set();
     }
 
 

@@ -87,9 +87,6 @@ enum class Direction
 
 struct CollisionInfo
 {
-    bool is_collision;
-    uint8_t color;
-    
     union
     {
         struct 
@@ -106,7 +103,7 @@ struct CollisionInfo
 
 };
 
-CollisionInfo make_collision_info(bool x, uint8_t y, xgm::Direction z);
+//CollisionInfo make_collision_info(bool x, uint8_t y, xgm::Direction z);
 
 namespace Renderer
 {
@@ -151,7 +148,7 @@ class rectangle : public GeometryObject
         uint32_t positionx_get();
         uint32_t positiony_get();
         CollisionInfo collision_detect(); 
-        bool** BlankCells;
+        uint8_t color_get() const;
 
     private:
         uint32_t position_x;
@@ -160,9 +157,25 @@ class rectangle : public GeometryObject
         uint32_t size_y;
         uint32_t color;
         uint32_t class_id;
+        uint8_t rotation_count;
         bool is_destroyed;
+        bool** BlankCells;
 };
 
+class ColissionDetector
+{
+
+    private:
+        uint8_t x;
+        uint8_t y;
+        uint8_t size_x;
+        uint8_t size_y;
+    
+    public:
+        ColissionDetector(uint8_t x, uint8_t y, uint8_t size_x, uint8_t size_y);
+        bool check(uint8_t ignored_color);
+
+};
 
 
 }

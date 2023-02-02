@@ -9,6 +9,7 @@
 
 int ping(char* ip_addr_str)
 {
+
     xprintf("ping %s\n", ip_addr_str);
     uint32_t ip_dest = str2ipv4(ip_addr_str);
     uint8_t macd[6] = {0xFF, 0xFF, 0xFF, 0xFF,0xFF, 0xFF};

@@ -9,12 +9,12 @@ extern "C" void printk(char* str);
 
 bool xgm::Renderer::ScreenManager::screen_cells[VGA_HEIGHT][VGA_WIDTH] = {false};
 
-xgm::CollisionInfo xgm::make_collision_info(bool x, uint8_t y, xgm::Direction z)
-{
-    xgm::CollisionInfo instance = {x,y, z == xgm::Direction::RIGHT, z == xgm::Direction::LEFT, 
-                                    z == xgm::Direction::UP, z == xgm::Direction::DOWN};
-    return instance;
-}
+// xgm::CollisionInfo xgm::make_collision_info(bool x, uint8_t y, xgm::Direction z)
+// {
+//     xgm::CollisionInfo instance = {x,y, z == xgm::Direction::RIGHT, z == xgm::Direction::LEFT, 
+//                                     z == xgm::Direction::UP, z == xgm::Direction::DOWN};
+//     return instance;
+// }
 
 void xgm::rectangle::create(uint32_t x, uint32_t y, uint32_t size_x, uint32_t size_y, uint8_t color)
 {        
@@ -121,10 +121,9 @@ void xgm::rectangle::rotate_right_90()
     this->size_x = this->size_y;
     this->size_y = size_x_tmp;
     
-
     {
         auto deallocate = BlankCells;
-        auto tmp = std::matrix90_rotate_left<bool>(BlankCells, this->size_y, this->size_x);
+        auto tmp = std::matrix90_rotate_right<bool>(BlankCells, this->size_y, this->size_x);
         BlankCells = tmp;
 
 
@@ -139,16 +138,17 @@ void xgm::rectangle::rotate_right_90()
     {
         for(int j = 0; j < this->size_x; j++)
         {
-            Screen.cursor[this->position_y + i][this->position_x + j] = ' ' | (set_output_color((this->color), black) << 8);
-            xgm::Renderer::ScreenManager::screen_cells[this->position_y + i][this->position_x + j] = true;
+            if(!this->BlankCells[i][j])
+            {
+                Screen.cursor[this->position_y + i][this->position_x + j] = ' ' | (set_output_color((this->color), black) << 8);
+                xgm::Renderer::ScreenManager::screen_cells[this->position_y + i][this->position_x + j] = true;
+            }
         }
     }
 }
 
-xgm::rectangle::rectangle(uint32_t class_id=0)
+xgm::rectangle::rectangle(uint32_t class_id=0) : class_id(class_id), BlankCells(nullptr), rotation_count(0)
 {
-    this->class_id = class_id;
-    this->BlankCells = nullptr;
 }
 
 std::pair<uint32_t, uint32_t> xgm::rectangle::size_get()
@@ -197,12 +197,14 @@ void xgm::rectangle::cell_remove(uint8_t x, uint8_t y)
 xgm::CollisionInfo xgm::rectangle::collision_detect()
 {
     Renderer::ScreenManager XgmScreen;
+
+    xgm::CollisionInfo ColInfo = {false, false, false, false};
     
     for(int i = 0; i < this->size_x; i++)
     {
         if(!this->BlankCells[0][i])
             if(xgm::Renderer::ScreenManager::screen_cells[this->position_y - 1][this->position_x + i])
-                return xgm::make_collision_info(true, XgmScreen[((this->position_y - 1) * VGA_WIDTH) + this->position_x + i], xgm::Direction::UP);
+                ColInfo.up = true;
     }
 
     for(int i = 0; i < this->size_x; i++)
@@ -210,7 +212,7 @@ xgm::CollisionInfo xgm::rectangle::collision_detect()
         if(!this->BlankCells[this->size_y - 1][i])
         {
             if(xgm::Renderer::ScreenManager::screen_cells[this->position_y + this->size_y][this->position_x + i])
-                return xgm::make_collision_info(true, XgmScreen[(this->position_y + this->size_y) * VGA_WIDTH + this->position_x + i], xgm::Direction::DOWN); 
+                ColInfo.down = true;
         }
     }
 
@@ -219,18 +221,23 @@ xgm::CollisionInfo xgm::rectangle::collision_detect()
 
         if(!this->BlankCells[i][0])
             if(xgm::Renderer::ScreenManager::screen_cells[this->position_y + i][this->position_x - 1])
-                return xgm::make_collision_info(true, XgmScreen[(this->position_x - 1) + (this->position_y + i) + i], xgm::Direction::LEFT);
+                ColInfo.left = true;
     }
 
     for(int i = 0; i < this->size_y; i++)
     {
         if(!this->BlankCells[i][this->size_x - 1])
             if(xgm::Renderer::ScreenManager::screen_cells[this->position_y + i][this->position_x + this->size_x])
-                return xgm::make_collision_info(true, XgmScreen[(this->position_x + this->size_x) + (this->position_y + i) * VGA_WIDTH], xgm::Direction::RIGHT);
+                ColInfo.right = true;
     }
 
-    return xgm::make_collision_info(false, black, xgm::Direction::NONE);
+    return ColInfo;
 
+}
+
+uint8_t xgm::rectangle::color_get() const
+{
+    return this->color;
 }
 
 
@@ -270,6 +277,21 @@ void xgm::Renderer::ScreenManager::vertical_line_create(uint8_t x, xgm::color::C
 }
 
 
+xgm::ColissionDetector::ColissionDetector(uint8_t x, uint8_t y, uint8_t size_x, uint8_t size_y) : x(x), y(y), size_x(size_x), size_y(size_y){}
+
+bool xgm::ColissionDetector::check(uint8_t ignored_color)
+{
+    for(int i = 0; i < size_y; i++)
+    {
+        for(int j = 0; j < size_x; j++)
+        {
+            if(xgm::Renderer::ScreenManager::screen_cells[this->y + i][this->x + j] && ((Screen.cursor[this->y + i][this->x + j] >> 12) != ignored_color))
+                return true;
+        }
+    }
+
+    return false;
+}
 
 extern "C" void __cxa_pure_virtual()
 {

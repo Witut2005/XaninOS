@@ -416,7 +416,7 @@ void _start(void)
 
     FileDescriptorTable = (XinFileDescriptor*)calloc(sizeof(XinFileDescriptor) * 512);
 
-    memset((uint8_t *)&ArpTable[0], 0xFF, sizeof(ArpTable[0]));
+    memset((uint8_t *)ArpTable, 0xFF, sizeof(ArpTable[0]));
     current_arp_entry++;
 
     netapi_init();

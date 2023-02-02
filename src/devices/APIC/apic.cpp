@@ -40,7 +40,7 @@ void AdvancedProgrammableInterruptContoller::set_spurious_vector_number(uint32_t
 }
 
 
-void AdvancedProgrammableInterruptContoller::lvt_set()
+void AdvancedProgrammableInterruptContoller::lvt_timer_set()
 {
     *(uint32_t*)APIC_LVT_REGISTER |= LVT_UNMASK;
    // *(uint32_t*)APIC_LVT_LINT0_REGISTER ^= APIC_UNMASK;

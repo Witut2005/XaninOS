@@ -45,25 +45,9 @@ extern "C"
 
     void arp_reply_handle(AddressResolutionProtocol* arp_header)
     {
-        uint32_t xanin_ip_address = (192 << 24) | (168 << 16) | (19 << 8) | 12;
-        if(memcmp((uint8_t*)arp_header->destination_hardware_address, 0x0, 6))
-            return;
 
-        uint32_t ip_addr = endian_switch(arp_header->source_protocol_address);
-
-        for(int i = 0; i < ARP_TABLE_ENTRIES; i++)
-            if(memcmp(ArpTable[i].mac_address, arp_header->source_hardware_address, 6) && memcmp(ArpTable[i].ip_address, (uint8_t*)&ip_addr, 4))
-                return;
-
-        current_arp_entry++;
-
-        memcpy(LastArpReply.mac_address, arp_header->source_hardware_address, 6);
-        memcpy(LastArpReply.ip_address, (uint8_t*)&ip_addr, 4);
-
-        memcpy(ArpTable[current_arp_entry].mac_address, LastArpReply.mac_address, 6);
-        memcpy(ArpTable[current_arp_entry].ip_address, LastArpReply.ip_address, 4);
-
-        if(endian_switch(arp_header->destination_protocol_address) == xanin_ip_address)
+        uint32_t xanin_ip_address = xanin_ip_get();
+        if(endian_switch(arp_header->destination_protocol_address) == xanin_ip_address && endian_switch(arp_header->opcode) == ARP_GET_MAC)
         {
             AddressResolutionProtocol* XaninArpReply = (AddressResolutionProtocol*)calloc(sizeof(AddressResolutionProtocol));
             prepare_arp_request(XaninArpReply, ARP_ETHERNET, ARP_IP_PROTOCOL, 0x6, 0x4, ARP_REPLY, netapi_mac_get(), 192 << 24 | 168 << 16 | 19 << 8 | 12, arp_header->destination_hardware_address, arp_header->destination_protocol_address);
@@ -71,21 +55,53 @@ extern "C"
             free(XaninArpReply);
         }
 
+        if(endian_switch(arp_header->opcode) != ARP_REPLY)//HANDLE ONLY REPLIES (NOT ARP PROBE ETC)
+            return;
+
+        if(memcmp((uint8_t*)arp_header->destination_hardware_address, 0x0, 6))
+            return;
+
+        uint32_t ip_addr = endian_switch(arp_header->source_protocol_address);
+
+        uint8_t arp_entry_used = current_arp_entry;
+
+        if(!ip_addr && !arp_header->source_hardware_address[0])
+            return;
+
+        for(int i = 0; i < ARP_TABLE_ENTRIES; i++)
+        {
+            if(memcmp(ArpTable[i].mac_address, arp_header->source_hardware_address, 6) && memcmp(ArpTable[i].ip_address, (uint8_t*)&ip_addr, 4))
+            {
+                arp_entry_used = i;
+                current_arp_entry--;
+            }
+        }
+
+
+        memcpy(LastArpReply.mac_address, arp_header->source_hardware_address, 6);
+        memcpy(LastArpReply.ip_address, (uint8_t*)&ip_addr, 4);
+
+        memcpy(ArpTable[arp_entry_used].mac_address, LastArpReply.mac_address, 6);
+        memcpy(ArpTable[arp_entry_used].ip_address, LastArpReply.ip_address, 4);
+
+        current_arp_entry++;
+
+
+
 
     }
 
     uint8_t mac_get_from_ip(uint32_t ip)
     {
 
-        const ArpTableEntry* table = (ArpTableEntry*)ArpTable;
+        const ArpTableEntry* const table = (ArpTableEntry*)ArpTable;
 
         for(int i = 0; i < ARP_TABLE_ENTRIES; i++)
         {
             const uint8_t* tmp = (uint8_t*)&table[i].ip_address;
             for(int j = 0; j < 4; j++)
-
-            if(memcmp((uint8_t*)&ip, ArpTable[i].ip_address, 4))
-                return i;
+                if(memcmp((uint8_t*)&ip, ArpTable[i].ip_address, 4))
+                    return i;
         }
         
         return 0xFF;
