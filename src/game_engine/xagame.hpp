@@ -129,6 +129,10 @@ class GeometryObject
         virtual void move(int32_t x, int32_t y) = 0;
         virtual void destroy() = 0;
         virtual void rotate_right_90() = 0;
+        virtual uint32_t sizex_get() const = 0;
+        virtual uint32_t sizey_get() const = 0;
+        virtual uint32_t positionx_get() const = 0;
+        virtual uint32_t positiony_get() const = 0;
 
 };
 
@@ -143,10 +147,10 @@ class rectangle : public GeometryObject
         void cell_remove(uint8_t x, uint8_t y);
         std::pair<uint32_t, uint32_t> size_get();
         std::pair<uint32_t, uint32_t> position_get();
-        uint32_t sizex_get() const;
-        uint32_t sizey_get() const;
-        uint32_t positionx_get();
-        uint32_t positiony_get();
+        virtual uint32_t sizex_get() const;
+        virtual uint32_t sizey_get() const;
+        virtual uint32_t positionx_get() const;
+        virtual uint32_t positiony_get() const;
         CollisionInfo collision_detect(); 
         uint8_t color_get() const;
 
@@ -173,7 +177,7 @@ class ColissionDetector
     
     public:
         ColissionDetector(uint8_t x, uint8_t y, uint8_t size_x, uint8_t size_y);
-        bool check(uint8_t ignored_color);
+        std::pair<uint32_t, uint32_t> check(rectangle ObjectToIgnore);
 
 };
 

@@ -2,10 +2,9 @@
 #include <xaninApps/hexeditor/hexeditor.h>
 
 
-char* data_pointer;
-uint32_t data_pointer_position = 0;
-
-uint8_t tmp; 
+static char* data_pointer;
+static uint32_t data_pointer_position;
+static uint8_t tmp; 
 
 void hexeditor_input(xchar x)
 {
@@ -189,6 +188,9 @@ void hexeditor_input(xchar x)
 int hexeditor(char* file_name, char* options)
 {
 
+    data_pointer = (char*)NULL;
+    data_pointer_position = NULL;
+    tmp = NULL; 
 
 
     XinEntry* file = fopen(file_name, "rw");

@@ -153,6 +153,19 @@ T** matrix90_rotate_right(T** matrix, uint32_t x, uint32_t y)
 
 }
 
+template <class T>
+bool is_in_range(T start, T end, T value)
+{
+    if(start > end)
+        std::swap(start, end);
+    
+    for(auto i = start; i < end; i++)
+        if(i == value)
+            return true;
+
+    return false;
+}
+
 }
 
 // extern "C" int** matrix90rotate32(int** matrix, uint32_t x, uint32_t y);

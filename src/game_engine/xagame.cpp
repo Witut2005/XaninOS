@@ -171,12 +171,12 @@ uint32_t xgm::rectangle::sizey_get() const
     return this->size_y;
 }
 
-uint32_t xgm::rectangle::positionx_get()
+uint32_t xgm::rectangle::positionx_get() const
 {
     return this->position_x;
 }
 
-uint32_t xgm::rectangle::positiony_get()
+uint32_t xgm::rectangle::positiony_get() const
 {
     return this->position_y;
 }
@@ -276,21 +276,33 @@ void xgm::Renderer::ScreenManager::vertical_line_create(uint8_t x, xgm::color::C
     }
 }
 
-
-xgm::ColissionDetector::ColissionDetector(uint8_t x, uint8_t y, uint8_t size_x, uint8_t size_y) : x(x), y(y), size_x(size_x), size_y(size_y){}
-
-bool xgm::ColissionDetector::check(uint8_t ignored_color)
+xgm::ColissionDetector::ColissionDetector(uint8_t x, uint8_t y, uint8_t size_x, uint8_t size_y) : x(x), y(y), size_x(size_x), size_y(size_y)
 {
+    // Screen.x = 0;
+    // Screen.y = 0;
+
+    // xprintf("x: %d\n", x);
+    // xprintf("y: %d\n", y);
+    // xprintf("size_x: %d\n", size_x);
+    // xprintf("size_y: %d\n", size_y);
+
+}
+
+std::pair<uint32_t, uint32_t> xgm::ColissionDetector::check(xgm::rectangle ObjectToIgnore)
+{
+    
     for(int i = 0; i < size_y; i++)
     {
         for(int j = 0; j < size_x; j++)
         {
-            if(xgm::Renderer::ScreenManager::screen_cells[this->y + i][this->x + j] && ((Screen.cursor[this->y + i][this->x + j] >> 12) != ignored_color))
-                return true;
+            if(xgm::Renderer::ScreenManager::screen_cells[this->y + i][this->x + j])
+            {
+                if(!(std::is_in_range<uint32_t>(x, x + size_x, ObjectToIgnore.positionx_get() + j) && std::is_in_range<uint32_t>(y, y + size_y, ObjectToIgnore.positiony_get() + i)))
+                    return std::pair(ObjectToIgnore.positionx_get()+j, ObjectToIgnore.positiony_get()+i);
+            }
         }
     }
-
-    return false;
+    return std::pair(static_cast<uint32_t>(0),static_cast<uint32_t>(0));
 }
 
 extern "C" void __cxa_pure_virtual()
@@ -298,3 +310,4 @@ extern "C" void __cxa_pure_virtual()
     printk("virtual function execution error");
     return;
 }
+

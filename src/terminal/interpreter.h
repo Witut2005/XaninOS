@@ -169,6 +169,7 @@ extern int tetris(void);
 #include <xaninApps/zsk.c>
 #include <xaninApps/explorer.c>
 #include <xaninApps/memory_allocator_test.c>
+#include <xaninApps/grapher/grapher.c>
 // #include <xaninApps/grapher/grapher.c>
 //extern void xagame_test(void);
 //extern void assembler(char* file_name);

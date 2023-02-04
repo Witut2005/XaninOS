@@ -243,6 +243,7 @@ void scan(void)
     XANIN_ADD_APP_ENTRY0("dhcp_test", dhcp_test)
     XANIN_ADD_APP_ENTRY2("netdevice_rename", network_device_rename)
     XANIN_ADD_APP_ENTRY0("nic_print", nic_print)
+    XANIN_ADD_APP_ENTRY0("grapher", grapher)
 
     else if(strcmp("real_mode_fswitch", program_name))
     {

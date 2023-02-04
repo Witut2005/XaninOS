@@ -76,10 +76,26 @@ extern "C" void tetris_keyboard_handler(void)
     if(std::KeyInfo.scan_code == SPACE)
     {
 
-        // xgm::ColissionDetector tmp(object.positionx_get(), object.positiony_get(), object.sizey_get(), object.sizex_get());
+        xgm::ColissionDetector tmp(object.positionx_get(), object.positiony_get(), object.sizey_get(), object.sizex_get());
 
-        // if(!tmp.check(object.color_get()))
-            object.rotate_right_90();
+        // Screen.x = 0;
+        // Screen.y = 0;
+
+        // xgm::GeometryObject* obj = (xgm::GeometryObject*)&object;
+
+        // xprintf("ugabuga: %d\n", object.positionx_get());
+
+        // while(1);
+        // tmp.check(&object);
+        // if(tmp.check(object).first || tmp.check(object).second)
+        // {
+        //     Screen.x = 0;
+        //     Screen.y = 0;
+        //     xprintf("x: %d\n", tmp.check(object).first);
+        //     xprintf("y: %d\n", tmp.check(object).second);
+        // }
+
+        object.rotate_right_90();
     
     }
 
@@ -177,11 +193,11 @@ extern "C" int tetris(void)
             for(int i = 1; i < 3; i++)
                 TetrisScreen.vertical_line_create(59 - 10 + i, xgm::color::black);
 
-            // if(!object.collision_detect().down) //&& ((object.positiony_get() + object.sizey_get()) < VGA_HEIGHT))
-            //     object.move(0,1);
+            if(!object.collision_detect().down) //&& ((object.positiony_get() + object.sizey_get()) < VGA_HEIGHT))
+                object.move(0,1);
 
-            // else
-            //     break;
+            else
+                break;
 
             msleep(200);
         }
