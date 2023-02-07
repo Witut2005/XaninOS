@@ -42,21 +42,8 @@ int run(char* file_name)
     
         uint8_t* where_to_load = 0x10000;
 
+        fread(xin_file, where_to_load, xin_file->entry_size);
 
-        uint8_t* file_data = (uint8_t*)calloc(512);
-        fread(xin_file, file_data, 512);
-
-        for(uint8_t* i = file_data; i < (file_data + 512); i++, where_to_load++)
-            *where_to_load = * i;
-            
-
-        void (*entry_point)(void) = 0x10000;
-
-        asm(
-            "call 0x10000"
-            );
-
-        free(file_data);
         return XANIN_OK;
         
 

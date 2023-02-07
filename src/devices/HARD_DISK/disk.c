@@ -1,7 +1,9 @@
-#pragma once
 
 #include <devices/HARD_DISK/disk.h>
 #include <libc/syslog.h>
+#include <libc/stdlibx.h>
+#include <libc/hal.h>
+#include <xin_fs/xin.h>
 
 void init_disk(uint16_t base, uint8_t master)
 {

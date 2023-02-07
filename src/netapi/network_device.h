@@ -2,6 +2,9 @@
 
 #include <stdint.h>
 #include <devices/PCI/pci.h>
+#include <stdbool.h>
+
+#define NETWORK_CARDS_HANDLERS 10
 
 struct NetworkHandler
 {
@@ -22,8 +25,8 @@ typedef struct NetworkHandler NetworkHandler;
 extern "C" {
 #endif
 
-void netapi_init(void);
-void netapi_add_device(uint8_t*(*receive_ptr)(void), void(*send_ptr)(uint32_t, uint16_t), uint8_t* mac_ptr, void(*interrupt_handler)(void), pci_device* pci_info);
+bool network_device_available_check(void);
+bool netapi_add_device(uint8_t*(*receive_ptr)(void), void(*send_ptr)(uint32_t, uint16_t), uint8_t* mac_ptr, void(*interrupt_handler)(void), pci_device* pci_info);
 void netapi_packet_send(uint32_t buffer, uint16_t length);
 uint8_t* netapi_packet_receive(void);
 uint8_t* netapi_mac_get(void);

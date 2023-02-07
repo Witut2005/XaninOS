@@ -1,5 +1,8 @@
 
+#pragma once
+
 #include <stdint.h>
+#include <devices/PCI/pci.h>
 
 enum usb_controller_types
 {
@@ -9,10 +12,7 @@ enum usb_controller_types
     XHCI = 0x30
 };
 
-
-
-uint32_t pci_usb_id[10]; /* you can use this array to store pointers to PCI_CONFIG_SPACE */
-
+void usb_controller_detect(pci_device* USBConfigurationSpace);
 
 
 

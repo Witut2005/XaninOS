@@ -1,7 +1,15 @@
 
+#include <stdbool.h>
 #include <devices/ACPI/ACPI.h>
+#include <libc/string.h>
+#include <libc/stdiox.h>
+#include <libc/stdlibx.h>
 
 uint32_t acpi_rdsp_base;
+acpi_rsdt* rsdt;
+uint8_t* madt_entries[0x10];
+rsdp_descriptor* rsdp;
+apic_sdt_entry* apic_sdt;
 
 uint8_t madt_entry_type0_counter = 0;
 uint8_t madt_entry_type1_counter = 0;
@@ -62,7 +70,7 @@ rsdp_descriptor *get_acpi_rsdp_address_base(void)
         acpi_string += 0x10;
     }
 
-    return 0xFFFFFFFF;
+    return (rsdp_descriptor*)nullptr;
 
 }
 

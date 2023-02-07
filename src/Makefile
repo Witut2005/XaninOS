@@ -223,6 +223,15 @@ build:
 	@echo [C] vga.c
 	@$(C) $(C_OPTIONS) ./devices/VGA/vga.c -o ./devices/VGA/vga.o
 
+	@echo [C] usb.c
+	@$(C) $(C_OPTIONS) ./devices/USB/usb.c -o ./devices/USB/usb.o
+
+	@echo [C] ACPI.c
+	@$(C) $(C_OPTIONS) ./devices/ACPI/ACPI.c -o ./devices/ACPI/ACPI.o
+
+	@echo [C] disk.c
+	@$(C) $(C_OPTIONS) ./devices/HARD_DISK/disk.c -o ./devices/HARD_DISK/disk.o
+
 	@echo [C] real_mode_fswitch.c
 	@$(C) $(C_OPTIONS) ./libc/real_mode_fswitch.c -o ./libc/real_mode_fswitch.o
 
@@ -273,6 +282,9 @@ build:
 	./devices/NIC/8254x_int_handler.o \
 	./devices/NIC/8254x.o \
 	./devices/PCSPK/pc_speaker.o \
+	./devices/USB/usb.o \
+	./devices/ACPI/ACPI.o \
+	./devices/HARD_DISK/disk.o \
 	./network_protocols/ethernet_frame/ethernet_frame.o \
 	./network_protocols/arp/arp.o \
 	./network_protocols/internet_protocol/ipv4/ip.o \

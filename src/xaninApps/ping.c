@@ -10,6 +10,13 @@
 int ping(char* ip_addr_str)
 {
 
+    if(!network_device_available_check())
+    {
+        xprintf("%zCANT EXECUTE PING COMMAND: NO NETWORK CARD\n", stderr);
+        while(inputg().scan_code != ENTER);
+        return XANIN_ERROR;
+    }
+
     xprintf("ping %s\n", ip_addr_str);
     uint32_t ip_dest = str2ipv4(ip_addr_str);
     uint8_t macd[6] = {0xFF, 0xFF, 0xFF, 0xFF,0xFF, 0xFF};

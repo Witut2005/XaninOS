@@ -76,6 +76,7 @@ CmosTime* time_get(CmosTime* Time)
     //GET HOURS
     outbIO(CMOS_ADDR,0x4);
     Time->hour = inbIO(CMOS_DATA);
+
     
     if((Time->hour & 0xF0) == 2 && (Time->hour & 0x0F) >= 2)
     {
@@ -83,8 +84,6 @@ CmosTime* time_get(CmosTime* Time)
         Time->hour -= 2;
 
         Time->hour = Time->hour << 4;
-
-
     }
 
     else if((Time->hour & 0xF) == 9 || (Time->hour & 0xF) == 8)
@@ -95,6 +94,10 @@ CmosTime* time_get(CmosTime* Time)
 
     else
         Time->hour+=2;
+
+
+    if(Time->hour >= 0x24)
+        Time->hour -= 0x25;
 
     //GET day
     outbIO(CMOS_ADDR,0x6);

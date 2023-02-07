@@ -2,6 +2,7 @@
 #include <devices/USB/usb.h>
 #include <devices/PCI/pci.h>
 #include <libc/stdiox.h>
+#include <devices/vendor.h>
 
 char* usb_controller_names[4] = 
 {
@@ -62,7 +63,7 @@ void uhci_init(uint32_t configuration_address, uint8_t controller_type)
 */
 
 
-void usb_detect(void)
+void usb_controller_detect(pci_device* USBConfigurationSpace)
 {
     uint32_t pci_address_selector = 0x0;
 
@@ -79,26 +80,29 @@ void usb_detect(void)
         if(var == 0x0c03 && tmp != var)
         {
 
+            pci_find_device(0x0C03, pci_get_data8((pci_address_selector & 0xFF000000) >> 24, (pci_address_selector & 0xFF0000) >> 16, 
+                                            (pci_address_selector & 0xFF00) >> 8, 0), USBConfigurationSpace);
 
-            xprintf("USB CONTROLLER DETECTED VENDOR ID: ");
-            xprintf("0x%x\n",pci_get_data16((pci_address_selector & 0xFF000000) >> 24, (pci_address_selector & 0xFF0000) >> 16, 
-                                                                                        (pci_address_selector & 0xFF00) >> 8, 0x0));          
+
+            // xprintf("USB CONTROLLER DETECTED VENDOR ID: ");
+            // xprintf("0x%x\n",pci_get_data16((pci_address_selector & 0xFF000000) >> 24, (pci_address_selector & 0xFF0000) >> 16, 
+            //                                                                             (pci_address_selector & 0xFF00) >> 8, 0x0));          
             
-            xprintf("USB CONTROLLER TYPE: %s\n", 
-                    usb_controller_names[pci_get_data8((pci_address_selector & 0xFF000000) >> 24, (pci_address_selector & 0xFF0000) >> 16,
-                                                                                            (pci_address_selector & 0xFF00) >> 8, 0x9) / 0x10]);
-            xprintf("USB CONTROLLER BASE ADDRES: ");
+            // xprintf("USB CONTROLLER TYPE: %s\n", 
+            //         usb_controller_names[pci_get_data8((pci_address_selector & 0xFF000000) >> 24, (pci_address_selector & 0xFF0000) >> 16,
+            //                                                                                 (pci_address_selector & 0xFF00) >> 8, 0x9) / 0x10]);
+            // xprintf("USB CONTROLLER BASE ADDRES: ");
 
-            if(!pci_get_data8((pci_address_selector & 0xFF000000) >> 24, (pci_address_selector & 0xFF0000) >> 16,
-                                                                                            (pci_address_selector & 0xFF00) >> 8, 0x9) / 0x10)
-                xprintf("0x%x\n",pci_get_data32((pci_address_selector & 0xFF000000) >> 24, (pci_address_selector & 0xFF0000) >> 16, (pci_address_selector & 0xFF00) >> 8, 0x20));  
+            // if(!pci_get_data8((pci_address_selector & 0xFF000000) >> 24, (pci_address_selector & 0xFF0000) >> 16,
+            //                                                                                 (pci_address_selector & 0xFF00) >> 8, 0x9) / 0x10)
+            //     xprintf("0x%x\n",pci_get_data32((pci_address_selector & 0xFF000000) >> 24, (pci_address_selector & 0xFF0000) >> 16, (pci_address_selector & 0xFF00) >> 8, 0x20));  
             
 
-            else
-            xprintf("0x%x\n",pci_get_data32((pci_address_selector & 0xFF000000) >> 24, (pci_address_selector & 0xFF0000) >> 16,
-                                                                                                            (pci_address_selector & 0xFF00) >> 8, 0x10));  
+            // else
+            // xprintf("0x%x\n",pci_get_data32((pci_address_selector & 0xFF000000) >> 24, (pci_address_selector & 0xFF0000) >> 16,
+            //                                                                                                 (pci_address_selector & 0xFF00) >> 8, 0x10));  
 
-            return;
+            // return;
 
         }
            

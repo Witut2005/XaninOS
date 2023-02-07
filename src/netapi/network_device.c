@@ -7,21 +7,11 @@
 #include <xin_fs/xin.h>
 #include <network_protocols/internet_protocol/ipv4/ip.h>
     
-NetworkHandler NetworkHandlersBackup[10];
-NetworkHandler NetworkHandlers[10];
 
-void netapi_init(void)
-{
-    for(int i = 0; i < 10; i++)
-    {
-        NetworkHandlers[i].is_device_present = 0x0;
-        NetworkHandlers[i].device_mac = 0x0;
-        NetworkHandlers[i].send_ptr = 0x0;
-        NetworkHandlers[i].receive_ptr = 0x0;
-    }
-}
 
-void netapi_add_device(uint8_t*(*receive_ptr)(void), void(*send_ptr)(uint32_t, uint16_t), uint8_t* mac_ptr, void(*interrupt_handler)(void), pci_device* pci_info)
+NetworkHandler NetworkHandlers[NETWORK_CARDS_HANDLERS] = {0,0,0,0,0,0,0};
+
+bool netapi_add_device(uint8_t*(*receive_ptr)(void), void(*send_ptr)(uint32_t, uint16_t), uint8_t* mac_ptr, void(*interrupt_handler)(void), pci_device* pci_info)
 {
     NetworkHandler* tmp = NetworkHandlers;
     int new_device_id = 0x0;
@@ -30,6 +20,10 @@ void netapi_add_device(uint8_t*(*receive_ptr)(void), void(*send_ptr)(uint32_t, u
     {
         tmp++;
         new_device_id++;
+
+        if(new_device_id == NETWORK_CARDS_HANDLERS)
+            return false;
+
     }
 
     tmp->is_device_present = 1;
@@ -45,14 +39,31 @@ void netapi_add_device(uint8_t*(*receive_ptr)(void), void(*send_ptr)(uint32_t, u
     
     strcpy(tmp->device_name, new_device_name);
 
-    NetworkHandlersBackup[new_device_id].is_device_present = 1;
-    NetworkHandlersBackup[new_device_id].receive_ptr = receive_ptr;
-    NetworkHandlersBackup[new_device_id].send_ptr = send_ptr;
-    NetworkHandlersBackup[new_device_id].device_mac = mac_ptr;
+    // NetworkHandlersBackup[new_device_id].is_device_present = 1;
+    // NetworkHandlersBackup[new_device_id].receive_ptr = receive_ptr;
+    // NetworkHandlersBackup[new_device_id].send_ptr = send_ptr;
+    // NetworkHandlersBackup[new_device_id].device_mac = mac_ptr;
 
     free(new_device_name);
+    return true;
     
 
+}
+
+bool network_device_available_check(void)
+{
+    NetworkHandler* tmp = NetworkHandlers;
+    uint8_t device_id = 0;
+
+    while(!tmp->is_device_present)
+    {
+        tmp++;
+        device_id++;
+        if(device_id == NETWORK_CARDS_HANDLERS)
+            return false;
+    }
+
+    return true;
 }
 
 void netapi_packet_send(uint32_t buffer, uint16_t length)
@@ -61,7 +72,7 @@ void netapi_packet_send(uint32_t buffer, uint16_t length)
     NetworkHandler* tmp = NetworkHandlers;
     int device_id = 0x0;
 
-    while(tmp->is_device_present != 1)
+    while(tmp->is_device_present != true)
     {
         tmp++;
         device_id++;
@@ -129,12 +140,10 @@ void network_handler(void)
 NetworkHandler* device_info_get_by_name(char* device_name)
 {
     NetworkHandler* tmp = NetworkHandlers;
-    while(!strcmp(tmp->device_name, device_name) && tmp < &NetworkHandlers[10])
-    {
+    while(!strcmp(tmp->device_name, device_name) && tmp < &NetworkHandlers[NETWORK_CARDS_HANDLERS])
         tmp++;
-    }
 
-    if(tmp == &NetworkHandlers[10])
+    if(tmp == &NetworkHandlers[NETWORK_CARDS_HANDLERS])
         return nullptr;
     else
         return tmp;

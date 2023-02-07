@@ -8,7 +8,8 @@
         "stdlibx.h": "c",
         "tui.h": "c",
         "XinEntry.h": "c",
-        "xin_syscalls.h": "c"
+        "xin_syscalls.h": "c",
+        "network_device.h": "c"
     },
     "C_Cpp.errorSquiggles": "disabled",
     "makefile.launchConfigurations": [

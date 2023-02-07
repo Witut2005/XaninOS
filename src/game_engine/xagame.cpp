@@ -3,6 +3,7 @@
 #include <libc/colors.h>
 #include <libc/stdlibx.h>
 #include <libcpp/algorithm.h>
+#include <libc/hal.h>
 
 
 extern "C" void printk(char* str);
@@ -145,6 +146,9 @@ void xgm::rectangle::rotate_right_90()
             }
         }
     }
+
+    for(int i = 0; i < 10000; i++)
+        io_wait();
 }
 
 xgm::rectangle::rectangle(uint32_t class_id=0) : class_id(class_id), BlankCells(nullptr), rotation_count(0)
@@ -263,7 +267,7 @@ void xgm::Renderer::ScreenManager::screen_clear(void)
     for(int i = 0; i < VGA_HEIGHT; i++)
     {
         for(int j = 0; j < VGA_WIDTH; j++)
-            this->screen_cells[i];
+            this->screen_cells[i][j] = false;
     }
 }
 
@@ -276,33 +280,37 @@ void xgm::Renderer::ScreenManager::vertical_line_create(uint8_t x, xgm::color::C
     }
 }
 
-xgm::ColissionDetector::ColissionDetector(uint8_t x, uint8_t y, uint8_t size_x, uint8_t size_y) : x(x), y(y), size_x(size_x), size_y(size_y)
-{
+xgm::ColissionDetector::ColissionDetector(uint8_t x, uint8_t y, uint8_t size_x, uint8_t size_y) : x(x), y(y), size_x(size_x), size_y(size_y){
+    // xgm::Renderer::ScreenManager ScreenTmp;
+
+
     // Screen.x = 0;
     // Screen.y = 0;
-
     // xprintf("x: %d\n", x);
     // xprintf("y: %d\n", y);
     // xprintf("size_x: %d\n", size_x);
     // xprintf("size_y: %d\n", size_y);
-
+    
+    // for(int i = 0; i < size_y; i++)
+    //     for(int j = 0; j < size_x; j++)
+    //         ScreenTmp[i * VGA_WIDTH + j] = xgm::color::white;
 }
 
 std::pair<uint32_t, uint32_t> xgm::ColissionDetector::check(xgm::rectangle ObjectToIgnore)
 {
     
-    for(int i = 0; i < size_y; i++)
+    for(int i = 1; i < this->size_y; i++)
     {
-        for(int j = 0; j < size_x; j++)
+        for(int j = 1; j < this->size_x; j++)
         {
             if(xgm::Renderer::ScreenManager::screen_cells[this->y + i][this->x + j])
             {
-                if(!(std::is_in_range<uint32_t>(x, x + size_x, ObjectToIgnore.positionx_get() + j) && std::is_in_range<uint32_t>(y, y + size_y, ObjectToIgnore.positiony_get() + i)))
-                    return std::pair(ObjectToIgnore.positionx_get()+j, ObjectToIgnore.positiony_get()+i);
+                if(!((ObjectToIgnore.positionx_get() + j == this->x + j) && (ObjectToIgnore.positiony_get() + i == this->y + i)))
+                    return std::pair<uint32_t, uint32_t> (this->x + j, this->y + i);
             }
         }
     }
-    return std::pair(static_cast<uint32_t>(0),static_cast<uint32_t>(0));
+    return std::pair<uint32_t, uint32_t>(0, 0);
 }
 
 extern "C" void __cxa_pure_virtual()
@@ -310,4 +318,3 @@ extern "C" void __cxa_pure_virtual()
     printk("virtual function execution error");
     return;
 }
-

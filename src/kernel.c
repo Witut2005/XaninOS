@@ -9,10 +9,10 @@
 #include <terminal/interpreter.c>
 #include <libc/math.h>
 #include <keyboard/keyboard_init.c>
-#include <devices/PCI/pci.c>
-#include <devices/ACPI/ACPI.c>
-#include <devices/USB/usb.c>
-#include <devices/HARD_DISK/disk.c>
+#include <devices/PCI/pci.h>
+#include <devices/ACPI/ACPI.h>
+#include <devices/USB/usb.h>
+#include <devices/HARD_DISK/disk.h>
 #include <devices/VGA/vga.h>
 #include <xin_fs/xin.h>
 #include <libc/assert.h>
@@ -20,7 +20,7 @@
 #include <devices/APIC/apic_registers.h>
 #include <devices/APIC/apic.h>
 #include <devices/IOAPIC/ioapic.h>
-#include <elf/elf_loader.c>
+#include <elf/elf_loader.h>
 #include <devices/ACPI/ACPI.h>
 #include <libc/syslog.h>
 #include <xanin_info/info_block.c>
@@ -419,8 +419,7 @@ void _start(void)
     memset((uint8_t *)ArpTable, 0xFF, sizeof(ArpTable[0]));
     current_arp_entry++;
 
-    netapi_init();
-    i8254x_init();
+    // i8254x_init();
 
     // interrupt_enable();
     KeyInfo.is_ctrl = false;

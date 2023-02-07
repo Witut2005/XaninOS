@@ -118,8 +118,7 @@ uint32_t pci_get_data32(const uint8_t bus, const uint8_t slot,
 
 
 
-uint16_t pci_get_data16(const uint8_t bus, const uint8_t slot,
-                        const uint8_t function, const uint8_t offset)
+uint16_t pci_get_data16(const uint8_t bus, const uint8_t slot, const uint8_t function, const uint8_t offset)
 {
 
     uint32_t address; 
@@ -141,8 +140,7 @@ uint16_t pci_get_data16(const uint8_t bus, const uint8_t slot,
 }
 
 
-uint8_t pci_get_data8(const uint8_t bus, const uint8_t slot, 
-                        const uint8_t function, const uint8_t offset )
+uint8_t pci_get_data8(const uint8_t bus, const uint8_t slot, const uint8_t function, const uint8_t offset )
 {
 
     uint32_t address; 

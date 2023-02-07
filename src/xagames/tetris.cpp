@@ -5,6 +5,8 @@
 #include <libcpp/cmemory.h>
 #include <keyboard/scan_codes.h>
 #include <libc/stdlibx.h>
+#include <libcpp/algorithm.h>
+
 #define VGA_WIDTH 80
 #define VGA_HEIGHT 28
 
@@ -61,7 +63,8 @@ void row_down(int row)
 
 }
 
-static xgm::rectangle object(0);
+xgm::rectangle object(0);
+
 
 extern "C" void tetris_keyboard_handler(void)
 {
@@ -76,27 +79,24 @@ extern "C" void tetris_keyboard_handler(void)
     if(std::KeyInfo.scan_code == SPACE)
     {
 
-        xgm::ColissionDetector tmp(object.positionx_get(), object.positiony_get(), object.sizey_get(), object.sizex_get());
+        // xgm::ColissionDetector tmp(object.positionx_get(), object.positiony_get(), object.sizey_get(), object.sizex_get());
 
-        // Screen.x = 0;
-        // Screen.y = 0;
+        // if(tmp.check(object).first == 0 && tmp.check(object).second == 0)
+        // {
+        //     Screen.x = 0;
+        //     Screen.y = 0;
+        //     xprintf("x: %d\n", tmp.check(object).first);
+        //     xprintf("y: %d\n", tmp.check(object).second);
+            object.rotate_right_90();
+        // }
 
-        // xgm::GeometryObject* obj = (xgm::GeometryObject*)&object;
-
-        // xprintf("ugabuga: %d\n", object.positionx_get());
-
-        // while(1);
-        // tmp.check(&object);
-        // if(tmp.check(object).first || tmp.check(object).second)
+        // else
         // {
         //     Screen.x = 0;
         //     Screen.y = 0;
         //     xprintf("x: %d\n", tmp.check(object).first);
         //     xprintf("y: %d\n", tmp.check(object).second);
         // }
-
-        object.rotate_right_90();
-    
     }
 
     else if(std::KeyInfo.scan_code == ARROW_LEFT)
@@ -123,7 +123,6 @@ extern "C" void tetris_keyboard_handler(void)
 
 }
 
-
 extern "C" int tetris(void)
 {
 
@@ -134,6 +133,10 @@ extern "C" int tetris(void)
     uint32_t score = 0;
     
     KEYBOARD_KEYSTROKE_HANLDER_LOAD(tetris_keyboard_handler);
+
+
+    // xprintf("hm? %d\n", std::is_in_range(10, 0, 9));
+    // while(1);
 
     while(1)
     {
@@ -181,8 +184,8 @@ extern "C" int tetris(void)
             Screen.x = 0;
             Screen.y = 5;
 
-            xprintf("position x: %d\n", object.positionx_get());
-            xprintf("position y: %d\n", object.positiony_get());
+            // xprintf("position x: %d\n", object.positionx_get());
+            // xprintf("position y: %d\n", object.positiony_get());
 
             TetrisScreen.vertical_line_create(19 + 10, xgm::color::lgreen);
             TetrisScreen.vertical_line_create(59 - 10, xgm::color::lgreen);
@@ -193,13 +196,13 @@ extern "C" int tetris(void)
             for(int i = 1; i < 3; i++)
                 TetrisScreen.vertical_line_create(59 - 10 + i, xgm::color::black);
 
-            if(!object.collision_detect().down) //&& ((object.positiony_get() + object.sizey_get()) < VGA_HEIGHT))
-                object.move(0,1);
+            // if(!object.collision_detect().down) //&& ((object.positiony_get() + object.sizey_get()) < VGA_HEIGHT))
+            //     object.move(0,1);
 
-            else
-                break;
+            // else
+            //     break;
 
-            msleep(200);
+            // msleep(200);
         }
 
         for(int i = 0; i < VGA_HEIGHT; i++)
@@ -227,7 +230,8 @@ extern "C" int tetris(void)
         current_color++;
     }
 
-    screen_clear();
+    // TetrisScreen.screen_clear();
+    object.destroy();
 
     Screen.y = 14;
     Screen.x = 35;
