@@ -2,6 +2,8 @@
 #pragma once
 
 #include <libc/hal.h>
+#include <libc/singal.h>
+#include <libc/stdlibx.h>
 #include <terminal/vty.h>
 #include <devices/APIC/apic_registers.h>
 
@@ -155,6 +157,9 @@ void keyboard_driver(uint8_t scanCode)
 
     if(keyboard_handle != nullptr)
         keyboard_handle();
+
+    if(KeyInfo.is_ctrl && KeyInfo.character == 'c')
+        exit();
 
     eoi_send();
 

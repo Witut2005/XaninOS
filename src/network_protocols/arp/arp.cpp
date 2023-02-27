@@ -9,8 +9,8 @@
 #include <libcpp/ctime.h>
 
 
-ArpTableEntry ArpTable[ARP_TABLE_ENTRIES] = {0,0};
-ArpTableEntry LastArpReply = {0,0};
+ArpTableEntry ArpTable[ARP_TABLE_ENTRIES] = {0,0,false};
+ArpTableEntry LastArpReply = {0,0,false};
 
 uint8_t mac_broadcast[] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
 uint8_t current_arp_entry = 0x0;
@@ -56,39 +56,41 @@ extern "C"
         }
 
         if(endian_switch(arp_header->opcode) != ARP_REPLY)//HANDLE ONLY REPLIES (NOT ARP PROBE ETC)
+        {
+            memset((uint8_t*)&LastArpReply, 0, sizeof(LastArpReply));
             return;
+        }
 
         if(memcmp((uint8_t*)arp_header->destination_hardware_address, 0x0, 6))
+        {
+            memset((uint8_t*)&LastArpReply, 0, sizeof(LastArpReply));
             return;
+        }
 
         uint32_t ip_addr = endian_switch(arp_header->source_protocol_address);
 
         uint8_t arp_entry_used = current_arp_entry;
 
-        if(!ip_addr && !arp_header->source_hardware_address[0])
-            return;
+        // if(!ip_addr && !arp_header->source_hardware_address[0])
+        //     return;
 
         for(int i = 0; i < ARP_TABLE_ENTRIES; i++)
         {
-            if(memcmp(ArpTable[i].mac_address, arp_header->source_hardware_address, 6) && memcmp(ArpTable[i].ip_address, (uint8_t*)&ip_addr, 4))
+            if(memcmp(ArpTable[i].ip_address, (uint8_t*)&ip_addr, 4))
             {
                 arp_entry_used = i;
                 current_arp_entry--;
             }
         }
 
-
-        memcpy(LastArpReply.mac_address, arp_header->source_hardware_address, 6);
-        memcpy(LastArpReply.ip_address, (uint8_t*)&ip_addr, 4);
-
         memcpy(ArpTable[arp_entry_used].mac_address, LastArpReply.mac_address, 6);
         memcpy(ArpTable[arp_entry_used].ip_address, LastArpReply.ip_address, 4);
 
+        memcpy(LastArpReply.mac_address, arp_header->source_hardware_address, 6);
+        memcpy(LastArpReply.ip_address, (uint8_t*)&ip_addr, 4);
+        LastArpReply.success = true;
+
         current_arp_entry++;
-
-
-
-
     }
 
     uint8_t mac_get_from_ip(uint32_t ip)
@@ -108,5 +110,9 @@ extern "C"
 
     }
 
+    ArpTableEntry last_arp_reply_get(void)
+    {
+        return LastArpReply;
+    }
 
 }

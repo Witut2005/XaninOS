@@ -40,6 +40,16 @@ void scan(void)
 {
 
     screen_clear();
+
+    argc = 0;
+
+    for(int i = 0; i < 5; i++)
+    {
+        if(strlen(argv[i]) == 0)
+            break;
+        argc = i;
+    }
+
     // terminal_t* app_terminal = terminal_create();
     // terminal_set(kernel_terminal, app_terminal);
     
@@ -263,19 +273,32 @@ void scan(void)
         
         if(!is_external_app)
         {
-            xprintf("%zUnknown command: %s", stderr, program_name);
+            xprintf("%zunknown command: %s", stderr, program_name);
             screen_background_color_set(red);
             msleep(400);
             last_command_exit_status = XANIN_ERROR;
         }
+
         is_external_app = false;
+        keyboard_handle = nullptr;
+        app_exited = true;
+        KeyInfo.character = 0x0;
+        KeyInfo.scan_code = 0x0;
+        return;
     }
 
+    if(last_command_exit_status != XANIN_OK)
+    {
+        xprintf("Command execution status: %z%s", stderr, app_exit_status_text_get());
+        screen_background_color_set(red);
+        msleep(800);
+    }
 
     keyboard_handle = nullptr;
     app_exited = true;
     KeyInfo.character = 0x0;
     KeyInfo.scan_code = 0x0;
+
 
     // terminal_destroy(app_terminal, kernel_terminal);
 

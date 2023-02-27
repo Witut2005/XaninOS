@@ -24,6 +24,8 @@
 #include <libcpp/fstream.h>
 #include <libcpp/regex.h>
 #include <libcpp/memory.h>
+#include <libcpp/command_parser.h>
+#include <terminal/vty.h>
 
 class Test
 {
@@ -37,6 +39,13 @@ void cpp_prog()
 
 
     std::cout << std::clear;
+
+    std::CommandParser parser(argv);
+
+    parser.argument_add("--help");//, "str");
+
+    std::cout << parser.parse_arg("--help") << std::endl;
+    while(inputg().scan_code != ENTER);
 
     int* p;
     
@@ -226,6 +235,11 @@ void cpp_prog()
         std::cout << "no shared mordo :))" << std::endl;
     else
         std::cout << "weak ptr value: " << *weak.lock()->get() << std::endl;
+
+    screen_clear();
+
+    // std::List<char*> nicho;
+    // nicho.push_back("ugabuga");
 
 
     while(inputg().scan_code != ENTER);

@@ -2,6 +2,8 @@
 #pragma once
 
 #include <libc/stdlibx.h>
+#include <libcpp/iostream.h>
+#include <libcpp/initializer_list.hpp>
 
 namespace std
 {

@@ -2,6 +2,7 @@
 #include <tui/tui.h>
 #include <libc/colors.h>
 #include <xin_fs/xin.h>
+#include <libc/process.h>
 
 static char* app_current_folder;
 static char** app_parent_folder;
@@ -163,6 +164,14 @@ void hfs(char* omg)
 
 }
 
+static table_t* explorer_main_table;
+
+void explorer_app_deconstructor(void)
+{
+    table_destroy(explorer_main_table);
+    free(explorer_main_table);
+}
+
 int explorer(char* parent_folder)
 {
     app_current_folder = nullptr;
@@ -170,6 +179,8 @@ int explorer(char* parent_folder)
     app_parent_folder_counter = 0;
     selected_file = nullptr;
     exit_tui_test_app = false;
+
+    app_process_register(explorer_app_deconstructor, 3, app_current_folder, app_parent_folder, selected_file);
 
     char* initial_folder = (char*)calloc(MAX_PATH);
     xin_get_current_directory(initial_folder);
@@ -202,6 +213,7 @@ int explorer(char* parent_folder)
         xprintf("CURRENT DIRECTORY: %s\n", app_current_folder);
         XinChildrenEntries* hoho = xin_get_children_entries(app_current_folder, false);
         table_t* fro = table_create(0,1, 10, 80, black, white, TUI_TEST_SITES);
+        explorer_main_table = fro;
 
         if(fro == nullptr)
         {

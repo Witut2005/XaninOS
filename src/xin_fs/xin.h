@@ -94,6 +94,7 @@ const uint32_t ftell(XinEntry* file);
 const uint32_t lteel(int fd);
 uint8_t *xin_find_free_pointer(void);
 uint8_t *xin_find_free_pointer_with_given_size(uint32_t size);
+int xin_get_file_size_in_sectors(XinEntry* File);
 
 #ifdef __cplusplus
 }

@@ -190,8 +190,7 @@ int xin_note(char* file_name)
 
         xin_file->entry_size = file_data_counter;
 
-        for(int i = 0; i < 16; i++)
-            disk_write(ATA_FIRST_BUS, ATA_MASTER, xin_file->starting_sector + i, 1, (uint16_t*)(tmp + (i * SECTOR_SIZE)));
+        disk_write(ATA_FIRST_BUS, ATA_MASTER, xin_file->starting_sector, xin_get_file_size_in_sectors(xin_file), (uint16_t*)(tmp));
         
         free(tmp);
 

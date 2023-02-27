@@ -419,7 +419,7 @@ void _start(void)
     memset((uint8_t *)ArpTable, 0xFF, sizeof(ArpTable[0]));
     current_arp_entry++;
 
-    // i8254x_init();
+    i8254x_init();
 
     // interrupt_enable();
     KeyInfo.is_ctrl = false;

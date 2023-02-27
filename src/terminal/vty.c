@@ -3,6 +3,7 @@
 #include <libc/colors.h>
 #include <keyboard/key_map.h>
 #include <libc/stdlibx.h>
+#include <libc/string.h>
 
 #define VGA_SCREEN_RESOLUTION 4480
 #define VGA_TEXT_MEMORY 0xb8000
@@ -22,6 +23,7 @@ char program_parameters1[40];
 char program_parameters2[40];
 char program_parameters3[40];
 
+int argc = 0;
 char* argv[5];
 
 char last_used_commands[40];
@@ -184,4 +186,34 @@ void terminal_keyboard(void)
     }
 
 
+}
+
+static char app_exit_status_text[40];
+
+char* app_exit_status_text_get(void)
+{
+
+    switch(last_command_exit_status)
+    {
+        case XANIN_OK:
+        {
+            strcpy(app_exit_status_text, "ok");
+            break;
+        }
+
+        case XANIN_ERROR:
+        {
+            strcpy(app_exit_status_text, "error");
+            break;
+        }
+
+        // case XIN:
+        // {
+        //     strcpy(app_exit_status_text, "error");
+        //     break;
+        // }
+
+    }
+    
+    return app_exit_status_text;
 }

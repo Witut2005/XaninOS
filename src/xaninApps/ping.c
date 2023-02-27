@@ -40,12 +40,14 @@ int ping(char* ip_addr_str)
         prepare_arp_request(arp, ARP_ETHERNET, ARP_IP_PROTOCOL, 0x6, 0x4, ARP_GET_MAC, netapi_mac_get(), xanin_ip_get(), macd, ip_dest);
         send_arp_request(arp);
 
-        if(memcmp(LastArpReply.ip_address, tmp, 4))
+        ArpTableEntry Response = last_arp_reply_get();
+
+        if(Response.success)
             xprintf("%z%s host reached\n", set_output_color(green,white), ip_addr_str);
         else
             xprintf("%zNo such host\n", set_output_color(red,white));
 
-        char* tmp = (char*)&LastArpReply.ip_address;
+        char* tmp = (char*)&Response.ip_address;
         int j;
         for(j = 3; j > 0; j--)
             xprintf("%x.", tmp[j]);

@@ -346,11 +346,8 @@ int xin_folder_create(char* entry_name)
     entry->entry_size = 0x0;
     entry->entry_type = XIN_DIRECTORY;
 
-    for(int i = 0; i < 5; i++)
-        disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x12 + i, 1, (uint16_t*)(0x800 + (i * SECTOR_SIZE)));
-
-    for(int i = 0; i < 10; i++)
-        disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x1a + i, 1, (uint16_t*)(0x1800 + (i * SECTOR_SIZE)));
+    disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x12, 5, (uint16_t*)(0x800));
+    disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x1a, 10, (uint16_t*)(0x1800));
 
     return XANIN_OK;
 
@@ -608,19 +605,12 @@ int xin_file_create(char* entry_name)
 
     uint8_t* zeros = (uint8_t*)calloc(SECTOR_SIZE);
 
-    for(int i = 0; i < 0x10; i++)
-        disk_write(ATA_FIRST_BUS, ATA_MASTER, entry->starting_sector + i, 1, (uint16_t*)zeros);
+    disk_write(ATA_FIRST_BUS, ATA_MASTER, entry->starting_sector, 0x10, (uint16_t*)zeros);
     
     free(zeros);
 
     disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x12, 8, (uint16_t*)0x800);
-    disk_flush(ATA_FIRST_BUS, ATA_MASTER);
-
-    for(int i = 0; i < 40; i++)
-    {
-        disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x1a + i, 1, (uint16_t*)(0x1800 + (i * SECTOR_SIZE)));
-        disk_flush(ATA_FIRST_BUS, ATA_MASTER);
-    }
+    disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x1a, 40, (uint16_t*)(0x1800));
 
     return XANIN_OK;
 
@@ -938,8 +928,7 @@ void close(int fd)
     memset(file->FileInfo->rights, '\0', 2);
 
 //    for(int i = 0; i < (*file)->entry_size / 512 + ((*file)->entry_size % 512 != 0 ? 1 : 0); i++)
-    for(int i = 0; i < 0x10; i++)
-       disk_write(ATA_FIRST_BUS, ATA_MASTER, file->starting_sector + i, 1, (uint16_t*)(file->FileInfo->base_address_memory + (i * SECTOR_SIZE)));
+    disk_write(ATA_FIRST_BUS, ATA_MASTER, file->starting_sector, 0x10, (uint16_t*)(file->FileInfo->base_address_memory));
 
     // while(1);
     free(file->FileInfo->base_address_memory);
@@ -1191,4 +1180,13 @@ XinChildrenEntries* xin_get_children_entries_type(char* folder, uint8_t type)
     }
     Children->how_many = finded_entries;
     return Children;
+}
+
+
+int xin_get_file_size_in_sectors(XinEntry* File)
+{
+    int size = File->entry_size / SECTOR_SIZE;
+    if(File->entry_size % SECTOR_SIZE)
+        size++;
+    return size;
 }

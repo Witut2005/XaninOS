@@ -178,8 +178,8 @@ extern "C" {
 
 uint32_t pci_find_device(uint16_t, uint16_t, pci_device*);
 //PciDevicePack pci_find_devices(uint16_t, uint16_t);
-uint8_t pci_get_data8(const uint8_t bus, const uint8_t slot, const uint8_t function, const uint8_t offset );
-uint16_t pci_get_data16(const uint8_t bus, const uint8_t slot, const uint8_t function, const uint8_t offset );
+uint8_t pci_get_data8(const uint8_t bus, const uint8_t slot, const uint8_t function, const uint8_t offset);
+uint16_t pci_get_data16(const uint8_t bus, const uint8_t slot, const uint8_t function, const uint8_t offset);
 
 #ifdef __cplusplus
 }

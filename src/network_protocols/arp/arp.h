@@ -18,6 +18,7 @@ struct ArpTableEntry
 {
     uint8_t mac_address[6];
     uint8_t ip_address[4];
+    int success;
 }__attribute__((packed));
 
 struct AddressResolutionProtocol
@@ -40,28 +41,27 @@ struct AddressResolutionProtocol
 #ifndef __cplusplus
     typedef struct AddressResolutionProtocol AddressResolutionProtocol;
     typedef struct ArpTableEntry ArpTableEntry;
-    extern void send_arp_request(AddressResolutionProtocol* arp);
-    extern AddressResolutionProtocol* prepare_arp_request(AddressResolutionProtocol* arp, uint16_t hardware_type, uint16_t protocol_type, 
-                                                    uint8_t hardware_address_length, uint8_t protocol_address_length, uint16_t opcode,
-                                                        uint8_t* source_hardware_address, uint32_t source_protocol_address, uint8_t* destination_hardware_address,
-                                                            uint32_t destination_protocol_address); 
-    extern void arp_reply_handle(AddressResolutionProtocol* arp_header);
-    extern uint8_t mac_get_from_ip(uint32_t ip);
+#endif
 
 
-#else
-    extern "C" void send_arp_request(AddressResolutionProtocol* arp);
-    extern "C" AddressResolutionProtocol* prepare_arp_request(AddressResolutionProtocol* arp, uint16_t hardware_type, uint16_t protocol_type, 
+#ifdef __cplusplus
+extern "C" {
+#endif
+    void send_arp_request(AddressResolutionProtocol* arp);
+    AddressResolutionProtocol* prepare_arp_request(AddressResolutionProtocol* arp, uint16_t hardware_type, uint16_t protocol_type, 
                                                     uint8_t hardware_address_length, uint8_t protocol_address_length, uint16_t opcode,
                                                         uint8_t* source_hardware_address, uint32_t source_protocol_address, uint8_t* destination_hardware_address,
                                                             uint32_t destination_protocol_address);
-    extern "C" void arp_reply_handle(AddressResolutionProtocol* arp_header);
-    extern "C" uint8_t mac_get_from_ip(uint32_t ip);
+    void arp_reply_handle(AddressResolutionProtocol* arp_header);
+    uint8_t mac_get_from_ip(uint32_t ip);
+    ArpTableEntry last_arp_reply_get(void);
 
+#ifdef __cplusplus
+}
 #endif
 
 extern ArpTableEntry ArpTable[ARP_TABLE_ENTRIES];
-extern ArpTableEntry LastArpReply;
+// extern ArpTableEntry LastArpReply;
 extern uint8_t current_arp_entry;
 extern uint8_t mac_broadcast[];
 

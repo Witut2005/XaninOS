@@ -8,5 +8,6 @@ int memory_test(void)
     xprintf("memory_test 0x%x\n", tmp);
 
     while(inputg().scan_code != ENTER);
+    return XANIN_OK;
 
 }

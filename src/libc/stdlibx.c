@@ -8,6 +8,7 @@
 #include <libc/stdlibx.h>
 #include <pit/pit.h>
 #include <libc/memory.h>
+#include <libc/process.h>
 
 char command_buffer[80];
 char* keyboard_command;
@@ -28,6 +29,7 @@ void exit(void)
     interrupt_enable();
     eoi_send();
     kernel_loop();
+    app_process_unregister();
 }
 
 void wait_key(uint8_t key)

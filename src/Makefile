@@ -172,6 +172,9 @@ build:
 	@echo [C] stdlibx.c
 	@$(C) $(C_OPTIONS) ./libc/stdlibx.c -o ./libc/stdlibx.o
 
+	@echo [C] signal.c
+	@$(C) $(C_OPTIONS) ./libc/signal.c -o ./libc/signal.o
+
 	@echo [C] tui.c
 	@$(C) $(C_OPTIONS) ./tui/tui.c -o ./tui/tui.o
 
@@ -187,8 +190,11 @@ build:
 	@echo [C] string.c
 	@$(C) $(C_OPTIONS) ./libc/string.c -o ./libc/string.o
 
-	@echo [CC] algorithm.c
+	@echo [CC] algorithm.cpp
 	@$(CC) $(CC_OPTIONS) ./libcpp/algorithm.cpp -o ./libcpp/algorithm.o
+
+	@echo [CC] command_parser.cpp
+	@$(CC) $(CC_OPTIONS) ./libcpp/command_parser.cpp -o ./libcpp/command_parser.o
 
 	@echo [C] algorithm.c
 	@$(C) $(C_OPTIONS) ./libc/algorithm.c -o ./libc/algorithm.o
@@ -198,6 +204,9 @@ build:
 
 	@echo [C] time.c
 	@$(C) $(C_OPTIONS) ./libc/time.c -o ./libc/time.o
+
+	@echo [C] procesa.c
+	@$(C) $(C_OPTIONS) ./libc/process.c -o ./libc/process.o
 
 	@echo [C] xaninGraphics 
 	@$(C) $(C_OPTIONS) ./xaninGraphics/xaninGraphics.c -o ./xaninGraphics/xaninGraphics.o
@@ -257,6 +266,8 @@ build:
 	./libc/instruction_pointer.o \
 	./libc/real_mode_fswitch.o \
 	./libc/algorithm.o \
+	./libc/signal.o \
+	./libc/process.o \
 	./libcpp/algorithm.o \
 	./libcpp/regex.o \
 	./tui/tui.o \
@@ -336,7 +347,13 @@ build:
 
 run:
 	@# qemu-system-i386 -smp 2 -net nic,model=e1000 -drive file=../bin/xanin.img,cache=unsafe -m 512
-	sudo qemu-system-i386 -drive file=../bin/xanin.img,cache=unsafe -net nic,model=e1000 -net tap -m 256 -vga std
+	@# sudo qemu-system-i386 -drive file=../bin/xanin.img,cache=unsafe -net nic,model=e1000 -net tap -m 256 -vga std
+	@# qemu-system-i386 -m 256 -drive file=../bin/xanin.img,cache=unsafe -netdev user,id=network0 -device e1000,netdev=network0,mac=52:54:00:12:34:56 
+
+	# @sudo /etc/qemu-ifup tap0
+	@sudo qemu-system-i386 -m 256 -drive file=../bin/xanin.img,cache=unsafe -net nic -net tap,ifname=tap0,script=no,downscript=no
+	# @sudo /etc/qemu-ifdown tap0
+
 	@# sudo qemu-system-i386 -drive file=../bin/xanin.img,cache=unsafe -m 512
 	@#sudo qemu-system-i386 -drive file=../bin/xanin.img,cache=unsafe -m 8192 -netdev user,id=user.0 -device e1000,netdev=user.0
 

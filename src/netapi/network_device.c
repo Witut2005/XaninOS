@@ -139,14 +139,18 @@ void network_handler(void)
 
 NetworkHandler* device_info_get_by_name(char* device_name)
 {
-    NetworkHandler* tmp = NetworkHandlers;
-    while(!strcmp(tmp->device_name, device_name) && tmp < &NetworkHandlers[NETWORK_CARDS_HANDLERS])
-        tmp++;
-
-    if(tmp == &NetworkHandlers[NETWORK_CARDS_HANDLERS])
+    if(!strlen(device_name))
         return nullptr;
-    else
-        return tmp;
+
+    NetworkHandler* tmp = NetworkHandlers;
+    while(!strcmp(tmp->device_name, device_name) )
+    {
+        if(tmp == &NetworkHandlers[NETWORK_CARDS_HANDLERS])
+            return nullptr;
+        tmp++;
+    }
+
+    return tmp;
 
 }
 
