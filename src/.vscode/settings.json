@@ -1,5 +1,6 @@
 {
     "files.associations": {
+        "*.embeddedhtml": "html",
         "stdiox.h": "c",
         "pit.h": "c",
         "xin.h": "c",
@@ -9,7 +10,8 @@
         "tui.h": "c",
         "XinEntry.h": "c",
         "xin_syscalls.h": "c",
-        "network_device.h": "c"
+        "network_device.h": "c",
+        "type_traits": "cpp"
     },
     "C_Cpp.errorSquiggles": "disabled",
     "makefile.launchConfigurations": [
