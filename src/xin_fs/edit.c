@@ -425,7 +425,7 @@ int edit(char* file_name)
     screen_clear();
     XinEntry* file = fopen(file_name, "r");
 
-    if(file == nullptr)
+    if(file == NULL)
     {
         xprintf("Couldn't open file %s\n", file_name);
         while(KeyInfo.scan_code != ENTER);

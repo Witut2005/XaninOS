@@ -24,6 +24,12 @@ namespace std
         size_t size;
 
     public:
+
+        ListElement* tail_get(void)
+        {
+            return this->Tail;
+        }
+
         UnorderedMap(std::initializer_list<std::pair<K,V>> ListOfElements)
         {
             this->Head = (ListElement *)malloc(sizeof(ListElement));
@@ -40,21 +46,21 @@ namespace std
                 Tmp->item.first = a.first;
                 Tmp->item.second = a.second;
             }
-            Tmp->next = nullptr;
+            Tmp->next = NULL;
             this->Tail = Tmp;
 
             this->Head->next->previous = this->Head;
             this->Head = this->Head->next;
             free(this->Head->previous);
-            this->Head->previous = nullptr;
+            this->Head->previous = NULL;
         }
 
         UnorderedMap()
         {
             this->Head = (ListElement *)malloc(sizeof(ListElement));
             this->Tail = (ListElement *)malloc(sizeof(ListElement));
-            this->Head->next = nullptr;
-            this->Head->previous = nullptr;
+            this->Head->next = NULL;
+            this->Head->previous = NULL;
             this->size = 0;
             this->Head->next = this->Tail;
         }
@@ -72,12 +78,29 @@ namespace std
         ListElement *find(K key)
         {
             ListElement *Tmp = Head;
-            while (Tmp != Tail)
+
+            if constexpr(std::is_pointer<K>::value) 
             {
-                if (Tmp->item.first == key)
-                    return Tmp;
-                Tmp = Tmp->next;
+                while (Tmp != Tail)
+                {
+                    if(strcmp((char*)Tmp->item.first, (char*)key))
+                    {
+                        return Tmp;
+                    }
+                    Tmp = Tmp->next;
+                }
             }
+
+            else
+            {
+                while (Tmp != Tail)
+                {
+                    if (Tmp->item.first == key)
+                        return Tmp;
+                    Tmp = Tmp->next;
+                }
+            }
+
             return Tail;
         }
 
@@ -159,7 +182,7 @@ namespace std
             this->size++;
             ListElement *NewItem = (ListElement *)malloc(sizeof(ListElement));
             NewItem->next = this->Head;
-            NewItem->previous = nullptr;
+            NewItem->previous = NULL;
             NewItem->item.first = key;
             NewItem->item.second = value;
             Head = NewItem;
@@ -171,7 +194,7 @@ namespace std
 
             std::cout << '[';
 
-            while (HeadTmp->next != nullptr)
+            while (HeadTmp->next != NULL)
             {
                 std::cout << '[' << HeadTmp->item.first << ',' << HeadTmp->item.second << "], ";
                 HeadTmp = HeadTmp->next;

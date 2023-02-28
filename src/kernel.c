@@ -247,10 +247,10 @@ void _start(void)
 
     xprintf("\n");
 
-    madt_entry_type2 *apic_keyboard_redirect = nullptr;
-    madt_entry_type2 *apic_pit_redirect = nullptr;
-    madt_entry_type2 *apic_nic_redirect = nullptr;
-    madt_entry_type2 *apic_mouse_redirect = nullptr;
+    madt_entry_type2 *apic_keyboard_redirect = NULL;
+    madt_entry_type2 *apic_pit_redirect = NULL;
+    madt_entry_type2 *apic_nic_redirect = NULL;
+    madt_entry_type2 *apic_mouse_redirect = NULL;
 
     for (int i = 0; (*madt_entry_type2_ptr[i]).entry_type == 2; i++)
     {
@@ -265,17 +265,17 @@ void _start(void)
         
     }
 
-    ioapic_ioredtbl_configure((apic_keyboard_redirect != nullptr ? apic_keyboard_redirect->global_system_int_table + APIC_IRQ_BASE : PIC_KEYBOARD_VECTOR)
+    ioapic_ioredtbl_configure((apic_keyboard_redirect != NULL ? apic_keyboard_redirect->global_system_int_table + APIC_IRQ_BASE : PIC_KEYBOARD_VECTOR)
                                       << APIC_VECTOR |
                                   0x0 << APIC_DELIVERY_MODE | 0x0 << APIC_DESTINATION_MODE | 0x0 << APIC_INT_PIN_POLARITY | 0x0 << APIC_INT_MASK,
                               ioapic_id_get());
 
-    ioapic_ioredtbl_configure((apic_pit_redirect != nullptr ? apic_pit_redirect->global_system_int_table + APIC_IRQ_BASE : PIC_PIT_VECTOR)
+    ioapic_ioredtbl_configure((apic_pit_redirect != NULL ? apic_pit_redirect->global_system_int_table + APIC_IRQ_BASE : PIC_PIT_VECTOR)
                                       << APIC_VECTOR |
                                   0x0 << APIC_DELIVERY_MODE | 0x0 << APIC_DESTINATION_MODE | 0x0 << APIC_INT_PIN_POLARITY | 0x0 << APIC_INT_MASK,
                               ioapic_id_get());
 
-    ioapic_ioredtbl_configure((apic_nic_redirect != nullptr ? apic_nic_redirect->global_system_int_table + APIC_IRQ_BASE : PIC_NIC_VECTOR)
+    ioapic_ioredtbl_configure((apic_nic_redirect != NULL ? apic_nic_redirect->global_system_int_table + APIC_IRQ_BASE : PIC_NIC_VECTOR)
                                       << APIC_VECTOR |
                                   0x0 << APIC_DELIVERY_MODE | 0x0 << APIC_DESTINATION_MODE | 0x0 << APIC_INT_PIN_POLARITY | 0x0 << APIC_INT_MASK,
                               ioapic_id_get());
@@ -286,7 +286,7 @@ void _start(void)
                               ioapic_id_get());
 
     xprintf("\n%z----------------------------\n", set_output_color(black, green));
-    xprintf("NIC interrupt line: 0x%x", (apic_nic_redirect != nullptr ? apic_nic_redirect->global_system_int_table + APIC_IRQ_BASE : PIC_NIC_VECTOR));
+    xprintf("NIC interrupt line: 0x%x", (apic_nic_redirect != NULL ? apic_nic_redirect->global_system_int_table + APIC_IRQ_BASE : PIC_NIC_VECTOR));
 
     xanin_info_ptr = xanin_information_block_get();
 
@@ -302,7 +302,7 @@ void _start(void)
 
     // for (int i = 0; i < 10; i++)
     // {
-    //     if (madt_entry_type0_ptr[i] != nullptr)
+    //     if (madt_entry_type0_ptr[i] != NULL)
     //         number_of_cores++;
     // }
 

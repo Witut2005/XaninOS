@@ -16,7 +16,7 @@ void screen_cell_set(uint8_t x, uint8_t y, char character, uint8_t background_co
 table_t* table_create(uint16_t x, uint16_t y, uint8_t number_of_rows, uint8_t row_size, uint8_t background_color, uint8_t foreground_color, uint8_t number_of_sites)
 {
     if((!number_of_rows) || (!row_size))
-        return (table_t*)nullptr;
+        return (table_t*)NULL;
     
     if(number_of_sites > 9)
         number_of_sites = 9;

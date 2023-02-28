@@ -27,7 +27,7 @@ void xgm::rectangle::create(uint32_t x, uint32_t y, uint32_t size_x, uint32_t si
     this->size_y = size_y;
     this->color = color;
 
-    if(BlankCells != nullptr)
+    if(BlankCells != NULL)
     {
         for(int i = 0; i < this->size_y; i++)
             free(BlankCells[i]);
@@ -151,7 +151,7 @@ void xgm::rectangle::rotate_right_90()
         io_wait();
 }
 
-xgm::rectangle::rectangle(uint32_t class_id=0) : class_id(class_id), BlankCells(nullptr), rotation_count(0)
+xgm::rectangle::rectangle(uint32_t class_id=0) : class_id(class_id), BlankCells(NULL), rotation_count(0)
 {
 }
 

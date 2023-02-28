@@ -391,7 +391,7 @@ PciDevicePack pci_find_devices(uint16_t class, uint16_t device_id)
     uint32_t pci_address_selector = 0x0;
     pci_device* device_data;
 
-    PciDevicePack DevicesPresent = {0, nullptr}; 
+    PciDevicePack DevicesPresent = {0, NULL}; 
 
     for(pci_address_selector = 0x0; pci_address_selector < 2500000; pci_address_selector++) 
     {

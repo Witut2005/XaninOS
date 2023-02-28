@@ -27,7 +27,7 @@ void check_external_apps(void)
 
     XinEntry* file = fopen(app, "r");
 
-    if(file != nullptr && file->entry_size != 0)
+    if(file != NULL && file->entry_size != 0)
     {
         elfreader(app);
         is_external_app = true;
@@ -280,7 +280,7 @@ void scan(void)
         }
 
         is_external_app = false;
-        keyboard_handle = nullptr;
+        keyboard_handle = NULL;
         app_exited = true;
         KeyInfo.character = 0x0;
         KeyInfo.scan_code = 0x0;
@@ -294,7 +294,7 @@ void scan(void)
         msleep(800);
     }
 
-    keyboard_handle = nullptr;
+    keyboard_handle = NULL;
     app_exited = true;
     KeyInfo.character = 0x0;
     KeyInfo.scan_code = 0x0;

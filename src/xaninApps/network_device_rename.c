@@ -6,7 +6,7 @@ int network_device_rename(char* oldname, char* newname)
 
     NetworkHandler* handler = device_info_get_by_name(oldname);
 
-    if(handler == nullptr)
+    if(handler == NULL)
     {
         xprintf("%zNo Such Device %s\n", stderr, oldname);
         while(KeyInfo.scan_code != ENTER);

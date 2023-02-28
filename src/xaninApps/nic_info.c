@@ -18,7 +18,7 @@ int nic_info(char* network_device_name)
     
     NetworkHandler* device_info = device_info_get_by_name(network_device_name);
     
-    if(device_info == nullptr)
+    if(device_info == NULL)
     {
         xprintf("%zNo Such Device: %s\n", stderr, network_device_name);
         while(KeyInfo.scan_code != ENTER);

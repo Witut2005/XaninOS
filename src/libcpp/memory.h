@@ -152,7 +152,7 @@ class weak_ptr
         shared_ptr<T>* lock()
         {
             if(!(*this->share_count))
-                return nullptr;
+                return NULL;
             else
             {
                 return &this->parent;

@@ -22,9 +22,9 @@ namespace std
 
 
         public:
-            fstream(char* file_name = nullptr, char* flags = nullptr)
+            fstream(char* file_name = NULL, char* flags = NULL)
             {
-                if(file_name != nullptr && flags != nullptr) 
+                if(file_name != NULL && flags != NULL) 
                     this->file = xin::fopen(file_name, flags);
             }
 
@@ -35,7 +35,7 @@ namespace std
 
             bool good() 
             {
-                this->FstreamFlags.failbit = this->file == nullptr;
+                this->FstreamFlags.failbit = this->file == NULL;
             }
 
             void close() 

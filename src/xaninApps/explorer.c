@@ -174,10 +174,10 @@ void explorer_app_deconstructor(void)
 
 int explorer(char* parent_folder)
 {
-    app_current_folder = nullptr;
-    app_parent_folder = nullptr;
+    app_current_folder = NULL;
+    app_parent_folder = NULL;
     app_parent_folder_counter = 0;
-    selected_file = nullptr;
+    selected_file = NULL;
     exit_tui_test_app = false;
 
     app_process_register(explorer_app_deconstructor, 3, app_current_folder, app_parent_folder, selected_file);
@@ -194,7 +194,7 @@ int explorer(char* parent_folder)
     else if(parent_folder[strlen(parent_folder) - 1] != '/')
         parent_folder[strlen(parent_folder)] = '/';
 
-    else if(xin_find_entry(parent_folder) != nullptr)
+    else if(xin_find_entry(parent_folder) != NULL)
         strcpy(app_current_folder, xin_find_entry(parent_folder)->entry_path) ;
 
     else 
@@ -215,7 +215,7 @@ int explorer(char* parent_folder)
         table_t* fro = table_create(0,1, 10, 80, black, white, TUI_TEST_SITES);
         explorer_main_table = fro;
 
-        if(fro == nullptr)
+        if(fro == NULL)
         {
             screen_clear();
             xprintf("No folders");

@@ -7,7 +7,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#define nullptr 0x0
+// #define NULL 0x0
 #define VGA_TEXT_MEMORY 0xb8000
 
 #ifdef __cplusplus

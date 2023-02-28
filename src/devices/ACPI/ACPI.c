@@ -70,7 +70,7 @@ rsdp_descriptor *get_acpi_rsdp_address_base(void)
         acpi_string += 0x10;
     }
 
-    return (rsdp_descriptor*)nullptr;
+    return (rsdp_descriptor*)NULL;
 
 }
 

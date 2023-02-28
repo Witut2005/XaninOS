@@ -144,7 +144,7 @@ void keyboard_driver(uint8_t scanCode)
 
 
 
-    // if(keyboard_handle != nullptr)
+    // if(keyboard_handle != NULL)
     // {
     //     keyboard_handle();
     // }
@@ -155,7 +155,7 @@ void keyboard_driver(uint8_t scanCode)
     if(KeyInfo.scan_code == BSPC)
         KeyInfo.character = '\0';
 
-    if(keyboard_handle != nullptr)
+    if(keyboard_handle != NULL)
         keyboard_handle();
 
     if(KeyInfo.is_ctrl && KeyInfo.character == 'c')

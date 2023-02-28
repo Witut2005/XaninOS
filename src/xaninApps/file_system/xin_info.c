@@ -7,7 +7,7 @@ int xin_info(char *entry_name)
 
     XinEntry* file = fopen(entry_name, "r");
 
-    if (file != nullptr)
+    if (file != NULL)
     {
         xprintf("\nentry path: %s\n", file->entry_path);
         xprintf("creation date: %y\n", file->creation_date);

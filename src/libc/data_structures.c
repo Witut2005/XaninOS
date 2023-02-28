@@ -38,7 +38,7 @@ bool stack_is_empty(stack_t* Stack)
 void stack_remove(stack_t** Stack)
 {
     free((*Stack)->end);
-    *Stack = nullptr;
+    *Stack = NULL;
     return;
 }
 

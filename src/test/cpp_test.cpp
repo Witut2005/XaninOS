@@ -41,10 +41,17 @@ void cpp_prog()
     std::cout << std::clear;
 
     std::CommandParser parser(argv);
-
-    parser.argument_add("--help");//, "str");
+    parser.argument_add("--help", true);//, "str");
 
     std::cout << parser.parse_arg("--help") << std::endl;
+
+    // std::UnorderedMap<const char*, const char* > MojaMapa;
+    // MojaMapa.insert("nicho", "wojciech");
+    // MojaMapa.insert("agata", "lerczok");
+    // MojaMapa.insert("huj", "udpa");
+
+    // std::cout << MojaMapa["nicho"] << " " << MojaMapa["agata"] << " " << MojaMapa["huj"] << std::endl;
+
     while(inputg().scan_code != ENTER);
 
     int* p;
@@ -224,14 +231,14 @@ void cpp_prog()
     weak = shr1;
 
 
-    if(weak.lock() == nullptr)
+    if(weak.lock() == NULL)
         std::cout << "no shared mordo :))" << std::endl;
     else
         std::cout << "weak ptr value: " << *weak.lock()->get() << std::endl;
     }
 
     
-    if(weak.lock() == nullptr)
+    if(weak.lock() == NULL)
         std::cout << "no shared mordo :))" << std::endl;
     else
         std::cout << "weak ptr value: " << *weak.lock()->get() << std::endl;

@@ -199,7 +199,7 @@ int hexeditor(char* file_name, char* options)
     if(strcmp(options, "-offset"))
         hexeditor_offset = strtoi(argv[3], 16);
 
-    if(file == nullptr)
+    if(file == NULL)
     {
         xprintf("Can't open file %s\n", file_name);
         while(KeyInfo.scan_code != ENTER);

@@ -149,7 +149,7 @@ int xin_note(char* file_name)
 
     XinEntry* xin_file = fopen(file_name, "rw");
 
-    if(xin_file == nullptr)
+    if(xin_file == NULL)
     {
         xprintf("Could not open file: %s\n", file_name);
         while(KeyInfo.scan_code != ENTER);
@@ -197,7 +197,7 @@ int xin_note(char* file_name)
     }
 
     
-    keyboard_handle = nullptr;
+    keyboard_handle = NULL;
     return XANIN_OK;
 
 }

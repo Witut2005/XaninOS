@@ -64,12 +64,12 @@ __STATUS __sys_xin_folder_create(char* entry_name)
 __STATUS __sys_xin_entry_move(char* entry_name, char* new_name)
 {
 
-    if(xin_get_file_pf(new_name) == nullptr)
+    if(xin_get_file_pf(new_name) == NULL)
     {
          return XIN_ENTRY_NOT_FOUND;
     }
 
-    if(xin_find_entry(entry_name) == nullptr)
+    if(xin_find_entry(entry_name) == NULL)
     {
         return XIN_ENTRY_NOT_FOUND;
     }
@@ -124,7 +124,7 @@ __STATUS __sys_xin_folder_change(const char* new_folder_name)
 {
     XinEntry* folder_entry = xin_folder_change((char*)new_folder_name);
 
-    if(folder_entry == nullptr)
+    if(folder_entry == NULL)
         return XANIN_ERROR;
 
     return XANIN_OK;
@@ -136,7 +136,7 @@ __STATUS __sys_xin_copy(char* file_name, char* new_file_name)
 
     XinEntry* entry = xin_find_entry(file_name);
 
-    if(entry == nullptr)
+    if(entry == NULL)
         return XIN_ENTRY_NOT_FOUND;
 
     int status = __sys_xin_file_create(new_file_name);
@@ -163,7 +163,7 @@ __STATUS __sys_xin_link_remove(char* linkname)
 {
     XinEntry* file = xin_find_entry(linkname); 
 
-    if(file != nullptr && file->entry_type == XIN_LINK)
+    if(file != NULL && file->entry_type == XIN_LINK)
     {
         memset((uint8_t*)file, 0x0, sizeof(XinEntry));
         return XANIN_OK;
@@ -180,7 +180,7 @@ __STATUS __sys_xin_link_create(char* file_name, char* link_name)
 
     XinEntry* file = xin_find_entry(file_name); 
 
-    if(file == nullptr)
+    if(file == NULL)
         return XIN_ENTRY_NOT_FOUND;
 
     XinEntry* link = xin_find_free_entry();
@@ -222,7 +222,7 @@ __STATUS __sys_xin_list_files(char** argv)
     int printed_text = 0;
     char* current_path = xin_get_current_path(path);
 
-    if(xin_find_entry(path) == nullptr && strlen(path) > 0)
+    if(xin_find_entry(path) == NULL && strlen(path) > 0)
         return XANIN_ERROR;
 
     while((uint32_t)i < XIN_ENTRY_TABLE + SECTOR_SIZE * 50)
@@ -235,7 +235,7 @@ __STATUS __sys_xin_list_files(char** argv)
         }
         else if(!strlen(path))
         {
-            if(xin_get_file_pf(i->entry_path) != nullptr)
+            if(xin_get_file_pf(i->entry_path) != NULL)
             {
                 if(strcmp(xin_get_file_pf(i->entry_path)->entry_path, xin_current_directory))
                 {

@@ -5,7 +5,7 @@
 
 static int process_id = 0;
 static uint32_t number_of_pointers_to_clear = 0;
-static uint8_t** process_pointers = nullptr;
+static uint8_t** process_pointers = NULL;
 static void (*process_deconstructor)(void);
 
 void app_process_register(void (*deconstructor)(void), uint32_t number_of_pointers, ...)

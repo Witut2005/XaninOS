@@ -9,11 +9,19 @@
 namespace std
 {
 
+enum class CommandParserErrorCodes
+{
+    REQUIRED_ARGUMENT_NOT_GIVEN,
+    NOT_SUCH_OPTION
+};
+
 class CommandParser 
 {
 
     private:
-    // std::List<std::string> ValueMap;
+    std::UnorderedMap<const char*, std::pair<const char*, bool>> ValueMap;
+    CommandParserErrorCodes ParserErrno;
+    std::string required_argument_not_given;
     const char* nullstr;
     int argument_counter;
     char** argv;
@@ -21,45 +29,34 @@ class CommandParser
 
     public:
 
-    CommandParser(char** args) : nullstr("0"), argv(args), argument_counter(0)
+    CommandParser(char** args) : nullstr("\0"), argv(args), argument_counter(0), required_argument_not_given("required argument not given: ")
     {
         this->given_arguments = (char**)calloc(sizeof(char*));
     }
 
-    void argument_add(const char* name)//, const char * type)
+    void argument_add(const char* name, bool required=false)//, const char * type)
     {
-        this->argument_counter++;
-        this->given_arguments = (char**)realloc(this->given_arguments, sizeof(char**) * this->argument_counter);
-
-        this->given_arguments[argument_counter-1] = (char*)calloc(sizeof(char) * strlen(name));
-
-        strcpy(this->given_arguments[argument_counter-1], (char*)name);
-
-
+        ValueMap.insert(name, std::pair(nullstr, required));
     }
 
     // template <class T>
     const char* parse_arg(const char* index)
     {
-
-        bool ok = false;
-        for(int i = 0; i < this->argument_counter; i++)
+        
+        for(int i = 0; i < 4; i++)
         {
-            if(strcmp(this->given_arguments[i], (char*)index))
-                ok = true;
+            if(strcmp(argv[i], (char*)index))
+            {
+                ValueMap[index].first = argv[i+1];
+                return ValueMap[index].first;
+            }
         }
 
-        if(!ok)
-            return nullptr;
+        if(ValueMap[index].second)
+            this->ParserErrno = CommandParserErrorCodes::REQUIRED_ARGUMENT_NOT_GIVEN;
+        return (this->required_argument_not_given + std::string(index)).c_str();
+        // return str.c_str();
 
-        for(int i = 0; i < 5; i++)
-        {
-            if(strcmp(this->argv[i], (char*)index) && strlen(this->argv[i + 1]) > 0)
-                return this->argv[i + 1];
-            else 
-                nullptr;
-                // return this->ValueMap[index]
-        }
     }
 
 };

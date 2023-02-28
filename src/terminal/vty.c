@@ -7,7 +7,7 @@
 
 #define VGA_SCREEN_RESOLUTION 4480
 #define VGA_TEXT_MEMORY 0xb8000
-#define nullptr 0x0
+// #define NULL 0x0
 
 
 bool cursor_show = false;
@@ -15,7 +15,7 @@ char selected_character;
 
 typedef void (*keyboard_handle_input)(void);
 
-keyboard_handle_input keyboard_handle = nullptr;
+keyboard_handle_input keyboard_handle = NULL;
  
 char program_name[40];
 char program_parameters[40];

@@ -114,7 +114,7 @@ int xin_xpaint(char* file_name)
 
     XinEntry* xin_file = fopen(file_name, "rw");
 
-    if(xin_file == nullptr)
+    if(xin_file == NULL)
     {
         xprintf("Could not open file %s\n", file_name);
         while(KeyInfo.scan_code != ENTER);

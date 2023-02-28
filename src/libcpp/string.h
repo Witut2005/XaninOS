@@ -49,7 +49,7 @@ class string
     string(string&& str)
     {
         this->string_data = str.string_data;
-        str.string_data = nullptr;
+        str.string_data = NULL;
 
     }
 
@@ -104,7 +104,7 @@ class string
     {
         std::string* delete_ptr = (std::string*)element;
         free(delete_ptr->c_str());
-        delete_ptr->string_data = nullptr;
+        delete_ptr->string_data = NULL;
     }
 
 
@@ -129,12 +129,29 @@ class string
         std::string result(c);
         return result;
 
+    }
+
+    std::string operator + (const char* second)
+    {
+
+        char* c = (char*)malloc(strlen(second) + this->length());
+        
+        int i = 0;
+        for(; this->c_str()[i] != '\0'; i++)
+            c[i] = this->c_str()[i];
+        
+        int j = 0;
+        for(; second[j] != '\0'; i++, j++)
+            c[i] = second[j];
+
+        std::string result(c);
+        return result;
 
     }
 
     uint32_t length() const
     {
-        if(string_data == nullptr)
+        if(string_data == NULL)
             return 0;
         else 
             return strlen(string_data); 

@@ -11,7 +11,7 @@
 #define SCREEN_WIDTH 28
 #define SCREEN_HEIGHT 80
 #define SCREEN_RESOLUTION (25 * 80)
-#define nullptr 0x0
+// #define NULL 0x0
 
 enum screen_macros
 {

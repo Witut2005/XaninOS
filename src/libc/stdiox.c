@@ -231,7 +231,7 @@ void xprintf(char* str, ... )
 
                     stringPtr = va_arg(args,char*);
 
-                    if(stringPtr == nullptr)
+                    if(stringPtr == NULL)
                         return;
 
 

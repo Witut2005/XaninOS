@@ -34,15 +34,15 @@ class List
     {
         size = 0;
         FirstElement = (ListElement*)malloc(sizeof(FirstElement));
-        FirstElement->next = nullptr;
-        FirstElement->previous = nullptr;
+        FirstElement->next = NULL;
+        FirstElement->previous = NULL;
         FirstElement->value = first;
     }
 
     ListElement* goto_last_element(void)
     {
         ListElement* Tmp = FirstElement;
-        while(Tmp->next != nullptr)
+        while(Tmp->next != NULL)
         {
             Tmp = Tmp->next;
         }
@@ -60,14 +60,14 @@ class List
 
         LastItem->value = value;
         LastItem->previous = LastItemTmp;
-        LastItem->next = nullptr;
+        LastItem->next = NULL;
     }
 
     void print(void)
     {
         ListElement* Tmp = FirstElement;
         std::cout << '[';
-        while(Tmp->next != nullptr)
+        while(Tmp->next != NULL)
         {
             std::cout << Tmp->value << ',';
             Tmp = Tmp->next;
@@ -80,8 +80,8 @@ class List
     {
         size = 0;
         FirstElement = (ListElement*)malloc(sizeof(FirstElement));
-        FirstElement->next = nullptr;
-        FirstElement->previous = nullptr;
+        FirstElement->next = NULL;
+        FirstElement->previous = NULL;
         //FirstElement->value = first;
 
         for(auto a : items)
@@ -93,7 +93,7 @@ class List
         ListElement* Tmp = goto_last_element();
 
         T ret = Tmp->value;
-        Tmp->previous->next = nullptr;
+        Tmp->previous->next = NULL;
 
         free(Tmp);
         return ret;
@@ -105,7 +105,7 @@ class List
 
         for(int i = 0; i < index; i++)
         {
-            if(Tmp->next != nullptr)
+            if(Tmp->next != NULL)
                 Tmp = Tmp->next;
             else
                 return this->goto_last_element()->value;
@@ -113,11 +113,11 @@ class List
         return Tmp->value;
     }
 
-    ListElement* operator++(int);
-    ListElement* operator++(void);
+    // ListElement* operator++(int);
+    // ListElement* operator++(void);
 
-    ListElement* operator--(int);
-    ListElement* operator--(void);
+    // ListElement* operator--(int);
+    // ListElement* operator--(void);
     
 
 

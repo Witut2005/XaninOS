@@ -14,7 +14,7 @@
 uint32_t strlen(const char* a)
 {
 
-    if(a == nullptr)
+    if(a == NULL)
         return 0;
 
     uint32_t length = 0;
@@ -472,7 +472,7 @@ char* substr_find(char *str, const char *substr)
             return str;
         str++;
     }
-    return nullptr;
+    return NULL;
 }
 
 char* strconcat(char* str1, char* buf) //concatenate str1 and buf (first str1)

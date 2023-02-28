@@ -13,14 +13,14 @@ int gyn_interpreter(char* file_to_interpret)
     fread(file, data, SECTOR_SIZE);
     char* command;
 
-    if(file == nullptr)
+    if(file == NULL)
     {
         xprintf("%zCouldn't open file %s\n", stderr, file_to_interpret);
         while(KeyInfo.scan_code != ENTER);
         return XANIN_ERROR;
     }
 
-    for(int i = 1; getline(file, i) != nullptr; i++)
+    for(int i = 1; getline(file, i) != NULL; i++)
     {
 
         for(int i = 0; i < 5; i++)

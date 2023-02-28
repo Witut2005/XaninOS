@@ -15,7 +15,7 @@ int run(char* file_name)
 
     XinEntry* xin_file = fopen(file_name, "rw");
     
-    if(xin_file == nullptr)
+    if(xin_file == NULL)
     {
         xprintf("%zNO SUCH FILE %s\n",set_output_color(red,white),program_parameters);
 

@@ -67,7 +67,7 @@ uint8_t *xin_find_free_pointer(void)
             return (uint8_t *)i;
     }
 
-    return nullptr;
+    return NULL;
 }
 
 uint8_t *xin_find_free_pointer_with_given_size(uint32_t size)
@@ -90,7 +90,7 @@ uint8_t *xin_find_free_pointer_with_given_size(uint32_t size)
                 return i;
         }
     }
-    return nullptr;
+    return NULL;
 }
 
                                             
@@ -114,7 +114,7 @@ void xin_entry_resize(XinEntry* entry, uint32_t new_size)
 XinEntry *xin_find_entry(char *entry_name)
 {
     if(!strlen(entry_name))
-        return nullptr;
+        return NULL;
 
     for (char *i = (char*)XIN_ENTRY_TABLE; (uint32_t)i < XIN_ENTRY_TABLE + (SECTOR_SIZE * 50); i += 64)
     {
@@ -125,7 +125,7 @@ XinEntry *xin_find_entry(char *entry_name)
     entry_name = xin_get_current_path(entry_name);
 
     if(strlen(entry_name) > 40)
-        return nullptr;
+        return NULL;
 
     for (char *i = (char*)XIN_ENTRY_TABLE; (uint32_t)i < XIN_ENTRY_TABLE + (SECTOR_SIZE * 50); i += 64)
     {
@@ -133,13 +133,13 @@ XinEntry *xin_find_entry(char *entry_name)
             return (XinEntry *)i;
     }
 
-    return nullptr;
+    return NULL;
 }
 
 XinEntry* xin_get_file_pf(char* entry_path) // pf = parent folder/cr
 {
     if(entry_path[0] == '\0')
-        return nullptr;
+        return NULL;
         
     bool if_folder = false;
 
@@ -154,13 +154,13 @@ XinEntry* xin_get_file_pf(char* entry_path) // pf = parent folder/cr
     for(int j = 0; j <= i; j++)
         parent_folder[j] = entry_path[j];
 
-    if(xin_find_entry(parent_folder) != nullptr)
+    if(xin_find_entry(parent_folder) != NULL)
         return xin_find_entry(parent_folder);   
 
-    // if(xin_find_entry(xin_get_current_path(parent_folder)) != nullptr)    
+    // if(xin_find_entry(xin_get_current_path(parent_folder)) != NULL)    
     //     return xin_find_entry(xin_get_current_path(parent_folder)); 
 
-    return nullptr;
+    return NULL;
 
 }
 
@@ -179,7 +179,7 @@ XinEntry *xin_find_free_entry(void)
             return (XinEntry *)i;
     }
 
-    return nullptr;
+    return NULL;
 }
 
 XinEntry *xin_folder_change(char *new_directory)
@@ -192,7 +192,7 @@ XinEntry *xin_folder_change(char *new_directory)
     if(strcmp(new_directory, ".."))
     {
         if(strcmp(xin_current_directory, "/"))
-            return nullptr;
+            return NULL;
         else 
         {
             xin_current_directory[strlen(xin_current_directory) - 1] = '\0';
@@ -217,18 +217,18 @@ XinEntry *xin_folder_change(char *new_directory)
 
     XinEntry *xin_new_directory = xin_find_entry(new_directory);
 
-    if (xin_new_directory == nullptr)
+    if (xin_new_directory == NULL)
     {
         // xprintf("%zNO SUCH DIRECTORY\n", set_output_color(red, white));
         // while (KeyInfo.scan_code != ENTER);
         free(new_directory);
-        return nullptr;
+        return NULL;
     }
 
     else if(xin_new_directory->entry_type != XIN_DIRECTORY)
     {
         free(new_directory);
-        return nullptr;
+        return NULL;
     }
 
     else if (new_directory[strlen(new_directory) - 1] != '/')
@@ -236,7 +236,7 @@ XinEntry *xin_folder_change(char *new_directory)
         // xprintf("%zMISSING / ENDING CHARACTER IN DIRECTORY NAME\n", set_output_color(red, white));
         // while (KeyInfo.scan_code != ENTER);
         free(new_directory);
-        return nullptr;
+        return NULL;
     }
 
     for (int i = 0; i < sizeof(xin_current_directory); i++)
@@ -285,7 +285,7 @@ int xin_folder_create(char* entry_name)
 
         xprintf("%s\n", path);
 
-        if(xin_find_entry(entry_name) != nullptr)
+        if(xin_find_entry(entry_name) != NULL)
         {
             // xprintf("%zFILE WITH THIS NAME EXISTS\n", stderr);
             // while(getscan() != ENTER);
@@ -305,15 +305,15 @@ int xin_folder_create(char* entry_name)
 
         XinEntry* entry_path = xin_find_entry(xin_get_file_pf(full_path)->entry_path);
 
-        if(entry_path == nullptr)
+        if(entry_path == NULL)
             return XANIN_ERROR;
 
         strcpy(entry->entry_path, full_path);
     }  
     
-    else if(xin_get_file_pf(entry_name) != nullptr)
+    else if(xin_get_file_pf(entry_name) != NULL)
     {
-        if(xin_find_entry(entry_name) != nullptr)
+        if(xin_find_entry(entry_name) != NULL)
         {
             // xprintf("%zFILE WITH THIS NAME EXISTS\n", stderr);
             // while(getscan() != ENTER);
@@ -341,7 +341,7 @@ int xin_folder_create(char* entry_name)
     entry->creation_time = (uint16_t)(SystemTime.hour << 8) | (SystemTime.minutes);
     entry->modification_date = (uint32_t)((SystemTime.day_of_month << 24) | (SystemTime.month << 16) | (SystemTime.century << 8) | (SystemTime.year)); 
     entry->modification_time = (uint16_t)(SystemTime.hour << 8) | (SystemTime.minutes);
-    entry->FileInfo = nullptr;
+    entry->FileInfo = NULL;
     entry->entry_permissions = PERMISSION_MAX;
     entry->entry_size = 0x0;
     entry->entry_type = XIN_DIRECTORY;
@@ -364,7 +364,7 @@ void xin_file_create_at_address(char *path, uint8_t creation_date, uint8_t creat
 
     entry_created->creation_date = creation_date;
     entry_created->creation_time = creation_time;
-    entry_created->FileInfo = nullptr;
+    entry_created->FileInfo = NULL;
     entry_created->entry_type = entry_type;
     entry_created->modification_date = modification_date;
     entry_created->modification_time = modification_time;
@@ -391,37 +391,37 @@ void xin_file_create_at_address(char *path, uint8_t creation_date, uint8_t creat
 void xin_init_fs(void)
 {
 
-    if(xin_find_entry("/") == nullptr)
+    if(xin_find_entry("/") == NULL)
         xin_file_create_at_address("/",                         0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x0, 0x0,    XIN_DIRECTORY, 0);
 
-    if(xin_find_entry("/ivt") == nullptr)
+    if(xin_find_entry("/ivt") == NULL)
         xin_file_create_at_address("/ivt",                      0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x0, 0x3,    XIN_FILE, 1);
 
-    if(xin_find_entry("/file_system.bin") == nullptr)
+    if(xin_find_entry("/file_system.bin") == NULL)
         xin_file_create_at_address("/file_system.bin",          0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x4, 20,     XIN_FILE, 2);
 
-    if(xin_find_entry("/enter_real_mode.bin") == nullptr)
+    if(xin_find_entry("/enter_real_mode.bin") == NULL)
         xin_file_create_at_address("/enter_real_mode.bin",      0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x1, 0x1,    XIN_FILE, 3);
 
-    if(xin_find_entry("/boot.bin") == nullptr)
+    if(xin_find_entry("/boot.bin") == NULL)
         xin_file_create_at_address("/boot.bin",                 0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x3E,0x1,    XIN_FILE, 4);
 
-    if(xin_find_entry("/tmp.bin") == nullptr)
+    if(xin_find_entry("/tmp.bin") == NULL)
         xin_file_create_at_address("/tmp.bin",                  0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x80,0x1,    XIN_FILE, 5);
 
-    if(xin_find_entry("/shutdown.bin") == nullptr)
+    if(xin_find_entry("/shutdown.bin") == NULL)
         xin_file_create_at_address("/shutdown.bin",             0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x2,0x1,    XIN_FILE, 6);
 
-    if(xin_find_entry("/syscall_test.bin") == nullptr)
+    if(xin_find_entry("/syscall_test.bin") == NULL)
         xin_file_create_at_address("/syscall_test.bin",         0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x500,0x1,    XIN_FILE, 7);
 
-    if(xin_find_entry("/fast_real_mode_enter.bin") == nullptr)
+    if(xin_find_entry("/fast_real_mode_enter.bin") == NULL)
         xin_file_create_at_address("/fast_real_mode_enter.bin", 0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x5,0x1,    XIN_FILE, 8);
 
-    if(xin_find_entry("/fast_real_mode_return.bin") == nullptr)
+    if(xin_find_entry("/fast_real_mode_return.bin") == NULL)
         xin_file_create_at_address("/fast_real_mode_return.bin", 0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x6,0x1,    XIN_FILE, 9);
     
-    if(xin_find_entry("/screenshot/") == nullptr)
+    if(xin_find_entry("/screenshot/") == NULL)
         xin_folder_create("/screenshot/");
 
     uint32_t k = 0;
@@ -442,7 +442,7 @@ void create_file_kernel(char* entry_name)
 {
 
 
-    if(xin_find_entry(entry_name) != nullptr)
+    if(xin_find_entry(entry_name) != NULL)
         return;
 
     /* write entry to xin entry pointers table */
@@ -464,7 +464,7 @@ void create_file_kernel(char* entry_name)
     entry->creation_time = (uint16_t)(SystemTime.hour << 8) | (SystemTime.minutes);
     entry->modification_date = (uint32_t)((SystemTime.day_of_month << 24) | (SystemTime.month << 16) | (SystemTime.century << 8) | (SystemTime.year)); 
     entry->modification_time = (uint16_t)(SystemTime.hour << 8) | (SystemTime.minutes);
-    entry->FileInfo = nullptr;
+    entry->FileInfo = NULL;
     entry->entry_permissions = PERMISSION_MAX;
     entry->entry_size = 0x0;
     entry->entry_type = XIN_FILE;
@@ -486,7 +486,7 @@ int xin_file_create(char* entry_name)
     
     XinEntry* entry = xin_find_free_entry();
 
-    if(entry == nullptr)
+    if(entry == NULL)
         return XANIN_ERROR;
 
     for(int i = strlen(entry_name) - 1; i >= 0; i--)
@@ -520,7 +520,7 @@ int xin_file_create(char* entry_name)
         strcpy(tmp, xin_get_current_path(tmp));
         XinEntry* entry_path = xin_find_entry(tmp);
 
-        if(entry_path == nullptr)
+        if(entry_path == NULL)
         {
             memset((uint8_t*)entry, 0, 64); 
             return XANIN_ERROR;
@@ -535,7 +535,7 @@ int xin_file_create(char* entry_name)
 
         // xprintf("%s\n", path);
 
-        if(xin_find_entry(entry_name) != nullptr)
+        if(xin_find_entry(entry_name) != NULL)
         {
             // xprintf("%zFILE WITH THIS NAME EXISTS\n", stderr);
             // while(getscan() != ENTER);
@@ -548,7 +548,7 @@ int xin_file_create(char* entry_name)
     
     else if(entry_name[0] == '/')
     {
-        if(xin_find_entry(entry_name) != nullptr)
+        if(xin_find_entry(entry_name) != NULL)
         {
             // xprintf("%zFILE WITH THIS NAME EXISTS\n", stderr);
             // while(getscan() != ENTER);
@@ -558,9 +558,9 @@ int xin_file_create(char* entry_name)
         strcpy(entry->entry_path, entry_name);
     }
 
-    else if(xin_get_file_pf(entry_name) != nullptr)
+    else if(xin_get_file_pf(entry_name) != NULL)
     {
-        if(xin_find_entry(entry_name) != nullptr)
+        if(xin_find_entry(entry_name) != NULL)
         {
             // xprintf("%zFILE WITH THIS NAME EXISTS\n", stderr);
             // while(getscan() != ENTER);
@@ -593,7 +593,7 @@ int xin_file_create(char* entry_name)
     entry->creation_time = (uint16_t)(SystemTime.hour << 8) | (SystemTime.minutes);
     entry->modification_date = (uint32_t)((SystemTime.day_of_month << 24) | (SystemTime.month << 16) | (SystemTime.century << 8) | (SystemTime.year)); 
     entry->modification_time = (uint16_t)(SystemTime.hour << 8) | (SystemTime.minutes);
-    entry->FileInfo = nullptr;
+    entry->FileInfo = NULL;
     entry->entry_permissions = PERMISSION_MAX;
     entry->entry_size = SECTOR_SIZE * 0x10;
     entry->entry_type = XIN_FILE;
@@ -622,7 +622,7 @@ __STATUS sys_xin_remove_entry(char *entry_name)
 
     XinEntry* entry_data = xin_find_entry(entry_name);
 
-    if (entry_data == nullptr)
+    if (entry_data == NULL)
         return XIN_ENTRY_NOT_FOUND;
 
     else if (entry_data->entry_type == XIN_FILE)
@@ -656,7 +656,7 @@ size_t fread(XinEntry *entry, void *buf, size_t count)
     char* end = (char *)(entry->FileInfo->base_address_memory + ftell(entry) + count);
     char* begin = (char *)(entry->FileInfo->base_address_memory + ftell(entry));
 
-    if(entry == nullptr)
+    if(entry == NULL)
         return 0;
 
     uint32_t sectors_to_load = (count + ftell(entry)) / SECTOR_SIZE;
@@ -719,7 +719,7 @@ size_t read(int fd, void *buf, size_t count)
 size_t fwrite(XinEntry *entry, void *buf, size_t count)
 {
 
-    if(entry == nullptr)
+    if(entry == NULL)
         return 0;
 
     char* end = (char *)(entry->FileInfo->base_address_memory + count + ftell(entry));
@@ -828,7 +828,7 @@ XinEntry *fopen(char *file_path, char *mode)
 
     XinEntry* file = xin_find_entry(file_path);
 
-    if(file != nullptr)
+    if(file != NULL)
     {
         file->FileInfo = (FileInformationBlock*)calloc(sizeof(FileInformationBlock));
         file->FileInfo->base_address_memory = (uint8_t*)calloc(SECTOR_SIZE * 0x10);
@@ -851,7 +851,7 @@ XinEntry *fopen(char *file_path, char *mode)
         return file;
     }
 
-    else if (file != nullptr && file->entry_type != XIN_DIRECTORY && file->entry_path[0] != '\0')
+    else if (file != NULL && file->entry_type != XIN_DIRECTORY && file->entry_path[0] != '\0')
     {
 
         strcpy(file->FileInfo->rights, mode);
@@ -873,12 +873,12 @@ XinEntry *fopen(char *file_path, char *mode)
         }
 
         else
-            return nullptr;
+            return NULL;
     }
 
 
 
-    return nullptr;
+    return NULL;
 }
 
 
@@ -912,7 +912,7 @@ void fclose(XinEntry** file)
     
     xin_entry_resize(*file, (*file)->entry_size);
 
-    *file = nullptr;
+    *file = NULL;
 
 }
 
@@ -942,10 +942,10 @@ int open(char* file_path, uint32_t options)
     XinEntry* file = xin_find_entry(file_path);
 
 
-    if (file != nullptr && file->entry_type != XIN_DIRECTORY && file->entry_path[0] != '\0')
+    if (file != NULL && file->entry_type != XIN_DIRECTORY && file->entry_path[0] != '\0')
     {
 
-        if(file->FileInfo == nullptr)
+        if(file->FileInfo == NULL)
             file->FileInfo = (FileInformationBlock*)calloc(sizeof(FileInformationBlock));
 
         file->FileInfo->position = 0;
@@ -985,7 +985,7 @@ char* getline_from_ptr(char* data, int line_id)
                 }
 
                 else
-                    return nullptr;
+                    return NULL;
                 break;
             }
 
@@ -1033,7 +1033,7 @@ char* getline(XinEntry* file, int line_id)
                 }
 
                 else
-                    return nullptr;
+                    return NULL;
                 break;
             }
 
@@ -1061,7 +1061,7 @@ __STATUS remove_directory(char* folder_name)
 
     XinEntry* folder = xin_find_entry(folder_name);
 
-    if(folder == nullptr)
+    if(folder == NULL)
         return XIN_ENTRY_NOT_FOUND;
 
     char name[40];
@@ -1101,7 +1101,7 @@ char* xin_get_entry_name(char* path)
     if(!strlen(path))
     {
         free(tmp);
-        return nullptr;
+        return NULL;
     }
 
     int index = strlen(path)-1;
@@ -1123,8 +1123,8 @@ char* xin_get_entry_name(char* path)
 XinChildrenEntries* xin_get_children_entries(char* folder, bool show_hidden)
 {
 
-    if(xin_find_entry(folder) == nullptr || strlen(folder) == 0)
-        return (XinChildrenEntries*)nullptr;
+    if(xin_find_entry(folder) == NULL || strlen(folder) == 0)
+        return (XinChildrenEntries*)NULL;
 
     XinChildrenEntries* Children = (XinChildrenEntries*)calloc(sizeof(XinChildrenEntries));
     Children->children = (XinEntry**)calloc(sizeof(XinEntry*));
@@ -1156,8 +1156,8 @@ XinChildrenEntries* xin_get_children_entries(char* folder, bool show_hidden)
 XinChildrenEntries* xin_get_children_entries_type(char* folder, uint8_t type)
 {
 
-    if(xin_find_entry(folder) == nullptr || strlen(folder) == 0)
-        return (XinChildrenEntries*)nullptr;
+    if(xin_find_entry(folder) == NULL || strlen(folder) == 0)
+        return (XinChildrenEntries*)NULL;
 
     XinChildrenEntries* Children = (XinChildrenEntries*)calloc(sizeof(XinChildrenEntries));
     Children->children = (XinEntry**)calloc(sizeof(XinEntry*));

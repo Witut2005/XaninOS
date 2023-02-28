@@ -10,11 +10,11 @@
 extern void(*keyboard_handle)(void);
 
 #define KEYBOARD_KEYSTROKE_HANLDER_LOAD(handler) keyboard_handle = handler
-#define KEYBOARD_KEYSTROKE_HANLDER_UNLOAD() keyboard_handle = nullptr 
+#define KEYBOARD_KEYSTROKE_HANLDER_UNLOAD() keyboard_handle = NULL 
 
-#ifndef nullptr
-#define nullptr 0x0
-#endif
+// #ifndef NULL
+// #define NULL 0x0
+// #endif
 
 struct CmosTime
 {

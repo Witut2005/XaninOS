@@ -39,5 +39,6 @@ struct is_pointer<T* volatile> : std::true_type {};
 template<class T>
 struct is_pointer<T* const volatile> : std::true_type {};
 
+// static const char* const nullptr;
 
 }
