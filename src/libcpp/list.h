@@ -19,9 +19,10 @@ class List
     };
 
     private:
+
+    static uint8_t NoSuchElement;
     ListElement* FirstElement;
     uint32_t size;
-        
 
     public:
 
@@ -63,9 +64,22 @@ class List
         LastItem->next = NULL;
     }
 
+    void push_front(T value)
+    {
+        ListElement* LastItem = this->goto_last_element();
+        auto LastItemTmp = LastItem;
+
+        decltype(this->FirstElement) NewFirstElement;
+        NewFirstElement = (ListElement*)malloc(sizeof(ListElement));
+
+        NewFirstElement->value = value;
+        ->previous = LastItemTmp;
+        LastItem->next = NULL;
+    }
+
     void print(void)
     {
-        ListElement* Tmp = FirstElement;
+        ListElement* Tmp = this->FirstElement;
         std::cout << '[';
         while(Tmp->next != NULL)
         {
@@ -82,7 +96,6 @@ class List
         FirstElement = (ListElement*)malloc(sizeof(FirstElement));
         FirstElement->next = NULL;
         FirstElement->previous = NULL;
-        //FirstElement->value = first;
 
         for(auto a : items)
             this->push(a);
@@ -99,26 +112,33 @@ class List
         return ret;
     }
 
-    T& operator[](uint32_t index)
+    ListElement* operator[](T index)
     {
         ListElement* Tmp = this->FirstElement;
 
-        for(int i = 0; i < index; i++)
+        if constexpr((std::is_pointer<T>::value) && (sizeof(std::remove_pointer<T>) == sizeof(char)))
         {
-            if(Tmp->next != NULL)
-                Tmp = Tmp->next;
-            else
-                return this->goto_last_element()->value;
+            while(!strcmp((char*)Tmp->value, (char*)index))
+            {
+                if(Tmp->next != NULL)
+                    Tmp = Tmp->next;
+                else
+                    return nullptr;
+            }
         }
-        return Tmp->value;
+
+        else
+        {
+            while(Tmp->value != index)
+            {
+                if(Tmp->next != NULL)
+                    Tmp = Tmp->next;
+                else
+                    return nullptr;
+            }
+        }
+        return Tmp;
     }
-
-    // ListElement* operator++(int);
-    // ListElement* operator++(void);
-
-    // ListElement* operator--(int);
-    // ListElement* operator--(void);
-    
 
 
 };

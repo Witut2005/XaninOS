@@ -52,6 +52,18 @@ void cpp_prog()
 
     // std::cout << MojaMapa["nicho"] << " " << MojaMapa["agata"] << " " << MojaMapa["huj"] << std::endl;
 
+    std::List<const char*> lista("nicho");
+    lista.push("123");
+    
+    lista.print();
+    // if(lista["123"] != nullptr)
+    //     std::cout << "istnieje" << std::endl;
+    // else
+    //     std::cout << "nie istnieje" << std::endl;
+
+
+    // lista.
+
     while(inputg().scan_code != ENTER);
 
     int* p;
@@ -153,11 +165,6 @@ void cpp_prog()
 
     screen_clear();
 
-    std::List MojaLista(0); 
-    for(int i = 1; i < 10; i++)
-        MojaLista.push(i);
-    MojaLista.print();
-
     std::UnorderedMap<char, int> Mapa;
     Mapa.insert('a', 10);
     Mapa.insert('b', 11);
@@ -201,9 +208,7 @@ void cpp_prog()
     std::cout << std::clear;
     
     std::cout << "ABATAKAM" << std::endl;
-    std::List<uint32_t> jmm = {1,2,3,4,5};
     
-    std::cout << jmm[0] << std::endl;
 
     /*
         for(int i = 0; i < jmm.size_get(); i++)

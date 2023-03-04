@@ -79,7 +79,7 @@ namespace std
         {
             ListElement *Tmp = Head;
 
-            if constexpr(std::is_pointer<K>::value) 
+            if constexpr((std::is_pointer<K>::value) && (sizeof(std::remove_pointer<K>) == sizeof(char)))
             {
                 while (Tmp != Tail)
                 {
