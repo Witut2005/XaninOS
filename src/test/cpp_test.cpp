@@ -15,7 +15,6 @@
 #include <libcpp/initializer_list.hpp>
 #include <libcpp/new.hpp>
 #include <libcpp/box.h>
-#include <libcpp/iterator.h>
 #include <libcpp/bytes.h>
 #include <libcpp/list.h>
 #include <libcpp/map.h>
@@ -40,10 +39,71 @@ void cpp_prog()
 
     std::cout << std::clear;
 
-    std::CommandParser parser(argv);
-    parser.argument_add("--help", true);//, "str");
+    std::array<const char*, 3> arr = {"nicho", "morbius", "lerczok"};
 
-    std::cout << parser.parse_arg("--help") << std::endl;
+    std::cout << "array: " << std::endl;
+    for(auto a : arr)
+        std::cout << a << " ";
+    std::cout << std::endl;
+
+    std::cout << "vector: " << std::endl;
+    std::vector<int> vec = {1,2,3,4,5};
+    for(auto a : vec)
+        std::cout << a << " ";
+    std::cout << std::endl;
+
+    std::cout << "list: " << std::endl;
+    std::List<int> li(0);
+    
+    for(int i = 1; i < 10; i++)
+        li.push(i);
+
+    std::ListIterator a = li.begin();
+
+    for(auto a : li)
+        std::cout << a << " ";
+    std::cout << std::endl;
+
+    std::cout << "map: " << std::endl;
+    std::UnorderedMap<int, std::string> mapp;// = {{1, "123"}, {2, "456"}, {3,"789"}};
+    
+
+    int huhu = 0;
+    mapp.insert(1,"123");
+
+    // for(auto it = mapp.begin(); it != mapp.end(); it++)
+    // {
+    std::cout << mapp[1] << std::endl;
+    std::cout << *mapp.begin() << std::endl;
+    // }
+
+    // for(auto a : mapp)
+    //     std::cout << a << " ";
+    // std::cout << std::endl;
+        
+    while(1);
+        
+    std::CommandParser parser(argv);
+    parser.argument_add("--piwka", true);
+
+    int ile_piw = std::CommandParser::parse_arg<int>(parser, "--piwka");
+
+    std::cout << "parser errno: " << parser.errno_get() << std::endl;
+
+    if(!parser.errno_get())
+    {
+        if(ile_piw > 10)
+            std::cout << "chiluj opie" << std::endl;
+        else
+            std::cout << "tak malo?" << std::endl;
+    }
+
+    else
+    {
+        std::cout << "czegos mi tu brakuje, hmmm" << std::endl;
+    }
+
+
 
     // std::UnorderedMap<const char*, const char* > MojaMapa;
     // MojaMapa.insert("nicho", "wojciech");
@@ -52,10 +112,10 @@ void cpp_prog()
 
     // std::cout << MojaMapa["nicho"] << " " << MojaMapa["agata"] << " " << MojaMapa["huj"] << std::endl;
 
-    std::List<const char*> lista("nicho");
-    lista.push("123");
+    // std::List<const char*> lista("nicho");
+    // lista.push("123");
     
-    lista.print();
+    // lista.print();
     // if(lista["123"] != nullptr)
     //     std::cout << "istnieje" << std::endl;
     // else

@@ -40,7 +40,7 @@ int load_file(char* file_name, char* options)
         xprintf("\n");
     }
 
-	while(KeyInfo.scan_code != ENTER);
+	while(inputg().scan_code != ENTER);
     return XANIN_OK;
 
 

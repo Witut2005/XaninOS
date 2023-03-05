@@ -3,10 +3,66 @@
 
 #include <libcpp/cstring.h>
 #include <libc/stdlibx.h>
-#include <libcpp/iterator.h>
 
 namespace std
 {
+
+class StringIterator
+{
+       public: 
+    
+
+        StringIterator(char* ptr) : i_ptr(ptr){}
+
+        StringIterator& operator ++ ()   //prefix operator
+        {
+            i_ptr++;
+            return *this;
+        }
+
+        StringIterator operator ++ (int) //postfix operator
+        {
+            StringIterator tmp = *this;
+            ++(this->i_ptr); //++(*this);
+
+            return tmp;
+        }
+
+
+        StringIterator& operator -- ()   //prefix operator
+        {
+            i_ptr--;
+            return *this;
+        }
+
+        StringIterator operator -- (int) //postfix operator
+        {
+            StringIterator tmp = *this;
+            --(this->i_ptr);
+
+            return tmp;
+        }
+
+        char& operator *()
+        {
+            return *i_ptr;
+        }
+
+        bool operator == (const StringIterator x)
+        {
+            return i_ptr == x.i_ptr;
+        }
+
+        bool operator != (const StringIterator x)
+        {
+            return i_ptr != x.i_ptr;
+        }
+
+    private:
+        char* i_ptr;
+
+
+};
 
 class string
 {
@@ -15,6 +71,7 @@ class string
     public: 
 
     using Type = char;
+    using Iterator = StringIterator;
 
     size_t reserve(uint32_t size)
     {
@@ -34,11 +91,16 @@ class string
 
     string(const char* str)
     {
-
-        string_data = (char*)calloc(sizeof(char) * strlen((char*)str));
+        this->string_data = (char*)calloc(sizeof(char) * strlen((char*)str));
         for(int i = 0; i < strlen((char*)str); i++) 
             string_data[i] = str[i];
 
+    }
+    
+    string(const string& str)
+    {
+        this->string_data = (char*)calloc(sizeof(char) * strlen((char*)str.c_str()));
+        strcpy(this->string_data, str.c_str());  
     }
     
     string(string& str)
@@ -158,13 +220,13 @@ class string
     }
 
 
-    Iterator<char> begin() const
+    StringIterator begin() const
     {
         return string_data;
     }
 
 
-    Iterator<char> end() const
+    StringIterator end() const
     {
         return string_data + strlen(string_data);
     }

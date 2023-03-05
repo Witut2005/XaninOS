@@ -270,7 +270,7 @@ int help(char* command)
     }
 
     
-    while(KeyInfo.scan_code != ENTER);
+    while(inputg().scan_code != ENTER);
     return XANIN_OK;
 
 }

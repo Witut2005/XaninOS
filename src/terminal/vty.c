@@ -30,7 +30,6 @@ char last_used_commands[40];
 char last_used_parameters[40];
 
 uint8_t index;
-char character_blocked;
 
 uint8_t x = 0, y = 0;
 
@@ -59,7 +58,7 @@ struct key_info_t
 };
 
 typedef struct key_info_t key_info_t;
-key_info_t KeyInfo;
+key_info_t KeyInfo = {0};
 
 struct screen_t
 {
@@ -130,63 +129,6 @@ void keyboard_refresh_add(uint8_t keyboard_index_position, char character_saved)
     }
 }
 
-
-
-void terminal_keyboard(void)
-{
-    if(KeyInfo.scan_code == ARROW_LEFT_RELEASE)
-    {        
-        
-        Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | (((black << 4) | white) << 8));
-
-        if((char)Screen.cursor[Screen.y][Screen.x - 1] == character_blocked)
-        {
-            return;
-        }
-
-        if(!Screen.x)
-        {
-            Screen.x = 0;
-            Screen.y--;
-        }
-
-
-        Screen.x--;
-        
-        if(index)
-            index--;
-
-        Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | ((white << 4) | black) << 8);
-    }
-
-    else if(KeyInfo.is_right)
-    {
-        //Screen.cursor[Screen.y][Screen.x] = (uint16_t)(selected_character | ((black << 4) | white) << 8);
-        
-        Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | (((black << 4) | white) << 8));
-        
-
-        if(&Screen.cursor[Screen.y][Screen.x + 1] >= &Screen.cursor[8][79])
-        {
-            return;
-        }
-
-        Screen.x++;
-
-        if(Screen.x == 80)
-        {
-            Screen.x = 0;
-            Screen.y++;
-        }
-
-        index++;
-        
-        Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | ((white << 4) | black) << 8);    
-    
-    }
-
-
-}
 
 static char app_exit_status_text[40];
 

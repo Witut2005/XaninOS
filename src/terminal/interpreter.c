@@ -40,6 +40,11 @@ void scan(void)
 {
 
     screen_clear();
+    last_command_exit_status = XANIN_OK;
+    
+    //legacy reasons
+    KeyInfo.scan_code = 0;
+    KeyInfo.character = 0;
 
     argc = 0;
 
@@ -185,7 +190,7 @@ void scan(void)
     else if(strcmp(program_name,"pwd"))
     {
         xprintf("%s\n", xin_current_directory);
-        while(KeyInfo.scan_code != ENTER);
+        while(inputg().scan_code != ENTER);
     }
 
     // XANIN_ADD_APP_ENTRY1("pf", xin_get_file_pf_test)
@@ -282,8 +287,6 @@ void scan(void)
         is_external_app = false;
         keyboard_handle = NULL;
         app_exited = true;
-        KeyInfo.character = 0x0;
-        KeyInfo.scan_code = 0x0;
         return;
     }
 
@@ -294,11 +297,9 @@ void scan(void)
         msleep(800);
     }
 
+
     keyboard_handle = NULL;
     app_exited = true;
-    KeyInfo.character = 0x0;
-    KeyInfo.scan_code = 0x0;
-
 
     // terminal_destroy(app_terminal, kernel_terminal);
 

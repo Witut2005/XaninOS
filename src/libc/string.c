@@ -380,6 +380,11 @@ uint32_t atoi(char* str)
 uint32_t strtoi(const char* str, uint8_t format)
 {
 
+    bool is_negative = false;
+
+    if(str[0] == '-')
+        is_negative = true;
+
     uint32_t sum = 0;
 
     if(format > 16) 
@@ -412,7 +417,9 @@ uint32_t strtoi(const char* str, uint8_t format)
         sum += tmp;
 
     }
-    
+
+    if(is_negative) 
+        sum = sum * (-1);
     return sum;
 
 }

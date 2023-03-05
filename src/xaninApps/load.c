@@ -33,7 +33,7 @@ int load(char* address_string)
         xprintf("\n");
     }
 
-	while(KeyInfo.scan_code != ENTER);
+	while(inputg().scan_code != ENTER);
     return XANIN_OK;
 
 

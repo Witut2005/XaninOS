@@ -21,7 +21,7 @@ int nic_info(char* network_device_name)
     if(device_info == NULL)
     {
         xprintf("%zNo Such Device: %s\n", stderr, network_device_name);
-        while(KeyInfo.scan_code != ENTER);
+        while(inputg().scan_code != ENTER);
         return XANIN_ERROR;
     }
 

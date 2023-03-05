@@ -59,7 +59,8 @@ int ping(char* ip_addr_str)
 
     free(arp);
 
-    while(KeyInfo.scan_code != ENTER);
+    while(inputg().scan_code != ENTER);
+    return XANIN_OK;
 
 
 }

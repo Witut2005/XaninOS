@@ -121,11 +121,9 @@ void paint_input(xchar x)
             case F_KEY : Screen.cursor[Screen.y][Screen.x] = (uint16_t) (0x20 + (((white << 4) | black) << 8)); current_color    = white; break;
         }
 
-        if(KeyInfo.character)
+        if(x.character)
             selected_cell = (uint16_t) (' ' + (((current_color << 4) | black) << 8));
     }
-
-    KeyInfo.scan_code = 0x0;
 
 }
 

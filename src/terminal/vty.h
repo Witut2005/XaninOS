@@ -63,7 +63,6 @@ extern screen_t Screen;
 
 extern uint16_t* screen_buffer[60];
 extern uint8_t index;
-extern char character_blocked; 
 
 extern uint8_t y,x;
 

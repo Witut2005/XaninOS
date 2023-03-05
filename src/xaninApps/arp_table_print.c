@@ -34,6 +34,6 @@ int arp_table_print(char* arg)
     }
 
 
-    while(KeyInfo.scan_code != ENTER);
+    while(inputg().scan_code != ENTER);
 
 }

@@ -19,6 +19,7 @@ Screen.y = y_new
 #define VGA_SCREEN_RESOLUTION 4480
 
 #define mkstr(str) #str
+#define SCREEN_CELL_SET_FROM_POINTER(ptr, background, foreground, character) *ptr = (uint16_t)((foreground | (background << 4)) << 8 | (character & 0xFF))
 
 extern char* color_attributes[16];
 

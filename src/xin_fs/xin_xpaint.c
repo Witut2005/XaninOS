@@ -8,83 +8,81 @@
 uint16_t saved_cell;
 uint16_t* cursor;
 
-void xpaint_input(void)
+void xpaint_input(xchar Input)
 {
     
-    if(!KeyInfo.scan_code)
+    if(!Input.scan_code)
         return;
     
-    if(KeyInfo.scan_code >= 128)
+    if(Input.scan_code >= 128)
         return;
 
     *cursor = saved_cell;
 
-    if(KeyInfo.scan_code == ARROW_RIGHT)
+    if(Input.scan_code == ARROW_RIGHT)
     {
         cursor++;
     }
 
-    else if(KeyInfo.scan_code == ARROW_LEFT)
+    else if(Input.scan_code == ARROW_LEFT)
     {
         cursor--;
     }
 
-    else if(KeyInfo.scan_code == ARROW_DOWN)
+    else if(Input.scan_code == ARROW_DOWN)
     {
-        cursor = cursor + 80;
+        cursor = cursor + VGA_WIDTH;
     }
 
-    else if(KeyInfo.scan_code == ARROW_UP)
+    else if(Input.scan_code == ARROW_UP)
     {
-        cursor = cursor - 80;
+        cursor = cursor - VGA_WIDTH;
     }
 
     if(KeyInfo.is_ctrl)
     {
-        if(KeyInfo.character)
+        if(Input.character)
         {
-            uint8_t color = KeyInfo.character;
+            uint8_t background_color = Input.character;
 
-            if(color >= 'a' && color <= 'f')
-                color = color - 'a' + 0xa;   
-            else if(color >= '0' && color <= '9')
-                color = color - '0';
+            if(background_color >= 'a' && background_color <= 'f')
+                background_color = background_color - 'a' + 0xa;   
+            else if(background_color >= '0' && background_color <= '9')
+                background_color = background_color - '0';
             else 
                 return;
 
             uint8_t font_color = (*cursor >> 8) & 0xF;
-            color = color << 4;
-
-            *cursor = (uint16_t)(((color | font_color) << 8) | (*cursor & 0xFF));
+            SCREEN_CELL_SET_FROM_POINTER(cursor, background_color, font_color, *cursor);
         }
     }
     
     else if(KeyInfo.is_alt)
     {
-        if(KeyInfo.character)
+        if(Input.character)
         {
-            uint8_t color = KeyInfo.character;
+            uint8_t font_color = Input.character;
 
-            if(color >= 'a' && color <= 'f')
-                color = color - 'a' + 0xa;   
-            else if(color >= '0' && color <= '9')
-                color = color - '0';
+            if(font_color >= 'a' && font_color <= 'f')
+                font_color = font_color - 'a' + 0xa;   
+            else if(font_color >= '0' && font_color <= '9')
+                font_color = font_color - '0';
             else 
                 return;
 
-            uint8_t background_color = (*cursor >> 12) & 0xF;
-            *cursor = (uint16_t)((color | background_color) << 8 | (*cursor & 0xFF));
+            uint8_t background_color = ((*cursor >> 12) & 0xF);
+            SCREEN_CELL_SET_FROM_POINTER(cursor, background_color, font_color, *cursor);
         }
     }
     
-    else if(KeyInfo.scan_code == DELETE_KEY)
+    else if(Input.scan_code == DELETE_KEY)
     {
-        *cursor = 0;
+        *cursor = (uint16_t)NULL;
     }
 
     else
     {
-        if(KeyInfo.character)
+        if(Input.character)
         {
         
             uint8_t color;
@@ -94,18 +92,16 @@ void xpaint_input(void)
             else
                 color = (*cursor & 0xFF00) >> 8;
             
-            *cursor = (uint16_t)(color << 8 | KeyInfo.character);
+            *cursor = (uint16_t)(color << 8 | Input.character);
         }
     }
     
 
-
     saved_cell = *cursor;
 
-    if(!KeyInfo.character)
+    if(!Input.character)
         *cursor = (set_output_color(black, white) << 8) | '_';
 
-    KeyInfo.scan_code = 0x0;
 }
 
 
@@ -117,7 +113,7 @@ int xin_xpaint(char* file_name)
     if(xin_file == NULL)
     {
         xprintf("Could not open file %s\n", file_name);
-        while(KeyInfo.scan_code != ENTER);
+        while(inputg().scan_code != ENTER);
         return XANIN_ERROR;
     }
 
@@ -136,8 +132,14 @@ int xin_xpaint(char* file_name)
         cursor = (uint16_t*)VGA_TEXT_MEMORY;
         saved_cell = *cursor;
 
-        while(KeyInfo.scan_code != F4_KEY_RELEASE)
-            xpaint_input();
+        while(true)
+        {
+            xchar Input = inputg();
+            if(Input.scan_code == F4_KEY)
+                break;
+            xpaint_input(Input);
+        }
+
         *cursor = saved_cell;
         fseek(xin_file, XIN_FILE_BEGIN);
         fwrite(xin_file, (char*)VGA_TEXT_MEMORY, VGA_SCREEN_RESOLUTION);

@@ -93,11 +93,6 @@ void kernel_loop(void)
 
         xprintf(">");
 
-        character_blocked   = '>';
-
-        KeyInfo.scan_code   = 0x0;
-        KeyInfo.character   = 0x0;
-
         app_exited          = false;
 
         while(1)
@@ -129,10 +124,6 @@ void kernel_loop(void)
             erase_spaces(program_parameters);
             
 
-            character_blocked = '\0';
-
-            KeyInfo.character = 0x0;
-            KeyInfo.scan_code = 0x0;
             scan();
         }   
 
@@ -422,8 +413,6 @@ void _start(void)
     i8254x_init();
 
     // interrupt_enable();
-    KeyInfo.is_ctrl = false;
-    KeyInfo.is_shift = false;
 
     // __sys_xin_file_create("/syslog");
     xin_file_create("/syslog");
@@ -467,7 +456,8 @@ void _start(void)
     // xprintf("%s\n", strconcat("/", hm);
 
 
-    while (KeyInfo.scan_code != ENTER);
+    // inputg();
+    while (inputg().scan_code != ENTER);
 
     kernel_loop();
 

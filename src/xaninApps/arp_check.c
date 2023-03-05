@@ -29,6 +29,6 @@ int arp_check(const char* ip_addr_str)
         xprintf("%zno such arp table entry\n", set_output_color(red,white));
 
 
-    while(KeyInfo.scan_code != ENTER);
+    while(inputg().scan_code != ENTER);
 
 }

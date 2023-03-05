@@ -62,7 +62,7 @@ void elf_data_load(XinEntry* file)
 
 
     
-    while(KeyInfo.scan_code != ENTER);
+    while(inputg().scan_code != ENTER);
 }
 
 int elfdump(char* filename)

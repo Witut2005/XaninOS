@@ -30,7 +30,7 @@ public:
         return begin_ptr + this->size;
     }
     
-    void push(T&& item)
+    void push(T item)
     {
         begin_ptr = (T*)realloc(begin_ptr, sizeof(T) * this->size);
         begin_ptr[size++] = item;

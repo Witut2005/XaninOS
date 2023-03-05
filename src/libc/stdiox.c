@@ -560,8 +560,6 @@ void xscanf(char* str, ... )
 
     index = 0x0;
  
-    character_blocked = (char)Screen.cursor[Screen.y][Screen.x - 1];
-
     char* starting_screen_position = (char*)&Screen.cursor[Screen.y][Screen.x - 1];
 
     start:
@@ -569,7 +567,9 @@ void xscanf(char* str, ... )
     while(1)
     {
 
-        if(KeyInfo.is_bspc)
+        xchar Input = inputg();
+
+        if(Input.scan_code == BSPC)
         {
             Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((black << 4) | white) << 8));
 
@@ -601,7 +601,7 @@ void xscanf(char* str, ... )
             letters_refresh(&Screen.cursor[Screen.y][Screen.x]);
         }
 
-        else if(KeyInfo.scan_code == LSHIFT)
+        else if(Input.scan_code == LSHIFT)
         {
             goto start;
         }
@@ -656,34 +656,34 @@ void xscanf(char* str, ... )
                 
         // }
 
-        else if(KeyInfo.scan_code == ARROW_UP)
-        {
+        // else if(KeyInfo.scan_code == ARROW_UP)
+        // {
 
-            strcpy(keyboard_command, last_used_commands);
-            keyboard_command[strlen(last_used_commands)] = ' ';
-            strcpy(keyboard_command + strlen(last_used_commands) + 1, last_used_parameters);
+        //     strcpy(keyboard_command, last_used_commands);
+        //     keyboard_command[strlen(last_used_commands)] = ' ';
+        //     strcpy(keyboard_command + strlen(last_used_commands) + 1, last_used_parameters);
 
-            int x_new = strlen(last_used_commands) + strlen(last_used_parameters);
+        //     int x_new = strlen(last_used_commands) + strlen(last_used_parameters);
 
-            memset(last_used_commands, '\0', sizeof(last_used_commands));
-            memset(last_used_parameters, '\0', sizeof(last_used_parameters));
+        //     memset(last_used_commands, '\0', sizeof(last_used_commands));
+        //     memset(last_used_parameters, '\0', sizeof(last_used_parameters));
             
-            Screen.x = 1;
+        //     Screen.x = 1;
 
-            uint16_t first_tmp = (uint16_t)Screen.cursor[Screen.y][Screen.x];
-            xprintf("%s", keyboard_command);
+        //     uint16_t first_tmp = (uint16_t)Screen.cursor[Screen.y][Screen.x];
+        //     xprintf("%s", keyboard_command);
 
 
-            index = x_new;
-            Screen.x = x_new;
+        //     index = x_new;
+        //     Screen.x = x_new;
 
-            Screen.cursor[Screen.y][1] = first_tmp;
+        //     Screen.cursor[Screen.y][1] = first_tmp;
 
-            // cpu_halt();
+        //     // cpu_halt();
 
-        }
+        // }
 
-        else if(KeyInfo.scan_code == ENTER)
+        else if(Input.scan_code == ENTER)
         {
             while(str[str_counter])
             {
@@ -817,8 +817,6 @@ void xscanf(char* str, ... )
         for(int i = 0x0; i < 50;i++)
             buffer[i] = 0x0;
 
-        KeyInfo.scan_code = 0x0;
-
         Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((black << 4) | white) << 8));
            
         xprintf("\n");
@@ -826,9 +824,9 @@ void xscanf(char* str, ... )
 
         }
 
-        else if(KeyInfo.character)
+        else if(Input.character)
         {
-            char tmp = getchar();
+            char tmp = Input.character;
 
             Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((black << 4) | white) << 8));
             char character_saved = (char)(Screen.cursor[Screen.y][Screen.x]);
@@ -868,7 +866,6 @@ void xscan_range(char* string_buffer, uint32_t how_many_chars)
 
     uint32_t str_counter = 0x0;
     uint32_t counter = 0x0;
-    KeyInfo.scan_code = 0;
     char* string_pointer;
     char* buffer = (char*)calloc(how_many_chars);
 
@@ -876,8 +873,6 @@ void xscan_range(char* string_buffer, uint32_t how_many_chars)
     index = 0;
     uint8_t screen_offset = 0;
  
-    character_blocked = (char)Screen.cursor[Screen.y][Screen.x - 1];
-
     char* starting_screen_position = (char*)&Screen.cursor[Screen.y][Screen.x - 1];
     uint16_t* text_buffer_start = &Screen.cursor[Screen.y][Screen.x];
 
@@ -891,8 +886,9 @@ void xscan_range(char* string_buffer, uint32_t how_many_chars)
 
     while(1)
     {
+        xchar Input = inputg();
 
-        if(KeyInfo.is_bspc)
+        if(Input.scan_code == BSPC)
         {
             Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((black << 4) | white) << 8));
 
@@ -924,7 +920,7 @@ void xscan_range(char* string_buffer, uint32_t how_many_chars)
             letters_refresh(&Screen.cursor[Screen.y][Screen.x]);
         }
 
-        else if(KeyInfo.scan_code == ENTER)
+        else if(Input.scan_code == ENTER)
         {
  
 
@@ -966,21 +962,17 @@ void xscan_range(char* string_buffer, uint32_t how_many_chars)
         for(int i = 0x0; i < 50;i++)
             buffer[i] = 0x0;
 
-        KeyInfo.scan_code = 0x0;
 
         Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((black << 4) | white) << 8));
            
-        // for(int i = how_many_chars; i < sizeof(buffer); i++)
-
-
         xprintf("\n");
         return;
 
         }
 
-        else if(KeyInfo.character)
+        else if(Input.character)
         {
-            char tmp = getchar();
+            char tmp = Input.character;
 
             Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][index + x_start]) + (((black << 4) | white) << 8));
             

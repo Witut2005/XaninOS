@@ -21,9 +21,7 @@ int timer_test(void)
     screen_clear();
 
     xprintf("Press 'a' to start...");
-    while(getchar() != 'a');
-
-    KeyInfo.scan_code = 0x0;
+    while(inputg().character != 'a');
 
     while(!app_exited)
     {

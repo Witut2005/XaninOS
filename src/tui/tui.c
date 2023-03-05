@@ -227,7 +227,6 @@ void table_row_select(table_t* Table)
         screen_cell_set(cursor_x+i, cursor_y, buffer[i-1], Table->row_background_color[current_page][current_row], Table->row_foreground_color[current_page][current_row]);
 
     Table->handler(table_get_row_data(Table, current_row, current_page));
-    KeyInfo.scan_code = 0;
 }
 
 void table_destroy(table_t* Table)

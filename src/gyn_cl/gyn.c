@@ -16,7 +16,7 @@ int gyn_interpreter(char* file_to_interpret)
     if(file == NULL)
     {
         xprintf("%zCouldn't open file %s\n", stderr, file_to_interpret);
-        while(KeyInfo.scan_code != ENTER);
+        while(inputg().scan_code != ENTER);
         return XANIN_ERROR;
     }
 
@@ -56,7 +56,7 @@ int gyn_interpreter(char* file_to_interpret)
         if(last_command_exit_status == XANIN_ERROR)
         {
             xprintf("\n%zGYN COMMAND PARSING ERROR: %s\n", stderr, command);
-            while(KeyInfo.scan_code != ENTER);
+            while(inputg().scan_code != ENTER);
             fclose(&file);
             gyn_cl_on = false;
             return XANIN_ERROR;
@@ -66,7 +66,7 @@ int gyn_interpreter(char* file_to_interpret)
 
     }
 
-    while(KeyInfo.scan_code != ENTER);
+    while(inputg().scan_code != ENTER);
     fclose(&file);
     gyn_cl_on = false;
     return XANIN_OK;

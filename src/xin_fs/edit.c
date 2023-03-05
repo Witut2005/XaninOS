@@ -400,7 +400,7 @@ void edit_input(xchar Input)
         for(; i < strlen(tmp) + 1; i++)
             program_buffer[i + 1] = tmp[i];
 
-        program_buffer[file_position] = KeyInfo.character;
+        program_buffer[file_position] = Input.character;
 
         file_position++;
 

@@ -9,7 +9,7 @@ int network_device_rename(char* oldname, char* newname)
     if(handler == NULL)
     {
         xprintf("%zNo Such Device %s\n", stderr, oldname);
-        while(KeyInfo.scan_code != ENTER);
+        while(inputg().scan_code != ENTER);
         return XANIN_ERROR;
     }
 
@@ -20,7 +20,7 @@ int network_device_rename(char* oldname, char* newname)
         if(strlen(newname) >= 50)
         {
             xprintf("%Max Device Name Length Is 49 %s\n", stderr, oldname);
-            while(KeyInfo.scan_code != ENTER);
+            while(inputg().scan_code != ENTER);
             return XANIN_ERROR;
         }
 

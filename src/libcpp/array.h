@@ -50,10 +50,10 @@ class ArrayIterator
         }
 
 
-        Type operator [](uint32_t index)
-        {
-            return i_ptr[index];
-        }
+        // Type operator [](uint32_t index)
+        // {
+        //     return i_ptr[index];
+        // }
 
 
         uint32_t* operator &()

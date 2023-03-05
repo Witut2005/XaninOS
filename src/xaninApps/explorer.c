@@ -219,7 +219,7 @@ int explorer(char* parent_folder)
         {
             screen_clear();
             xprintf("No folders");
-            while(KeyInfo.scan_code != F4_KEY);
+            while(inputg().scan_code != F4_KEY);
             break;
         }
 

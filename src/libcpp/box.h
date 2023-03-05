@@ -1,17 +1,22 @@
 
 #include <libcpp/array.h>
 #include <libcpp/string.h>
-#include <libcpp/iterator.h>
 
 namespace std
 {
 
-template <class T>
+template <typename T>
+class BoxIterator
+{
+    
+};
+
+template <typename T>
 class Box
 {
 
-    Iterator<T> first;
-    Iterator<T> last;
+    BoxIterator<T> first;
+    BoxIterator<T> last;
 
     public:
 
@@ -25,7 +30,7 @@ class Box
         return last;
     }
 
-    Box(Iterator<T> first, Iterator<T> last) : first(first), last(last){}
+    // Box(<T> first, Iterator<T> last) : first(first), last(last){}
 
 
 };

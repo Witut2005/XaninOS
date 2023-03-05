@@ -25,6 +25,6 @@ int loadch(char* address_string)
         putchar(data_pointer[i]);
     }
 
-	while(KeyInfo.scan_code != ENTER);
+	while(inputg().scan_code != ENTER);
     return XANIN_OK;
 }

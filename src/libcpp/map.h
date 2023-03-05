@@ -7,11 +7,67 @@
 namespace std
 {
 
+    template<typename K, typename V, template <typename, typename> class UnorderedMap>
+    class UnorderedMapIterator 
+    {
+        using Type = typename UnorderedMap<K, V>::ListElement;
+        
+        public:
+
+        UnorderedMapIterator(Type* ptr) : i_ptr(ptr) {}
+
+        UnorderedMapIterator& operator ++ () 
+        {
+            this->i_ptr = this->i_ptr->next;
+            return *this;
+        }
+
+        UnorderedMapIterator operator ++ (int) 
+        {
+            UnorderedMapIterator tmp = this->i_ptr;
+            this->i_ptr = this->i_ptr->next;
+            return tmp;
+        }
+
+        UnorderedMapIterator& operator -- () 
+        {
+            this->i_ptr = this->i_ptr->previous;
+            return this->i_ptr;
+        }
+
+        UnorderedMapIterator operator -- (int) 
+        {
+            UnorderedMapIterator tmp = this->i_ptr;
+            this->i_ptr = this->i_ptr->previous;
+            return tmp;
+        }
+
+        V& operator * ()
+        {
+            return this->i_ptr->item.second;
+        }
+
+        bool operator == (const UnorderedMapIterator x)
+        {
+            return this->i_ptr == x.i_ptr; 
+        }
+
+        bool operator != (const UnorderedMapIterator x)
+        {
+            return this->i_ptr != x.i_ptr; 
+        }
+
+        private:
+        Type* i_ptr;
+
+    };
+
     template <class K, class V>
     class UnorderedMap
     {
 
     public:
+        
         struct ListElement
         {
             std::pair<K, V> item;
@@ -22,8 +78,6 @@ namespace std
         ListElement *Head;
         ListElement *Tail;
         size_t size;
-
-    public:
 
         ListElement* tail_get(void)
         {
@@ -59,10 +113,10 @@ namespace std
         {
             this->Head = (ListElement *)malloc(sizeof(ListElement));
             this->Tail = (ListElement *)malloc(sizeof(ListElement));
-            this->Head->next = NULL;
             this->Head->previous = NULL;
             this->size = 0;
             this->Head->next = this->Tail;
+            this->Tail->next = NULL;
         }
 
         ListElement *goto_last_element()
@@ -79,7 +133,7 @@ namespace std
         {
             ListElement *Tmp = Head;
 
-            if constexpr((std::is_pointer<K>::value) && (sizeof(std::remove_pointer<K>) == sizeof(char)))
+            if constexpr(is_char_ptr(K))
             {
                 while (Tmp != Tail)
                 {
@@ -103,6 +157,7 @@ namespace std
 
             return Tail;
         }
+        
 
         void insert(K key, V value)
         {
@@ -126,15 +181,40 @@ namespace std
             LastItem->next = this->Tail;
             this->size++;
         }
+        // void insert(K key, V value)
+        // {
 
-        V begin(void)
+        //     if (!this->size)
+        //     {
+        //         this->Head->item.first = key;
+        //         this->Head->item.second = value;
+        //         this->size++;
+        //         return;
+        //     }
+    
+        //     else
+        //     {
+        //         ListElement* NewElement = (ListElement*)calloc(sizeof(ListElement));
+        //         ListElement* Tmp = goto_last_element();
+
+        //         Tmp->next = NewElement;
+        //         NewElement->previous = Tmp;
+        //         NewElement->item.first = key;
+        //         NewElement->item.second = value;
+        //         NewElement->next = this->Tail;
+
+        //         this->size++;
+        //     }
+        // }
+
+        UnorderedMapIterator<K, V, UnorderedMap> begin(void)
         {
-            return this->Head;
+            return UnorderedMapIterator<K, V, UnorderedMap>(this->Head);
         }
 
-        V end(void)
+        UnorderedMapIterator<K, V, UnorderedMap> end(void)
         {
-            return this->Tail;
+            return UnorderedMapIterator<K, V, UnorderedMap>(this->Tail);
         }
 
         ListElement *operator++(int)

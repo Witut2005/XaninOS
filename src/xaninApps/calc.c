@@ -24,14 +24,13 @@ int calc(char* options)
         screen_clear();
         xprintf("xaninOS developer tools\n");
         xprintf("Simple calculator :))\n");
-    	while(KeyInfo.scan_code != ENTER);
+    	while(inputg().scan_code != ENTER);
         return XANIN_OK;
     }
 
     int operation_type;
     uint32_t a, b, result;
 
-        character_blocked = ':';
 
     xprintf("choose type of operation:\n");
     xprintf("1. add\n");
@@ -45,8 +44,6 @@ int calc(char* options)
 
     xprintf("\nfirst number: ");
     xscanf("%d", &a);
-
-    KeyInfo.scan_code = 0x0;
 
     xprintf("\nsecond number: ");
     xscanf("%d", &b);

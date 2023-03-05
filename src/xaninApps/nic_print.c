@@ -16,7 +16,7 @@ int nic_print(void)
         }
     }
 
-    while(KeyInfo.scan_code != ENTER);
+    while(inputg().scan_code != ENTER);
     return XANIN_OK;
 
 }
