@@ -1,7 +1,6 @@
 
 
 #include <stdint.h>
-#include <headers/macros.h>
 #include <devices/APIC/apic_registers.h>
 #include <xanin_info/info_block.h>
 

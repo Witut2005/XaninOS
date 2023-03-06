@@ -1,5 +1,4 @@
 
-#include <headers/macros.h>
 #include <libc/colors.h>
 #include <keyboard/key_map.h>
 #include <libc/stdlibx.h>

@@ -4,7 +4,6 @@
  
 #include <libc/hal.h>
 #include <libc/stdiox.h>
-#include <headers/macros.h>
 #include <keyboard/key_map.h>
 #include <keyboard/keyboard_driver.c>
 #include <handlers/handlers.h>

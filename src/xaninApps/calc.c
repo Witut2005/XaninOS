@@ -3,10 +3,6 @@
 #include <libc/string.h>
 #include <libc/stdiox.h>
  
-#include <headers/macros.h>
-
-
-
 enum operation_types
 {
     CALC_ADD = 1,

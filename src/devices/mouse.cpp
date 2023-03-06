@@ -1,4 +1,3 @@
-/*
 #include <libcpp/hal.h>
 #include <libc/hal.h>
 #include <libc/stdiox.h>
@@ -6,7 +5,6 @@
 #define PS2_DATA_REGISTER     0x60
 #define PS2_STATUS_REGISTER   0x64
 #define PS2_COMMAND_REGISTER  0x64
-
 
 
 
@@ -18,21 +16,23 @@ enum class Ps2
 
 class MouseClass
 {
-    using namespace hal;
 
     private:
-    Port8 PicMasterData = Port8(0x21);
-    Port8 PicSlaveData = Port8(0xa1);
-    Port8 Ps2Data = Port8(PS2_DATA_REGISTER);
-    Port8 Ps2Status = Port8(PS2_STATUS_REGISTER);
-    Port8 Ps2Command = Port8(PS2_COMMAND_REGISTER);
-    uint8_t mouse_cycle = 0;
-    uint8_t mouse_x;
-    uint8_t mouse_y;
+    hal::Port8 PicMasterData;
+    hal::Port8 PicSlaveData;
+    hal::Port8 Ps2Data; 
+    hal::Port8 Ps2Status; 
+    hal::Port8 Ps2Command;
+    static uint8_t mouse_cycle;
+    static uint8_t mouse_x;
+    static uint8_t mouse_y;
 
-    int8_t mouse_bytes[3] = {0};
+    static int8_t mouse_bytes[3];
 
     public:
+
+    MouseClass() : PicMasterData(0x21), PicSlaveData(0xa1), Ps2Data(PS2_DATA_REGISTER), Ps2Status(PS2_STATUS_REGISTER), Ps2Command(PS2_COMMAND_REGISTER){}
+
 
     void print()
     {
@@ -52,7 +52,7 @@ class MouseClass
         if(operation == Ps2::ps2_write)
         {
             while(time--)
-                if(inbIO(0x64) & 0x2 == 0) return;
+                if((inbIO(0x64) & 0x2) == 0) return;
                 //if(Ps2Status.read() & 0x2 == 0) return;
             
         }
@@ -60,7 +60,7 @@ class MouseClass
         else
         {
             while(time--)
-                if(inbIO(0x64) & 1)return;
+                if((inbIO(0x64) & 1)== 0)return;
         }
 
 
@@ -85,38 +85,46 @@ class MouseClass
 
     void handle()
     {
+        
+        inbIO(PS2_STATUS_REGISTER);
 
-        PicMasterData = Port8(0x21);
-        PicSlaveData = Port8(0xa1);
-        Ps2Data = Port8(PS2_DATA_REGISTER);
-        Ps2Status = Port8(PS2_STATUS_REGISTER);
-        Ps2Command = Port8(PS2_COMMAND_REGISTER);
+        this->wait(Ps2::ps2_write);
+        outbIO(PS2_STATUS_REGISTER, 0xEB);
 
+        while(this->read() != 0xFA);
+        uint8_t data= inbIO(PS2_DATA_REGISTER);
 
         switch(mouse_cycle)
         {
             case 0:
             {
-                mouse_bytes[mouse_cycle] = Ps2Data.read();
+                mouse_bytes[mouse_cycle] = data;
                 mouse_cycle++;
                 break;
             }
             
             case 1:
             {
-                mouse_bytes[mouse_cycle] = Ps2Data.read();
+                mouse_bytes[mouse_cycle] = data;//Ps2Data.read();
                 mouse_cycle++;
                 break;
             }
 
             case 2:
             {
-                mouse_bytes[mouse_cycle] = Ps2Data.read();
+                mouse_bytes[mouse_cycle] = data;//Ps2Data.read();
+
+                if (mouse_bytes[0] & 0x80 || mouse_bytes[0] & 0x40) {
+                    /* x/y overflow? bad packet! */
+                    break;
+                }
+
                 mouse_x = mouse_bytes[1];
                 mouse_y = mouse_bytes[2];
                 mouse_cycle = 0;
-                xprintf("Mouse x: %d\n", mouse_x);
-                xprintf("Mouse y: %d\n", mouse_y);
+                // xprintf("Mouse x: %d\n", mouse_x);
+                // xprintf("Mouse y: %d\n", mouse_y);
+                inbIO(PS2_STATUS_REGISTER);
                 break;
             }
         }
@@ -128,12 +136,8 @@ class MouseClass
         //https://wiki.osdev.org/Mouse_Input#0xD4_Byte.2C_Command_Byte.2C_Data_Byte  
 
         uint8_t status;
-        PicMasterData = Port8(0x21);
-        PicSlaveData = Port8(0xa1);
-        Ps2Data = Port8(PS2_DATA_REGISTER);
-        Ps2Status = Port8(PS2_STATUS_REGISTER);
-        Ps2Command = Port8(PS2_COMMAND_REGISTER);
 
+        interrupt_disable();
 
         //Enable second PS/2 port (only if 2 PS/2 ports supported)
         this->wait(Ps2::ps2_write);
@@ -151,14 +155,18 @@ class MouseClass
 
         //Write Data to PS/2 contoller configuration byte
         this->wait(Ps2::ps2_write);
-        outbIO(0x64, 60);
+        outbIO(0x64, 0x60);
 
-        //Ps2Command.write(0x60);
-
-        //Write Data to PS/2 contoller configuration byte
         this->wait(Ps2::ps2_write);
         outbIO(0x60, status);
-        //Ps2Data.write(status);
+
+
+        // //Ps2Command.write(0x60);
+
+        // //Write Data to PS/2 contoller configuration byte
+        // this->wait(Ps2::ps2_write);
+        // outbIO(0x60, status);
+        // //Ps2Data.write(status);
 
 
 
@@ -170,32 +178,41 @@ class MouseClass
         this->write(0xF4);
         this->read();
 
+        //mouse on
+        this->write(0xF0);
+        this->read();
+
+        interrupt_enable();
+
 
 
     }
 
 
-}Mouse;
+};
 
+uint8_t MouseClass::mouse_cycle;
+uint8_t MouseClass::mouse_x;
+uint8_t MouseClass::mouse_y;
+int8_t MouseClass::mouse_bytes[3];
 
 extern "C" 
 {
 
     void mouse_handler(void)
     {
-        //Mouse.handle();
-        inbIO(0x60);
+        MouseClass Mouse;
+        Mouse.handle();
+        // inbIO(0x60);
         xprintf("o");
-        eoi_send();
-        outbIO(0xa1, 0x20);
+        // eoi_send();
      
     }    
 
     void mouse_enable(void)
     {
+        MouseClass Mouse;
         Mouse.enable();
     }
 
 }
-
-*/

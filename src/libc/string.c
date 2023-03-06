@@ -3,7 +3,6 @@
 #include <stdarg.h>
 #include <stdint.h>
 #include <libc/colors.h>
-#include <headers/macros.h>
 #include <terminal/vty.h>
 #include <libc/stdlibx.h>
 #include <libc/math.h>

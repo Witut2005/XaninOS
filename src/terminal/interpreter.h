@@ -113,9 +113,9 @@
 #include <xaninApps/hexeditor/hexeditor.c>
 #endif
 
-#ifdef MOUSE_APP
+// #ifdef MOUSE_APP
 #include <xaninApps/mouse.c>
-#endif
+// #endif
 
 // #include <xin_fs/xin.h>
 

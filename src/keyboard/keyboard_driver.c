@@ -85,7 +85,6 @@ void keyboard_driver(uint8_t scanCode)
         {
             int x_tmp                     = Screen.x, y_tmp = Screen.y;
             screenshot(); 
-            *(uint32_t*)APIC_EOI_REGISTER = 0x0; 
             eoi_send(); 
             KeyInfo.character             = 0x0; 
             Screen.x                      = x_tmp;

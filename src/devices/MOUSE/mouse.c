@@ -169,7 +169,7 @@ void mouse_install(void)
 	
 	//Enable the interrupts
 	mouse_wait(1);
-	outbIO(0x64, 0x20);
+	// outbIO(0x64, 0x20);
 	mouse_wait(0);
 	_status=(inbIO(0x60) | 2);
 	_status &= ~(1 << 5);

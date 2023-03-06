@@ -5,21 +5,21 @@
 
 #include <libc/stdiox.h>
 
-void mouse_test(char *x)
+extern void mouse_enable(void);
+
+int mouse_test(void)
 {
 
-    /*
+    mouse_enable();
 
     while(1)
     {
 
-        screen_clear();
-        mouse_handler();
+        // screen_clear();
+        // mouse_handler();
 
-        msleep(5);
-
+        // msleep(5);
     }
-
-    */
+    return XANIN_OK;
 
 }
