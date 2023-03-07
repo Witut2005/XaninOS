@@ -10,7 +10,9 @@
 
 #include <libc/hal.h>
 #include <handlers/handlers.h>
+#include <IDT/idt.h>
 
+extern void keyboard_handler_init(void);
 
 uint8_t keyboard_self_test()
 {
@@ -31,11 +33,11 @@ uint8_t keyboard_init(void)
 
     uint8_t KEYBOARD_TEST_STATUS = keyboard_self_test();
 
-	outbIO(0x64, KEYBOARD_DISABLE);             // KEYBOARD OFF
-    for(int i = 0; i < 10; i++)
-        io_wait();
-	outbIO(0x64, KEYBOARD_ENABLE);             // KEYBOARD ON
-    outbIO(PIC1_DATA_REG, 0xFD);    // 11111101 <-- irq1 ON
+	// outbIO(0x64, KEYBOARD_DISABLE);             // KEYBOARD OFF
+    // for(int i = 0; i < 10; i++)
+    //     io_wait();
+	// outbIO(0x64, KEYBOARD_ENABLE);             // KEYBOARD ON
+    // outbIO(PIC1_DATA_REG, 0xFD);    // 11111101 <-- irq1 ON
 
     if(KEYBOARD_TEST_STATUS == KEYBOARD_TEST_FAILURE)
     {
@@ -44,7 +46,11 @@ uint8_t keyboard_init(void)
         asm("hlt");
     }
 
-    
+    // xprintf(":GAUIGBAUG");
+    // interrupt_handlers[0x21] = keyboard_handler_init;
+    uint16_t* tmp = (uint16_t*)0xB8000;
+    *tmp = 0x4141;
+    interrupt_register(0x21, keyboard_handler_init); 
 
     return KEYBOARD_TEST_STATUS;
 

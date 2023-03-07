@@ -155,11 +155,12 @@ extern void machine_check_exception(void);
 extern void simd_floating_point_exception(void);
 extern void virtualization_exception(void);
 
+extern int idt_examine(void);
+
 void _start(void)
 {
 
-    screen_init(); // init screen management system
-    // set_idt();
+    interrupt_disable();
 
     interrupt_register(0, divide_by_zero_exception);
     interrupt_register(1, debug_exception);
@@ -194,34 +195,17 @@ void _start(void)
     interrupt_register(31, general_protection_exception);
     interrupt_register(32, general_protection_exception);
     
-    // irq_register(0x21, keyboard_handler_init);
-    // irq_register(0x22, pit_handler_init);
 
-    // irq_register(0x22, pit_handler_init,CODE_SEGMENT);
-    // irq_register(0x21, keyboard_handler_init,CODE_SEGMENT);
-    
-    // configure_idt_entry(0x26, floppy_interrupt,CODE_SEGMENT);
-    // configure_idt_entry(0x2B, i8254x_interrupt_handler_entry, CODE_SEGMENT);
-    // configure_idt_entry(0x2B + 1, gowno, CODE_SEGMENT);
-    // configure_idt_entry(0x2B + 2, gowno, CODE_SEGMENT);
-    // configure_idt_entry(0x2B + 3, gowno, CODE_SEGMENT);
-    // configure_idt_entry(0x2B + 4, gowno, CODE_SEGMENT);
-    // configure_idt_entry(0x2B + 5, gowno, CODE_SEGMENT);
-    // configure_idt_entry(0x2B + 6, gowno, CODE_SEGMENT);
-    // configure_idt_entry(0x2B + 7, gowno, CODE_SEGMENT);
-    // configure_idt_entry(0x2C, mouse_handler_init, CODE_SEGMENT);
-    // configure_idt_entry(0x50, elf_correctly_loaded,CODE_SEGMENT);
+    // interrupt_register(0x21, keyboard_handler_init);
 
-    // configure_idt_entry(0x80, syscall_entry,CODE_SEGMENT);
-    // configure_idt_entry(0x81, no_handler,CODE_SEGMENT);
-    // configure_idt_entry(0xFF, reboot_interrupt,CODE_SEGMENT);
-
-    // set_idt();
-
+    screen_init(); // init screen management system
+    screen_clear();
+    keyboard_init();
+    set_pit();
+    // idt_examine();
 
     disable_cursor();
-    screen_clear();
-    uint8_t ppmngr_bitmap[0x2000];
+    uint8_t ppmngr_bitmap[0x2000] = {0};
 
     pmmngr_init(0x10000, ppmngr_bitmap);
     pmmngr_init_region(0x0, 0xFFFFFF);
@@ -229,9 +213,6 @@ void _start(void)
 
     time_get(&SystemTime);
 
-    keyboard_init();
-
-    set_pit_divisor(0x8000);
 
     // set_pit();
     keyboard_command = command_buffer;
@@ -494,8 +475,7 @@ void _start(void)
 
     // interrupt_enable();
 
-    // __sys_xin_file_create("/syslog");
-    xin_file_create("/syslog");
+    __sys_xin_file_create("/syslog");
     printk("To wszystko dla Ciebie Babciu <3");
 
     // __sys_xin_folder_create("/config/");

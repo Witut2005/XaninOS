@@ -5,6 +5,7 @@
 #include <stdbool.h>
 #include <devices/APIC/apic_registers.h>
 #include <libc/hal.h>
+#include <IDT/idt.h>
 
 #define PIT_CHANNEL0 0x40
 #define PIT_CHANNEL1 0x41
@@ -20,7 +21,7 @@
 
 extern float pit_time;
 
-
+extern void pit_handler_init(void);
 
 static inline void set_pit_divisor(uint16_t divisor_value)
 {
@@ -37,11 +38,12 @@ static inline void set_pit_divisor(uint16_t divisor_value)
 static inline void set_pit()
 {
 
-    // interrupt_disable();
+    interrupt_disable();
     // outbIO(PIC1_DATA_REG, 0xFC); // pit irq on
-    //outbIO(PIT_MODE_COMMAND_REGISTER,0x30);
-    // set_pit_divisor(0x8000);
-    // interrupt_enable();
+    // outbIO(PIT_MODE_COMMAND_REGISTER,0x30);
+    set_pit_divisor(0x8000);
+    interrupt_enable();
+    interrupt_register(0x22, pit_handler_init);
 }
 
 

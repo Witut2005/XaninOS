@@ -35,7 +35,8 @@ namespace std
 
             bool good() 
             {
-                this->FstreamFlags.failbit = this->file == NULL;
+                this->FstreamFlags.failbit = (this->file == NULL);
+                return this->FstreamFlags.failbit;
             }
 
             void close() 
@@ -48,6 +49,7 @@ namespace std
                 count = xin::fread(this->file, buf, count);
                 if(!count)
                     this->FstreamFlags.failbit = true;
+                return count;
             }
 
             size_t write(void* buf, size_t count) 
@@ -55,6 +57,7 @@ namespace std
                 count = xin::fwrite(this->file, buf, count);
                 if(!count)
                     this->FstreamFlags.failbit = true;
+                return count;
             }
 
             size_t write(const void* buf, size_t count) 
@@ -62,6 +65,7 @@ namespace std
                 count = xin::fwrite(this->file, (void*)buf, count);
                 if(!count)
                     this->FstreamFlags.failbit = true;
+                return count;
             }
 
 
@@ -70,6 +74,7 @@ namespace std
                 uint32_t count = xin::fread(this->file,buf, 1);
                 if(!count)
                     this->FstreamFlags.failbit = true;
+                return (*this);
             }
 
             fstream& operator << (char* buf) 
@@ -77,6 +82,7 @@ namespace std
                 uint32_t count = xin::fwrite(this->file,buf, 1);
                 if(!count)
                     this->FstreamFlags.failbit = true;
+                return (*this);
             }
 
             char get(void) 

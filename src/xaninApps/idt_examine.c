@@ -3,6 +3,7 @@
 #include <libc/stdlibx.h>
 
 extern void divide_by_zero_exception(void);
+extern void keyboard_handler_init(void);
 extern irq_handler interrupt_handlers[0x100];
 
 int idt_examine(void)
@@ -13,6 +14,11 @@ int idt_examine(void)
     xprintf("device by zero:");
     xprintf("0x%x ", divide_by_zero_exception);
     xprintf("0x%x\n", interrupt_handlers[0]);
-    while(inputg().scan_code != ENTER);
+
+    xprintf("0x%x ", keyboard_handler_init);
+    xprintf("0x%x\n", interrupt_handlers[0x21]);
+
+    // while(inputg().scan_code != ENTER);
+    while(1);
     return XANIN_OK;
 }

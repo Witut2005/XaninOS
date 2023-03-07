@@ -42,6 +42,7 @@ namespace std
         istream& operator>>(char& x)
         {
             xscanf("%c",&x);
+            return *this;
         }
 
         istream& operator>>(short& x)

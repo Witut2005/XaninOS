@@ -1,6 +1,7 @@
 #include <libcpp/hal.h>
 #include <libc/hal.h>
 #include <libc/stdiox.h>
+#include <IDT/idt.h>
 
 #define PS2_DATA_REGISTER     0x60
 #define PS2_STATUS_REGISTER   0x64
@@ -213,6 +214,7 @@ extern "C"
     {
         MouseClass Mouse;
         Mouse.enable();
+        interrupt_register(0x2C, mouse_handler);
     }
 
 }

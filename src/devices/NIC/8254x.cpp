@@ -11,6 +11,7 @@
 #include <libcpp/utility.h>
 #include <limits.h>
 #include <libcpp/cmemory.h>
+#include <IDT/idt.h>
 
 #define INTEL_8254X_DESCRIPTORS 256
 #define reset() write(0x0, 0x80000000)
@@ -286,7 +287,6 @@ void Intel8254xDriver::init()
                   nic::ims::RXDMT | nic::ims::RXSEQ | nic::ims::LSC);
 
     
-    
 
     // this->write(nic::RCTL, this->read(nic::RCTL) & (~nic::RCTL_EN));
 
@@ -399,6 +399,7 @@ uint8_t* Intel8254xDriver::receive_packet(void)
 
 void Intel8254xDriver::interrupt_handler(void) 
 {
+    // xprintf("N");
     uint16_t interrupt_status = this->read(nic::ICR);
     
     if(interrupt_status & 0x80)
@@ -462,8 +463,8 @@ extern "C"
 
     void i8254x_interrupt_handler(void)
     {
-        // xprintf("i8254x_interrupt");
-        return Intel8254x.interrupt_handler();
+        Intel8254x.interrupt_handler();
+        eoi_send();
     }
 
     uint8_t* i8254x_packet_receive(void)
@@ -481,7 +482,10 @@ extern "C"
     {
         Intel8254x.init();
         if(Intel8254x.is_device_present())
+        {
             netapi_add_device(i8254x_packet_receive, i8254x_packet_send, i8254x_mac_get(), i8254x_interrupt_handler, Intel8254x.pci_info_get());
+            interrupt_register(0x2B, i8254x_interrupt_handler_entry);
+        }
     }
 
     

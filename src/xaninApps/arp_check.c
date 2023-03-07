@@ -30,5 +30,6 @@ int arp_check(const char* ip_addr_str)
 
 
     while(inputg().scan_code != ENTER);
+    return XANIN_OK;
 
 }

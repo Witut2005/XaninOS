@@ -76,6 +76,7 @@ class string
     size_t reserve(uint32_t size)
     {
         string_data = (char*)calloc(size * sizeof(char));
+        return size;
     }
 
     string() {string_data = (char*)malloc(4096);} 
@@ -119,12 +120,14 @@ class string
     {
         realloc(string_data, strlen(x));
         strcpy(string_data, x);
+        return *this;
     }
 
     string operator = (std::string x)
     {
         realloc(string_data, strlen(x.c_str()));
         strcpy(string_data, x.c_str());
+        return *this;
     }
 
     inline bool operator == (std::string x) 

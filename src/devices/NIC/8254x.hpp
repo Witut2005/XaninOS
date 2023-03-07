@@ -9,6 +9,7 @@ extern "C" uint32_t pci_get_bar(const uint8_t bus, const uint8_t slot, const uin
 extern "C" uint16_t pci_get_vendor_id(const uint8_t bus, const uint8_t slot, 
                         const uint8_t function);
 extern "C" uint16_t pci_write_data16(const uint8_t bus, const uint8_t slot, const uint8_t function, const uint8_t offset, const uint16_t value);
+extern "C" void i8254x_interrupt_handler_entry(void);
 
 #define INTEL_8254X 0x0200
 #define INTEL_8254X_VENDOR_ID 0x100E

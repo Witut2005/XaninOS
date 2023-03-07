@@ -35,5 +35,5 @@ int arp_table_print(char* arg)
 
 
     while(inputg().scan_code != ENTER);
-
+    return XANIN_OK;
 }

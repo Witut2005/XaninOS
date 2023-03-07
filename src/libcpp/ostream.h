@@ -245,11 +245,13 @@ class ostream
     ostream& operator<< (CmosTime time)
     {
         xprintf("%i:%i:%i", time.hour, time.minutes, time.seconds);
+        return *this;
     }
 
     ostream& operator<< (bcd year)
     {
         xprintf("%x", year.bcd_num);
+        return *this;
     }
 
     void put(char x)
