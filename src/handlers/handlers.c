@@ -64,7 +64,7 @@ void pit_handler(void)
 
 void keyboard_handler(void)
 {
-    keyStatus = inbIO(KEYBOARD_STATUS_REG); // if status & 1 (ON)
+    // keyStatus = inbIO(KEYBOARD_STATUS_REG); // if status & 1 (ON)
     KeyInfo.scan_code = inbIO(KEYBOARD_DATA_REG); // get KeyInfo.scan_code
     keyboard_driver(KeyInfo.scan_code);
 }

@@ -1,9 +1,10 @@
 
+#include <pit/pit.h>
 #include <terminal/terminal.h>
 #include <libc/data_structures.h>
 #include <limits.h>
 #include <stdint.h>
-#include <IDT/idt.c>
+#include <IDT/idt.h>
 #include <libc/stdlibx.h>
 #include <terminal/vty.h>
 #include <terminal/interpreter.c>
@@ -133,11 +134,90 @@ void kernel_loop(void)
 
 }
 
+extern void divide_by_zero_exception(void);
+extern void debug_exception(void);
+extern void nmi_interrupt(void);
+extern void breakpoint_exception(void);
+extern void overflow_exception(void);
+extern void nmi_interrupt(void);
+extern void invalid_opcode(void);
+extern void device_not_available_exception(void);
+extern void double_fault_exception(void);
+extern void coprocessor_segment_overrun(void);
+extern void invalid_tss_exception(void);
+extern void segment_not_present(void);
+extern void stack_fault_exception(void);
+extern void general_protection_exception(void);
+extern void page_fault_exception(void);
+extern void x86_fpu_floating_point_exception(void);
+extern void aligment_check_exception(void);
+extern void machine_check_exception(void);
+extern void simd_floating_point_exception(void);
+extern void virtualization_exception(void);
+
 void _start(void)
 {
 
     screen_init(); // init screen management system
-    set_idt();
+    // set_idt();
+
+    interrupt_register(0, divide_by_zero_exception);
+    interrupt_register(1, debug_exception);
+    interrupt_register(2, nmi_interrupt);
+    interrupt_register(3, breakpoint_exception);
+    interrupt_register(4, overflow_exception);
+    interrupt_register(5, nmi_interrupt);
+    interrupt_register(6, invalid_opcode);
+    interrupt_register(7, device_not_available_exception);
+    interrupt_register(8, double_fault_exception);
+    interrupt_register(9, coprocessor_segment_overrun);
+    interrupt_register(10, invalid_tss_exception);
+    interrupt_register(11, segment_not_present);
+    interrupt_register(12, stack_fault_exception);
+    interrupt_register(13, general_protection_exception);
+    interrupt_register(14, page_fault_exception);
+    interrupt_register(15, x86_fpu_floating_point_exception);
+    interrupt_register(17, aligment_check_exception);
+    interrupt_register(18, machine_check_exception);
+    interrupt_register(19, simd_floating_point_exception);
+    interrupt_register(20, virtualization_exception);
+    interrupt_register(21, general_protection_exception); 
+    interrupt_register(22, general_protection_exception); 
+    interrupt_register(23, general_protection_exception); 
+    interrupt_register(24, general_protection_exception); 
+    interrupt_register(25, general_protection_exception); 
+    interrupt_register(26, general_protection_exception);
+    interrupt_register(27, general_protection_exception);
+    interrupt_register(28, general_protection_exception);
+    interrupt_register(29, general_protection_exception);
+    interrupt_register(30, general_protection_exception);
+    interrupt_register(31, general_protection_exception);
+    interrupt_register(32, general_protection_exception);
+    
+    // irq_register(0x21, keyboard_handler_init);
+    // irq_register(0x22, pit_handler_init);
+
+    // irq_register(0x22, pit_handler_init,CODE_SEGMENT);
+    // irq_register(0x21, keyboard_handler_init,CODE_SEGMENT);
+    
+    // configure_idt_entry(0x26, floppy_interrupt,CODE_SEGMENT);
+    // configure_idt_entry(0x2B, i8254x_interrupt_handler_entry, CODE_SEGMENT);
+    // configure_idt_entry(0x2B + 1, gowno, CODE_SEGMENT);
+    // configure_idt_entry(0x2B + 2, gowno, CODE_SEGMENT);
+    // configure_idt_entry(0x2B + 3, gowno, CODE_SEGMENT);
+    // configure_idt_entry(0x2B + 4, gowno, CODE_SEGMENT);
+    // configure_idt_entry(0x2B + 5, gowno, CODE_SEGMENT);
+    // configure_idt_entry(0x2B + 6, gowno, CODE_SEGMENT);
+    // configure_idt_entry(0x2B + 7, gowno, CODE_SEGMENT);
+    // configure_idt_entry(0x2C, mouse_handler_init, CODE_SEGMENT);
+    // configure_idt_entry(0x50, elf_correctly_loaded,CODE_SEGMENT);
+
+    // configure_idt_entry(0x80, syscall_entry,CODE_SEGMENT);
+    // configure_idt_entry(0x81, no_handler,CODE_SEGMENT);
+    // configure_idt_entry(0xFF, reboot_interrupt,CODE_SEGMENT);
+
+    // set_idt();
+
 
     disable_cursor();
     screen_clear();
@@ -157,8 +237,8 @@ void _start(void)
     keyboard_command = command_buffer;
 
     null_memory_region = (uint8_t*)calloc(VGA_SCREEN_RESOLUTION);
-    kernel_terminal = terminal_create();
-    terminal_set((terminal_t*)null_memory_region, kernel_terminal);
+    // kernel_terminal = terminal_create();
+    // terminal_set((terminal_t*)null_memory_region, kernel_terminal);
     screen_clear();
 
 

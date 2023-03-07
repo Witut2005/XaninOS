@@ -19,6 +19,7 @@
 //#include <xaninApps/rd.c>
 //#include <xaninApps/touch.c>
 
+#include <xaninApps/idt_examine.c>
 #include <xaninApps/load_file.c>
 #include <xaninApps/file_system/copy_file.c>
 #include <xaninApps/file_system/create_file.c>
@@ -65,9 +66,9 @@
 #include <xaninApps/logo.c>
 #endif
 
-#ifdef REGISTER_DUMP_APP
-#include <xaninApps/register_dump.c>
-#endif
+// #ifdef REGISTER_DUMP_APP
+// #include <xaninApps/register_dump.c>
+// #endif
 
 #ifdef CPU_INFO_APP
 #include <xaninApps/cpu_info.c>

@@ -36,10 +36,6 @@ int shutdown(void)
 
     xprintf("goodbye :))\n\n");
 
-    xprintf("Your computer status:\n\n");
-
-    reg_dump();
-
     interrupt_disable();
     asm("hlt");
     return XANIN_OK;

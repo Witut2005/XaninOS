@@ -2,7 +2,8 @@
 #pragma once
 
 #include <xaninApps/tetris/keybindings.h>
-
+#include <libc/stdlibx.h>
+#include <libc/time.h>
 
 #define BLANK 0xa
 

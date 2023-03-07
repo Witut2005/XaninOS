@@ -118,6 +118,9 @@ build:
 	@echo [CC] udp.cpp
 	@$(CC) $(CC_OPTIONS) ./network_protocols/udp/udp.cpp -o ./network_protocols/udp/udp.o
 
+	@echo [C] idt.c
+	@$(C) $(C_OPTIONS) ./IDT/idt.c -o ./IDT/idt.o
+
 	@echo [C] icmp.c
 	@$(C) $(C_OPTIONS) ./network_protocols/icmp/icmp.c -o ./network_protocols/icmp/icmp.o
 
@@ -208,8 +211,11 @@ build:
 	@echo [C] time.c
 	@$(C) $(C_OPTIONS) ./libc/time.c -o ./libc/time.o
 
-	@echo [C] procesa.c
+	@echo [C] process.c
 	@$(C) $(C_OPTIONS) ./libc/process.c -o ./libc/process.o
+	
+	@echo [C] register_dump.c
+	@$(C) $(C_OPTIONS) ./libc/register_dump.c -o ./libc/register_dump.o
 
 	@echo [C] xaninGraphics 
 	@$(C) $(C_OPTIONS) ./xaninGraphics/xaninGraphics.c -o ./xaninGraphics/xaninGraphics.o
@@ -271,6 +277,7 @@ build:
 	./libc/algorithm.o \
 	./libc/signal.o \
 	./libc/process.o \
+	./libc/register_dump.o \
 	./libcpp/algorithm.o \
 	./libcpp/regex.o \
 	./tui/tui.o \
@@ -309,6 +316,7 @@ build:
 	./netapi/network_device.o \
 	./devices/IOAPIC/ioapic.o \
 	./test/testc.o \
+	./IDT/idt.o \
 	./devices/COM/ComPort.o \
 	./xaninApps/screenshot.o \
 	./game_engine/xagame.o \

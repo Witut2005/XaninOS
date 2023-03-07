@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include <xin_fs/xin.h>
+
 int load_file(char* file_name, char* options)
 {
 

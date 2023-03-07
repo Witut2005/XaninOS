@@ -78,6 +78,7 @@ void scan(void)
     XANIN_ADD_APP_ENTRY0("ptetris", ptetris)
     XANIN_ADD_APP_ENTRY1("explorer", explorer)
 
+    XANIN_ADD_APP_ENTRY0("idt", idt_examine)
     XANIN_ADD_APP_ENTRY0("start_screen", start_screen)
     XANIN_ADD_APP_ENTRY0("screensaver", start_screen)
     XANIN_ADD_APP_ENTRY2("load_file", load_file)
@@ -136,9 +137,9 @@ void scan(void)
     XANIN_ADD_APP_ENTRY1("paint", xin_paint)
     #endif
 
-    #ifdef REGISTER_DUMP_APP
-    XANIN_ADD_APP_ENTRY0("reg_dump", reg_dump)
-    #endif
+    // #ifdef REGISTER_DUMP_APP
+    // XANIN_ADD_APP_ENTRY0("reg_dump", reg_dump)
+    // #endif
 
     #ifdef LOAD_APP
     XANIN_ADD_APP_ENTRY1("load", load)

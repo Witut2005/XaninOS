@@ -1,7 +1,10 @@
 
+#pragma once
+
 #include <stdint.h>
 #include <stdbool.h>
 #include <devices/APIC/apic_registers.h>
+#include <libc/hal.h>
 
 #define PIT_CHANNEL0 0x40
 #define PIT_CHANNEL1 0x41
@@ -22,15 +25,10 @@ extern float pit_time;
 static inline void set_pit_divisor(uint16_t divisor_value)
 {
 
-
     if(divisor_value < 250)
         divisor_value = 250;
 
-
     outbIO(PIT_CHANNEL0,(uint8_t)(divisor_value & 0x00ff));
-
-    //for(int i = 0; i < 0xFFFFFFFF; i ++);
-
     outbIO(PIT_CHANNEL0,(uint8_t)((divisor_value & 0xff00) >> 8));
 
 }

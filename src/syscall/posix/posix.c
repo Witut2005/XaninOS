@@ -48,7 +48,7 @@ uint32_t syscall_handle(void)
         case __NR_read: 
         {
             if(!FileDescriptorTable[ebx].is_used)
-                xscan_range(ecx, edx);
+                xscan_range((char*)ecx, edx);
 
             else
                 eax = read(ebx, (void*)ecx, edx);

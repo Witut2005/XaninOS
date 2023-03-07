@@ -1,6 +1,8 @@
 
 /* macros */
 
+#pragma ocne
+
 #define PIC1_COMMAND_REG 0x20
 #define PIC1_STATUS_REG 0x20
 
@@ -22,9 +24,8 @@
 
 #define VGA_TEXT_MEMORY 0xb8000
 
-#include <xaninApps/register_dump.c>
+#include <libc/register_dump.h>
 
 /* KEYBOARD HANDLER DATA */
-uint8_t keyStatus;
+// uint8_t keyStatus;
 
-int reg_dump(void);

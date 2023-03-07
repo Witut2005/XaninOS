@@ -1,10 +1,10 @@
-#pragma once
 
 #include <stdint.h>
 #include <handlers/handlers.c>
 #include <keyboard/key_map.h>
 #include <syscall/posix/posix.c>
 #include <devices/MOUSE/mouse.h>
+#include <IDT/idt.h>
 
 //extern void mouse_handler(void);
 
@@ -22,6 +22,14 @@ extern void syscall_entry(void);
 #define configure_idt_entry(idt_entry,off,seg)\
     idtEntries[idt_entry].off_0_15 = (uint16_t)(((uint32_t)&off & 0x0000ffff));\
     idtEntries[idt_entry].off_16_31 = (uint16_t)((uint32_t)&off >> 16);\
+    idtEntries[idt_entry].segment = seg;\
+    idtEntries[idt_entry].res = 0x0;\
+    idtEntries[idt_entry].P_DPL = 0x8e
+
+/* configure interrupt descriptor table entry */
+#define configure_idt_entry_from_array(idt_entry,off,seg)\
+    idtEntries[idt_entry].off_0_15 = (uint16_t)(((uint32_t)off & 0x0000ffff));\
+    idtEntries[idt_entry].off_16_31 = (uint16_t)((uint32_t)off >> 16);\
     idtEntries[idt_entry].segment = seg;\
     idtEntries[idt_entry].res = 0x0;\
     idtEntries[idt_entry].P_DPL = 0x8e
@@ -59,44 +67,46 @@ __attribute__((aligned(0x8))) IDT idtEntries[IDT_HANDLERS];
 //     idtEntries[idt_entry].P_DPL = 0x8e;
 // }
 
-void set_idt(void)
-{
+irq_handler interrupt_handlers[0x100];
 
+void set_idt(void)
+
+{
     asm("cli");
 
     /* configure IDT entries*/
-    configure_idt_entry(0x0, divide_by_zero_exception,CODE_SEGMENT);
-    configure_idt_entry(0x1, debug_exception, CODE_SEGMENT);
-    configure_idt_entry(0x2, nmi_interrupt,CODE_SEGMENT);
-    configure_idt_entry(0x3, breakpoint_exception, CODE_SEGMENT);
-    configure_idt_entry(0x4, overflow_exception, CODE_SEGMENT);
-    configure_idt_entry(0x5, nmi_interrupt,CODE_SEGMENT);
-    configure_idt_entry(0x6, invalid_opcode,CODE_SEGMENT);
-    configure_idt_entry(0x7, device_not_available_exception,CODE_SEGMENT);
-    configure_idt_entry(0x8, double_fault_exception,CODE_SEGMENT);
-    configure_idt_entry(0x9, coprocessor_segment_overrun,CODE_SEGMENT);
-    configure_idt_entry(0xa, invalid_tss_exception,CODE_SEGMENT);
-    configure_idt_entry(0xb, segment_not_present,CODE_SEGMENT);
-    configure_idt_entry(0xc, stack_fault_exception,CODE_SEGMENT);
-    configure_idt_entry(13, general_protection_exception, CODE_SEGMENT);
-    configure_idt_entry(0xe, page_fault_exception, CODE_SEGMENT);
-    configure_idt_entry(0xf, x86_fpu_floating_point_exception, CODE_SEGMENT);
-    configure_idt_entry(17, aligment_check_exception, CODE_SEGMENT);
-    configure_idt_entry(18, machine_check_exception,CODE_SEGMENT);
-    configure_idt_entry(19, simd_floating_point_exception, CODE_SEGMENT);
-    configure_idt_entry(20, virtualization_exception,CODE_SEGMENT);
-    configure_idt_entry(21, control_protection_exception,CODE_SEGMENT);
-    configure_idt_entry(22, general_protection_exception, CODE_SEGMENT);
-    configure_idt_entry(23, general_protection_exception, CODE_SEGMENT);
-    configure_idt_entry(24, general_protection_exception, CODE_SEGMENT);
-    configure_idt_entry(25, general_protection_exception, CODE_SEGMENT);
-    configure_idt_entry(26, general_protection_exception, CODE_SEGMENT);
-    configure_idt_entry(27, general_protection_exception, CODE_SEGMENT);
-    configure_idt_entry(28, general_protection_exception, CODE_SEGMENT);
-    configure_idt_entry(29, general_protection_exception, CODE_SEGMENT);
-    configure_idt_entry(30, general_protection_exception, CODE_SEGMENT);
-    configure_idt_entry(31, general_protection_exception, CODE_SEGMENT);
-    configure_idt_entry(32, general_protection_exception, CODE_SEGMENT);
+    configure_idt_entry_from_array(0x0, interrupt_handlers[0], CODE_SEGMENT);
+    configure_idt_entry_from_array(0x1, interrupt_handlers[1], CODE_SEGMENT);
+    configure_idt_entry_from_array(0x2, interrupt_handlers[2],CODE_SEGMENT);
+    configure_idt_entry_from_array(0x3, interrupt_handlers[3], CODE_SEGMENT);
+    configure_idt_entry_from_array(0x4, interrupt_handlers[4], CODE_SEGMENT);
+    configure_idt_entry_from_array(0x5, interrupt_handlers[5],CODE_SEGMENT);
+    configure_idt_entry_from_array(0x6, interrupt_handlers[6],CODE_SEGMENT);
+    configure_idt_entry_from_array(0x7, interrupt_handlers[7],CODE_SEGMENT);
+    configure_idt_entry_from_array(0x8, interrupt_handlers[8],CODE_SEGMENT);
+    configure_idt_entry_from_array(0x9, interrupt_handlers[9],CODE_SEGMENT);
+    configure_idt_entry_from_array(0xa, interrupt_handlers[0xa],CODE_SEGMENT);
+    configure_idt_entry_from_array(0xb, interrupt_handlers[0xb],CODE_SEGMENT);
+    configure_idt_entry_from_array(0xc, interrupt_handlers[0xc],CODE_SEGMENT);
+    configure_idt_entry_from_array(13, interrupt_handlers[13], CODE_SEGMENT);
+    configure_idt_entry_from_array(0xe, interrupt_handlers[14], CODE_SEGMENT);
+    configure_idt_entry_from_array(0xf, interrupt_handlers[15], CODE_SEGMENT);
+    configure_idt_entry_from_array(17, interrupt_handlers[17], CODE_SEGMENT);
+    configure_idt_entry_from_array(18, interrupt_handlers[18],CODE_SEGMENT);
+    configure_idt_entry_from_array(19, interrupt_handlers[19], CODE_SEGMENT);
+    configure_idt_entry_from_array(20, interrupt_handlers[20],CODE_SEGMENT);
+    configure_idt_entry_from_array(21, interrupt_handlers[21],CODE_SEGMENT);
+    configure_idt_entry_from_array(22, interrupt_handlers[22], CODE_SEGMENT);
+    configure_idt_entry_from_array(23, interrupt_handlers[23], CODE_SEGMENT);
+    configure_idt_entry_from_array(24, interrupt_handlers[24], CODE_SEGMENT);
+    configure_idt_entry_from_array(25, interrupt_handlers[25], CODE_SEGMENT);
+    configure_idt_entry_from_array(26, interrupt_handlers[26], CODE_SEGMENT);
+    configure_idt_entry_from_array(27, interrupt_handlers[27], CODE_SEGMENT);
+    configure_idt_entry_from_array(28, interrupt_handlers[28], CODE_SEGMENT);
+    configure_idt_entry_from_array(29, interrupt_handlers[29], CODE_SEGMENT);
+    configure_idt_entry_from_array(30, interrupt_handlers[30], CODE_SEGMENT);
+    configure_idt_entry_from_array(31, interrupt_handlers[31], CODE_SEGMENT);
+    configure_idt_entry_from_array(32, interrupt_handlers[32], CODE_SEGMENT);
     
     configure_idt_entry(0x22, pit_handler_init,CODE_SEGMENT);
     configure_idt_entry(0x21, keyboard_handler_init,CODE_SEGMENT);
@@ -111,9 +121,9 @@ void set_idt(void)
     configure_idt_entry(0x2B + 6, gowno, CODE_SEGMENT);
     configure_idt_entry(0x2B + 7, gowno, CODE_SEGMENT);
     configure_idt_entry(0x2C, mouse_handler_init, CODE_SEGMENT);
+    configure_idt_entry(0x50, elf_correctly_loaded,CODE_SEGMENT);
 
     configure_idt_entry(0x80, syscall_entry,CODE_SEGMENT);
-    configure_idt_entry(0x50, elf_correctly_loaded,CODE_SEGMENT);
     configure_idt_entry(0x81, no_handler,CODE_SEGMENT);
     configure_idt_entry(0xFF, reboot_interrupt,CODE_SEGMENT);
 
@@ -123,9 +133,23 @@ void set_idt(void)
     };
 
     /* load IDT Register with proper struct */
-    interrupt_enable();
     asm("lidt %0" : : "m"(idtr));
+    interrupt_enable();
+}
 
+void interrupt_register(uint32_t interrupt_id, irq_handler handler) 
+{
+    if(interrupt_id >= 0x20)
+        return;
+    interrupt_handlers[interrupt_id] = handler;
+    set_idt();
+}
 
-
+void irq_register(uint32_t irq, irq_handler handler) 
+{
+    
+    if(irq < 0x20)
+        return;
+    interrupt_handlers[irq] = handler;
+    set_idt();
 }

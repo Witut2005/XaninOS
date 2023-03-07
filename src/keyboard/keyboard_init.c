@@ -9,6 +9,7 @@
 #define KEYBOARD_ENABLE 0xAE
 
 #include <libc/hal.h>
+#include <handlers/handlers.h>
 
 
 uint8_t keyboard_self_test()

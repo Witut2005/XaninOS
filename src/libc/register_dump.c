@@ -1,9 +1,8 @@
 
-#pragma once
-
-#include <terminal/vty.h>
+#include <libc/register_dump.h>
 #include <libc/stdlibx.h>
-
+#include <libc/stdiox.h>
+#include <keyboard/scan_codes.h>
 
 int reg_dump(void)
 {
@@ -62,7 +61,7 @@ int reg_dump(void)
     xprintf("fs: 0x%x\n", SegmentRegister.fs);
     xprintf("gs: 0x%x\n", SegmentRegister.gs);
 
-    while(getscan() != ENTER);
+    while(inputg().scan_code != ENTER);
     return XANIN_OK;
 
 }
