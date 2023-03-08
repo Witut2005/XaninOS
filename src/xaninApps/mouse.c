@@ -6,6 +6,7 @@
 #include <libc/stdiox.h>
 
 extern void mouse_enable(void);
+extern void mouse_handler(void);
 
 int mouse_test(void)
 {
@@ -16,9 +17,8 @@ int mouse_test(void)
     {
 
         // screen_clear();
-        // mouse_handler();
-
-        // msleep(5);
+        mouse_handler();
+        msleep(5);
     }
     return XANIN_OK;
 

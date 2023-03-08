@@ -150,7 +150,6 @@ class string
 
     string(ReversedStringIterator rbeg, ReversedStringIterator rend)
     {
-        return;
         this->string_data = (char*)calloc(4096);
 
         int i = 0;
@@ -314,7 +313,7 @@ class string
 
     ReversedStringIterator rbegin() const
     {
-        return string_data + strlen(string_data);
+        return string_data + strlen(string_data) - 1;
     }
 
 

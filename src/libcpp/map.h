@@ -4,6 +4,8 @@
 #include <libcpp/algorithm.h>
 #include <libcpp/utility.h>
 
+/*DONT USE STD::STRING DOESNT WORK*/
+
 namespace std
 {
 
@@ -62,15 +64,15 @@ namespace std
 
     };
 
+
     template <class K, class V>
     class UnorderedMap
     {
 
     public:
-        
         struct ListElement
         {
-            std::pair<K, V> item;
+            pair<K, V> item;
             ListElement *next;
             ListElement *previous;
         };
@@ -79,12 +81,8 @@ namespace std
         ListElement *Tail;
         size_t size;
 
-        ListElement* tail_get(void)
-        {
-            return this->Tail;
-        }
-
-        UnorderedMap(std::initializer_list<std::pair<K,V>> ListOfElements)
+    public:
+        UnorderedMap(initializer_list<pair<K,V>> ListOfElements)
         {
             this->Head = (ListElement *)malloc(sizeof(ListElement));
 
@@ -100,23 +98,23 @@ namespace std
                 Tmp->item.first = a.first;
                 Tmp->item.second = a.second;
             }
-            Tmp->next = NULL;
+            Tmp->next = nullptr;
             this->Tail = Tmp;
 
             this->Head->next->previous = this->Head;
             this->Head = this->Head->next;
             free(this->Head->previous);
-            this->Head->previous = NULL;
+            this->Head->previous = nullptr;
         }
 
         UnorderedMap()
         {
             this->Head = (ListElement *)malloc(sizeof(ListElement));
             this->Tail = (ListElement *)malloc(sizeof(ListElement));
-            this->Head->previous = NULL;
+            this->Head->next = nullptr;
+            this->Head->previous = nullptr;
             this->size = 0;
             this->Head->next = this->Tail;
-            this->Tail->next = NULL;
         }
 
         ListElement *goto_last_element()
@@ -129,35 +127,17 @@ namespace std
             return Tmp;
         }
 
-        ListElement *find(K key)
+        UnorderedMapIterator<K, V, UnorderedMap> find(K key)
         {
             ListElement *Tmp = Head;
-
-            if constexpr(is_char_ptr(K))
+            while (Tmp != Tail)
             {
-                while (Tmp != Tail)
-                {
-                    if(strcmp((char*)Tmp->item.first, (char*)key))
-                    {
-                        return Tmp;
-                    }
-                    Tmp = Tmp->next;
-                }
+                if (Tmp->item.first == key)
+                    return UnorderedMapIterator<K, V, UnorderedMap>(Tmp);
+                Tmp = Tmp->next;
             }
-
-            else
-            {
-                while (Tmp != Tail)
-                {
-                    if (Tmp->item.first == key)
-                        return Tmp;
-                    Tmp = Tmp->next;
-                }
-            }
-
-            return Tail;
+            return UnorderedMapIterator<K, V, UnorderedMap>(Tail);
         }
-        
 
         void insert(K key, V value)
         {
@@ -180,41 +160,6 @@ namespace std
 
             LastItem->next = this->Tail;
             this->size++;
-        }
-        // void insert(K key, V value)
-        // {
-
-        //     if (!this->size)
-        //     {
-        //         this->Head->item.first = key;
-        //         this->Head->item.second = value;
-        //         this->size++;
-        //         return;
-        //     }
-    
-        //     else
-        //     {
-        //         ListElement* NewElement = (ListElement*)calloc(sizeof(ListElement));
-        //         ListElement* Tmp = goto_last_element();
-
-        //         Tmp->next = NewElement;
-        //         NewElement->previous = Tmp;
-        //         NewElement->item.first = key;
-        //         NewElement->item.second = value;
-        //         NewElement->next = this->Tail;
-
-        //         this->size++;
-        //     }
-        // }
-
-        UnorderedMapIterator<K, V, UnorderedMap> begin(void)
-        {
-            return UnorderedMapIterator<K, V, UnorderedMap>(this->Head);
-        }
-
-        UnorderedMapIterator<K, V, UnorderedMap> end(void)
-        {
-            return UnorderedMapIterator<K, V, UnorderedMap>(this->Tail);
         }
 
         ListElement *operator++(int)
@@ -262,7 +207,7 @@ namespace std
             this->size++;
             ListElement *NewItem = (ListElement *)malloc(sizeof(ListElement));
             NewItem->next = this->Head;
-            NewItem->previous = NULL;
+            NewItem->previous = nullptr;
             NewItem->item.first = key;
             NewItem->item.second = value;
             Head = NewItem;
@@ -274,7 +219,7 @@ namespace std
 
             std::cout << '[';
 
-            while (HeadTmp->next != NULL)
+            while (HeadTmp->next != nullptr)
             {
                 std::cout << '[' << HeadTmp->item.first << ',' << HeadTmp->item.second << "], ";
                 HeadTmp = HeadTmp->next;
@@ -287,10 +232,24 @@ namespace std
         {
             auto ret = this->find(key);
             if (ret == this->Tail)
-                return (V &)this->Tail;
+                return (V&)this->Tail;
             else
-                return ret->item.second;
+                return *ret;
+        }        
+        
+        UnorderedMapIterator<K, V, UnorderedMap> begin(void)
+        {
+            return UnorderedMapIterator<K, V, UnorderedMap>(this->Head);
         }
+
+        UnorderedMapIterator<K, V, UnorderedMap> end(void)
+        {
+            return UnorderedMapIterator<K, V, UnorderedMap>(this->Tail);
+        }
+
     };
 
 }
+
+
+

@@ -5,19 +5,23 @@
 #include <libc/hal.h>
 #include <libc/stdiox.h>
 #include <terminal/vty.h>
+#include <IDT/idt.h>
 
-uint8_t mouse_cycle=0;     //unsigned char
-uint8_t mouse_uint8_t[3];    //signed char
-int32_t mouse_x=0;         //signed char
-int32_t mouse_y=0;         //signed char
-uint8_t flip_flop = 0;
-uint32_t packet_limiter_x = 0;
-uint32_t packet_limiter_y = 0;
+static uint8_t mouse_cycle;     //unsigned char
+static uint8_t mouse_uint8_t[3];    //signed char
+static int32_t mouse_x;         //signed char
+static int32_t mouse_y;         //signed char
+static uint8_t flip_flop;
+static uint32_t packet_limiter_x;
+static uint32_t packet_limiter_y;
+
+extern void mouse_handler_init(void);
 
 //Mouse functions
-void my_mouse_handler(void) //struct regs *a_r (not used but just there)
+void mouse_handler(void) //struct regs *a_r (not used but just there)
 {
  
+	xprintf("o");
 	switch(mouse_cycle)
   	{
 		case 0:
@@ -156,7 +160,7 @@ uint8_t mouse_read(void)
 	return inbIO(0x60);
 }
 
-void mouse_install(void)
+void mouse_enable(void)
 {
 	uint8_t _status;  //unsigned char
 
@@ -190,6 +194,8 @@ void mouse_install(void)
 
 	mouse_write(0xF3);
 	mouse_read();
+
+	INTERRUPT_REGISTER(0x2C, mouse_handler_init);
 
     
 }

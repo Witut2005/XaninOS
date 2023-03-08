@@ -7,7 +7,6 @@
 #include <libcpp/cmemory.h>
 #include <devices/APIC/apic_registers.h>
 #include <network_protocols/ethernet_frame/ethernet_frame.hpp>
-#include <libcpp/macros.h>
 #include <libcpp/utility.h>
 #include <limits.h>
 #include <libcpp/cmemory.h>

@@ -43,24 +43,7 @@ void cpp_prog()
     // std::string strr2(strr.rbegin(), strr.rend());
     std::string strr2(strr.rbegin(), strr.rend());
     
-    // for(auto it = strr.rbegin(); it != strr.rend(); it++)
-    // {
-    //     xprintf("%c", *it);
-    //     strr2 = strr2 + (*it);
-    // }
-
-    // xprintf("\n", *strr.rbegin()+1);
-
-    
-    std::cout << "hallo: " << strr2c_str() << std::endl;
-
-    // int i = 0;
-    // for(auto it = strr.rbegin(); it != strr.rend(); it++, i++)
-    //     strr2[i] = *it;
-
-    // std::cout << strr2 << std::endl;
-
-    // std::cout << "str iterator test: " << strr2 << std::endl;
+    std::cout << strr2 << std::endl;
 
 
     std::array<const char*, 3> arr = {"nicho", "morbius", "lerczok"};
@@ -89,16 +72,16 @@ void cpp_prog()
     std::cout << std::endl;
 
     std::cout << "map: " << std::endl;
-    std::UnorderedMap<int, std::string> mapp;// = {{1, "123"}, {2, "456"}, {3,"789"}};
+    std::UnorderedMap<int, const char*> mapp = {{1, "100"}, {2, "200"}, {3, "300"}};
     
+    // mapp.print();
 
-    int huhu = 0;
-    mapp.insert(1,"123");
+    // int huhu = 0;
+    // mapp.insert(1,"123");
 
     // for(auto it = mapp.begin(); it != mapp.end(); it++)
     // {
-    std::cout << mapp[1] << std::endl;
-    std::cout << *mapp.begin() << std::endl;
+    // std::cout << *mapp.find(1) << std::endl;
     // }
 
     // for(auto a : mapp)
