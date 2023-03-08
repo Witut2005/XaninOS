@@ -39,6 +39,30 @@ void cpp_prog()
 
     std::cout << std::clear;
 
+    std::string strr("nicho");
+    // std::string strr2(strr.rbegin(), strr.rend());
+    std::string strr2(strr.rbegin(), strr.rend());
+    
+    // for(auto it = strr.rbegin(); it != strr.rend(); it++)
+    // {
+    //     xprintf("%c", *it);
+    //     strr2 = strr2 + (*it);
+    // }
+
+    // xprintf("\n", *strr.rbegin()+1);
+
+    
+    std::cout << "hallo: " << strr2c_str() << std::endl;
+
+    // int i = 0;
+    // for(auto it = strr.rbegin(); it != strr.rend(); it++, i++)
+    //     strr2[i] = *it;
+
+    // std::cout << strr2 << std::endl;
+
+    // std::cout << "str iterator test: " << strr2 << std::endl;
+
+
     std::array<const char*, 3> arr = {"nicho", "morbius", "lerczok"};
 
     std::cout << "array: " << std::endl;

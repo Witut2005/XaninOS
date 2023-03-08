@@ -8,10 +8,10 @@ extern "C" {
 #endif
 
 extern void set_idt(void);
-// extern void interrupt_register(uint32_t irq, irq_handler handler);
-// extern void interrupt_register(uint32_t interrupt_id, irq_handler handler);
+// extern void INTERRUPT_REGISTER(uint32_t irq, irq_handler handler);
+// extern void INTERRUPT_REGISTER(uint32_t interrupt_id, irq_handler handler);
 
-#define interrupt_register(interrupt_id, handler)\
+#define INTERRUPT_REGISTER(interrupt_id, handler)\
 {\
     interrupt_handlers[interrupt_id] = handler;\
     set_idt();\

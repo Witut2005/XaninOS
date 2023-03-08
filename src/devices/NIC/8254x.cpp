@@ -484,7 +484,7 @@ extern "C"
         if(Intel8254x.is_device_present())
         {
             netapi_add_device(i8254x_packet_receive, i8254x_packet_send, i8254x_mac_get(), i8254x_interrupt_handler, Intel8254x.pci_info_get());
-            interrupt_register(0x2B, i8254x_interrupt_handler_entry);
+            INTERRUPT_REGISTER(0x2B, i8254x_interrupt_handler_entry);
         }
     }
 

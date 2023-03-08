@@ -43,7 +43,7 @@ static inline void set_pit()
     // outbIO(PIT_MODE_COMMAND_REGISTER,0x30);
     set_pit_divisor(0x8000);
     interrupt_enable();
-    interrupt_register(0x22, pit_handler_init);
+    INTERRUPT_REGISTER(0x22, pit_handler_init);
 }
 
 

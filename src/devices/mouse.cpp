@@ -214,7 +214,7 @@ extern "C"
     {
         MouseClass Mouse;
         Mouse.enable();
-        interrupt_register(0x2C, mouse_handler);
+        INTERRUPT_REGISTER(0x2C, mouse_handler);
     }
 
 }

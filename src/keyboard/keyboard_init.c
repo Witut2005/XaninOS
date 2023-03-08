@@ -50,7 +50,7 @@ uint8_t keyboard_init(void)
     // interrupt_handlers[0x21] = keyboard_handler_init;
     uint16_t* tmp = (uint16_t*)0xB8000;
     *tmp = 0x4141;
-    interrupt_register(0x21, keyboard_handler_init); 
+    INTERRUPT_REGISTER(0x21, keyboard_handler_init); 
 
     return KEYBOARD_TEST_STATUS;
 

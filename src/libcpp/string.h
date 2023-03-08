@@ -3,9 +3,68 @@
 
 #include <libcpp/cstring.h>
 #include <libc/stdlibx.h>
+#include <libc/stdiox.h>
 
 namespace std
 {
+
+class ReversedStringIterator
+{
+       public: 
+    
+
+        ReversedStringIterator(char* ptr) : i_ptr(ptr){}
+
+        ReversedStringIterator& operator ++ ()   //prefix operator
+        {
+            i_ptr--;
+            return *this;
+        }
+
+        ReversedStringIterator operator ++ (int) //postfix operator
+        {
+            ReversedStringIterator tmp = *this;
+            --(this->i_ptr); //++(*this);
+
+            return tmp;
+        }
+
+
+        ReversedStringIterator& operator -- ()   //prefix operator
+        {
+            i_ptr++;
+            return *this;
+        }
+
+        ReversedStringIterator operator -- (int) //postfix operator
+        {
+            ReversedStringIterator tmp = *this;
+            ++(this->i_ptr);
+
+            return tmp;
+        }
+
+        char& operator *()
+        {
+            return *i_ptr;
+        }
+
+        bool operator == (const ReversedStringIterator x)
+        {
+            return i_ptr == x.i_ptr;
+        }
+
+        bool operator != (const ReversedStringIterator x)
+        {
+            return i_ptr != x.i_ptr;
+        }
+
+    private:
+        char* i_ptr;
+
+
+};
+
 
 class StringIterator
 {
@@ -79,7 +138,26 @@ class string
         return size;
     }
 
-    string() {string_data = (char*)malloc(4096);} 
+    string() {this->string_data = (char*)calloc(4096);} 
+    
+    string(StringIterator beg, StringIterator end)
+    {
+        this->string_data = (char*)calloc(4096);
+        int i = 0;
+        for(auto it = beg; it != end; it++, i++) 
+            this->string_data[i] = *it;
+    }
+
+    string(ReversedStringIterator rbeg, ReversedStringIterator rend)
+    {
+        return;
+        this->string_data = (char*)calloc(4096);
+
+        int i = 0;
+        for(auto it = rbeg; it != rend; it++, i++) 
+            this->string_data[i] = *it;
+    }
+
     ~string() {free(string_data);}
 
     string(char* str)
@@ -140,7 +218,7 @@ class string
         return strcmp(this->c_str(), x.c_str()) != 0;
     }
 
-    char operator [](uint32_t index)
+    char& operator [](uint32_t index)
     {
         return this->string_data[index];
     }
@@ -176,6 +254,12 @@ class string
     char* c_str() const
     {
         return string_data;
+    }
+
+    std::string operator + (char character)
+    {
+        this->string_data[strlen(this->string_data)] = character;
+        return *this;
     }
 
     std::string operator + (std::string second)
@@ -228,10 +312,20 @@ class string
         return string_data;
     }
 
+    ReversedStringIterator rbegin() const
+    {
+        return string_data + strlen(string_data);
+    }
+
 
     StringIterator end() const
     {
         return string_data + strlen(string_data);
+    }
+
+    ReversedStringIterator rend() const
+    {
+        return string_data-1;
     }
 
     private:
