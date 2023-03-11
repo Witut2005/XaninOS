@@ -25,9 +25,12 @@ void check_external_apps(void)
     for(int i = 0; program_name[i] != '\0'; i++)
         app[ARRAY_LENGTH("/external_apps/") + i - 1] = program_name[i];
 
+    if(strlen(app) > MAX_PATH)
+        return;
+
     XinEntry* file = fopen(app, "r");
 
-    if(file != NULL && file->entry_size != 0)
+    if(file != NULL && file->size != 0)
     {
         elfreader(app);
         is_external_app = true;
@@ -45,8 +48,11 @@ void scan(void)
     //legacy reasons
     KeyInfo.scan_code = 0;
     KeyInfo.character = 0;
-
     argc = 0;
+
+    xprintf("program name %s", program_name);
+    
+    msleep(5000);
 
     for(int i = 0; i < 5; i++)
     {
@@ -185,7 +191,7 @@ void scan(void)
     XANIN_ADD_APP_ENTRY0("shutdown", shutdown)
     #endif
     
-    XANIN_ADD_APP_ENTRY1("rm", XinEntry_remove_app)
+    XANIN_ADD_APP_ENTRY1("rm", xin_entry_remove_app)
     XANIN_ADD_APP_ENTRY1("rd", xin_folder_remove_app)
     XANIN_ADD_APP_ENTRY1("cd", xin_folder_change_app)
 
@@ -266,10 +272,10 @@ void scan(void)
     else if(strcmp("real_mode_fswitch", program_name))
     {
         XinEntry* real_mode_enter = fopen("/fast_real_mode_enter.bin", "r");
-        disk_read(ATA_FIRST_BUS, ATA_MASTER, real_mode_enter->starting_sector, 1, (uint16_t*)0x600);
+        disk_read(ATA_FIRST_BUS, ATA_MASTER, real_mode_enter->first_sector, 1, (uint16_t*)0x600);
 
         XinEntry* real_mode_return = fopen("/fast_real_mode_return.bin", "r");
-        disk_read(ATA_FIRST_BUS, ATA_MASTER, real_mode_return->starting_sector, 1, (uint16_t*)0x400);
+        disk_read(ATA_FIRST_BUS, ATA_MASTER, real_mode_return->first_sector, 1, (uint16_t*)0x400);
         real_mode_fswitch("0x0", "0x0");
     }
 
@@ -292,12 +298,12 @@ void scan(void)
         return;
     }
 
-    if(last_command_exit_status != XANIN_OK)
-    {
-        xprintf("Command execution status: %z%s", stderr, app_exit_status_text_get());
-        screen_background_color_set(red);
-        msleep(800);
-    }
+    // if(last_command_exit_status != XANIN_OK)
+    // {
+    //     xprintf("Command execution status: %z%s", stderr, app_exit_status_text_get());
+    //     screen_background_color_set(red);
+    //     msleep(800);
+    // }
 
 
     keyboard_handle = NULL;

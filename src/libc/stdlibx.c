@@ -10,7 +10,7 @@
 #include <libc/memory.h>
 #include <libc/process.h>
 
-char command_buffer[80];
+char command_buffer[1000];
 char* keyboard_command;
 uint8_t null_region[20] = {0};
 
@@ -23,6 +23,16 @@ char* daysLUT[7] = {"Sun","Mon","Tue","Wed","Thu","Fri","Sat"};
 uint8_t* null_memory_region;
 
 extern void kernel_loop(void);
+
+#define SECTOR_SIZE 512
+
+uint32_t int_to_sectors(uint32_t num)
+{
+    int size = num / SECTOR_SIZE;
+    if(num % SECTOR_SIZE)
+        size++;
+    return size;
+}
 
 void exit(void)
 {

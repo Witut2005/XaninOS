@@ -24,24 +24,15 @@ enum xin_fs_properties
 
 };
 
-struct MemoryBlocksUsed
-{
-    uint16_t begin;
-    uint16_t end;
-};
-
-#ifndef __cplusplus
-typedef struct MemoryBlocksUsed MemoryBlocksUsed;
-#endif
-
 struct FileInformationBlock 
 {
     char file_name[MAX_PATH];
     char rights[2];
     uint32_t position;
-    uint8_t* base_address_memory;
+    uint8_t* buffer;
+    uint32_t tmp_size;
     bool* sector_in_use;
-}__attribute__((packed, aligned(64)));
+}__attribute__((packed));
 
 #ifndef __cplusplus
 typedef struct FileInformationBlock FileInformationBlock;
@@ -49,15 +40,15 @@ typedef struct FileInformationBlock FileInformationBlock;
 
 struct XinEntry
 {
-    char entry_path[MAX_PATH];          //38
-    uint8_t entry_type;                 //39
+    char path[MAX_PATH];          //38
+    uint8_t type;                       //39
     uint32_t creation_date;             //43
     uint16_t creation_time;             //45
     uint32_t modification_date;         //49
     uint16_t modification_time;         //51
-    uint8_t entry_permissions;          //52
-    uint32_t entry_size;                //56
-    uint32_t starting_sector;           //60
+    uint8_t permissions;          //52
+    uint32_t size;                      //56
+    uint32_t first_sector;           //60
     FileInformationBlock* FileInfo; //64
 }__attribute__((packed));
 

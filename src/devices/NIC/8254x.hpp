@@ -2,7 +2,7 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <devices/PCI/pci.h>
-#include <netapi/network_device.h>
+#include <netapi/network_device.hpp>
 
 // extern "C" int32_t pci_find_device(uint16_t, uint16_t, pci_device*);
 extern "C" uint32_t pci_get_bar(const uint8_t bus, const uint8_t slot, const uint8_t function, const uint8_t bar_number);
@@ -167,7 +167,7 @@ struct i8254xTransmitDescriptor
 
 }__attribute__((packed));
 
-class Intel8254xDriver 
+class Intel8254xDriver //: NetworkDevice
 {
 
 
@@ -212,11 +212,8 @@ class Intel8254xDriver
     bool is_device_present(void) const;
     
 
-    uint8_t* receive_packet(void);
-    void send_packet(uint32_t address_low, uint16_t length);
-    
-    template<class T>
-    void send_range(T range);
+    uint8_t* packet_receive(void);
+    void packet_send(uint8_t* address_low, uint16_t length);
 
 };
 

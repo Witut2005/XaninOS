@@ -140,8 +140,8 @@ class rectangle : public GeometryObject
 {
     public:
         rectangle(uint32_t class_id);
-        void create(uint32_t x, uint32_t y, uint32_t size_x, uint32_t size_y, uint8_t color);
-        void move(int32_t x, int32_t y);
+        virtual void create(uint32_t x, uint32_t y, uint32_t size_x, uint32_t size_y, uint8_t color);
+        virtual void move(int32_t x, int32_t y);
         void destroy();
         void rotate_right_90();
         void cell_remove(uint8_t x, uint8_t y);

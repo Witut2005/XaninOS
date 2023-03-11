@@ -459,7 +459,7 @@ int edit(char* file_name)
     fseek(file, 0x0);
     fwrite(file, program_buffer, strlen(program_buffer));
 
-    for(int i = 0; i < strlen(file->FileInfo->base_address_memory) - strlen(program_buffer); i++)
+    for(int i = 0; i < strlen(file->FileInfo->buffer) - strlen(program_buffer); i++)
         fwrite(file, "\0", 1);
 
     fclose(&file);

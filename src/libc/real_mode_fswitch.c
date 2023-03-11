@@ -10,10 +10,10 @@ void real_mode_fswitch(uint16_t segment, uint16_t offset)
     offset = 0x400;
 
     // XinEntry* real_mode_enter = fopen("/fast_real_mode_enter.bin", "r");
-    // disk_read(ATA_FIRST_BUS, ATA_MASTER, real_mode_enter->starting_sector, 1, (uint16_t*)0x600);
+    // disk_read(ATA_FIRST_BUS, ATA_MASTER, real_mode_enter->first_sector, 1, (uint16_t*)0x600);
 
     XinEntry* real_mode_return = fopen("/fast_real_mode_return.bin", "r");
-    disk_read(ATA_FIRST_BUS, ATA_MASTER, real_mode_return->starting_sector, 1, (uint16_t*)0x600);
+    disk_read(ATA_FIRST_BUS, ATA_MASTER, real_mode_return->first_sector, 1, (uint16_t*)0x600);
     xanin_cpu_backup_make();    
     
     asm (

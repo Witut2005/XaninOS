@@ -9,7 +9,7 @@
 #define XIN_SYSTEM_FOLDER '/'
 #define XIN_BASE_FILE_ADDRESS_TO_LOAD 0x100000
 #define XIN_FILE_BEGIN 0
-#define XIN_ENTRY_SIZE 64
+#define XIN_size 64
 
 enum XIN_RETURN_STATUS
 {
@@ -62,7 +62,7 @@ char* xin_set_current_directory(char* directory);
 void xin_get_current_directory(char* buf);
 char* xin_get_current_path(char* file_name);
 
-__STATUS sys_xin_remove_entry(char* entry_name);
+__STATUS __sys_xin_entry_remove(char *entry_name);
 char* xin_get_current_path(char* file_name);
 
 void xin_init_fs(void);
@@ -79,7 +79,7 @@ size_t write(int fd, void *buf, size_t count);
 size_t read(int fd, void *buf, size_t count);
 void fseek(XinEntry *file, uint32_t new_position);
 void lseek(int fd, uint32_t new_position);
-XinEntry* xin_get_file_pf(char* entry_path); // pf = parent folder
+XinEntry* xin_get_file_pf(char* path); // pf = parent folder
 XinEntry* xin_find_entry(char *entry_name);
 __STATUS remove_directory(char* folder_name);
 void create_file_kernel(char* entry_name);

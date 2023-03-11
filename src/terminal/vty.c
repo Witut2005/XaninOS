@@ -16,7 +16,7 @@ typedef void (*keyboard_handle_input)(void);
 
 keyboard_handle_input keyboard_handle = NULL;
  
-char program_name[40];
+char program_name[1000];
 char program_parameters[40];
 char program_parameters1[40];
 char program_parameters2[40];

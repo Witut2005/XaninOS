@@ -11,7 +11,7 @@
 
 NetworkHandler NetworkHandlers[NETWORK_CARDS_HANDLERS] = {0,0,0,0,0,0,0};
 
-bool netapi_add_device(uint8_t*(*receive_ptr)(void), void(*send_ptr)(uint32_t, uint16_t), uint8_t* mac_ptr, void(*interrupt_handler)(void), pci_device* pci_info)
+bool netapi_add_device(uint8_t*(*receive_ptr)(void), void(*send_ptr)(uint8_t*, uint16_t), uint8_t* mac_ptr, void(*interrupt_handler)(void), pci_device* pci_info)
 {
     NetworkHandler* tmp = NetworkHandlers;
     int new_device_id = 0x0;
@@ -66,7 +66,7 @@ bool network_device_available_check(void)
     return true;
 }
 
-void netapi_packet_send(uint32_t buffer, uint16_t length)
+void netapi_packet_send(uint8_t* buffer, uint16_t length)
 {
 
     NetworkHandler* tmp = NetworkHandlers;

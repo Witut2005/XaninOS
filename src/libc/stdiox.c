@@ -553,14 +553,12 @@ void xscanf(char* str, ... )
     va_list args;
     va_start(args, str);
 
-    char* buffer = (char*)calloc(50);
-
-    memset(command_buffer, '\0', sizeof(command_buffer));
-    memset(buffer, '\0', sizeof(buffer));
+    char* buffer = (char*)calloc(1000);
 
     index = 0x0;
  
     char* starting_screen_position = (char*)&Screen.cursor[Screen.y][Screen.x - 1];
+    memset(command_buffer, 0, 1000);
 
     start:
 
@@ -810,16 +808,13 @@ void xscanf(char* str, ... )
 
             }
 
-        for(int i = 0; i < 50;i++)
-            keyboard_command[i] = '\0';
-
-
-        for(int i = 0x0; i < 50;i++)
-            buffer[i] = 0x0;
+        memset(buffer, 0, 1000); 
+        memset(command_buffer, 0, 1000);
 
         Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((black << 4) | white) << 8));
            
         xprintf("\n");
+        free(buffer);
         return;
 
         }
@@ -834,13 +829,13 @@ void xscanf(char* str, ... )
 
             xprintf("%c", tmp);
     
-            letters_refresh_add(&Screen.cursor[Screen.y][Screen.x], character_saved);
+            // letters_refresh_add(&Screen.cursor[Screen.y][Screen.x], character_saved);
     
-            uint8_t* tmp_buf = (uint8_t*)calloc(40);
-            memcpy(tmp_buf, keyboard_command, 40);
+            // uint8_t* tmp_buf = (uint8_t*)calloc(40);
+            // memcpy(tmp_buf, keyboard_command, 40);
 
-            for(int i = index; i < 40; i++)
-                keyboard_command[i+1] = tmp_buf[i];
+            // for(int i = index; i < 40; i++)
+            //     keyboard_command[i+1] = tmp_buf[i];
             
 
 

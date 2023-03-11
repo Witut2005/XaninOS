@@ -1,7 +1,7 @@
 
 #include <xin_fs/xin.h>
 
-int XinEntry_remove_app(char* entry_name)
+int xin_entry_remove_app(char* entry_name)
 {
     int status = __sys_xin_entry_remove(entry_name);
 

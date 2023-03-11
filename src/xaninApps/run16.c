@@ -27,7 +27,7 @@ int run16(char* file_name)
     else
     {
     
-        if(xin_file->entry_type == XIN_DIRECTORY)
+        if(xin_file->type == XIN_DIRECTORY)
         {
             xprintf("%zYOU CANT RUN DIRECTORY\n",set_output_color(red,white));
             xprintf("%zuse F4 key to exit\n",set_output_color(red,white));
@@ -35,12 +35,12 @@ int run16(char* file_name)
             return XANIN_ERROR;
         }
     
-        //uint32_t address = (current_program->starting_sector * SECTOR_SIZE);
+        //uint32_t address = (current_program->first_sector * SECTOR_SIZE);
 
         uint8_t* dest = 0x10000;
 
-        fread(xin_file, dest, xin_file->entry_size);
-        // for(uint8_t* i = xin_file->FileInfo->base_address_memory; (uint32_t)i < (uint32_t)(xin_file->FileInfo->base_address_memory) + SECTOR_SIZE; i++, dest++)
+        fread(xin_file, dest, xin_file->size);
+        // for(uint8_t* i = xin_file->FileInfo->buffer; (uint32_t)i < (uint32_t)(xin_file->FileInfo->buffer) + SECTOR_SIZE; i++, dest++)
         //     *dest = *i;
 
         real_mode_enter_no_return(0x1000, 0x0); // <-- tmp.bin address in memory

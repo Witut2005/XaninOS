@@ -160,11 +160,11 @@ int xin_note(char* file_name)
     {
 
         for(int i = 0; i < 16; i++)
-            disk_read(ATA_FIRST_BUS, ATA_MASTER, xin_file->starting_sector + i, 1, (xin_file->starting_sector + i) * SECTOR_SIZE);
+            disk_read(ATA_FIRST_BUS, ATA_MASTER, xin_file->first_sector + i, 1, (xin_file->first_sector + i) * SECTOR_SIZE);
         
         screen_clear();
 
-        char* data_pointer = xin_file->starting_sector * SECTOR_SIZE;
+        char* data_pointer = xin_file->first_sector * SECTOR_SIZE;
 
         uint16_t* bruh_moment = VGA_TEXT_MEMORY;
         
@@ -188,9 +188,9 @@ int xin_note(char* file_name)
 
         }
 
-        xin_file->entry_size = file_data_counter;
+        xin_file->size = file_data_counter;
 
-        disk_write(ATA_FIRST_BUS, ATA_MASTER, xin_file->starting_sector, xin_get_file_size_in_sectors(xin_file), (uint16_t*)(tmp));
+        disk_write(ATA_FIRST_BUS, ATA_MASTER, xin_file->first_sector, xin_get_file_size_in_sectors(xin_file), (uint16_t*)(tmp));
         
         free(tmp);
 

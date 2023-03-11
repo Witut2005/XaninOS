@@ -39,7 +39,7 @@ extern CmosTime SystemTime;
 
 extern char* daysLUT[7];
 
-extern char command_buffer[80];
+extern char command_buffer[1000];
 extern char* keyboard_command;
 
 extern uint8_t* null_memory_region;
@@ -107,6 +107,7 @@ extern void* realloc(void* ptr, uint32_t size_new);
 extern void exit(void);
 extern uint32_t rand(void);
 xchar inputg(void);
+uint32_t int_to_sectors(uint32_t num);
 
 #ifdef __cplusplus
 }

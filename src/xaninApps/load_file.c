@@ -16,8 +16,8 @@ int load_file(char* file_name, char* options)
 
     XinEntry* File = fopen(file_name, "rw");
 
-    uint8_t* file_data = (uint8_t*)calloc(File->entry_size);
-    fread(File, file_data, File->entry_size);
+    uint8_t* file_data = (uint8_t*)calloc(File->size);
+    fread(File, file_data, File->size);
 
     uint32_t address = (uint32_t)file_data + offset;
     char* data_pointer = (char*)file_data + offset;

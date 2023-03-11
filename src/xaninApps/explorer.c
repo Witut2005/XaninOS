@@ -195,7 +195,7 @@ int explorer(char* parent_folder)
         parent_folder[strlen(parent_folder)] = '/';
 
     else if(xin_find_entry(parent_folder) != NULL)
-        strcpy(app_current_folder, xin_find_entry(parent_folder)->entry_path) ;
+        strcpy(app_current_folder, xin_find_entry(parent_folder)->path) ;
 
     else 
     { 
@@ -232,7 +232,7 @@ int explorer(char* parent_folder)
                 for(int j = 0; j < 10; j++)
                 {
                     if(i * 10 + j < hoho->how_many)
-                        table_insert(fro , j, hoho->children[j + i * 10]->entry_path, black, hoho->children[j + i * 10]->entry_type + 2, i);
+                        table_insert(fro , j, hoho->children[j + i * 10]->path, black, hoho->children[j + i * 10]->type + 2, i);
                          
                     else
                     {

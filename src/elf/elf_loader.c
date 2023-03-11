@@ -30,10 +30,10 @@ bool elf_check_arch(uint8_t* file)
 
 void elf_load(XinEntry* file)
 {
-    uint8_t* data = (uint8_t*)calloc(file->entry_size * SECTOR_SIZE);
-    fread(file, data, file->entry_size * SECTOR_SIZE);
+    uint8_t* data = (uint8_t*)calloc(file->size * SECTOR_SIZE);
+    fread(file, data, file->size * SECTOR_SIZE);
 
-    xprintf("file size: %d\n", file->entry_size);
+    xprintf("file size: %d\n", file->size);
 
     uint8_t* write_to_memory;
     uint8_t* read_from_file;

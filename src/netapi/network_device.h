@@ -10,7 +10,7 @@ struct NetworkHandler
 {
     uint8_t is_device_present;
     uint8_t*(*receive_ptr)(void);
-    void(*send_ptr)(uint32_t, uint16_t);
+    void(*send_ptr)(uint8_t*, uint16_t);
     uint8_t* device_mac;
     void(*interrupt_handler)(void);
     pci_device* pci_info;
@@ -26,8 +26,8 @@ extern "C" {
 #endif
 
 bool network_device_available_check(void);
-bool netapi_add_device(uint8_t*(*receive_ptr)(void), void(*send_ptr)(uint32_t, uint16_t), uint8_t* mac_ptr, void(*interrupt_handler)(void), pci_device* pci_info);
-void netapi_packet_send(uint32_t buffer, uint16_t length);
+bool netapi_add_device(uint8_t*(*receive_ptr)(void), void(*send_ptr)(uint8_t*, uint16_t), uint8_t* mac_ptr, void(*interrupt_handler)(void), pci_device* pci_info);
+void netapi_packet_send(uint8_t* buffer, uint16_t length);
 uint8_t* netapi_packet_receive(void);
 uint8_t* netapi_mac_get(void);
 NetworkHandler* device_info_get_by_name(char* device_name);

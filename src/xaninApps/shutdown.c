@@ -24,7 +24,7 @@ int shutdown(void)
 
 
     XinEntry* xin_file = fopen("/shutdown.bin", "r");
-    disk_read(ATA_FIRST_BUS, ATA_MASTER, xin_file->starting_sector, 1, (uint16_t*)0x400);
+    disk_read(ATA_FIRST_BUS, ATA_MASTER, xin_file->first_sector, 1, (uint16_t*)0x400);
 
 
     real_mode_enter_no_return(0x0, 0x400);

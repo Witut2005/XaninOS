@@ -145,7 +145,7 @@ int xin_paint(char* file_name)
     else
     {
     
-        char* data_pointer = (char*)calloc(VGA_SCREEN_RESOLUTION);//xin_file->starting_sector * SECTOR_SIZE;
+        char* data_pointer = (char*)calloc(VGA_SCREEN_RESOLUTION);//xin_file->first_sector * SECTOR_SIZE;
         char* data_pointer_save = data_pointer;
         fread(xin_file, data_pointer, VGA_SCREEN_RESOLUTION);
         
@@ -176,7 +176,7 @@ int xin_paint(char* file_name)
             fwrite(xin_file, screen_ptr + 1, 1);
         }
         
-        xin_file->entry_size = file_data_counter;
+        xin_file->size = file_data_counter;
         free(data_pointer);
 
     }

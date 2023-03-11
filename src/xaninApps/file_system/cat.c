@@ -24,7 +24,7 @@ int cat(char* file_name)
         uint8_t* file_data = (uint8_t*)calloc(VGA_SCREEN_RESOLUTION);
 
         fread(xin_file, file_data, VGA_SCREEN_RESOLUTION);
-        xprintf("%s", xin_file->FileInfo->base_address_memory);
+        xprintf("%s", xin_file->FileInfo->buffer);
         while(inputg().scan_code != ENTER);
         free(file_data);
         return XANIN_OK;

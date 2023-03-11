@@ -37,7 +37,7 @@ void EthernetFrameInterface::send(const uint8_t* mac_destination, const uint8_t*
     // tmp[i + 2] = 0x20;
     // tmp[i + 3] = 0x3A;
 
-    netapi_packet_send((uint32_t)FrameHeader, length + ETHERNET_FRAME_MAC_HEADER_SIZE);
+    netapi_packet_send((uint8_t*)FrameHeader, length + ETHERNET_FRAME_MAC_HEADER_SIZE);
     // i8254x_packet_send((uint32_t)FrameHeader, length + ETHERNET_FRAME_MAC_HEADER_SIZE);
 
     free(FrameHeader);

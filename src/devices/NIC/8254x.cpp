@@ -203,7 +203,7 @@ void Intel8254xDriver::transmit_init(void)
 
 }
 
-void Intel8254xDriver::send_packet(uint32_t address, uint16_t length)
+void Intel8254xDriver::packet_send(uint8_t* address, uint16_t length)
 {
 
     if(!is_present)
@@ -211,7 +211,7 @@ void Intel8254xDriver::send_packet(uint32_t address, uint16_t length)
 
     // xprintf("a");
 
-    this->transmit_descriptors_buffer[this->txd_current].address_low = address;
+    this->transmit_descriptors_buffer[this->txd_current].address_low = (uint32_t)address;
     this->transmit_descriptors_buffer[this->txd_current].address_high = 0x0;
     this->transmit_descriptors_buffer[this->txd_current].cmd = nic::CMD::EOP | nic::CMD::IFCS | nic::CMD::RS | nic::CMD::RPS;// | nic::CMD::RPS;
     this->transmit_descriptors_buffer[this->txd_current].length = length;
@@ -302,38 +302,6 @@ void Intel8254xDriver::init()
 
 
 }
-template<class T>
-void Intel8254xDriver::send_range(T range)
-{
-    
-    if(!this->is_present)
-        return;
-
-    uint8_t* buffer = (uint8_t*)malloc(range.size());
-
-    for(std::pair<uint32_t, auto> pair = {0, range.begin()}; pair.second != range.end(); pair.first++, pair.second++)
-        buffer[pair.first] = *pair.second;
-
-
-    this->transmit_descriptors_buffer[this->txd_current].address_low = buffer;
-    this->transmit_descriptors_buffer[this->txd_current].address_high = 0x0;
-    this->transmit_descriptors_buffer[this->txd_current].cmd = nic::CMD::EOP | nic::CMD::IFCS | nic::CMD::RS | nic::CMD::RPS;// | nic::CMD::RPS;
-    this->transmit_descriptors_buffer[this->txd_current].length = range.size();
-
-    this->transmit_descriptors_buffer[this->txd_current].status = 0x0;
-    this->transmit_descriptors_buffer[this->txd_current].css = 0x0;
-    this->transmit_descriptors_buffer[this->txd_current].cso = 0x0;
-    this->transmit_descriptors_buffer[this->txd_current].special = 0x0;
-
-
-    auto txd_old = this->txd_current;
-    this->write(nic::TDT,(this->txd_current + 1) % INTEL_8254X_DESCRIPTORS);
-    this->txd_current = (this->txd_current + 1) % INTEL_8254X_DESCRIPTORS;
-
-    while(!this->transmit_descriptors_buffer[txd_old].status);
-    
-    free(buffer);
-}
 
 uint32_t Intel8254xDriver::receive_descriptors_buffer_get(void)
 {
@@ -361,7 +329,7 @@ uint16_t Intel8254xDriver::vendorid_get()
     return this->pci_info.vendor_id;
 }
 
-uint8_t* Intel8254xDriver::receive_packet(void)
+uint8_t* Intel8254xDriver::packet_receive(void)
 {
 
     if(!this->is_present)
@@ -402,7 +370,7 @@ void Intel8254xDriver::interrupt_handler(void)
     uint16_t interrupt_status = this->read(nic::ICR);
     
     if(interrupt_status & 0x80)
-        this->receive_packet();
+        this->packet_receive();
 
 }
 
@@ -468,13 +436,13 @@ extern "C"
 
     uint8_t* i8254x_packet_receive(void)
     {
-        return Intel8254x.receive_packet();
+        return Intel8254x.packet_receive();
     }
 
-    void i8254x_packet_send(uint32_t address, uint16_t length)
+    void i8254x_packet_send(uint8_t* address, uint16_t length)
     {
         // xprintf("\n");
-        Intel8254x.send_packet(address, length);
+        Intel8254x.packet_send(address, length);
     }
 
     void i8254x_init(void)

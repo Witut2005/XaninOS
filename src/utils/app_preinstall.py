@@ -7,7 +7,7 @@ from colorama import Style
 import sys
 import os 
 
-XIN_ENTRY_SIZE = 64
+XIN_size = 64
 XIN_ALLOCATED = b'\x01'
 XIN_EOF = b'\xff'
 XIN_FILE = 'F'
@@ -84,7 +84,7 @@ for current_file in args.files:
     file.seek(SECTOR_SIZE * (xin_filesystem_pointers - xin_filesystem_pointers_begin)) #write data to image
     file.write(data)
 
-    xin_filesystem_entries += XIN_ENTRY_SIZE
+    xin_filesystem_entries += XIN_size
     xin_filesystem_pointers += file_lenght
 
     aha.close()
@@ -99,4 +99,4 @@ for d in directories:
     file.write(bytes(13))
     file.write(bytes(4))
     file.write(bytes(4))
-    xin_filesystem_entries += XIN_ENTRY_SIZE
+    xin_filesystem_entries += XIN_size

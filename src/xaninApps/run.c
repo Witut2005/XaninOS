@@ -26,7 +26,7 @@ int run(char* file_name)
     else
     {
     
-        if(xin_file->entry_type == XIN_DIRECTORY)
+        if(xin_file->type == XIN_DIRECTORY)
         {
             xprintf("%zYOU CANT RUN DIRECTORY\n",set_output_color(red,white));
             xprintf("%zuse F4 key to exit\n",set_output_color(red,white));
@@ -36,7 +36,7 @@ int run(char* file_name)
     
         uint8_t* where_to_load = 0x10000;
 
-        fread(xin_file, where_to_load, xin_file->entry_size);
+        fread(xin_file, where_to_load, xin_file->size);
 
         return XANIN_OK;
         

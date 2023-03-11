@@ -43,7 +43,7 @@ static inline void sll_frame_send(uint16_t packet_type, uint16_t link_layer_addr
     uint8_t* data = (uint8_t*)PacketFrame;
     data = data + 0x10;
     memcpy(data, data_to_send, packet_size + 0x10);
-    netapi_packet_send((uint32_t)PacketFrame, packet_size + 0x10);
+    netapi_packet_send((uint8_t*)PacketFrame, packet_size + 0x10);
 }
 
 #ifdef __cplusplus
