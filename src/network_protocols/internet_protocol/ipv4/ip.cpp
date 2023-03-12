@@ -125,7 +125,6 @@ void InternetProtocolInterface::ipv4_packet_receive(Ipv4Header* PacketData)
 
         case INTERNET_CONTROL_MESSAGE_PROTOCOL:
         {
-            asm("int 0x0");
             break;
         }
 

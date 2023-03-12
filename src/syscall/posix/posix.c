@@ -137,8 +137,8 @@ uint32_t syscall_handle(void)
         case __NR_link:
         {
             eax = __sys_xin_link_create((char*)ebx, (char*)ecx);
-            xprintf("filename: %s\n", (char*)ebx);
-            xprintf("linkname: %s\n", (char*)ecx);
+            // xprintf("filename: %s\n", (char*)ebx);
+            // xprintf("linkname: %s\n", (char*)ecx);
             break;
         }
 

@@ -35,6 +35,7 @@
 #include <libc/instruction_pointer.h>
 #include <libc/xanin_state.h>
 #include <libc/system.h>
+#include <handlers/entries/handler_entries.h>
 
 extern void v86_mode_enter(void);
 extern void mouse_enable(void);
@@ -134,68 +135,47 @@ void kernel_loop(void)
 
 }
 
-extern void divide_by_zero_exception(void);
-extern void debug_exception(void);
-extern void nmi_interrupt(void);
-extern void breakpoint_exception(void);
-extern void overflow_exception(void);
-extern void nmi_interrupt(void);
-extern void invalid_opcode(void);
-extern void device_not_available_exception(void);
-extern void double_fault_exception(void);
-extern void coprocessor_segment_overrun(void);
-extern void invalid_tss_exception(void);
-extern void segment_not_present(void);
-extern void stack_fault_exception(void);
-extern void general_protection_exception(void);
-extern void page_fault_exception(void);
-extern void x86_fpu_floating_point_exception(void);
-extern void aligment_check_exception(void);
-extern void machine_check_exception(void);
-extern void simd_floating_point_exception(void);
-extern void virtualization_exception(void);
-
-extern int idt_examine(void);
 
 void _start(void)
 {
 
     interrupt_disable();
 
-    INTERRUPT_REGISTER(0, divide_by_zero_exception);
-    INTERRUPT_REGISTER(1, debug_exception);
-    INTERRUPT_REGISTER(2, nmi_interrupt);
-    INTERRUPT_REGISTER(3, breakpoint_exception);
-    INTERRUPT_REGISTER(4, overflow_exception);
-    INTERRUPT_REGISTER(5, nmi_interrupt);
-    INTERRUPT_REGISTER(6, invalid_opcode);
-    INTERRUPT_REGISTER(7, device_not_available_exception);
-    INTERRUPT_REGISTER(8, double_fault_exception);
-    INTERRUPT_REGISTER(9, coprocessor_segment_overrun);
-    INTERRUPT_REGISTER(10, invalid_tss_exception);
-    INTERRUPT_REGISTER(11, segment_not_present);
-    INTERRUPT_REGISTER(12, stack_fault_exception);
-    INTERRUPT_REGISTER(13, general_protection_exception);
-    INTERRUPT_REGISTER(14, page_fault_exception);
-    INTERRUPT_REGISTER(15, x86_fpu_floating_point_exception);
-    INTERRUPT_REGISTER(17, aligment_check_exception);
-    INTERRUPT_REGISTER(18, machine_check_exception);
-    INTERRUPT_REGISTER(19, simd_floating_point_exception);
-    INTERRUPT_REGISTER(20, virtualization_exception);
-    INTERRUPT_REGISTER(21, general_protection_exception); 
-    INTERRUPT_REGISTER(22, general_protection_exception); 
-    INTERRUPT_REGISTER(23, general_protection_exception); 
-    INTERRUPT_REGISTER(24, general_protection_exception); 
-    INTERRUPT_REGISTER(25, general_protection_exception); 
-    INTERRUPT_REGISTER(26, general_protection_exception);
-    INTERRUPT_REGISTER(27, general_protection_exception);
-    INTERRUPT_REGISTER(28, general_protection_exception);
-    INTERRUPT_REGISTER(29, general_protection_exception);
-    INTERRUPT_REGISTER(30, general_protection_exception);
-    INTERRUPT_REGISTER(31, general_protection_exception);
-    INTERRUPT_REGISTER(32, general_protection_exception);
+    INTERRUPT_REGISTER(0, divide_by_zero_exception_entry);
+    INTERRUPT_REGISTER(1, debug_exception_entry);
+    INTERRUPT_REGISTER(2, nmi_interrupt_exception_entry);
+    INTERRUPT_REGISTER(3, breakpoint_exception_entry);
+    INTERRUPT_REGISTER(4, overflow_exception_entry);
+    INTERRUPT_REGISTER(5, bound_range_exceeded_exception_entry);
+    INTERRUPT_REGISTER(6, invalid_opcode_exception_entry);
+    INTERRUPT_REGISTER(7, device_not_available_exception_entry);
+    INTERRUPT_REGISTER(8, double_fault_exception_entry);
+    INTERRUPT_REGISTER(9, coprocessor_segment_overrun_exception_entry);
+    INTERRUPT_REGISTER(10, invalid_tss_exception_entry);
+    INTERRUPT_REGISTER(11, segment_not_present_exception_entry);
+    INTERRUPT_REGISTER(12, stack_fault_exception_entry);
+    INTERRUPT_REGISTER(13, general_protection_exception_entry);
+    INTERRUPT_REGISTER(14, page_fault_exception_entry);
+    INTERRUPT_REGISTER(15, x86_fpu_floating_point_exception_entry);
+    INTERRUPT_REGISTER(17, aligment_check_exception_entry);
+    INTERRUPT_REGISTER(18, machine_check_exception_entry);
+    INTERRUPT_REGISTER(19, simd_floating_point_exception_entry);
+    INTERRUPT_REGISTER(20, virtualization_exception_entry);
+    INTERRUPT_REGISTER(21, general_protection_exception_entry); 
+    INTERRUPT_REGISTER(22, general_protection_exception_entry); 
+    INTERRUPT_REGISTER(23, general_protection_exception_entry); 
+    INTERRUPT_REGISTER(24, general_protection_exception_entry); 
+    INTERRUPT_REGISTER(25, general_protection_exception_entry); 
+    INTERRUPT_REGISTER(26, general_protection_exception_entry);
+    INTERRUPT_REGISTER(27, general_protection_exception_entry);
+    INTERRUPT_REGISTER(28, general_protection_exception_entry);
+    INTERRUPT_REGISTER(29, general_protection_exception_entry);
+    INTERRUPT_REGISTER(30, general_protection_exception_entry);
+    INTERRUPT_REGISTER(31, general_protection_exception_entry);
+    INTERRUPT_REGISTER(32, general_protection_exception_entry);
     
 
+    
     // INTERRUPT_REGISTER(0x21, keyboard_handler_init);
 
     screen_init(); // init screen management system

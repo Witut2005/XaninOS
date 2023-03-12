@@ -188,6 +188,14 @@ XinEntry *xin_find_free_entry(void)
     return NULL;
 }
 
+void xin_free_temporary_data(XinEntry** File)
+{
+    memset((*File)->FileInfo->rights, 0, 2);
+    free((*File)->FileInfo->buffer);
+    free((*File)->FileInfo);
+    *File = NULL;
+}
+
 XinEntry *xin_folder_change(char *new_directory)
 {
 
@@ -626,9 +634,11 @@ int xin_file_create(char* entry_name)
 
 }
 
-int xin_file_reallocate_with_given_size(XinEntry* File, uint32_t size, uint8_t* buf)
+int xin_file_reallocate_with_given_size(XinEntry* File, uint32_t size)
 {
 
+    uint8_t* buf = (uint8_t*)calloc(int_to_sectors(size) * SECTOR_SIZE);
+    memcpy(buf, File->FileInfo->buffer, size);
 
     if(File == NULL)
         return XANIN_ERROR;
@@ -676,6 +686,8 @@ int xin_file_reallocate_with_given_size(XinEntry* File, uint32_t size, uint8_t* 
     
     disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x12, 8, (uint16_t*)0x800);
     disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x1a, 40, (uint16_t*)(0x1800));
+
+    free(buf);
 
     return XANIN_OK;
 }
@@ -741,7 +753,7 @@ size_t fread(XinEntry *entry, void *buf, size_t count)
     char* begin = (char *)(entry->FileInfo->buffer + ftell(entry));
     char* end = (char *)(entry->FileInfo->buffer + ftell(entry) + count);
 
-    uint32_t sectors_to_load = (count + ftell(entry)) / SECTOR_SIZE;
+    uint32_t sectors_to_load = int_to_sectors(count + initial_position);
 
     if((count + entry->FileInfo->position) % SECTOR_SIZE != 0)
         sectors_to_load++;
@@ -772,7 +784,7 @@ size_t read(int fd, void *buf, size_t count)
     if(fd < 0)
         return 0;
 
-    XinEntry* entry = (XinEntry*)(XIN_ENTRY_TABLE + (fd * XIN_size));
+    XinEntry* entry = (XinEntry*)(XIN_ENTRY_TABLE + (fd * XIN_ENTRY_SIZE));
 
     if((entry->type != XIN_FILE) && (entry->type != XIN_HARD_LINK))
         return 0;
@@ -787,28 +799,8 @@ size_t read(int fd, void *buf, size_t count)
 
     //////////////////////////////////////////////////
 
-    char* begin = (char *)(entry->FileInfo->buffer + ftell(entry));
-    char* end = (char *)(entry->FileInfo->buffer + count + ftell(entry));
+    return fread(entry, buf, count);
 
-    uint32_t sectors_to_load = (count + ftell(entry)) / SECTOR_SIZE;
-
-    if((count + entry->FileInfo->position) % SECTOR_SIZE != 0)
-        sectors_to_load++;
-
-    for(int i = 0; i < sectors_to_load; i++)
-    {
-        if(!entry->FileInfo->sector_in_use[i])
-        {
-            disk_read(ATA_FIRST_BUS, ATA_MASTER, entry->first_sector + i, 1, (uint16_t*)(entry->FileInfo->buffer + (i * SECTOR_SIZE)));
-            entry->FileInfo->sector_in_use[i] = true;
-        }
-    }
-
-    for (char *i = begin; i < end; i++, buf++)
-        *(char *)buf = *i;
-
-    fseek(entry, initial_position + count);
-    return count;
 }
 
 size_t fwrite(XinEntry *entry, void *buf, size_t count)
@@ -830,16 +822,14 @@ size_t fwrite(XinEntry *entry, void *buf, size_t count)
         entry->FileInfo->tmp_size = initial_position + count;
 
 
-    uint32_t sectors_count = (count / SECTOR_SIZE) + (count % SECTOR_SIZE != 0 ? 1 : 0);
+    uint32_t sectors_to_load = int_to_sectors(count + initial_position);
     
-    for(int i = 0; i < sectors_count; i++)
+    for(int i = 0; i < sectors_to_load; i++)
     {
         if(!entry->FileInfo->sector_in_use[i])
         {
-            uint8_t* tmp = (uint8_t*)calloc(SECTOR_SIZE);
-            fread(entry, tmp, SECTOR_SIZE);
+            disk_read(ATA_FIRST_BUS, ATA_MASTER, entry->first_sector + i, 1, (uint16_t*)(entry->FileInfo->buffer + (i * SECTOR_SIZE)));
             entry->FileInfo->sector_in_use[i] = true;
-            free(tmp);
         }
     }
 
@@ -869,47 +859,14 @@ size_t write(int fd, void* buf, size_t count)
     if(!FileDescriptorTable[fd].is_used)
         return 0;
 
-    XinEntry* entry = (XinEntry*)(XIN_ENTRY_TABLE + (fd * XIN_size));
+    XinEntry* entry = (XinEntry*)(XIN_ENTRY_TABLE + (fd * XIN_ENTRY_SIZE));
     
     if((entry->type != XIN_FILE) && (entry->type != XIN_HARD_LINK))
         return 0;
 
     //////////////////////////////////////////////////
 
-    // char *end = (char *)(entry->first_sector * SECTOR_SIZE) + count + entry->FileInfo->position;
-    char* end = (char *)(entry->FileInfo->buffer + count + entry->FileInfo->position);
-
-    uint32_t initial_position = entry->FileInfo->position;
-    
-    if(initial_position + count > entry->FileInfo->tmp_size)
-        entry->FileInfo->tmp_size = initial_position + count;
-
-    uint32_t sectors_count = (count / SECTOR_SIZE) + (count % SECTOR_SIZE != 0 ? 1 : 0);
-    
-    for(int i = 0; i < sectors_count; i++)
-    {
-        if(!entry->FileInfo->sector_in_use[i])
-        {
-            uint8_t* tmp = (uint8_t*)calloc(SECTOR_SIZE);
-            fread(entry, tmp, SECTOR_SIZE);
-            entry->FileInfo->sector_in_use[i] = true;
-            free(tmp);
-        }
-    }
-
-    uint32_t tmp = entry->FileInfo->position;
-    for (char *i = (char *)(entry->FileInfo->buffer) + tmp; i < end; i++, buf++)
-    {
-        *i = *(char *)buf;
-        entry->FileInfo->position++;
-    }
-
-    time_get(&SystemTime);
-
-    entry->modification_date = (uint32_t)((SystemTime.day_of_month << 24) | (SystemTime.month << 16) | (SystemTime.century << 8) | (SystemTime.year)); 
-    entry->modification_time = (uint16_t)(SystemTime.hour << 8) | (SystemTime.minutes);
-
-    return count;
+    return fwrite(entry, buf, count);
 
 }
 
@@ -944,16 +901,23 @@ XinEntry *fopen(char *file_path, char *mode)
 
     XinEntry* file = xin_find_entry(file_path);
 
+    if(file->type != XIN_FILE && file->type != XIN_HARD_LINK)
+        return NULL;
+
     if(file != NULL)
     {
         file->FileInfo = (FileInformationBlock*)calloc(sizeof(FileInformationBlock));
         file->FileInfo->buffer = (uint8_t*)calloc(SECTOR_SIZE * 0x10);
         file->FileInfo->sector_in_use = (bool*)calloc(0x10 * sizeof(bool));
+
+        memset(file->FileInfo->rights, '\0', 2); //set file rights
         strcpy(file->FileInfo->rights, mode);
-        file->FileInfo->position = file->size;
+
+        file->FileInfo->position = 0;
+        file->FileInfo->tmp_size = 0;
     }
 
-    if(strcmp(mode, "a"))
+    if(strncmp(mode, "a", 2))
     {
 
         uint32_t sectors_to_load = file->size / SECTOR_SIZE;
@@ -967,15 +931,13 @@ XinEntry *fopen(char *file_path, char *mode)
         return file;
     }
 
-    else if (file != NULL && file->type != XIN_DIRECTORY && file->path[0] != '\0')
-    {
 
-        strcpy(file->FileInfo->rights, mode);
-        file->FileInfo->position = 0;
+    else if(strncmp(mode, "r", 2))
+    {
         return file;
     }
 
-    else if(strcmp(mode, "rw") || strcmp(mode, "w"))
+    else if(strncmp(mode, "rw", 2) || strncmp(mode, "w", 2))
     {
         int status = xin_file_create(file_path);
 
@@ -987,6 +949,9 @@ XinEntry *fopen(char *file_path, char *mode)
             file->FileInfo->position = 0;
             return file;
         }
+
+        else if(status == XIN_FILE_EXISTS)
+            return file;
 
         else
             return NULL;
@@ -1000,6 +965,9 @@ XinEntry *fopen(char *file_path, char *mode)
 
 void fclose(XinEntry** file)
 {
+
+    if(strncmp((*file)->FileInfo->rights, "r", 2))
+        return;
     
     interrupt_disable();
 
@@ -1010,8 +978,8 @@ void fclose(XinEntry** file)
     else
         new_size = (*file)->size;
 
-    xin_file_reallocate_with_given_size((*file), new_size, (*file)->FileInfo->buffer);
-    *file = NULL;
+    xin_file_reallocate_with_given_size((*file), new_size);
+    // xin_free_temporary_data(file);
 
     interrupt_enable();
 
@@ -1023,16 +991,10 @@ void close(int fd)
     if(!FileDescriptorTable[fd].is_used)
         return;
 
-    XinEntry* file = FileDescriptorTable[fd].entry;
-    file->size = file->FileInfo->position;
-    file->FileInfo->position = 0;
-    memset(file->FileInfo->rights, '\0', 2);
+    XinEntry* File = FileDescriptorTable[fd].entry;
+    
+    fclose(&File);
 
-//    for(int i = 0; i < (*file)->size / 512 + ((*file)->size % 512 != 0 ? 1 : 0); i++)
-    disk_write(ATA_FIRST_BUS, ATA_MASTER, file->first_sector, 0x10, (uint16_t*)(file->FileInfo->buffer));
-
-    // while(1);
-    free(file->FileInfo->buffer);
     FileDescriptorTable[fd].is_used = false;
 
 }

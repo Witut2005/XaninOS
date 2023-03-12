@@ -423,7 +423,7 @@ int edit(char* file_name)
 {
 
     screen_clear();
-    XinEntry* file = fopen(file_name, "r");
+    XinEntry* file = fopen(file_name, "rw");
 
     if(file == NULL)
     {

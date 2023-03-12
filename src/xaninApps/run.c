@@ -38,6 +38,9 @@ int run(char* file_name)
 
         fread(xin_file, where_to_load, xin_file->size);
 
+        void (*ptr)(void) = (void(*)(void))where_to_load;
+        ptr();
+
         return XANIN_OK;
         
 

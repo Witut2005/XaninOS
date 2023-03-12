@@ -19,6 +19,7 @@
 //#include <xaninApps/rd.c>
 //#include <xaninApps/touch.c>
 
+#include <xaninApps/interrupt_test.c>
 #include <xaninApps/idt_examine.c>
 #include <xaninApps/load_file.c>
 #include <xaninApps/file_system/copy_file.c>

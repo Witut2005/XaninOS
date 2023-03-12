@@ -31,13 +31,13 @@ build:
 	@$(ASM) -fbin ./xin_fs/entries_table.asm
 	
 	@echo [ASM] keyboard.asm
-	@$(ASM) -f elf32 ./handlers/keyboard.asm -o ./handlers/keyboard.o
+	@$(ASM) -f elf32 ./keyboard/keyboard.asm -o ./keyboard/keyboard.o
 
 	@ echo [ASM] registers_values_get.asm
 	@ $(ASM) -f elf32 ./libc/registers_values_get.asm -o ./libc/registers_values_get.o
 	
 	@echo [ASM] pit.asm
-	@$(ASM) -f elf32 ./pit/pit.asm -o ./pit/pit.o
+	@$(ASM) -f elf32 ./pit/pit.asm -o ./pit/pit_entry.o
 
 	@echo [ASM] syscall_entry.asm
 	@$(ASM) -f elf32 ./syscall/syscall_entry.asm -o ./syscall/syscall_entry.o
@@ -65,6 +65,72 @@ build:
 
 	@echo [ASM] xanin_state.asm
 	@$(ASM) -f elf32 ./libc/xanin_state.asm -o ./libc/xanin_state.o
+
+	@echo [ASM] divide_by_zero_exception
+	@$(ASM) -f elf32 ./handlers/entries/divide_by_zero_exception.asm -o ./handlers/entries/divide_by_zero_exception.o
+
+	@echo [ASM] debug_exception
+	@$(ASM) -f elf32 ./handlers/entries/debug_exception.asm -o ./handlers/entries/debug_exception.o
+
+	@echo [ASM] nmi_exception
+	@$(ASM) -f elf32 ./handlers/entries/nmi_exception.asm -o ./handlers/entries/nmi_exception.o
+
+	@echo [ASM] breakpoint_exception 
+	@$(ASM) -f elf32 ./handlers/entries/breakpoint_exception.asm -o ./handlers/entries/breakpoint_exception.o
+
+	@echo [ASM] overflow_exception 
+	@$(ASM) -f elf32 ./handlers/entries/overflow_exception.asm -o ./handlers/entries/overflow_exception.o
+
+	@echo [ASM] bound_range_exceeded_exception
+	@$(ASM) -f elf32 ./handlers/entries/bound_range_exceeded_exception.asm -o ./handlers/entries/bound_range_exceeded_exception.o
+
+	@echo [ASM] invalid_opcode_exception 
+	@$(ASM) -f elf32 ./handlers/entries/invalid_opcode_exception.asm -o ./handlers/entries/invalid_opcode_exception.o
+
+	@echo [ASM] device_not_availble_exception
+	@$(ASM) -f elf32 ./handlers/entries/device_not_availble_exception.asm -o ./handlers/entries/device_not_availble_exception.o
+
+	@echo [ASM] double_fault_exception 
+	@$(ASM) -f elf32 ./handlers/entries/double_fault_exception.asm -o ./handlers/entries/double_fault_exception.o
+
+	@echo [ASM] coprocessor_segment_overrun_exception
+	@$(ASM) -f elf32 ./handlers/entries/coprocessor_segment_overrun_exception.asm -o ./handlers/entries/coprocessor_segment_overrun_exception.o
+
+	@echo [ASM] invalid_tss_exception
+	@$(ASM) -f elf32 ./handlers/entries/invalid_tss_exception.asm -o ./handlers/entries/invalid_tss_exception.o
+
+	@echo [ASM] segment_not_present_exception
+	@$(ASM) -f elf32 ./handlers/entries/segment_not_present_exception.asm -o ./handlers/entries/segment_not_present_exception.o
+
+	@echo [ASM] stack_fault_exception
+	@$(ASM) -f elf32 ./handlers/entries/stack_fault_exception.asm -o ./handlers/entries/stack_fault_exception.o
+
+	@echo [ASM] general_protection_exception 
+	@$(ASM) -f elf32 ./handlers/entries/general_protection_exception.asm -o ./handlers/entries/general_protection_exception.o
+
+	@echo [ASM] page_fault_exception
+	@$(ASM) -f elf32 ./handlers/entries/page_fault_exception.asm -o ./handlers/entries/page_fault_exception.o
+
+	@echo [ASM] x86_fpu_floating_point_exception 
+	@$(ASM) -f elf32 ./handlers/entries/x86_fpu_floating_point_exception.asm -o ./handlers/entries/x86_fpu_floating_point_exception.o
+
+	@echo [ASM] aligment_check_exception
+	@$(ASM) -f elf32 ./handlers/entries/aligment_check_exception.asm -o ./handlers/entries/aligment_check_exception.o
+
+	@echo [ASM] machine_check_exception
+	@$(ASM) -f elf32 ./handlers/entries/machine_check_exception.asm -o ./handlers/entries/machine_check_exception.o
+
+	@echo [ASM] simd_floating_point_exception
+	@$(ASM) -f elf32 ./handlers/entries/simd_floating_point_exception.asm -o ./handlers/entries/simd_floating_point_exception.o
+
+	@echo [ASM] virtualization_exception
+	@$(ASM) -f elf32 ./handlers/entries/virtualization_exception.asm -o ./handlers/entries/virtualization_exception.o
+
+	@echo [ASM] coprocessor_segment_overrun_exception
+	@$(ASM) -f elf32 ./handlers/entries/coprocessor_segment_overrun_exception.asm -o ./handlers/entries/coprocessor_segment_overrun_exception.o
+
+
+
 
 	@echo [CC] apic.cpp
 	@$(CC) $(CC_OPTIONS) ./devices/APIC/apic.cpp -o ./devices/APIC/apic.o
@@ -220,8 +286,8 @@ build:
 	@echo [C] xaninGraphics 
 	@$(C) $(C_OPTIONS) ./xaninGraphics/xaninGraphics.c -o ./xaninGraphics/xaninGraphics.o
 	
-	@# @echo [C] pit.c
-	@# @$(C) $(C_OPTIONS) ./pit/pit.c -o ./pit/pit.o
+	@echo [C] pit.c
+	@$(C) $(C_OPTIONS) ./pit/pit.c -o ./pit/pit.o
 
 	@echo [C] vty.c
 	@$(C) $(C_OPTIONS) ./terminal/vty.c -o ./terminal/vty.o
@@ -260,6 +326,26 @@ build:
 
 	@echo [C] kernel.c
 	@$(C) $(C_COMPILE) kernel.c \
+	./handlers/entries/divide_by_zero_exception.o \
+	./handlers/entries/debug_exception.o \
+	./handlers/entries/nmi_exception.o \
+	./handlers/entries/breakpoint_exception.o \
+	./handlers/entries/overflow_exception.o \
+	./handlers/entries/bound_range_exceeded_exception.o \
+	./handlers/entries/invalid_opcode_exception.o \
+	./handlers/entries/device_not_availble_exception.o \
+	./handlers/entries/double_fault_exception.o \
+	./handlers/entries/coprocessor_segment_overrun_exception.o \
+	./handlers/entries/invalid_tss_exception.o \
+	./handlers/entries/segment_not_present_exception.o \
+	./handlers/entries/stack_fault_exception.o \
+	./handlers/entries/general_protection_exception.o \
+	./handlers/entries/page_fault_exception.o \
+	./handlers/entries/x86_fpu_floating_point_exception.o \
+	./handlers/entries/aligment_check_exception.o \
+	./handlers/entries/machine_check_exception.o \
+	./handlers/entries/simd_floating_point_exception.o \
+	./handlers/entries/virtualization_exception.o \
 	./libc/alloc.o \
 	./libc/hal.o \
 	./libc/math.o \
@@ -289,7 +375,8 @@ build:
 	./terminal/terminal.o \
 	./keyboard/key_map.o \
 	./xaninGraphics/xaninGraphics.o \
-	./handlers/keyboard.o \
+	./keyboard/keyboard.o \
+	./pit/pit_entry.o \
 	./pit/pit.o \
 	./syscall/syscall_entry.o \
 	./xin_fs/xin.o \

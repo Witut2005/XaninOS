@@ -18,6 +18,13 @@
 
 extern int screenshot(void);
 
+#define KEYBOARD_ENCODER 0x60
+#define ONBOARD_KEY_CONTROLLER 0x64
+#define KEYBOARD_STATUS_REG 0x64
+
+#define KEYBOARD_DATA_REG 0x60
+
+
 void keyboard_driver_shift_remap_keys(void)
 {
 
@@ -49,11 +56,11 @@ void keyboard_driver_shift_remap_keys(void)
 
 }
 
-void keyboard_driver(uint8_t scanCode)
+void keyboard_driver(void)
 {
 
-    KeyInfo.scan_code = scanCode;
-    KeyInfo.character = keyboard_map[scanCode];
+    KeyInfo.scan_code = inbIO(KEYBOARD_DATA_REG); 
+    KeyInfo.character = keyboard_map[KeyInfo.scan_code];
 
     switch(KeyInfo.scan_code)
     {

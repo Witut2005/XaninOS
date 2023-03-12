@@ -9,7 +9,7 @@
 #define XIN_SYSTEM_FOLDER '/'
 #define XIN_BASE_FILE_ADDRESS_TO_LOAD 0x100000
 #define XIN_FILE_BEGIN 0
-#define XIN_size 64
+#define XIN_ENTRY_SIZE 64
 
 enum XIN_RETURN_STATUS
 {
@@ -95,6 +95,7 @@ const uint32_t lteel(int fd);
 uint8_t *xin_find_free_pointer(void);
 uint8_t *xin_find_free_pointer_with_given_size(uint32_t size);
 int xin_get_file_size_in_sectors(XinEntry* File);
+void xin_free_temporary_data(XinEntry** File);
 
 #ifdef __cplusplus
 }

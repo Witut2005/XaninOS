@@ -22,38 +22,9 @@
 extern float pit_time;
 
 extern void pit_handler_init(void);
-
-static inline void set_pit_divisor(uint16_t divisor_value)
-{
-
-    if(divisor_value < 250)
-        divisor_value = 250;
-
-    outbIO(PIT_CHANNEL0,(uint8_t)(divisor_value & 0x00ff));
-    outbIO(PIT_CHANNEL0,(uint8_t)((divisor_value & 0xff00) >> 8));
-
-}
-
-
-static inline void set_pit()
-{
-
-    interrupt_disable();
-    // outbIO(PIC1_DATA_REG, 0xFC); // pit irq on
-    // outbIO(PIT_MODE_COMMAND_REGISTER,0x30);
-    set_pit_divisor(0x8000);
-    interrupt_enable();
-    INTERRUPT_REGISTER(0x22, pit_handler_init);
-}
-
-
-static inline void pit_tick(uint32_t frequency)
-{
-    pit_time += 1 / (float)(PIT_BASE_FREQUENCY / frequency);
-    eoi_send();
-    // return pit_time;
-}
-
-
+extern void set_pit_divisor(uint16_t divisor_value);
+extern void pit_tick(uint32_t frequency);
+extern void pit_handler(void);
+extern void set_pit(void);
 
 

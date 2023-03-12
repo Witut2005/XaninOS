@@ -177,7 +177,7 @@ __STATUS __sys_xin_link_create(char* file_name, char* link_name)
     XinEntry* link = xin_find_free_entry();
     memcpy((uint8_t*)link, (uint8_t*)file, sizeof(XinEntry));
 
-    link->type = XIN_LINK;
+    link->type = XIN_HARD_LINK;
 
     for(int i = 0; i < MAX_PATH; i++)
         link->path[i] = file->path[i];

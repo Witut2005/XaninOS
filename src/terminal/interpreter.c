@@ -50,10 +50,7 @@ void scan(void)
     KeyInfo.character = 0;
     argc = 0;
 
-    xprintf("program name %s", program_name);
     
-    msleep(5000);
-
     for(int i = 0; i < 5; i++)
     {
         if(strlen(argv[i]) == 0)
@@ -83,6 +80,7 @@ void scan(void)
     XANIN_ADD_APP_ENTRY0("petris", ptetris)
     XANIN_ADD_APP_ENTRY0("ptetris", ptetris)
     XANIN_ADD_APP_ENTRY1("explorer", explorer)
+    XANIN_ADD_APP_ENTRY1("int", interrupt_test)
 
     XANIN_ADD_APP_ENTRY0("idt", idt_examine)
     XANIN_ADD_APP_ENTRY0("start_screen", start_screen)

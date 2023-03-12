@@ -3,6 +3,7 @@
 
  
 #include <libc/hal.h>
+#include <libc/syslog.h>
 #include <libc/stdiox.h>
 #include <keyboard/key_map.h>
 #include <keyboard/keyboard_driver.c>
@@ -17,258 +18,150 @@ extern void kernel_loop(void);
 extern void pit_handler_init(void);
 extern void keyboard_handler_init(void);
 
-
-void floppy_interrupt(void)
+void exception_print(const char* message) 
 {
-    xprintf("FLOPPY ERROR");
-    
-    interrupt_disable();
-    asm("hlt");
+    if(Screen.y != VGA_HEIGHT - 1)
+        Screen.y++;
+    else
+        Screen.y = VGA_HEIGHT - 1;
+
+    Screen.x = 0;
+    xprintf("%zERROR: %s\n", stderr, message);
+    while(inputg().scan_code != ENTER);
 }
 
-void gowno(void)
+void invalid_opcode_exception_handler(void)
 {
-    xprintf("gowno");
-    xprintf("%zNIC INTERRUPT\n", set_output_color(green,white));
-    while(1);
+    printk("ERROR: INVALID OPCODE");
+    exception_print("INVALID OPCODE EXCEPTION");
 }
 
-void invalid_opcode(void)
+void divide_by_zero_exception_handler(void)
 {
-    //screen_clear();
-    xprintf("\n%zINVALID OPCODE",set_output_color(red,white));
-    //reg_dump();
-    interrupt_disable();
-    asm("hlt");
+    printk("ERROR: DIVIDE BY ZERO EXCEPTION");
+    exception_print("DIVIDE BY ZERO EXCEPTION");
 }
 
-void divide_by_zero_exception(void)
-{
-    screen_clear();
-    int tmp;
-    asm("mov %0, [esp]"
-        : 
-        : "r"(tmp));
-        
-    xprintf("\n%zDIVIDE BY ZERO ERROR",set_output_color(red,white));
-    xprintf("0x%x\n", tmp);
-    // reg_dump();
-    interrupt_disable();
-    asm("hlt");
-}
-
-void pit_handler(void)
-{
-    pit_tick(0xFFFF);
-}
-
-void keyboard_handler(void)
-{
-    // keyStatus = inbIO(KEYBOARD_STATUS_REG); // if status & 1 (ON)
-    KeyInfo.scan_code = inbIO(KEYBOARD_DATA_REG); // get KeyInfo.scan_code
-    keyboard_driver(KeyInfo.scan_code);
-}
  
-void debug_exception(void)
+void debug_exception_handler(void)
 {
-    screen_clear();
-    xprintf("%zDEBUG EXCEPTION", set_output_color(red,white));
-    reg_dump();
-    interrupt_disable();
-    asm("hlt");
+    printk("ERROR: DEBUG EXCEPTION");
+    exception_print("DEBUG EXCEPTION");
 }
 
-void nmi_interrupt(void)
+void nmi_interrupt_exception_handler(void)
 {
-    // screen_clear();
-    // xprintf("%zNMI INTERRUPT", set_output_color(red,white));
-    // reg_dump();
-    interrupt_disable();
-    asm("hlt");
+    printk("ERROR: NMI EXCEPTION");
+    exception_print("NMI EXCEPTION");
 }
 
-void breakpoint_exception(void)
+void breakpoint_exception_handler(void)
 {
-    screen_clear();
-    xprintf("%zBREAKPOINT EXCEPTION", set_output_color(red,white));
-    reg_dump();
-    interrupt_disable();
-    asm("hlt");
+    printk("ERROR: BREAKPOINT EXCEPTION");
+    exception_print("BREAKPOINT EXCEPTION");
 }
 
-void overflow_exception(void)
+void overflow_exception_handler(void)
 {
-    screen_clear();
-    xprintf("%zOVERFLOW EXCEPTION", set_output_color(red,white));
-    reg_dump();
-    interrupt_disable();
-    asm("hlt");
+    printk("ERROR: OVERFLOW EXCEPTION");
+    exception_print("OVERFLOW EXCEPTION");
 }
 
-void bound_range_exceeded_exception(void)
+void bound_range_exceeded_exception_handler(void)
 {
-    screen_clear();
-    xprintf("\n%zBOUND Range Exceeded Exception", set_output_color(red,white));
-    reg_dump();
-    interrupt_disable();
-    asm("hlt");
+    printk("ERROR: BOUND RANGE EXCEEDED EXCEPTION");
+    exception_print("BOUND RANGE EXCEEDED EXCEPTION");
 }
 
-void device_not_available_exception(void)
+void device_not_available_exception_handler(void)
 {
-    screen_clear();
-    xprintf("\n%zDevice not available exception", set_output_color(red,white));
-    reg_dump();
-    interrupt_disable();
-    asm("hlt");
+    printk("ERROR: DEVICE NOT AVAIBLE EXCEPTION");
+    exception_print("DEVICE NOT AVAILABLE EXCEPTION");
 }
 
-void double_fault_exception(void)
+void double_fault_exception_handler(void)
 {
-    screen_clear();
-    xprintf("\n%zDouble fault exception", set_output_color(red,white));
-    reg_dump();
-    interrupt_disable();
-    asm("hlt");
+    printk("ERROR: DOUBLE FAULT EXCEPTION");
+    exception_print("DOUBLE FAULT EXCEPTION");
 }
 
-void coprocessor_segment_overrun(void)
+void coprocessor_segment_overrun_exception_handler(void)
 {
-    screen_clear();
-    xprintf("\n%zCoprocessor segment overrun", set_output_color(red,white));
-    reg_dump();
-    interrupt_disable();
-    asm("hlt");
+    printk("ERROR: COPROCESSOR SEGMENT OVERRUN");
+    exception_print("COPROCESSOR SEGMENT OVERRUN");
 }
 
-void invalid_tss_exception(void)
+void invalid_tss_exception_handler(void)
 {
-    screen_clear();
-    xprintf("%zInvalid TSS exception", set_output_color(red,white));
-    reg_dump();
-    interrupt_disable();
-    asm("hlt");
+    printk("ERROR: INVALID TSS EXCEPTION");
+    exception_print("INVALID TSS EXCETPION");
 }
 
-void segment_not_present(void)
+void segment_not_present_exception_handler(void)
 {
-    screen_clear();
-    xprintf("\n%zSegment not present", set_output_color(red,white));
-    reg_dump();
-    interrupt_disable();
-    asm("hlt");
+    printk("ERROR: SEGMENT NOT PRESENT");
+    exception_print("SEGMENT NOT PRESENT");
 }
 
-void stack_fault_exception(void)
+void stack_fault_exception_handler(void)
 {
-    screen_clear();
-    xprintf("\n%zStack fault exception", set_output_color(red,white));
-    reg_dump();
-    interrupt_disable();
-    asm("hlt");
+    printk("ERROR: STACK FAULT EXCEPTION");
+    exception_print("STACK FAULT EXCEPTION");
 }
 
-void general_protection_exception(void)
+void general_protection_exception_handler(void)
 {   
-    
-    // screen_clear();
-
-    // asm("mov ebx, [esp]\n\t"
-    //     "mov %0, ebx"
-    //     :"=r"(aha)
-    //     :
-    //     :"eax", "ebx"
-    //     );     
-    // xprintf("0x%x\n", aha);
-    
-    xprintf("\n%zGeneral protection exception\n", set_output_color(red,white));
-    // reg_dump();
-    // interrupt_disable();
-    // asm("hlt");
-    // asm("sti");
-    // eoi_send();
-    // interrupt_enable();
-    exit();
-    // kernel_loop();
+    printk("ERROR: GENERAL PROTECTION EXCEPTION");
+    exception_print("GENERAL PROTECTION EXCEPTION");
 }
 
-void page_fault_exception(void)
+void page_fault_exception_handler(void)
 {
-    screen_clear();
-    xprintf("%zPage fault exception", set_output_color(red,white));
-    reg_dump();
-    interrupt_disable();
-    asm("hlt");
+    printk("ERROR: PAGE FAULT EXCEPTION");
+    exception_print("PAGE FAULT EXCEPTION");
 }
     
-void x86_fpu_floating_point_exception(void)
+void x86_fpu_floating_point_exception_handler(void)
 {
-    screen_clear();
-    xprintf("%zx86 fpu floating point exception", set_output_color(red,white));
-    reg_dump();
-    interrupt_disable();
-    asm("hlt");
+    printk("ERROR: x86 FPU FLOATING POINT EXCEPTION");
+    exception_print("x86 FPU FLOATING POINT EXCEPTION");
 }
 
-void aligment_check_exception(void)
+void aligment_check_exception_handler(void)
 {
-    screen_clear();
-    xprintf("%zAligment check exception", set_output_color(red,white));
-    reg_dump();
-    interrupt_disable();
-    asm("hlt");
+    printk("ERROR: ALIGMENT CHECK EXCEPTION");
+    exception_print("ALIGMNET CHECK EXCEPTION");
 }
 
-void machine_check_exception(void)
+void machine_check_exception_handler(void)
 {
-    screen_clear();
-    xprintf("%zMachine check exception", set_output_color(red,white));
-    reg_dump();
-    interrupt_disable();
-    asm("hlt");
+    printk("ERROR: MACHINE CHECK EXCEPTION");
+    exception_print("MACHINE CHECK EXCEPTION");
 }
 
-void simd_floating_point_exception(void)
+void simd_floating_point_exception_handler(void)
 {
-    screen_clear();
-    xprintf("%zSIMD floating point exception", set_output_color(red,white));
-    reg_dump();
-    interrupt_disable();
-    asm("hlt");
+    printk("ERROR: SIMD FLOATING POINT EXCEPTION");
+    exception_print("SIMD FLOATING POINT EXCEPTION");
 }
 
-void virtualization_exception(void)
+void virtualization_exception_handler(void)
 {
-    screen_clear();
-    xprintf("%zVirtualization exception", set_output_color(red,white));
-    reg_dump();
-    interrupt_disable();
-    asm("hlt");
+    printk("ERROR: VIRTUALIZATION EXCEPTION");
+    exception_print("VIRTUALIZATION EXCEPTION");
 }
 
-void elf_correctly_loaded(void)
+void elf_correctly_loaded_handler(void)
 {
-    xprintf("\n%zELF loaded", set_output_color(black,green));
-    eoi_send();
-    interrupt_enable();
-    return;
+    printk("ELF OK");
 }
 
-void control_protection_exception(void)
+void control_protection_exception_handler(void)
 {
-    screen_clear();
-    xprintf("%zControl protection exception", set_output_color(red,white));
-    reg_dump();
-    interrupt_disable();
-    asm("hlt");
+    printk("ERROR: CONTROL PROTECTION EXCEPTION");
+    exception_print("CONTROL PROTECTION EXCETPION");
 }
 
-void no_handler(void)
-{
-    asm("out 0x20, al":: "ax"(0x20));
-    
-    while(1);
-}
 
 void reboot_interrupt(void)
 {

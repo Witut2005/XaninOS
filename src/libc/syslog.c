@@ -17,9 +17,7 @@ void printk(const char * str)
 
 
     char separator = ':';
-    uint8_t* file_data = (uint8_t*)calloc(512);
-    fread(file, file_data, 512);
-    fseek(file, strlen(file_data));
+    fseek(file, file->size);
     
     fwrite(file, bcd_to_str(SystemTime.hour, buf), strlen(buf));
 
@@ -42,7 +40,6 @@ void printk(const char * str)
 
     // current_line++;
     free(buf);
-    free(file_data);
 
     fclose(&file);
 }
