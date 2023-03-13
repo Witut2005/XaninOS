@@ -181,16 +181,10 @@ class string
         strcpy(this->string_data, str.c_str());  
     }
     
-    string(string& str)
-    {
-        strcpy(this->string_data, str.string_data);  
-    }
-
     string(string&& str)
     {
         this->string_data = str.string_data;
         str.string_data = NULL;
-
     }
 
     string operator = (const char* x)

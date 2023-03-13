@@ -4,6 +4,7 @@
 namespace std
 {
 
+
 /* https://en.cppreference.com/w/cpp/types/remove_pointer */
 template< class T > struct remove_pointer                    {typedef T type;};
 template< class T > struct remove_pointer<T*>                {typedef T type;};
@@ -46,5 +47,42 @@ struct is_pointer<T* const volatile> : std::true_type {};
 #define is_char(T) (sizeof(T) == sizeof(char))
 
 // static const char* const nullptr;
+
+enum class Types
+{
+    uint8_t, 
+    char, 
+    uint16_t,
+    short, 
+    uint32_t,
+    int,
+    string
+};
+
+constexpr Types type(const uint8_t x);
+{
+    return Types::uint8_t;
+}
+constexpr Types type(const char x)
+{
+    return Types::char;
+}
+constexpr Types type(const uint16_t x)
+{
+    return Types::uint16_t;
+}
+constexpr Types type(const short x)
+{
+    return Types::short;
+}
+constexpr Types type(const int x)
+{
+    return Types::int;
+}
+
+constexpr Types type(const std::string& x)
+{
+    return Types::string;
+}
 
 }
