@@ -444,22 +444,11 @@ build:
 
 
 run:
-	@# qemu-system-i386 -smp 2 -net nic,model=e1000 -drive file=../bin/xanin.img,cache=unsafe -m 512
-	@# sudo qemu-system-i386 -drive file=../bin/xanin.img,cache=unsafe -net nic,model=e1000 -net tap -m 256 -vga std
-	@# qemu-system-i386 -m 256 -drive file=../bin/xanin.img,cache=unsafe -netdev user,id=network0 -device e1000,netdev=network0,mac=52:54:00:12:34:56 
-
-	# @sudo /etc/qemu-ifup tap0
 	@sudo qemu-system-i386 -m 256 -drive file=../bin/xanin.img,cache=unsafe -net nic -net tap,ifname=tap0,script=no,downscript=no
-	# @sudo qemu-system-i386 -m 256 -drive file=../bin/xanin.img,cache=unsafe -nic none
-	# @sudo /etc/qemu-ifdown tap0
-
-	@# sudo qemu-system-i386 -drive file=../bin/xanin.img,cache=unsafe -m 512
-	@#sudo qemu-system-i386 -drive file=../bin/xanin.img,cache=unsafe -m 8192 -netdev user,id=user.0 -device e1000,netdev=user.0
-
 
 curses:
-	sudo qemu-system-i386 -drive file=../bin/xanin.img,cache=unsafe -net nic,model=e1000 -net tap -m 256 -curses
+	@sudo qemu-system-i386 -m 256 -drive file=../bin/xanin.img,cache=unsafe -net nic -net tap,ifname=tap0,script=no,downscript=no -curses
 
 debug:
-	sudo qemu-system-i386 -drive file=../bin/xanin.img,cache=unsafe -net nic,model=e1000 -net tap -m 256 -s -S
+	@sudo qemu-system-i386 -drive file=../bin/xanin.img,cache=unsafe -net nic,model=e1000 -net tap -m 256 -s -S
 

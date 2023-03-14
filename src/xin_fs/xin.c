@@ -480,7 +480,7 @@ void create_file_kernel(char* entry_name)
     entry->modification_time = (uint16_t)(SystemTime.hour << 8) | (SystemTime.minutes);
     entry->FileInfo = NULL;
     entry->permissions = PERMISSION_MAX;
-    entry->size = 0x0;
+    entry->size = SECTOR_SIZE * 16;
     entry->type = XIN_FILE;
 
     entry->first_sector = (uint32_t)write_entry - XIN_ENTRY_POINTERS;

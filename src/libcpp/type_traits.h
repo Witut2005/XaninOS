@@ -51,33 +51,33 @@ struct is_pointer<T* const volatile> : std::true_type {};
 enum class Types
 {
     uint8_t, 
-    char, 
+    character, 
     uint16_t,
-    short, 
+    int16_t, 
     uint32_t,
-    int,
+    integer,
     string
 };
 
-constexpr Types type(const uint8_t x);
+constexpr Types type(const uint8_t x)
 {
     return Types::uint8_t;
 }
 constexpr Types type(const char x)
 {
-    return Types::char;
+    return Types::character;
 }
 constexpr Types type(const uint16_t x)
 {
     return Types::uint16_t;
 }
-constexpr Types type(const short x)
+constexpr Types type(const int16_t x)
 {
-    return Types::short;
+    return Types::int16_t;
 }
 constexpr Types type(const int x)
 {
-    return Types::int;
+    return Types::integer;
 }
 
 constexpr Types type(const std::string& x)
