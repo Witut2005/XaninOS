@@ -15,15 +15,10 @@
 
 //#define IF_FILE_NOT_EXIST
 
-uint8_t enter_real_mode_buffer[512];
-uint8_t shutdown_program_buffer[512];
-uint8_t* bootloader_program_buffer;
-uint8_t* kernel_load_backup;
-
 XinFileDescriptor* FileDescriptorTable;
 
 
-uint8_t xin_base_state[100];
+int8_t xin_base_state[100];
 char xin_current_path[38] = {'\0'};
 char xin_current_directory[38] = {'\0'};
 
@@ -438,15 +433,6 @@ void xin_init_fs(void)
     if(xin_find_entry("/screenshot/") == NULL)
         xin_folder_create("/screenshot/");
 
-    uint32_t k = 0;
-
-    for(char* i = (char*)0x600; i < (char*)0x600 + 0x200; i++, k++)
-        enter_real_mode_buffer[k] = *i;
-    
-    k = 0;
-
-    for(char* i = (char*)0x400; i < (char*)0x400 + SECTOR_SIZE; i++, k++)
-        shutdown_program_buffer[k] = *i;
 
     xin_folder_change("/");
 
@@ -637,8 +623,10 @@ int xin_file_create(char* entry_name)
 int xin_file_reallocate_with_given_size(XinEntry* File, uint32_t size)
 {
 
-    uint8_t* buf = (uint8_t*)calloc(int_to_sectors(size) * SECTOR_SIZE);
-    memcpy(buf, File->FileInfo->buffer, size);
+    if(!size)
+        size++;
+
+    FileInformationBlock* OldInfo = File->FileInfo;
 
     if(File == NULL)
         return XANIN_ERROR;
@@ -672,6 +660,7 @@ int xin_file_reallocate_with_given_size(XinEntry* File, uint32_t size)
 
     time_get(&SystemTime);
 
+
     File->creation_date = (uint32_t)((SystemTime.day_of_month << 24) | (SystemTime.month << 16) | (SystemTime.century << 8) | (SystemTime.year)); 
     File->creation_time = (uint16_t)(SystemTime.hour << 8) | (SystemTime.minutes);
     File->modification_date = (uint32_t)((SystemTime.day_of_month << 24) | (SystemTime.month << 16) | (SystemTime.century << 8) | (SystemTime.year)); 
@@ -682,12 +671,14 @@ int xin_file_reallocate_with_given_size(XinEntry* File, uint32_t size)
     File->type = XIN_FILE;
     File->first_sector = (uint32_t)write_entry - XIN_ENTRY_POINTERS;
 
-    disk_write(ATA_FIRST_BUS, ATA_MASTER, File->first_sector, number_of_sectors_to_allocate, (uint16_t*)buf);
+    disk_write(ATA_FIRST_BUS, ATA_MASTER, File->first_sector, number_of_sectors_to_allocate, (uint16_t*)OldInfo->buffer);
     
     disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x12, 8, (uint16_t*)0x800);
     disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x1a, 40, (uint16_t*)(0x1800));
 
-    free(buf);
+    free(OldInfo->buffer);
+    free(OldInfo->sector_in_use);
+    free(OldInfo);
 
     return XANIN_OK;
 }
@@ -732,6 +723,9 @@ size_t fread(XinEntry *entry, void *buf, size_t count)
 {
 
     //////////////////VALIDATION///////////////////
+    
+    if(!count)
+        return 0;
 
     if(entry == NULL)
         return 0;
@@ -750,13 +744,19 @@ size_t fread(XinEntry *entry, void *buf, size_t count)
     
     //////////////////////////////////////////////////
 
-    char* begin = (char *)(entry->FileInfo->buffer + ftell(entry));
-    char* end = (char *)(entry->FileInfo->buffer + ftell(entry) + count);
+    if(initial_position + count > entry->FileInfo->tmp_size)
+        entry->FileInfo->tmp_size = initial_position + count;
+
+    if(entry->FileInfo->tmp_size > entry->size)
+    {
+        entry->FileInfo->buffer = (uint8_t*)realloc(entry->FileInfo->buffer, (entry->FileInfo->tmp_size) * sizeof(uint8_t));
+        entry->FileInfo->sector_in_use = (bool*)realloc(entry->FileInfo->sector_in_use, int_to_sectors(entry->FileInfo->tmp_size) * sizeof(bool));
+    }
 
     uint32_t sectors_to_load = int_to_sectors(count + initial_position);
 
-    if((count + entry->FileInfo->position) % SECTOR_SIZE != 0)
-        sectors_to_load++;
+    if(sectors_to_load > int_to_sectors(entry->size))
+        sectors_to_load = int_to_sectors(entry->size);
 
     for(int i = 0; i < sectors_to_load; i++)
     {
@@ -767,7 +767,7 @@ size_t fread(XinEntry *entry, void *buf, size_t count)
         }
     }
 
-    for (char *i = begin; i < end; i++, buf++)
+    for (char *i = (char*)(entry->FileInfo->buffer + initial_position); i < (char*)(entry->FileInfo->buffer + initial_position + count); i++, buf++)
         *(char *)buf = *i;
 
     fseek(entry, initial_position + count);
@@ -806,6 +806,9 @@ size_t read(int fd, void *buf, size_t count)
 size_t fwrite(XinEntry *entry, void *buf, size_t count)
 {
     //////////////////VALIDATION///////////////////
+    
+    if(!count)
+        return 0;
 
     if(entry == NULL)
         return 0;
@@ -815,14 +818,18 @@ size_t fwrite(XinEntry *entry, void *buf, size_t count)
 
     //////////////////////////////////////////////////
 
-    char* end = (char *)(entry->FileInfo->buffer + count + ftell(entry));
     uint32_t initial_position = ftell(entry);
 
-    if(initial_position + count > entry->FileInfo->tmp_size)
+    if((initial_position + count) > entry->FileInfo->tmp_size)
         entry->FileInfo->tmp_size = initial_position + count;
 
+    entry->FileInfo->buffer = (uint8_t*)realloc(entry->FileInfo->buffer, SECTOR_SIZE * 2);
+    entry->FileInfo->sector_in_use = (bool*)realloc(entry->FileInfo->sector_in_use, SECTOR_SIZE * 2);
 
     uint32_t sectors_to_load = int_to_sectors(count + initial_position);
+
+    if(sectors_to_load > int_to_sectors(entry->size))
+        sectors_to_load = int_to_sectors(entry->size);
     
     for(int i = 0; i < sectors_to_load; i++)
     {
@@ -835,7 +842,7 @@ size_t fwrite(XinEntry *entry, void *buf, size_t count)
 
     fseek(entry, initial_position);
 
-    for (char *i = (char *)(entry->FileInfo->buffer) + initial_position; i < end; i++, buf++)
+    for (char *i = (char *)(entry->FileInfo->buffer) + initial_position; i < (char*)(entry->FileInfo->buffer + initial_position + count); i++, buf++)
     {
         *i = *(char *)buf;
         fseek(entry, ftell(entry) + 1);
@@ -901,32 +908,34 @@ XinEntry *fopen(char *file_path, char *mode)
 
     XinEntry* file = xin_find_entry(file_path);
 
-    if(file->type != XIN_FILE && file->type != XIN_HARD_LINK)
-        return NULL;
 
     if(file != NULL)
     {
+    	if(file->type != XIN_FILE && file->type != XIN_HARD_LINK)
+		return NULL;
+
         file->FileInfo = (FileInformationBlock*)calloc(sizeof(FileInformationBlock));
-        file->FileInfo->buffer = (uint8_t*)calloc(SECTOR_SIZE * 0x10);
-        file->FileInfo->sector_in_use = (bool*)calloc(0x10 * sizeof(bool));
+        file->FileInfo->buffer = (uint8_t*)calloc(file->size + SECTOR_SIZE);
+        file->FileInfo->sector_in_use = (bool*)calloc(int_to_sectors(file->size) + 5);
 
         memset(file->FileInfo->rights, '\0', 2); //set file rights
         strcpy(file->FileInfo->rights, mode);
 
         file->FileInfo->position = 0;
-        file->FileInfo->tmp_size = 0;
+        file->FileInfo->tmp_size = file->size;
     }
 
     if(strncmp(mode, "a", 2))
     {
+        file->FileInfo = (FileInformationBlock*)calloc(sizeof(FileInformationBlock));
+        file->FileInfo->buffer = (uint8_t*)calloc(file->size + SECTOR_SIZE);
+        file->FileInfo->sector_in_use = (bool*)calloc(int_to_sectors(file->size) + 5);
 
-        uint32_t sectors_to_load = file->size / SECTOR_SIZE;
+        memset(file->FileInfo->rights, '\0', 2); //set file rights
+        strcpy(file->FileInfo->rights, mode);
 
-        if(file->size % SECTOR_SIZE != 0)
-            sectors_to_load++;
-
-        for(int i = 0; i < sectors_to_load; i++)
-            disk_read(ATA_FIRST_BUS, ATA_MASTER, file->first_sector + i, 1, (uint16_t*)(file->FileInfo->buffer + (i * SECTOR_SIZE)));
+        file->FileInfo->position = file->size;
+        file->FileInfo->tmp_size = file->size;
 
         return file;
     }
@@ -943,10 +952,16 @@ XinEntry *fopen(char *file_path, char *mode)
 
         if(status == XANIN_OK)
         {
-            file = xin_find_entry(file_path);
+      	    file = xin_find_entry(file_path);
+            file->FileInfo = (FileInformationBlock*)calloc(sizeof(FileInformationBlock));
+            file->FileInfo->buffer = (uint8_t*)calloc(file->size + SECTOR_SIZE);
+            file->FileInfo->sector_in_use = (bool*)calloc(int_to_sectors(file->size) + 5);
+
+            memset(file->FileInfo->rights, '\0', 2); //set file rights
             strcpy(file->FileInfo->rights, mode);
-            file->FileInfo->sector_in_use = (bool*)calloc(0x10 * sizeof(bool));
+
             file->FileInfo->position = 0;
+            file->FileInfo->tmp_size = file->size;
             return file;
         }
 

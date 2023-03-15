@@ -44,14 +44,7 @@ typedef struct XinChildrenEntries XinChildrenEntries;
 extern char xin_current_path[38];
 extern char xin_current_directory[38];
 
-extern uint8_t enter_real_mode_buffer[512];
-extern uint8_t shutdown_program_buffer[512];
-
-extern uint8_t* bootloader_program_buffer;
-extern uint8_t* kernel_load_backup;
-
 extern XinFileDescriptor* FileDescriptorTable;
-
 
 #ifdef __cplusplus
 extern "C" {

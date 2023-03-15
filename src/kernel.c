@@ -325,9 +325,6 @@ void _start(void)
     xprintf("\n%z----------------------------\n", set_output_color(black, green));
     xprintf("Com port status: 0x%x\n", com_status());
 
-    bootloader_program_buffer = (uint8_t *)malloc(sizeof(uint8_t) * SECTOR_SIZE); // must be before xin_init_fs
-    memcpy(bootloader_program_buffer, (uint8_t *)0x7C00, SECTOR_SIZE);
-
     xprintf("Press ENTER to continue...\n");
 
     static int number_of_cores;
@@ -459,22 +456,24 @@ void _start(void)
     __sys_xin_file_create("/syslog");
     printk("To wszystko dla Ciebie Babciu <3");
 
-    // __sys_xin_folder_create("/config/");
-    // __sys_xin_file_create("/config/nic.conf");
-    // XinEntry* nic_config = fopen("/config/nic.conf", "rw");
-    // fwrite(nic_config, "192.168.019.012  //XaninOS nic IP address(USE ALWAYS FULL OCTETS)", ARRAY_LENGTH("192.168.019.012  //XaninOS nic IP address(USE ALWAYS FULL OCTETS"));
-    // fclose(&nic_config);
-    
-    // xprintf("YOUR IP ADDRESS: ");
-    // uint32_t base_ip = xanin_ip_get();
-    // // xprintf("%d", base_ip);
-    // for(uint8_t i = 3; i > 0; i--)
+    __sys_xin_folder_create("/config/");
+    // int status = __sys_xin_file_create("/config/nic.conf");
+    // if(status == XANIN_OK)
     // {
-    //     uint8_t* tmp = (uint8_t*)&base_ip;
-    //     xprintf("%d.", tmp[i]);
+    //     XinEntry* nic_config = fopen("/config/nic.conf", "rw");
+    //     fwrite(nic_config, "192.168.019.012  //XaninOS nic IP address(USE ALWAYS FULL OCTETS)", ARRAY_LENGTH("192.168.019.012  //XaninOS nic IP address(USE ALWAYS FULL OCTETS"));
+    //     fclose(&nic_config);
     // }
 
-    // xprintf("%d\n", ((uint8_t*)&base_ip)[0]);
+    xprintf("YOUR IP ADDRESS: ");
+    uint32_t base_ip = xanin_ip_get();
+    for(uint8_t i = 3; i > 0; i--)
+    {
+        uint8_t* tmp = (uint8_t*)&base_ip;
+        xprintf("%d.", tmp[i]);
+    }
+
+    xprintf("%d\n", ((uint8_t*)&base_ip)[0]);
 
     // system_variable_get(&bufsys, "HOME");
     // xprintf("bufsys: %s\n", bufsys);

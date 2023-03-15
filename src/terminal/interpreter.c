@@ -74,6 +74,7 @@ void scan(void)
         }
     }
 
+    XANIN_ADD_APP_ENTRY0("netplan_apply", netplan_apply)
     XANIN_ADD_APP_ENTRY0("usb_info", usb_controller_info)
     XANIN_ADD_APP_ENTRY0("memtest", memory_test)
     // XANIN_ADD_APP_ENTRY0("grapher", grapher)
