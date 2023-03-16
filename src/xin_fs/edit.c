@@ -11,6 +11,7 @@ static uint32_t file_position;
 static char* program_buffer;
 static uint16_t* cursor;
 static int column, current_line, total_lines;
+static int number_of_sectors;
 char* begin_of_current_text;
 
 #define MOVE_CURSOR_TO_FIRST_CHARACTER() while(((uint32_t)cursor - VGA_TEXT_MEMORY) % 0xA0 != 0) \
@@ -23,8 +24,34 @@ char* begin_of_current_text;
 #define MOVE_CURSOR_TO_PREVIOUS_ROW() cursor = cursor - VGA_WIDTH
 
 
-void edit_input(xchar Input)
+void edit_input(xchar Input, XinEntry* File)
 {
+    
+    File->FileInfo->tmp_size = strlen(program_buffer);
+    program_buffer[strlen(program_buffer)] = '\0';
+
+    if(int_to_sectors(File->FileInfo->tmp_size) > number_of_sectors)
+    {
+        number_of_sectors++;
+        File->FileInfo->buffer = realloc(File->FileInfo->buffer, number_of_sectors * SECTOR_SIZE);
+        program_buffer = File->FileInfo->buffer;
+
+        int tmp = current_line - (VGA_HEIGHT-1);
+        screen_clear();
+
+        int j = 0;
+
+        for(int i = 0; i < tmp; i++)
+        {
+            while(program_buffer[j] != '\n')                
+                j++;
+            j++;
+        }
+
+        begin_of_current_text = &program_buffer[j];
+
+    }
+
     int x_save = Screen.x; 
     int y_save = Screen.y;
 
@@ -351,15 +378,12 @@ void edit_input(xchar Input)
             MOVE_CURSOR_TO_NEXT_ROW();
 
         MOVE_CURSOR_TO_FIRST_CHARACTER();
-        
-
 
         int i;
 
         while(program_buffer[file_position] != '\n')
             file_position++;
         file_position++;
-
 
         if(current_line >= VGA_HEIGHT)
         {
@@ -404,8 +428,6 @@ void edit_input(xchar Input)
 
         file_position++;
 
-
-
         cursor++;
         screen_clear();
         // xprintf("%s", program_buffer);
@@ -423,20 +445,34 @@ int edit(char* file_name)
 {
 
     screen_clear();
-    XinEntry* file = fopen(file_name, "rw");
+    XinEntry* file = xin_find_entry(file_name);
 
     if(file == NULL)
     {
         xprintf("Couldn't open file %s\n", file_name);
-        while(KeyInfo.scan_code != ENTER);
-        return 3;
+        xprintf("Do want to create it?\nY/n ");
+
+        char selected_option = inputg().character;
+        if(selected_option == 'n' || selected_option == 'N')
+            return XANIN_ERROR;
+        file = fopen(file_name, "rw");
     }
+
+    else
+        file = fopen(file_name, "rw");
+    
+    screen_clear();
     
     cursor = (uint16_t*)VGA_TEXT_MEMORY;
     *cursor = (uint16_t)(*cursor + (((white << 4) | black) << 8));
 
-    program_buffer = (char*) calloc(VGA_SCREEN_RESOLUTION);
+    program_buffer = (char*) calloc(file->size);
     fread(file, program_buffer, file->size);
+    free(program_buffer);
+
+    number_of_sectors = int_to_sectors(file->size);
+
+    program_buffer = file->FileInfo->buffer;
 
     file_position = 0x0;
 
@@ -452,18 +488,23 @@ int edit(char* file_name)
 
 
     while(KeyInfo.scan_code != F4_KEY && KeyInfo.scan_code != F4_KEY_RELEASE && KeyInfo.scan_code != ESC)
-        edit_input(inputg());
+        edit_input(inputg(), file);
 
-    file_position = strlen(program_buffer);
+    //file_position = strlen(program_buffer);
 
-    fseek(file, 0x0);
-    fwrite(file, program_buffer, strlen(program_buffer));
 
-    fclose(&file);
+    /*
+    xprintf("sectors: %d\n", number_of_sectors);
+    xprintf("tmp_size: %d\n", file->FileInfo->tmp_size);
+    while(inputg().scan_code != ENTER);
+    while(inputg().scan_code != ENTER);
+    */
 
-    current_line = 0x0;
-    column = 0x0;
-    total_lines = 0x0;
+    fclose_with_given_size(&file, strlen(program_buffer) + 1);//we need to include '\0' character
+
+    current_line = NULL;
+    column = NULL;
+    total_lines = NULL;
 
     free(program_buffer);
 

@@ -32,6 +32,7 @@ struct FileInformationBlock
     uint8_t* buffer;
     uint32_t tmp_size;
     bool* sector_in_use;
+    bool is_fully_loaded;
 }__attribute__((packed));
 
 #ifndef __cplusplus

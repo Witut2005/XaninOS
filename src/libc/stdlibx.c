@@ -325,11 +325,18 @@ void* realloc(void* ptr, uint32_t size_new)
 
 }
 
+char inputc(void)
+{
+    KeyInfo.scan_code = 0x0;
+    while(KeyInfo.character== 0x0);
+    return KeyInfo.character;
+}
+
 
 xchar inputg(void)
 {
-    KeyInfo.scan_code = 0x0;
-    while(KeyInfo.scan_code == 0x0);
+    KeyInfo.scan_code = 0xFf;
+    while(KeyInfo.scan_code > 0x80);
     
     xchar x;
 

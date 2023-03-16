@@ -107,6 +107,7 @@ extern void* realloc(void* ptr, uint32_t size_new);
 extern void exit(void);
 extern uint32_t rand(void);
 xchar inputg(void);
+char inputc(void);
 uint32_t int_to_sectors(uint32_t num);
 
 #ifdef __cplusplus

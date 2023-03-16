@@ -77,6 +77,7 @@ XinEntry* xin_find_entry(char *entry_name);
 __STATUS remove_directory(char* folder_name);
 void create_file_kernel(char* entry_name);
 void fclose(XinEntry** file);
+void fclose_with_given_size(XinEntry** file, uint32_t new_size);
 void close(int fd);
 char* getline(XinEntry* file, int line_id);
 char* getline_from_ptr(char* data, int line_id);

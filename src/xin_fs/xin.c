@@ -623,16 +623,16 @@ int xin_file_create(char* entry_name)
 int xin_file_reallocate_with_given_size(XinEntry* File, uint32_t size)
 {
 
-    if(!size)
-        size++;
+    interrupt_disable();
 
     FileInformationBlock* OldInfo = File->FileInfo;
 
+    uint8_t* buf = (uint8_t*)calloc(int_to_sectors(size) * SECTOR_SIZE); 
+    memcpy(buf, File->FileInfo->buffer, size);
+    memset(&buf[size], 0, (int_to_sectors(size) * SECTOR_SIZE) - size);
+
     if(File == NULL)
         return XANIN_ERROR;
-
-    if(File->size >= size)
-        return XANIN_OK;
 
     uint32_t number_of_sectors_to_deallocate = int_to_sectors(File->size);
     if(!number_of_sectors_to_deallocate)
@@ -671,11 +671,12 @@ int xin_file_reallocate_with_given_size(XinEntry* File, uint32_t size)
     File->type = XIN_FILE;
     File->first_sector = (uint32_t)write_entry - XIN_ENTRY_POINTERS;
 
-    disk_write(ATA_FIRST_BUS, ATA_MASTER, File->first_sector, number_of_sectors_to_allocate, (uint16_t*)OldInfo->buffer);
+    disk_write(ATA_FIRST_BUS, ATA_MASTER, File->first_sector, number_of_sectors_to_allocate, (uint16_t*)buf);
     
     disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x12, 8, (uint16_t*)0x800);
     disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x1a, 40, (uint16_t*)(0x1800));
 
+    free(buf);
     free(OldInfo->buffer);
     free(OldInfo->sector_in_use);
     free(OldInfo);
@@ -922,7 +923,8 @@ XinEntry *fopen(char *file_path, char *mode)
         strcpy(file->FileInfo->rights, mode);
 
         file->FileInfo->position = 0;
-        file->FileInfo->tmp_size = file->size;
+        file->FileInfo->tmp_size = 0;
+        file->FileInfo->is_fully_loaded = false;
     }
 
     if(strncmp(mode, "a", 2))
@@ -936,6 +938,7 @@ XinEntry *fopen(char *file_path, char *mode)
 
         file->FileInfo->position = file->size;
         file->FileInfo->tmp_size = file->size;
+        file->FileInfo->is_fully_loaded = true;
 
         return file;
     }
@@ -961,7 +964,8 @@ XinEntry *fopen(char *file_path, char *mode)
             strcpy(file->FileInfo->rights, mode);
 
             file->FileInfo->position = 0;
-            file->FileInfo->tmp_size = file->size;
+            file->FileInfo->tmp_size = 0;
+            file->FileInfo->is_fully_loaded = false;
             return file;
         }
 
@@ -976,6 +980,21 @@ XinEntry *fopen(char *file_path, char *mode)
 
     return NULL;
 }
+
+void fclose_with_given_size(XinEntry** file, uint32_t new_size)
+{
+    interrupt_disable();
+
+    if(strncmp((*file)->FileInfo->rights, "r", 2))
+        return;
+    
+    xin_file_reallocate_with_given_size((*file), new_size);
+    // xin_free_temporary_data(file);
+
+    interrupt_enable();
+
+}
+
 
 
 void fclose(XinEntry** file)

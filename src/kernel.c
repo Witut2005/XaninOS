@@ -452,7 +452,6 @@ void _start(void)
 
     i8254x_init();
 
-
     __sys_xin_file_create("/syslog");
     printk("To wszystko dla Ciebie Babciu <3");
 
