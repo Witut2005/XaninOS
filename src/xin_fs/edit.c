@@ -7,404 +7,251 @@
 #include <libc/string.h>
 #include <libc/memory.h>
 
-static uint32_t file_position;
-static char* program_buffer;
-static uint16_t* cursor;
-static int column, current_line, total_lines;
-static int number_of_sectors;
-char* begin_of_current_text;
+#define MOVE_CURSOR_TO_FIRST_CHARACTER(EditState) while(((uint32_t)EditState->cursor - VGA_TEXT_MEMORY) % 0xA0 != 0) \
+            EditState->cursor--
 
-#define MOVE_CURSOR_TO_FIRST_CHARACTER() while(((uint32_t)cursor - VGA_TEXT_MEMORY) % 0xA0 != 0) \
-            cursor--
+#define MOVE_CURSOR_TO_END_OF_LINE(EditState) while((char)(*EditState->cursor) != '\0') \
+                EditState->cursor++
 
-#define MOVE_CURSOR_TO_END_OF_LINE() while((char)(*cursor) != '\0') \
-                cursor++
+#define MOVE_CURSOR_TO_NEXT_ROW(EditState) EditState->cursor = EditState->cursor + VGA_WIDTH
+#define MOVE_CURSOR_TO_PREVIOUS_ROW(EditState) EditState->cursor = EditState->cursor - VGA_WIDTH
+#define CURSOR_SELECT_MODE_SET(EditState) *(EditState)->cursor = (uint16_t)((char)(*(EditState)->cursor) + (((white << 4) | black) << 8));
+#define CURSOR_NORMAL_MODE_SET(EditState) *(EditState)->cursor = (uint16_t)((char)(*(EditState)->cursor) + (((black << 4) | white) << 8));
 
-#define MOVE_CURSOR_TO_NEXT_ROW() cursor = cursor + VGA_WIDTH
-#define MOVE_CURSOR_TO_PREVIOUS_ROW() cursor = cursor - VGA_WIDTH
+struct EditInfo
+{
+    uint32_t file_position;
+    uint16_t* cursor;
+    uint32_t column;
+    uint32_t current_line;
+    uint32_t total_lines;
+    uint32_t number_of_sectors;
+    char* program_buffer;
+    char* begin_of_current_text;
+};
+
+typedef struct EditInfo EditInfo;
 
 
-void edit_input(xchar Input, XinEntry* File)
+int edit_get_begin_of_printed_text(EditInfo* EditState)
+{
+    int tmp = EditState->current_line - (VGA_HEIGHT-1);
+    int j = 0;
+
+    for(int i = 0; i < tmp; i++)
+    {
+        while(EditState->program_buffer[j] != '\n')                
+            j++;
+        j++;
+    }
+
+    return j;
+
+}
+
+void edit_input(xchar Input, XinEntry* File, EditInfo* EditState)
 {
     
-    File->FileInfo->tmp_size = strlen(program_buffer);
-    program_buffer[strlen(program_buffer)] = '\0';
+    File->FileInfo->tmp_size = strlen(EditState->program_buffer);
+    EditState->program_buffer[strlen(EditState->program_buffer)] = '\0';
 
-    if(int_to_sectors(File->FileInfo->tmp_size) > number_of_sectors)
+    if(int_to_sectors(File->FileInfo->tmp_size) > EditState->number_of_sectors)
     {
-        number_of_sectors++;
-        File->FileInfo->buffer = realloc(File->FileInfo->buffer, number_of_sectors * SECTOR_SIZE);
-        program_buffer = File->FileInfo->buffer;
-
-        int tmp = current_line - (VGA_HEIGHT-1);
-        screen_clear();
-
-        int j = 0;
-
-        for(int i = 0; i < tmp; i++)
-        {
-            while(program_buffer[j] != '\n')                
-                j++;
-            j++;
-        }
-
-        begin_of_current_text = &program_buffer[j];
-
+        EditState->number_of_sectors++;
+        File->FileInfo->buffer = realloc(File->FileInfo->buffer, EditState->number_of_sectors * SECTOR_SIZE);
+        EditState->program_buffer = File->FileInfo->buffer;
     }
 
     int x_save = Screen.x; 
     int y_save = Screen.y;
 
-    if(Screen.cursor[70][VGA_HEIGHT-1] == 0x0)
-    {
-        for(int i = 0; i < 5; i++)
-            Screen.cursor[Screen.y][Screen.x + i] = 0x0;
-
-        cursor_set_position(70, VGA_HEIGHT - 1); 
-        xprintf("%d/%d", current_line, total_lines);
-    }
-
-    *cursor = (uint16_t)((char)(*cursor) + (((white << 4) | black) << 8));
-
     if(KeyInfo.is_ctrl == true)
     {
-        *cursor = (uint16_t)((char)(*cursor) + (((black << 4) | white) << 8));
-    
         if(Input.character == '$')
         {
-            while(program_buffer[file_position] != '\n' && program_buffer[file_position] != '\0')
-                file_position++;
+            while(EditState->program_buffer[EditState->file_position] != '\n' && EditState->program_buffer[EditState->file_position] != '\0')
+                EditState->file_position++;
 
-            MOVE_CURSOR_TO_END_OF_LINE();
+            MOVE_CURSOR_TO_END_OF_LINE(EditState);
 
         }
 
         else if(Input.character == '0')
         {
-            while(program_buffer[file_position-1] != '\n' && file_position != 0)
-                file_position--;
+            while(EditState->program_buffer[EditState->file_position-1] != '\n' && EditState->file_position != 0)
+                EditState->file_position--;
 
-            MOVE_CURSOR_TO_FIRST_CHARACTER();
+            MOVE_CURSOR_TO_FIRST_CHARACTER(EditState);
         }
-
-        *cursor = (uint16_t)((char)(*cursor) + (((white << 4) | black) << 8));
-
     }
 
     else if(Input.scan_code == ENTER)
     {
-        *cursor = (uint16_t)((char)(*cursor) + (((black << 4) | white) << 8));
+        char* tmp = (char*)calloc(strlen(EditState->program_buffer)) + 1;
+        memcpy(tmp, EditState->program_buffer, strlen(EditState->program_buffer) + 1);
 
-        char* tmp = (char*)calloc(strlen(program_buffer)) + 1;
-        memcpy(tmp, program_buffer, strlen(program_buffer) + 1);
-
-        int i =  file_position;
+        int i =  EditState->file_position;
         for(; i < strlen(tmp) + 1; i++)
-            program_buffer[i + 1] = tmp[i];
+            EditState->program_buffer[i + 1] = tmp[i];
 
-        program_buffer[file_position] = '\n';
+        EditState->program_buffer[EditState->file_position] = '\n';
 
-        file_position++;
-        total_lines++;
-        current_line++;
+        EditState->file_position++;
+        EditState->total_lines++;
+        EditState->current_line++;
 
-        if(current_line >= VGA_HEIGHT)
-        {
-
-            if(current_line >= VGA_HEIGHT)
-            {
-                int tmp = current_line - (VGA_HEIGHT-1);
-                screen_clear();
-
-                int j = 0;
-
-                for(int i = 0; i < tmp; i++)
-                {
-                    while(program_buffer[j] != '\n')                
-                        j++;
-                    j++;
-                }
-
-                begin_of_current_text = &program_buffer[j];
-                // xprintf("%s", &program_buffer[j]);
-
-            }
-            
-            if(current_line < VGA_HEIGHT)
-                MOVE_CURSOR_TO_NEXT_ROW();
-            MOVE_CURSOR_TO_FIRST_CHARACTER();
+        if(EditState->current_line >= VGA_HEIGHT)
+        {            
+            MOVE_CURSOR_TO_FIRST_CHARACTER(EditState);
         }
 
         else
         {
-            MOVE_CURSOR_TO_NEXT_ROW();
-            MOVE_CURSOR_TO_FIRST_CHARACTER();
+            MOVE_CURSOR_TO_NEXT_ROW(EditState);
+            MOVE_CURSOR_TO_FIRST_CHARACTER(EditState);
         }
-
-        screen_clear();
-        xprintf("%s", begin_of_current_text);
-
-        *cursor = (uint16_t)((char)(*cursor) + (((white << 4) | black) << 8));
     }
 
     else if(Input.scan_code == TAB_KEY)
     {
-        *cursor = (uint16_t)((char)(*cursor) + (((black << 4) | white) << 8));
+        char* tmp = (char*)calloc(strlen(EditState->program_buffer)) + 3;
+        memcpy(tmp, EditState->program_buffer, strlen(EditState->program_buffer) + 3);
 
-        char* tmp = (char*)calloc(strlen(program_buffer)) + 3;
-        memcpy(tmp, program_buffer, strlen(program_buffer) + 3);
-
-        int i =  file_position;
+        int i =  EditState->file_position;
         for(; i < strlen(tmp) + 3; i++)
-            program_buffer[i + 3] = tmp[i];
+            EditState->program_buffer[i + 3] = tmp[i];
 
-        program_buffer[file_position] = ' ';
-        program_buffer[file_position + 1] = ' ';
-        program_buffer[file_position + 2] = ' ';
+        EditState->program_buffer[EditState->file_position] = ' ';
+        EditState->program_buffer[EditState->file_position + 1] = ' ';
+        EditState->program_buffer[EditState->file_position + 2] = ' ';
 
-        file_position = file_position + 3;;
+        EditState->file_position = EditState->file_position + 3;;
 
-        screen_clear();
-        xprintf("%s", program_buffer);
-
-
-        cursor = cursor + 3;
-        *cursor = (uint16_t)((char)(*cursor) + (((white << 4) | black) << 8));
+        EditState->cursor = EditState->cursor + 3;
     }
 
     else if(Input.scan_code == BSPC)
     {
-        if(!file_position)
+        if(!EditState->file_position)
             return;
 
-        *cursor = (uint16_t)((char)(*cursor) + (((black << 4) | white) << 8));
-
         int i;
-        char character_to_delete = program_buffer[file_position - 1];
+        char character_to_delete = EditState->program_buffer[EditState->file_position - 1];
 
-        for(i = file_position - 1; program_buffer[i] != '\0'; i++)
-            program_buffer[i] = program_buffer[i+1];
+        for(i = EditState->file_position - 1; EditState->program_buffer[i] != '\0'; i++)
+            EditState->program_buffer[i] = EditState->program_buffer[i+1];
 
         if(character_to_delete == '\n')
         {
-            current_line--;
-            total_lines--;
-            MOVE_CURSOR_TO_PREVIOUS_ROW();
-            MOVE_CURSOR_TO_END_OF_LINE();
+            EditState->current_line--;
+            EditState->total_lines--;
+            MOVE_CURSOR_TO_PREVIOUS_ROW(EditState);
+            MOVE_CURSOR_TO_END_OF_LINE(EditState);
         }
         
         else
-            cursor--;
+            EditState->cursor--;
 
-        program_buffer[i] = '\0';
+        EditState->program_buffer[i] = '\0';
         
-        screen_clear();
-
-        xprintf("%s", begin_of_current_text);
-        file_position--;
-
-        *cursor = (uint16_t)((char)(*cursor) + (((white << 4) | black) << 8));
+        EditState->file_position--;
 
     }
 
     else if(Input.scan_code == ARROW_LEFT)
     {
     
-        if(!file_position)
+        if(!EditState->file_position)
             return;
 
-        *cursor = (uint16_t)((char)(*cursor) + (((black << 4) | white) << 8));
-        
-        if(program_buffer[file_position - 1] == '\n')
+        if(EditState->program_buffer[EditState->file_position - 1] == '\n')
         {
-            current_line--;
+            if(EditState->current_line < VGA_HEIGHT)
+                MOVE_CURSOR_TO_PREVIOUS_ROW(EditState);
 
-            if(total_lines >= VGA_HEIGHT && (uint32_t)cursor == VGA_TEXT_MEMORY)
-            {
-                int tmp = current_line;
-                screen_clear();
+            MOVE_CURSOR_TO_END_OF_LINE(EditState);
 
-                int j = 0;
-
-                for(int i = 0; i < tmp; i++)
-                {
-                    while(program_buffer[j] != '\n')                
-                        j++;
-                    j++;
-                }
-
-                begin_of_current_text = &program_buffer[j];
-                xprintf("%s", begin_of_current_text);
-
-            }
-
-
-            MOVE_CURSOR_TO_PREVIOUS_ROW();
-            MOVE_CURSOR_TO_END_OF_LINE();
-        
+            EditState->current_line--;
         }
         
         else 
-            cursor--;
+            EditState->cursor--;
         
-        file_position--;
-        *cursor = (uint16_t)((char)(*cursor) + (((white << 4) | black) << 8));
-
+        EditState->file_position--;
     }
     
     else if(Input.scan_code == ARROW_RIGHT)
     {
 
 
-        if(program_buffer[file_position] != '\0')
+        if(EditState->program_buffer[EditState->file_position] != '\0')
         {
-            *cursor = (uint16_t)((char)(*cursor) + (((black << 4) | white) << 8));
             
-            if(program_buffer[file_position] == '\n')
+            if(EditState->program_buffer[EditState->file_position] == '\n')
             {
-                current_line++;
+                EditState->current_line++;
             
-
-                if(current_line >= VGA_HEIGHT)
-                {
-                    int tmp = current_line - (VGA_HEIGHT-1);
-                    screen_clear();
-
-                    int j = 0;
-
-                    for(int i = 0; i < tmp; i++)
-                    {
-                        while(program_buffer[j] != '\n')                
-                            j++;
-                        j++;
-                    }
-
-                    begin_of_current_text = &program_buffer[j];
-                    xprintf("%s", &program_buffer[j]);
-
-                }
-                
-                if(current_line < VGA_HEIGHT)
-                    MOVE_CURSOR_TO_NEXT_ROW();
-                MOVE_CURSOR_TO_FIRST_CHARACTER();
+                if(EditState->current_line < VGA_HEIGHT)
+                    MOVE_CURSOR_TO_NEXT_ROW(EditState);
+                MOVE_CURSOR_TO_FIRST_CHARACTER(EditState);
             
-
             }
 
             else 
-                cursor++;
+                EditState->cursor++;
             
-            file_position++;
+            EditState->file_position++;
         }
-        *cursor = (uint16_t)((char)(*cursor) + (((white << 4) | black) << 8));
     }
 
 
     else if(Input.scan_code == ARROW_UP)
     {
 
-        if(!current_line)
+        if(!EditState->current_line)
             return;
 
-        *cursor = (uint16_t)((char)(*cursor) + (((black << 4) | white) << 8));
-        
-
-        if((uint32_t)cursor > VGA_TEXT_MEMORY + VGA_WIDTH - 1)
+        if(EditState->current_line < VGA_HEIGHT)
         {
-            MOVE_CURSOR_TO_FIRST_CHARACTER();
-            MOVE_CURSOR_TO_PREVIOUS_ROW();
+            MOVE_CURSOR_TO_FIRST_CHARACTER(EditState);
+            MOVE_CURSOR_TO_PREVIOUS_ROW(EditState);
         }
 
-        //if((uint32_t)cursor <= VGA_TEXT_MEMORY + VGA_WIDTH - 1)
+        while(EditState->program_buffer[EditState->file_position-1] != '\n')
+            EditState->file_position--;
+        EditState->file_position--;
 
-        else
-        {
-            if(total_lines >= VGA_HEIGHT)
-            {
-                int tmp = current_line - 1;
-                screen_clear();
-
-                int j = 0;
-
-                for(int i = 0; i < tmp; i++)
-                {
-                    while(program_buffer[j] != '\n')                
-                        j++;
-                    j++;
-                }
-
-                begin_of_current_text = &program_buffer[j];
-                xprintf("%s", &program_buffer[j]);
-                // while(program_buffer[j] != '\0')
-                // {
-                //     xprintf("%c", program_buffer[j]);
-                //     j++;
-                // }
-            }
-        }
-
-
-        int cursor_offset = 0;
+        while((char)*EditState->cursor != '\0')
+            EditState->cursor++;
         
-
-        while(program_buffer[file_position-1] != '\n')
-            file_position--;
-        file_position--;
-
-        while((char)*cursor != '\0')
-            cursor++;
-        
-        current_line--;
-        *cursor = (uint16_t)((char)(*cursor) + (((white << 4) | black) << 8));
+        EditState->current_line--;
     }
 
     else if(Input.scan_code == ARROW_DOWN)
     {
 
         {
-            int i = file_position;
-            for(; program_buffer[i] != '\n' && program_buffer[i] != '\0'; i++);
-            if(program_buffer[i] == '\0')
+            int i = EditState->file_position;
+            for(; EditState->program_buffer[i] != '\n' && EditState->program_buffer[i] != '\0'; i++);
+            if(EditState->program_buffer[i] == '\0')
                 return;
-            if(i >= strlen(program_buffer))
+            if(i >= strlen(EditState->program_buffer))
                 return;
         }
 
-        *cursor = (uint16_t)((char)(*cursor) + (((black << 4) | white) << 8));
 
-        current_line++;        
+        EditState->current_line++;        
 
-        if(current_line < VGA_HEIGHT)
-            MOVE_CURSOR_TO_NEXT_ROW();
+        if(EditState->current_line < VGA_HEIGHT)
+            MOVE_CURSOR_TO_NEXT_ROW(EditState);
 
-        MOVE_CURSOR_TO_FIRST_CHARACTER();
+        MOVE_CURSOR_TO_FIRST_CHARACTER(EditState);
 
         int i;
 
-        while(program_buffer[file_position] != '\n')
-            file_position++;
-        file_position++;
-
-        if(current_line >= VGA_HEIGHT)
-        {
-            int tmp = current_line - (VGA_HEIGHT-1);
-            screen_clear();
-
-            int j = 0;
-
-            for(int i = 0; i < tmp; i++)
-            {
-                while(program_buffer[j] != '\n')                
-                    j++;
-                j++;
-            }
-
-            begin_of_current_text = &program_buffer[j];
-            xprintf("%s", &program_buffer[j]);
-
-        }
-
-        *cursor = (uint16_t)((char)(*cursor) + (((white << 4) | black) << 8));
+        while(EditState->program_buffer[EditState->file_position] != '\n')
+            EditState->file_position++;
+        EditState->file_position++;
 
     }
 
@@ -414,25 +261,22 @@ void edit_input(xchar Input, XinEntry* File)
 
     else if(Input.character != '\0')
     {
-        *cursor = (uint16_t)((char)(*cursor) + (((black << 4) | white) << 8));
 
+        CURSOR_NORMAL_MODE_SET(EditState);
 
-        char* tmp = (char*)calloc(strlen(program_buffer)) + 1;
-        memcpy(tmp, program_buffer, strlen(program_buffer) + 1);
+        char* tmp = (char*)calloc(strlen(EditState->program_buffer)) + 1;
+        memcpy(tmp, EditState->program_buffer, strlen(EditState->program_buffer) + 1);
 
-        int i =  file_position;
+        int i =  EditState->file_position;
         for(; i < strlen(tmp) + 1; i++)
-            program_buffer[i + 1] = tmp[i];
+            EditState->program_buffer[i + 1] = tmp[i];
 
-        program_buffer[file_position] = Input.character;
+        EditState->program_buffer[EditState->file_position] = Input.character;
 
-        file_position++;
+        EditState->file_position++;
 
-        cursor++;
-        screen_clear();
-        // xprintf("%s", program_buffer);
-        xprintf("%s", begin_of_current_text);
-        *cursor = (uint16_t)((char)(*cursor) + (((white << 4) | black) << 8));
+        EditState->cursor++;
+        CURSOR_SELECT_MODE_SET(EditState);
         free(tmp);
         
     }
@@ -463,50 +307,43 @@ int edit(char* file_name)
     
     screen_clear();
     
-    cursor = (uint16_t*)VGA_TEXT_MEMORY;
-    *cursor = (uint16_t)(*cursor + (((white << 4) | black) << 8));
 
-    program_buffer = (char*) calloc(file->size);
-    fread(file, program_buffer, file->size);
-    free(program_buffer);
+    fread(file, NULL, file->size);
 
-    number_of_sectors = int_to_sectors(file->size);
+    EditInfo EditState = {0, (uint16_t*)VGA_TEXT_MEMORY, 0, 0, 0, xin_get_file_size_in_sectors(file), 
+                            file->FileInfo->buffer, file->FileInfo->buffer};
 
-    program_buffer = file->FileInfo->buffer;
-
-    file_position = 0x0;
-
-    xprintf("%s", program_buffer);
+    xprintf("%s", EditState.program_buffer);
     
-    for(int i = 0; program_buffer[i] != '\0'; i++)
+    for(int i = 0; EditState.program_buffer[i] != '\0'; i++)
     {
-        if(program_buffer[i] == '\n')
-            total_lines++;
+        if(EditState.program_buffer[i] == '\n')
+            EditState.total_lines++;
     }
 
-    begin_of_current_text = program_buffer;
-
+    CURSOR_SELECT_MODE_SET(&EditState);
 
     while(KeyInfo.scan_code != F4_KEY && KeyInfo.scan_code != F4_KEY_RELEASE && KeyInfo.scan_code != ESC)
-        edit_input(inputg(), file);
+    {
+        edit_input(inputg(), file, &EditState);
+        EditState.begin_of_current_text = &EditState.program_buffer[edit_get_begin_of_printed_text(&EditState)];
+        screen_clear();
+        xprintf("%s", EditState.begin_of_current_text);
+        CURSOR_SELECT_MODE_SET(&EditState);
 
-    //file_position = strlen(program_buffer);
+        if(Screen.cursor[VGA_HEIGHT-1][70] == NULL)
+        { 
+            cursor_set_position(70, VGA_HEIGHT - 1); 
+            for(int i = 0; i < 5; i++)
+                Screen.cursor[Screen.y][Screen.x + i] = NULL;
 
+            xprintf("%d/%d", EditState.current_line, EditState.total_lines);
+        }
 
-    /*
-    xprintf("sectors: %d\n", number_of_sectors);
-    xprintf("tmp_size: %d\n", file->FileInfo->tmp_size);
-    while(inputg().scan_code != ENTER);
-    while(inputg().scan_code != ENTER);
-    */
+    }
 
-    fclose_with_given_size(&file, strlen(program_buffer) + 1);//we need to include '\0' character
+    fclose_with_given_size(&file, strlen(EditState.program_buffer) + 1);//we need to include '\0' character
 
-    current_line = NULL;
-    column = NULL;
-    total_lines = NULL;
-
-    free(program_buffer);
 
     return XANIN_OK;
 

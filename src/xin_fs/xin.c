@@ -768,6 +768,9 @@ size_t fread(XinEntry *entry, void *buf, size_t count)
         }
     }
 
+    if(buf == NULL)
+        return 0;
+
     for (char *i = (char*)(entry->FileInfo->buffer + initial_position); i < (char*)(entry->FileInfo->buffer + initial_position + count); i++, buf++)
         *(char *)buf = *i;
 
