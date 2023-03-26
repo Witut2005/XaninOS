@@ -214,8 +214,11 @@ build:
 	@echo [CC] endian.cpp
 	@$(CC) $(CC_OPTIONS) ./libcpp/endian.cpp -o ./libcpp/endian.o
 
-	@echo [C] network_device.cpp
+	@echo [C] network_device.c
 	@$(C) $(C_OPTIONS) ./netapi/network_device.c -o ./netapi/network_device.o
+
+	@echo [C] network_device.cpp
+	@$(CC) $(CC_OPTIONS) ./netapi/network_device.cpp -o ./netapi/network_devicecpp.o
 
 	@echo [CC] dhcp.cpp
 	@$(CC) $(CC_OPTIONS) ./network_protocols/dhcp/dhcp.cpp -o ./network_protocols/dhcp/dhcp.o
@@ -267,6 +270,9 @@ build:
 
 	@echo [CC] command_parser.cpp
 	@$(CC) $(CC_OPTIONS) ./libcpp/command_parser.cpp -o ./libcpp/command_parser.o
+
+	@echo [CC] icxabi.cpp
+	@$(CC) $(CC_OPTIONS) ./libcpp/icxxabi.cpp -o ./libcpp/icxxabi.o
 
 	@echo [C] algorithm.c
 	@$(C) $(C_OPTIONS) ./libc/algorithm.c -o ./libc/algorithm.o
@@ -369,6 +375,7 @@ build:
 	./tui/tui.o \
 	./xgl/xgl.o \
 	./libcpp/endian.o \
+	./libcpp/icxxabi.o \
 	./devices/VGA/vga.o \
 	./libc/registers_values_get.o \
 	./terminal/vty.o \
@@ -401,6 +408,7 @@ build:
 	./network_protocols/dhcp/dhcp.o \
 	./network_protocols/sll/sll.o \
 	./netapi/network_device.o \
+	./netapi/network_devicecpp.o \
 	./devices/IOAPIC/ioapic.o \
 	./test/testc.o \
 	./IDT/idt.o \
@@ -450,5 +458,6 @@ curses:
 	@sudo qemu-system-i386 -m 256 -drive file=../bin/xanin.img,cache=unsafe -net nic -net tap,ifname=tap0,script=no,downscript=no -curses
 
 debug:
-	@sudo qemu-system-i386 -drive file=../bin/xanin.img,cache=unsafe -net nic,model=e1000 -net tap -m 256 -s -S
+	@sudo qemu-system-i386 -m 256 -drive file=../bin/xanin.img,cache=unsafe -net nic -net tap,ifname=tap0,script=no,downscript=no -s -S
+	# @sudo qemu-system-i386 -drive file=../bin/xanin.img,cache=unsafe -net nic,model=e1000 -net tap -m 256 -s -S
 

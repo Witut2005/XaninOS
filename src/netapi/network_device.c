@@ -8,7 +8,6 @@
 #include <network_protocols/internet_protocol/ipv4/ip.h>
     
 
-
 NetworkHandler NetworkHandlers[NETWORK_CARDS_HANDLERS] = {0,0,0,0,0,0,0};
 
 bool netapi_add_device(uint8_t*(*receive_ptr)(void), void(*send_ptr)(uint8_t*, uint16_t), uint8_t* mac_ptr, void(*interrupt_handler)(void), pci_device* pci_info)

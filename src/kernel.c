@@ -87,15 +87,17 @@ void kernel_loop(void)
         xprintf("%z   _/  _/    _/    _/  _/    _/  _/  _/    _/  _/    _/        _/%z   version 1.0v\n",set_output_color(logo_back_color, logo_front_color), set_output_color(black,white) );
         xprintf("%z_/      _/    _/_/_/  _/    _/  _/  _/    _/    _/_/    _/_/_/     %z%s: %i:%i:%i\n\n\n", set_output_color(logo_back_color, logo_front_color), set_output_color(black,white), daysLUT[SystemTime.weekday], SystemTime.hour, SystemTime.minutes, SystemTime.seconds);                                       
 
-        Screen.x            = 0;
-        Screen.y            = 8;
+        Screen.x = 0;
+        Screen.y = 8;
 
         for(int i = 0; xin_current_directory[i + 1] != '\0'; i++)
             xprintf("%z%c", set_output_color(black, lblue), xin_current_directory[i]);
 
         xprintf(">");
 
-        app_exited          = false;
+        app_exited = false;
+
+        xin_close_all_files();
 
         while(1)
         {

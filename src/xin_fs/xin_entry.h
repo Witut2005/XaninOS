@@ -55,4 +55,6 @@ struct XinEntry
 
 #ifndef __cplusplus
 typedef struct XinEntry XinEntry;
+typedef struct XinEntry XinBuffer;
 #endif
+

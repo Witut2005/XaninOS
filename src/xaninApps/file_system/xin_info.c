@@ -5,7 +5,7 @@ int xin_info(char *entry_name)
 
     screen_clear();
 
-    XinEntry* file = xin_find_entry(entry_name);//fopen(entry_name, "r");
+    XinEntry* file = fopen(entry_name, "rw");
 
     if (file != NULL)
     {
@@ -18,6 +18,7 @@ int xin_info(char *entry_name)
         xprintf("permissions: 0x%x\n", file->permissions);
         xprintf("size: 0x%x\n", file->size);
         xprintf("first_sector: 0x%x\n", file->first_sector);
+        fwrite(file, "nicho", 5);
     }
 
     else

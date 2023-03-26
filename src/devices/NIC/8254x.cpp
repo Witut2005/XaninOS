@@ -15,6 +15,8 @@
 #define INTEL_8254X_DESCRIPTORS 256
 #define reset() write(0x0, 0x80000000)
 
+Intel8254xDriver* Intel8254x;
+
 
 void Intel8254xDriver::write(uint32_t reg, uint32_t value)
 {
@@ -80,7 +82,7 @@ uint16_t Intel8254xDriver::eeprom_read(uint8_t address)
 
 }
 
-uint8_t* Intel8254xDriver::mac_get()
+uint8_t* Intel8254xDriver::mac_get() 
 {
 
     // screen_clear();
@@ -314,17 +316,17 @@ uint32_t Intel8254xDriver::transmit_descriptors_buffer_get(void)
     // return this->read(nic::TDBAL);
 }
 
-pci_device* Intel8254xDriver::pci_info_get()
+pci_device* Intel8254xDriver::pci_info_get() 
 {
     return &this->pci_info;
 }
 
-uint32_t Intel8254xDriver::iobase_get()
+uint32_t Intel8254xDriver::iobase_get() const
 {
     return pci_info.base0;
 }
 
-uint16_t Intel8254xDriver::vendorid_get()
+uint16_t Intel8254xDriver::vendorid_get() const
 {
     return this->pci_info.vendor_id;
 }
@@ -389,68 +391,82 @@ bool Intel8254xDriver::is_device_present(void) const
     return this->is_present;
 }
 
+void Intel8254xDriver::name_set(std::string const& name)
+{
+    this->DeviceName = name;
+}
+
+std::string Intel8254xDriver::name_get(void) const
+{
+    return this->DeviceName;
+}
+
 extern "C"
 {
 
     uint32_t i8254x_receive_buffer_get(void)
     {
-        return Intel8254x.receive_buffer_get();
+        return Intel8254x->receive_buffer_get();
     }
 
     uint32_t i8254x_transmit_buffer_get(void)
     {
-        return Intel8254x.transmit_buffer_get();
+        return Intel8254x->transmit_buffer_get();
     }
 
     uint32_t i8254x_iobase_get(void)
     {
-        return Intel8254x.iobase_get();
+        return Intel8254x->iobase_get();
     }
 
 
     pci_device* i8254x_pci_info_get(void)
     {
-        return Intel8254x.pci_info_get();
+        return Intel8254x->pci_info_get();
     }
 
     uint8_t* i8254x_mac_get(void)
     {
-        return Intel8254x.mac_get();
+        return Intel8254x->mac_get();
     }
 
     uint32_t i8254x_receive_descriptors_buffer_get(void)
     {
-        return Intel8254x.receive_descriptors_buffer_get();
+        return Intel8254x->receive_descriptors_buffer_get();
     }
 
     uint32_t i8254x_transmit_descriptors_buffer_get(void)
     {
-        return Intel8254x.transmit_descriptors_buffer_get();
+        return Intel8254x->transmit_descriptors_buffer_get();
     }
 
     void i8254x_interrupt_handler(void)
     {
-        Intel8254x.interrupt_handler();
+        Intel8254x->interrupt_handler();
         eoi_send();
     }
 
     uint8_t* i8254x_packet_receive(void)
     {
-        return Intel8254x.packet_receive();
+        return Intel8254x->packet_receive();
     }
 
     void i8254x_packet_send(uint8_t* address, uint16_t length)
     {
-        // xprintf("\n");
-        Intel8254x.packet_send(address, length);
+        NetworkDevice* dev = Intel8254x;
+        dev->packet_send(address, length);
     }
 
     void i8254x_init(void)
     {
-        Intel8254x.init();
-        if(Intel8254x.is_device_present())
+        Intel8254x = new Intel8254xDriver;
+        NetworkDevice* Netdev = Intel8254x;
+
+        Intel8254x->init();
+
+        if(Intel8254x->is_device_present())
         {
-            netapi_add_device(i8254x_packet_receive, i8254x_packet_send, i8254x_mac_get(), i8254x_interrupt_handler, Intel8254x.pci_info_get());
+            netapi_add_device(i8254x_packet_receive, i8254x_packet_send, i8254x_mac_get(), i8254x_interrupt_handler, Intel8254x->pci_info_get());
             INTERRUPT_REGISTER(0x2B, i8254x_interrupt_handler_entry);
         }
     }

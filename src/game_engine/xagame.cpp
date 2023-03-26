@@ -316,5 +316,8 @@ std::pair<uint32_t, uint32_t> xgm::ColissionDetector::check(xgm::rectangle Objec
 extern "C" void __cxa_pure_virtual()
 {
     printk("virtual function execution error");
+    eoi_send();
+    interrupt_enable();
+    exit();
     return;
 }

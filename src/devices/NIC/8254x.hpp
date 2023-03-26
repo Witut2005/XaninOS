@@ -167,7 +167,7 @@ struct i8254xTransmitDescriptor
 
 }__attribute__((packed));
 
-class Intel8254xDriver //: NetworkDevice
+class Intel8254xDriver : public NetworkDevice
 {
 
 
@@ -187,6 +187,7 @@ class Intel8254xDriver //: NetworkDevice
     uint32_t txd_current;
     uint32_t rxd_current;
     uint8_t* last_packet;
+    std::string DeviceName;
     
     //---------------------------------
 
@@ -194,10 +195,10 @@ class Intel8254xDriver //: NetworkDevice
     public:
     void write(uint32_t reg, uint32_t value);
     uint32_t read(uint32_t reg);
-    uint8_t* mac_get(void);
-    uint32_t iobase_get(void);
-    uint16_t vendorid_get(void);
-    pci_device* pci_info_get(void);
+    virtual uint8_t* mac_get(void);
+    uint32_t iobase_get(void) const;
+    uint16_t vendorid_get(void) const;
+    virtual pci_device* pci_info_get(void);
     uint16_t eeprom_read(uint8_t address);
     bool is_eeprom_present(void);
     void multicast_table_array_clear(void);
@@ -205,16 +206,16 @@ class Intel8254xDriver //: NetworkDevice
     uint32_t transmit_descriptors_buffer_get(void);
     uint32_t receive_buffer_get(void) const;
     uint32_t transmit_buffer_get(void) const;
-    void interrupt_handler(void);
+    virtual void interrupt_handler(void);
     void receive_init(void);
     void transmit_init(void);
     void init(void);
     bool is_device_present(void) const;
-    
+    virtual void name_set(std::string const& name);
+    virtual std::string name_get(void) const;
 
-    uint8_t* packet_receive(void);
-    void packet_send(uint8_t* address_low, uint16_t length);
+
+    virtual uint8_t* packet_receive(void);
+    virtual void packet_send(uint8_t* address_low, uint16_t length);
 
 };
-
-inline Intel8254xDriver Intel8254x;
