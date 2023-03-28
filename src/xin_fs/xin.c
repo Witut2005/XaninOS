@@ -733,6 +733,9 @@ size_t fread(XinEntry *entry, void *buf, size_t count)
     
     if((entry->type != XIN_FILE) && (entry->type != XIN_HARD_LINK))
         return 0;
+    
+    if(!entry->size)
+        return 0;
 
     uint32_t initial_position = ftell(entry);
 

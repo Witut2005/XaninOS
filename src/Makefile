@@ -214,8 +214,8 @@ build:
 	@echo [CC] endian.cpp
 	@$(CC) $(CC_OPTIONS) ./libcpp/endian.cpp -o ./libcpp/endian.o
 
-	@echo [C] network_device.c
-	@$(C) $(C_OPTIONS) ./netapi/network_device.c -o ./netapi/network_device.o
+	@# @echo [C] network_device.c
+	@# @$(C) $(C_OPTIONS) ./netapi/network_device.c -o ./netapi/network_device.o
 
 	@echo [C] network_device.cpp
 	@$(CC) $(CC_OPTIONS) ./netapi/network_device.cpp -o ./netapi/network_devicecpp.o
@@ -407,7 +407,6 @@ build:
 	./network_protocols/icmp/icmp.o \
 	./network_protocols/dhcp/dhcp.o \
 	./network_protocols/sll/sll.o \
-	./netapi/network_device.o \
 	./netapi/network_devicecpp.o \
 	./devices/IOAPIC/ioapic.o \
 	./test/testc.o \

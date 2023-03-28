@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include <libcpp/cstring.h>
+#include <libc/string.h>
 #include <libc/stdlibx.h>
 #include <libc/stdiox.h>
 

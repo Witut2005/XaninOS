@@ -460,13 +460,14 @@ extern "C"
     void i8254x_init(void)
     {
         Intel8254x = new Intel8254xDriver;
-        NetworkDevice* Netdev = Intel8254x;
+        NetworkDevice* NetDev = Intel8254x;
 
         Intel8254x->init();
 
         if(Intel8254x->is_device_present())
         {
-            netapi_add_device(i8254x_packet_receive, i8254x_packet_send, i8254x_mac_get(), i8254x_interrupt_handler, Intel8254x->pci_info_get());
+            // netapi_add_device(i8254x_packet_receive, i8254x_packet_send, i8254x_mac_get(), i8254x_interrupt_handler, Intel8254x->pci_info_get());
+            netapi_add_device(NetDev);
             INTERRUPT_REGISTER(0x2B, i8254x_interrupt_handler_entry);
         }
     }

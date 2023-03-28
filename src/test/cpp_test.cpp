@@ -4,7 +4,7 @@
 #include <libcpp/utility.h>
 #include <libcpp/time.hpp>
 #include <libcpp/algorithm.h>
-#include <libcpp/cstring.h>
+#include <libc/string.h>
 #include <libcpp/cmemory.h>
 #include <libcpp/ostream.h>
 #include <libc/stdlibx.h>

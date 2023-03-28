@@ -5,7 +5,7 @@
 #include <libcpp/cmemory.h>
 #include <libcpp/endian.h>
 #include <libc/stdiox.h>
-#include <libcpp/cstring.h>
+#include <libc/string.h>
 #include <libcpp/ctime.h>
 
 

@@ -158,10 +158,10 @@ uint32_t xanin_ip_get(void)
 {
     XinEntry* nic_ip = fopen("/config/nic.conf", "rw");
 
-    char* ip_str = (char*)calloc(64);
+    char* ip_str     = (char*)calloc(64);
     fread(nic_ip, ip_str, 15);
 
-    uint32_t ip = str2ipv4(ip_str);
+    uint32_t ip      = str2ipv4(ip_str);
     free(ip_str);
 
     if(!ip)
