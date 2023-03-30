@@ -187,12 +187,12 @@ class Intel8254xDriver : public NetworkDevice
     uint32_t txd_current;
     uint32_t rxd_current;
     uint8_t* last_packet;
-    std::string DeviceName;
+    char* name;
     
     //---------------------------------
 
-    // ~Intel8254xDriver(void);
     public:
+    Intel8254xDriver();
     void write(uint32_t reg, uint32_t value);
     uint32_t read(uint32_t reg);
     virtual uint8_t* mac_get(void);
@@ -211,10 +211,8 @@ class Intel8254xDriver : public NetworkDevice
     void transmit_init(void);
     void init(void);
     bool is_device_present(void) const;
-    virtual void name_set(std::string const& name);
-    virtual std::string name_get(void) const;
-
-
+    virtual void name_set(const char* name);
+    virtual const char* name_get(void) const;
     virtual uint8_t* packet_receive(void);
     virtual void packet_send(uint8_t* address_low, uint16_t length);
 

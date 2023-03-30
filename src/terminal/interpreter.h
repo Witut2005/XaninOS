@@ -167,7 +167,7 @@ extern int tetris(void);
 #include <xaninApps/arp_check.c>
 #include <xaninApps/dhcp_test.c>
 // #include <xaninApps/network_device_rename.c>
-// #include <xaninApps/eic_print.c>
+#include <xaninApps/nic_print.c>
 #include <xaninApps/sll_test.c>
 #include <xaninApps/zsk.c>
 #include <xaninApps/explorer.c>

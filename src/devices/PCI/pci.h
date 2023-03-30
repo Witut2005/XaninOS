@@ -163,8 +163,9 @@ static char* pci_device_name[15] =
 
 struct PciDevicePack 
 {
-    uint8_t number_of_devices;
-    pci_device** devices;
+    const char* name;
+    const pci_device** const PciInfo;
+    uint8_t length;
 };
 
 #ifndef __cplusplus

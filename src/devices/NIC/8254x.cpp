@@ -391,14 +391,21 @@ bool Intel8254xDriver::is_device_present(void) const
     return this->is_present;
 }
 
-void Intel8254xDriver::name_set(std::string const& name)
+Intel8254xDriver::Intel8254xDriver() : name(NULL) {}
+
+void Intel8254xDriver::name_set(const char* name)
 {
-    this->DeviceName = name;
+    if(this->name)
+        free(this->name);
+    this->name = (char*)calloc(strlen(name));
+
+    strcpy(this->name, name);
+
 }
 
-std::string Intel8254xDriver::name_get(void) const
+const char* Intel8254xDriver::name_get(void) const
 {
-    return this->DeviceName;
+    return this->name;
 }
 
 extern "C"
@@ -467,7 +474,7 @@ extern "C"
         if(Intel8254x->is_device_present())
         {
             // netapi_add_device(i8254x_packet_receive, i8254x_packet_send, i8254x_mac_get(), i8254x_interrupt_handler, Intel8254x->pci_info_get());
-            netapi_add_device(NetDev);
+            netapi_add_device(NetDev, "i8254x");
             INTERRUPT_REGISTER(0x2B, i8254x_interrupt_handler_entry);
         }
     }

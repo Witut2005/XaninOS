@@ -4,17 +4,20 @@
 int nic_print(void)
 {
 
-    NetworkHandler* device_info = NetworkHandlers;
+    PciDevicePack* NetworkDevices = (PciDevicePack*)calloc(sizeof(PciDevicePack));
 
-    for(int i = 0; i < 10; i++)
+    netapi_all_cards_info_get(NetworkDevices);
+
+    xprintf("Number of Devices: %d\n\n", NetworkDevices->length);
+
+    for(int i = 0; i < NetworkDevices->length; i++)
     {
-        if(device_info[i].is_device_present)
-        {
-            xprintf("%s\n", device_info[i].device_name);
-            xprintf("ven: %X dev: %X\n", device_info[i].pci_info->vendor_id, device_info[i].pci_info->device_id);
-            xprintf("%z----------------------------------\n", set_output_color(black, green));
-        }
+        xprintf("%s\n", NetworkDevices->name);
+        xprintf("ven: %X dev: %X\n", NetworkDevices->PciInfo[i]->vendor_id, NetworkDevices->PciInfo[i]->device_id);
+        xprintf("%z----------------------------------\n", set_output_color(black, green));
     }
+
+    free(NetworkDevices);
 
     while(inputg().scan_code != ENTER);
     return XANIN_OK;

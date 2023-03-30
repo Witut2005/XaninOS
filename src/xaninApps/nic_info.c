@@ -13,10 +13,7 @@ extern uint32_t i8254x_receive_buffer_get(void);
 int nic_info(char* network_device_name)
 {
 
-    pci_device* nic_info = i8254x_pci_info_get();
-
-    
-    NetworkHandler* device_info = device_info_get_by_name(network_device_name);
+    pci_device* device_info = network_device_name(network_device_name);
     
     if(device_info == NULL)
     {
