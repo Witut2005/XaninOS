@@ -93,8 +93,9 @@ char* table_get_row_data(table_t* Table, uint8_t row_id, uint8_t page_id)
     return Table->row_data[page_id][row_id];
 }
 
-void table_add_handler(table_t* Table, void(*handler)(char*))
+void table_add_handler(table_t* Table, void(*handler)(char*, uint8_t*), uint8_t* DataObject)
 {
+    Table->DataObject = DataObject;
     Table->handler = handler;
 }
 
@@ -226,7 +227,7 @@ void table_row_select(table_t* Table)
     for(int i = 1; i < Table->row_size-1; i++)
         screen_cell_set(cursor_x+i, cursor_y, buffer[i-1], Table->row_background_color[current_page][current_row], Table->row_foreground_color[current_page][current_row]);
 
-    Table->handler(table_get_row_data(Table, current_row, current_page));
+    Table->handler(table_get_row_data(Table, current_row, current_page), Table->DataObject);
 }
 
 void table_destroy(table_t* Table)

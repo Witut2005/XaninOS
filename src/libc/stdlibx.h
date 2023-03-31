@@ -120,9 +120,12 @@ extern bool app_exited;
 extern int last_command_exit_status;
 extern uint8_t null_region[20];
 
+typedef uint8_t* address_t;
+
 
 enum XANIN_RETURN_STATUS
 {
     XANIN_OK = 0x0,
     XANIN_ERROR = 0x3,
+    XANIN_TOO_LONG_STRING = 0x4,
 };

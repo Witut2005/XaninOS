@@ -2,15 +2,14 @@
 #include <libc/stdlibx.h>
 #include <libc/data_structures.h>
 
-stack_t* stack_create(void)
+void stack_create(stack_t** Stack)
 {
-    stack_t* StackCreated = (stack_t*)calloc(sizeof(stack_t));
-    StackCreated->number_of_elements = 0; //I know that calloc uses 0 but you know ;))
-    StackCreated->end = (uint32_t*)calloc(sizeof(XANIN_PMMNGR_BLOCK_SIZE));
-    return StackCreated;
+    (*Stack) = (stack_t*)calloc(sizeof(stack_t));
+    (*Stack)->number_of_elements = 0;                 //I know that calloc uses 0 but you know ;))
+    (*Stack)->end = (uint32_t*)calloc(sizeof(XANIN_PMMNGR_BLOCK_SIZE));
 }
 
-void stack_push(stack_t* Stack, uint32_t value)
+void stack_push(stack_t* Stack, const address_t const value)
 {
     if(Stack->number_of_elements)
         Stack->end++;
@@ -19,7 +18,7 @@ void stack_push(stack_t* Stack, uint32_t value)
     Stack->number_of_elements++;
 }
 
-uint32_t stack_pop(stack_t* Stack)
+address_t stack_pop(stack_t* Stack)
 {
     if(!Stack->number_of_elements)
         return INT32_MAX;

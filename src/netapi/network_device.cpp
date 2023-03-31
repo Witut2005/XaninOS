@@ -10,7 +10,7 @@ static NetworkDevice* XaninNetworkDevices [NETDEVICES_HANDLERS];
 
 
     
-bool netapi_add_device(NetworkDevice* NetDev, const char* name)
+bool netapi_add_device(NetworkDevice* NetDev, const char* name) // add new to device to system :0
 {
     for(int i = 0; i < NETDEVICES_HANDLERS; i++)
     {
@@ -26,7 +26,7 @@ bool netapi_add_device(NetworkDevice* NetDev, const char* name)
 
 extern "C" {
 
-    bool netapi_packet_send(uint8_t* buffer, uint16_t length)
+    bool netapi_packet_send(uint8_t* buffer, uint16_t length) // send data to the network :))
     {
         for(int i = 0; i < NETDEVICES_HANDLERS; i++)
         {
@@ -40,7 +40,7 @@ extern "C" {
 
     }
 
-    uint8_t* netapi_packet_receive(void)
+    uint8_t* netapi_packet_receive(void) // receive incoming packet
     {
         for(int i = 0; i < NETDEVICES_HANDLERS; i++)
         {
@@ -50,7 +50,7 @@ extern "C" {
         return NULL;
     }
 
-    uint8_t* netapi_mac_get(void)
+    uint8_t* netapi_mac_get(void) // get XaninOS main network card MAC
     {
         for(int i = 0; i < NETDEVICES_HANDLERS; i++)
         {
@@ -60,7 +60,7 @@ extern "C" {
         return NULL;
     }
 
-    void netapi_interrupt_handle(void)
+    void netapi_interrupt_handle(void) // netapi interrupt handler
     {
         for(int i = 0; i < NETDEVICES_HANDLERS; i++)
         {
@@ -69,7 +69,7 @@ extern "C" {
         }
     }
 
-    pci_device* netapi_device_info_get(char* device_name)
+    pci_device* netapi_device_info_get(char* device_name) // get network card pci info
     {
         for(int i = 0; i < NETDEVICES_HANDLERS; i++)
         {
@@ -84,7 +84,7 @@ extern "C" {
 
     }
 
-    PciDevicePack* netapi_all_cards_info_get(PciDevicePack* Pack)
+    PciDevicePack* netapi_all_cards_info_get(PciDevicePack* Pack) // get all network cards pci information
     {
         Pack->length = 0;
 
@@ -101,7 +101,7 @@ extern "C" {
 
     }
 
-    uint32_t xanin_ip_get(void)
+    uint32_t xanin_ip_get(void) // get XaninOS IP from file
     {
         XinEntry* nic_ip = xin::fopen("/config/nic.conf", "rw");
 
@@ -119,7 +119,7 @@ extern "C" {
         return ip;
     }
 
-    bool network_device_available_check(void)
+    bool network_device_available_check(void) // check if any network device is available
     {
         for(int i = 0; i < NETDEVICES_HANDLERS; i++)
         {
@@ -132,5 +132,34 @@ extern "C" {
         return false;
     }
 
+    uint8_t* netapi_device_mac_get(char* device_name)
+    {
+        for(int i = 0; i < NETDEVICES_HANDLERS; i++)
+        {
+            if(XaninNetworkDevices[i])
+            {
+                if(strcmp(const_cast<char*>(XaninNetworkDevices[i]->name_get()), device_name))
+                    return XaninNetworkDevices[i]->mac_get();
+            }
+        }
 
+        return NULL; 
+    }
+
+    int netapi_rename_device(char* old_name, char* new_name)
+    {
+        for(int i = 0; i < NETDEVICES_HANDLERS; i++)
+        {
+            if(XaninNetworkDevices[i])
+            {
+                if(strcmp(const_cast<char*>(XaninNetworkDevices[i]->name_get()), old_name))
+                {
+                    XaninNetworkDevices[i]->name_set(new_name);
+                    return XANIN_OK;
+                }
+            }
+        }
+
+        return XANIN_ERROR; 
+    }
 }

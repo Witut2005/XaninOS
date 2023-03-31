@@ -140,8 +140,12 @@ XinEntry *xin_find_entry(char *entry_name)
     return NULL;
 }
 
-XinEntry* xin_get_file_pf(char* path) // pf = parent folder/cr
+XinEntry* xin_get_file_pf(char* path) // pf = parent folder
 {
+
+    if(strcmp(path, "/"))
+        return NULL;
+
     if(path[0] == '\0')
         return NULL;
         
@@ -160,9 +164,6 @@ XinEntry* xin_get_file_pf(char* path) // pf = parent folder/cr
 
     if(xin_find_entry(parent_folder) != NULL)
         return xin_find_entry(parent_folder);   
-
-    // if(xin_find_entry(xin_get_current_path(parent_folder)) != NULL)    
-    //     return xin_find_entry(xin_get_current_path(parent_folder)); 
 
     return NULL;
 
@@ -671,7 +672,16 @@ int xin_file_reallocate_with_given_size(XinEntry* File, uint32_t size)
     File->FileInfo = NULL;
     File->permissions = PERMISSION_MAX;
     File->size = size;
-    File->type = XIN_FILE;
+    // File->type = XIN_FILE;
+    // get all hard links
+    XinEntriesPack* HardLinks = xin_get_hard_links(File);
+
+    for(int i = 0; i < HardLinks->length; i++)
+    {
+        HardLinks->entries[i]->first_sector = (uint32_t)write_entry - XIN_ENTRY_POINTERS;
+        HardLinks->entries[i]->size = size;
+    }
+
     File->first_sector = (uint32_t)write_entry - XIN_ENTRY_POINTERS;
 
     disk_write(ATA_FIRST_BUS, ATA_MASTER, File->first_sector, number_of_sectors_to_allocate, (uint16_t*)buf);
@@ -1247,7 +1257,7 @@ char* xin_get_entry_name(char* path)
     return tmp;
 }
 
-XinChildrenEntries* xin_get_children_entries(char* folder, bool show_hidden)
+XinChildrenEntries* xin_get_children_entries(char* folder, bool get_hidden)
 {
 
     if(xin_find_entry(folder) == NULL || strlen(folder) == 0)
@@ -1265,7 +1275,7 @@ XinChildrenEntries* xin_get_children_entries(char* folder, bool show_hidden)
         {
             if(!strcmp(i->path, folder))
             {
-                if(xin_get_entry_name(i->path)[0] != '.' || show_hidden)
+                if(xin_get_entry_name(i->path)[0] != '.' || get_hidden)
                 {
                     Children->children[finded_entries] = i;
                     finded_entries++;
@@ -1309,6 +1319,27 @@ XinChildrenEntries* xin_get_children_entries_type(char* folder, uint8_t type)
     return Children;
 }
 
+XinEntriesPack* xin_get_hard_links(const XinEntry* const File)
+{
+
+    XinEntriesPack* Pack = (XinEntriesPack*)calloc(sizeof(XinEntriesPack));
+    Pack->entries = (XinEntry**)calloc(sizeof(XinEntry*));
+
+    if(File->type != XIN_FILE || !File)
+        return Pack;
+
+    for(XinEntry* i = (XinEntry*)XIN_ENTRY_TABLE; (uint32_t)i < XIN_ENTRY_TABLE + (SECTOR_SIZE * 50); i++)
+    {
+        if(i->first_sector == File->first_sector)
+        {
+            Pack->entries = realloc(Pack->entries, Pack->length + 1);
+            Pack->entries[Pack->length++] = i;
+        }
+    }
+
+    return Pack;
+    
+}
 
 int xin_get_file_size_in_sectors(XinEntry* File)
 {

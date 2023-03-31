@@ -153,7 +153,7 @@ extern int screenshot(void);
 extern int xagame_test(void);
 extern int tetris(void);
 
-// #include <xaninApps/nic_info.c>
+#include <xaninApps/nic_info.c>
 #include <gyn_cl/gyn.c>
 #include <xin_fs/xin_xpaint.c>
 #include <xaninApps/xgl_test.c>
@@ -166,7 +166,7 @@ extern int tetris(void);
 #include <xaninApps/icmp_test.c>
 #include <xaninApps/arp_check.c>
 #include <xaninApps/dhcp_test.c>
-// #include <xaninApps/network_device_rename.c>
+#include <xaninApps/nic_rename.c>
 #include <xaninApps/nic_print.c>
 #include <xaninApps/sll_test.c>
 #include <xaninApps/zsk.c>
