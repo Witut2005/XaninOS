@@ -65,7 +65,10 @@ extern "C" {
         for(int i = 0; i < NETDEVICES_HANDLERS; i++)
         {
             if(XaninNetworkDevices[i])
+            {
                 XaninNetworkDevices[i]->interrupt_handler();
+                return;
+            }
         }
     }
 

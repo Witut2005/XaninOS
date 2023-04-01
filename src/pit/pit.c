@@ -29,7 +29,7 @@ void set_pit_divisor(uint16_t divisor_value)
 }
 
 
-void set_pit(void)
+void set_pit(uint8_t vector)
 {
 
     interrupt_disable();
@@ -37,7 +37,7 @@ void set_pit(void)
     // outbIO(PIT_MODE_COMMAND_REGISTER,0x30);
     set_pit_divisor(0x8000);
     interrupt_enable();
-    INTERRUPT_REGISTER(0x22, pit_handler_init);
+    INTERRUPT_REGISTER(vector, pit_handler_init);
 }
 
 

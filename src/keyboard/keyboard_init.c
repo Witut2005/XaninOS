@@ -28,30 +28,19 @@ void keyboard_reset(void)
 	outbIO(0x64, KEYBOARD_ENABLE);             // KEYBOARD ON
 }
 
-uint8_t keyboard_init(void)
+uint8_t keyboard_init(uint8_t vector)
 {
 
-    uint8_t KEYBOARD_TEST_STATUS = keyboard_self_test();
+    uint8_t keyboard_status = keyboard_self_test();
 
-	// outbIO(0x64, KEYBOARD_DISABLE);             // KEYBOARD OFF
-    // for(int i = 0; i < 10; i++)
-    //     io_wait();
-	// outbIO(0x64, KEYBOARD_ENABLE);             // KEYBOARD ON
-    // outbIO(PIC1_DATA_REG, 0xFD);    // 11111101 <-- irq1 ON
-
-    if(KEYBOARD_TEST_STATUS == KEYBOARD_TEST_FAILURE)
+    if(keyboard_status == KEYBOARD_TEST_FAILURE)
     {
         xprintf("keyboard self test failed. Halting execution\n");
         interrupt_disable();
-        asm("hlt");
+        cpu_halt();
     }
 
-    // xprintf(":GAUIGBAUG");
-    // interrupt_handlers[0x21] = keyboard_handler_init;
-    uint16_t* tmp = (uint16_t*)0xB8000;
-    *tmp = 0x4141;
-    INTERRUPT_REGISTER(0x21, keyboard_handler_init); 
-
-    return KEYBOARD_TEST_STATUS;
+    INTERRUPT_REGISTER(vector, keyboard_handler_init); 
+    return keyboard_status;
 
 }

@@ -182,8 +182,8 @@ void _start(void)
 
     screen_init(); // init screen management system
     screen_clear();
-    keyboard_init();
-    set_pit();
+    keyboard_init(0x21);
+    set_pit(0x20);
     // idt_examine();
 
     disable_cursor();
@@ -299,6 +299,8 @@ void _start(void)
         
     }
 
+    interrupt_disable();
+
     ioapic_ioredtbl_configure((apic_keyboard_redirect != NULL ? apic_keyboard_redirect->global_system_int_table + APIC_IRQ_BASE : PIC_KEYBOARD_VECTOR)
                                       << APIC_VECTOR |
                                   0x0 << APIC_DELIVERY_MODE | 0x0 << APIC_DESTINATION_MODE | 0x0 << APIC_INT_PIN_POLARITY | 0x0 << APIC_INT_MASK,
@@ -313,11 +315,17 @@ void _start(void)
                                       << APIC_VECTOR |
                                   0x0 << APIC_DELIVERY_MODE | 0x0 << APIC_DESTINATION_MODE | 0x0 << APIC_INT_PIN_POLARITY | 0x0 << APIC_INT_MASK,
                               ioapic_id_get());
+                        
+    set_pit(apic_pit_redirect != NULL ? apic_pit_redirect->global_system_int_table + APIC_IRQ_BASE : PIC_PIT_VECTOR);
+    keyboard_init(apic_keyboard_redirect != NULL ? apic_keyboard_redirect->global_system_int_table + APIC_IRQ_BASE : PIC_KEYBOARD_VECTOR);
+    i8254x_init(apic_nic_redirect != NULL ? apic_nic_redirect->global_system_int_table + APIC_IRQ_BASE : PIC_NIC_VECTOR);
+                
+    interrupt_enable();
 
-    ioapic_ioredtbl_configure((APIC_IRQ_BASE + 0xC)
-                                      << APIC_VECTOR |
-                                  0x0 << APIC_DELIVERY_MODE | 0x0 << APIC_DESTINATION_MODE | 0x0 << APIC_INT_PIN_POLARITY | 0x0 << APIC_INT_MASK,
-                              ioapic_id_get());
+    // ioapic_ioredtbl_configure((APIC_IRQ_BASE + 0xC)
+    //                                   << APIC_VECTOR |
+    //                               0x0 << APIC_DELIVERY_MODE | 0x0 << APIC_DESTINATION_MODE | 0x0 << APIC_INT_PIN_POLARITY | 0x0 << APIC_INT_MASK,
+    //                           ioapic_id_get());
 
     xprintf("\n%z----------------------------\n", set_output_color(black, green));
     xprintf("NIC interrupt line: 0x%x", (apic_nic_redirect != NULL ? apic_nic_redirect->global_system_int_table + APIC_IRQ_BASE : PIC_NIC_VECTOR));
@@ -451,8 +459,6 @@ void _start(void)
 
     memset((uint8_t *)ArpTable, 0xFF, sizeof(ArpTable[0]));
     current_arp_entry++;
-
-    i8254x_init();
 
     __sys_xin_file_create("/syslog");
     printk("To wszystko dla Ciebie Babciu <3");

@@ -25,6 +25,6 @@ extern void pit_handler_init(void);
 extern void set_pit_divisor(uint16_t divisor_value);
 extern void pit_tick(uint32_t frequency);
 extern void pit_handler(void);
-extern void set_pit(void);
+extern void set_pit(uint8_t vector);
 
 
