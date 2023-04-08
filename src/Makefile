@@ -129,8 +129,8 @@ build:
 	@echo [ASM] coprocessor_segment_overrun_exception
 	@$(ASM) -f elf32 ./handlers/entries/coprocessor_segment_overrun_exception.asm -o ./handlers/entries/coprocessor_segment_overrun_exception.o
 
-
-
+	@echo [ASM] netapi_interrupt
+	@$(ASM) -f elf32 ./netapi/netapi_interrupt.asm -o ./netapi/netapi_interrupt.o
 
 	@echo [CC] apic.cpp
 	@$(CC) $(CC_OPTIONS) ./devices/APIC/apic.cpp -o ./devices/APIC/apic.o
@@ -408,6 +408,7 @@ build:
 	./network_protocols/dhcp/dhcp.o \
 	./network_protocols/sll/sll.o \
 	./netapi/network_devicecpp.o \
+	./netapi/netapi_interrupt.o \
 	./devices/IOAPIC/ioapic.o \
 	./test/testc.o \
 	./IDT/idt.o \

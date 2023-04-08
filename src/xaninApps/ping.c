@@ -22,7 +22,7 @@ int ping(char* ip_addr_str)
     uint8_t macd[6] = {0xFF, 0xFF, 0xFF, 0xFF,0xFF, 0xFF};
 
     AddressResolutionProtocol* arp = (AddressResolutionProtocol*)malloc(sizeof(AddressResolutionProtocol));
-    // prepare_arp_request(arp, ARP_ETHERNET, ARP_IP_PROTOCOL, 0x6, 0x4, ARP_GET_MAC, netapi_mac_get(), create_ip_address(ip_addr), macd, ip_dest);
+    // prepare_arp_request(arp, ARP_ETHERNET, ARP_IP_PROTOCOL, 0x6, 0x4, ARP_GET_MAC, netapi_mac_get(), create_ip(ip_addr), macd, ip_dest);
 
     uint32_t how_many_pings = 4;//strtoi(argv[2], 10) + 1;
     // xprintf("pings: %s\n", argv[2]);
@@ -47,7 +47,7 @@ int ping(char* ip_addr_str)
         else
             xprintf("%zNo such host\n", set_output_color(red,white));
 
-        char* tmp = (char*)&Response.ip_address;
+        char* tmp = (char*)&Response.ip;
         int j;
         for(j = 3; j > 0; j--)
             xprintf("%x.", tmp[j]);

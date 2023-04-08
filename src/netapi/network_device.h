@@ -34,6 +34,7 @@ extern "C"{
     int netapi_rename_device(char* old_name, char* new_name);
     uint32_t xanin_ip_get(void);
     bool network_device_available_check(void);
+    void netapi_interrupt_handle_entry(void);
 #ifdef __cplusplus
 }
 #endif

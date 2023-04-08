@@ -16,7 +16,7 @@ struct SllFrame
     uint16_t packet_type;
     uint16_t link_layer_address_type;
     uint16_t link_layer_address_length;
-    uint8_t mac_address[6];
+    uint8_t mac[6];
     uint16_t unused;
     uint16_t protocol;
 };
@@ -30,13 +30,13 @@ typedef struct SllFrame SllFrame;
 extern "C" { 
 #endif
 static inline void sll_frame_send(uint16_t packet_type, uint16_t link_layer_address_type, uint16_t link_layer_address_length,
-                        uint8_t* mac_address, uint16_t protocol, uint8_t* data_to_send, uint16_t packet_size)
+                        uint8_t* mac, uint16_t protocol, uint8_t* data_to_send, uint16_t packet_size)
 {
     SllFrame* PacketFrame = (SllFrame*)calloc(packet_size);//chyba
     PacketFrame->packet_type = endian_switch16(packet_type);
     PacketFrame->link_layer_address_type = endian_switch16(link_layer_address_type);
     PacketFrame->link_layer_address_length = endian_switch16(link_layer_address_length);
-    memcpy(PacketFrame->mac_address, mac_address, 6);
+    memcpy(PacketFrame->mac, mac, 6);
     PacketFrame->unused = 0x0;
     PacketFrame->protocol = endian_switch16(protocol);
 

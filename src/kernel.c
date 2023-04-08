@@ -77,6 +77,7 @@ void kernel_loop(void)
     while(1)
     {
 
+        memset(null_memory_region, 0, SECTOR_SIZE);
 
         screen_clear();
         time_get(&SystemTime);
@@ -460,7 +461,7 @@ void _start(void)
     memset((uint8_t *)ArpTable, 0xFF, sizeof(ArpTable[0]));
     current_arp_entry++;
 
-    __sys_xin_file_create("/syslog");
+
     printk("To wszystko dla Ciebie Babciu <3");
 
     __sys_xin_folder_create("/config/");
@@ -481,6 +482,8 @@ void _start(void)
     }
 
     xprintf("%d\n", ((uint8_t*)&base_ip)[0]);
+
+    arp_table_add_entry((127 << 24) | (0) | (0) | (1), null_memory_region);
 
     // system_variable_get(&bufsys, "HOME");
     // xprintf("bufsys: %s\n", bufsys);

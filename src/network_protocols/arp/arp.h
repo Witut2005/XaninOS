@@ -16,8 +16,8 @@ extern "C" {
 #endif
 struct ArpTableEntry
 {
-    uint8_t mac_address[6];
-    uint8_t ip_address[4];
+    uint8_t mac[6];
+    uint8_t ip[4];
     int success;
 }__attribute__((packed));
 
@@ -55,6 +55,7 @@ extern "C" {
     void arp_reply_handle(AddressResolutionProtocol* arp_header);
     uint8_t mac_get_from_ip(uint32_t ip);
     ArpTableEntry last_arp_reply_get(void);
+    bool arp_table_add_entry(uint32_t ip, uint8_t* mac);
 
 #ifdef __cplusplus
 }

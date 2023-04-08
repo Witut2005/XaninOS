@@ -20,8 +20,8 @@ int arp_check(const char* ip_addr_str)
         xprintf("%zarp entry found\n", set_output_color(green,white));
 
         for(int i = 0; i < 5; i++)
-            xprintf("%x:", ArpTable[x].mac_address[i]);
-        xprintf("%x\n", ArpTable[x].mac_address[5]);
+            xprintf("%x:", ArpTable[x].mac[i]);
+        xprintf("%x\n", ArpTable[x].mac[5]);
 
     }
 

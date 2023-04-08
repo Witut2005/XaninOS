@@ -71,7 +71,7 @@ void InternetProtocolInterface::ip4_packet_send(uint32_t dest_ip, uint32_t src_i
             EthernetFrameInterface* NewEthernetFrame = (EthernetFrameInterface*)malloc(sizeof(EthernetFrameInterface));
             
             int arp_table_index = mac_get_from_ip(dest_ip);
-            NewEthernetFrame->send(arp_table_index != 0xFF ? ArpTable[arp_table_index].mac_address : mac_broadcast, netapi_mac_get(), ETHERNET_TYPE_IPV4, (uint8_t*)IpHeader, final_packet_size);
+            NewEthernetFrame->send(arp_table_index != 0xFF ? ArpTable[arp_table_index].mac : mac_broadcast, netapi_mac_get(), ETHERNET_TYPE_IPV4, (uint8_t*)IpHeader, final_packet_size);
 
             free(NewEthernetFrame);
             break;
@@ -97,7 +97,7 @@ void InternetProtocolInterface::ip4_packet_send(uint32_t dest_ip, uint32_t src_i
 
             EthernetFrameInterface* NewEthernetFrame = (EthernetFrameInterface*)malloc(sizeof(EthernetFrameInterface));
             int arp_table_index = mac_get_from_ip(dest_ip);
-            NewEthernetFrame->send(arp_table_index != 0xFF ? ArpTable[arp_table_index].mac_address : mac_broadcast, netapi_mac_get(), ETHERNET_TYPE_IPV4, (uint8_t*)IpHeader, final_packet_size);
+            NewEthernetFrame->send(arp_table_index != 0xFF ? ArpTable[arp_table_index].mac : mac_broadcast, netapi_mac_get(), ETHERNET_TYPE_IPV4, (uint8_t*)IpHeader, final_packet_size);
             free(NewEthernetFrame);
 
 

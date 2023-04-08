@@ -109,7 +109,7 @@ CmosTime* time_get(CmosTime* Time)
 
 
     if(Time->hour >= 0x24)
-        Time->hour -= 0x25;
+        Time->hour = 0;
 
     //GET day
     outbIO(CMOS_ADDR,0x6);

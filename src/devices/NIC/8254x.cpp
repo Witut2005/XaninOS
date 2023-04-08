@@ -476,7 +476,7 @@ extern "C"
             // netapi_add_device(i8254x_packet_receive, i8254x_packet_send, i8254x_mac_get(), i8254x_interrupt_handler, Intel8254x->pci_info_get());
             netapi_add_device(NetDev, "i8254x");
             INTERRUPT_REGISTER(vector, i8254x_interrupt_handler_entry);
-            // INTERRUPT_REGISTER(0x2B, netapi_interrupt_handle);
+            // INTERRUPT_REGISTER(vector, netapi_interrupt_handle_entry);
         }
     }
 

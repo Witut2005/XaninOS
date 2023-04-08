@@ -11,20 +11,20 @@ int arp_table_print(char* arg)
         // if(i == sizeof(ArpTable) / sizeof(ArpTable[0]))
         //     return 3;
 
-        // if(table[i].ip_address[i] != 0x0 && *(uint32_t*)&table[i].mac_address != 0x0)
+        // if(table[i].ip[i] != 0x0 && *(uint32_t*)&table[i].mac != 0x0)
         {
             int j = 0;
 
             xprintf("%d: ", i);
 
             for(; j < 5; j++)
-                xprintf("%mX:", table[i].mac_address[j]);
+                xprintf("%mX:", table[i].mac[j]);
 
-            xprintf("%mX", table[i].mac_address[5]);
+            xprintf("%mX", table[i].mac[5]);
             xprintf(" -> ");
 
 
-            uint8_t* tmp = (uint8_t*)table[i].ip_address;
+            uint8_t* tmp = (uint8_t*)table[i].ip;
 
             for(j = 3; j > 0; j--)
                 xprintf("%d.", tmp[j]);
