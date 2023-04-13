@@ -3,6 +3,7 @@
 #include <xin_fs/xin.h>
 #include <libcpp/ostream.h>
 #include <libc/string.h>
+#include <libc/hal.h>
 
 #define NETDEVICES_HANDLERS 100
 
@@ -10,7 +11,7 @@ static NetworkDevice* XaninNetworkDevices [NETDEVICES_HANDLERS];
 
 
     
-bool netapi_add_device(NetworkDevice* NetDev, const char* name) // add new to device to system :0
+bool netapi_add_device(NetworkDevice* NetDev, const char* name, void(*interrupt_handler_entry)(void)) // add new to device to system :0
 {
     for(int i = 0; i < NETDEVICES_HANDLERS; i++)
     {
@@ -18,6 +19,7 @@ bool netapi_add_device(NetworkDevice* NetDev, const char* name) // add new to de
         {
             XaninNetworkDevices[i] = NetDev;
             XaninNetworkDevices[i]->name_set(name);
+            XaninNetworkDevices[i]->interrupt_handler_set(interrupt_handler_entry);
             return true;
         }
     }
@@ -60,13 +62,17 @@ extern "C" {
         return NULL;
     }
 
+extern void i8254x_interrupt_handler_entry(void);
+
     void netapi_interrupt_handle(void) // netapi interrupt handler
     {
+        interrupt_disable();
         for(int i = 0; i < NETDEVICES_HANDLERS; i++)
         {
             if(XaninNetworkDevices[i])
             {
-                XaninNetworkDevices[i]->interrupt_handler();
+                XaninNetworkDevices[i]->handle_interrupt();
+                interrupt_enable();
                 return;
             }
         }
@@ -113,7 +119,7 @@ extern "C" {
 
         xin::fclose(&nic_ip);
 
-        uint32_t ip      = str2ipv4(ip_str);
+        uint32_t ip = str2ipv4(ip_str);
         free(ip_str);
 
         if(!ip)

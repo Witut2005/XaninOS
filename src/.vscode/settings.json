@@ -12,7 +12,9 @@
         "xin_syscalls.h": "c",
         "network_device.h": "c",
         "type_traits": "cpp",
-        "syslog.h": "c"
+        "syslog.h": "c",
+        "icmp.h": "c",
+        "string.h": "c"
     },
     "C_Cpp.errorSquiggles": "disabled",
     "makefile.launchConfigurations": [

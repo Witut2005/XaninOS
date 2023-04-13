@@ -9,17 +9,31 @@
 #include <libcpp/string.h>
 class NetworkDevice
 {
+    private: 
+        void(*interrupt_handler)(void);
+
     public:
-    virtual bool is_device_present(void) const = 0;
-    virtual uint8_t* mac_get(void) = 0;
-    virtual void interrupt_handler(void) = 0;
-    virtual pci_device* pci_info_get(void)= 0;
+        
+        inline void handle_interrupt(void)
+        {
+            this->interrupt_handler();
+        }
 
-    virtual void name_set(const char* name) = 0;
-    virtual const char* name_get(void) const = 0;
+        inline void interrupt_handler_set(void(*handler)(void))
+        {
+            this->interrupt_handler = handler;
+        }
 
-    virtual uint8_t* packet_receive(void) = 0;
-    virtual void packet_send(uint8_t*, uint16_t) = 0;
+        virtual bool is_device_present(void) const = 0;
+        virtual uint8_t* mac_get(void) = 0;
+        // virtual void interrupt_handler(void) = 0;
+        virtual pci_device* pci_info_get(void)= 0;
+
+        virtual void name_set(const char* name) = 0;
+        virtual const char* name_get(void) const = 0;
+
+        virtual uint8_t* packet_receive(void) = 0;
+        virtual void packet_send(uint8_t*, uint16_t) = 0;
 };
 
 extern "C"{
@@ -40,5 +54,5 @@ extern "C"{
 #endif
 
 #ifdef __cplusplus
-bool netapi_add_device(NetworkDevice* NetDev, const char* name);
+bool netapi_add_device(NetworkDevice* NetDev, const char* name, void(*interrupt_handler_entry)(void));
 #endif

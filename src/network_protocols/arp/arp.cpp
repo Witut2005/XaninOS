@@ -46,8 +46,8 @@ extern "C"
     void arp_reply_handle(AddressResolutionProtocol* arp_header)
     {
 
-        uint32_t xanin_ip = xanin_ip_get();
-        if(endian_switch(arp_header->destination_protocol_address) == xanin_ip && endian_switch(arp_header->opcode) == ARP_GET_MAC)
+        uint32_t xanin_ip = xanin_ip_get(); //returns in big endian
+        if(arp_header->destination_protocol_address == xanin_ip && endian_switch(arp_header->opcode) == ARP_GET_MAC)
         {
             AddressResolutionProtocol* XaninArpReply = (AddressResolutionProtocol*)calloc(sizeof(AddressResolutionProtocol));
             prepare_arp_request(XaninArpReply, ARP_ETHERNET, ARP_IP_PROTOCOL, 0x6, 0x4, ARP_REPLY, netapi_mac_get(), 192 << 24 | 168 << 16 | 19 << 8 | 12, arp_header->destination_hardware_address, arp_header->destination_protocol_address);

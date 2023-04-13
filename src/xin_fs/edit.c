@@ -308,7 +308,7 @@ int edit(char* file_name)
     screen_clear();
     
 
-    fread(file, NULL, file->size);
+    fread(file, NULL, file->size );
 
     EditInfo EditState = {0, (uint16_t*)VGA_TEXT_MEMORY, 0, 0, 0, xin_get_file_size_in_sectors(file), 
                             file->FileInfo->buffer, file->FileInfo->buffer};

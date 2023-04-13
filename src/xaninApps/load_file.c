@@ -14,7 +14,7 @@ int load_file(char* file_name, char* options)
 
     screen_clear();
 
-    XinEntry* File = fopen(file_name, "rw");
+    XinEntry* File = fopen(file_name, "r");
 
     uint8_t* file_data = (uint8_t*)calloc(File->size);
     fread(File, file_data, File->size);
@@ -41,6 +41,8 @@ int load_file(char* file_name, char* options)
 
         xprintf("\n");
     }
+    
+    fclose(&File);
 
 	while(inputg().scan_code != ENTER);
     return XANIN_OK;

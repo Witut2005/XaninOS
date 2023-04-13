@@ -1,35 +1,17 @@
 #include <xaninApps/grapher/functions.h>
 #include <libc/stdlibx.h>
 #include <libc/stdiox.h>
-//xanin 80x28
+//xanin 79x25
 // char 219 is white square
 unsigned short DispX=79;
-unsigned short DispY=27;
+unsigned short DispY=25;
 
 //traz was here
 
 int grapher(){
     bool RunFlag= true;
 
-    /*
-    remains from the cmd version
-
-    cout<<"Resolution"<<endl;
-
-    ResInputX:
-    cout<<"x: ";    cin>>DispX;
-    if(DispX<=1){cout<<"Must be bigger than 1!"<<endl;goto ResInputX;}
-
-    ResInputY:
-    cout<<"y: ";    cin>>DispY;
-    if(DispY<=1){cout<<"Must be bigger than 1!"<<endl;goto ResInputY;}
-    
-    //DispX=79;
-    //DispY=27;
-    cout<<"Drawing @: "<<DispX<<"x"<<DispY<<" res."<<endl;
-    */
-
-    unsigned char D[79][27]= {};
+    unsigned char D[79][25]= {};
     unsigned short POSX=0;
     unsigned short POSY=0;
 
@@ -37,9 +19,9 @@ int grapher(){
     short CenterY=0;
     short ValX=0;
     short ValY=0;
-    int ValueA=0;
-    int ValueP=0;
-    int ValueQ=0;
+    uint32_t ValueA=0;
+    uint32_t ValueP=0;
+    uint32_t ValueQ=0;
     unsigned short FunctionType=0;
     
     unsigned short select=0;
@@ -47,9 +29,7 @@ int grapher(){
     unsigned short Clearing=0;
 
     xprintf("?Draw axies?\n[Y/any]: ");
-    //cout<<"?Draw axies?"<<endl<<"[Y/any]: ";
-    xscanf("%d", &select);
-    //cin>> select;
+    xscanf("%c", &select);
 
 
     while(RunFlag==true)
@@ -67,14 +47,14 @@ int grapher(){
         POSY=DispY/2;
         while (POSX<=DispX-2)
         {
-            D[POSX][POSY]=196;//horizontal line
+            D[POSX][POSY]=45;//horizontal line
             POSX++;
         }
         D[POSX][POSY]=88;//Add X letter
 
         POSX=DispX/2;       //
         POSX++;             //add unit mark on X axis
-        D[POSX][POSY]=250;  //
+        D[POSX][POSY]=46;  //
 
         POSY=0;
         POSX=0;
@@ -87,13 +67,13 @@ int grapher(){
 
         while (POSY<=DispY-1)
         {
-            D[POSX][POSY]=179;// vertical line
+            D[POSX][POSY]=124;// vertical line
             POSY++;
         }
 
         POSY=DispY/2;       //
         POSY--;             //add unit mark on Y axis
-        D[POSX][POSY]=250;  //
+        D[POSX][POSY]=46;  //
 
         POSY=0;
         POSX=0;
@@ -102,19 +82,8 @@ int grapher(){
      /////////////////////////
     //function selecting and running
         
-        
-        //xprintf("");
         xprintf("select function type: \n1 - Constant | 2 - Linear | 3 - Quadratic | 4 - Rational\n");
-        //cout<<"select function type: \n1 - Constant | 2 - Linear | 3 - Quadratic | 4 - Rational"<<endl;
-
-        /*
-        xprintf("asdfgh");
-        //cout<<"asdfgh");
-        same lenght!!!! :O
-        */
-
         xscanf("%d", &FunctionType);
-        //cin>>FunctionType;
 
         screen_clear();
 
@@ -129,43 +98,30 @@ int grapher(){
             {
             case 1:
                 xprintf("value: !full integers!\n");
-                //cout<<"value: !full integers!"<<endl;
                 xscanf("%d", &ValueA);
-                //cin>>ValueA;
                 break;
 
             case 2:
                 xprintf("value a, b: !full integers!\n");
-                //cout<<"value a, b: !full integers!"<<endl;
                 xscanf("%d", &ValueA);
                 xscanf("%d", &ValueP);
-                //cin>>ValueA;
-                //cin>>ValueP;
                 break;
             
             case 3:
                 xprintf("value a, b, c: !full integers!\n");
-                //cout<<"value a, b, c: !full integers!"<<endl;
                 xscanf("%d", &ValueA);
                 xscanf("%d", &ValueP);
                 xscanf("%d", &ValueQ);
-                //cin>>ValueA;
-                //cin>>ValueP;
-                //cin>>ValueQ; 
                 break;
             
             case 4:
                 xprintf("value a, b, c: !full integers!\n");
-                //cout<<"value a, b, c: !full integers!"<<endl;
                 xscanf("%d", &ValueA);
                 xscanf("%d", &ValueP);
-                xscanf("%d", &ValueQ);
-                //cin>>ValueA;
-                //cin>>ValueP;
-                //cin>>ValueQ;                
+                xscanf("%d", &ValueQ);               
                 break;
             }
-
+        screen_clear();
         //run function and input result for given x into table
         while (POSX<=DispX-1){
             ValX=POSX-CenterX;
@@ -215,13 +171,15 @@ int grapher(){
             for(;POSX<=DispX-1;POSX++)
             {
                 if(D[POSX][POSY]==0)
-                   xprintf(" ");//empty space
+                    xprintf(" ");//empty space
+                else if (D[POSX][POSY]==42)
+                {
+                    xprintf("%z%c",set_output_color(black, lred), D[POSX][POSY]);
+                }
                 else
-                   xprintf("%c", D[POSX][POSY]);
-                   //cout<<D[POSX][POSY];
+                    xprintf("%z%c", set_output_color(black, white), D[POSX][POSY]);
             }
             xprintf("\n");
-            //cout<<endl;
             POSX=0;
         }
             POSY=0;
@@ -230,15 +188,12 @@ int grapher(){
 
     //ask for running again//////////////////
     xprintf("run again? [Y/any]");
-    xscanf("%d", &RunAgain);
-    //cin>> RunAgain;
+    xscanf("%c", &RunAgain);
     if(RunAgain==121||RunAgain==89||RunAgain==49)
     {
         RunFlag=true;
         xprintf("clear graph(s)? [Y/any]");
-        //cout<<"clear graph(s)? [Y/any]";
-        xscanf("%d", &Clearing);
-        //cin>> Clearing;
+        xscanf("%c", &Clearing);
 
         if(Clearing==121||Clearing==89||Clearing==49)
         {
@@ -254,8 +209,7 @@ int grapher(){
 
         Clearing=0;
         POSY=0;
-        POSX=0;
-        
+        POSX=0;    
     }
     
     }

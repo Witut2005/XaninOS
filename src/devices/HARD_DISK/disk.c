@@ -142,7 +142,7 @@ void disk_write_single_sector(uint16_t base, uint8_t master, uint32_t sector_num
     disk_flush(ATA_FIRST_BUS, ATA_MASTER);
         
     if(disk_status & 0x1 == 1)
-    	printk("DISK ERROR");
+    	printk("Disk module writing error");
 }
 
 

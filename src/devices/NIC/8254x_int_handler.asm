@@ -8,6 +8,7 @@ extern i8254x_interrupt_handler
 %define APIC_EOI_REGISTER 0xFEE000B0
 
 i8254x_interrupt_handler_entry:
+    cli
     pushfd
     pushad
     call i8254x_interrupt_handler
@@ -16,6 +17,7 @@ i8254x_interrupt_handler_entry:
     mov eax, [APIC_SPURIOUS_INTERRUPT_VECTOR_REGISTER]
     and eax, APIC_PRESENT
     cmp eax, APIC_PRESENT
+    sti
 
     je apic_send_eoi
     jne pic_send_eoi
@@ -23,12 +25,12 @@ i8254x_interrupt_handler_entry:
 apic_send_eoi:
     mov dword eax, APIC_EOI_REGISTER
     mov dword [eax], 0x0
-    iretd
+    ret ;DONT USE IRETD
 
 pic_send_eoi:
     mov al, 0x20
     out 0x20, al
-    iretd
+    ret ;DONT USE IRETD
 
 
 

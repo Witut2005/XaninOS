@@ -763,8 +763,8 @@ size_t fread(XinEntry *entry, void *buf, size_t count)
 
     if(entry->FileInfo->tmp_size > entry->size)
     {
-        entry->FileInfo->buffer = (uint8_t*)realloc(entry->FileInfo->buffer, (entry->FileInfo->tmp_size) * sizeof(uint8_t));
-        entry->FileInfo->sector_in_use = (bool*)realloc(entry->FileInfo->sector_in_use, int_to_sectors(entry->FileInfo->tmp_size) * sizeof(bool));
+        entry->FileInfo->buffer = (uint8_t*)realloc(entry->FileInfo->buffer, (int_to_sectors(entry->FileInfo->tmp_size) + 1) * SECTOR_SIZE);
+        entry->FileInfo->sector_in_use = (bool*)realloc(entry->FileInfo->sector_in_use, (int_to_sectors(entry->FileInfo->tmp_size) + 1));
     }
 
     uint32_t sectors_to_load = int_to_sectors(count + initial_position);
@@ -840,8 +840,9 @@ size_t fwrite(XinEntry *entry, void *buf, size_t count)
     if((initial_position + count) > entry->FileInfo->tmp_size)
         entry->FileInfo->tmp_size = initial_position + count;
 
-    entry->FileInfo->buffer = (uint8_t*)realloc(entry->FileInfo->buffer, SECTOR_SIZE * 2);
-    entry->FileInfo->sector_in_use = (bool*)realloc(entry->FileInfo->sector_in_use, SECTOR_SIZE * 2);
+    entry->FileInfo->buffer = (uint8_t*)realloc(entry->FileInfo->buffer, (int_to_sectors(entry->FileInfo->tmp_size) + 1) * SECTOR_SIZE);
+    entry->FileInfo->sector_in_use = (bool*)realloc(entry->FileInfo->sector_in_use, (int_to_sectors(entry->FileInfo->tmp_size) + 1));
+
 
     uint32_t sectors_to_load = int_to_sectors(count + initial_position);
 

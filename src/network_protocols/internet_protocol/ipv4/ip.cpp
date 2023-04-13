@@ -9,6 +9,7 @@
 #include <libcpp/cmemory.h>
 #include <libc/stdiox.h>
 #include <network_protocols/sll/sll.h>
+#include <libc/syslog.h>
 
 #define ETHERNET_TYPE_IPV4 0x800
 #define IPV4_HEADER_SIZE 20
@@ -97,7 +98,14 @@ void InternetProtocolInterface::ip4_packet_send(uint32_t dest_ip, uint32_t src_i
 
             EthernetFrameInterface* NewEthernetFrame = (EthernetFrameInterface*)malloc(sizeof(EthernetFrameInterface));
             int arp_table_index = mac_get_from_ip(dest_ip);
-            NewEthernetFrame->send(arp_table_index != 0xFF ? ArpTable[arp_table_index].mac : mac_broadcast, netapi_mac_get(), ETHERNET_TYPE_IPV4, (uint8_t*)IpHeader, final_packet_size);
+
+            if(arp_table_index == 0xFF)
+            {
+                // printk("NO SUCH MAC !!! (icmp module)");
+                return;
+            }
+
+            NewEthernetFrame->send(ArpTable[arp_table_index].mac, netapi_mac_get(), ETHERNET_TYPE_IPV4, (uint8_t*)IpHeader, final_packet_size);
             free(NewEthernetFrame);
 
 

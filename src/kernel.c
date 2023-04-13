@@ -504,9 +504,8 @@ void _start(void)
     // char* hm = (char*)calloc(10);
     // strcpy(hm, "piwko");
     // xprintf("%s\n", strconcat("/", hm);
-
-
     // inputg();
+
     while (inputg().scan_code != ENTER);
 
     kernel_loop();
