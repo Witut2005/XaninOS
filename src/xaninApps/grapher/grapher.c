@@ -3,12 +3,13 @@
 #include <libc/stdiox.h>
 //xanin 79x25
 // char 219 is white square
-unsigned short DispX=79;
-unsigned short DispY=25;
 
 //traz was here
 
 int grapher(){
+    
+    unsigned short DispX=79;
+    unsigned short DispY=25;
     bool RunFlag= true;
 
     unsigned char D[79][25]= {};

@@ -4,7 +4,7 @@
 #include <libcpp/cmemory.h>
 #include <libcpp/endian.h>
 #include <libc/stdiox.h>
-#include <network_protocols/internet_protocol/ipv4/ip.hpp>
+#include <network_protocols/internet_protocol/ipv4/ip.h>
 
 /* everything is zero !!! */
 

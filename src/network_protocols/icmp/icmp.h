@@ -37,8 +37,15 @@ struct IcmpPacket
 
 #ifndef __cplusplus
 typedef struct IcmpPacket IcmpPacket;
-void icmp_message_send(uint8_t icmp_type, uint8_t icmp_code);
+#endif
+
+#ifdef __cplusplus 
+extern "C"{
+#endif
+
 void icmp_ping(uint32_t ip_dest);
-#else
-extern "C" void icmp_message_send(uint8_t icmp_type, uint8_t icmp_code);
+void icmp_ping_reply(IcmpPacket* packet, uint32_t ip_dest);
+
+#ifdef __cplusplus 
+}
 #endif

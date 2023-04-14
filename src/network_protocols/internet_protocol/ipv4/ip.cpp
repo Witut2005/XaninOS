@@ -1,5 +1,5 @@
 
-#include <network_protocols/internet_protocol/ipv4/ip.hpp>
+#include <network_protocols/internet_protocol/ipv4/ip.h>
 #include <network_protocols/icmp/icmp.h>
 #include <network_protocols/dhcp/dhcp.h>
 #include <libc/stdlibx.h>
@@ -10,9 +10,17 @@
 #include <libc/stdiox.h>
 #include <network_protocols/sll/sll.h>
 #include <libc/syslog.h>
+#include <network_protocols/udp/udp.hpp>
 
 #define ETHERNET_TYPE_IPV4 0x800
 #define IPV4_HEADER_SIZE 20
+
+bool loopback_packet = false;
+
+extern "C" bool is_loopback_packet(void)
+{
+    return loopback_packet;
+}
 
 
 uint32_t InternetProtocolInterface::create_ip_address(uint8_t ip_address[4])
@@ -46,8 +54,9 @@ void InternetProtocolInterface::ip4_packet_send(uint32_t dest_ip, uint32_t src_i
     Ipv4Header* IpHeader = (Ipv4Header*)malloc(sizeof(1518));
     IpHeader->version_ihl = 0x5;
     IpHeader->version_ihl |= IPV4_HEADER_VERSION << 4;
+    IpHeader->tos = NULL;
     IpHeader->packet_size = endian_switch(static_cast<uint16_t>(packet_size + IPV4_HEADER_SIZE));
-    IpHeader->fragment_offset_and_flags = 0x0;
+    IpHeader->fragment_offset_and_flags = NULL;
     IpHeader->time_to_live = ttl;
     IpHeader->protocol = protocol;
     IpHeader->identification = 0x0;
@@ -80,16 +89,6 @@ void InternetProtocolInterface::ip4_packet_send(uint32_t dest_ip, uint32_t src_i
 
         case INTERNET_CONTROL_MESSAGE_PROTOCOL:
         {
-            // uint8_t* protocol_header = (uint8_t*)IpHeader;
-            // protocol_header = protocol_header + IPV4_HEADER_SIZE;
-            // IcmpPacket* Packet = (IcmpPacket*)protocol_header;
-
-            // memcpy((uint8_t*)Packet, data, packet_size);
-            // uint32_t os_ip_address = 192 << 24 |  168 << 16 | 19 << 8 |12;
-
-
-            // sll_frame_send(0x4, 0x1, 0x6, netapi_mac_get(), ETHERNET_TYPE_IPV4, (uint8_t*)IpHeader, packet_size);
-
             uint8_t* protocol_header = (uint8_t*)IpHeader;
             protocol_header = protocol_header + IPV4_HEADER_SIZE;
             IcmpPacket* Packet = (IcmpPacket*)protocol_header;
@@ -99,13 +98,22 @@ void InternetProtocolInterface::ip4_packet_send(uint32_t dest_ip, uint32_t src_i
             EthernetFrameInterface* NewEthernetFrame = (EthernetFrameInterface*)malloc(sizeof(EthernetFrameInterface));
             int arp_table_index = mac_get_from_ip(dest_ip);
 
+            uint8_t* macd = ArpTable[arp_table_index].mac;
+
             if(arp_table_index == 0xFF)
             {
-                // printk("NO SUCH MAC !!! (icmp module)");
+                printk("NO SUCH MAC !!! (icmp module)");
                 return;
             }
 
-            NewEthernetFrame->send(ArpTable[arp_table_index].mac, netapi_mac_get(), ETHERNET_TYPE_IPV4, (uint8_t*)IpHeader, final_packet_size);
+            if(IpHeader->destination_ip_address == (127 << 24) | (1))
+            {
+                IpHeader->source_ip_address = endian_switch((127 << 24) | (1));
+                NewEthernetFrame->send(macd, macd, ETHERNET_TYPE_IPV4, (uint8_t*)IpHeader, final_packet_size);
+            }
+            else
+                NewEthernetFrame->send(macd, netapi_mac_get(), ETHERNET_TYPE_IPV4, (uint8_t*)IpHeader, final_packet_size);
+
             free(NewEthernetFrame);
 
 
@@ -121,8 +129,11 @@ void InternetProtocolInterface::ip4_packet_send(uint32_t dest_ip, uint32_t src_i
 
 void InternetProtocolInterface::ipv4_packet_receive(Ipv4Header* PacketData)
 {
-    // screen_clear();
-    // xprintf("0x%x", PacketData->protocol);
+
+    if((endian_switch(PacketData->destination_ip_address) == LOOPBACK_IP_ADDRESS) && (endian_switch(PacketData->source_ip_address) == LOOPBACK_IP_ADDRESS))
+        loopback_packet = true;
+    
+
     switch(PacketData->protocol)
     {
         case USER_DATAGRAM_PROTOCOL:
@@ -133,6 +144,12 @@ void InternetProtocolInterface::ipv4_packet_receive(Ipv4Header* PacketData)
 
         case INTERNET_CONTROL_MESSAGE_PROTOCOL:
         {
+            IcmpPacket* IcmpData = (IcmpPacket*)((uint8_t*)(PacketData) + sizeof(Ipv4Header));
+
+            if(IcmpData->icmp_type == ICMP_ECHO_REPLY)
+                break;
+
+            icmp_ping_reply((IcmpPacket*)((uint8_t*)(PacketData) + sizeof(Ipv4Header)), endian_switch(PacketData->destination_ip_address));
             break;
         }
 

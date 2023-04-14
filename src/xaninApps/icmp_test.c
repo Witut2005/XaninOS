@@ -10,7 +10,7 @@ int icmp_test(char* ip_dest_str)
     while(KeyInfo.scan_code != ENTER)   
     {
         icmp_ping(ip_dest);
-        sleep(1);
+        msleep(4000);
     }
 
 }
