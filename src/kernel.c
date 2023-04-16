@@ -374,92 +374,9 @@ void _start(void)
 
     memset(XIN_ENTRY_POINTERS, 1, 0x280);
 
-    // create_file_kernel("/.system_space1");
-    // create_file_kernel("/.system_space2");
-    // create_file_kernel("/.system_space3");
-    // create_file_kernel("/.system_space4");
-    // create_file_kernel("/.system_space5");
-    // create_file_kernel("/.system_space6");
-    // create_file_kernel("/.system_space7");
-    // create_file_kernel("/.system_space8");
-    // create_file_kernel("/.system_space9");
-    // create_file_kernel("/.system_space10");
-    // create_file_kernel("/.system_space11");
-    // create_file_kernel("/.system_space12");
-    // create_file_kernel("/.system_space13");
-    // create_file_kernel("/.system_space14");
-    // create_file_kernel("/.system_space15");
-    // create_file_kernel("/.system_space16");
-    // create_file_kernel("/.system_space17");
-    // create_file_kernel("/.system_space18");
-    // create_file_kernel("/.system_space19");
-    // create_file_kernel("/.system_space20");
-    // create_file_kernel("/.system_space21");
-    // create_file_kernel("/.system_space22");
-    // create_file_kernel("/.system_space23");
-    // create_file_kernel("/.system_space24");
-    // create_file_kernel("/.system_space25");
-    // create_file_kernel("/.system_space26");
-    // create_file_kernel("/.system_space27");
-    // create_file_kernel("/.system_space28");
-    // create_file_kernel("/.system_space29");
-    // create_file_kernel("/.system_space30");
-    // create_file_kernel("/.system_space31");
-    // create_file_kernel("/.system_space32");
-    // create_file_kernel("/.system_space33");
-    // create_file_kernel("/.system_space34");
-    // create_file_kernel("/.system_space35");
-    // create_file_kernel("/.system_space36");
-    // create_file_kernel("/.system_space37");
-    // create_file_kernel("/.system_space38");
-    // create_file_kernel("/.system_space39");
-    // create_file_kernel("/.system_space40");
-    // create_file_kernel("/.system_space41");
-    // create_file_kernel("/.system_space42");
-    // create_file_kernel("/.system_space43");
-    // create_file_kernel("/.system_space44");
-    // create_file_kernel("/.system_space45");
-    // create_file_kernel("/.system_space46");
-    // create_file_kernel("/.system_space47");
-    // create_file_kernel("/.system_space48");
-    // create_file_kernel("/.system_space49");
-    // create_file_kernel("/.system_space50");
-    // create_file_kernel("/.system_space51");
-    // create_file_kernel("/.system_space52");
-    // create_file_kernel("/.system_space53");
-    // create_file_kernel("/.system_space54");
-    // create_file_kernel("/.system_space55");
-    // create_file_kernel("/.system_space56");
-    // create_file_kernel("/.system_space57");
-    // create_file_kernel("/.system_space58");
-    // create_file_kernel("/.system_space59");
-    // create_file_kernel("/.system_space60");
-    // create_file_kernel("/.system_space61");
-    // create_file_kernel("/.system_space62");
-    // create_file_kernel("/.system_space63");
-    // create_file_kernel("/.system_space64");
-    // create_file_kernel("/.system_space65");
-    // create_file_kernel("/.system_space66");
-    // create_file_kernel("/.system_space67");
-    // create_file_kernel("/.system_space68");
-    // create_file_kernel("/.system_space69");
-    // create_file_kernel("/.system_space70");
-    // create_file_kernel("/.system_space71");
-    // create_file_kernel("/.system_space72");
-    // create_file_kernel("/.system_space73");
-    // create_file_kernel("/.system_space74");
-    // create_file_kernel("/.system_space75");
-    // create_file_kernel("/.system_space76");
-    // create_file_kernel("/.system_space77");
-    // create_file_kernel("/.system_space78");
-    // create_file_kernel("/.system_space79");
-    // create_file_kernel("/.system_space80");
-
-
     FileDescriptorTable = (XinFileDescriptor*)calloc(sizeof(XinFileDescriptor) * 512);
 
     memset((uint8_t *)ArpTable, 0xFF, sizeof(ArpTable[0]));
-    current_arp_entry++;
 
 
     printk("To wszystko dla Ciebie Babciu <3");
@@ -481,9 +398,12 @@ void _start(void)
         xprintf("%d.", tmp[i]);
     }
 
-    xprintf("%d\n", ((uint8_t*)&base_ip)[0]);
+    xprintf("%d\n", base_ip & 0xFF);
+
 
     arp_table_add_entry((127 << 24) | (0) | (0) | (1), null_memory_region);
+    icmp_packets_info_init();
+    icmp_module_init();
 
     // system_variable_get(&bufsys, "HOME");
     // xprintf("bufsys: %s\n", bufsys);

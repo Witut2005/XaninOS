@@ -2,10 +2,11 @@
 #pragma once
 
 #include <stdint.h>
+#include <network_protocols/internet_protocol/ipv4/ip.h>
 
 #define INTERNET_CONTROL_MESSAGE_PROTOCOL 0x1
 
-enum ICMP_TYPE
+enum type
 {
 
     ICMP_ECHO_REPLY = 0,
@@ -16,8 +17,8 @@ enum ICMP_TYPE
 
 struct IcmpPacket
 {
-    uint8_t icmp_type;
-    uint8_t icmp_code;
+    uint8_t type;
+    uint8_t code;
     uint16_t checksum;
 
     union
@@ -43,7 +44,8 @@ typedef struct IcmpPacket IcmpPacket;
 extern "C"{
 #endif
 
-void icmp_ping(uint32_t ip_dest);
+void icmp_module_init(void);
+void icmp_ping(uint32_t ip_dest, IcmpPacket* Response);
 void icmp_ping_reply(IcmpPacket* packet, uint32_t ip_dest);
 
 #ifdef __cplusplus 

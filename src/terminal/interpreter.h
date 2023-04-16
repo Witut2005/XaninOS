@@ -163,12 +163,10 @@ extern int tetris(void);
 #include <xaninApps/ip_test.c>
 #include <xaninApps/udp_test.c>
 #include <libc/real_mode_fswitch.h>
-#include <xaninApps/icmp_test.c>
 #include <xaninApps/arp_check.c>
 #include <xaninApps/dhcp_test.c>
 #include <xaninApps/nic_rename.c>
 #include <xaninApps/nic_print.c>
-#include <xaninApps/sll_test.c>
 #include <xaninApps/zsk.c>
 #include <xaninApps/explorer.c>
 #include <xaninApps/memory_allocator_test.c>

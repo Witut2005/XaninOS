@@ -1,5 +1,6 @@
 
 #include <netapi/network_device.h>
+#include <netapi/loopback/loopback.h>
 #include <xin_fs/xin.h>
 #include <libcpp/ostream.h>
 #include <libc/string.h>
@@ -9,7 +10,18 @@
 
 static NetworkDevice* XaninNetworkDevices [NETDEVICES_HANDLERS];
 
-
+NetworkDevice* netapi_find_available_device(void)
+{
+    for(int i = 0; i < NETDEVICES_HANDLERS; i++)
+    {
+        if(XaninNetworkDevices[i])
+        {
+            if(XaninNetworkDevices[i]->is_device_present())
+                return XaninNetworkDevices[i];
+        }
+    }
+    return (NetworkDevice*)NULL;
+}
     
 bool netapi_add_device(NetworkDevice* NetDev, const char* name, void(*interrupt_handler_entry)(void)) // add new to device to system :0
 {
@@ -52,8 +64,12 @@ extern "C" {
         return NULL;
     }
 
-    uint8_t* netapi_mac_get(void) // get XaninOS main network card MAC
+    uint8_t* netapi_mac_get(uint32_t nic_ip) // get XaninOS main network card MAC
     {
+
+        if(nic_ip == XaninNetworkLoopback.ip_get())
+            return XaninNetworkLoopback.mac_get();
+
         for(int i = 0; i < NETDEVICES_HANDLERS; i++)
         {
             if(XaninNetworkDevices[i])
@@ -61,8 +77,6 @@ extern "C" {
         }
         return NULL;
     }
-
-extern void i8254x_interrupt_handler_entry(void);
 
     void netapi_interrupt_handle(void) // netapi interrupt handler
     {
@@ -112,9 +126,9 @@ extern void i8254x_interrupt_handler_entry(void);
 
     uint32_t xanin_ip_get(void) // get XaninOS IP from file
     {
-        XinEntry* nic_ip = xin::fopen("/config/nic.conf", "rw");
+        XinEntry* nic_ip = xin::fopen("/config/nic.conf", "r");
 
-        char* ip_str     = (char*)calloc(64);
+        char* ip_str = (char*)calloc(64);
         xin::fread(nic_ip, ip_str, 15);
 
         xin::fclose(&nic_ip);

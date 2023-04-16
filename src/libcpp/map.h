@@ -3,6 +3,7 @@
 
 #include <libcpp/algorithm.h>
 #include <libcpp/utility.h>
+#include <libcpp/ostream.h>
 
 /*DONT USE STD::STRING DOESNT WORK*/
 
@@ -117,6 +118,16 @@ namespace std
             this->Head->next = this->Tail;
         }
 
+        void init()
+        {
+            this->Head = (ListElement *)malloc(sizeof(ListElement));
+            this->Tail = (ListElement *)malloc(sizeof(ListElement));
+            this->Head->next = nullptr;
+            this->Head->previous = nullptr;
+            this->size = 0;
+            this->Head->next = this->Tail;
+        }
+
         ListElement *goto_last_element()
         {
             ListElement *Tmp = Head;
@@ -137,6 +148,14 @@ namespace std
                 Tmp = Tmp->next;
             }
             return UnorderedMapIterator<K, V, UnorderedMap>(Tail);
+        }
+
+        bool exists(K key)
+        {
+            if(this->find(key) == this->Tail)
+                return false;
+
+            return true;
         }
 
         void insert(K key, V value)

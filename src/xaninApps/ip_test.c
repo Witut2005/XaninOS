@@ -12,5 +12,5 @@ int ip_test(char* arg)
 
 
     while(KeyInfo.scan_code != ENTER)
-        ipv4_packet_send(ip_dest, ip_src, USER_DATAGRAM_PROTOCOL, 0x10, 64, (uint8_t*)0x100);
+        ipv4_packet_send(ip_dest, ip_src, USER_DATAGRAM_PROTOCOL, 0x10, 64, (uint8_t*)0x100, NULL);
 }

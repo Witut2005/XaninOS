@@ -6,7 +6,6 @@
 
 
 #ifdef __cplusplus
-#include <libcpp/string.h>
 class NetworkDevice
 {
     private: 
@@ -40,7 +39,7 @@ extern "C"{
 #endif
     bool netapi_packet_send(uint8_t* buffer, uint16_t length);
     uint8_t* netapi_packet_receive(void);
-    uint8_t* netapi_mac_get(void);
+    uint8_t* netapi_mac_get(uint32_t nic_ip);
     uint8_t* netapi_device_mac_get(char* device_name);
     void netapi_interrupt_handle(void);
     pci_device* netapi_device_info_get(char* device_name);
@@ -54,5 +53,6 @@ extern "C"{
 #endif
 
 #ifdef __cplusplus
+NetworkDevice* netapi_find_available_device(void);
 bool netapi_add_device(NetworkDevice* NetDev, const char* name, void(*interrupt_handler_entry)(void));
 #endif

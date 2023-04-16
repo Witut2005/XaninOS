@@ -7,6 +7,7 @@
 #include <libc/stdiox.h>
 #include <libc/string.h>
 #include <libcpp/ctime.h>
+#include <netapi/loopback/loopback.h>
 
 
 ArpTableEntry ArpTable[ARP_TABLE_ENTRIES] = {0,0,false};
@@ -18,10 +19,18 @@ uint8_t current_arp_entry = 0x0;
 extern "C"
 {
 
-    void send_arp_request(AddressResolutionProtocol* arp)
+    void send_arp_request(AddressResolutionProtocol* Arp)
     {
+        if((Arp->destination_protocol_address == endian_switch(xanin_ip_get())) || (Arp->destination_protocol_address == endian_switch(XaninNetworkLoopback.ip_get())))
+        {
+            *(uint32_t*)LastArpReply.ip = endian_switch(Arp->destination_protocol_address);
+            memset(LastArpReply.mac, 0, 6);
+            LastArpReply.success = true;
+            return;
+        }
+
         EthernetFrameInterface EthernetFrameSubsystem;// = (EthernetFrameInterface*)malloc(sizeof(EthernetFrameInterface));    
-        EthernetFrameSubsystem.send(arp->destination_hardware_address, arp->source_hardware_address,  ARP_ETHER_TYPE, (uint8_t*)arp, sizeof(AddressResolutionProtocol));
+        EthernetFrameSubsystem.send(Arp->destination_hardware_address, Arp->source_hardware_address,  ARP_ETHER_TYPE, (uint8_t*)Arp, sizeof(AddressResolutionProtocol));
     }
 
     AddressResolutionProtocol* prepare_arp_request(AddressResolutionProtocol* arp, uint16_t hardware_type, uint16_t protocol_type, 
@@ -46,11 +55,12 @@ extern "C"
     void arp_reply_handle(AddressResolutionProtocol* arp_header)
     {
 
-        uint32_t xanin_ip = xanin_ip_get(); //returns in big endian
+        uint32_t xanin_ip = xanin_ip_get(); //returns XaninOS ip in little endian
+
         if(arp_header->destination_protocol_address == xanin_ip && endian_switch(arp_header->opcode) == ARP_GET_MAC)
         {
             AddressResolutionProtocol* XaninArpReply = (AddressResolutionProtocol*)calloc(sizeof(AddressResolutionProtocol));
-            prepare_arp_request(XaninArpReply, ARP_ETHERNET, ARP_IP_PROTOCOL, 0x6, 0x4, ARP_REPLY, netapi_mac_get(), 192 << 24 | 168 << 16 | 19 << 8 | 12, arp_header->destination_hardware_address, arp_header->destination_protocol_address);
+            prepare_arp_request(XaninArpReply, ARP_ETHERNET, ARP_IP_PROTOCOL, 0x6, 0x4, ARP_REPLY, netapi_mac_get(xanin_ip_get()), 192 << 24 | 168 << 16 | 19 << 8 | 12, arp_header->destination_hardware_address, arp_header->destination_protocol_address);
             send_arp_request(XaninArpReply);
             free(XaninArpReply);
         }
@@ -61,18 +71,8 @@ extern "C"
             return;
         }
 
-        if(memcmp((uint8_t*)arp_header->destination_hardware_address, 0x0, 6))
-        {
-            memset((uint8_t*)&LastArpReply, 0, sizeof(LastArpReply));
-            return;
-        }
-
         uint32_t ip_addr = endian_switch(arp_header->source_protocol_address);
-
         uint8_t arp_entry_used = current_arp_entry;
-
-        // if(!ip_addr && !arp_header->source_hardware_address[0])
-        //     return;
 
         for(int i = 0; i < ARP_TABLE_ENTRIES; i++)
         {
@@ -83,12 +83,12 @@ extern "C"
             }
         }
 
-        memcpy(ArpTable[arp_entry_used].mac, LastArpReply.mac, 6);
-        memcpy(ArpTable[arp_entry_used].ip, LastArpReply.ip, 4);
-
         memcpy(LastArpReply.mac, arp_header->source_hardware_address, 6);
         memcpy(LastArpReply.ip, (uint8_t*)&ip_addr, 4);
         LastArpReply.success = true;
+
+        memcpy(ArpTable[arp_entry_used].mac, LastArpReply.mac, 6);
+        memcpy(ArpTable[arp_entry_used].ip, LastArpReply.ip, 4);
 
         current_arp_entry++;
     }

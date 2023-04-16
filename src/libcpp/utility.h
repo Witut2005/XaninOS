@@ -39,6 +39,22 @@ struct pair
         this->second = copy.second;
     }
 
+    bool operator == (const pair<T, X>& other)
+    {
+        if((this->first == other.first) && (this->second == other.second))
+            return true;
+        else
+            return false;
+    }
+
+    bool operator != (const pair<T, X>& other)
+    {
+        if((this->first == other.first) && (this->second == other.second))
+            return false;
+        else
+            return true;
+    }
+
 };
 
 

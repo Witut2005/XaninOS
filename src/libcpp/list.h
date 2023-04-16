@@ -74,6 +74,7 @@ class ListIterator
 template<class T>
 class List
 {
+
     public:
     struct ListElement
     {
@@ -82,15 +83,15 @@ class List
         ListElement* previous;
     };
 
+    
     private:
-
+    bool initialized;
     static uint8_t NoSuchElement;
     ListElement* FirstElement;
     uint32_t size;
 
     public:
 
-    // using Iterator = ListIterator<List<T>>;
     using Type = T;
 
     uint32_t size_get(void)
@@ -98,9 +99,15 @@ class List
         return this->size;
     }
 
+    List()
+    {
+        this->initialized = false;
+    }
+
     List(T first)
     {
-        size = 0;
+        this->initialized = true;
+        size = 1;
         FirstElement = (ListElement*)malloc(sizeof(FirstElement));
         FirstElement->next = NULL;
         FirstElement->previous = NULL;
@@ -111,15 +118,23 @@ class List
     {
         ListElement* Tmp = FirstElement;
         while(Tmp->next != NULL)
-        {
             Tmp = Tmp->next;
-        }
 
         return Tmp;
     }
 
     void push(T value)
     {
+
+        if(!this->initialized)
+        {
+            this->size = 1;
+            this->FirstElement = (ListElement*)malloc(sizeof(FirstElement));
+            this->FirstElement->next = NULL;
+            this->FirstElement->previous = NULL;
+            this->FirstElement->value = value;
+        }
+
         ListElement* LastItem = this->goto_last_element();
         auto LastItemTmp = LastItem;
 
@@ -129,14 +144,27 @@ class List
         LastItem->value = value;
         LastItem->previous = LastItemTmp;
         LastItem->next = NULL;
+        this->size++;
     }
 
     void push_front(T value)
     {
+        if(!this->initialized)
+        {
+            this->size = 1;
+            this->FirstElement = (ListElement*)malloc(sizeof(FirstElement));
+            this->FirstElement->next = NULL;
+            this->FirstElement->previous = NULL;
+            this->FirstElement->value = value;
+        }
+
         decltype(this->FirstElement) NewFirstElement;
         NewFirstElement = (ListElement*)malloc(sizeof(ListElement));
         NewFirstElement->value = value;
         this->FirstElement = NewFirstElement;
+
+        this->size++;
+
     }
 
     void print(void)

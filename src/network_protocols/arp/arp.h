@@ -3,11 +3,19 @@
 
 #include <stdint.h>
 
-#define ARP_ETHERNET 0x1
-#define ARP_IP_PROTOCOL 0x800
-#define ARP_REPLY 0x2
-#define ARP_GET_MAC 0x1
-#define ARP_ETHER_TYPE 0x0806
+
+enum ARP_ENUM
+{
+    ARP_ETHERNET = 0x1,
+    ARP_IP_PROTOCOL = 0x800,
+    ARP_REPLY = 0x2,
+    ARP_GET_MAC = 0x1,
+    ARP_ETHER_TYPE = 0x0806,
+    ARP_MAC_LENGTH = 6,
+    ARP_IP_LENGTH = 4,
+    ARP_TABLE_NO_SUCH_ENTRY = 0xFF
+
+};
 
 #define ARP_TABLE_ENTRIES 0xFF 
 

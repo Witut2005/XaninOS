@@ -190,9 +190,6 @@ build:
 	@echo [C] icmp.c
 	@$(C) $(C_OPTIONS) ./network_protocols/icmp/icmp.c -o ./network_protocols/icmp/icmp.o
 
-	@echo [C] sll.c
-	@$(C) $(C_OPTIONS) ./network_protocols/sll/sll.c -o ./network_protocols/sll/sll.o
-
 	@echo [CC] screenshot.cpp
 	@$(CC) $(CC_OPTIONS) ./xaninApps/screenshot.cpp -o ./xaninApps/screenshot.o
 
@@ -214,11 +211,11 @@ build:
 	@echo [CC] endian.cpp
 	@$(CC) $(CC_OPTIONS) ./libcpp/endian.cpp -o ./libcpp/endian.o
 
-	@# @echo [C] network_device.c
-	@# @$(C) $(C_OPTIONS) ./netapi/network_device.c -o ./netapi/network_device.o
-
-	@echo [C] network_device.cpp
+	@echo [CC] network_device.cpp
 	@$(CC) $(CC_OPTIONS) ./netapi/network_device.cpp -o ./netapi/network_devicecpp.o
+
+	@echo [CC] loopback.cpp
+	@$(CC) $(CC_OPTIONS) ./netapi/loopback/loopback.cpp -o ./netapi/loopback/loopback.o
 
 	@echo [CC] dhcp.cpp
 	@$(CC) $(CC_OPTIONS) ./network_protocols/dhcp/dhcp.cpp -o ./network_protocols/dhcp/dhcp.o
@@ -406,9 +403,9 @@ build:
 	./network_protocols/udp/udp.o \
 	./network_protocols/icmp/icmp.o \
 	./network_protocols/dhcp/dhcp.o \
-	./network_protocols/sll/sll.o \
 	./netapi/network_devicecpp.o \
 	./netapi/netapi_interrupt.o \
+	./netapi/loopback/loopback.o \
 	./devices/IOAPIC/ioapic.o \
 	./test/testc.o \
 	./IDT/idt.o \

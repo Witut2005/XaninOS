@@ -73,22 +73,18 @@ void cpp_prog()
 
     std::cout << "map: " << std::endl;
     std::UnorderedMap<int, const char*> mapp = {{1, "100"}, {2, "200"}, {3, "300"}};
-    
-    // mapp.print();
-
-    // int huhu = 0;
-    // mapp.insert(1,"123");
-
-    // for(auto it = mapp.begin(); it != mapp.end(); it++)
-    // {
-    // std::cout << *mapp.find(1) << std::endl;
-    // }
-
-    // for(auto a : mapp)
-    //     std::cout << a << " ";
-    // std::cout << std::endl;
         
-    while(1);
+    std::UnorderedMap<std::pair<int, int>, uint32_t> nii;
+    nii.insert(std::make_pair(1,1), 100);
+
+    std::cout << "lista generalnie: ";
+    if(nii[std::make_pair(1,1)] != nii.Tail->item.second)
+        std::cout << nii[std::make_pair(1,1)] << std::endl;
+    else
+        std::cout << "bruh" << std::endl;
+
+        
+    // while(1);
         
     std::CommandParser parser(argv);
     parser.argument_add("--piwka", true);

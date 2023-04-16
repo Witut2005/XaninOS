@@ -17,21 +17,21 @@ void DynamicHostConfigurationProtocolSubystem::discover_send(void)
     Message->hlen = 1;
     Message->hops = 0;
 
-    Message->xid = endian_switch(0x3903F326);
-    Message->secs = endian_switch(0);
-    Message->flags = endian_switch(0);
+    Message->xid = endian_switch(static_cast<uint32_t>(0x3903F326));
+    Message->secs = 0;
+    Message->flags = 0;
 
-    Message->client_ip_address = endian_switch(0);
-    Message->your_ip_address = endian_switch(0);
-    Message->server_ip_address = endian_switch(0);
-    Message->gateway_ip_address = endian_switch(0);
+    Message->client_ip_address = 0;
+    Message->your_ip_address = 0;
+    Message->server_ip_address = 0;
+    Message->gateway_ip_address = 0;
 
-    memcpy(Message->client_hardware_address, netapi_mac_get(), 6);
+    memcpy(Message->client_hardware_address, netapi_mac_get(xanin_ip_get()), 6);
     memset(Message->reserved, 0x0, 10);
     memset(Message->server_name, 0x0, 64);
     memset(Message->boot_filename, 0x0, 128);
 
-    Message->magic_cookie = endian_switch(DHCP_MAGIC_COOKIE);
+    Message->magic_cookie = endian_switch(static_cast<uint32_t>(DHCP_MAGIC_COOKIE));
 
     Message->options[0] = 0x35;
     Message->options[1] = 0x01;
@@ -40,7 +40,7 @@ void DynamicHostConfigurationProtocolSubystem::discover_send(void)
     Message->endmark = 0xFF;
 
     UserDatagramProtocolInterface* UdpPacket = (UserDatagramProtocolInterface*)malloc(sizeof(UserDatagramProtocolInterface));
-    UdpPacket->ipv4_send(UDP_BROADCAST, (192 << 24) | (168 << 16) | (0 << 8) | 12, DHCP_SERVER_PORT, DHCP_CLIENT_PORT, (uint8_t*)Message, DHCP_HEADER_SIZE);
+    UdpPacket->ipv4_send(UDP_BROADCAST, xanin_ip_get(), DHCP_SERVER_PORT, DHCP_CLIENT_PORT, (uint8_t*)Message, DHCP_HEADER_SIZE, NULL);
 
     free(Message);
     free(UdpPacket);
