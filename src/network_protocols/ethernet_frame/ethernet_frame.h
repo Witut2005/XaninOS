@@ -19,4 +19,5 @@ struct EthernetFrame
 
 #ifndef __cplusplus
     extern void ethernet_frame_send(uint8_t* mac_destination, uint8_t* mac_source, uint16_t protocol, uint8_t* buffer, uint16_t length);
+    extern arp_module_init(void);
 #endif

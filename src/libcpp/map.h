@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include <libc/stdlibx.h>
 #include <libcpp/algorithm.h>
 #include <libcpp/utility.h>
 #include <libcpp/ostream.h>

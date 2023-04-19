@@ -217,6 +217,9 @@ build:
 	@echo [CC] loopback.cpp
 	@$(CC) $(CC_OPTIONS) ./netapi/loopback/loopback.cpp -o ./netapi/loopback/loopback.o
 
+	@echo [C] response.c
+	@$(CC) $(CC_OPTIONS) ./netapi/objects/response.c -o ./netapi/objects/response.o
+
 	@echo [CC] dhcp.cpp
 	@$(CC) $(CC_OPTIONS) ./network_protocols/dhcp/dhcp.cpp -o ./network_protocols/dhcp/dhcp.o
 
@@ -403,6 +406,7 @@ build:
 	./network_protocols/udp/udp.o \
 	./network_protocols/icmp/icmp.o \
 	./network_protocols/dhcp/dhcp.o \
+	./netapi/objects/response.c \
 	./netapi/network_devicecpp.o \
 	./netapi/netapi_interrupt.o \
 	./netapi/loopback/loopback.o \

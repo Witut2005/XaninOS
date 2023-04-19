@@ -4,17 +4,11 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <libc/stdlibx.h>
+#include <netapi/objects/response.h>
 
 #define IPV4_HEADER_VERSION 0x4
 #define LOOPBACK_IP_ADDRESS ((127 << 24) | (1))
 
-struct NetworkResponse
-{
-    bool success;
-    address_t data;
-};
-
-typedef struct NetworkResponse NetworkResponse;
 
 struct Ipv4Header
 {
@@ -38,7 +32,7 @@ typedef struct Ipv4Header Ipv4Header;
 extern "C" {
 #endif
 
-extern void icmp_packets_info_init(void);
+extern void icmp_module_init(void);
 
 #ifdef __cplusplus
 }
@@ -69,7 +63,7 @@ class InternetProtocolInterface
     void ip4_packet_send(uint32_t dest_ip, uint32_t src_ip, uint8_t protocol, uint8_t ttl, uint8_t* data, uint16_t packet_size, NetworkResponse* Response);
     void ipv4_packet_receive(Ipv4Header* PacketData);
     
-    friend void icmp_packets_info_init(void);
+    friend void icmp_module_init(void);
 
 };
 

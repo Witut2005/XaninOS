@@ -4,12 +4,11 @@
 #include <libcpp/chal.h>
 #include <libcpp/ostream.h>
 #include <libc/syslog.h>
-#include <libcpp/cmemory.h>
+#include <libc/memory.h>
 #include <devices/APIC/apic_registers.h>
 #include <network_protocols/ethernet_frame/ethernet_frame.hpp>
 #include <libcpp/utility.h>
 #include <limits.h>
-#include <libcpp/cmemory.h>
 #include <IDT/idt.h>
 
 #define INTEL_8254X_DESCRIPTORS 256
@@ -85,9 +84,8 @@ uint16_t Intel8254xDriver::eeprom_read(uint8_t address)
 uint8_t* Intel8254xDriver::mac_get() 
 {
 
-    // screen_clear();
     if(!this->is_present)
-        return (uint8_t*)PHYSICAL_ADDRESS_MAX;
+        return (uint8_t*)NULL;
 
 
     *(uint16_t*)&mac[0] = this->eeprom_read(0x0);
@@ -335,7 +333,7 @@ uint8_t* Intel8254xDriver::packet_receive(void)
 {
 
     if(!this->is_present)
-        return (uint8_t*)PHYSICAL_ADDRESS_MAX;
+        return (uint8_t*)NULL;
 
     this->rxd_current = this->read(nic::RDT) % INTEL_8254X_DESCRIPTORS;
     this->rxd_current = (this->rxd_current + 1) % INTEL_8254X_DESCRIPTORS;
@@ -477,11 +475,5 @@ extern "C"
             INTERRUPT_REGISTER(vector, netapi_interrupt_handle_entry);
         }
     }
-
-    
-
-
-
-
 
 }

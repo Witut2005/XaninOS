@@ -1,7 +1,7 @@
 
 #include <network_protocols/udp/udp.hpp>
 #include <libc/stdlibx.h>
-#include <libcpp/cmemory.h>
+#include <libc/memory.h>
 #include <libcpp/endian.h>
 #include <libc/stdiox.h>
 #include <network_protocols/internet_protocol/ipv4/ip.h>

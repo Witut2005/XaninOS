@@ -8,7 +8,6 @@
 #include <network_protocols/ethernet_frame/ethernet_frame.hpp>
 #include <network_protocols/arp/arp.h>
 #include <libcpp/endian.h>
-#include <libcpp/cmemory.h>
 #include <libc/stdiox.h>
 #include <libc/syslog.h>
 #include <network_protocols/udp/udp.hpp>
@@ -28,7 +27,7 @@ extern "C" bool is_loopback_packet(void)
     return loopback_packet;
 }
 
-extern "C" void icmp_packets_info_init(void)
+extern "C" void icmp_module_init(void)
 {
     InternetProtocolInterface::IcmpPacketsInfo.init();
 }
@@ -90,7 +89,7 @@ void InternetProtocolInterface::ip4_packet_send(uint32_t dest_ip, uint32_t src_i
             EthernetFrameInterface* NewEthernetFrame = (EthernetFrameInterface*)malloc(sizeof(EthernetFrameInterface));
             
             int arp_table_index = mac_get_from_ip(dest_ip);
-            NewEthernetFrame->send(arp_table_index != ARP_TABLE_NO_SUCH_ENTRY ? ArpTable[arp_table_index].mac : mac_broadcast, netapi_mac_get(xanin_ip_get()), ETHERNET_TYPE_IPV4, (uint8_t*)IpHeader, final_packet_size);
+            NewEthernetFrame->send(arp_table_index != ARP_TABLE_NO_SUCH_ENTRY ? ArpTable[arp_table_index].mac : mac_broadcast, netapi_mac_get(xanin_ip_get()), ETHERNET_TYPE_IPV4, (uint8_t*)IpHeader, final_packet_size, Response);
 
             free(NewEthernetFrame);
             break;
@@ -108,8 +107,11 @@ void InternetProtocolInterface::ip4_packet_send(uint32_t dest_ip, uint32_t src_i
 
             if(Packet->type == ICMP_ECHO_REQUEST)
             {
-                memset((uint8_t*)Response, 0, sizeof(NetworkResponse));
-                this->IcmpPacketsInfo.insert(std::make_pair(endian_switch(Packet->echo_id), endian_switch(Packet->echo_sequence)), Response);
+                if(Response)
+                {
+                    memset((uint8_t*)Response, 0, sizeof(NetworkResponse));
+                    this->IcmpPacketsInfo.insert(std::make_pair(endian_switch(Packet->echo_id), endian_switch(Packet->echo_sequence)), Response);
+                }
             }
 
             EthernetFrameInterface* NewEthernetFrame = (EthernetFrameInterface*)malloc(sizeof(EthernetFrameInterface));
@@ -124,7 +126,7 @@ void InternetProtocolInterface::ip4_packet_send(uint32_t dest_ip, uint32_t src_i
                 prepare_arp_request(ArpPacket, ARP_ETHERNET, ARP_IP_PROTOCOL, ARP_MAC_LENGTH, ARP_IP_LENGTH, ARP_GET_MAC, netapi_mac_get(xanin_ip_get()), xanin_ip_get(), mac_broadcast, dest_ip);
                 
                 for(int i = 0; i < 20; i++)
-                    send_arp_request(ArpPacket);
+                    send_arp_request(ArpPacket, NULL);
 
                 free(ArpPacket);
 
@@ -140,7 +142,7 @@ void InternetProtocolInterface::ip4_packet_send(uint32_t dest_ip, uint32_t src_i
             }
 
             // send icmp request
-            NewEthernetFrame->send(macd, netapi_mac_get(src_ip), ETHERNET_TYPE_IPV4, (uint8_t*)IpHeader, final_packet_size);
+            NewEthernetFrame->send(macd, netapi_mac_get(src_ip), ETHERNET_TYPE_IPV4, (uint8_t*)IpHeader, final_packet_size, NULL);
 
             free(NewEthernetFrame);
 
@@ -181,12 +183,8 @@ void InternetProtocolInterface::ipv4_packet_receive(Ipv4Header* PacketData)
                 if(this->IcmpPacketsInfo.exists(std::make_pair(echo_id, echo_sequence)))
                 {
                     this->IcmpPacketsInfo[std::make_pair(echo_id, echo_sequence)]->success = true;
-
                     IcmpReplyPacket = endian_switch(IcmpReplyPacket); 
-
-                    this->IcmpPacketsInfo[std::make_pair(echo_id, echo_sequence)]->data = (address_t)calloc(sizeof(IcmpPacket));
                     memcpy((uint8_t*)this->IcmpPacketsInfo[std::make_pair(echo_id, echo_sequence)]->data, (uint8_t*)IcmpReplyPacket, sizeof(IcmpPacket));
-
                 }
 
                 break;

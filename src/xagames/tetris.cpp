@@ -2,7 +2,7 @@
 #include <game_engine/xagame.hpp>
 #include <libcpp/ostream.h>
 #include <libcpp/istream.h>
-#include <libcpp/cmemory.h>
+#include <libc/memory.h>
 #include <keyboard/scan_codes.h>
 #include <libc/stdlibx.h>
 #include <libcpp/algorithm.h>

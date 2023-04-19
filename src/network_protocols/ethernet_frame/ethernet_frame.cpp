@@ -1,7 +1,6 @@
 
 #include <network_protocols/ethernet_frame/ethernet_frame.hpp>
 #include <libc/stdlibx.h>
-#include <libcpp/cmemory.h>
 #include <libcpp/endian.h>
 #include <libc/stdiox.h>
 #include <devices/NIC/8254x.hpp>
@@ -10,11 +9,14 @@
 #include <network_protocols/ethernet_type.h>
 #include <network_protocols/internet_protocol/ipv4/ip.h>
 
-extern "C" void i8254x_packet_send(uint32_t address, uint16_t length);
-extern "C" uint32_t* i8254x_class_return(void);
+std::UnorderedMap<net::MacAddress, NetworkResponse*> EthernetFrameInterface::ArpPacketsInfo;
 
+extern "C" void arp_module_init(void)
+{
 
-void EthernetFrameInterface::send(const uint8_t* mac_destination, const uint8_t* mac_source, uint16_t protocol, const uint8_t* buffer, uint16_t length)
+}
+
+void EthernetFrameInterface::send(const uint8_t* mac_destination, const uint8_t* mac_source, uint16_t protocol, const uint8_t* buffer, uint16_t length, NetworkResponse* Response)
 {
     
     uint8_t* tmp = (uint8_t*)malloc(sizeof(uint8_t) * 2000);
@@ -29,6 +31,18 @@ void EthernetFrameInterface::send(const uint8_t* mac_destination, const uint8_t*
     int i = 0;
     for(; i < length; i++)
         tmp[i] = buffer[i];
+
+    switch(protocol)
+    {
+        case ARP_ETHER_TYPE:
+        {
+            if(Response)
+            {
+                this->ArpPacketsInfo.insert(net::MacAddress(mac_destination), Response);
+            }
+            break;
+        }
+    }
 
     netapi_packet_send((uint8_t*)FrameHeader, length + ETHERNET_FRAME_MAC_HEADER_SIZE);
 
@@ -63,6 +77,9 @@ void EthernetFrameInterface::receive(uint8_t* buffer)
     {
         case ARP_ETHER_TYPE: 
         {
+            this->ArpPacketsInfo[Frame->mac_source]->success = true;
+            memcpy(this->ArpPacketsInfo[Frame->mac_source]->data, Frame->data, sizeof(AddressResolutionProtocol));
+
             arp_reply_handle((AddressResolutionProtocol*)Frame->data);
             break;
         }
@@ -81,13 +98,12 @@ void EthernetFrameInterface::receive(uint8_t* buffer)
 
 }
 
-EthernetFrameInterface EthernetFrameSubsystem;
-
 extern "C"
 {
-    void ethernet_frame_send(uint8_t* mac_destination, uint8_t* mac_source, uint16_t protocol, uint8_t* buffer, uint16_t length)
+    void ethernet_frame_send(uint8_t* mac_destination, uint8_t* mac_source, uint16_t protocol, uint8_t* buffer, uint16_t length, NetworkResponse* Response)
     {
-        EthernetFrameSubsystem.send(mac_destination, mac_source, protocol, buffer, length);
+        EthernetFrameInterface* EthernetFrameSubsystem  = (EthernetFrameInterface*)calloc(sizeof(EthernetFrameSubsystem));
+        EthernetFrameSubsystem->send(mac_destination, mac_source, protocol, buffer, length, Response);
     }
 }
 

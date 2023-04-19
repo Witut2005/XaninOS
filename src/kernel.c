@@ -402,7 +402,6 @@ void _start(void)
 
 
     arp_table_add_entry((127 << 24) | (0) | (0) | (1), null_memory_region);
-    icmp_packets_info_init();
     icmp_module_init();
 
     // system_variable_get(&bufsys, "HOME");

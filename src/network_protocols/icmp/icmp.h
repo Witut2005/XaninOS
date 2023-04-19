@@ -32,7 +32,7 @@ struct IcmpPacket
         
         uint32_t rest;
     };
-}__attribute__ ((packed, aligned(0x2)));
+}__attribute__ ((packed));
 
 
 

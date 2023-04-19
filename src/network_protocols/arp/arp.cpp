@@ -2,7 +2,6 @@
 #include <network_protocols/arp/arp.h>
 #include <network_protocols/ethernet_frame/ethernet_frame.hpp>
 #include <libc/stdlibx.h>
-#include <libcpp/cmemory.h>
 #include <libcpp/endian.h>
 #include <libc/stdiox.h>
 #include <libc/string.h>
@@ -19,7 +18,7 @@ uint8_t current_arp_entry = 0x0;
 extern "C"
 {
 
-    void send_arp_request(AddressResolutionProtocol* Arp)
+    void send_arp_request(AddressResolutionProtocol* Arp, NetworkResponse* Response)
     {
         if((Arp->destination_protocol_address == endian_switch(xanin_ip_get())) || (Arp->destination_protocol_address == endian_switch(XaninNetworkLoopback.ip_get())))
         {
@@ -30,7 +29,7 @@ extern "C"
         }
 
         EthernetFrameInterface EthernetFrameSubsystem;// = (EthernetFrameInterface*)malloc(sizeof(EthernetFrameInterface));    
-        EthernetFrameSubsystem.send(Arp->destination_hardware_address, Arp->source_hardware_address,  ARP_ETHER_TYPE, (uint8_t*)Arp, sizeof(AddressResolutionProtocol));
+        EthernetFrameSubsystem.send(Arp->destination_hardware_address, Arp->source_hardware_address,  ARP_ETHER_TYPE, (uint8_t*)Arp, sizeof(AddressResolutionProtocol), Response);
     }
 
     AddressResolutionProtocol* prepare_arp_request(AddressResolutionProtocol* arp, uint16_t hardware_type, uint16_t protocol_type, 
@@ -61,7 +60,7 @@ extern "C"
         {
             AddressResolutionProtocol* XaninArpReply = (AddressResolutionProtocol*)calloc(sizeof(AddressResolutionProtocol));
             prepare_arp_request(XaninArpReply, ARP_ETHERNET, ARP_IP_PROTOCOL, 0x6, 0x4, ARP_REPLY, netapi_mac_get(xanin_ip_get()), 192 << 24 | 168 << 16 | 19 << 8 | 12, arp_header->destination_hardware_address, arp_header->destination_protocol_address);
-            send_arp_request(XaninArpReply);
+            send_arp_request(XaninArpReply, NULL);
             free(XaninArpReply);
         }
 

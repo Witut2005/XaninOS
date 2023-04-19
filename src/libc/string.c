@@ -426,45 +426,134 @@ uint32_t strtoi(const char* str, uint8_t format)
 
 uint32_t str2ipv4(char* str)
 {
+    
     uint32_t tmp = 0;
-    char str_tmp[4] = {'\0'}; 
-    uint32_t octet;
+    
+    if(strlen(str) == 15)
+    {
 
-    memcpy(str_tmp, str, 3);
+        char str_tmp[4] = {'\0'}; 
+        uint32_t octet;
 
-    octet = strtoi(str_tmp, 10);
-    if(octet > 0xFF)
-        octet = 0xFF;
+        memcpy(str_tmp, str, 3);
 
-    tmp = octet << 8;
+        octet = strtoi(str_tmp, 10);
+        if(octet > 0xFF)
+            octet = 0xFF;
 
-    memcpy(str_tmp, str + 4, 3);
+        tmp = octet << 8;
 
-    octet = strtoi(str_tmp, 10);
-    if(octet > 0xFF)
-        octet = 0xFF;
+        if(str[3] != '.')
+            return BAD_IP_ADDRESS;
 
-    tmp = tmp | octet;
-    tmp = tmp << 8;
+        memcpy(str_tmp, str + 4, 3);
 
-    memcpy(str_tmp, str + 8, 3);
+        octet = strtoi(str_tmp, 10);
+        if(octet > 0xFF)
+            octet = 0xFF;
 
-    octet = strtoi(str_tmp, 10);
-    if(octet > 0xFF)
-        octet = 0xFF;
+        tmp = tmp | octet;
+        tmp = tmp << 8;
 
-    tmp = tmp | octet;
-    tmp = tmp << 8;
+        if(str[7] != '.')
+            return BAD_IP_ADDRESS;
 
-    memcpy(str_tmp, str + 12, 3);
+        memcpy(str_tmp, str + 8, 3);
 
-    octet = strtoi(str_tmp, 10);
-    if(octet > 0xFF)
-        octet = 0xFF;
+        octet = strtoi(str_tmp, 10);
+        if(octet > 0xFF)
+            octet = 0xFF;
 
-    tmp = tmp | octet;
+        tmp = tmp | octet;
+        tmp = tmp << 8;
+
+        if(str[11] != '.')
+            return BAD_IP_ADDRESS;
+
+        memcpy(str_tmp, str + 12, 3);
+
+        octet = strtoi(str_tmp, 10);
+        if(octet > 0xFF)
+            octet = 0xFF;
+
+        tmp = tmp | octet;
 
 
+    }
+
+    else
+    {
+        char str_tmp[4] = {'\0'}; 
+        uint32_t octet;
+
+        for(int i = 0; i <= 3; i++)
+        {
+            if(str[i] == '.')
+                break;
+            
+            // if((str[i] != '.') && (i == 3))
+            //     return BAD_IP_ADDRESS;
+
+            str_tmp[i] = str[i];
+
+
+        }
+
+        octet = strtoi(str_tmp, 10);
+        tmp = tmp | octet;
+        tmp = tmp << 8;
+
+        for(int i = 4; i <= 7; i++)
+        {
+            if(str[i] == '.')
+                break;
+            
+            // if((str[i] != '.') && (i == 7))
+            //     return BAD_IP_ADDRESS;
+
+            str_tmp[i-4] = str[i];
+
+
+        }
+
+        octet = strtoi(str_tmp, 10);
+        tmp = tmp | octet;
+        tmp = tmp << 8;
+
+        for(int i = 8; i <= 11; i++)
+        {
+            if(str[i] == '.')
+                break;
+            
+            // if((str[i] != '.') && (i == 11))
+            //     return BAD_IP_ADDRESS;
+
+            str_tmp[i-8] = str[i];
+
+        }
+
+        octet = strtoi(str_tmp, 10);
+        tmp = tmp | octet;
+        tmp = tmp << 8;
+
+        for(int i = 11; i <= 14; i++)
+        {
+            if(str[i] == '.')
+                break;
+            
+            // if((str[i] != '.') && (i == 14))
+            //     return BAD_IP_ADDRESS;
+
+            str_tmp[i-11] = str[i];
+
+        }
+
+        octet = strtoi(str_tmp, 10);
+        tmp = tmp | octet;
+        tmp = tmp << 8;
+
+    }
+    
     return tmp;
 
 }

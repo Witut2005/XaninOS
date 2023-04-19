@@ -2,6 +2,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <netapi/objects/response.h>
 
 
 enum ARP_ENUM
@@ -55,7 +56,7 @@ struct AddressResolutionProtocol
 #ifdef __cplusplus
 extern "C" {
 #endif
-    void send_arp_request(AddressResolutionProtocol* arp);
+    void send_arp_request(AddressResolutionProtocol* arp, NetworkResponse* Response);
     AddressResolutionProtocol* prepare_arp_request(AddressResolutionProtocol* arp, uint16_t hardware_type, uint16_t protocol_type, 
                                                     uint8_t hardware_address_length, uint8_t protocol_address_length, uint16_t opcode,
                                                         uint8_t* source_hardware_address, uint32_t source_protocol_address, uint8_t* destination_hardware_address,

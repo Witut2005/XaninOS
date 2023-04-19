@@ -5,7 +5,7 @@
 #include <libcpp/time.hpp>
 #include <libcpp/algorithm.h>
 #include <libc/string.h>
-#include <libcpp/cmemory.h>
+#include <libc/memory.h>
 #include <libcpp/ostream.h>
 #include <libc/stdlibx.h>
 #include <libcpp/string.h>
