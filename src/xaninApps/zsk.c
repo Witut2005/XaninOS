@@ -24,7 +24,7 @@ void zsk_init(void)
     xprintf("   ___II____| |___| |                                          \n");
     xprintf("  |                 |     __________      __________           \n");
     xprintf(" |O|                |    |          |    |          |          \n");
-    xprintf("  |_________________|=||=|    %zZSK%z   |=||=|    %zZSK%z   |=|\n", set_output_color(lblue,white), set_output_color(black, white),set_output_color(lblue,white), set_output_color(black, white));
+    xprintf("  |_________________|=||=|    %zZSK%z   |=||=|    %zZSK%z   |=|\n", OUTPUT_COLOR_SET(lblue,white), OUTPUT_COLOR_SET(black, white),OUTPUT_COLOR_SET(lblue,white), OUTPUT_COLOR_SET(black, white));
     xprintf(" /====|_____|====O |     |__________|    |__________|          \n");
     xprintf("  {___}      L____/        O      O        O      O            \n");
 }
@@ -58,7 +58,7 @@ int zsk(char* delay_str)
         delay = 100;
     
     else
-        delay = strtoi(delay_str,10);
+        delay = strtoi(delay_str, DECIMAL);
 
     xprintf("delay: %d", delay);
     //fwhile(1);

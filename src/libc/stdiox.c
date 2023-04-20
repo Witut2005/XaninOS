@@ -739,7 +739,7 @@ void xscanf(char* str, ... )
                                 counter++;
                             }
                             
-                            *number = strtoi(buffer, 10);                       
+                            *number = strtoi(buffer, DECIMAL);                       
 
                             if(buffer[0] == '-')
                                 *number = *number * -1;
@@ -751,7 +751,7 @@ void xscanf(char* str, ... )
                         {
 
                             char* number = va_arg(args, char*);
-                            *number = keyboard_command[0]; //strtoi(buffer, 10);                     
+                            *number = keyboard_command[0]; 
                             break;
                         }
 
@@ -769,7 +769,7 @@ void xscanf(char* str, ... )
                                 counter++;
                             }
                             
-                            *number = strtoi(buffer, 16);                       
+                            *number = strtoi(buffer, HEXADECIMAL);                       
                             
                             if(buffer[0] == '-')
                                 *number = *number * -1;
@@ -789,7 +789,7 @@ void xscanf(char* str, ... )
                                 counter++;
                             }
                             
-                            *number = strtoi(buffer, 2);                       
+                            *number = strtoi(buffer, BINARY);                       
 
                             break;
                         }

@@ -16,7 +16,7 @@ int run16(char* file_name)
     
     if(xin_file == NULL)
     {
-        xprintf("%zNO SUCH FILE %s\n",set_output_color(red,white),program_parameters);
+        xprintf("%zNO SUCH FILE %s\n",OUTPUT_COLOR_SET(red,white),program_parameters);
 
         while(inputg().scan_code == ENTER);
         return XANIN_ERROR;
@@ -29,8 +29,8 @@ int run16(char* file_name)
     
         if(xin_file->type == XIN_DIRECTORY)
         {
-            xprintf("%zYOU CANT RUN DIRECTORY\n",set_output_color(red,white));
-            xprintf("%zuse F4 key to exit\n",set_output_color(red,white));
+            xprintf("%zYOU CANT RUN DIRECTORY\n",OUTPUT_COLOR_SET(red,white));
+            xprintf("%zuse F4 key to exit\n",OUTPUT_COLOR_SET(red,white));
             while(inputg().scan_code != ENTER);
             return XANIN_ERROR;
         }

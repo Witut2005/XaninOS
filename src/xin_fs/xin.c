@@ -232,7 +232,7 @@ XinEntry *xin_folder_change(char *new_directory)
 
     if (xin_new_directory == NULL)
     {
-        // xprintf("%zNO SUCH DIRECTORY\n", set_output_color(red, white));
+        // xprintf("%zNO SUCH DIRECTORY\n", OUTPUT_COLOR_SET(red, white));
         // while (KeyInfo.scan_code != ENTER);
         free(new_directory);
         return NULL;
@@ -246,7 +246,7 @@ XinEntry *xin_folder_change(char *new_directory)
 
     else if (new_directory[strlen(new_directory) - 1] != '/')
     {
-        // xprintf("%zMISSING / ENDING CHARACTER IN DIRECTORY NAME\n", set_output_color(red, white));
+        // xprintf("%zMISSING / ENDING CHARACTER IN DIRECTORY NAME\n", OUTPUT_COLOR_SET(red, white));
         // while (KeyInfo.scan_code != ENTER);
         free(new_directory);
         return NULL;

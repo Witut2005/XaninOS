@@ -83,13 +83,13 @@ K CommandParser::parse_arg(CommandParser& parser, const char* index)
 
     else if constexpr(is_int(K))
     {
-        K tmp = strtoi((char*)parser.ValueMap[index].first, 10);
+        K tmp = strtoi((char*)parser.ValueMap[index].first, DECIMAL);
         return tmp;
     }
 
     else if constexpr(is_short(K))
     {
-        K tmp = (int16_t)strtoi((char*)parser.ValueMap[index].first, 10);
+        K tmp = (int16_t)strtoi((char*)parser.ValueMap[index].first, DECIMAL);
         return tmp;
     }
 

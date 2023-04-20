@@ -230,7 +230,7 @@ __STATUS __sys_xin_list_files(char** argv)
             {
                 if(strcmp(xin_get_file_pf(i->path)->path, xin_current_directory))
                 {
-                    xprintf("%z%s", set_output_color(black, i->type + 0x2), i);
+                    xprintf("%z%s", OUTPUT_COLOR_SET(black, i->type + 0x2), i);
                     xprintf("   ");
                 }
             }
@@ -251,7 +251,7 @@ __STATUS __sys_xin_list_files(char** argv)
 
                 if(strcmp(xin_get_file_pf(i->path)->path, path))
                 {
-                    xprintf("%z%s", set_output_color(black, i->type + 0x2), i);
+                    xprintf("%z%s", OUTPUT_COLOR_SET(black, i->type + 0x2), i);
                     xprintf("  ");
                 }
                 printed_text = printed_text + strlen("  ");
@@ -262,7 +262,7 @@ __STATUS __sys_xin_list_files(char** argv)
             {
                 if(strcmp(xin_get_file_pf(i->path)->path, xin_get_current_path(path)))
                 {
-                    xprintf("%z%s", set_output_color(black, i->type + 0x2), i);
+                    xprintf("%z%s", OUTPUT_COLOR_SET(black, i->type + 0x2), i);
                     xprintf("  ");
                 }
 

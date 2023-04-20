@@ -31,13 +31,13 @@ static inline void print_xanin_os_string(void)
     char* fourth_row= " /_/\\_\\__,_|_||_|_|_||_\\___/|___/\n";
 
     align_xanin_os_string();
-    xprintf("%z%s", set_output_color(logo_back_color, logo_front_color), first_row);
+    xprintf("%z%s", OUTPUT_COLOR_SET(logo_back_color, logo_front_color), first_row);
     align_xanin_os_string();
-    xprintf("%z%s", set_output_color(logo_back_color, logo_front_color), second_row);
+    xprintf("%z%s", OUTPUT_COLOR_SET(logo_back_color, logo_front_color), second_row);
     align_xanin_os_string();
-    xprintf("%z%s", set_output_color(logo_back_color, logo_front_color), third_row);
+    xprintf("%z%s", OUTPUT_COLOR_SET(logo_back_color, logo_front_color), third_row);
     align_xanin_os_string();
-    xprintf("%z%s", set_output_color(logo_back_color, logo_front_color), fourth_row);
+    xprintf("%z%s", OUTPUT_COLOR_SET(logo_back_color, logo_front_color), fourth_row);
 
 }
 

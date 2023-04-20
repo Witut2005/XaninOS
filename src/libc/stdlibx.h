@@ -13,6 +13,7 @@ extern void(*keyboard_handle)(void);
 #define KEYBOARD_KEYSTROKE_HANLDER_UNLOAD() keyboard_handle = NULL 
 
 typedef uint8_t* address_t;
+typedef int __STATUS;
 
 // #ifndef NULL
 // #define NULL 0x0

@@ -14,7 +14,7 @@ int nic_print(void)
     {
         xprintf("%s\n", NetworkDevices->name);
         xprintf("ven: %X dev: %X\n", NetworkDevices->PciInfo[i]->vendor_id, NetworkDevices->PciInfo[i]->device_id);
-        xprintf("%z----------------------------------\n", set_output_color(black, green));
+        xprintf("%z----------------------------------\n", OUTPUT_COLOR_SET(black, green));
     }
 
     free(NetworkDevices);

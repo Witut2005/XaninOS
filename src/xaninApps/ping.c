@@ -22,13 +22,17 @@ int ping(char* ip_addr_str)
     uint32_t ip_dest = str2ipv4(ip_addr_str);
     uint8_t* tmp = (uint8_t*)&ip_dest;
 
-    for(int i = 3; i >=1; i--)
+    if(check_string_errors(IPV4_ERRNO))
     {
-        xprintf("%d.", tmp[i]);
+        xprintf("IP error (invalid ip given)\n");
+        while(inputg().scan_code != ENTER); 
+        return XANIN_OK;
     }
 
-    xprintf("%d\n", tmp[0]);
+    for(int i = 3; i >=1; i--)
+        xprintf("%d.", tmp[i]);
 
+    xprintf("%d\n\n\n", tmp[0]);
 
     NetworkResponse* IcmpResponse;
     response_object_create(&IcmpResponse, sizeof(IcmpPacket));
@@ -41,9 +45,10 @@ int ping(char* ip_addr_str)
         if(IcmpResponse->success)
         {
             IcmpPacket* PacketData = IcmpResponse->data;
-            xprintf("%z%s replied %d/%d\n", set_output_color(green, white),ip_addr_str, PacketData->echo_id, PacketData->echo_sequence);
+            xprintf("%z%s replied %d/%d\n", OUTPUT_COLOR_SET(green, white),ip_addr_str, PacketData->echo_id, PacketData->echo_sequence);
             free(PacketData);
         }
+
         else
             xprintf("%z%s not found\n", stderr, ip_addr_str);
 

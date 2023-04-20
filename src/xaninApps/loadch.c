@@ -11,7 +11,7 @@ int loadch(char* address_string)
     
     
 
-    uint32_t address = strtoi(address_string, 16);
+    uint32_t address = strtoi(address_string, HEXADECIMAL);
 
     char* data_pointer = (char*)(address);
 

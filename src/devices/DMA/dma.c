@@ -35,7 +35,7 @@ void dma_address_set(uint8_t channel_number, uint8_t address_low,
 
     if(channel_number > 8)
     {
-        xprintf("%zINVALID DMAC CHANNEL NUMBER\n",set_output_color(red,white));
+        xprintf("%zINVALID DMAC CHANNEL NUMBER\n",OUTPUT_COLOR_SET(red,white));
         return;
     }
 
@@ -63,7 +63,7 @@ void dma_count_set(uint8_t channel_number, uint8_t address_low,
 {
     if(channel_number > 8)
     {
-        xprintf("%zINVALID DMAC CHANNEL NUMBER\n",set_output_color(red,white));
+        xprintf("%zINVALID DMAC CHANNEL NUMBER\n",OUTPUT_COLOR_SET(red,white));
         return;
     }
 

@@ -19,6 +19,7 @@
 //#include <xaninApps/rd.c>
 //#include <xaninApps/touch.c>
 
+#include <xaninApps/netapi_check.c>
 #include <xaninApps/netplan_apply.c>
 #include <xaninApps/interrupt_test.c>
 #include <xaninApps/idt_examine.c>

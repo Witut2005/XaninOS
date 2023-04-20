@@ -10,7 +10,7 @@ int load_file(char* file_name, char* options)
     uint32_t offset = 0;
 
     if(strcmp(options, "-offset"))
-        offset = strtoi(argv[3], 16);
+        offset = strtoi(argv[3], HEXADECIMAL);
 
     screen_clear();
 
@@ -34,7 +34,7 @@ int load_file(char* file_name, char* options)
         for(int j = 0; j < 16; j++)
             xprintf(" %mX", data_pointer[ (16 * i) + j]);
 
-        xprintf(" %z| ", set_output_color(black, green));
+        xprintf(" %z| ", OUTPUT_COLOR_SET(black, green));
 
         for(int j = 0; j < 16; j++)
             putchar(data_pointer[ (16 * i) + j]);

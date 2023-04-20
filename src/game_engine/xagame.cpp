@@ -44,7 +44,7 @@ void xgm::rectangle::create(uint32_t x, uint32_t y, uint32_t size_x, uint32_t si
     {
         for(int j = 0; j < size_x; j++)
         {
-            Screen.cursor[this->position_y + i][this->position_x + j] = ' ' | (set_output_color(color, white) << 8);
+            Screen.cursor[this->position_y + i][this->position_x + j] = ' ' | (OUTPUT_COLOR_SET(color, white) << 8);
             xgm::Renderer::ScreenManager::screen_cells[this->position_y + i][this->position_x + j] = true;
         }
     }
@@ -60,7 +60,7 @@ void xgm::rectangle::move(int32_t x, int32_t y)
     {
         for(int j = 0; j < this->size_x; j++)
         {
-            Screen.cursor[this->position_y + i][this->position_x + j] = ' ' | (set_output_color(black, black) << 8);
+            Screen.cursor[this->position_y + i][this->position_x + j] = ' ' | (OUTPUT_COLOR_SET(black, black) << 8);
             xgm::Renderer::ScreenManager::screen_cells[this->position_y + i][this->position_x + j] = false;
         }
     }
@@ -78,7 +78,7 @@ void xgm::rectangle::move(int32_t x, int32_t y)
 
             if(!dont_copy_me)
             {
-                Screen.cursor[this->position_y + i][this->position_x + j] = ' ' | (set_output_color((this->color), white) << 8);
+                Screen.cursor[this->position_y + i][this->position_x + j] = ' ' | (OUTPUT_COLOR_SET((this->color), white) << 8);
                 xgm::Renderer::ScreenManager::screen_cells[this->position_y + i][this->position_x + j] = true;
             }
 
@@ -95,7 +95,7 @@ void xgm::rectangle::destroy()
     {
         for(int j = 0; j < this->size_x; j++)
         {
-            Screen.cursor[this->position_y + i][this->position_x + j] = ' ' | (set_output_color(black, white) << 8);
+            Screen.cursor[this->position_y + i][this->position_x + j] = ' ' | (OUTPUT_COLOR_SET(black, white) << 8);
             xgm::Renderer::ScreenManager::screen_cells[this->position_y + i][this->position_x + j] = false;
         }
     }
@@ -113,7 +113,7 @@ void xgm::rectangle::rotate_right_90()
     {
         for(int j = 0; j < this->size_x; j++)
         {
-            Screen.cursor[this->position_y + i][this->position_x + j] = ' ' | (set_output_color(black, black) << 8);
+            Screen.cursor[this->position_y + i][this->position_x + j] = ' ' | (OUTPUT_COLOR_SET(black, black) << 8);
             xgm::Renderer::ScreenManager::screen_cells[this->position_y + i][this->position_x + j] = false;
         }
     }
@@ -141,7 +141,7 @@ void xgm::rectangle::rotate_right_90()
         {
             if(!this->BlankCells[i][j])
             {
-                Screen.cursor[this->position_y + i][this->position_x + j] = ' ' | (set_output_color((this->color), black) << 8);
+                Screen.cursor[this->position_y + i][this->position_x + j] = ' ' | (OUTPUT_COLOR_SET((this->color), black) << 8);
                 xgm::Renderer::ScreenManager::screen_cells[this->position_y + i][this->position_x + j] = true;
             }
         }

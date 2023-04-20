@@ -23,7 +23,7 @@ int xin_info(char *entry_name)
 
     else
     {
-        xprintf("%zNO SUCH FILE\n", set_output_color(red, white));
+        xprintf("%zNO SUCH FILE\n", OUTPUT_COLOR_SET(red, white));
         while (inputg().scan_code != ENTER);
         return XANIN_ERROR;
     }

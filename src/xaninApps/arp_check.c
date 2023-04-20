@@ -17,7 +17,7 @@ int arp_check(const char* ip_addr_str)
     if(x != 0xFF)
     {
 
-        xprintf("%zarp entry found\n", set_output_color(green,white));
+        xprintf("%zarp entry found\n", OUTPUT_COLOR_SET(green,white));
 
         for(int i = 0; i < 5; i++)
             xprintf("%x:", ArpTable[x].mac[i]);
@@ -26,7 +26,7 @@ int arp_check(const char* ip_addr_str)
     }
 
     else
-        xprintf("%zno such arp table entry\n", set_output_color(red,white));
+        xprintf("%zno such arp table entry\n", OUTPUT_COLOR_SET(red,white));
 
 
     while(inputg().scan_code != ENTER);

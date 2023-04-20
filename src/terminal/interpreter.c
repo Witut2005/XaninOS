@@ -75,6 +75,7 @@ void scan(void)
     }
 
     XANIN_ADD_APP_ENTRY0("netplan_apply", netplan_apply)
+    XANIN_ADD_APP_ENTRY1("netapi_check", netapi_check)
     XANIN_ADD_APP_ENTRY0("usb_info", usb_controller_info)
     XANIN_ADD_APP_ENTRY0("memtest", memory_test)
     // XANIN_ADD_APP_ENTRY0("grapher", grapher)
@@ -255,7 +256,7 @@ void scan(void)
     XANIN_ADD_APP_ENTRY0("tetris", tetris)
     XANIN_ADD_APP_ENTRY0("xgl_test", xgl_test)
 
-    XANIN_ADD_APP_ENTRY1("arp", arp_table_print)
+    XANIN_ADD_APP_ENTRY2("arp", arp_table_print)
     XANIN_ADD_APP_ENTRY1("ping", ping)
     XANIN_ADD_APP_ENTRY1("ip_test", ip_test)
     XANIN_ADD_APP_ENTRY1("udp_test", udp_test)

@@ -5,6 +5,7 @@
 #include <stddef.h>
 #include <xin_fs/xin_entry.h>
 #include <stdbool.h>
+#include <libc/stdlibx.h>
 
 #define XIN_SYSTEM_FOLDER '/'
 #define XIN_BASE_FILE_ADDRESS_TO_LOAD 0x100000
@@ -19,8 +20,6 @@ enum XIN_RETURN_STATUS
     XIN_ENTRY_NOT_FOUND = 0x6
 
 };
-
-typedef int __STATUS;
 
 struct XinFileDescriptor
 {

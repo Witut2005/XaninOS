@@ -8,7 +8,7 @@ int load(char* address_string)
     screen_clear();
 
 
-    uint32_t address = strtoi(address_string, 16);
+    uint32_t address = strtoi(address_string, HEXADECIMAL);
 
     char* data_pointer = (char*)(address);
 
@@ -25,7 +25,7 @@ int load(char* address_string)
         for(int j = 0; j < 16; j++)
             xprintf(" %mX", data_pointer[ (16 * i) + j]);
 
-        xprintf(" %z| ", set_output_color(black, green));
+        xprintf(" %z| ", OUTPUT_COLOR_SET(black, green));
 
         for(int j = 0; j < 16; j++)
             putchar(data_pointer[ (16 * i) + j]);

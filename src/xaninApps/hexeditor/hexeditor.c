@@ -197,7 +197,7 @@ int hexeditor(char* file_name, char* options)
     uint32_t hexeditor_offset = 0;
 
     if(strcmp(options, "-offset"))
-        hexeditor_offset = strtoi(argv[3], 16);
+        hexeditor_offset = strtoi(argv[3], HEXADECIMAL);
 
     if(file == NULL)
     {

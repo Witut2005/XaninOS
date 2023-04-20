@@ -88,7 +88,7 @@ void xpaint_input(xchar Input)
             uint8_t color;
         
             if(!(*cursor && 0xFF00))
-                color = set_output_color(black, white);
+                color = OUTPUT_COLOR_SET(black, white);
             else
                 color = (*cursor & 0xFF00) >> 8;
             
@@ -100,7 +100,7 @@ void xpaint_input(xchar Input)
     saved_cell = *cursor;
 
     if(!Input.character)
-        *cursor = (set_output_color(black, white) << 8) | '_';
+        *cursor = (OUTPUT_COLOR_SET(black, white) << 8) | '_';
 
 }
 

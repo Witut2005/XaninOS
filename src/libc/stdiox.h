@@ -5,7 +5,7 @@
 #include <stdint.h>
 #include <libc/colors.h>
 
-#define set_output_color(x,y) ((x & 0xF) << 4 | (y & 0xF))
+#define OUTPUT_COLOR_SET(x,y) ((x & 0xF) << 4 | (y & 0xF))
 
 #define cursor_set_position(x_new, y_new) \
 Screen.x = x_new; \

@@ -82,17 +82,17 @@ void kernel_loop(void)
         screen_clear();
         time_get(&SystemTime);
 
-        xprintf("%z    _/      _/                      _/              _/_/      _/_/_/       \n", set_output_color(logo_back_color, logo_front_color));
-        xprintf("%z     _/  _/      _/_/_/  _/_/_/        _/_/_/    _/    _/  _/              \n", set_output_color(logo_back_color, logo_front_color));
-        xprintf("%z      _/      _/    _/  _/    _/  _/  _/    _/  _/    _/    _/_/           \n", set_output_color(logo_back_color, logo_front_color));
-        xprintf("%z   _/  _/    _/    _/  _/    _/  _/  _/    _/  _/    _/        _/%z   version 1.0v\n",set_output_color(logo_back_color, logo_front_color), set_output_color(black,white) );
-        xprintf("%z_/      _/    _/_/_/  _/    _/  _/  _/    _/    _/_/    _/_/_/     %z%s: %i:%i:%i\n\n\n", set_output_color(logo_back_color, logo_front_color), set_output_color(black,white), daysLUT[SystemTime.weekday], SystemTime.hour, SystemTime.minutes, SystemTime.seconds);                                       
+        xprintf("%z    _/      _/                      _/              _/_/      _/_/_/       \n", OUTPUT_COLOR_SET(logo_back_color, logo_front_color));
+        xprintf("%z     _/  _/      _/_/_/  _/_/_/        _/_/_/    _/    _/  _/              \n", OUTPUT_COLOR_SET(logo_back_color, logo_front_color));
+        xprintf("%z      _/      _/    _/  _/    _/  _/  _/    _/  _/    _/    _/_/           \n", OUTPUT_COLOR_SET(logo_back_color, logo_front_color));
+        xprintf("%z   _/  _/    _/    _/  _/    _/  _/  _/    _/  _/    _/        _/%z   version 1.0v\n",OUTPUT_COLOR_SET(logo_back_color, logo_front_color), OUTPUT_COLOR_SET(black,white) );
+        xprintf("%z_/      _/    _/_/_/  _/    _/  _/  _/    _/    _/_/    _/_/_/     %z%s: %i:%i:%i\n\n\n", OUTPUT_COLOR_SET(logo_back_color, logo_front_color), OUTPUT_COLOR_SET(black,white), daysLUT[SystemTime.weekday], SystemTime.hour, SystemTime.minutes, SystemTime.seconds);                                       
 
         Screen.x = 0;
         Screen.y = 8;
 
         for(int i = 0; xin_current_directory[i + 1] != '\0'; i++)
-            xprintf("%z%c", set_output_color(black, lblue), xin_current_directory[i]);
+            xprintf("%z%c", OUTPUT_COLOR_SET(black, lblue), xin_current_directory[i]);
 
         xprintf(">");
 
@@ -208,26 +208,26 @@ void _start(void)
 
     rsdp = get_acpi_rsdp_address_base();
 
-    xprintf("%z----------------------------\n", set_output_color(black, green));
+    xprintf("%z----------------------------\n", OUTPUT_COLOR_SET(black, green));
 
     xprintf("CHECKSUM CHECK RSDP: ");
-    1 == acpi_rsdp_checksum_check(rsdp) ? xprintf("%zVALID", set_output_color(green, white)) : xprintf("%zINVALID", set_output_color(red, white));
+    1 == acpi_rsdp_checksum_check(rsdp) ? xprintf("%zVALID", OUTPUT_COLOR_SET(green, white)) : xprintf("%zINVALID", OUTPUT_COLOR_SET(red, white));
     xprintf("\nRSDP address: 0x%x\n", rsdp);
 
     rsdt = rsdp->rsdt_address;
 
-    xprintf("%z----------------------------\n", set_output_color(black, green));
+    xprintf("%z----------------------------\n", OUTPUT_COLOR_SET(black, green));
 
     xprintf("CHECKSUM CHECK RSDT: ");
-    1 == acpi_rsdt_checksum_check(rsdt) ? xprintf("%zVALID", set_output_color(green, white)) : xprintf("%zINVALID", set_output_color(red, white));
+    1 == acpi_rsdt_checksum_check(rsdt) ? xprintf("%zVALID", OUTPUT_COLOR_SET(green, white)) : xprintf("%zINVALID", OUTPUT_COLOR_SET(red, white));
     xprintf("\nRSDT address: 0x%x\n", rsdt);
 
     apic_sdt = apic_sdt_find();
 
-    xprintf("%z----------------------------\n", set_output_color(black, green));
+    xprintf("%z----------------------------\n", OUTPUT_COLOR_SET(black, green));
 
     xprintf("CHECKSUM CHECK MADT: ");
-    1 == acpi_rsdt_checksum_check(rsdt) ? xprintf("%zVALID", set_output_color(green, white)) : xprintf("%zINVALID", set_output_color(red, white));
+    1 == acpi_rsdt_checksum_check(rsdt) ? xprintf("%zVALID", OUTPUT_COLOR_SET(green, white)) : xprintf("%zINVALID", OUTPUT_COLOR_SET(red, white));
     xprintf("\nMADT address: 0x%x\n", rsdt);
 
     pic_disable();
@@ -250,7 +250,7 @@ void _start(void)
             break;
         }
     }
-    xprintf("%z----------------------------\n", set_output_color(black, green));
+    xprintf("%z----------------------------\n", OUTPUT_COLOR_SET(black, green));
 
     apic_enable();
     xprintf("apic state: 0x%x\n", *(uint32_t *)APIC_SPURIOUS_INTERRUPT_VECTOR_REGISTER);
@@ -328,12 +328,12 @@ void _start(void)
     //                               0x0 << APIC_DELIVERY_MODE | 0x0 << APIC_DESTINATION_MODE | 0x0 << APIC_INT_PIN_POLARITY | 0x0 << APIC_INT_MASK,
     //                           ioapic_id_get());
 
-    xprintf("\n%z----------------------------\n", set_output_color(black, green));
+    xprintf("\n%z----------------------------\n", OUTPUT_COLOR_SET(black, green));
     xprintf("NIC interrupt line: 0x%x", (apic_nic_redirect != NULL ? apic_nic_redirect->global_system_int_table + APIC_IRQ_BASE : PIC_NIC_VECTOR));
 
     xanin_info_ptr = xanin_information_block_get();
 
-    xprintf("\n%z----------------------------\n", set_output_color(black, green));
+    xprintf("\n%z----------------------------\n", OUTPUT_COLOR_SET(black, green));
     xprintf("Com port status: 0x%x\n", com_status());
 
     xprintf("Press ENTER to continue...\n");

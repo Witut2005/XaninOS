@@ -9,6 +9,12 @@
 #include <keyboard/key_map.h>
 #include <libc/memory.h>
 
+static uint32_t string_errno;
+
+uint32_t check_string_errors(uint32_t mask)
+{
+    return string_errno & mask;
+}
 
 uint32_t strlen(const char* a)
 {
@@ -20,7 +26,6 @@ uint32_t strlen(const char* a)
 
     for(const char* i = a; *i != '\0' ;i++)
         length++;
-    
 
     return length;
 }
@@ -428,6 +433,7 @@ uint32_t str2ipv4(char* str)
 {
     
     uint32_t tmp = 0;
+    uint32_t counter = 0;
     
     if(strlen(str) == 15)
     {
@@ -437,7 +443,7 @@ uint32_t str2ipv4(char* str)
 
         memcpy(str_tmp, str, 3);
 
-        octet = strtoi(str_tmp, 10);
+        octet = strtoi(str_tmp, DECIMAL);
         if(octet > 0xFF)
             octet = 0xFF;
 
@@ -448,7 +454,7 @@ uint32_t str2ipv4(char* str)
 
         memcpy(str_tmp, str + 4, 3);
 
-        octet = strtoi(str_tmp, 10);
+        octet = strtoi(str_tmp, DECIMAL);
         if(octet > 0xFF)
             octet = 0xFF;
 
@@ -460,7 +466,7 @@ uint32_t str2ipv4(char* str)
 
         memcpy(str_tmp, str + 8, 3);
 
-        octet = strtoi(str_tmp, 10);
+        octet = strtoi(str_tmp, DECIMAL);
         if(octet > 0xFF)
             octet = 0xFF;
 
@@ -471,13 +477,12 @@ uint32_t str2ipv4(char* str)
             return BAD_IP_ADDRESS;
 
         memcpy(str_tmp, str + 12, 3);
+        octet = strtoi(str_tmp, DECIMAL);
 
-        octet = strtoi(str_tmp, 10);
         if(octet > 0xFF)
             octet = 0xFF;
 
         tmp = tmp | octet;
-
 
     }
 
@@ -486,73 +491,130 @@ uint32_t str2ipv4(char* str)
         char str_tmp[4] = {'\0'}; 
         uint32_t octet;
 
-        for(int i = 0; i <= 3; i++)
+        for(counter = 0; counter <= 3; counter++)
         {
-            if(str[i] == '.')
+            if(str[counter] == '.')
+            {
+                counter++;
                 break;
-            
-            // if((str[i] != '.') && (i == 3))
-            //     return BAD_IP_ADDRESS;
+            }
 
-            str_tmp[i] = str[i];
+            if((str[counter] != '.') && (counter == 3))
+            {
+                string_errno = string_errno | IPV4_ERRNO;
+                return BAD_IP_ADDRESS;
+            }
 
+            str_tmp[counter] = str[counter];
 
         }
 
-        octet = strtoi(str_tmp, 10);
-        tmp = tmp | octet;
-        tmp = tmp << 8;
+        octet = strtoi(str_tmp, DECIMAL);
 
-        for(int i = 4; i <= 7; i++)
+        if(octet > 255)
         {
-            if(str[i] == '.')
-                break;
-            
-            // if((str[i] != '.') && (i == 7))
-            //     return BAD_IP_ADDRESS;
-
-            str_tmp[i-4] = str[i];
-
-
+            string_errno = string_errno | IPV4_ERRNO;
+            return BAD_IP_ADDRESS;
         }
 
-        octet = strtoi(str_tmp, 10);
         tmp = tmp | octet;
         tmp = tmp << 8;
+        memset(str_tmp, 0, 4);
 
-        for(int i = 8; i <= 11; i++)
+        uint32_t counter_start = counter;
+        uint32_t counter_tmp = counter + 3;
+
+        for(; counter <= counter_tmp; counter++)
         {
-            if(str[i] == '.')
+            if(str[counter] == '.')
+            {
+                counter++;
                 break;
+            }
+
+            if((str[counter] != '.') && (counter == counter_tmp))
+            {
+                string_errno = string_errno | IPV4_ERRNO;
+                return BAD_IP_ADDRESS;
+            }
             
-            // if((str[i] != '.') && (i == 11))
-            //     return BAD_IP_ADDRESS;
-
-            str_tmp[i-8] = str[i];
-
+            str_tmp[counter-counter_start] = str[counter];
         }
 
-        octet = strtoi(str_tmp, 10);
-        tmp = tmp | octet;
-        tmp = tmp << 8;
+        octet = strtoi(str_tmp, DECIMAL);
 
-        for(int i = 11; i <= 14; i++)
+        if(octet > 255)
         {
-            if(str[i] == '.')
-                break;
-            
-            // if((str[i] != '.') && (i == 14))
-            //     return BAD_IP_ADDRESS;
-
-            str_tmp[i-11] = str[i];
-
+            string_errno = string_errno | IPV4_ERRNO;
+            return BAD_IP_ADDRESS;
         }
 
-        octet = strtoi(str_tmp, 10);
         tmp = tmp | octet;
         tmp = tmp << 8;
+        memset(str_tmp, 0, 4);
+
+        counter_start = counter;
+        counter_tmp = counter + 3;
+
+        for(; counter <= counter_tmp; counter++)
+        {
+            if(str[counter] == '.')
+            {
+                counter++;
+                break;
+            }
+
+            if((str[counter] != '.') && (counter == counter_tmp))
+            {
+                string_errno = string_errno | IPV4_ERRNO;
+                return BAD_IP_ADDRESS;
+            }
+
+            str_tmp[counter-counter_start] = str[counter];
+        }
+
+        octet = strtoi(str_tmp, DECIMAL);
+
+        if(octet > 255)
+        {
+            string_errno = string_errno | IPV4_ERRNO;
+            return BAD_IP_ADDRESS;
+        }
+
+        tmp = tmp | octet;
+        tmp = tmp << 8;
+        memset(str_tmp, 0, 4);
+
+        counter_start = counter;
+        counter_tmp = counter + 3;
+
+        for(; counter <= counter_tmp; counter++)
+        {
+            if(str[counter] == '\0')
+                break;
+
+            if((str[counter] != '.') && (counter == counter_tmp))
+            {
+                string_errno = string_errno | IPV4_ERRNO;
+                return BAD_IP_ADDRESS;
+            }
+
+            str_tmp[counter-counter_start] = str[counter];
+        }
+
+        octet = strtoi(str_tmp, DECIMAL);
+
+        if(octet > 255)
+        {
+            string_errno = string_errno | IPV4_ERRNO;
+            return BAD_IP_ADDRESS;
+        }
+
+        tmp = tmp | octet;
 
     }
+
+    string_errno = NULL;    
     
     return tmp;
 

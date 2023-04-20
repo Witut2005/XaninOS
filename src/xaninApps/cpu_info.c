@@ -110,52 +110,52 @@ int cpu_info(char* options)
 
 
     is_present = (edx & CPUID_EDX_IA64) >> 30;
-    xprintf("64-bit:               %z%s\n", set_output_color(cpu_state_color[is_present],white), cpu_state[is_present]); 
+    xprintf("64-bit:               %z%s\n", OUTPUT_COLOR_SET(cpu_state_color[is_present],white), cpu_state[is_present]); 
      
     is_present = (edx & CPUID_EDX_HTT) >> 28;
-    xprintf("Hyper-Threading:      %z%s\n", set_output_color(cpu_state_color[is_present],white), cpu_state[is_present]);
+    xprintf("Hyper-Threading:      %z%s\n", OUTPUT_COLOR_SET(cpu_state_color[is_present],white), cpu_state[is_present]);
 
     is_present = (edx & CPUID_EDX_MMX) >> 23;
-    xprintf("MMX:                  %z%s\n", set_output_color(cpu_state_color[is_present],white), cpu_state[is_present]);
+    xprintf("MMX:                  %z%s\n", OUTPUT_COLOR_SET(cpu_state_color[is_present],white), cpu_state[is_present]);
 
     is_present = (edx & CPUID_EDX_MCA) >> 14;
-    xprintf("Machine Check Arch:   %z%s\n", set_output_color(cpu_state_color[is_present],white), cpu_state[is_present]);
+    xprintf("Machine Check Arch:   %z%s\n", OUTPUT_COLOR_SET(cpu_state_color[is_present],white), cpu_state[is_present]);
 
     is_present = (edx & CPUID_EDX_FPU) >> 0;
-    xprintf("Onboard FPU:          %z%s\n", set_output_color(cpu_state_color[is_present],white), cpu_state[is_present]);
+    xprintf("Onboard FPU:          %z%s\n", OUTPUT_COLOR_SET(cpu_state_color[is_present],white), cpu_state[is_present]);
 
     is_present = (edx & CPUID_EDX_MSR) >> 5;
-    xprintf("MSRs:                 %z%s\n", set_output_color(cpu_state_color[is_present],white), cpu_state[is_present]);
+    xprintf("MSRs:                 %z%s\n", OUTPUT_COLOR_SET(cpu_state_color[is_present],white), cpu_state[is_present]);
 
     is_present = (edx & CPUID_EDX_APIC) >> 9;
-    xprintf("APIC:                 %z%s\n", set_output_color(cpu_state_color[is_present],white), cpu_state[is_present]);
+    xprintf("APIC:                 %z%s\n", OUTPUT_COLOR_SET(cpu_state_color[is_present],white), cpu_state[is_present]);
 
 
     is_present = (ecx & CPUID_ECX_X2APIC) >> 21;
-    xprintf("x2APIC:               %z%s\n", set_output_color(cpu_state_color[is_present],white), cpu_state[is_present]);
+    xprintf("x2APIC:               %z%s\n", OUTPUT_COLOR_SET(cpu_state_color[is_present],white), cpu_state[is_present]);
 
     is_present = (edx & CPUID_EDX_ACPI) >> 22;
-    xprintf("ACPI:                 %z%s\n", set_output_color(cpu_state_color[is_present],white), cpu_state[is_present]);
+    xprintf("ACPI:                 %z%s\n", OUTPUT_COLOR_SET(cpu_state_color[is_present],white), cpu_state[is_present]);
 
 
     is_present = (ecx & CPUID_ECX_AVX) >> 28;
-    xprintf("AVX:                  %z%s\n", set_output_color(cpu_state_color[is_present],white), cpu_state[is_present]);
+    xprintf("AVX:                  %z%s\n", OUTPUT_COLOR_SET(cpu_state_color[is_present],white), cpu_state[is_present]);
 
     is_present = (ecx & CPUID_ECX_RDRAND) >> 30;
-    xprintf("RDRAND Instruction:   %z%s\n", set_output_color(cpu_state_color[is_present],white), cpu_state[is_present]);
+    xprintf("RDRAND Instruction:   %z%s\n", OUTPUT_COLOR_SET(cpu_state_color[is_present],white), cpu_state[is_present]);
 
 
     is_present = (edx & CPUID_EDX_SSE2) >> 26;
-    xprintf("SSE2:                 %z%s\n", set_output_color(cpu_state_color[is_present],white), cpu_state[is_present]);
+    xprintf("SSE2:                 %z%s\n", OUTPUT_COLOR_SET(cpu_state_color[is_present],white), cpu_state[is_present]);
 
     is_present = (ecx & CPUID_ECX_SSE3) >> 0;
-    xprintf("SSE3:                 %z%s\n", set_output_color(cpu_state_color[is_present],white), cpu_state[is_present]);
+    xprintf("SSE3:                 %z%s\n", OUTPUT_COLOR_SET(cpu_state_color[is_present],white), cpu_state[is_present]);
 
     is_present = (ecx & CPUID_ECX_SSE4_1) >> 19;
-    xprintf("SSE4_1:               %z%s\n", set_output_color(cpu_state_color[is_present],white), cpu_state[is_present]);
+    xprintf("SSE4_1:               %z%s\n", OUTPUT_COLOR_SET(cpu_state_color[is_present],white), cpu_state[is_present]);
  
     is_present = (ecx & CPUID_ECX_SSE4_2) >> 20;
-    xprintf("SSE4_2:               %z%s\n", set_output_color(cpu_state_color[is_present],white), cpu_state[is_present]);
+    xprintf("SSE4_2:               %z%s\n", OUTPUT_COLOR_SET(cpu_state_color[is_present],white), cpu_state[is_present]);
 
 
     while(getscan() != ENTER);

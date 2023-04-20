@@ -4,12 +4,13 @@
 #include <stddef.h>
 #include <libc/stdlibx.h>
 
+#define NETWORK_RESPONSE_WAIT(ms) msleep(ms)
+
 struct NetworkResponse
 {
     bool success;
     address_t data;
 };
-
 
 #ifndef __cplusplus
 typedef struct NetworkResponse NetworkResponse;

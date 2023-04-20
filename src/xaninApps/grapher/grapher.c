@@ -175,10 +175,10 @@ int grapher(){
                     xprintf(" ");//empty space
                 else if (D[POSX][POSY]==42)
                 {
-                    xprintf("%z%c",set_output_color(black, lred), D[POSX][POSY]);
+                    xprintf("%z%c",OUTPUT_COLOR_SET(black, lred), D[POSX][POSY]);
                 }
                 else
-                    xprintf("%z%c", set_output_color(black, white), D[POSX][POSY]);
+                    xprintf("%z%c", OUTPUT_COLOR_SET(black, white), D[POSX][POSY]);
             }
             xprintf("\n");
             POSX=0;

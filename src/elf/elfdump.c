@@ -24,7 +24,7 @@ void elf_data_load(XinEntry* file)
     data += ELF_HEADER_SIZE;
     uint32_t load_sum = 0;
 
-    xprintf("%zExecutable and Linkage File Format Info:\n", set_output_color(green, white));
+    xprintf("%zExecutable and Linkage File Format Info:\n", OUTPUT_COLOR_SET(green, white));
     xprintf("--------------------------\n");
     xprintf("Magic: %s\n", magic);
     xprintf("--------------------------\n");
