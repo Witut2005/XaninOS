@@ -132,6 +132,9 @@ build:
 	@echo [ASM] netapi_interrupt
 	@$(ASM) -f elf32 ./netapi/netapi_interrupt.asm -o ./netapi/netapi_interrupt.o
 
+	@echo [CPP] ip.cpp
+	@$(CC) $(CC_OPTIONS) ./netapi/objects/ip.cpp -o ./netapi/objects/ip.o 
+
 	@echo [CC] apic.cpp
 	@$(CC) $(CC_OPTIONS) ./devices/APIC/apic.cpp -o ./devices/APIC/apic.o
 
@@ -219,6 +222,9 @@ build:
 
 	@echo [C] response.c
 	@$(CC) $(CC_OPTIONS) ./netapi/objects/response.c -o ./netapi/objects/response.o
+
+	@echo [CC] mac.cpp
+	@$(CC) $(CC_OPTIONS) ./netapi/objects/mac.cpp -o ./netapi/objects/mac.o 
 
 	@echo [CC] dhcp.cpp
 	@$(CC) $(CC_OPTIONS) ./network_protocols/dhcp/dhcp.cpp -o ./network_protocols/dhcp/dhcp.o
@@ -400,6 +406,8 @@ build:
 	./devices/USB/usb.o \
 	./devices/ACPI/ACPI.o \
 	./devices/HARD_DISK/disk.o \
+	./netapi/objects/mac.o \
+	./netapi/objects/ip.o \
 	./network_protocols/ethernet_frame/ethernet_frame.o \
 	./network_protocols/arp/arp.o \
 	./network_protocols/internet_protocol/ipv4/ip.o \

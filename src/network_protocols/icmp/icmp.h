@@ -2,6 +2,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <netapi/objects/response.h>
 #include <network_protocols/internet_protocol/ipv4/ip.h>
 
 #define INTERNET_CONTROL_MESSAGE_PROTOCOL 0x1
@@ -45,7 +46,7 @@ extern "C"{
 #endif
 
 void icmp_module_init(void);
-void icmp_ping(uint32_t ip_dest, IcmpPacket* Response);
+void icmp_ping(uint32_t ip_dest, NetworkResponse* Response);
 void icmp_ping_reply(IcmpPacket* packet, uint32_t ip_dest);
 
 #ifdef __cplusplus 

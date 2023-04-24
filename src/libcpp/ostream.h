@@ -2,7 +2,7 @@
 #pragma once
 
 #include <stdint.h>
-#include <libcpp/ctime.h>
+#include <libc/time.h>
 #include <libcpp/string.h>
 #include <libc/stdiox.h>
 

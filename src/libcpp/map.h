@@ -71,6 +71,8 @@ namespace std
     class UnorderedMap
     {
 
+        bool initialized;
+
     public:
         struct ListElement
         {
@@ -109,6 +111,11 @@ namespace std
             this->Head->previous = nullptr;
         }
 
+        bool is_initialized()
+        {
+            return this->initialized;
+        }
+
         UnorderedMap()
         {
             this->Head = (ListElement *)malloc(sizeof(ListElement));
@@ -117,16 +124,22 @@ namespace std
             this->Head->previous = nullptr;
             this->size = 0;
             this->Head->next = this->Tail;
+            this->initialized = true;
         }
 
         void init()
         {
+
+            if(this->initialized)
+                return;
+
             this->Head = (ListElement *)malloc(sizeof(ListElement));
             this->Tail = (ListElement *)malloc(sizeof(ListElement));
             this->Head->next = nullptr;
             this->Head->previous = nullptr;
             this->size = 0;
             this->Head->next = this->Tail;
+            this->initialized = true;
         }
 
         ListElement *goto_last_element()
@@ -161,6 +174,9 @@ namespace std
 
         void insert(K key, V value)
         {
+
+            if(this->exists(key))
+                return;
 
             if (!size)
             {

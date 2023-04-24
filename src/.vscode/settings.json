@@ -15,7 +15,9 @@
         "syslog.h": "c",
         "icmp.h": "c",
         "string.h": "c",
-        "stdint.h": "c"
+        "stdint.h": "c",
+        "response.h": "c",
+        "arp.h": "c"
     },
     "C_Cpp.errorSquiggles": "disabled",
     "makefile.launchConfigurations": [

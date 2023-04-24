@@ -11,7 +11,7 @@ int echo_seq_global = 0;
 IcmpPacket* IcmpResponse;
 
 
-void icmp_ping(uint32_t ip_dest, IcmpPacket* Response)
+void icmp_ping(uint32_t ip_dest, NetworkResponse* Response)
 {
 
     IcmpResponse = Response;

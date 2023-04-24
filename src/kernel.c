@@ -69,6 +69,7 @@ extern bool com_status(void);
 
 float pit_time = 0x0;
 terminal_t* kernel_terminal;
+uint8_t* const zeros;
 
 void kernel_loop(void)
 {
@@ -402,6 +403,7 @@ void _start(void)
 
 
     arp_table_add_entry((127 << 24) | (0) | (0) | (1), null_memory_region);
+    arp_module_init();
     icmp_module_init();
 
     // system_variable_get(&bufsys, "HOME");
@@ -424,6 +426,10 @@ void _start(void)
     // strcpy(hm, "piwko");
     // xprintf("%s\n", strconcat("/", hm);
     // inputg();
+
+    xprintf("ARP module status: %d\n", arp_module_status());
+
+    uint8_t* zeros = (uint8_t*)calloc(SECTOR_SIZE);
 
     while (inputg().scan_code != ENTER);
 

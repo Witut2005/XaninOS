@@ -86,12 +86,10 @@ void InternetProtocolInterface::ip4_packet_send(uint32_t dest_ip, uint32_t src_i
 
             memcpy((uint8_t*)UdpPacket, data , 1518 - sizeof(Ipv4Header) - sizeof(UdpHeader));
 
-            EthernetFrameInterface* NewEthernetFrame = (EthernetFrameInterface*)malloc(sizeof(EthernetFrameInterface));
-            
             int arp_table_index = mac_get_from_ip(dest_ip);
-            NewEthernetFrame->send(arp_table_index != ARP_TABLE_NO_SUCH_ENTRY ? ArpTable[arp_table_index].mac : mac_broadcast, netapi_mac_get(xanin_ip_get()), ETHERNET_TYPE_IPV4, (uint8_t*)IpHeader, final_packet_size, Response);
+            
+            EthernetFrameInterface::send(arp_table_index != ARP_TABLE_NO_SUCH_ENTRY ? ArpTable[arp_table_index].mac : mac_broadcast, netapi_mac_get(xanin_ip_get()), ETHERNET_TYPE_IPV4, (uint8_t*)IpHeader, final_packet_size, Response);
 
-            free(NewEthernetFrame);
             break;
         }
 
@@ -108,13 +106,8 @@ void InternetProtocolInterface::ip4_packet_send(uint32_t dest_ip, uint32_t src_i
             if(Packet->type == ICMP_ECHO_REQUEST)
             {
                 if(Response)
-                {
-                    memset((uint8_t*)Response, 0, sizeof(NetworkResponse));
                     this->IcmpPacketsInfo.insert(std::make_pair(endian_switch(Packet->echo_id), endian_switch(Packet->echo_sequence)), Response);
-                }
             }
-
-            EthernetFrameInterface* NewEthernetFrame = (EthernetFrameInterface*)malloc(sizeof(EthernetFrameInterface));
 
             int arp_table_index = mac_get_from_ip(dest_ip);
             uint8_t* macd = IpHeader->destination_ip_address != xanin_ip_get() ? ArpTable[arp_table_index].mac : XaninNetworkLoopback.mac_get();
@@ -135,16 +128,13 @@ void InternetProtocolInterface::ip4_packet_send(uint32_t dest_ip, uint32_t src_i
                 if(arp_table_index == ARP_TABLE_NO_SUCH_ENTRY)
                 {
                     printk("NO SUCH MAC !!! (icmp module)");
-                    free(NewEthernetFrame);
                     free(IpHeader);
                     return;
                 }
             }
 
             // send icmp request
-            NewEthernetFrame->send(macd, netapi_mac_get(src_ip), ETHERNET_TYPE_IPV4, (uint8_t*)IpHeader, final_packet_size, NULL);
-
-            free(NewEthernetFrame);
+            EthernetFrameInterface::send(macd, netapi_mac_get(src_ip), ETHERNET_TYPE_IPV4, (uint8_t*)IpHeader, final_packet_size, NULL);
 
             break;
         }

@@ -15,9 +15,7 @@ extern void(*keyboard_handle)(void);
 typedef uint8_t* address_t;
 typedef int __STATUS;
 
-// #ifndef NULL
-// #define NULL 0x0
-// #endif
+extern uint8_t* const zeros;
 
 struct CmosTime
 {

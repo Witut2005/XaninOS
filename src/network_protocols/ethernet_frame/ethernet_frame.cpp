@@ -5,16 +5,11 @@
 #include <libc/stdiox.h>
 #include <devices/NIC/8254x.hpp>
 #include <network_protocols/arp/arp.h>
-#include <libcpp/ctime.h>
+#include <libc/time.h>
 #include <network_protocols/ethernet_type.h>
 #include <network_protocols/internet_protocol/ipv4/ip.h>
 
-std::UnorderedMap<net::MacAddress, NetworkResponse*> EthernetFrameInterface::ArpPacketsInfo;
-
-extern "C" void arp_module_init(void)
-{
-
-}
+extern std::UnorderedMap<net::MacAddress, NetworkResponse*> ArpPacketsInfo;
 
 void EthernetFrameInterface::send(const uint8_t* mac_destination, const uint8_t* mac_source, uint16_t protocol, const uint8_t* buffer, uint16_t length, NetworkResponse* Response)
 {
@@ -32,26 +27,12 @@ void EthernetFrameInterface::send(const uint8_t* mac_destination, const uint8_t*
     for(; i < length; i++)
         tmp[i] = buffer[i];
 
-    switch(protocol)
-    {
-        case ARP_ETHER_TYPE:
-        {
-            if(Response)
-            {
-                this->ArpPacketsInfo.insert(net::MacAddress(mac_destination), Response);
-            }
-            break;
-        }
-    }
-
     netapi_packet_send((uint8_t*)FrameHeader, length + ETHERNET_FRAME_MAC_HEADER_SIZE);
 
-    if(memcmp(const_cast<uint8_t*>(mac_destination), (uint8_t*)"\0\0\0\0\0", 6) && memcmp(const_cast<uint8_t*>(mac_source), (uint8_t*)"\0\0\0\0\0", 6))
-        this->receive((uint8_t*)FrameHeader);
+    if(memcmp(const_cast<uint8_t*>(mac_source), (uint8_t*)"\0\0\0\0\0", 6))
+        EthernetFrameInterface::receive((uint8_t*)FrameHeader);
 
     free(FrameHeader);
-    
-
 
 }
 
@@ -77,8 +58,8 @@ void EthernetFrameInterface::receive(uint8_t* buffer)
     {
         case ARP_ETHER_TYPE: 
         {
-            this->ArpPacketsInfo[Frame->mac_source]->success = true;
-            memcpy(this->ArpPacketsInfo[Frame->mac_source]->data, Frame->data, sizeof(AddressResolutionProtocol));
+            // ArpModule::PacketsInfo[Frame->mac_source]->success = true;
+            // memcpy(ArpModule::PacketsInfo[Frame->mac_source]->data, Frame->data, sizeof(AddressResolutionProtocol));
 
             arp_reply_handle((AddressResolutionProtocol*)Frame->data);
             break;
