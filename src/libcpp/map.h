@@ -130,9 +130,8 @@ namespace std
         void init()
         {
 
-            if(this->initialized)
-                return;
-
+            // if(this->initialized)
+            //     return;
             this->Head = (ListElement *)malloc(sizeof(ListElement));
             this->Tail = (ListElement *)malloc(sizeof(ListElement));
             this->Head->next = nullptr;

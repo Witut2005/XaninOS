@@ -36,7 +36,7 @@ extern "C"
     void send_arp_request(AddressResolutionProtocol* Arp, NetworkResponse* Response)
     {
 
-        if(Response)
+        if(Response != NULL)
             ArpModule::PacketsInfo.insert(endian_switch(Arp->destination_protocol_address), Response);
 
         if(net::is_system_ip(endian_switch(Arp->destination_protocol_address)))
@@ -73,17 +73,16 @@ extern "C"
 
     void arp_reply_handle(AddressResolutionProtocol* ArpHeader)
     {
+
+
         if(net::is_system_ip(endian_switch(ArpHeader->destination_protocol_address)))
         {
             
             if(endian_switch(ArpHeader->opcode) != ARP_GET_MAC)
                 return;
-
-            AddressResolutionProtocol* XaninArpReply = (AddressResolutionProtocol*)calloc(sizeof(AddressResolutionProtocol));
-
+            
             if(net::is_system_mac(ArpHeader->source_hardware_address))
             {
-                // xprintf("n");
                 if(ArpModule::PacketsInfo.exists(endian_switch(ArpHeader->destination_protocol_address)))
                 {
                     ArpModule::PacketsInfo[endian_switch(ArpHeader->destination_protocol_address)]->success = true;
@@ -93,18 +92,17 @@ extern "C"
             
             else 
             {
-                // xprintf("i");
                 if(ArpModule::PacketsInfo.exists(endian_switch(ArpHeader->source_protocol_address)))
                 {
-                    // xprintf("cho\n");
                     ArpModule::PacketsInfo[endian_switch(ArpHeader->source_protocol_address)]->success = true;
                     memcpy((uint8_t*)ArpModule::PacketsInfo[endian_switch(ArpHeader->source_protocol_address)]->data, (uint8_t*)ArpHeader, sizeof(AddressResolutionProtocol));
                 }
             }
 
-            prepare_arp_request(XaninArpReply, ARP_ETHERNET, ARP_IP_PROTOCOL, 0x6, 0x4, ARP_REPLY, netapi_mac_get(xanin_ip_get()), xanin_ip_get(), ArpHeader->source_hardware_address, ArpHeader->source_protocol_address);
-            send_arp(XaninArpReply, NULL);
-            free(XaninArpReply);
+            AddressResolutionProtocol XaninArpReply;
+            prepare_arp_request(&XaninArpReply, ARP_ETHERNET, ARP_IP_PROTOCOL, 0x6, 0x4, ARP_REPLY, netapi_mac_get(xanin_ip_get()), xanin_ip_get(), ArpHeader->source_hardware_address, ArpHeader->source_protocol_address);
+            send_arp(&XaninArpReply, NULL);
+            return;
         }
 
         if(endian_switch(ArpHeader->opcode) != ARP_REPLY)//HANDLE ONLY REPLIES (NOT ARP PROBE ETC)

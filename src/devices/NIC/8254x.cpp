@@ -354,10 +354,7 @@ uint8_t* Intel8254xDriver::packet_receive(void)
     this->write(nic::RDT, this->rxd_current);
 
 
-    EthernetFrameInterface* HandleEthternetFrame = (EthernetFrameInterface*)malloc(sizeof(EthernetFrameInterface));
-    HandleEthternetFrame->receive(this->last_packet);
-
-    free(HandleEthternetFrame);
+    EthernetFrameInterface::receive(this->last_packet);
 
     return last_packet;
 
