@@ -35,6 +35,7 @@ void check_external_apps(void)
         elfreader(app);
         is_external_app = true;
     }
+    free(external_apps_folder);
     free(app);
 }
 

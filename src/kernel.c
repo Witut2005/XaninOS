@@ -189,10 +189,10 @@ void _start(void)
     // idt_examine();
 
     disable_cursor();
-    uint8_t ppmngr_bitmap[0x2000] = {0};
+    uint8_t ppmngr_bitmap[0x10000];
 
     pmmngr_init(0x10000, ppmngr_bitmap);
-    pmmngr_init_region(0x0, 0xFFFFFF);
+    pmmngr_init_region(0x20000, XANIN_PMMNGR_BLOCK_SIZE * 500);
     // init_disk(ATA_FIRST_BUS, ATA_MASTER);
 
     time_get(&SystemTime);
@@ -200,12 +200,16 @@ void _start(void)
 
     // set_pit();
     keyboard_command = command_buffer;
+    screen_clear();
 
+    null_memory_region = (uint8_t*)calloc(VGA_SCREEN_RESOLUTION);
+    xprintf("Memory Block Size Allocated: 0x%x\n", null_memory_region);
+    // free(null_memory_region);
     null_memory_region = (uint8_t*)calloc(VGA_SCREEN_RESOLUTION);
     // kernel_terminal = terminal_create();
     // terminal_set((terminal_t*)null_memory_region, kernel_terminal);
-    screen_clear();
 
+    xprintf("Memory Block Size Allocated: 0x%x\n", null_memory_region);
 
     rsdp = get_acpi_rsdp_address_base();
 
