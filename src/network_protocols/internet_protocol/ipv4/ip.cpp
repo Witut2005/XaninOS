@@ -38,9 +38,10 @@ uint32_t InternetProtocolInterface::create_ip_address(uint8_t ip_address[4])
     return tmp;
 }
 
-extern "C" uint16_t ipv4_checksum_get(uint16_t* data, uint32_t data_size)
+extern "C" uint16_t ipv4_checksum_get(uint8_t* packet_data, uint32_t data_size)
 {
     uint32_t temp = 0;
+    uint16_t* data = (uint16_t*)packet_data;
 
     for(int i = 0; i < data_size /2; i++)
         temp += ((data[i] & 0xFF00) >> 8) | ((data[i] & 0x00FF) << 8);
@@ -66,12 +67,12 @@ void InternetProtocolInterface::ip4_packet_send(uint32_t dest_ip, uint32_t src_i
     Ipv4Header* IpHeader = (Ipv4Header*)malloc(sizeof(1518));
     IpHeader->version_ihl = 0x5;
     IpHeader->version_ihl |= IPV4_HEADER_VERSION << 4;
-    IpHeader->tos = NULL;
+    IpHeader->tos =(uint8_t)NULL;
     IpHeader->packet_size = endian_switch(static_cast<uint16_t>(packet_size + IPV4_HEADER_SIZE));
-    IpHeader->fragment_offset_and_flags = NULL;
+    IpHeader->fragment_offset_and_flags = (uint8_t)NULL;
     IpHeader->time_to_live = ttl;
     IpHeader->protocol = protocol;
-    IpHeader->identification = 0x0;
+    IpHeader->identification = (uint16_t)NULL;
     IpHeader->checksum = endian_switch(static_cast<uint16_t>(packet_size + IpHeader->identification)); // oj nie wiem czy dobrze
     IpHeader->source_ip_address = endian_switch(src_ip);
     IpHeader->destination_ip_address= endian_switch(dest_ip);

@@ -189,11 +189,22 @@ void _start(void)
     // idt_examine();
 
     disable_cursor();
-    uint8_t ppmngr_bitmap[0x10000];
+
+    // pmmngr_init(0x10000, ppmngr_bitmap);
+    // pmmngr_init_region(0x1000, XANIN_PMMNGR_BLOCK_SIZE * (0x10000 / XANIN_PMMNGR_BLOCK_SIZE));
+// static uint8_t ppmngr_bitmap[0x10000];
+
+    // pmmngr_init(0x10000, ppmngr_bitmap);
+    // pmmngr_init_region(0x20000, XANIN_PMMNGR_BLOCK_SIZE * 500);
+
+    uint8_t ppmngr_bitmap[0x2000] = {0};
 
     pmmngr_init(0x10000, ppmngr_bitmap);
-    pmmngr_init_region(0x20000, XANIN_PMMNGR_BLOCK_SIZE * 500);
-    // init_disk(ATA_FIRST_BUS, ATA_MASTER);
+    pmmngr_init_region(0x0, 0xFFFFFF);
+
+    uint8_t mmngr_mmap[0x2000];
+    mmngr_init(mmngr_mmap, 0x100000, 0x300);
+
 
     time_get(&SystemTime);
 

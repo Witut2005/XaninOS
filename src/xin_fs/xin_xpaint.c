@@ -77,7 +77,7 @@ void xpaint_input(xchar Input)
     
     else if(Input.scan_code == DELETE_KEY)
     {
-        *cursor = (uint16_t)NULL;
+        *cursor = BLANK_SCREEN_CELL;
     }
 
     else

@@ -115,7 +115,7 @@ void hfs(char* omg, ExplorerInfo* AppInfo)
     {
         table_t* fro = table_create(0, 15, 1, 20, black, white, 1);
         table_insert(fro, 0, "create", black, white, 0);
-        table_add_handler(fro, handle_selected_option, (address_t)AppInfo);
+        table_add_handler(fro, (tui_table_handler)handle_selected_option, (address_t)AppInfo);
         table_row_select(fro);
 
         table_destroy(fro);
@@ -146,7 +146,7 @@ void hfs(char* omg, ExplorerInfo* AppInfo)
         table_insert(fro , 5, "edit", black, white, 0);
 
         AppInfo->selected_file = omg;
-        table_add_handler(fro,handle_selected_option, (address_t)AppInfo);
+        table_add_handler(fro, (tui_table_handler)handle_selected_option, (address_t)AppInfo);
         table_row_select(fro);
 
         table_destroy(fro);
@@ -209,7 +209,7 @@ int explorer(char* parent_folder)
 
         else
         {
-            table_add_handler(AppInfo.MainTable, hfs, (address_t)&AppInfo);
+            table_add_handler(AppInfo.MainTable, (tui_table_handler)hfs, (address_t)&AppInfo);
 
             for(int i = 0; i < TUI_TEST_SITES; i++)
             {

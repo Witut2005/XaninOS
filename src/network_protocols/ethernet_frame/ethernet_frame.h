@@ -4,6 +4,7 @@
 #include <stdint.h>
 
 #define ETHERNET_FRAME_MAC_HEADER_SIZE 14
+#define ETHERNET_FRAME_PAYLOAD_SIZE 1500
 
 struct EthernetFrame
 {
@@ -11,7 +12,7 @@ struct EthernetFrame
     uint8_t mac_source[6];
     uint16_t ethernet_type;
 
-    uint8_t* data;
+    uint8_t data[ETHERNET_FRAME_PAYLOAD_SIZE];
     uint8_t checksum[4];
 
 };

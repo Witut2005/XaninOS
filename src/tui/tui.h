@@ -3,6 +3,7 @@
 #include <libc/stdiox.h>
 #include <terminal/vty.h>
 
+
 struct table_t
 {
     uint16_t x;
@@ -23,6 +24,8 @@ struct table_t
 
     void (*handler)(char*, uint8_t*);
 };
+
+typedef void(*tui_table_handler)(char*, uint8_t*);
 
 struct ScreenCell
 {

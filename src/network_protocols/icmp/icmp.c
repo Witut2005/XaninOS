@@ -8,7 +8,7 @@
 int echo_id_global = 45;
 int echo_seq_global = 0;
 
-IcmpPacket* IcmpResponse;
+NetworkResponse* IcmpResponse;
 
 
 void icmp_ping(uint32_t ip_dest, NetworkResponse* Response)
@@ -24,7 +24,7 @@ void icmp_ping(uint32_t ip_dest, NetworkResponse* Response)
     RequestPacket->echo_sequence = endian_switch16(echo_seq_global);
     
     RequestPacket->checksum = 0x0;
-    RequestPacket->checksum = ipv4_checksum_get((uint16_t*)RequestPacket, sizeof(IcmpPacket));
+    RequestPacket->checksum = ipv4_checksum_get((address_t)RequestPacket, sizeof(IcmpPacket));
 
     echo_seq_global++;
     echo_id_global++;
@@ -46,7 +46,7 @@ void icmp_ping_reply(IcmpPacket* Packet, uint32_t ip_dest)
     ReplyPacket->echo_sequence = Packet->echo_sequence;
     
     ReplyPacket->checksum = 0x0;
-    ReplyPacket->checksum = ipv4_checksum_get((uint16_t*)ReplyPacket, sizeof(IcmpPacket));
+    ReplyPacket->checksum = ipv4_checksum_get((address_t)ReplyPacket, sizeof(IcmpPacket));
 
     if(is_loopback_packet())
         ipv4_packet_send(LOOPBACK_IP_ADDRESS, LOOPBACK_IP_ADDRESS, INTERNET_CONTROL_MESSAGE_PROTOCOL, 64, (uint8_t*)ReplyPacket, sizeof(IcmpPacket), NULL);

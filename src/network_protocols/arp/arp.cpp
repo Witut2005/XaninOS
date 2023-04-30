@@ -9,7 +9,6 @@
 #include <netapi/loopback/loopback.h>
 #include <netapi/objects/ip.h>
 #include <netapi/objects/mac.hpp>
-
 ArpTableEntry ArpTable[ARP_TABLE_ENTRIES] = {0,0,false};
 ArpTableEntry LastArpReply = {0,0,false};
 
@@ -70,6 +69,18 @@ extern "C"
 
     }
 
+    void arp_loopback_reply(AddressResolutionProtocol* ArpHeader)
+    {
+        if(endian_switch(ArpHeader->opcode) != ARP_GET_MAC)
+            return;
+
+        if(ArpModule::PacketsInfo.exists(endian_switch(ArpHeader->destination_protocol_address)))
+        {
+            ArpModule::PacketsInfo[endian_switch(ArpHeader->destination_protocol_address)]->success = true;
+            memcpy((uint8_t*)ArpModule::PacketsInfo[endian_switch(ArpHeader->destination_protocol_address)]->data, (uint8_t*)ArpHeader, sizeof(AddressResolutionProtocol));
+        }
+    }
+
 
     void arp_reply_handle(AddressResolutionProtocol* ArpHeader)
     {
@@ -78,34 +89,34 @@ extern "C"
         if(net::is_system_ip(endian_switch(ArpHeader->destination_protocol_address)))
         {
             
-            if(endian_switch(ArpHeader->opcode) != ARP_GET_MAC)
-                return;
-            
             if(net::is_system_mac(ArpHeader->source_hardware_address))
-            {
-                if(ArpModule::PacketsInfo.exists(endian_switch(ArpHeader->destination_protocol_address)))
-                {
-                    ArpModule::PacketsInfo[endian_switch(ArpHeader->destination_protocol_address)]->success = true;
-                    memcpy((uint8_t*)ArpModule::PacketsInfo[endian_switch(ArpHeader->destination_protocol_address)]->data, (uint8_t*)ArpHeader, sizeof(AddressResolutionProtocol));
-                }
-            }
+                arp_loopback_reply(ArpHeader);
             
             else 
             {
-                if(ArpModule::PacketsInfo.exists(endian_switch(ArpHeader->source_protocol_address)))
+                if(endian_switch(ArpHeader->opcode) == ARP_REPLY)
                 {
-                    ArpModule::PacketsInfo[endian_switch(ArpHeader->source_protocol_address)]->success = true;
-                    memcpy((uint8_t*)ArpModule::PacketsInfo[endian_switch(ArpHeader->source_protocol_address)]->data, (uint8_t*)ArpHeader, sizeof(AddressResolutionProtocol));
+                    if(ArpModule::PacketsInfo.exists(endian_switch(ArpHeader->source_protocol_address)))
+                    {
+                        xprintf("nicho");
+                        ArpModule::PacketsInfo[endian_switch(ArpHeader->source_protocol_address)]->success = true;
+                        xprintf(" 0x%x\n", ArpModule::PacketsInfo[endian_switch(ArpHeader->source_protocol_address)]->data);
+                        memcpy((uint8_t*)ArpModule::PacketsInfo[endian_switch(ArpHeader->source_protocol_address)]->data, (uint8_t*)ArpHeader, sizeof(AddressResolutionProtocol));
+                    }
                 }
+
+                else if(endian_switch(ArpHeader->opcode) == ARP_GET_MAC)
+                {
+                    AddressResolutionProtocol XaninArpReply;
+                    prepare_arp_request(&XaninArpReply, ARP_ETHERNET, ARP_IP_PROTOCOL, 0x6, 0x4, ARP_REPLY, netapi_mac_get(xanin_ip_get()), xanin_ip_get(), ArpHeader->source_hardware_address, ArpHeader->source_protocol_address);
+                    send_arp(&XaninArpReply, NULL);
+                }
+
             }
 
-            AddressResolutionProtocol XaninArpReply;
-            prepare_arp_request(&XaninArpReply, ARP_ETHERNET, ARP_IP_PROTOCOL, 0x6, 0x4, ARP_REPLY, netapi_mac_get(xanin_ip_get()), xanin_ip_get(), ArpHeader->source_hardware_address, ArpHeader->source_protocol_address);
-            send_arp(&XaninArpReply, NULL);
-            return;
         }
 
-        if(endian_switch(ArpHeader->opcode) != ARP_REPLY)//HANDLE ONLY REPLIES (NOT ARP PROBE ETC)
+        else if(endian_switch(ArpHeader->opcode) != ARP_REPLY)//HANDLE ONLY REPLIES (NOT ARP PROBE ETC)
             return;
 
         uint32_t ip_addr = endian_switch(ArpHeader->source_protocol_address);

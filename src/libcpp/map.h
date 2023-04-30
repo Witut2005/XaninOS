@@ -39,6 +39,16 @@ namespace std
             return this->i_ptr;
         }
 
+        UnorderedMapIterator& previous()
+        {
+            return this->i_ptr->previous;
+        }
+
+        UnorderedMapIterator& next()
+        {
+            return this->i_ptr->next;
+        }
+
         UnorderedMapIterator operator -- (int) 
         {
             UnorderedMapIterator tmp = this->i_ptr;
@@ -163,6 +173,21 @@ namespace std
             return UnorderedMapIterator<K, V, UnorderedMap>(Tail);
         }
 
+        bool erase(K key)
+        {
+            auto IteratorToErase = find(key);
+
+            if(IteratorToErase == Tail)
+                return false;
+            
+            auto Previous = IteratorToErase->previous();
+            auto Next = IteratorToErase->next();
+
+            Previous.i_ptr->next = Previous.i_ptr;
+
+            return true;
+        }
+
         bool exists(K key)
         {
             if(this->find(key) == this->Tail)
@@ -185,15 +210,16 @@ namespace std
                 return;
             }
 
-            ListElement *LastItem = goto_last_element();
+            ListElement *ItemInserted = goto_last_element();
 
-            LastItem->next = (ListElement *)(malloc(sizeof(ListElement)));
+            ItemInserted->next = (ListElement *)(malloc(sizeof(ListElement)));
 
-            LastItem = LastItem->next;
-            LastItem->item.first = key;
-            LastItem->item.second = value;
+            ItemInserted->next->previous = ItemInserted;
+            ItemInserted = ItemInserted->next;
+            ItemInserted->item.first = key;
+            ItemInserted->item.second = value;
+            ItemInserted->next = this->Tail;
 
-            LastItem->next = this->Tail;
             this->size++;
         }
 

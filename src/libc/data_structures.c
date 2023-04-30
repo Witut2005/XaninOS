@@ -14,19 +14,19 @@ void stack_push(stack_t* Stack, const address_t const value)
     if(Stack->number_of_elements)
         Stack->end++;
 
-    *(Stack->end) = value;
+    *(Stack->end) = (uint32_t)value;
     Stack->number_of_elements++;
 }
 
 address_t stack_pop(stack_t* Stack)
 {
     if(!Stack->number_of_elements)
-        return INT32_MAX;
+        return (address_t)INT32_MAX;
         
     uint32_t tmp = *(Stack->end);
     Stack->end--;
     Stack->number_of_elements--;
-    return tmp;
+    return (address_t)tmp;
 }
 
 bool stack_is_empty(stack_t* Stack)

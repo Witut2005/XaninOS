@@ -13,23 +13,25 @@ extern std::UnorderedMap<net::MacAddress, NetworkResponse*> ArpPacketsInfo;
 
 void EthernetFrameInterface::send(const uint8_t* mac_destination, const uint8_t* mac_source, uint16_t protocol, const uint8_t* buffer, uint16_t length, NetworkResponse* Response)
 {
+    if(length > ETHERNET_FRAME_PAYLOAD_SIZE)
+        length = ETHERNET_FRAME_PAYLOAD_SIZE;
     
-    uint8_t FrameBytes[2000];//= (uint8_t*)calloc(sizeof(uint8_t) * 2000);
+    uint8_t* FrameBytes = (uint8_t*)calloc(sizeof(uint8_t) * 2000);
     EthernetFrame* FrameHeader = (EthernetFrame*)FrameBytes;
 
     memcpy(FrameHeader->mac_destination, const_cast<uint8_t*>(mac_destination), 6);
     memcpy(FrameHeader->mac_source, const_cast<uint8_t*>(mac_source), 6);
     FrameHeader->ethernet_type = endian_switch(protocol);
 
-    for(int i = ETHERNET_FRAME_MAC_HEADER_SIZE; i < length; i++)
+    for(int i = 0; i < length; i++)
         FrameHeader->data[i] = buffer[i];
 
     netapi_packet_send((uint8_t*)FrameHeader, length + ETHERNET_FRAME_MAC_HEADER_SIZE);
 
-    if(memcmp(const_cast<uint8_t*>(mac_source), (uint8_t*)"\0\0\0\0\0", 6))
+    if(net::is_system_mac(const_cast<uint8_t*>(mac_source)))
         EthernetFrameInterface::receive((uint8_t*)FrameHeader);
 
-    // free(FrameHeader);
+    free(FrameHeader);
 
 }
 
@@ -49,7 +51,7 @@ void EthernetFrameInterface::receive(uint8_t* buffer)
     Frame.ethernet_type = static_cast<uint16_t>(((tmp[0] << 8) | tmp[1]));
     tmp = tmp + 2;
 
-    Frame.data = tmp;
+    memcpy(Frame.data, tmp, ETHERNET_FRAME_PAYLOAD_SIZE);
 
     switch(Frame.ethernet_type)
     {

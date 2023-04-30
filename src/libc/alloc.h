@@ -36,3 +36,49 @@ void pmmngr_init_region (physical_addr base, size_t size);
 void pmmngr_deinit_region (physical_addr base, size_t size); 
 void* pmmngr_alloc_block ();
 void pmmngr_free_block (void* p); 
+
+
+
+////////////////////////////////////////////////////////////////
+
+extern uint8_t* mmngr_mmap;            //mmap address
+extern uint32_t mmngr_mmap_blocks;       //sizeof mmngr available memory space
+
+extern uint8_t* kernel_heap_base;
+extern uint32_t kernel_heap_offset;    
+extern uint32_t kernel_heap_blocks;      // 1/3 of allocated memory space belongs to kernel heap
+
+extern uint8_t* user_heap_base;
+extern uint32_t user_heap_offset;      
+extern uint32_t user_heap_blocks;      // 2/3 of allocated memory space belongs to user heap
+
+enum ALLOCATION_MODES
+{
+    KERNEL_HEAP = 0,
+    USER_HEAP = 1
+};
+
+enum MEMORY_ALLOCATOR_BLOCKS_STATES
+{
+    MEMORY_UNALLOCATED = 0,
+    MEMORY_ALLOCATED = 1
+};
+
+static inline int8_t* user_heap_base_get(void)
+{
+    return user_heap_base;
+}
+
+static inline uint8_t* kernel_heap_base_get(void)
+{
+    return kernel_heap_base;
+}
+
+void mmngr_mmap_set(uint32_t index);
+void mmngr_mmap_unset(uint32_t index);
+uint32_t mmngr_mmap_free_block_find(uint8_t mode);
+void mmngr_init(uint8_t* map, uint8_t* base, uint32_t size);
+// void mmngr_init_region(uint32_t offset, uint32_t size);
+// void mmngr_deinit_region(uint32_t offset, uint32_t size);
+void* mmngr_block_allocate(uint8_t mode, uint32_t size);
+void mmngr_block_free(void* ptr);

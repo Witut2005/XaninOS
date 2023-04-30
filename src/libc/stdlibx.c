@@ -322,8 +322,31 @@ void* realloc(void* ptr, uint32_t size_new)
     memcpy((uint8_t*)ptr, (uint8_t*)old_ptr, size_new);
     free(old_ptr);
     return ptr;
+}
+
+////////////////////////////////
+
+void* kmalloc(uint32_t size)
+{
+    return NULL;
+}
+
+void* kcalloc(uint32_t size)
+{
+    return NULL;
+}
+
+
+void kfree(void * ptr)
+{
 
 }
+
+void* krealloc(void* ptr, uint32_t size)
+{
+    return NULL;
+}
+
 
 char inputc(void)
 {
@@ -335,8 +358,9 @@ char inputc(void)
 
 xchar inputg(void)
 {
-    KeyInfo.scan_code = 0xFf;
-    while(KeyInfo.scan_code > 0x80);
+    KeyInfo.scan_code = 0xFF;
+
+    while(KeyInfo.scan_code > 0x80); // break codes doesnt count
     
     xchar x;
 

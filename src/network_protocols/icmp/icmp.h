@@ -2,6 +2,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <netapi/network_device.h>
 #include <netapi/objects/response.h>
 #include <network_protocols/internet_protocol/ipv4/ip.h>
 

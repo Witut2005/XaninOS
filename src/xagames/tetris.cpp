@@ -238,5 +238,6 @@ extern "C" int tetris(void)
     KEYBOARD_KEYSTROKE_HANLDER_UNLOAD();
     xprintf("Your score: %d\n", score);
     while(inputg().scan_code != ENTER);
+    return XANIN_OK;
 
 }

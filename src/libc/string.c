@@ -614,7 +614,7 @@ uint32_t str2ipv4(char* str)
 
     }
 
-    string_errno = NULL;    
+    string_errno = (uint32_t)NULL;    
     
     return tmp;
 

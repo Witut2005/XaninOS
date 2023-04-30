@@ -9,28 +9,30 @@
 int netapi_check(char* protocol)
 {
     
-    // NetworkResponse* Response;
-    NetworkResponse Response = {true, NULL};
+    NetworkResponse* Response;
 
     if(strcmp(protocol, "ARP"))
     {
-        // response_object_create(&Response, sizeof(AddressResolutionProtocol));
-        AddressResolutionProtocol ArpPacket;
-        prepare_arp_request(&ArpPacket, ARP_ETHERNET, ARP_IP_PROTOCOL, ARP_MAC_LENGTH, ARP_IP_LENGTH, ARP_GET_MAC, netapi_mac_get(xanin_ip_get()), xanin_ip_get(), mac_broadcast, LOOPBACK_IP_ADDRESS);
+        response_object_create(&Response, sizeof(AddressResolutionProtocol));
+        AddressResolutionProtocol* ArpPacket = (AddressResolutionProtocol*)calloc(sizeof(AddressResolutionProtocol));
+        prepare_arp_request(ArpPacket, ARP_ETHERNET, ARP_IP_PROTOCOL, ARP_MAC_LENGTH, ARP_IP_LENGTH, ARP_GET_MAC, netapi_mac_get(xanin_ip_get()), xanin_ip_get(), mac_broadcast, (192 << 24) | (168 << 16) | (0 << 8) | (160));
+        // prepare_arp_request(ArpPacket, ARP_ETHERNET, ARP_IP_PROTOCOL, ARP_MAC_LENGTH, ARP_IP_LENGTH, ARP_GET_MAC, netapi_mac_get(xanin_ip_get()), xanin_ip_get(), mac_broadcast, LOOPBACK_IP_ADDRESS);
         
-        for(int i = 0; i < 15; i++)
+        for(int i = 0; i < 5; i++)
         {
-        Response.data = (address_t)calloc(sizeof(AddressResolutionProtocol));
-            xprintf("0x%x\n", Response.data);
-            send_arp_request(&ArpPacket, &Response); 
-        free(Response.data);
+            if(Response->success)
+                break;
+            xprintf("0x%x\n", Response->data);
+            send_arp_request(ArpPacket, Response); 
+            NETWORK_RESPONSE_WAIT(500);
         }
     }
 
     else if(strcmp(protocol, "ICMP"))
     {
         response_object_create(&Response, sizeof(IcmpPacket));
-        icmp_ping((127 << 24) | (1), &Response);
+        icmp_ping((127 << 24) | (1), Response);
+        NETWORK_RESPONSE_WAIT(2000);
     }
 
     else
@@ -40,14 +42,13 @@ int netapi_check(char* protocol)
         return XANIN_OK;
     }
 
-    // NETWORK_RESPONSE_WAIT(2000);
 
-    if(Response.success)
+    if(Response->success)
         xprintf("%zprotocol works!\n", OUTPUT_COLOR_SET(black, green));
     else
         xprintf("%zprotocol doesnt works!\n", OUTPUT_COLOR_SET(black, red));
-    
-    // response_object_destroy(&Response);
+
+    response_object_destroy(&Response);
     
     while(inputg().scan_code != ENTER);
     return XANIN_OK;

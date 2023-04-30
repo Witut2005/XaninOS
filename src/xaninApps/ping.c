@@ -44,7 +44,7 @@ int ping(char* ip_addr_str)
 
         if(IcmpResponse->success)
         {
-            IcmpPacket* PacketData = IcmpResponse->data;
+            IcmpPacket* PacketData = (IcmpPacket*)IcmpResponse->data;
             xprintf("%z%s replied %d/%d\n", OUTPUT_COLOR_SET(green, white),ip_addr_str, PacketData->echo_id, PacketData->echo_sequence);
             free(PacketData);
         }

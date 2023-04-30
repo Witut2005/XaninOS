@@ -336,15 +336,9 @@ void _start(void)
 
     init_disk(ATA_FIRST_BUS, ATA_MASTER);    
         
-    for(int i = 0; i < 1500; i++)
+    for(int i = 0; i < 2500; i++)
         disk_read(ATA_FIRST_BUS, ATA_MASTER, 0xA9 + i, 1, (uint16_t*)(0x20200 + ((15 + i)* SECTOR_SIZE)));
 
-
-    // for(int i = 200; i < 300; i++)
-    //     disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x2 + 0x80 + 15 + i, 1, (uint16_t*)(0x20200 + ((14 + i)* SECTOR_SIZE)));
-
-    // for(int i = 200; i < 300; i++)
-    //     disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x2 + 0x80 + 15 + i, 1, (uint16_t*)(0x20200 + ((15 + i)* SECTOR_SIZE)));
 
     elf_load();
 }
