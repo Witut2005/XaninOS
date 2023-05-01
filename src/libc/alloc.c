@@ -160,16 +160,6 @@ static inline uint32_t size_to_blocks_allocated(uint32_t size)
     return (size / PMMNGR_BLOCK_SIZE) + (size % PMMNGR_BLOCK_SIZE == 0 ? 0 : 1); 
 }
 
-void mmngr_mmap_set(uint32_t index)
-{
-
-}
-
-void mmngr_mmap_unset(uint32_t index)
-{
-
-}
-
 uint32_t mmngr_mmap_free_block_find(uint8_t mode)
 {
 
@@ -177,31 +167,27 @@ uint32_t mmngr_mmap_free_block_find(uint8_t mode)
     if(mode == KERNEL_HEAP)
     {
 
-        uint8_t* i = mmngr_mmap + kernel_heap_offset;
-
-        while(*i != MEMORY_UNALLOCATED) 
+        for(int i = kernel_heap_offset; i < kernel_heap_offset + kernel_heap_blocks; i++)
         {
-            if((uint32_t)i > (uint32_t)mmngr_mmap + kernel_heap_blocks)
-                return UINT32_MAX;
-            i++;
+            if(mmngr_mmap[i] == MEMORY_UNALLOCATED) 
+                return i;
         }
 
-        return (uint32_t)(i - (&mmngr_mmap[kernel_heap_offset]));  
+        return UINT32_MAX;
+
     }
 
     else //USER HEAP
     {
 
-        uint8_t* i = mmngr_mmap + user_heap_offset;
-
-        while(*i != MEMORY_UNALLOCATED) 
+        for(int i = user_heap_offset; i < user_heap_offset + user_heap_blocks; i++)
         {
-            if((uint32_t)i > (uint32_t)mmngr_mmap + mmngr_heap_blocks)
-                return UINT32_MAX;
-            i++;
+            if(mmngr_mmap[i] == MEMORY_UNALLOCATED) 
+                return i;
         }
 
-        return (uint32_t)(i - (&mmngr_mmap[user_heap_offset]));  
+        return UINT32_MAX;
+
     }
 
 }
@@ -224,43 +210,53 @@ void mmngr_init(uint8_t* map, uint8_t* base, uint32_t blocks)
         mmngr_mmap[i] = MEMORY_UNALLOCATED;
 
     for(int i = 0; i < blocks * PMMNGR_BLOCK_SIZE; i++)
-        base[i] = NULL;
+        base[i] = 0;
 
 }
-
-// void mmngr_init_region(uint32_t offset, uint32_t size)
-// {
-//     for(int i = offset; i < offset + size; i++)
-//         mmngr_mmap[i] = MEMORY_UNALLOCATED;
-// }
-
-// void mmngr_deinit_region(uint32_t offset, uint32_t size)
-// {
-//     for(int i = offset; i < offset + size; i++)
-//         mmngr_mmap[i] = MEMORY_UNALLOCATED;
-// }
 
 void* mmngr_block_allocate(uint8_t mode, uint32_t size)
 {
 
     uint32_t mmap_index = mmngr_mmap_free_block_find(mode);
 
-    if(mmap_index == UINT32_MAX)
+    if(mmap_index == UINT32_MAX) // NO AVAILABLE MEMORY
+    {
+        xprintf("EERRORORORORO");
         return (void*)NULL;
+    }
 
     uint32_t blocks_allocated = size_to_blocks_allocated(size);
 
-    for(int i = 0; i < blocks_allocated; i++)
-        mmngr_mmap[mmap_index + i] = MEMORY_ALLOCATED;
+    // xprintf("index: %d allocated: %d\n", mmap_index, blocks_allocated);
+
+    for(int i = mmap_index; i < mmap_index + blocks_allocated - 1; i++)
+        mmngr_mmap[i] = MEMORY_ALLOCATED;
+
+    mmngr_mmap[mmap_index + blocks_allocated - 1] = MEMORY_ALLOCATED_REGION_END;
         
     if(mode == KERNEL_HEAP)
-        return kernel_heap_base + (size_to_blocks_allocated(size) * PMMNGR_BLOCK_SIZE);
+        return kernel_heap_base + (mmap_index * PMMNGR_BLOCK_SIZE);
 
-    return user_heap_base + (size_to_blocks_allocated(size) * PMMNGR_BLOCK_SIZE);
+    return user_heap_base + (mmap_index * PMMNGR_BLOCK_SIZE);
 
 }
 
 
-void mmngr_block_free(void* ptr)
+void mmngr_block_free(uint8_t mode, void* ptr)
 {
+    uint32_t index; 
+
+    if(mode == KERNEL_HEAP)
+        index = ((uint32_t)((uint32_t)ptr - (uint32_t)kernel_heap_base) / PMMNGR_BLOCK_SIZE);
+
+    else //USER HEAP
+        index = ((uint32_t)((uint32_t)ptr - (uint32_t)user_heap_base) / PMMNGR_BLOCK_SIZE);
+
+    // xprintf("free: %d\n", index);
+
+    for(; mmngr_mmap[index] != MEMORY_ALLOCATED_REGION_END; index++)
+        mmngr_mmap[index] = MEMORY_UNALLOCATED;
+    
+    mmngr_mmap[index] = MEMORY_UNALLOCATED;
+
 }

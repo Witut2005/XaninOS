@@ -135,13 +135,13 @@ apic_sdt_entry *apic_sdt_find(void)
 void madt_entries_get(apic_sdt_entry *apic_entry)
 {
 
-    madt_entry_type0_ptr = malloc(sizeof(madt_entry_type0) * 10);
-    madt_entry_type1_ptr = malloc(sizeof(madt_entry_type1) * 10);
-    madt_entry_type2_ptr = malloc(sizeof(madt_entry_type2) * 10);
-    madt_entry_type3_ptr = malloc(sizeof(madt_entry_type3) * 10);
-    madt_entry_type4_ptr = malloc(sizeof(madt_entry_type4) * 10);
-    madt_entry_type5_ptr = malloc(sizeof(madt_entry_type5) * 10);
-    madt_entry_type9_ptr = malloc(sizeof(madt_entry_type9) * 10);
+    madt_entry_type0_ptr = kmalloc(sizeof(madt_entry_type0) * 10);
+    madt_entry_type1_ptr = kmalloc(sizeof(madt_entry_type1) * 10);
+    madt_entry_type2_ptr = kmalloc(sizeof(madt_entry_type2) * 10);
+    madt_entry_type3_ptr = kmalloc(sizeof(madt_entry_type3) * 10);
+    madt_entry_type4_ptr = kmalloc(sizeof(madt_entry_type4) * 10);
+    madt_entry_type5_ptr = kmalloc(sizeof(madt_entry_type5) * 10);
+    madt_entry_type9_ptr = kmalloc(sizeof(madt_entry_type9) * 10);
 
     uint8_t *tmp = (uint8_t*)(apic_entry) + 0x2C;
 

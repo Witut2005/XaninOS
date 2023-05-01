@@ -288,63 +288,121 @@ void merge_sort(int array[], int first, int last)
 
 }
 
-void* malloc(uint32_t size)
-{
-    uint8_t* ptr = (uint8_t*)pmmngr_alloc_block();
+// void* malloc(uint32_t size)
+// {
+//     uint8_t* ptr = (uint8_t*)pmmngr_alloc_block();
 
-    for(int i = 0; i < size / 4096; i++)
-        pmmngr_alloc_block();
+//     for(int i = 0; i < size / 4096; i++)
+//         pmmngr_alloc_block();
 
-    return ptr;
+//     return ptr;
 
-}
+// }
 
-void* calloc(uint32_t size)
-{
+// void* calloc(uint32_t size)
+// {
 
-    uint8_t* ptr = (uint8_t*)malloc(size);
-    memset(ptr, 0, size);
+//     uint8_t* ptr = (uint8_t*)malloc(size);
+//     memset(ptr, 0, size);
     
-    return ptr;
+//     return ptr;
 
-}
+// }
 
 
-void free(void* ptr)
-{
-    pmmngr_free_block(ptr);
-}
+// void free(void* ptr)
+// {
+//     pmmngr_free_block(ptr);
+// }
 
-void* realloc(void* ptr, uint32_t size_new)
-{
-    uint8_t* old_ptr = (uint8_t*)ptr;
-    ptr = (void*)malloc(size_new);
-    memcpy((uint8_t*)ptr, (uint8_t*)old_ptr, size_new);
-    free(old_ptr);
-    return ptr;
-}
+// void* realloc(void* ptr, uint32_t size_new)
+// {
+//     uint8_t* old_ptr = (uint8_t*)ptr;
+//     ptr = (void*)malloc(size_new);
+//     memcpy((uint8_t*)ptr, (uint8_t*)old_ptr, size_new);
+//     free(old_ptr);
+//     return ptr;
+// }
 
 ////////////////////////////////
 
 void* kmalloc(uint32_t size)
 {
-    return NULL;
+    return mmngr_block_allocate(KERNEL_HEAP, size);
+}
+
+void* malloc(uint32_t size)
+{
+    return mmngr_block_allocate(USER_HEAP, size);
 }
 
 void* kcalloc(uint32_t size)
 {
-    return NULL;
+    uint8_t* tmp = mmngr_block_allocate(KERNEL_HEAP, size);
+
+    for(int i = 0; i < size; i++)
+        tmp[i] = 0;
+
+    return tmp;
 }
 
+void* calloc(uint32_t size)
+{
+    uint8_t* tmp = mmngr_block_allocate(USER_HEAP, size);
+
+    for(int i = 0; i < size; i++)
+        tmp[i] = 0;
+
+    return tmp;
+}
 
 void kfree(void * ptr)
 {
+    mmngr_block_free(KERNEL_HEAP, ptr);
+}
 
+void free(void* ptr)
+{
+    mmngr_block_free(USER_HEAP, ptr);
 }
 
 void* krealloc(void* ptr, uint32_t size)
 {
-    return NULL;
+    // interrupt_disable();
+
+    uint8_t* tmp = mmngr_block_allocate(KERNEL_HEAP, size);
+    memcpy(tmp, ptr, size);
+    mmngr_block_free(KERNEL_HEAP, ptr);
+
+    // interrupt_enable();
+
+    return tmp;
+}
+
+void* realloc(void* ptr, uint32_t size)
+{
+    // interrupt_disable();
+
+    uint8_t* tmp = mmngr_block_allocate(USER_HEAP, size);
+    memcpy(tmp, ptr, size);
+    mmngr_block_free(USER_HEAP, ptr);
+
+    // interrupt_enable();
+
+    return tmp;
+}
+
+void* mmngr_realloc(void* ptr, uint32_t size)
+{
+    // interrupt_disable();
+
+    uint8_t* tmp = mmngr_block_allocate(USER_HEAP, size);
+    memcpy(tmp, ptr, size);
+    mmngr_block_free(USER_HEAP, ptr);
+
+    // interrupt_enable();
+
+    return tmp;
 }
 
 

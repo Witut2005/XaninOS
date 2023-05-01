@@ -61,7 +61,8 @@ enum ALLOCATION_MODES
 enum MEMORY_ALLOCATOR_BLOCKS_STATES
 {
     MEMORY_UNALLOCATED = 0,
-    MEMORY_ALLOCATED = 1
+    MEMORY_ALLOCATED = 1,
+    MEMORY_ALLOCATED_REGION_END = 0xFF
 };
 
 static inline int8_t* user_heap_base_get(void)
@@ -74,11 +75,11 @@ static inline uint8_t* kernel_heap_base_get(void)
     return kernel_heap_base;
 }
 
-void mmngr_mmap_set(uint32_t index);
-void mmngr_mmap_unset(uint32_t index);
+
+
 uint32_t mmngr_mmap_free_block_find(uint8_t mode);
 void mmngr_init(uint8_t* map, uint8_t* base, uint32_t size);
 // void mmngr_init_region(uint32_t offset, uint32_t size);
 // void mmngr_deinit_region(uint32_t offset, uint32_t size);
 void* mmngr_block_allocate(uint8_t mode, uint32_t size);
-void mmngr_block_free(void* ptr);
+void mmngr_block_free(uint8_t mode, void* ptr);

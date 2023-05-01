@@ -36,8 +36,25 @@ class Test
 void cpp_prog()
 {
 
+    std::UnorderedMap<char, int> Mapa;
+    Mapa.insert('a', 10);
+    Mapa.insert('b', 11);
+    Mapa.insert('c', 12);
 
-    std::cout << std::clear;
+    // Mapa.print();
+    auto tmptmp = Mapa.find('a');
+
+    xprintf("0x%x\n", tmptmp);
+    xprintf("0x%x\n", Mapa.end());
+
+    if(tmptmp == Mapa.end())
+        std::cout << "no such element with given key" << std::endl;
+    else
+        std::cout << "value of the given key: " << *tmptmp << std::endl;
+
+    while(inputg().scan_code != ENTER);
+    screen_clear();
+
 
     std::string strr("nicho");
     // std::string strr2(strr.rbegin(), strr.rend());
@@ -78,7 +95,7 @@ void cpp_prog()
     nii.insert(std::make_pair(1,1), 100);
 
     std::cout << "lista generalnie: ";
-    if(nii[std::make_pair(1,1)] != nii.Tail->item.second)
+    if(nii[std::make_pair(1,1)] != *nii.end())
         std::cout << nii[std::make_pair(1,1)] << std::endl;
     else
         std::cout << "bruh" << std::endl;
@@ -228,27 +245,12 @@ void cpp_prog()
 
     screen_clear();
 
-    std::UnorderedMap<char, int> Mapa;
-    Mapa.insert('a', 10);
-    Mapa.insert('b', 11);
-    Mapa.insert('c', 12);
 
-    // Mapa.print();
-    auto& tmptmp = Mapa['z'];
-
-    xprintf("0x%x\n", &tmptmp);
-    xprintf("0x%x\n", Mapa.Tail);
-
-    if((uint32_t)tmptmp == (uint32_t)Mapa.Tail)
-        std::cout << "no such element with given key" << std::endl;
-    else
-        std::cout << "value of the given key: " << tmptmp << std::endl;
-
-    screen_clear();
     std::UnorderedMap<int, int> Ahha = {
         {1,5},
         {6,9}
     };
+
 
     Ahha.print();
     std::cout << "ARRR: " << test_array[-1] << std::endl;
@@ -267,7 +269,8 @@ void cpp_prog()
         
     wekk.print();
 
-    wait_key(ENTER_RELEASE);
+    while(inputg().scan_code != ENTER);
+
     std::cout << std::clear;
     
     std::cout << "ABATAKAM" << std::endl;
@@ -311,7 +314,6 @@ void cpp_prog()
     else
         std::cout << "weak ptr value: " << *weak.lock()->get() << std::endl;
 
-    screen_clear();
 
     // std::List<char*> nicho;
     // nicho.push_back("ugabuga");

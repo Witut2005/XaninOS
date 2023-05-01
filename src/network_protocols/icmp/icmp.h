@@ -49,7 +49,28 @@ extern "C"{
 void icmp_module_init(void);
 void icmp_ping(uint32_t ip_dest, NetworkResponse* Response);
 void icmp_ping_reply(IcmpPacket* packet, uint32_t ip_dest);
+void icmp_packet_receive(IcmpPacket* Packet, uint32_t ip_src);
 
 #ifdef __cplusplus 
 }
+#endif
+
+
+#ifdef __cplusplus
+
+class IcmpModule
+{
+    // private: 
+    static std::UnorderedMap<std::pair<uint16_t, uint16_t>, NetworkResponse*> PacketsInfo;
+
+    public:
+    static void ping(uint32_t ip_dest, NetworkResponse* Response);
+    static void ping_reply(IcmpPacket* PacketReceived, uint32_t ip_dest);
+    static void receive(IcmpPacket* IcmpPacketReceived, uint32_t ip_src);
+
+    friend void icmp_module_init(void);
+    friend class InternetProtocolInterface;
+};
+
+
 #endif

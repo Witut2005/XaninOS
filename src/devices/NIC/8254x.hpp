@@ -13,6 +13,7 @@ extern "C" void i8254x_interrupt_handler_entry(void);
 
 #define INTEL_8254X 0x0200
 #define INTEL_8254X_VENDOR_ID 0x100E
+#define TRANSMIT_BUFFER_SIZE XANIN_PMMNGR_BLOCK_SIZE
 
 namespace nic
 {

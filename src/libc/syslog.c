@@ -16,8 +16,7 @@ void printk(const char * str)
 
     XinEntry* file = fopen("/syslog", "w");
 
-    char* buf = calloc(80);
-
+    char* buf = calloc(VGA_WIDTH);
 
     char separator = ':';
     fseek(file, file->size);
@@ -36,7 +35,7 @@ void printk(const char * str)
 
     fwrite(file, (void*)str, strlen(str));
 
-    fwrite(file, "\n", 1);
+    fwrite(file, "\n", 2);
 
 
     // current_line++;

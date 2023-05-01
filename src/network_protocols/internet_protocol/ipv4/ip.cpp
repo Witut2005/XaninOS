@@ -20,17 +20,12 @@ bool loopback_packet = false;
 
 NetworkResponse* InternetProtocolInterface::Response;
 address_t InternetProtocolInterface::PacketSent;
-std::UnorderedMap<std::pair<uint16_t, uint16_t>, NetworkResponse*> InternetProtocolInterface::IcmpPacketsInfo;
 
 extern "C" bool is_loopback_packet(void)
 {
     return loopback_packet;
 }
 
-extern "C" void icmp_module_init(void)
-{
-    InternetProtocolInterface::IcmpPacketsInfo.init();
-}
 
 uint32_t InternetProtocolInterface::create_ip_address(uint8_t ip_address[4])
 {
@@ -68,14 +63,14 @@ void InternetProtocolInterface::ip4_packet_send(uint32_t dest_ip, uint32_t src_i
     IpHeader->version_ihl = 0x5;
     IpHeader->version_ihl |= IPV4_HEADER_VERSION << 4;
     IpHeader->tos =(uint8_t)NULL;
-    IpHeader->packet_size = endian_switch(static_cast<uint16_t>(packet_size + IPV4_HEADER_SIZE));
+    IpHeader->packet_size = BIG_ENDIAN(static_cast<uint16_t>(packet_size + IPV4_HEADER_SIZE));
     IpHeader->fragment_offset_and_flags = (uint8_t)NULL;
     IpHeader->time_to_live = ttl;
     IpHeader->protocol = protocol;
     IpHeader->identification = (uint16_t)NULL;
-    IpHeader->checksum = endian_switch(static_cast<uint16_t>(packet_size + IpHeader->identification)); // oj nie wiem czy dobrze
-    IpHeader->source_ip_address = endian_switch(src_ip);
-    IpHeader->destination_ip_address= endian_switch(dest_ip);
+    IpHeader->checksum = BIG_ENDIAN(static_cast<uint16_t>(packet_size + IpHeader->identification)); // oj nie wiem czy dobrze
+    IpHeader->source_ip_address = BIG_ENDIAN(src_ip);
+    IpHeader->destination_ip_address= BIG_ENDIAN(dest_ip);
 
     switch (protocol)
     {
@@ -107,7 +102,7 @@ void InternetProtocolInterface::ip4_packet_send(uint32_t dest_ip, uint32_t src_i
             if(Packet->type == ICMP_ECHO_REQUEST)
             {
                 if(Response)
-                    this->IcmpPacketsInfo.insert(std::make_pair(endian_switch(Packet->echo_id), endian_switch(Packet->echo_sequence)), Response);
+                    IcmpModule::PacketsInfo.insert_or_assign(std::make_pair(LITTLE_ENDIAN(Packet->echo_id), LITTLE_ENDIAN(Packet->echo_sequence)), Response);
             }
 
             int arp_table_index = mac_get_from_ip(dest_ip);
@@ -150,7 +145,7 @@ void InternetProtocolInterface::ip4_packet_send(uint32_t dest_ip, uint32_t src_i
 void InternetProtocolInterface::ipv4_packet_receive(Ipv4Header* PacketData)
 {
 
-    if((endian_switch(PacketData->destination_ip_address) == LOOPBACK_IP_ADDRESS) && (endian_switch(PacketData->source_ip_address) == LOOPBACK_IP_ADDRESS))
+    if((endian_switch(PacketData->destination_ip_address) == LOOPBACK_IP_ADDRESS) && (LITTLE_ENDIAN(PacketData->source_ip_address) == LOOPBACK_IP_ADDRESS))
         loopback_packet = true;
     
 
@@ -164,24 +159,8 @@ void InternetProtocolInterface::ipv4_packet_receive(Ipv4Header* PacketData)
 
         case INTERNET_CONTROL_MESSAGE_PROTOCOL:
         {
-            IcmpPacket* IcmpReplyPacket = (IcmpPacket*)((uint8_t*)(PacketData) + sizeof(Ipv4Header));
-
-            uint16_t echo_id = endian_switch(IcmpReplyPacket->echo_id);
-            uint16_t echo_sequence = endian_switch(IcmpReplyPacket->echo_sequence);
-
-            if(IcmpReplyPacket->type == ICMP_ECHO_REPLY)
-            {
-                if(this->IcmpPacketsInfo.exists(std::make_pair(echo_id, echo_sequence)))
-                {
-                    this->IcmpPacketsInfo[std::make_pair(echo_id, echo_sequence)]->success = true;
-                    IcmpReplyPacket = endian_switch(IcmpReplyPacket); 
-                    memcpy((uint8_t*)this->IcmpPacketsInfo[std::make_pair(echo_id, echo_sequence)]->data, (uint8_t*)IcmpReplyPacket, sizeof(IcmpPacket));
-                }
-
-                break;
-            }
-
-            icmp_ping_reply((IcmpPacket*)((uint8_t*)(PacketData) + sizeof(Ipv4Header)), endian_switch(PacketData->destination_ip_address));
+            IcmpPacket* IcmpPacketReceived = (IcmpPacket*)((uint8_t*)(PacketData) + sizeof(Ipv4Header));
+            IcmpModule::receive(IcmpPacketReceived, LITTLE_ENDIAN(PacketData->source_ip_address));
             break;
         }
 

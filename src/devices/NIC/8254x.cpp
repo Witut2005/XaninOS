@@ -102,9 +102,9 @@ void Intel8254xDriver::receive_init(void)
     if(!this->is_present)
         return;
 
-    this->receive_descriptors_buffer = (i8254xReceiveDescriptor*)malloc(sizeof(i8254xReceiveDescriptor) * INTEL_8254X_DESCRIPTORS);
+    this->receive_descriptors_buffer = (i8254xReceiveDescriptor*)kmalloc(sizeof(i8254xReceiveDescriptor) * INTEL_8254X_DESCRIPTORS);
     const auto receive_buffer_size = 4096;
-    this->receive_buffer = (uint8_t*)malloc(receive_buffer_size * INTEL_8254X_DESCRIPTORS);
+    this->receive_buffer = (uint8_t*)kmalloc(receive_buffer_size * INTEL_8254X_DESCRIPTORS);
 
     for(int i = 0; i < INTEL_8254X_DESCRIPTORS; i++)
     {
@@ -155,15 +155,16 @@ void Intel8254xDriver::transmit_init(void)
     /* transmit buffer allocation */
     // auto AHA = (i8254xTransmitDescriptor*)malloc(sizeof(i8254xTransmitDescriptor) * INTEL_8254X_DESCRIPTORS); //+ 16);
 
-    auto transmit_descriptors_buffer_region = malloc(sizeof(i8254xTransmitDescriptor) * INTEL_8254X_DESCRIPTORS); // kompilator zawsze ma racje, prawda? 
+    auto transmit_descriptors_buffer_region = kmalloc(sizeof(i8254xTransmitDescriptor) * INTEL_8254X_DESCRIPTORS); // kompilator zawsze ma racje, prawda? 
     this->transmit_descriptors_buffer = (i8254xTransmitDescriptor*)transmit_descriptors_buffer_region;
 
-    const auto transmit_buffer_size = 4096;
-    this->transmit_buffer = (uint8_t*)malloc(transmit_buffer_size * INTEL_8254X_DESCRIPTORS);
+    // const auto TRANSMIT_BUFFER_SIZE = 4096;
+
+    this->transmit_buffer = (uint8_t*)kmalloc(TRANSMIT_BUFFER_SIZE * INTEL_8254X_DESCRIPTORS);
 
     for(int i = 0; i < INTEL_8254X_DESCRIPTORS; i++)
     {
-        this->transmit_descriptors_buffer[i].address_low = (uint32_t)&this->transmit_descriptors_buffer[i * transmit_buffer_size];
+        this->transmit_descriptors_buffer[i].address_low = (uint32_t)&this->transmit_descriptors_buffer[i * TRANSMIT_BUFFER_SIZE];
         this->transmit_descriptors_buffer[i].address_high = 0x0;
         this->transmit_descriptors_buffer[i].length = 0x0;
         this->transmit_descriptors_buffer[i].cso = 0x0;
@@ -279,7 +280,7 @@ void Intel8254xDriver::init()
     this->receive_init();
     this->transmit_init();
 
-    this->last_packet = (uint8_t*)calloc(sizeof(uint8_t) * 4096);
+    this->last_packet = (uint8_t*)kcalloc(sizeof(uint8_t) * XANIN_PMMNGR_BLOCK_SIZE);
 
     /* enabling interrupts */
     this->write(nic::IMS, this->read(nic::IMS) | nic::ims::RXT | nic::ims::RXO | 
@@ -392,7 +393,7 @@ void Intel8254xDriver::name_set(const char* name)
 {
     if(this->name)
         free(this->name);
-    this->name = (char*)calloc(strlen(name));
+    this->name = (char*)kcalloc(strlen(name));
 
     strcpy(this->name, name);
 

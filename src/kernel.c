@@ -71,6 +71,8 @@ float pit_time = 0x0;
 terminal_t* kernel_terminal;
 uint8_t* const zeros;
 
+#define PMMNGR_MEMORY_BLOCKS 2000
+
 void kernel_loop(void)
 {
 
@@ -139,6 +141,7 @@ void kernel_loop(void)
 
 }
 
+uint8_t kernel_mmngr_mmap[PMMNGR_MEMORY_BLOCKS];
 
 void _start(void)
 {
@@ -192,18 +195,18 @@ void _start(void)
 
     // pmmngr_init(0x10000, ppmngr_bitmap);
     // pmmngr_init_region(0x1000, XANIN_PMMNGR_BLOCK_SIZE * (0x10000 / XANIN_PMMNGR_BLOCK_SIZE));
-// static uint8_t ppmngr_bitmap[0x10000];
+
+    // static uint8_t ppmngr_bitmap[0x10000];
 
     // pmmngr_init(0x10000, ppmngr_bitmap);
     // pmmngr_init_region(0x20000, XANIN_PMMNGR_BLOCK_SIZE * 500);
 
-    uint8_t ppmngr_bitmap[0x2000] = {0};
+    // uint8_t ppmngr_bitmap[0x2000] = {0};
 
-    pmmngr_init(0x10000, ppmngr_bitmap);
-    pmmngr_init_region(0x0, 0xFFFFFF);
+    // pmmngr_init(0x10000, ppmngr_bitmap);
+    // pmmngr_init_region(0x0, 0xFFFFFF);
 
-    uint8_t mmngr_mmap[0x2000];
-    mmngr_init(mmngr_mmap, 0x100000, 0x300);
+    mmngr_init(kernel_mmngr_mmap, 0x300000, PMMNGR_MEMORY_BLOCKS);
 
 
     time_get(&SystemTime);
@@ -213,14 +216,14 @@ void _start(void)
     keyboard_command = command_buffer;
     screen_clear();
 
-    null_memory_region = (uint8_t*)calloc(VGA_SCREEN_RESOLUTION);
-    xprintf("Memory Block Size Allocated: 0x%x\n", null_memory_region);
+    null_memory_region = (uint8_t*)kcalloc(VGA_SCREEN_RESOLUTION);
+    // xprintf("Memory Block Size Allocated: 0x%x\n", null_memory_region);
     // free(null_memory_region);
-    null_memory_region = (uint8_t*)calloc(VGA_SCREEN_RESOLUTION);
+    // null_memory_region = (uint8_t*)calloc(VGA_SCREEN_RESOLUTION);
     // kernel_terminal = terminal_create();
     // terminal_set((terminal_t*)null_memory_region, kernel_terminal);
 
-    xprintf("Memory Block Size Allocated: 0x%x\n", null_memory_region);
+    // xprintf("Memory Block Size Allocated: 0x%x\n", null_memory_region);
 
     rsdp = get_acpi_rsdp_address_base();
 
@@ -390,21 +393,15 @@ void _start(void)
 
     memset(XIN_ENTRY_POINTERS, 1, 0x280);
 
-    FileDescriptorTable = (XinFileDescriptor*)calloc(sizeof(XinFileDescriptor) * 512);
+    FileDescriptorTable = (XinFileDescriptor*)kcalloc(sizeof(XinFileDescriptor) * 512);
+    // xprintf("nicho");
 
     memset((uint8_t *)ArpTable, 0xFF, sizeof(ArpTable[0]));
-
 
     printk("To wszystko dla Ciebie Babciu <3");
 
     __sys_xin_folder_create("/config/");
-    // int status = __sys_xin_file_create("/config/nic.conf");
-    // if(status == XANIN_OK)
-    // {
-    //     XinEntry* nic_config = fopen("/config/nic.conf", "rw");
-    //     fwrite(nic_config, "192.168.019.012  //XaninOS nic IP address(USE ALWAYS FULL OCTETS)", ARRAY_LENGTH("192.168.019.012  //XaninOS nic IP address(USE ALWAYS FULL OCTETS"));
-    //     fclose(&nic_config);
-    // }
+    // xprintf("nicho");
 
     xprintf("YOUR IP ADDRESS: ");
     uint32_t base_ip = xanin_ip_get();
@@ -415,7 +412,6 @@ void _start(void)
     }
 
     xprintf("%d\n", base_ip & 0xFF);
-
 
     arp_table_add_entry((127 << 24) | (0) | (0) | (1), null_memory_region);
     arp_module_init();
@@ -444,7 +440,8 @@ void _start(void)
 
     xprintf("ARP module status: %d\n", arp_module_status());
 
-    uint8_t* zeros = (uint8_t*)calloc(SECTOR_SIZE);
+    uint8_t* zeros = (uint8_t*)kcalloc(SECTOR_SIZE);
+    // xprintf("nicho");
 
     while (inputg().scan_code != ENTER);
 

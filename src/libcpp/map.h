@@ -81,7 +81,6 @@ namespace std
     class UnorderedMap
     {
 
-        bool initialized;
 
     public:
         struct ListElement
@@ -91,6 +90,8 @@ namespace std
             ListElement *previous;
         };
 
+    private:
+        bool initialized;
         ListElement *Head;
         ListElement *Tail;
         size_t size;
@@ -121,7 +122,7 @@ namespace std
             this->Head->previous = nullptr;
         }
 
-        bool is_initialized()
+        bool is_initialized() const
         {
             return this->initialized;
         }
@@ -139,9 +140,6 @@ namespace std
 
         void init()
         {
-
-            // if(this->initialized)
-            //     return;
             this->Head = (ListElement *)malloc(sizeof(ListElement));
             this->Tail = (ListElement *)malloc(sizeof(ListElement));
             this->Head->next = nullptr;
@@ -223,6 +221,38 @@ namespace std
             this->size++;
         }
 
+        void insert_or_assign(K key, V value)
+        {
+            
+            if(this->exists(key))
+            {
+                auto Iterator = this->find(key);
+                *Iterator = value;
+                return;
+            }
+
+            if (!size)
+            {
+                this->Head->item.first = key;
+                this->Head->item.second = value;
+                this->size++;
+                return;
+            }
+
+            ListElement *ItemInserted = goto_last_element();
+
+            ItemInserted->next = (ListElement *)(malloc(sizeof(ListElement)));
+
+            ItemInserted->next->previous = ItemInserted;
+            ItemInserted = ItemInserted->next;
+            ItemInserted->item.first = key;
+            ItemInserted->item.second = value;
+            ItemInserted->next = this->Tail;
+
+            this->size++;
+
+        }
+
         ListElement *operator++(int)
         {
             ListElement *Tmp = this->Head;
@@ -292,8 +322,13 @@ namespace std
         V &operator[](K key)
         {
             auto ret = this->find(key);
+
             if (ret == this->Tail)
-                return (V&)this->Tail;
+            {
+                this->insert(key, *this->end());
+                return *this->find(key);
+            }
+
             else
                 return *ret;
         }        

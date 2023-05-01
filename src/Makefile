@@ -190,8 +190,8 @@ build:
 	@echo [C] idt.c
 	@$(C) $(C_OPTIONS) ./IDT/idt.c -o ./IDT/idt.o
 
-	@echo [C] icmp.c
-	@$(C) $(C_OPTIONS) ./network_protocols/icmp/icmp.c -o ./network_protocols/icmp/icmp.o
+	@echo [CC] icmp.cpp
+	@$(CC) $(CC_OPTIONS) ./network_protocols/icmp/icmp.cpp -o ./network_protocols/icmp/icmp.o
 
 	@echo [CC] screenshot.cpp
 	@$(CC) $(CC_OPTIONS) ./xaninApps/screenshot.cpp -o ./xaninApps/screenshot.o
@@ -461,7 +461,7 @@ build:
 
 
 run:
-	@sudo qemu-system-i386 -m 256 -drive file=../bin/xanin.img,cache=unsafe -net nic -net tap,ifname=tap0,script=no,downscript=no
+	@sudo qemu-system-i386 -m 4096 -drive file=../bin/xanin.img,cache=unsafe -net nic -net tap,ifname=tap0,script=no,downscript=no
 	# @sudo qemu-system-i386 -m 256 -drive file=../bin/xanin.img,cache=unsafe -net nic -net user
 
 curses:
