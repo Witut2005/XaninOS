@@ -17,7 +17,7 @@ void DynamicHostConfigurationProtocolSubystem::discover_send(void)
     Message->hlen = 1;
     Message->hops = 0;
 
-    Message->xid = endian_switch(static_cast<uint32_t>(0x3903F326));
+    Message->xid = BIG_ENDIAN(static_cast<uint32_t>(0x3903F326));
     Message->secs = 0;
     Message->flags = 0;
 
@@ -31,7 +31,7 @@ void DynamicHostConfigurationProtocolSubystem::discover_send(void)
     memset(Message->server_name, 0x0, 64);
     memset(Message->boot_filename, 0x0, 128);
 
-    Message->magic_cookie = endian_switch(static_cast<uint32_t>(DHCP_MAGIC_COOKIE));
+    Message->magic_cookie = BIG_ENDIAN(static_cast<uint32_t>(DHCP_MAGIC_COOKIE));
 
     Message->options[0] = 0x35;
     Message->options[1] = 0x01;

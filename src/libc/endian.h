@@ -3,7 +3,8 @@
 
 #include <stdint.h>
 
-
+#define LITTLE_ENDIAN16(nb) endian_switch16(nb) 
+#define LITTLE_ENDIAN32(nb) endian_switch32(nb) 
 
 static inline uint16_t endian_switch16(uint16_t nb)
 {
@@ -19,3 +20,5 @@ static inline uint32_t endian_switch32(uint32_t nb)
             ((nb & 0xFF000000) >> 24));
 
 }
+
+

@@ -12,9 +12,9 @@ void UserDatagramProtocolInterface::ipv4_send(uint32_t dest_ip, uint32_t src_ip,
 {
     UdpHeader* UdpPacket = (UdpHeader*)malloc(sizeof(1518));
 
-    UdpPacket->destination_port = endian_switch(dest_port);
-    UdpPacket->source_port = endian_switch(src_port);
-    UdpPacket->packet_size = endian_switch(packet_size);
+    UdpPacket->destination_port = BIG_ENDIAN(dest_port);
+    UdpPacket->source_port = BIG_ENDIAN(src_port);
+    UdpPacket->packet_size = BIG_ENDIAN(packet_size);
     UdpPacket->checksum = 0x0;
 
     memcpy((uint8_t*)UdpPacket+8, data, packet_size);

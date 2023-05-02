@@ -21,7 +21,7 @@ void EthernetFrameInterface::send(const uint8_t* mac_destination, const uint8_t*
 
     memcpy(FrameHeader->mac_destination, const_cast<uint8_t*>(mac_destination), 6);
     memcpy(FrameHeader->mac_source, const_cast<uint8_t*>(mac_source), 6);
-    FrameHeader->ethernet_type = endian_switch(protocol);
+    FrameHeader->ethernet_type = BIG_ENDIAN(protocol);
 
     for(int i = 0; i < length; i++)
         FrameHeader->data[i] = buffer[i];

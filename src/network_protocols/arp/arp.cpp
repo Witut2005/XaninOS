@@ -36,9 +36,9 @@ extern "C"
     {
 
         if(Response != NULL)
-            ArpModule::PacketsInfo.insert_or_assign(endian_switch(Arp->destination_protocol_address), Response);
+            ArpModule::PacketsInfo.insert_or_assign(LITTLE_ENDIAN(Arp->destination_protocol_address), Response);
 
-        if(net::is_system_ip(endian_switch(Arp->destination_protocol_address)))
+        if(net::is_system_ip(LITTLE_ENDIAN(Arp->destination_protocol_address)))
         {
             memset(Arp->source_hardware_address, 0, ARP_MAC_LENGTH);
             memset(Arp->destination_hardware_address, 0, ARP_MAC_LENGTH);
@@ -56,31 +56,28 @@ extern "C"
                                                         uint8_t* source_hardware_address, uint32_t source_protocol_address, uint8_t* destination_hardware_address,
                                                             uint32_t destination_protocol_address)
     {
-        arp->hardware_type = endian_switch(hardware_type);
-        arp->protocol_type = endian_switch(protocol_type);
+        arp->hardware_type = BIG_ENDIAN(hardware_type);
+        arp->protocol_type = BIG_ENDIAN(protocol_type);
         arp->hardware_address_length = hardware_address_length;
         arp->protocol_address_length = protocol_address_length;
-        arp->opcode = endian_switch(opcode);
+        arp->opcode = BIG_ENDIAN(opcode);
         memcpy(arp->source_hardware_address, source_hardware_address, 6);
-        arp->source_protocol_address = endian_switch(source_protocol_address);
+        arp->source_protocol_address = BIG_ENDIAN(source_protocol_address);
         memcpy(arp->destination_hardware_address, destination_hardware_address, 6);
-        arp->destination_protocol_address = endian_switch(destination_protocol_address);
+        arp->destination_protocol_address = BIG_ENDIAN(destination_protocol_address);
         return arp;
 
     }
 
     void arp_loopback_reply(AddressResolutionProtocol* ArpHeader)
     {
-        if(endian_switch(ArpHeader->opcode) != ARP_GET_MAC)
+        if(LITTLE_ENDIAN(ArpHeader->opcode) != ARP_GET_MAC)
             return;
 
-        if(ArpModule::PacketsInfo.exists(endian_switch(ArpHeader->destination_protocol_address)))
+        if(ArpModule::PacketsInfo.exists(LITTLE_ENDIAN(ArpHeader->destination_protocol_address)))
         {
-            // ArpModule::PacketsInfo[endian_switch(ArpHeader->destination_protocol_address)]->success = true;
-            (*ArpModule::PacketsInfo.find(endian_switch(ArpHeader->destination_protocol_address)))->success = true;
-
-            // memcpy((uint8_t*)ArpModule::PacketsInfo[endian_switch(ArpHeader->destination_protocol_address)]->data, (uint8_t*)ArpHeader, sizeof(AddressResolutionProtocol));
-            memcpy((uint8_t*)(*ArpModule::PacketsInfo.find(endian_switch(ArpHeader->destination_protocol_address)))->data, (uint8_t*)ArpHeader, sizeof(AddressResolutionProtocol));
+            (*ArpModule::PacketsInfo.find(LITTLE_ENDIAN(ArpHeader->destination_protocol_address)))->success = true;
+            memcpy((uint8_t*)(*ArpModule::PacketsInfo.find(LITTLE_ENDIAN(ArpHeader->destination_protocol_address)))->data, (uint8_t*)ArpHeader, sizeof(AddressResolutionProtocol));
         }
     }
 
@@ -89,7 +86,7 @@ extern "C"
     {
 
 
-        if(net::is_system_ip(endian_switch(ArpHeader->destination_protocol_address)))
+        if(net::is_system_ip(LITTLE_ENDIAN(ArpHeader->destination_protocol_address)))
         {
             
             if(net::is_system_mac(ArpHeader->source_hardware_address))
@@ -97,18 +94,16 @@ extern "C"
             
             else 
             {
-                if(endian_switch(ArpHeader->opcode) == ARP_REPLY)
+                if(LITTLE_ENDIAN(ArpHeader->opcode) == ARP_REPLY)
                 {
-                    if(ArpModule::PacketsInfo.exists(endian_switch(ArpHeader->source_protocol_address)))
+                    if(ArpModule::PacketsInfo.exists(LITTLE_ENDIAN(ArpHeader->source_protocol_address)))
                     {
-                        // xprintf("nicho");
-                        ArpModule::PacketsInfo[endian_switch(ArpHeader->source_protocol_address)]->success = true;
-                        // xprintf(" 0x%x\n", ArpModule::PacketsInfo[endian_switch(ArpHeader->source_protocol_address)]->data);
-                        memcpy((uint8_t*)ArpModule::PacketsInfo[endian_switch(ArpHeader->source_protocol_address)]->data, (uint8_t*)ArpHeader, sizeof(AddressResolutionProtocol));
+                        ArpModule::PacketsInfo[LITTLE_ENDIAN(ArpHeader->source_protocol_address)]->success = true;
+                        memcpy((uint8_t*)ArpModule::PacketsInfo[LITTLE_ENDIAN(ArpHeader->source_protocol_address)]->data, (uint8_t*)ArpHeader, sizeof(AddressResolutionProtocol));
                     }
                 }
 
-                else if(endian_switch(ArpHeader->opcode) == ARP_GET_MAC)
+                else if(LITTLE_ENDIAN(ArpHeader->opcode) == ARP_GET_MAC)
                 {
                     AddressResolutionProtocol XaninArpReply;
                     prepare_arp_request(&XaninArpReply, ARP_ETHERNET, ARP_IP_PROTOCOL, 0x6, 0x4, ARP_REPLY, netapi_mac_get(xanin_ip_get()), xanin_ip_get(), ArpHeader->source_hardware_address, ArpHeader->source_protocol_address);
@@ -119,10 +114,10 @@ extern "C"
 
         }
 
-        else if(endian_switch(ArpHeader->opcode) != ARP_REPLY)//HANDLE ONLY REPLIES (NOT ARP PROBE ETC)
+        else if(LITTLE_ENDIAN(ArpHeader->opcode) != ARP_REPLY)//HANDLE ONLY REPLIES (NOT ARP PROBE ETC)
             return;
 
-        uint32_t ip_addr = endian_switch(ArpHeader->source_protocol_address);
+        uint32_t ip_addr = LITTLE_ENDIAN(ArpHeader->source_protocol_address);
         uint8_t arp_entry_used = current_arp_entry;
 
         for(int i = 0; i < ARP_TABLE_ENTRIES; i++)

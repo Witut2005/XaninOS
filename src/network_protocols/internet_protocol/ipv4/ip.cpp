@@ -12,6 +12,7 @@
 #include <libc/syslog.h>
 #include <network_protocols/udp/udp.hpp>
 #include <netapi/loopback/loopback.h>
+#include <netapi/objects/ip.h>
 
 #define ETHERNET_TYPE_IPV4 0x800
 #define IPV4_HEADER_SIZE 20
@@ -145,9 +146,12 @@ void InternetProtocolInterface::ip4_packet_send(uint32_t dest_ip, uint32_t src_i
 void InternetProtocolInterface::ipv4_packet_receive(Ipv4Header* PacketData)
 {
 
-    if((endian_switch(PacketData->destination_ip_address) == LOOPBACK_IP_ADDRESS) && (LITTLE_ENDIAN(PacketData->source_ip_address) == LOOPBACK_IP_ADDRESS))
+    // if((endian_switch(PacketData->destination_ip_address) == LOOPBACK_IP_ADDRESS) && (LITTLE_ENDIAN(PacketData->source_ip_address) == LOOPBACK_IP_ADDRESS))
+
+    if(net::is_system_ip(LITTLE_ENDIAN(PacketData->destination_ip_address)))
         loopback_packet = true;
-    
+    else
+        loopback_packet = false;
 
     switch(PacketData->protocol)
     {
