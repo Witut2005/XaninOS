@@ -220,10 +220,7 @@ void* mmngr_block_allocate(uint8_t mode, uint32_t size)
     uint32_t mmap_index = mmngr_mmap_free_block_find(mode);
 
     if(mmap_index == UINT32_MAX) // NO AVAILABLE MEMORY
-    {
-        xprintf("EERRORORORORO");
         return (void*)NULL;
-    }
 
     uint32_t blocks_allocated = size_to_blocks_allocated(size);
 

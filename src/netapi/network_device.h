@@ -9,16 +9,16 @@
 class NetworkDevice
 {
     private: 
-        void(*interrupt_handler)(void);
+        bool(*interrupt_handler)(void);
 
     public:
         
-        inline void handle_interrupt(void)
+        inline bool handle_interrupt(void)
         {
-            this->interrupt_handler();
+            return this->interrupt_handler();
         }
 
-        inline void interrupt_handler_set(void(*handler)(void))
+        inline void interrupt_handler_set(bool(*handler)(void))
         {
             this->interrupt_handler = handler;
         }
@@ -54,5 +54,5 @@ extern "C"{
 
 #ifdef __cplusplus
 NetworkDevice* netapi_find_available_device(void);
-bool netapi_add_device(NetworkDevice* NetDev, const char* name, void(*interrupt_handler_entry)(void));
+bool netapi_add_device(NetworkDevice* NetDev, const char* name, bool(*interrupt_handler_entry)(void));
 #endif

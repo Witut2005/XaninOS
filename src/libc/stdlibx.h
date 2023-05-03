@@ -131,10 +131,43 @@ extern uint8_t null_region[20];
 
 typedef uint8_t* address_t;
 
-
 enum XANIN_RETURN_STATUS
 {
     XANIN_OK = 0x0,
     XANIN_ERROR = 0x3,
-    XANIN_TOO_LONG_STRING = 0x4,
+    XANIN_TOO_LONG_STRING = 0x4
 };
+
+enum XANIN_INTERVAL
+{
+    INTERVALS_MAX = 100,
+    INTERVAL_CLEAR = 0,
+    INTERVAL_IN_USE = 1
+};
+
+typedef uint32_t interval_id;
+typedef void(*interval_handler)(address_t* args);
+
+struct IntervalEntry
+{
+    bool is_in_use;
+    interval_handler handler;
+    address_t* arguments;
+    float timeout;
+    float current_time;
+};
+
+typedef struct IntervalEntry IntervalEntry;
+extern IntervalEntry XaninIntervals[100];
+
+#ifdef __cplusplus
+extern "C"{
+#endif
+
+interval_id interval_set(interval_handler handler, float ms, address_t* args);
+void interval_clear(interval_id used_interval);
+void do_interval(interval_id interval);
+
+#ifdef __cplusplus
+}
+#endif

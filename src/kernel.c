@@ -143,6 +143,11 @@ void kernel_loop(void)
 
 uint8_t kernel_mmngr_mmap[PMMNGR_MEMORY_BLOCKS];
 
+void interval_test(address_t* args)
+{
+    xprintf("n");
+}
+
 void _start(void)
 {
 
@@ -444,6 +449,22 @@ void _start(void)
     // xprintf("nicho");
 
     while (inputg().scan_code != ENTER);
+
+    // address_t* as = NULL;
+
+    // screen_clear();
+    
+    // interval_set(interval_test, 1000.0, NULL);
+
+    // msleep(10000);
+
+    // for(int i = 0; i < 10; i++)
+    // {
+    //     xprintf("a");
+    //     msleep(1000);
+    // }
+
+    // while (inputg().scan_code != ENTER);
 
     kernel_loop();
 

@@ -9,7 +9,7 @@ extern "C" uint32_t pci_get_bar(const uint8_t bus, const uint8_t slot, const uin
 extern "C" uint16_t pci_get_vendor_id(const uint8_t bus, const uint8_t slot, 
                         const uint8_t function);
 extern "C" uint16_t pci_write_data16(const uint8_t bus, const uint8_t slot, const uint8_t function, const uint8_t offset, const uint16_t value);
-extern "C" void i8254x_interrupt_handler_entry(void);
+extern "C" bool i8254x_interrupt_handler_entry(void);
 
 #define INTEL_8254X 0x0200
 #define INTEL_8254X_VENDOR_ID 0x100E
@@ -207,7 +207,7 @@ class Intel8254xDriver : public NetworkDevice
     uint32_t transmit_descriptors_buffer_get(void);
     uint32_t receive_buffer_get(void) const;
     uint32_t transmit_buffer_get(void) const;
-    virtual void interrupt_handler(void);
+    virtual bool interrupt_handler(void);
     void receive_init(void);
     void transmit_init(void);
     void init(void);

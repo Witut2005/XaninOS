@@ -430,3 +430,43 @@ xchar inputg(void)
 }
 
 bool app_exited = false;
+
+IntervalEntry XaninIntervals[INTERVALS_MAX] = {INTERVAL_CLEAR};
+
+interval_id interval_set(interval_handler handler, float ms, address_t* args)
+{
+    interval_id interval;
+
+    for(int i = 0; i < INTERVALS_MAX; i++)
+    {
+        if(!XaninIntervals[i].is_in_use)
+        {
+            interval = i;
+            XaninIntervals[i].is_in_use = INTERVAL_IN_USE;
+            XaninIntervals[i].handler = handler;
+            XaninIntervals[i].arguments = args;
+            XaninIntervals[i].timeout = ms / 1000;
+            XaninIntervals[i].current_time = pit_time;
+        }
+    }
+    return interval;
+}
+
+
+void interval_clear(interval_id interval)
+{
+    XaninIntervals[interval].is_in_use = INTERVAL_CLEAR;
+}
+
+void do_interval(interval_id interval)
+{
+    if(XaninIntervals[interval].is_in_use)
+    {
+        if(pit_time > (XaninIntervals[interval].current_time + XaninIntervals[interval].timeout)) // timeout reached
+        {
+            // pit_time = 0;
+            XaninIntervals[interval].handler(XaninIntervals[interval].arguments);
+            XaninIntervals[interval].current_time = pit_time; // clears timeout
+        }
+    }
+}

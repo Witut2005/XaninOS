@@ -20,13 +20,11 @@ void sleep(float seconds)
 
 void msleep(float miliseconds)
 {
-
     miliseconds = miliseconds / 1000;
-
+    // pit_time = 0;
     float now = pit_time;
 
     while(pit_time < now + miliseconds);
-
 }
 
 time_offset_t* start(void)

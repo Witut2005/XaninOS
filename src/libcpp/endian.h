@@ -2,6 +2,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <network_protocols/arp/arp.h>
 #include <network_protocols/icmp/icmp.h>
 
 
@@ -32,6 +33,7 @@ static inline int32_t endian_switch(int32_t nb)
 }
 
 extern IcmpPacket* endian_switch(IcmpPacket* IcmpData);
+extern AddressResolutionProtocol* endian_switch(AddressResolutionProtocol* ArpData);
 
 #define BIG_ENDIAN(nb) endian_switch(nb)
 #define LITTLE_ENDIAN(nb) endian_switch(nb)

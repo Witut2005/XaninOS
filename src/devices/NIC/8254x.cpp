@@ -362,13 +362,17 @@ uint8_t* Intel8254xDriver::packet_receive(void)
 }
 
 
-void Intel8254xDriver::interrupt_handler(void) 
+bool Intel8254xDriver::interrupt_handler(void) 
 {
-    // xprintf("N");
     uint16_t interrupt_status = this->read(nic::ICR);
     
     if(interrupt_status & 0x80)
+    {
         this->packet_receive();
+        return true;
+    }
+
+    return false;
 
 }
 

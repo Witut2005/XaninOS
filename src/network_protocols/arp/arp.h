@@ -64,7 +64,6 @@ struct AddressResolutionProtocol
     typedef struct ArpTableEntry ArpTableEntry;
 #endif
 
-
 #ifdef __cplusplus
 extern "C" {
 #endif

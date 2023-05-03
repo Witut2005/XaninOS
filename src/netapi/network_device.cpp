@@ -23,7 +23,7 @@ NetworkDevice* netapi_find_available_device(void)
     return (NetworkDevice*)NULL;
 }
     
-bool netapi_add_device(NetworkDevice* NetDev, const char* name, void(*interrupt_handler_entry)(void)) // add new to device to system :0
+bool netapi_add_device(NetworkDevice* NetDev, const char* name, bool(*interrupt_handler_entry)(void)) // add new to device to system :0
 {
     for(int i = 0; i < NETDEVICES_HANDLERS; i++)
     {
@@ -85,11 +85,10 @@ extern "C" {
         {
             if(XaninNetworkDevices[i])
             {
-                XaninNetworkDevices[i]->handle_interrupt();
-                interrupt_enable();
-                return;
+                bool status = XaninNetworkDevices[i]->handle_interrupt();
             }
         }
+        interrupt_enable();
     }
 
     pci_device* netapi_device_info_get(char* device_name) // get network card pci info

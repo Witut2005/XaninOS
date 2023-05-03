@@ -161,10 +161,9 @@ build:
 
 	@echo [CC] regex.cpp
 	@$(CC) $(CC_OPTIONS) ./libcpp/regex.cpp -o ./libcpp/regex.o 
-	
+
 	@echo [C] xgl.c
 	@$(C) $(C_OPTIONS) ./xgl/xgl.c -o ./xgl/xgl.o
-
 	
 	@echo [ASM] 8254x INTERRUPT ENTRY
 	@$(ASM) -f elf32 ./devices/NIC/8254x_int_handler.asm -o ./devices/NIC/8254x_int_handler.o
