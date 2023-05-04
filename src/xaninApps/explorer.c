@@ -3,6 +3,7 @@
 #include <tui/tui.h>
 #include <libc/colors.h>
 #include <xin_fs/xin.h>
+#include <xin_fs/xin_syscalls.h>
 #include <libc/process.h>
 #include <libc/data_structures.h>
 

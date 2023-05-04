@@ -44,11 +44,11 @@ static inline void print_xanin_os_string(void)
 int start_screen(void)
 {
 
-screen_clear();
+    screen_clear();
 
-logo_front_color = white;
+    logo_front_color = white;
 
-print_xanin_os_string();
+    print_xanin_os_string();
 
     while(KeyInfo.scan_code != ENTER)
     {
@@ -125,5 +125,7 @@ print_xanin_os_string();
 
         msleep(300);
     }
+
+    return XANIN_OK;
 
 }

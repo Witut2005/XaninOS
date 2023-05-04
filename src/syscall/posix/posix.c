@@ -12,6 +12,7 @@
 #include <libc/string.h>
 #include <syscall/posix/posix.h>
 #include <xin_fs/xin_syscalls.h>
+#include <terminal/interpreter.h>
 
 
 extern int reboot(void);
@@ -42,6 +43,7 @@ uint32_t syscall_handle(void)
         {
             last_command_exit_status = ebx;
             exit();
+            kernel_loop();
             break;
         }
 

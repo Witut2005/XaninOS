@@ -5,8 +5,6 @@
 #include <libc/memory.h>
 #include <libc/string.h>
 
-#define VGA_SCREEN_RESOLUTION 4480
-
 static uint8_t current_color;
 static uint16_t selected_cell;
 

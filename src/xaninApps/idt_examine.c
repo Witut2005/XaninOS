@@ -19,5 +19,5 @@ int idt_examine(void)
     // xprintf("0x%x\n", interrupt_handlers[0x21]);
 
     // // while(inputg().scan_code != ENTER);
-    // return XANIN_OK;
+    return XANIN_OK;
 }

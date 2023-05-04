@@ -6,8 +6,7 @@
 #include <keyboard/scan_codes.h>
 #include <stdarg.h>
 #include <libc/time.h>
-
-#define VGA_SCREEN_RESOLUTION 4480
+#include <libc/stdiox.h>
 
 char* color_attributes[16] = {"black", "blue", "green", "cyan", "red", "magenta", "brown", "lgray", "dgray","lblue", "lgreen", "lcyan", "lred", "lmagenta", "yellow", "white"};
 

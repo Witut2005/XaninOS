@@ -1,5 +1,7 @@
+// #include <
 
-int main(void)
+void main(void)
 {
-    return 1;
+    xprintf("nicho");
+    return;
 }

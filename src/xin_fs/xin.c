@@ -367,21 +367,19 @@ int xin_folder_create(char* entry_name)
 }
 
 
-void xin_file_create_at_address(char *path, uint8_t creation_date, uint8_t creation_time,
-                                uint16_t os_specific, uint8_t modification_date,
-                                uint8_t modification_time, uint8_t permissions,
-                                uint32_t first_sector, uint8_t size, uint8_t type,uint32_t entry_number)
+void xin_file_create_at_given_sector(char *path, uint32_t first_sector, uint8_t size)
 {
-    XinEntry* entry_created = (XinEntry *)((entry_number * 64) + XIN_ENTRY_TABLE);
+    XinEntry* entry_created = xin_find_free_entry();
+
     strcpy(entry_created->path, path);
 
-    entry_created->creation_date = creation_date;
-    entry_created->creation_time = creation_time;
+    entry_created->creation_date = 0;
+    entry_created->creation_time = 0;
     entry_created->FileInfo = NULL;
-    entry_created->type = type;
-    entry_created->modification_date = modification_date;
-    entry_created->modification_time = modification_time;
-    entry_created->permissions = permissions;
+    entry_created->type = XIN_FILE;
+    entry_created->modification_date = 0;
+    entry_created->modification_time = 0;
+    entry_created->permissions = PERMISSION_MAX;
     entry_created->size = size * SECTOR_SIZE;
     entry_created->first_sector = first_sector;
 
@@ -403,36 +401,33 @@ void xin_file_create_at_address(char *path, uint8_t creation_date, uint8_t creat
 
 void xin_init_fs(void)
 {
-
     if(xin_find_entry("/") == NULL)
-        xin_file_create_at_address("/",                         0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x0, 0x0,    XIN_DIRECTORY, 0);
+        xin_folder_create("/");
 
     if(xin_find_entry("/ivt") == NULL)
-        xin_file_create_at_address("/ivt",                      0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x0, 0x3,    XIN_FILE, 1);
+        xin_file_create_at_given_sector("/ivt",                      0x0, 0x3);
 
     if(xin_find_entry("/file_system.bin") == NULL)
-        xin_file_create_at_address("/file_system.bin",          0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x4, 20,     XIN_FILE, 2);
+        xin_file_create_at_given_sector("/file_system.bin",          0x4, 20);
 
     if(xin_find_entry("/enter_real_mode.bin") == NULL)
-        xin_file_create_at_address("/enter_real_mode.bin",      0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x1, 0x1,    XIN_FILE, 3);
+        xin_file_create_at_given_sector("/enter_real_mode.bin",      0x1, 0x1);
 
     if(xin_find_entry("/boot.bin") == NULL)
-        xin_file_create_at_address("/boot.bin",                 0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x3E,0x1,    XIN_FILE, 4);
-
-    if(xin_find_entry("/tmp.bin") == NULL)
-        xin_file_create_at_address("/tmp.bin",                  0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x80,0x1,    XIN_FILE, 5);
+        xin_file_create_at_given_sector("/boot.bin",                 0, 0x1);
 
     if(xin_find_entry("/shutdown.bin") == NULL)
-        xin_file_create_at_address("/shutdown.bin",             0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x2,0x1,    XIN_FILE, 6);
+        xin_file_create_at_given_sector("/shutdown.bin",             0x2, 0x1);    
 
-    if(xin_find_entry("/syscall_test.bin") == NULL)
-        xin_file_create_at_address("/syscall_test.bin",         0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x500,0x1,    XIN_FILE, 7);
+    // if(xin_find_entry("/syscall_test.bin") == NULL)
+    //     xin_file_create_at_given_sector("/syscall_test.bin",         0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x500,0x1,    XIN_FILE, 7);
 
     if(xin_find_entry("/fast_real_mode_enter.bin") == NULL)
-        xin_file_create_at_address("/fast_real_mode_enter.bin", 0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x5,0x1,    XIN_FILE, 8);
+        xin_file_create_at_given_sector("/fast_real_mode_enter.bin", 0x5, 0x1);
 
     if(xin_find_entry("/fast_real_mode_return.bin") == NULL)
-        xin_file_create_at_address("/fast_real_mode_return.bin", 0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x6,0x1,    XIN_FILE, 9);
+        xin_file_create_at_given_sector("/fast_real_mode_return.bin",  0x6, 0x1);
+
     
     if(xin_find_entry("/screenshot/") == NULL)
         xin_folder_create("/screenshot/");

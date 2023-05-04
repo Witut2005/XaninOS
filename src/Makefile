@@ -252,6 +252,9 @@ build:
 	@echo [C] stdlibx.c
 	@$(C) $(C_OPTIONS) ./libc/stdlibx.c -o ./libc/stdlibx.o
 
+	@echo [C] kernel.c-library
+	@$(C) $(C_OPTIONS) ./libc/kernel.c -o ./libc/kernel.o
+
 	@echo [C] signal.c
 	@$(C) $(C_OPTIONS) ./libc/signal.c -o ./libc/signal.o
 
@@ -333,7 +336,38 @@ build:
 	@echo [ASM] xin_extended_table.asm
 	@$(ASM) ./xin_fs/xin_extended_table.asm -o ./xin_fs/xin_extended_table
 
+	@echo [ASM] CRT0
+	nasm -f elf32 ./libc/crt0.asm -o libc/crt0.o
 
+
+	@echo [C] C_LIBARY
+	@i386-elf-ld -r ./libc/alloc.o \
+	./libc/hal.o \
+	./libc/math.o \
+	./libc/memory.o \
+	./libc/stdiox.o \
+	./libc/stdlibx.o \
+	./libc/string.o \
+	./libc/syslog.o \
+	./libc/system.o \
+	./libc/time.o \
+	./libc/data_structures.o \
+	./libc/xanin_state.o \
+	./libc/instruction_pointer.o \
+	./libc/real_mode_fswitch.o \
+	./libc/algorithm.o \
+	./libc/signal.o \
+	./libc/process.o \
+	./libc/register_dump.o \
+	./libc/registers_values_get.o \
+	./libc/kernel.o \
+	./xin_fs/xin.o \
+	./xin_fs/xin_syscalls.o \
+	./terminal/vty.o \
+	./devices/HARD_DISK/disk.o \
+	./terminal/terminal.o -o ./libc/libc.o
+
+	@i386-elf-ar rsc ./libc/libc.a ./libc/libc.o ./libc/crt0.o
 
 	@echo [C] kernel.c
 	@$(C) $(C_COMPILE) kernel.c \
@@ -357,24 +391,9 @@ build:
 	./handlers/entries/machine_check_exception.o \
 	./handlers/entries/simd_floating_point_exception.o \
 	./handlers/entries/virtualization_exception.o \
-	./libc/alloc.o \
-	./libc/hal.o \
-	./libc/math.o \
-	./libc/memory.o \
-	./libc/stdiox.o \
-	./libc/stdlibx.o \
-	./libc/string.o \
-	./libc/syslog.o \
-	./libc/system.o \
-	./libc/time.o \
-	./libc/data_structures.o \
-	./libc/xanin_state.o \
-	./libc/instruction_pointer.o \
-	./libc/real_mode_fswitch.o \
-	./libc/algorithm.o \
-	./libc/signal.o \
-	./libc/process.o \
-	./libc/register_dump.o \
+	./libc/libc.o \
+	./pit/pit.o \
+	./pit/pit_entry.o \
 	./libcpp/algorithm.o \
 	./libcpp/regex.o \
 	./tui/tui.o \
@@ -382,17 +401,10 @@ build:
 	./libcpp/endian.o \
 	./libcpp/icxxabi.o \
 	./devices/VGA/vga.o \
-	./libc/registers_values_get.o \
-	./terminal/vty.o \
-	./terminal/terminal.o \
 	./keyboard/key_map.o \
 	./xaninGraphics/xaninGraphics.o \
 	./keyboard/keyboard.o \
-	./pit/pit_entry.o \
-	./pit/pit.o \
 	./syscall/syscall_entry.o \
-	./xin_fs/xin.o \
-	./xin_fs/xin_syscalls.o \
 	./xin_fs/edit.o \
 	./test/cpp_test.o \
 	./test/cpp_test2.o \
@@ -404,7 +416,6 @@ build:
 	./devices/PCSPK/pc_speaker.o \
 	./devices/USB/usb.o \
 	./devices/ACPI/ACPI.o \
-	./devices/HARD_DISK/disk.o \
 	./netapi/objects/mac.o \
 	./netapi/objects/ip.o \
 	./network_protocols/ethernet_frame/ethernet_frame.o \
@@ -430,6 +441,8 @@ build:
 	@$(C) $(C_COMPILE) ./boot/disk_freestanding_driver.c ./boot/linker.ld -Ttext 0xA00000 -o ./boot/disk_freestanding_driver
 	python3 ./utils/align_file.py -file ./boot/disk_freestanding_driver -size 512
 	
+	cp ./libc/libc.o ./external_apps/libc.o
+	cp ./libc/libc.a ./external_apps/libc.a
 
 	@echo "\033[0;32mCOMPILATION SUCCESS"
 	@echo "\033[0m"
@@ -453,9 +466,11 @@ build:
 	@echo "\033[0;32mCOMPILING XANIN EXTERNAL APPS"
 	@echo "\033[0m"
 	@make -C ./external_apps/
+	
+	rm ./external_apps/libc.o
+	rm ./external_apps/libc.a
 
 	@python3 ./utils/app_preinstall.py -files yhm/ external_apps/ config/ -image $(XANIN_BINARIES)/xanin.img 
-
 
 
 

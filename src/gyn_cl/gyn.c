@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include <libc/string.h>
 #include <gyn_cl/gyn.h>
 
 bool gyn_cl_on = false;

@@ -14,9 +14,16 @@ Screen.y = y_new
 #define stderr ( red << 4 | white)
 #define ARRAY_LENGTH(x) sizeof(x) / sizeof(x[0])
 
+enum screen_macros
+{
+    VGA_WIDTH = 80,
+    VGA_HEIGHT = 25,
+    VGA_SCREEN_CELL_SIZE = 2
+};
+
 #define VRAM 0xb8000
 #define VGA_TEXT_MEMORY 0xb8000
-#define VGA_SCREEN_RESOLUTION 4480
+#define VGA_SCREEN_RESOLUTION (25 * 80)
 #define BLANK_SCREEN_CELL 0
 #define mkstr(str) #str
 #define SCREEN_CELL_SET_FROM_POINTER(ptr, background, foreground, character) *ptr = (uint16_t)((foreground | (background << 4)) << 8 | (character & 0xFF))

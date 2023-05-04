@@ -33,13 +33,13 @@ _loadSector:
 mov [BOOT_DISK_NUMBER], dl
 
 ;INITIALIZE SCREEN
-mov ax, 0x3
-int 0x10
+; mov ax, 0x3
+; int 0x10
 
 ;SETTING VIDEO MODE
-mov ax, 0x1111
-xor bl,bl
-int 10h
+; mov ax, 0x1111
+; xor bl,bl
+; int 10h
 
 ;mov ah, 0x1
 ;mov ch, 0x3f

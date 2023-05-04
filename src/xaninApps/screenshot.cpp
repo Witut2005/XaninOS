@@ -6,9 +6,7 @@
 #include <libcpp/iostream.h>
 #include <keyboard/scan_codes.h>
 #include <libc/memory.h>
-
-#define VGA_TEXT_MEMORY 0xb8000
-#define VGA_SCREEN_RESOLUTION 4480
+#include <libc/stdiox.h>
 
 extern "C" 
 {

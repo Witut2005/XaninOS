@@ -21,21 +21,29 @@ void xpaint_input(xchar Input)
 
     if(Input.scan_code == ARROW_RIGHT)
     {
+        if((uint32_t)(cursor + 1) >= VGA_TEXT_MEMORY + (VGA_SCREEN_RESOLUTION * VGA_SCREEN_CELL_SIZE))
+            return;
         cursor++;
     }
 
     else if(Input.scan_code == ARROW_LEFT)
     {
+        if((uint32_t)(cursor - 1) < VGA_TEXT_MEMORY)
+            return;
         cursor--;
     }
 
     else if(Input.scan_code == ARROW_DOWN)
     {
+        if((uint32_t)(cursor + VGA_WIDTH) >= VGA_TEXT_MEMORY + (VGA_SCREEN_RESOLUTION * VGA_SCREEN_CELL_SIZE))
+            return;
         cursor = cursor + VGA_WIDTH;
     }
 
     else if(Input.scan_code == ARROW_UP)
     {
+        if((uint32_t)(cursor - VGA_WIDTH) < VGA_TEXT_MEMORY)
+            return;
         cursor = cursor - VGA_WIDTH;
     }
 

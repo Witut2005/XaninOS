@@ -131,30 +131,30 @@ void keyboard_refresh_add(uint8_t keyboard_index_position, char character_saved)
 
 static char app_exit_status_text[40];
 
-char* app_exit_status_text_get(void)
-{
+// char* app_exit_status_text_get(void)
+// {
 
-    switch(last_command_exit_status)
-    {
-        case XANIN_OK:
-        {
-            strcpy(app_exit_status_text, "ok");
-            break;
-        }
+//     switch(last_command_exit_status)
+//     {
+//         case XANIN_OK:
+//         {
+//             strcpy(app_exit_status_text, "ok");
+//             break;
+//         }
 
-        case XANIN_ERROR:
-        {
-            strcpy(app_exit_status_text, "error");
-            break;
-        }
+//         case XANIN_ERROR:
+//         {
+//             strcpy(app_exit_status_text, "error");
+//             break;
+//         }
 
-        // case XIN:
-        // {
-        //     strcpy(app_exit_status_text, "error");
-        //     break;
-        // }
+//         // case XIN:
+//         // {
+//         //     strcpy(app_exit_status_text, "error");
+//         //     break;
+//         // }
 
-    }
+//     }
     
-    return app_exit_status_text;
-}
+//     return app_exit_status_text;
+// }

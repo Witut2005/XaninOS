@@ -25,7 +25,6 @@
 #include <devices/ACPI/ACPI.h>
 #include <libc/syslog.h>
 #include <xanin_info/info_block.c>
-#include <xin_fs/xin.h>
 #include <devices/NIC/8254x.h>
 #include <devices/PCSPK/pc_speaker.h>
 // #include <network_protocols/ethernet_frame/ethernet_frame.h>
@@ -67,7 +66,6 @@ extern bool com_status(void);
 |Ja, rok 2022, 31 grudzień, 17:00:45    |
 /--------------------------------------*/
 
-float pit_time = 0x0;
 terminal_t* kernel_terminal;
 uint8_t* const zeros;
 
@@ -137,9 +135,8 @@ void kernel_loop(void)
 
     }
 
-
-
 }
+
 
 uint8_t kernel_mmngr_mmap[PMMNGR_MEMORY_BLOCKS];
 
@@ -388,11 +385,8 @@ void _start(void)
     argv[3] = program_parameters2;
     argv[4] = program_parameters3;
 
-    for (int i = 0; i < 5; i++)
-        disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x12 + i, 1, (uint16_t *)(0x800 + (i * SECTOR_SIZE)));
-
-    for (int i = 0; i < 10; i++)
-        disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x1a + i, 1, (uint16_t *)(0x1800 + (i * SECTOR_SIZE)));
+    disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x12, 8, (uint16_t *)XIN_ENTRY_POINTERS);
+    disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x1a, 10, (uint16_t *)XIN_ENTRY_TABLE);
 
     xin_init_fs();
 
@@ -418,7 +412,7 @@ void _start(void)
 
     xprintf("%d\n", base_ip & 0xFF);
 
-    arp_table_add_entry((127 << 24) | (0) | (0) | (1), null_memory_region);
+    arp_table_add_entry(LOOPBACK_IP_ADDRESS, null_memory_region);
     arp_module_init();
     icmp_module_init();
 

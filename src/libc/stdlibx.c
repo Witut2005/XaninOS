@@ -19,6 +19,7 @@ CmosTime SystemTime;
 #define CMOS_ADDR 0x70
 #define CMOS_DATA 0x71
 
+float pit_time;
 char* daysLUT[7] = {"Sun","Mon","Tue","Wed","Thu","Fri","Sat"};
 uint8_t* null_memory_region;
 
@@ -38,7 +39,11 @@ void exit(void)
 {
     interrupt_enable();
     eoi_send();
-    kernel_loop();
+    // kernel_loop();
+    
+    asm("mov eax, 1\n\t"
+        "int 0x80");
+
     app_process_unregister();
 }
 

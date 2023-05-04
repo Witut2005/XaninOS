@@ -9,4 +9,5 @@ int xin_folder_remove_app(char* folder_name)
         xprintf("%zNO SUCH FOLDER: %s\n", stderr, folder_name);
         while(inputg().scan_code != ENTER);
     }
+    return XANIN_OK;
 }

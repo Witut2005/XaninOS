@@ -22,14 +22,31 @@ args.add_argument('-errors', action='store_true')
 args = args.parse_args()
 
 file = open(str(args.image), 'rb+')
-xin_filesystem_pointers_begin = int(SECTOR_SIZE * 18)
-xin_filesystem_pointers = int(SECTOR_SIZE * 18 + 0x300)
-xin_filesystem_entries = int(SECTOR_SIZE * 26 + 0xB40 + (64 * 10))
-# file.seek(SECTOR_SIZE * 18 + 0xB00)
+tmp = file.read()
+
+file.seek(0)
+
+xin_filesystem_pointers_begin = int(SECTOR_SIZE * 0x12)
+
+# xin_filesystem_entries = int(SECTOR_SIZE * 26 + 0xB40 + (64 * 10))
+
+# xin_filesystem_pointers = int(SECTOR_SIZE * 0x12) 
+
+xin_filesystem_pointers = int(SECTOR_SIZE * 0x12 + 0x300)
+xin_filesystem_entries = int(SECTOR_SIZE * 0x1A) 
+i = xin_filesystem_entries
+
+while tmp[i] != 0:
+    i = i + 64
+
+xin_filesystem_entries = i
+
 directories = set() 
 
 print('\n\n\n--------------------------------')
 print('XIN FILESYSTEM PREINSTALL PHARSE')
+
+
 
 for current_file in args.files:
     try: 
@@ -63,7 +80,7 @@ for current_file in args.files:
     if(len(data) % 512 != 0):
         file_lenght += 1 
     
-    print('file lenght(in sectors):', file_lenght)
+    print(str(current_file).ljust(40, ' '), file_lenght, 'sectors')
     if(file_lenght == 0):
         file_lenght += 1
 

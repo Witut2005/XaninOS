@@ -19,6 +19,7 @@
 
 //https://www.youtube.com/watch?v=aK4paXV1XfM <-- USEFUL
 
+
 void set_pit_divisor(uint16_t divisor_value)
 {
 
@@ -33,7 +34,7 @@ void set_pit_divisor(uint16_t divisor_value)
 
 void set_pit(uint8_t vector)
 {
-
+    pit_time = 0;
     interrupt_disable();
     outbIO(PIT_MODE_COMMAND_REGISTER, 0x36); //
     set_pit_divisor(PIT_BASE_FREQUENCY / PIT_XANIN_FREQUENCY); // 10ms

@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <stdbool.h>
+#include <keyboard/scan_codes.h>
 
 #define XANIN_PMMNGR_BLOCK_SIZE 4096
 
@@ -84,6 +85,7 @@ typedef struct xchar xchar;
 extern "C" {
 #endif
 
+extern float pit_time;
 extern bool key_pressed(void);
 extern void wait_key(uint8_t key);
 extern char getchar(void);
@@ -126,7 +128,6 @@ uint32_t int_to_sectors(uint32_t num);
 
 
 extern bool app_exited;
-extern int last_command_exit_status;
 extern uint8_t null_region[20];
 
 typedef uint8_t* address_t;

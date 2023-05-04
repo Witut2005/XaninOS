@@ -296,7 +296,7 @@ int edit(char* file_name)
         xprintf("Couldn't open file %s\n", file_name);
         xprintf("Do want to create it?\nY/n ");
 
-        char selected_option = inputg().character;
+        char selected_option = inputc();
         if(selected_option == 'n' || selected_option == 'N')
             return XANIN_ERROR;
         file = fopen(file_name, "rw");

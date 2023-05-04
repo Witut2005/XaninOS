@@ -21,7 +21,7 @@ int timer_test(void)
     screen_clear();
 
     xprintf("Press 'a' to start...");
-    while(inputg().character != 'a');
+    while(inputc() != 'a');
 
     while(!app_exited)
     {

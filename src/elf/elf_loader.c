@@ -113,6 +113,14 @@ void elf_load(XinEntry* file)
 int elfreader(char* filename)
 {
     XinEntry* file = fopen(filename, "r");
+
+    if(file == NULL)
+    {
+        xprintf("%zNO SUCH FILE\n", stderr);
+        while(inputg().scan_code != ENTER);
+        return XANIN_ERROR;
+    }
+
     elf_load(file);
     return XANIN_OK;
 }
