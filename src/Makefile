@@ -21,7 +21,7 @@ build:
 	@echo [ASM] boot.asm
 	@$(ASM) -fbin ./boot/boot.asm
 
-	@echo [ASM] boot.asm
+	@echo [ASM] kernelLoader.asm
 	@$(ASM) -fbin ./boot/kernelLoader.asm
 	
 	@echo [ASM] xin_pointers.asm
@@ -339,7 +339,6 @@ build:
 	@echo [ASM] CRT0
 	nasm -f elf32 ./libc/crt0.asm -o libc/crt0.o
 
-
 	@echo [C] C_LIBARY
 	@i386-elf-ld -r ./libc/alloc.o \
 	./libc/hal.o \
@@ -443,6 +442,7 @@ build:
 	
 	cp ./libc/libc.o ./external_apps/libc.o
 	cp ./libc/libc.a ./external_apps/libc.a
+	cp ./libc/crt0.o ./external_apps/crt0.o
 
 	@echo "\033[0;32mCOMPILATION SUCCESS"
 	@echo "\033[0m"

@@ -5,21 +5,13 @@ global syscall_entry
 section .text
 
 syscall_entry:
-pushfd
 
-push ebx
-push edx
-push ecx
-push esi
-push edi
+pushfd
+pusha
 
 call syscall_handle
 
-pop edi
-pop esi
-pop ecx
-pop edx
-pop ebx
+popa 
 popfd
 
 iretd

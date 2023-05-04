@@ -30,7 +30,15 @@ bool elf_check_arch(uint8_t* file)
 
 void elf_load(XinEntry* file)
 {
-    uint8_t* data = (uint8_t*)calloc(file->size * SECTOR_SIZE);
+    uint8_t* data = (uint8_t*)calloc(file->size);
+
+    if(data == NULL)
+    {
+        xprintf("MEMORY OUT");
+        while(inputg().scan_code != ENTER);
+        return;
+    }
+
     fread(file, data, file->size * SECTOR_SIZE);
 
     xprintf("file size: %d\n", file->size);

@@ -2,6 +2,6 @@
 
 void main(void)
 {
-    xprintf("nicho");
+    putchar('n');
     return;
 }

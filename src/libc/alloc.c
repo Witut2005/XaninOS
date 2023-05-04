@@ -160,7 +160,7 @@ static inline uint32_t size_to_blocks_allocated(uint32_t size)
     return (size / PMMNGR_BLOCK_SIZE) + (size % PMMNGR_BLOCK_SIZE == 0 ? 0 : 1); 
 }
 
-uint32_t mmngr_mmap_free_block_find(uint8_t mode)
+uint32_t mmngr_mmap_free_block_find(uint8_t mode, uint32_t blocks)
 {
 
     
@@ -170,7 +170,21 @@ uint32_t mmngr_mmap_free_block_find(uint8_t mode)
         for(int i = kernel_heap_offset; i < kernel_heap_offset + kernel_heap_blocks; i++)
         {
             if(mmngr_mmap[i] == MEMORY_UNALLOCATED) 
-                return i;
+            {
+
+                if(i + blocks > kernel_heap_offset + kernel_heap_blocks)
+                    return UINT32_MAX;
+
+                bool ok = true;
+                for(int j = i; j < i + blocks; j++)
+                {
+                    if(mmngr_mmap[j] != MEMORY_UNALLOCATED)
+                        ok = false;
+                }
+                
+                if(ok)
+                    return i;
+            }
         }
 
         return UINT32_MAX;
@@ -183,7 +197,21 @@ uint32_t mmngr_mmap_free_block_find(uint8_t mode)
         for(int i = user_heap_offset; i < user_heap_offset + user_heap_blocks; i++)
         {
             if(mmngr_mmap[i] == MEMORY_UNALLOCATED) 
-                return i;
+            {
+
+                if(i + blocks > user_heap_offset + user_heap_blocks)
+                    return UINT32_MAX;
+
+                bool ok = true;
+                for(int j = i; j < i + blocks; j++)
+                {
+                    if(mmngr_mmap[j] != MEMORY_UNALLOCATED)
+                        ok = false;
+                }
+                
+                if(ok)
+                    return i;
+            }
         }
 
         return UINT32_MAX;
@@ -217,7 +245,7 @@ void mmngr_init(uint8_t* map, uint8_t* base, uint32_t blocks)
 void* mmngr_block_allocate(uint8_t mode, uint32_t size)
 {
 
-    uint32_t mmap_index = mmngr_mmap_free_block_find(mode);
+    uint32_t mmap_index = mmngr_mmap_free_block_find(mode, size_to_blocks_allocated(size));
 
     if(mmap_index == UINT32_MAX) // NO AVAILABLE MEMORY
         return (void*)NULL;
