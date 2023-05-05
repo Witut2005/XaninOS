@@ -1,20 +1,21 @@
-# xaninOS
+# XaninOS
 
 32-bit protected mode operating system made for educational purposes
 
 Features:
 
+- user can do all of its tasks in kernel mode
 - own bootloader
-- interrupt descriptor table (IDT)
-- all exceptions are handled
-- debugging commands(reg_dump, load, loadch)
-- configurated PIC
-- configurated keyboard controller
-- note (notepad)
+- debugging commands(load, loadch)
+- edit (notepad)
+- xpaint
 - paint
-- recreated some parts of C libaries
-- file system manipulation commands (create, mkdir)
-- usb detector
+- file system manipulation commands (ex. create, mkdir) 
+- implemented parts of posix syscalls set
+- networking
+- own memory allocator
+- own C++ library
+- own C library 
 - own file system (xin file system)
 - pong game
 
@@ -50,5 +51,5 @@ make run (you can find this file inside /src directory)
 ## Building XaninOS from source
 
 ```
-build.sh (you can find this file inside /src directory)
+make (within /src folder)
 ```
