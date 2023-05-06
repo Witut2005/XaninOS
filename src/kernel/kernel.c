@@ -17,7 +17,7 @@
 #include <devices/VGA/vga.h>
 #include <xin_fs/xin.h>
 #include <libc/assert.h>
-#include <libc/alloc.h>
+#include <kernel/pmmngr/alloc.h>
 #include <devices/APIC/apic_registers.h>
 #include <devices/APIC/apic.h>
 #include <devices/IOAPIC/ioapic.h>

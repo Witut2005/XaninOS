@@ -11,6 +11,8 @@
 #include <limits.h>
 #include <IDT/idt.h>
 
+#include <kernel/pmmngr/alloc.h>
+
 #define INTEL_8254X_DESCRIPTORS 256
 #define reset() write(0x0, 0x80000000)
 

@@ -1,6 +1,7 @@
 section .text
 
 extern main
+extern screen_init
 
 global _start
 _start:
@@ -23,6 +24,8 @@ _start:
 	; # Restore argc and argv.
 	; popq %rdi
 	; popq %rsi
+
+	call screen_init ; init XaninOS screen  
 
 	; # Run main
 	call main

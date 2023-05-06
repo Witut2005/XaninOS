@@ -36,6 +36,18 @@ int screen_clear(void)
 }
 
 
+void putc(char* str, uint32_t count)
+{
+    asm("mov eax, 4;"
+        "mov ebx, 1;"
+        "mov ecx, %0;"
+        "mov edx, %1;"
+        "int 0x80;"
+        :
+        : "g"(str), "g"(count)
+    );
+}
+
 
 char putchar(char character)
 {

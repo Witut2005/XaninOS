@@ -35,6 +35,7 @@ extern "C" {
 #endif
 
 int screen_clear(void);
+void putc(char* str, uint32_t count);
 char putchar(char character);
 char putchar_color(uint8_t color, char character);
 void print_bcd_number(uint8_t x);

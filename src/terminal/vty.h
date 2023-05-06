@@ -10,6 +10,9 @@
 
 #define VGA_TEXT_MEMORY 0xb8000
 
+// #ifndef VGA_HEIGHT
+// #define VGA_HEIGHT 25
+// #endif
 
 extern uint8_t logo_front_color;
 extern uint8_t logo_back_color;
@@ -50,7 +53,7 @@ typedef struct screen_t screen_t;
 
 extern screen_t Screen;
 
-extern uint16_t* screen_buffer[60];
+extern uint16_t* screen_rows[25];
 extern uint8_t index;
 
 extern uint8_t y,x;

@@ -62,6 +62,8 @@ class IcmpModule
 {
     // private: 
     static std::UnorderedMap<std::pair<uint16_t, uint16_t>, NetworkResponse*> PacketsInfo;
+    static uint32_t echo_id_global;
+    static uint32_t echo_seq_global;
 
     public:
     static void ping(uint32_t ip_dest, NetworkResponse* Response);

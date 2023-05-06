@@ -4,6 +4,7 @@
 #include <libc/string.h>
 #include <libc/stdiox.h>
 #include <libc/stdlibx.h>
+#include <kernel/pmmngr/alloc.h>
 
 uint32_t acpi_rdsp_base;
 acpi_rsdt* rsdt;

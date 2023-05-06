@@ -6,6 +6,7 @@
 
 #define VGA_SCREEN_RESOLUTION 4480
 #define VGA_TEXT_MEMORY 0xb8000
+#define VGA_HEIGHT 25
 // #define NULL 0x0
 
 
@@ -68,17 +69,17 @@ struct screen_t
 };
 
 typedef struct screen_t screen_t;
-screen_t Screen;
+screen_t Screen = {(uint16_t**)VGA_TEXT_MEMORY, 0, 0};
 
-uint16_t* screen_buffer[60];
+uint16_t* screen_rows[VGA_HEIGHT];
 
 void screen_init(void)
 {
     //screen.cursor = VGA_TEXT_MEMORY;
     
-    Screen.cursor = screen_buffer;
+    Screen.cursor = screen_rows;
 
-    for(int i = 0; i < 28; i++)
+    for(int i = 0; i < VGA_HEIGHT; i++)
         Screen.cursor[i] = (uint16_t*)(VGA_TEXT_MEMORY + (80 * i * 2));  
 
     Screen.x = 0x0;

@@ -1,5 +1,7 @@
 #pragma once
 
+extern int cpp_test(void);
+
 #include <terminal/interpreter.h>
 #include <terminal/terminal.h>
 #include <xaninApps/nic_info.c>
@@ -63,9 +65,7 @@
 #include <xaninApps/shutdown.c>
 #endif
 
-#ifdef REBOOT_APP
 #include <xaninApps/reboot.c>
-#endif
 
 #ifdef DEVICE_INFO_APP
 #include <xaninApps/device_info.c>
@@ -203,6 +203,7 @@ void scan(void)
 {
 
     screen_clear();
+    xprintf("AAA");
     last_command_exit_status = XANIN_OK;
     
     //legacy reasons
@@ -339,9 +340,9 @@ void scan(void)
     XANIN_ADD_APP_ENTRY0("dev-info", get_device_info)
     #endif
 
-    #ifdef REBOOT_APP
+    // #ifdef REBOOT_APP
     XANIN_ADD_APP_ENTRY0("reboot", reboot)
-    #endif
+    // #endif
 
     // XANIN_ADD_APP_ENTRY1("create", __sys_xin_file_create)
     XANIN_ADD_APP_ENTRY1("create", xin_create_file_app)

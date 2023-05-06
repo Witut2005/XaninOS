@@ -3,7 +3,6 @@
 #include <libc/time.h>
 #include <terminal/vty.h>
 #include <libc/colors.h>
-#include <libc/alloc.h>
 #include <libc/string.h>
 #include <libc/stdlibx.h>
 #include <pit/pit.h>
@@ -293,123 +292,61 @@ void merge_sort(int array[], int first, int last)
 
 }
 
-// void* malloc(uint32_t size)
-// {
-//     uint8_t* ptr = (uint8_t*)pmmngr_alloc_block();
-
-//     for(int i = 0; i < size / 4096; i++)
-//         pmmngr_alloc_block();
-
-//     return ptr;
-
-// }
-
-// void* calloc(uint32_t size)
-// {
-
-//     uint8_t* ptr = (uint8_t*)malloc(size);
-//     memset(ptr, 0, size);
-    
-//     return ptr;
-
-// }
-
-
-// void free(void* ptr)
-// {
-//     pmmngr_free_block(ptr);
-// }
-
-// void* realloc(void* ptr, uint32_t size_new)
-// {
-//     uint8_t* old_ptr = (uint8_t*)ptr;
-//     ptr = (void*)malloc(size_new);
-//     memcpy((uint8_t*)ptr, (uint8_t*)old_ptr, size_new);
-//     free(old_ptr);
-//     return ptr;
-// }
-
-////////////////////////////////
-
-void* kmalloc(uint32_t size)
-{
-    return mmngr_block_allocate(KERNEL_HEAP, size);
-}
 
 void* malloc(uint32_t size)
 {
-    return mmngr_block_allocate(USER_HEAP, size);
+    void* ret;
+    asm("mov eax, 100;" // malloc syscall id
+        "mov ecx, %1;"
+        "int 0x81;"
+        "mov %0, eax;"
+        :"=r"(ret)
+        :"g"(size)
+        );
+
+    return ret;
 }
 
-void* kcalloc(uint32_t size)
-{
-    uint8_t* tmp = mmngr_block_allocate(KERNEL_HEAP, size);
-
-    for(int i = 0; i < size; i++)
-        tmp[i] = 0;
-
-    return tmp;
-}
 
 void* calloc(uint32_t size)
 {
-    uint8_t* tmp = mmngr_block_allocate(USER_HEAP, size);
+    void* ret;
+    asm("mov eax, 101;" // callolc syscall id
+        "mov ecx, %1;"
+        "int 0x81;"
+        "mov %0, eax;"
+        :"=r"(ret)
+        :"g"(size)
+        );
 
-    for(int i = 0; i < size; i++)
-        tmp[i] = 0;
-
-    return tmp;
+    return ret;
 }
 
-void kfree(void * ptr)
-{
-    mmngr_block_free(KERNEL_HEAP, ptr);
-}
 
 void free(void* ptr)
 {
-    mmngr_block_free(USER_HEAP, ptr);
+    asm("mov eax, 103;" // free syscall id
+        "mov ecx, %0;"
+        "int 0x81;"
+        :
+        :"g"(ptr)
+        );
 }
 
-void* krealloc(void* ptr, uint32_t size)
-{
-    // interrupt_disable();
-
-    uint8_t* tmp = mmngr_block_allocate(KERNEL_HEAP, size);
-    memcpy(tmp, ptr, size);
-    mmngr_block_free(KERNEL_HEAP, ptr);
-
-    // interrupt_enable();
-
-    return tmp;
-}
 
 void* realloc(void* ptr, uint32_t size)
 {
-    // interrupt_disable();
+    void* ret;
+    asm("mov eax, 102;" // realloc syscall id
+        "mov ecx, %1;"
+        "int 0x81;"
+        "mov %0, eax;"
+        :"=r"(ret)
+        :"g"(size)
+        );
 
-    uint8_t* tmp = mmngr_block_allocate(USER_HEAP, size);
-    memcpy(tmp, ptr, size);
-    mmngr_block_free(USER_HEAP, ptr);
-
-    // interrupt_enable();
-
-    return tmp;
+    return ret;
 }
-
-void* mmngr_realloc(void* ptr, uint32_t size)
-{
-    // interrupt_disable();
-
-    uint8_t* tmp = mmngr_block_allocate(USER_HEAP, size);
-    memcpy(tmp, ptr, size);
-    mmngr_block_free(USER_HEAP, ptr);
-
-    // interrupt_enable();
-
-    return tmp;
-}
-
 
 char inputc(void)
 {

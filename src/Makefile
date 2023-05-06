@@ -42,14 +42,17 @@ build:
 	@echo [ASM] syscall_entry.asm
 	@$(ASM) -f elf32 ./syscall/syscall_entry.asm -o ./syscall/syscall_entry.o
 
+	@echo [ASM] xanin_sys_entry.asm
+	@$(ASM) -f elf32 ./syscall/xanin_sys_entry.asm -o ./syscall/xanin_sys_entry.o
+
 	@echo [ASM] enter_real_mode.asm
 	@$(ASM) -fbin ./libc/enter_real_mode.asm -o ./libc/enter_real_mode
 
 	@echo [ASM] shutdown.asm
 	@$(ASM) -fbin $(APPS)/shutdown.asm -o $(APPS)/shutdown
 
-	@echo [ASM] reboot.asm
-	@$(ASM) -fbin $(APPS)/reboot.asm -o $(APPS)/reboot
+	# @echo [ASM] reboot.asm
+	# @$(ASM) -fbin $(APPS)/reboot.asm -o $(APPS)/reboot
 
 	@echo [ASM] syscall_test.asm
 	@$(ASM) -fbin $(APPS)/syscall_test.asm -o  $(APPS)/syscall_test -w-other
@@ -232,10 +235,33 @@ build:
 	@$(CC) $(CC_OPTIONS) ./devices/NIC/ne2000.cpp -o ./devices/NIC/ne2000.o
 
  
-	@#C LIBARIES
+	@echo ///////////////////////////////////////////////
+
+	@echo C KERNEL LIBARIES
 
 	@echo [C] alloc.c
-	@$(C) $(C_OPTIONS) ./libc/alloc.c -o ./libc/alloc.o
+	@$(C) $(C_OPTIONS) ./kernel/pmmngr/alloc.c -o ./kernel/pmmngr/alloc.o
+
+
+	@echo ///////////////////////////////////////////////
+
+	@echo C KERNEL LIBARIES
+
+	@echo [C] alloc.c
+	@$(C) $(C_OPTIONS) ./kernel/pmmngr/alloc.c -o ./kernel/pmmngr/alloc.o
+
+
+	@echo ///////////////////////////////////////////////
+
+	@echo C XANIN_SYS  
+
+	@echo [C] alloc.c
+	@$(C) $(C_OPTIONS) ./syscall/xanin_sys/pmmngr/alloc.c -o ./syscall/xanin_sys/pmmngr/alloc.o
+
+
+	@echo ///////////////////////////////////////////////
+ 
+	@echo C USER LIBARIES
 
 	@echo [C] hal.c
 	@$(C) $(C_OPTIONS) ./libc/hal.c -o ./libc/hal.o
@@ -315,6 +341,9 @@ build:
 	@echo [C] xin_syscalls.c
 	@$(C) $(C_OPTIONS) ./xin_fs/xin_syscalls.c -o ./xin_fs/xin_syscalls.o
 
+	@echo [C] xanin_sys.c
+	@$(C) $(C_OPTIONS) ./syscall/xanin_sys/xanin_sys.c -o ./syscall/xanin_sys/xanin_sys.o
+
 	@echo [C] edit.c
 	@$(C) $(C_OPTIONS) ./xin_fs/edit.c -o ./xin_fs/edit.o
 
@@ -340,8 +369,7 @@ build:
 	nasm -f elf32 ./libc/crt0.asm -o libc/crt0.o
 
 	@echo [C] C_LIBARY
-	@i386-elf-ld -r ./libc/alloc.o \
-	./libc/hal.o \
+	@i386-elf-ld -r ./libc/hal.o \
 	./libc/math.o \
 	./libc/memory.o \
 	./libc/stdiox.o \
@@ -369,7 +397,9 @@ build:
 	@i386-elf-ar rsc ./libc/libc.a ./libc/libc.o ./libc/crt0.o
 
 	@echo [C] kernel.c
-	@$(C) $(C_COMPILE) kernel.c \
+	@$(C) $(C_COMPILE) ./kernel/kernel.c \
+	./kernel/pmmngr/alloc.o \
+	./syscall/xanin_sys/pmmngr/alloc.o \
 	./handlers/entries/divide_by_zero_exception.o \
 	./handlers/entries/debug_exception.o \
 	./handlers/entries/nmi_exception.o \
@@ -404,6 +434,8 @@ build:
 	./xaninGraphics/xaninGraphics.o \
 	./keyboard/keyboard.o \
 	./syscall/syscall_entry.o \
+	./syscall/xanin_sys_entry.o \
+	./syscall/xanin_sys/xanin_sys.o \
 	./xin_fs/edit.o \
 	./test/cpp_test.o \
 	./test/cpp_test2.o \

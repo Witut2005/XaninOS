@@ -17,7 +17,8 @@
         "string.h": "c",
         "stdint.h": "c",
         "response.h": "c",
-        "arp.h": "c"
+        "arp.h": "c",
+        "alloc.h": "c"
     },
     "C_Cpp.errorSquiggles": "disabled",
     "makefile.launchConfigurations": [

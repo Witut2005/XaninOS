@@ -3,6 +3,9 @@
 
 //http://www.brokenthorn.com/Resources/OSDev17.html
 
+#include <stdint.h>
+#include <stddef.h>
+#include <stdbool.h>
 
 typedef	uint32_t physical_addr;
 
@@ -65,7 +68,7 @@ enum MEMORY_ALLOCATOR_BLOCKS_STATES
     MEMORY_ALLOCATED_REGION_END = 0xFF
 };
 
-static inline int8_t* user_heap_base_get(void)
+static inline uint8_t* user_heap_base_get(void)
 {
     return user_heap_base;
 }
@@ -76,10 +79,19 @@ static inline uint8_t* kernel_heap_base_get(void)
 }
 
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 uint32_t mmngr_mmap_free_block_find(uint8_t mode, uint32_t blocks);
 void mmngr_init(uint8_t* map, uint8_t* base, uint32_t size);
-// void mmngr_init_region(uint32_t offset, uint32_t size);
-// void mmngr_deinit_region(uint32_t offset, uint32_t size);
 void* mmngr_block_allocate(uint8_t mode, uint32_t size);
 void mmngr_block_free(uint8_t mode, void* ptr);
+void* kmalloc(uint32_t size);
+void* kcalloc(uint32_t size);
+void kfree(void* ptr);
+void* krealloc(void* ptr, uint32_t size);
+
+#ifdef __cplusplus
+}
+#endif

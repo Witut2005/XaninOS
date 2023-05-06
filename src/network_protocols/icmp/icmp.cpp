@@ -5,13 +5,11 @@
 #include <libcpp/endian.h>
 #include <libc/memory.h>
 
-uint32_t echo_id_global = 45;
-uint32_t echo_seq_global = 0;
 
 NetworkResponse* IcmpResponse;
 std::UnorderedMap<std::pair<uint16_t, uint16_t>, NetworkResponse*> IcmpModule::PacketsInfo;
-
-
+uint32_t IcmpModule::echo_id_global;
+uint32_t IcmpModule::echo_seq_global;
 
 void IcmpModule::ping(uint32_t ip_dest, NetworkResponse* Response)
 {
@@ -22,15 +20,16 @@ void IcmpModule::ping(uint32_t ip_dest, NetworkResponse* Response)
     RequestPacket->type = ICMP_ECHO_REQUEST;
     RequestPacket->code = 0x0;
     
-    RequestPacket->echo_id = BIG_ENDIAN(echo_id_global);
-    RequestPacket->echo_sequence = BIG_ENDIAN(echo_seq_global);
+    RequestPacket->echo_id = BIG_ENDIAN(IcmpModule::echo_id_global);
+    RequestPacket->echo_sequence = BIG_ENDIAN(IcmpModule::echo_seq_global);
     
     RequestPacket->checksum = 0x0;
     RequestPacket->checksum = ipv4_checksum_get((address_t)RequestPacket, sizeof(IcmpPacket));
 
-    echo_seq_global++;
-    echo_id_global++;
-    
+    IcmpModule::echo_seq_global++;
+    IcmpModule::echo_id_global++;
+
+    // xprintf("%d %d\n", IcmpModule::echo_id_global, IcmpModule::echo_seq_global);
 
     ipv4_packet_send(ip_dest, xanin_ip_get(), INTERNET_CONTROL_MESSAGE_PROTOCOL, 64, (uint8_t*)RequestPacket, sizeof(IcmpPacket), Response);
     free(RequestPacket);

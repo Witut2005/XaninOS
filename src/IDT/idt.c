@@ -10,6 +10,7 @@
 
 extern void mouse_handler_init(void);
 extern void i8254x_interrupt_handler_entry(void);
+extern void xanin_sys_entry(void);
 extern void syscall_entry(void);
 
 #define IDT_HANDLERS 256
@@ -57,15 +58,6 @@ typedef struct
 
 __attribute__((aligned(0x8))) IDT idtEntries[IDT_HANDLERS];
 
-
-// void configure_idt_entry(uint8_t idt_entry, uint32_t offset, uint16_t segment)
-// {
-//     idtEntries[idt_entry].off_0_15 = (uint16_t)(((uint32_t)&offset & 0x0000ffff));
-//     idtEntries[idt_entry].off_16_31 = (uint16_t)((uint32_t)&offset >> 16);
-//     idtEntries[idt_entry].segment = segment;
-//     idtEntries[idt_entry].res = 0x0;
-//     idtEntries[idt_entry].P_DPL = 0x8e;
-// }
 
 irq_handler interrupt_handlers[0x100];
 
@@ -125,6 +117,7 @@ void set_idt(void)
     configure_idt_entry(0x50, interrupt_handlers[0x50], CODE_SEGMENT);
 
     configure_idt_entry(0x80, syscall_entry, CODE_SEGMENT);
+    configure_idt_entry(0x81, xanin_sys_entry, CODE_SEGMENT);
     // configure_idt_entry(0x81, interrupt_handlers[0x81], CODE_SEGMENT);
     configure_idt_entry(0xFF, reboot_interrupt, CODE_SEGMENT);
 
