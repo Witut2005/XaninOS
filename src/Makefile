@@ -12,227 +12,250 @@ CC_OPTIONS =  -O0 -fno-exceptions -lstdc++ -masm=intel -std=c++17 -Wno-builtin-d
 C_OPTIONS  =  -O0 -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Werror=return-type -I $(XANIN_PATH) -c
 
 ASM	= nasm
-APPS = ./xaninApps
+APPS = ./programs
 
-HANDLERS = ./handlers
+HANDLERS = ./sys/interrupts/handlers
 
 build:
+
+	@echo "\n///////////////////////////////////////////////"
+	@echo "\033[0;32mBOOT MODULE COMPILATION PHARSE"
+	@echo "\033[0m"
 
 	@echo [ASM] boot.asm
 	@$(ASM) -fbin ./boot/boot.asm
 
 	@echo [ASM] kernelLoader.asm
 	@$(ASM) -fbin ./boot/kernelLoader.asm
+
+	@echo "\n///////////////////////////////////////////////"
 	
+
+	@echo "\033[0;32mFILE SYSTEM MODULE COMPILATION PHARSE"
+	@echo "\033[0m"
+
 	@echo [ASM] xin_pointers.asm
-	@$(ASM) -fbin ./xin_fs/xin_pointers.asm
+	@$(ASM) -fbin ./fs/xin_pointers.asm
 
 	@echo [ASM] entries_table.asm
-	@$(ASM) -fbin ./xin_fs/entries_table.asm
-	
-	@echo [ASM] keyboard.asm
-	@$(ASM) -f elf32 ./keyboard/keyboard.asm -o ./keyboard/keyboard.o
+	@$(ASM) -fbin ./fs/entries_table.asm
 
-	@ echo [ASM] registers_values_get.asm
-	@ $(ASM) -f elf32 ./libc/registers_values_get.asm -o ./libc/registers_values_get.o
-	
+	@echo [C] xin.c
+	@$(C) $(C_OPTIONS) ./fs/xin.c -o ./fs/xin.o
+
+	@echo [C] xin_syscalls.c
+	@$(C) $(C_OPTIONS) ./fs/xin_syscalls.c -o ./fs/xin_syscalls.o
+
+	@echo [ASM] xin_extended_table.asm
+	@$(ASM) ./fs/xin_extended_table.asm -o ./fs/xin_extended_table
+
+	@echo "\n///////////////////////////////////////////////"
+
+	@echo "\033[0;32mDEVICE DRIVES MODULE COMPILATION PHARSE"
+	@echo "\033[0m"
+
+	@echo [ASM] keyboard.asm
+	@$(ASM) -f elf32 ./sys/devices/keyboard/keyboard.asm -o ./sys/devices/keyboard/keyboard.o
+
 	@echo [ASM] pit.asm
-	@$(ASM) -f elf32 ./pit/pit.asm -o ./pit/pit_entry.o
+	@$(ASM) -f elf32 ./sys/devices/pit/pit.asm -o ./sys/devices/pit/pit_entry.o
+	
+	@echo [C] pc_speaker.c
+	@$(C) $(C_OPTIONS) ./sys/devices/pcspk/pc_speaker.c -o ./sys/devices/pcspk/pc_speaker.o
+
+	@echo [C] mouse.c
+	@$(C) $(C_OPTIONS) ./sys/devices/mouse/mouse.c -o ./sys/devices/mouse/mouse.o
+
+	@echo [ASM] mouse.asm
+	@$(ASM) -f elf32 ./sys/devices/mouse/mouse.asm -o ./sys/devices/mouse/mouse_init.o
+
+	@echo [CC] com.cpp
+	@$(CC) $(CC_OPTIONS) ./sys/devices/com/com.cpp -o ./sys/devices/com/ComPort.o
+
+	@echo [CC] ioapic.cpp
+	@$(CC) $(CC_OPTIONS) ./sys/devices/ioapic/ioapic.cpp -o ./sys/devices/ioapic/ioapic.o
+
+	@echo [ASM] 8254x INTERRUPT ENTRY
+	@$(ASM) -f elf32 ./sys/devices/nic/8254x_int_handler.asm -o ./sys/devices/nic/8254x_int_handler.o
+
+	@echo [CC] 8254x.cpp
+	@$(CC) $(CC_OPTIONS) ./sys/devices/nic/8254x.cpp -o ./sys/devices/nic/8254x.o
+
+	@echo "\n///////////////////////////////////////////////"
+
+	
+	@echo "\033[0;32mSYSCALL MODULE COMPILATION PHARSE"
+	@echo "\033[0m"
 
 	@echo [ASM] syscall_entry.asm
-	@$(ASM) -f elf32 ./syscall/syscall_entry.asm -o ./syscall/syscall_entry.o
+	@$(ASM) -f elf32 ./sys/call/syscall_entry.asm -o ./sys/call/syscall_entry.o
 
 	@echo [ASM] xanin_sys_entry.asm
-	@$(ASM) -f elf32 ./syscall/xanin_sys_entry.asm -o ./syscall/xanin_sys_entry.o
+	@$(ASM) -f elf32 ./sys/call/xanin_sys_entry.asm -o ./sys/call/xanin_sys_entry.o
 
+	@ echo [ASM] registers_values_get.asm
+	@ $(ASM) -f elf32 ./lib/libc/registers_values_get.asm -o ./lib/libc/registers_values_get.o
+	
 	@echo [ASM] enter_real_mode.asm
-	@$(ASM) -fbin ./libc/enter_real_mode.asm -o ./libc/enter_real_mode
+	@$(ASM) -fbin ./lib/libc/enter_real_mode.asm -o ./lib/libc/enter_real_mode
 
 	@echo [ASM] shutdown.asm
 	@$(ASM) -fbin $(APPS)/shutdown.asm -o $(APPS)/shutdown
-
-	# @echo [ASM] reboot.asm
-	# @$(ASM) -fbin $(APPS)/reboot.asm -o $(APPS)/reboot
-
-	@echo [ASM] syscall_test.asm
-	@$(ASM) -fbin $(APPS)/syscall_test.asm -o  $(APPS)/syscall_test -w-other
 
 	@echo [ASM] xanin_apps_space.asm
 	@$(ASM) -fbin $(APPS)/xanin_apps_space.asm -o $(APPS)/xanin_apps_space
 
 	@echo [ASM] instruction_pointer.asm
-	@$(ASM) -f elf32 ./libc/instruction_pointer.asm -o ./libc/instruction_pointer.o
+	@$(ASM) -f elf32 ./lib/libc/instruction_pointer.asm -o ./lib/libc/instruction_pointer.o
 
 	@echo [ASM] real_mode_fswitch.asm
-	@$(ASM) -fbin ./libc/real_mode_fswitch.asm -o ./libc/real_mode_fswitch_asm
+	@$(ASM) -fbin ./lib/libc/real_mode_fswitch.asm -o ./lib/libc/real_mode_fswitch_asm
 
 	@echo [ASM] xanin_state.asm
-	@$(ASM) -f elf32 ./libc/xanin_state.asm -o ./libc/xanin_state.o
+	@$(ASM) -f elf32 ./lib/libc/xanin_state.asm -o ./lib/libc/xanin_state.o
 
 	@echo [ASM] divide_by_zero_exception
-	@$(ASM) -f elf32 ./handlers/entries/divide_by_zero_exception.asm -o ./handlers/entries/divide_by_zero_exception.o
+	@$(ASM) -f elf32 ./sys/interrupts/handlers/entries/divide_by_zero_exception.asm -o ./sys/interrupts/handlers/entries/divide_by_zero_exception.o
 
 	@echo [ASM] debug_exception
-	@$(ASM) -f elf32 ./handlers/entries/debug_exception.asm -o ./handlers/entries/debug_exception.o
+	@$(ASM) -f elf32 ./sys/interrupts/handlers/entries/debug_exception.asm -o ./sys/interrupts/handlers/entries/debug_exception.o
 
 	@echo [ASM] nmi_exception
-	@$(ASM) -f elf32 ./handlers/entries/nmi_exception.asm -o ./handlers/entries/nmi_exception.o
+	@$(ASM) -f elf32 ./sys/interrupts/handlers/entries/nmi_exception.asm -o ./sys/interrupts/handlers/entries/nmi_exception.o
 
 	@echo [ASM] breakpoint_exception 
-	@$(ASM) -f elf32 ./handlers/entries/breakpoint_exception.asm -o ./handlers/entries/breakpoint_exception.o
+	@$(ASM) -f elf32 ./sys/interrupts/handlers/entries/breakpoint_exception.asm -o ./sys/interrupts/handlers/entries/breakpoint_exception.o
 
 	@echo [ASM] overflow_exception 
-	@$(ASM) -f elf32 ./handlers/entries/overflow_exception.asm -o ./handlers/entries/overflow_exception.o
+	@$(ASM) -f elf32 ./sys/interrupts/handlers/entries/overflow_exception.asm -o ./sys/interrupts/handlers/entries/overflow_exception.o
 
 	@echo [ASM] bound_range_exceeded_exception
-	@$(ASM) -f elf32 ./handlers/entries/bound_range_exceeded_exception.asm -o ./handlers/entries/bound_range_exceeded_exception.o
+	@$(ASM) -f elf32 ./sys/interrupts/handlers/entries/bound_range_exceeded_exception.asm -o ./sys/interrupts/handlers/entries/bound_range_exceeded_exception.o
 
 	@echo [ASM] invalid_opcode_exception 
-	@$(ASM) -f elf32 ./handlers/entries/invalid_opcode_exception.asm -o ./handlers/entries/invalid_opcode_exception.o
+	@$(ASM) -f elf32 ./sys/interrupts/handlers/entries/invalid_opcode_exception.asm -o ./sys/interrupts/handlers/entries/invalid_opcode_exception.o
 
 	@echo [ASM] device_not_availble_exception
-	@$(ASM) -f elf32 ./handlers/entries/device_not_availble_exception.asm -o ./handlers/entries/device_not_availble_exception.o
+	@$(ASM) -f elf32 ./sys/interrupts/handlers/entries/device_not_availble_exception.asm -o ./sys/interrupts/handlers/entries/device_not_availble_exception.o
 
 	@echo [ASM] double_fault_exception 
-	@$(ASM) -f elf32 ./handlers/entries/double_fault_exception.asm -o ./handlers/entries/double_fault_exception.o
+	@$(ASM) -f elf32 ./sys/interrupts/handlers/entries/double_fault_exception.asm -o ./sys/interrupts/handlers/entries/double_fault_exception.o
 
 	@echo [ASM] coprocessor_segment_overrun_exception
-	@$(ASM) -f elf32 ./handlers/entries/coprocessor_segment_overrun_exception.asm -o ./handlers/entries/coprocessor_segment_overrun_exception.o
+	@$(ASM) -f elf32 ./sys/interrupts/handlers/entries/coprocessor_segment_overrun_exception.asm -o ./sys/interrupts/handlers/entries/coprocessor_segment_overrun_exception.o
 
 	@echo [ASM] invalid_tss_exception
-	@$(ASM) -f elf32 ./handlers/entries/invalid_tss_exception.asm -o ./handlers/entries/invalid_tss_exception.o
+	@$(ASM) -f elf32 ./sys/interrupts/handlers/entries/invalid_tss_exception.asm -o ./sys/interrupts/handlers/entries/invalid_tss_exception.o
 
 	@echo [ASM] segment_not_present_exception
-	@$(ASM) -f elf32 ./handlers/entries/segment_not_present_exception.asm -o ./handlers/entries/segment_not_present_exception.o
+	@$(ASM) -f elf32 ./sys/interrupts/handlers/entries/segment_not_present_exception.asm -o ./sys/interrupts/handlers/entries/segment_not_present_exception.o
 
 	@echo [ASM] stack_fault_exception
-	@$(ASM) -f elf32 ./handlers/entries/stack_fault_exception.asm -o ./handlers/entries/stack_fault_exception.o
+	@$(ASM) -f elf32 ./sys/interrupts/handlers/entries/stack_fault_exception.asm -o ./sys/interrupts/handlers/entries/stack_fault_exception.o
 
 	@echo [ASM] general_protection_exception 
-	@$(ASM) -f elf32 ./handlers/entries/general_protection_exception.asm -o ./handlers/entries/general_protection_exception.o
+	@$(ASM) -f elf32 ./sys/interrupts/handlers/entries/general_protection_exception.asm -o ./sys/interrupts/handlers/entries/general_protection_exception.o
 
 	@echo [ASM] page_fault_exception
-	@$(ASM) -f elf32 ./handlers/entries/page_fault_exception.asm -o ./handlers/entries/page_fault_exception.o
+	@$(ASM) -f elf32 ./sys/interrupts/handlers/entries/page_fault_exception.asm -o ./sys/interrupts/handlers/entries/page_fault_exception.o
 
 	@echo [ASM] x86_fpu_floating_point_exception 
-	@$(ASM) -f elf32 ./handlers/entries/x86_fpu_floating_point_exception.asm -o ./handlers/entries/x86_fpu_floating_point_exception.o
+	@$(ASM) -f elf32 ./sys/interrupts/handlers/entries/x86_fpu_floating_point_exception.asm -o ./sys/interrupts/handlers/entries/x86_fpu_floating_point_exception.o
 
 	@echo [ASM] aligment_check_exception
-	@$(ASM) -f elf32 ./handlers/entries/aligment_check_exception.asm -o ./handlers/entries/aligment_check_exception.o
+	@$(ASM) -f elf32 ./sys/interrupts/handlers/entries/aligment_check_exception.asm -o ./sys/interrupts/handlers/entries/aligment_check_exception.o
 
 	@echo [ASM] machine_check_exception
-	@$(ASM) -f elf32 ./handlers/entries/machine_check_exception.asm -o ./handlers/entries/machine_check_exception.o
+	@$(ASM) -f elf32 ./sys/interrupts/handlers/entries/machine_check_exception.asm -o ./sys/interrupts/handlers/entries/machine_check_exception.o
 
 	@echo [ASM] simd_floating_point_exception
-	@$(ASM) -f elf32 ./handlers/entries/simd_floating_point_exception.asm -o ./handlers/entries/simd_floating_point_exception.o
+	@$(ASM) -f elf32 ./sys/interrupts/handlers/entries/simd_floating_point_exception.asm -o ./sys/interrupts/handlers/entries/simd_floating_point_exception.o
 
 	@echo [ASM] virtualization_exception
-	@$(ASM) -f elf32 ./handlers/entries/virtualization_exception.asm -o ./handlers/entries/virtualization_exception.o
+	@$(ASM) -f elf32 ./sys/interrupts/handlers/entries/virtualization_exception.asm -o ./sys/interrupts/handlers/entries/virtualization_exception.o
 
 	@echo [ASM] coprocessor_segment_overrun_exception
-	@$(ASM) -f elf32 ./handlers/entries/coprocessor_segment_overrun_exception.asm -o ./handlers/entries/coprocessor_segment_overrun_exception.o
+	@$(ASM) -f elf32 ./sys/interrupts/handlers/entries/coprocessor_segment_overrun_exception.asm -o ./sys/interrupts/handlers/entries/coprocessor_segment_overrun_exception.o
 
 	@echo [ASM] netapi_interrupt
-	@$(ASM) -f elf32 ./netapi/netapi_interrupt.asm -o ./netapi/netapi_interrupt.o
+	@$(ASM) -f elf32 ./sys/net/netapi/netapi_interrupt.asm -o ./sys/net/netapi/netapi_interrupt.o
 
 	@echo [CPP] ip.cpp
-	@$(CC) $(CC_OPTIONS) ./netapi/objects/ip.cpp -o ./netapi/objects/ip.o 
+	@$(CC) $(CC_OPTIONS) ./sys/net/netapi/objects/ip.cpp -o ./sys/net/netapi/objects/ip.o 
 
 	@echo [CC] apic.cpp
-	@$(CC) $(CC_OPTIONS) ./devices/APIC/apic.cpp -o ./devices/APIC/apic.o
+	@$(CC) $(CC_OPTIONS) ./sys/devices/apic/apic.cpp -o ./sys/devices/apic/apic.o
 
 	@echo [CC] cpp_test.cpp
-	@$(CC) $(CC_OPTIONS) ./test/cpp_test.cpp -o ./test/cpp_test.o
-
-	@echo [C] pc_speaker.c
-	@$(C) $(C_OPTIONS) ./devices/PCSPK/pc_speaker.c -o ./devices/PCSPK/pc_speaker.o
-
-	@echo [C] mouse.c
-	@$(C) $(C_OPTIONS) ./devices/MOUSE/mouse.c -o ./devices/MOUSE/mouse.o
-
-	# @echo [CC] mouse.cpp
-	# @$(CC) $(CC_OPTIONS) ./devices/mouse.cpp -o ./devices/mouse.o
-
-	@echo [ASM] mouse.asm
-	@$(ASM) -f elf32 ./devices/MOUSE/mouse.asm -o ./devices/MOUSE/mouse_init.o
-
-	@echo [CC] com.cpp
-	@$(CC) $(CC_OPTIONS) ./devices/COM/com.cpp -o ./devices/COM/ComPort.o
-
-	@echo [CC] ioapic.cpp
-	@$(CC) $(CC_OPTIONS) ./devices/IOAPIC/ioapic.cpp -o ./devices/IOAPIC/ioapic.o
+	@$(CC) $(CC_OPTIONS) ./programs/test/cpp_test.cpp -o ./programs/test/cpp_test.o
 
 	@echo [CC] regex.cpp
-	@$(CC) $(CC_OPTIONS) ./libcpp/regex.cpp -o ./libcpp/regex.o 
+	@$(CC) $(CC_OPTIONS) ./lib/libcpp/regex.cpp -o ./lib/libcpp/regex.o 
 
 	@echo [C] xgl.c
-	@$(C) $(C_OPTIONS) ./xgl/xgl.c -o ./xgl/xgl.o
+	@$(C) $(C_OPTIONS) ./lib/xgl/xgl.c -o ./lib/xgl/xgl.o
 	
-	@echo [ASM] 8254x INTERRUPT ENTRY
-	@$(ASM) -f elf32 ./devices/NIC/8254x_int_handler.asm -o ./devices/NIC/8254x_int_handler.o
 
 	@echo [ASM] fast_return_to_32_mode.asm 
-	@$(ASM) -fbin ./libc/fast_return_to_32_mode.asm -o ./libc/fast_return_to_32_mode
+	@$(ASM) -fbin ./lib/libc/fast_return_to_32_mode.asm -o ./lib/libc/fast_return_to_32_mode
 
-	@echo [CC] 8254x.cpp
-	@$(CC) $(CC_OPTIONS) ./devices/NIC/8254x.cpp -o ./devices/NIC/8254x.o
 
 	@echo [CC] EthernetFrameInterface
-	@$(CC) $(CC_OPTIONS) ./network_protocols/ethernet_frame/ethernet_frame.cpp -o ./network_protocols/ethernet_frame/ethernet_frame.o
+	@$(CC) $(CC_OPTIONS) ./sys/net/network_protocols/ethernet_frame/ethernet_frame.cpp -o ./sys/net/network_protocols/ethernet_frame/ethernet_frame.o
 
 	@echo [CC] arp.cpp
-	@$(CC) $(CC_OPTIONS) ./network_protocols/arp/arp.cpp -o ./network_protocols/arp/arp.o
+	@$(CC) $(CC_OPTIONS) ./sys/net/network_protocols/arp/arp.cpp -o ./sys/net/network_protocols/arp/arp.o
 
 	@echo [CC] ip.cpp
-	@$(CC) $(CC_OPTIONS) ./network_protocols/internet_protocol/ipv4/ip.cpp -o ./network_protocols/internet_protocol/ipv4/ip.o
+	@$(CC) $(CC_OPTIONS) ./sys/net/network_protocols/internet_protocol/ipv4/ip.cpp -o ./sys/net/network_protocols/internet_protocol/ipv4/ip.o
 
 	@echo [CC] udp.cpp
-	@$(CC) $(CC_OPTIONS) ./network_protocols/udp/udp.cpp -o ./network_protocols/udp/udp.o
+	@$(CC) $(CC_OPTIONS) ./sys/net/network_protocols/udp/udp.cpp -o ./sys/net/network_protocols/udp/udp.o
 
 	@echo [C] idt.c
-	@$(C) $(C_OPTIONS) ./IDT/idt.c -o ./IDT/idt.o
+	@$(C) $(C_OPTIONS) ./sys/interrupts/idt/idt.c -o ./sys/interrupts/idt/idt.o
 
 	@echo [CC] icmp.cpp
-	@$(CC) $(CC_OPTIONS) ./network_protocols/icmp/icmp.cpp -o ./network_protocols/icmp/icmp.o
+	@$(CC) $(CC_OPTIONS) ./sys/net/network_protocols/icmp/icmp.cpp -o ./sys/net/network_protocols/icmp/icmp.o
 
 	@echo [CC] screenshot.cpp
-	@$(CC) $(CC_OPTIONS) ./xaninApps/screenshot.cpp -o ./xaninApps/screenshot.o
+	@$(CC) $(CC_OPTIONS) ./programs/screenshot.cpp -o ./programs/screenshot.o
 
-	@echo [CC] xagame.cpp
-	@$(CC) $(CC_OPTIONS) ./game_engine/xagame.cpp -o ./game_engine/xagame.o
+	@echo [CC] game_engine.cpp
+	@$(CC) $(CC_OPTIONS) ./lib/game_engine/xagame.cpp -o ./lib/game_engine/xagame.o
 
 	@echo [CC] xagame_test.cpp
-	@$(CC) $(CC_OPTIONS) ./xagames/xagame_test.cpp -o ./xagames/xagame_test.o
+	@$(CC) $(CC_OPTIONS) ./programs/xagames/xagame_test.cpp -o ./programs/xagames/xagame_test.o
 
 	@echo [CC] tetris.cpp
-	@$(CC) $(CC_OPTIONS) ./xagames/tetris.cpp -o ./xagames/tetris.o
+	@$(CC) $(CC_OPTIONS) ./programs/xagames/tetris.cpp -o ./programs/xagames/tetris.o
 
 	@# @echo [CC] bytes.cpp
-	@# @$(CC) $(CC_OPTIONS) ./libcpp/bytes.cpp -o ./libcpp/bytes.o
+	@# @$(CC) $(CC_OPTIONS) ./lib/libcpp/bytes.cpp -o ./lib/libcpp/bytes.o
 
 	@# @echo [CC] tuple.hpp
-	@# @$(CC) $(CC_OPTIONS) ./libcpp/tuple.hpp -o ./libcpp/tuple.o
+	@# @$(CC) $(CC_OPTIONS) ./lib/libcpp/tuple.hpp -o ./lib/libcpp/tuple.o
 
 	@echo [CC] endian.cpp
-	@$(CC) $(CC_OPTIONS) ./libcpp/endian.cpp -o ./libcpp/endian.o
+	@$(CC) $(CC_OPTIONS) ./lib/libcpp/endian.cpp -o ./lib/libcpp/endian.o
 
 	@echo [CC] network_device.cpp
-	@$(CC) $(CC_OPTIONS) ./netapi/network_device.cpp -o ./netapi/network_devicecpp.o
+	@$(CC) $(CC_OPTIONS) ./sys/net/netapi/network_device.cpp -o ./sys/net/netapi/network_devicecpp.o
 
 	@echo [CC] loopback.cpp
-	@$(CC) $(CC_OPTIONS) ./netapi/loopback/loopback.cpp -o ./netapi/loopback/loopback.o
+	@$(CC) $(CC_OPTIONS) ./sys/net/netapi/loopback/loopback.cpp -o ./sys/net/netapi/loopback/loopback.o
 
 	@echo [C] response.c
-	@$(CC) $(CC_OPTIONS) ./netapi/objects/response.c -o ./netapi/objects/response.o
+	@$(CC) $(CC_OPTIONS) ./sys/net/netapi/objects/response.c -o ./sys/net/netapi/objects/response.o
 
 	@echo [CC] mac.cpp
-	@$(CC) $(CC_OPTIONS) ./netapi/objects/mac.cpp -o ./netapi/objects/mac.o 
+	@$(CC) $(CC_OPTIONS) ./sys/net/netapi/objects/mac.cpp -o ./sys/net/netapi/objects/mac.o 
 
 	@echo [CC] dhcp.cpp
-	@$(CC) $(CC_OPTIONS) ./network_protocols/dhcp/dhcp.cpp -o ./network_protocols/dhcp/dhcp.o
+	@$(CC) $(CC_OPTIONS) ./sys/net/network_protocols/dhcp/dhcp.cpp -o ./sys/net/network_protocols/dhcp/dhcp.o
 
 	@echo [CC] ne2000.cpp
-	@$(CC) $(CC_OPTIONS) ./devices/NIC/ne2000.cpp -o ./devices/NIC/ne2000.o
+	@$(CC) $(CC_OPTIONS) ./sys/devices/nic/ne2000.cpp -o ./sys/devices/nic/ne2000.o
 
  
 	@echo ///////////////////////////////////////////////
@@ -240,7 +263,10 @@ build:
 	@echo C KERNEL LIBARIES
 
 	@echo [C] alloc.c
-	@$(C) $(C_OPTIONS) ./kernel/pmmngr/alloc.c -o ./kernel/pmmngr/alloc.o
+	@$(C) $(C_OPTIONS) ./sys/pmmngr/alloc.c -o ./sys/pmmngr/alloc.o
+
+	@echo [C] input.c
+	@$(C) $(C_OPTIONS) ./sys/input/input.c -o ./sys/input/input.o
 
 
 	@echo ///////////////////////////////////////////////
@@ -248,7 +274,7 @@ build:
 	@echo C KERNEL LIBARIES
 
 	@echo [C] alloc.c
-	@$(C) $(C_OPTIONS) ./kernel/pmmngr/alloc.c -o ./kernel/pmmngr/alloc.o
+	@$(C) $(C_OPTIONS) ./sys/pmmngr/alloc.c -o ./sys/pmmngr/alloc.o
 
 
 	@echo ///////////////////////////////////////////////
@@ -256,7 +282,7 @@ build:
 	@echo C XANIN_SYS  
 
 	@echo [C] alloc.c
-	@$(C) $(C_OPTIONS) ./syscall/xanin_sys/pmmngr/alloc.c -o ./syscall/xanin_sys/pmmngr/alloc.o
+	@$(C) $(C_OPTIONS) ./sys/call/xanin_sys/pmmngr/alloc.c -o ./sys/call/xanin_sys/pmmngr/alloc.o
 
 
 	@echo ///////////////////////////////////////////////
@@ -264,229 +290,219 @@ build:
 	@echo C USER LIBARIES
 
 	@echo [C] hal.c
-	@$(C) $(C_OPTIONS) ./libc/hal.c -o ./libc/hal.o
+	@$(C) $(C_OPTIONS) ./lib/libc/hal.c -o ./lib/libc/hal.o
 
 	@echo [C] math.c
-	@$(C) $(C_OPTIONS) ./libc/math.c -o ./libc/math.o
+	@$(C) $(C_OPTIONS) ./lib/libc/math.c -o ./lib/libc/math.o
 
 	@echo [C] memory.c
-	@$(C) $(C_OPTIONS) ./libc/memory.c -o ./libc/memory.o
+	@$(C) $(C_OPTIONS) ./lib/libc/memory.c -o ./lib/libc/memory.o
 
 	@echo [C] stdiox.c
-	@$(C) $(C_OPTIONS) ./libc/stdiox.c -o ./libc/stdiox.o
+	@$(C) $(C_OPTIONS) ./lib/libc/stdiox.c -o ./lib/libc/stdiox.o
 
 	@echo [C] stdlibx.c
-	@$(C) $(C_OPTIONS) ./libc/stdlibx.c -o ./libc/stdlibx.o
-
-	@echo [C] kernel.c-library
-	@$(C) $(C_OPTIONS) ./libc/kernel.c -o ./libc/kernel.o
+	@$(C) $(C_OPTIONS) ./lib/libc/stdlibx.c -o ./lib/libc/stdlibx.o
 
 	@echo [C] signal.c
-	@$(C) $(C_OPTIONS) ./libc/signal.c -o ./libc/signal.o
+	@$(C) $(C_OPTIONS) ./lib/libc/signal.c -o ./lib/libc/signal.o
 
 	@echo [C] tui.c
-	@$(C) $(C_OPTIONS) ./tui/tui.c -o ./tui/tui.o
+	@$(C) $(C_OPTIONS) ./lib/tui/tui.c -o ./lib/tui/tui.o
 
 	@echo [C] terminal.c
-	@$(C) $(C_OPTIONS) ./terminal/terminal.c -o ./terminal/terminal.o
+	@$(C) $(C_OPTIONS) ./sys/terminal/interface/terminal.c -o ./sys/terminal/interface/terminal.o
 
 	@echo [C] data_structures.c
-	@$(C) $(C_OPTIONS) ./libc/data_structures.c -o ./libc/data_structures.o
+	@$(C) $(C_OPTIONS) ./lib/libc/data_structures.c -o ./lib/libc/data_structures.o
 
 	@echo [C] system.c
-	@$(C) $(C_OPTIONS) ./libc/system.c -o ./libc/system.o
+	@$(C) $(C_OPTIONS) ./lib/libc/system.c -o ./lib/libc/system.o
 
 	@echo [C] string.c
-	@$(C) $(C_OPTIONS) ./libc/string.c -o ./libc/string.o
+	@$(C) $(C_OPTIONS) ./lib/libc/string.c -o ./lib/libc/string.o
 
 	@echo [CC] algorithm.cpp
-	@$(CC) $(CC_OPTIONS) ./libcpp/algorithm.cpp -o ./libcpp/algorithm.o
+	@$(CC) $(CC_OPTIONS) ./lib/libcpp/algorithm.cpp -o ./lib/libcpp/algorithm.o
 
 	@echo [CC] command_parser.cpp
-	@$(CC) $(CC_OPTIONS) ./libcpp/command_parser.cpp -o ./libcpp/command_parser.o
+	@$(CC) $(CC_OPTIONS) ./lib/libcpp/command_parser.cpp -o ./lib/libcpp/command_parser.o
 
 	@echo [CC] icxabi.cpp
-	@$(CC) $(CC_OPTIONS) ./libcpp/icxxabi.cpp -o ./libcpp/icxxabi.o
+	@$(CC) $(CC_OPTIONS) ./lib/libcpp/icxxabi.cpp -o ./lib/libcpp/icxxabi.o
 
 	@echo [C] algorithm.c
-	@$(C) $(C_OPTIONS) ./libc/algorithm.c -o ./libc/algorithm.o
+	@$(C) $(C_OPTIONS) ./lib/libc/algorithm.c -o ./lib/libc/algorithm.o
 
 	@echo [C] syslog.c
-	@$(C) $(C_OPTIONS) ./libc/syslog.c -o ./libc/syslog.o
+	@$(C) $(C_OPTIONS) ./sys/syslog/syslog.c -o ./sys/syslog/syslog.o
 
 	@echo [C] time.c
-	@$(C) $(C_OPTIONS) ./libc/time.c -o ./libc/time.o
+	@$(C) $(C_OPTIONS) ./lib/libc/time.c -o ./lib/libc/time.o
 
 	@echo [C] process.c
-	@$(C) $(C_OPTIONS) ./libc/process.c -o ./libc/process.o
+	@$(C) $(C_OPTIONS) ./lib/libc/process.c -o ./lib/libc/process.o
 	
 	@echo [C] register_dump.c
-	@$(C) $(C_OPTIONS) ./libc/register_dump.c -o ./libc/register_dump.o
+	@$(C) $(C_OPTIONS) ./programs/register_dump.c -o ./programs/register_dump.o
 
 	@echo [C] xaninGraphics 
-	@$(C) $(C_OPTIONS) ./xaninGraphics/xaninGraphics.c -o ./xaninGraphics/xaninGraphics.o
+	@$(C) $(C_OPTIONS) ./lib/xaninGraphics/xaninGraphics.c -o ./lib/xaninGraphics/xaninGraphics.o
 	
 	@echo [C] pit.c
-	@$(C) $(C_OPTIONS) ./pit/pit.c -o ./pit/pit.o
+	@$(C) $(C_OPTIONS) ./sys/devices/pit/pit.c -o ./sys/devices/pit/pit.o
 
 	@echo [C] vty.c
-	@$(C) $(C_OPTIONS) ./terminal/vty.c -o ./terminal/vty.o
+	@$(C) $(C_OPTIONS) ./sys/terminal/vty/vty.c -o ./sys/terminal/vty/vty.o
 
 	@echo [C] key_map.c
-	@$(C) $(C_OPTIONS) ./keyboard/key_map.c -o ./keyboard/key_map.o
+	@$(C) $(C_OPTIONS) ./sys/devices/keyboard/key_map.c -o ./sys/devices/keyboard/key_map.o
 
-	@echo [C] xin.c
-	@$(C) $(C_OPTIONS) ./xin_fs/xin.c -o ./xin_fs/xin.o
-
-	@echo [C] xin_syscalls.c
-	@$(C) $(C_OPTIONS) ./xin_fs/xin_syscalls.c -o ./xin_fs/xin_syscalls.o
 
 	@echo [C] xanin_sys.c
-	@$(C) $(C_OPTIONS) ./syscall/xanin_sys/xanin_sys.c -o ./syscall/xanin_sys/xanin_sys.o
+	@$(C) $(C_OPTIONS) ./sys/call/xanin_sys/xanin_sys.c -o ./sys/call/xanin_sys/xanin_sys.o
 
 	@echo [C] edit.c
-	@$(C) $(C_OPTIONS) ./xin_fs/edit.c -o ./xin_fs/edit.o
+	@$(C) $(C_OPTIONS) ./programs/edit.c -o ./programs/edit.o
 
 	@echo [C] vga.c
-	@$(C) $(C_OPTIONS) ./devices/VGA/vga.c -o ./devices/VGA/vga.o
+	@$(C) $(C_OPTIONS) ./sys/devices/vga/vga.c -o ./sys/devices/vga/vga.o
 
 	@echo [C] usb.c
-	@$(C) $(C_OPTIONS) ./devices/USB/usb.c -o ./devices/USB/usb.o
+	@$(C) $(C_OPTIONS) ./sys/devices/usb/usb.c -o ./sys/devices/usb/usb.o
 
 	@echo [C] ACPI.c
-	@$(C) $(C_OPTIONS) ./devices/ACPI/ACPI.c -o ./devices/ACPI/ACPI.o
+	@$(C) $(C_OPTIONS) ./sys/devices/acpi/ACPI.c -o ./sys/devices/acpi/ACPI.o
 
 	@echo [C] disk.c
-	@$(C) $(C_OPTIONS) ./devices/HARD_DISK/disk.c -o ./devices/HARD_DISK/disk.o
+	@$(C) $(C_OPTIONS) ./sys/devices/hda/disk.c -o ./sys/devices/hda/disk.o
 
 	@echo [C] real_mode_fswitch.c
-	@$(C) $(C_OPTIONS) ./libc/real_mode_fswitch.c -o ./libc/real_mode_fswitch.o
+	@$(C) $(C_OPTIONS) ./lib/libc/real_mode_fswitch.c -o ./lib/libc/real_mode_fswitch.o
 
-	@echo [ASM] xin_extended_table.asm
-	@$(ASM) ./xin_fs/xin_extended_table.asm -o ./xin_fs/xin_extended_table
 
 	@echo [ASM] CRT0
-	nasm -f elf32 ./libc/crt0.asm -o libc/crt0.o
+	nasm -f elf32 ./lib/libc/crt0.asm -o ./lib/libc/crt0.o
 
 	@echo [C] C_LIBARY
-	@i386-elf-ld -r ./libc/hal.o \
-	./libc/math.o \
-	./libc/memory.o \
-	./libc/stdiox.o \
-	./libc/stdlibx.o \
-	./libc/string.o \
-	./libc/syslog.o \
-	./libc/system.o \
-	./libc/time.o \
-	./libc/data_structures.o \
-	./libc/xanin_state.o \
-	./libc/instruction_pointer.o \
-	./libc/real_mode_fswitch.o \
-	./libc/algorithm.o \
-	./libc/signal.o \
-	./libc/process.o \
-	./libc/register_dump.o \
-	./libc/registers_values_get.o \
-	./libc/kernel.o \
-	./xin_fs/xin.o \
-	./xin_fs/xin_syscalls.o \
-	./terminal/vty.o \
-	./devices/HARD_DISK/disk.o \
-	./terminal/terminal.o -o ./libc/libc.o
+	@i386-elf-ld -r ./lib/libc/hal.o \
+	./lib/libc/math.o \
+	./lib/libc/memory.o \
+	./lib/libc/stdiox.o \
+	./lib/libc/stdlibx.o \
+	./lib/libc/string.o \
+	./lib/libc/syslog.o \
+	./lib/libc/system.o \
+	./lib/libc/time.o \
+	./lib/libc/data_structures.o \
+	./lib/libc/xanin_state.o \
+	./lib/libc/instruction_pointer.o \
+	./lib/libc/real_mode_fswitch.o \
+	./lib/libc/algorithm.o \
+	./lib/libc/signal.o \
+	./lib/libc/process.o \
+	./lib/libc/registers_values_get.o \
+	./fs/xin.o \
+	./fs/xin_syscalls.o \
+	./sys/terminal/vty/vty.o \
+	./sys/devices/hda/disk.o \
+	./sys/terminal/interface/terminal.o -o ./lib/libc/libc.o
 
-	@i386-elf-ar rsc ./libc/libc.a ./libc/libc.o ./libc/crt0.o
+	@i386-elf-ar rsc ./lib/libc/libc.a ./lib/libc/libc.o ./lib/libc/crt0.o
 
 	@echo [C] kernel.c
-	@$(C) $(C_COMPILE) ./kernel/kernel.c \
-	./kernel/pmmngr/alloc.o \
-	./syscall/xanin_sys/pmmngr/alloc.o \
-	./handlers/entries/divide_by_zero_exception.o \
-	./handlers/entries/debug_exception.o \
-	./handlers/entries/nmi_exception.o \
-	./handlers/entries/breakpoint_exception.o \
-	./handlers/entries/overflow_exception.o \
-	./handlers/entries/bound_range_exceeded_exception.o \
-	./handlers/entries/invalid_opcode_exception.o \
-	./handlers/entries/device_not_availble_exception.o \
-	./handlers/entries/double_fault_exception.o \
-	./handlers/entries/coprocessor_segment_overrun_exception.o \
-	./handlers/entries/invalid_tss_exception.o \
-	./handlers/entries/segment_not_present_exception.o \
-	./handlers/entries/stack_fault_exception.o \
-	./handlers/entries/general_protection_exception.o \
-	./handlers/entries/page_fault_exception.o \
-	./handlers/entries/x86_fpu_floating_point_exception.o \
-	./handlers/entries/aligment_check_exception.o \
-	./handlers/entries/machine_check_exception.o \
-	./handlers/entries/simd_floating_point_exception.o \
-	./handlers/entries/virtualization_exception.o \
-	./libc/libc.o \
-	./pit/pit.o \
-	./pit/pit_entry.o \
-	./libcpp/algorithm.o \
-	./libcpp/regex.o \
-	./tui/tui.o \
-	./xgl/xgl.o \
-	./libcpp/endian.o \
-	./libcpp/icxxabi.o \
-	./devices/VGA/vga.o \
-	./keyboard/key_map.o \
-	./xaninGraphics/xaninGraphics.o \
-	./keyboard/keyboard.o \
-	./syscall/syscall_entry.o \
-	./syscall/xanin_sys_entry.o \
-	./syscall/xanin_sys/xanin_sys.o \
-	./xin_fs/edit.o \
-	./test/cpp_test.o \
-	./test/cpp_test2.o \
-	./devices/MOUSE/mouse_init.o \
-	./devices/MOUSE/mouse.o \
-	./devices/APIC/apic.o \
-	./devices/NIC/8254x_int_handler.o \
-	./devices/NIC/8254x.o \
-	./devices/PCSPK/pc_speaker.o \
-	./devices/USB/usb.o \
-	./devices/ACPI/ACPI.o \
-	./netapi/objects/mac.o \
-	./netapi/objects/ip.o \
-	./network_protocols/ethernet_frame/ethernet_frame.o \
-	./network_protocols/arp/arp.o \
-	./network_protocols/internet_protocol/ipv4/ip.o \
-	./network_protocols/udp/udp.o \
-	./network_protocols/icmp/icmp.o \
-	./network_protocols/dhcp/dhcp.o \
-	./netapi/objects/response.c \
-	./netapi/network_devicecpp.o \
-	./netapi/netapi_interrupt.o \
-	./netapi/loopback/loopback.o \
-	./devices/IOAPIC/ioapic.o \
-	./test/testc.o \
-	./IDT/idt.o \
-	./devices/COM/ComPort.o \
-	./xaninApps/screenshot.o \
-	./game_engine/xagame.o \
-	./xagames/xagame_test.o \
-	./xagames/tetris.o -Ttext 0xB00000 -o kernel.bin
+	@$(C) $(C_COMPILE) ./sys/kernel.c \
+	./sys/pmmngr/alloc.o \
+	./sys/input/input.o \
+	./programs/register_dump.o \
+	./sys/call/xanin_sys/pmmngr/alloc.o \
+	./sys/interrupts/handlers/entries/divide_by_zero_exception.o \
+	./sys/interrupts/handlers/entries/debug_exception.o \
+	./sys/interrupts/handlers/entries/nmi_exception.o \
+	./sys/interrupts/handlers/entries/breakpoint_exception.o \
+	./sys/interrupts/handlers/entries/overflow_exception.o \
+	./sys/interrupts/handlers/entries/bound_range_exceeded_exception.o \
+	./sys/interrupts/handlers/entries/invalid_opcode_exception.o \
+	./sys/interrupts/handlers/entries/device_not_availble_exception.o \
+	./sys/interrupts/handlers/entries/double_fault_exception.o \
+	./sys/interrupts/handlers/entries/coprocessor_segment_overrun_exception.o \
+	./sys/interrupts/handlers/entries/invalid_tss_exception.o \
+	./sys/interrupts/handlers/entries/segment_not_present_exception.o \
+	./sys/interrupts/handlers/entries/stack_fault_exception.o \
+	./sys/interrupts/handlers/entries/general_protection_exception.o \
+	./sys/interrupts/handlers/entries/page_fault_exception.o \
+	./sys/interrupts/handlers/entries/x86_fpu_floating_point_exception.o \
+	./sys/interrupts/handlers/entries/aligment_check_exception.o \
+	./sys/interrupts/handlers/entries/machine_check_exception.o \
+	./sys/interrupts/handlers/entries/simd_floating_point_exception.o \
+	./sys/interrupts/handlers/entries/virtualization_exception.o \
+	./lib/libc/libc.o \
+	./sys/devices/pit/pit.o \
+	./sys/devices/pit/pit_entry.o \
+	./lib/libcpp/algorithm.o \
+	./lib/libcpp/regex.o \
+	./lib/tui/tui.o \
+	./lib/xgl/xgl.o \
+	./lib/xaninGraphics/xaninGraphics.o \
+	./lib/libcpp/endian.o \
+	./lib/libcpp/icxxabi.o \
+	./sys/devices/vga/vga.o \
+	./sys/devices/keyboard/key_map.o \
+	./sys/devices/keyboard/keyboard.o \
+	./sys/call/syscall_entry.o \
+	./sys/call/xanin_sys_entry.o \
+	./sys/call/xanin_sys/xanin_sys.o \
+	./programs/edit.o \
+	./programs/test/cpp_test.o \
+	./programs/test/cpp_test2.o \
+	./sys/devices/mouse/mouse_init.o \
+	./sys/devices/mouse/mouse.o \
+	./sys/devices/apic/apic.o \
+	./sys/devices/nic/8254x_int_handler.o \
+	./sys/devices/nic/8254x.o \
+	./sys/devices/pcspk/pc_speaker.o \
+	./sys/devices/usb/usb.o \
+	./sys/devices/acpi/ACPI.o \
+	./sys/net/netapi/objects/mac.o \
+	./sys/net/netapi/objects/ip.o \
+	./sys/net/network_protocols/ethernet_frame/ethernet_frame.o \
+	./sys/net/network_protocols/arp/arp.o \
+	./sys/net/network_protocols/internet_protocol/ipv4/ip.o \
+	./sys/net/network_protocols/udp/udp.o \
+	./sys/net/network_protocols/icmp/icmp.o \
+	./sys/net/network_protocols/dhcp/dhcp.o \
+	./sys/net/netapi/objects/response.c \
+	./sys/net/netapi/network_devicecpp.o \
+	./sys/net/netapi/netapi_interrupt.o \
+	./sys/net/netapi/loopback/loopback.o \
+	./sys/devices/ioapic/ioapic.o \
+	./programs/test/testc.o \
+	./sys/interrupts/idt/idt.o \
+	./sys/devices/com/ComPort.o \
+	./programs/screenshot.o \
+	./lib/game_engine/xagame.o \
+	./programs/xagames/xagame_test.o \
+	./programs/xagames/tetris.o -Ttext 0xB00000 -o kernel.bin
 
 	@echo [C] disk_freestanding_driver.c
 	@$(C) $(C_COMPILE) ./boot/disk_freestanding_driver.c ./boot/linker.ld -Ttext 0xA00000 -o ./boot/disk_freestanding_driver
 	python3 ./utils/align_file.py -file ./boot/disk_freestanding_driver -size 512
 	
-	cp ./libc/libc.o ./external_apps/libc.o
-	cp ./libc/libc.a ./external_apps/libc.a
-	cp ./libc/crt0.o ./external_apps/crt0.o
+	cp ./lib/libc/libc.o ./external_apps/libc.o
+	cp ./lib/libc/libc.a ./external_apps/libc.a
+	cp ./lib/libc/crt0.o ./external_apps/crt0.o
 
 	@echo "\033[0;32mCOMPILATION SUCCESS"
 	@echo "\033[0m"
 
-	@cat ./xaninApps/shutdown $(APPS)/current_app $(APPS)/syscall_test ./libc/real_mode_fswitch_asm ./libc/fast_return_to_32_mode > ./xaninApps/xanin_external_apps
-	@dd if=./xaninApps/xanin_external_apps of=./xaninApps/xanin_apps_space bs=512 count=16 conv=notrunc
+	@cat ./programs/shutdown $(APPS)/current_app $(APPS)/syscall_test ./lib/libc/real_mode_fswitch_asm ./lib/libc/fast_return_to_32_mode > ./programs/xanin_external_apps
+	@dd if=./programs/xanin_external_apps of=./programs/xanin_apps_space bs=512 count=16 conv=notrunc
 	
 ## ifeq ($(boot), 3)
-	## @cat ./yan-bootloader/yan.bin ./libc/enter_real_mode ./xaninApps/xanin_apps_space ./xin_fs/xin_pointers ./xin_fs/entries_table ./boot/kernelLoader kernel.bin > xanin.bin
-	@cat ./boot/boot ./libc/enter_real_mode ./xaninApps/xanin_apps_space ./xaninApps/blank_sector ./xin_fs/xin_pointers ./xin_fs/entries_table ./boot/kernelLoader ./boot/disk_freestanding_driver kernel.bin > xanin.bin
+	## @cat ./yan-bootloader/yan.bin ./lib/libc/enter_real_mode ./programs/xanin_apps_space ./fs/xin_pointers ./fs/entries_table ./boot/kernelLoader kernel.bin > xanin.bin
+	@cat ./boot/boot ./lib/libc/enter_real_mode ./programs/xanin_apps_space ./programs/blank_sector ./fs/xin_pointers ./fs/entries_table ./boot/kernelLoader ./boot/disk_freestanding_driver kernel.bin > xanin.bin
 ## else
-## 	@cat ./boot/boot ./libc/enter_real_mode ./xaninApps/xanin_apps_space ./xaninApps/blank_sector ./xin_fs/xin_pointers ./xin_fs/entries_table ./boot/kernelLoader kernel.bin ./xin_fs/xin_extended_table > xanin.bin
+## 	@cat ./boot/boot ./lib/libc/enter_real_mode ./programs/xanin_apps_space ./programs/blank_sector ./fs/xin_pointers ./fs/entries_table ./boot/kernelLoader kernel.bin ./fs/xin_extended_table > xanin.bin
 ## endif
 
 
@@ -502,9 +518,9 @@ build:
 	rm ./external_apps/libc.o
 	rm ./external_apps/libc.a
 
-	@python3 ./utils/app_preinstall.py -files yhm/ external_apps/ config/ -image $(XANIN_BINARIES)/xanin.img 
+	@python3 ./utils/app_preinstall.py -files external_apps/ ./etc/net/ ./etc/var/ -image $(XANIN_BINARIES)/xanin.img 
 
-
+	@find ./ -name "*.o" -type f -delete
 
 run:
 	@sudo qemu-system-i386 -m 4096 -drive file=../bin/xanin.img,cache=unsafe -net nic -net tap,ifname=tap0,script=no,downscript=no

@@ -1,15 +1,15 @@
 
 /*
-#include <libc/algorithm.h>
-#include <libc/alloc.h>
-#include <libc/assert.h>
-#include <libc/clock.h>
-#include <libc/hal.h>
-#include <libc/math.h>
-#include <libc/memory.h>
-#include <libc/parameter.h>
-#include <libc/stdiox.h>
-#include <libc/stdlibx.h>
-#include <libc/string.h>
-#include <libc/time.h>
+#include <lib/libc/algorithm.h>
+#include <lib/libc/alloc.h>
+#include <lib/libc/assert.h>
+#include <lib/libc/clock.h>
+#include <lib/libc/hal.h>
+#include <lib/libc/math.h>
+#include <lib/libc/memory.h>
+#include <lib/libc/parameter.h>
+#include <lib/libc/stdiox.h>
+#include <lib/libc/stdlibx.h>
+#include <lib/libc/string.h>
+#include <lib/libc/time.h>
 */

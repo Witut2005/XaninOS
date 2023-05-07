@@ -1,31 +1,12 @@
 {
     "files.associations": {
         "*.embeddedhtml": "html",
-        "stdiox.h": "c",
-        "pit.h": "c",
         "xin.h": "c",
-        "elf_loader.h": "c",
-        "cstdio": "c",
+        "xin_entry.h": "c",
         "stdlibx.h": "c",
-        "tui.h": "c",
-        "XinEntry.h": "c",
-        "xin_syscalls.h": "c",
-        "network_device.h": "c",
-        "type_traits": "cpp",
-        "syslog.h": "c",
-        "icmp.h": "c",
-        "string.h": "c",
-        "stdint.h": "c",
-        "response.h": "c",
-        "arp.h": "c",
-        "alloc.h": "c"
-    },
-    "C_Cpp.errorSquiggles": "disabled",
-    "makefile.launchConfigurations": [
-        {
-            "cwd": "/home/witut/Desktop/xaninOS/src/boot",
-            "binaryPath": "/home/witut/Desktop/xaninOS/src/boot/disk_freestanding_driver",
-            "binaryArgs": []
-        }
-    ]
+        "scan_codes.h": "c",
+        "vty.h": "c",
+        "disk.h": "c",
+        "stddef.h": "c"
+    }
 }

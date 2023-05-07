@@ -1,9 +1,0 @@
-
-#pragma once
-
-#define XANIN_ALLOCATE 100
-#define XANIN_CALLOCATE 101
-#define XANIN_REALLOCATE 102
-#define XANIN_FREE 103
-
-#define XANIN_INPUT_GET 200
