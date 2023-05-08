@@ -3,7 +3,7 @@
 
  
 #include <lib/libc/hal.h>
-#include <sys/syslog/syslog.h>
+#include <sys/log/syslog.h>
 #include <lib/libc/stdiox.h>
 #include <sys/devices/keyboard/key_map.h>
 #include <sys/devices/keyboard/keyboard_driver.c>

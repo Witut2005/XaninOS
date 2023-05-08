@@ -1,5 +1,5 @@
 
-#include <sys/syslog/syslog.h>
+#include <sys/log/syslog.h>
 
 #include <sys/devices/ioapic/ioapic.hpp>
 

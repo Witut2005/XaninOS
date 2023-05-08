@@ -23,7 +23,7 @@
 #include <sys/devices/ioapic/ioapic.h>
 #include <fs/loaders/elf/elf_loader.h>
 #include <sys/devices/acpi/ACPI.h>
-#include <sys/syslog/syslog.h>
+#include <sys/log/syslog.h>
 #include <sys/devices/nic/8254x.h>
 #include <sys/devices/pcspk/pc_speaker.h>
 // #include <sys/net/network_protocols/ethernet_frame/ethernet_frame.h>

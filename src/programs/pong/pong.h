@@ -1,7 +1,9 @@
 
+#pragma once
 
 #include <stdint.h>
 
+#define PONG_SIZE_Y 6
 
 uint16_t* pong1[6];
 uint16_t* pong2[6];

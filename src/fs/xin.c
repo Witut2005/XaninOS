@@ -1,6 +1,6 @@
 
 
-#include <sys/syslog/syslog.h>
+#include <sys/log/syslog.h>
 
 #include <lib/libc/hal.h>
 #include <fs/xin.h>

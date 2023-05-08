@@ -9,7 +9,7 @@
 #include <sys/net/network_protocols/arp/arp.h>
 #include <lib/libcpp/endian.h>
 #include <lib/libc/stdiox.h>
-#include <sys/syslog/syslog.h>
+#include <sys/log/syslog.h>
 
 #include <sys/net/network_protocols/udp/udp.hpp>
 #include <sys/net/netapi/loopback/loopback.h>

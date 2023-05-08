@@ -2,6 +2,7 @@
 
 #include <stdint.h>
 #include <sys/devices/apic/apic_registers.h>
+#include <sys/devices/hda/disk.h>
 
 struct Registers
 {
@@ -129,6 +130,8 @@ void io_wait(void)
 void real_mode_enter(uint16_t segment, uint16_t offset, uint32_t return_address)
 {
 
+    disk_read(ATA_FIRST_BUS, ATA_MASTER, 1, 1, (uint16_t*)0x600);
+
     asm (
         "mov ebx, %0\n\t"
         "and ebx, 0xFFFF\n\t"
@@ -146,6 +149,8 @@ void real_mode_enter(uint16_t segment, uint16_t offset, uint32_t return_address)
 
 void real_mode_enter_no_return(uint16_t segment, uint16_t offset)
 {
+    
+    disk_read(ATA_FIRST_BUS, ATA_MASTER, 1, 1, (uint16_t*)0x600);
 
     asm (
         "mov ebx, %0\n\t"

@@ -10,7 +10,7 @@
 #include <sys/input/input.h>
 
 #define VGA_WIDTH 80
-#define VGA_HEIGHT 28
+// #define VGA_HEIGHT 25
 
 int8_t first_nonempty_row_get(void)
 {
@@ -198,13 +198,13 @@ extern "C" int tetris(void)
             for(int i = 1; i < 3; i++)
                 TetrisScreen.vertical_line_create(59 - 10 + i, xgm::color::black);
 
-            // if(!object.collision_detect().down) //&& ((object.positiony_get() + object.sizey_get()) < VGA_HEIGHT))
-            //     object.move(0,1);
+            if((!object.collision_detect().down) && ((object.positiony_get() + object.sizey_get()) < VGA_HEIGHT))
+                object.move(0,1);
 
-            // else
-            //     break;
+            else
+                break;
 
-            // msleep(200);
+            msleep(200);
         }
 
         for(int i = 0; i < VGA_HEIGHT; i++)

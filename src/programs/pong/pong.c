@@ -27,12 +27,12 @@ void player1_get_input(void)
         if(pong1_y == 1)
             return;
 
-        for(int i = 0; i < 6; i++)   
+        for(int i = 0; i < PONG_SIZE_Y; i++)   
             *pong1[i] = (uint16_t) ('\0');
         
         pong1_y--;
 
-        for(int i = 0; i < 6; i++)
+        for(int i = 0; i < PONG_SIZE_Y; i++)
         {
             pong1[i] = &Screen.cursor[pong1_y + i][5];
             *pong1[i] = (uint16_t) (' ' + (((lgray << 4) | lgray) << 8));
@@ -42,15 +42,15 @@ void player1_get_input(void)
 
     else if(player1_input == 's')
     {
-            if(pong1_y == 21)
-                return;
+        if(pong1_y == VGA_HEIGHT - PONG_SIZE_Y - 1)
+            return;
 
-            for(int i = 0; i < 6; i++)
-                *pong1[i] = (uint16_t) ('\0');
+        for(int i = 0; i < PONG_SIZE_Y; i++)
+            *pong1[i] = (uint16_t) ('\0');
         
         pong1_y++;
 
-        for(int i = 0; i < 6; i++)
+        for(int i = 0; i < PONG_SIZE_Y; i++)
         {
             pong1[i] = &Screen.cursor[pong1_y + i][5];
             *pong1[i] = (uint16_t) (' ' + (((lgray << 4) | lgray) << 8));
@@ -68,12 +68,12 @@ void player2_get_input(void)
         if(pong2_y == 1)
             return;
 
-        for(int i = 0; i < 6; i++)
+        for(int i = 0; i < PONG_SIZE_Y; i++)
             *pong2[i] = (uint16_t) ('\0');
         
         pong2_y--;
 
-        for(int i = 0; i < 6; i++)
+        for(int i = 0; i < PONG_SIZE_Y; i++)
         {
             pong2[i] = &Screen.cursor[pong2_y + i][74];
             *pong2[i] = (uint16_t) (' ' + (((lgray << 4) | lgray) << 8));
@@ -82,7 +82,7 @@ void player2_get_input(void)
     
     else if(player2_input == 'l')
     {
-        if(pong2_y == 21)
+        if(pong2_y == VGA_HEIGHT - PONG_SIZE_Y - 1)
             return;
 
         for(int i = 0; i < 6; i++)
@@ -172,10 +172,10 @@ void pong_init(void)
     screen_clear();
 
     draw_line_x(0,79,0,lgreen);
-    draw_line_x(0,79,27,lgreen);
+    draw_line_x(0,79,VGA_HEIGHT - 1,lgreen);
 
-    draw_line_y(0,27,0,green);
-    draw_line_y(0,27,79,green);
+    draw_line_y(0,VGA_HEIGHT - 1,0,green);
+    draw_line_y(0,VGA_HEIGHT - 1,79,green);
 
     keyboard_handle = pong_get_input;
 

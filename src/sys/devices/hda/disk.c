@@ -1,6 +1,6 @@
 
 #include <sys/devices/hda/disk.h>
-#include <sys/syslog/syslog.h>
+#include <sys/log/syslog.h>
 #include <lib/libc/stdlibx.h>
 #include <lib/libc/stdiox.h>
 #include <lib/libc/hal.h>

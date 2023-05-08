@@ -203,7 +203,6 @@ void scan(void)
 {
 
     screen_clear();
-    xprintf("AAA");
     last_command_exit_status = XANIN_OK;
     
     //legacy reasons

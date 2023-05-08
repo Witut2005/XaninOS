@@ -35,17 +35,12 @@ int run16(char* file_name)
             return XANIN_ERROR;
         }
     
-        //uint32_t address = (current_program->first_sector * SECTOR_SIZE);
-
         uint8_t* dest = 0x10000;
-
         fread(xin_file, dest, xin_file->size);
-        // for(uint8_t* i = xin_file->FileInfo->buffer; (uint32_t)i < (uint32_t)(xin_file->FileInfo->buffer) + SECTOR_SIZE; i++, dest++)
-        //     *dest = *i;
+
+        memcpy((uint8_t*)0x1000, dest, SECTOR_SIZE);
 
         real_mode_enter_no_return(0x1000, 0x0); // <-- tmp.bin address in memory
-
-        
 
     }
 

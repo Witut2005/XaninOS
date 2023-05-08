@@ -5,7 +5,7 @@
 
 #define VGA_TEXT_MEMORY 0xb8000
 #define VGA_WIDTH 80
-#define VGA_HEIGHT 28
+#define VGA_HEIGHT 25
 
 /* USE IN CPP FILES NOT IN C BRUH */
 
