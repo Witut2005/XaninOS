@@ -93,6 +93,15 @@ build:
 	@echo [ASM] xanin_sys_entry.asm
 	@$(ASM) -f elf32 ./sys/call/xanin_sys_entry.asm -o ./sys/call/xanin_sys_entry.o
 
+	@echo [C] xanin_sys.c
+	@$(C) $(C_OPTIONS) ./sys/call/xanin_sys/xanin_sys.c -o ./sys/call/xanin_sys/xanin_sys.o
+
+	@echo "\n///////////////////////////////////////////////"
+
+	@echo "\033[0;32mINTERRUPT HANDLERS MODULE COMPILATION PHARSE"
+	@echo "\033[0m"
+
+
 	@ echo [ASM] registers_values_get.asm
 	@ $(ASM) -f elf32 ./lib/libc/registers_values_get.asm -o ./lib/libc/registers_values_get.o
 	
@@ -176,6 +185,8 @@ build:
 
 	@echo [ASM] coprocessor_segment_overrun_exception
 	@$(ASM) -f elf32 ./sys/interrupts/handlers/entries/coprocessor_segment_overrun_exception.asm -o ./sys/interrupts/handlers/entries/coprocessor_segment_overrun_exception.o
+
+	@echo "\n///////////////////////////////////////////////"
 
 	@echo [ASM] netapi_interrupt
 	@$(ASM) -f elf32 ./sys/net/netapi/netapi_interrupt.asm -o ./sys/net/netapi/netapi_interrupt.o
@@ -359,11 +370,12 @@ build:
 	@$(C) $(C_OPTIONS) ./sys/devices/keyboard/key_map.c -o ./sys/devices/keyboard/key_map.o
 
 
-	@echo [C] xanin_sys.c
-	@$(C) $(C_OPTIONS) ./sys/call/xanin_sys/xanin_sys.c -o ./sys/call/xanin_sys/xanin_sys.o
 
 	@echo [C] edit.c
 	@$(C) $(C_OPTIONS) ./programs/edit.c -o ./programs/edit.o
+
+	@echo [C] real_mode_fswitch.c
+	@$(C) $(C_OPTIONS) ./lib/libc/real_mode_fswitch.c -o ./lib/libc/real_mode_fswitch.o
 
 	@echo [C] vga.c
 	@$(C) $(C_OPTIONS) ./sys/devices/vga/vga.c -o ./sys/devices/vga/vga.o
@@ -376,9 +388,6 @@ build:
 
 	@echo [C] disk.c
 	@$(C) $(C_OPTIONS) ./sys/devices/hda/disk.c -o ./sys/devices/hda/disk.o
-
-	@echo [C] real_mode_fswitch.c
-	@$(C) $(C_OPTIONS) ./lib/libc/real_mode_fswitch.c -o ./lib/libc/real_mode_fswitch.o
 
 
 	@echo [ASM] CRT0
@@ -491,6 +500,8 @@ build:
 	cp ./lib/libc/libc.o ./external_apps/libc.o
 	cp ./lib/libc/libc.a ./external_apps/libc.a
 	cp ./lib/libc/crt0.o ./external_apps/crt0.o
+
+	python3 ./utilts/XaninSupervisor.py
 
 	@echo "\033[0;32mCOMPILATION SUCCESS"
 	@echo "\033[0m"
