@@ -10,6 +10,7 @@
 
 void printk(const char * str)
 {
+    return;
 
     interrupt_disable();
 

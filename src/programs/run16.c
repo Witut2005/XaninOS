@@ -36,9 +36,11 @@ int run16(char* file_name)
         }
     
         uint8_t* dest = 0x10000;
-        fread(xin_file, dest, xin_file->size);
+        // fread(xin_file, dest, xin_file->size);
+        fread(xin_file, dest, SECTOR_SIZE);
 
-        memcpy((uint8_t*)0x1000, dest, SECTOR_SIZE);
+        // xprintf("nicho");
+        // while(inputg().scan_code == ENTER);
 
         real_mode_enter_no_return(0x1000, 0x0); // <-- tmp.bin address in memory
 

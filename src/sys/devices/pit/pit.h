@@ -20,6 +20,7 @@
 //https://www.youtube.com/watch?v=aK4paXV1XfM <-- USEFUL
 
 extern float pit_time;
+extern float pit_interval_time;
 
 extern void pit_handler_init(void);
 extern void set_pit_divisor(uint16_t divisor_value);

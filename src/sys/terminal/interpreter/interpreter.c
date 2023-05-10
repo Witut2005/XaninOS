@@ -65,7 +65,6 @@ extern int cpp_test(void);
 #include <programs/shutdown.c>
 #endif
 
-#include <programs/reboot.c>
 
 #ifdef DEVICE_INFO_APP
 #include <programs/device_info.c>

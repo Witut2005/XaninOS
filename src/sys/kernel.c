@@ -446,6 +446,9 @@ void _start(void)
     // screen_clear();
     
     // interval_set(interval_test, 1000.0, NULL);
+    // interval_set(interval_test, 1000.0, NULL);
+    // interval_set(interval_test, 1000.0, NULL);
+    // interval_set(interval_test, 1000.0, NULL);
 
     // msleep(10000);
 

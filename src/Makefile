@@ -445,6 +445,7 @@ build:
 	./sys/devices/hda/disk.o \
 	./sys/terminal/interface/terminal.o -o ./lib/libc/libc.o
 
+	@i386-elf-gcc -shared -Ttext 0x900000 -o ./lib/libc/libc.so ./lib/libc/libc.o
 	@i386-elf-ar rsc ./lib/libc/libc.a ./lib/libc/libc.o ./lib/libc/crt0.o
 
 	@echo [C] kernel.c
@@ -526,8 +527,13 @@ build:
 	cp ./lib/libc/libc.o ./external_apps/libc.o
 	cp ./lib/libc/libc.a ./external_apps/libc.a
 	cp ./lib/libc/crt0.o ./external_apps/crt0.o
+	cp ./lib/libc/libc.so ./external_apps/libsharedc.so
 
 	python3 ./utils/XaninSupervisor.py
+	
+	@echo "\033[0;32mCOMPILING XANIN EXTERNAL APPS"
+	@echo "\033[0m"
+	@make -C ./external_apps/
 
 	@echo "\033[0;32mCOMPILATION SUCCESS"
 	@echo "\033[0m"
@@ -542,13 +548,6 @@ build:
 	@mv xanin.img -f ../bin
 	@mv xanin.bin -f ../bin
 	
-	@echo "\033[0;32mCOMPILING XANIN EXTERNAL APPS"
-	@echo "\033[0m"
-	@make -C ./external_apps/
-	
-	rm ./external_apps/libc.o
-	rm ./external_apps/libc.a
-
 	@python3 ./utils/app_preinstall.py -files external_apps/ ./etc/net/ ./etc/var/ -image $(XANIN_BINARIES)/xanin.img 
 
 	@find ./ -name "*.o" -type f -delete

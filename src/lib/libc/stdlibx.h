@@ -116,6 +116,7 @@ void* mmngr_realloc(void* ptr, uint32_t size);
 
 extern void exit(void);
 extern uint32_t rand(void);
+extern int reboot(void);
 
 void __sys_inputg(xchar* ptr);
 void __sys_keyinfo_get(key_info_t* ptr);
@@ -142,9 +143,10 @@ enum XANIN_RETURN_STATUS
 
 enum XANIN_INTERVAL
 {
-    INTERVALS_MAX = 100,
+    INTERVALS_MAX = 5,
     INTERVAL_CLEAR = 0,
-    INTERVAL_IN_USE = 1
+    INTERVAL_IN_USE = 1,
+    INTERVAL_CANT_INIT = 0xFFFFFFFF
 };
 
 typedef uint32_t interval_id;
@@ -156,11 +158,11 @@ struct IntervalEntry
     interval_handler handler;
     address_t* arguments;
     float timeout;
-    float current_time;
+    float start_time;
 };
 
 typedef struct IntervalEntry IntervalEntry;
-extern IntervalEntry XaninIntervals[100];
+extern IntervalEntry XaninIntervals[INTERVALS_MAX];
 
 #ifdef __cplusplus
 extern "C"{

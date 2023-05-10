@@ -45,7 +45,6 @@ void set_pit(uint8_t vector)
 
 void pit_tick(void)
 {
-    // pit_time = pit_time + (1 / (float)(PIT_BASE_FREQUENCY / frequency));
     pit_time = pit_time + 0.0001;
 
     for(int i = 0; i < INTERVALS_MAX; i++)

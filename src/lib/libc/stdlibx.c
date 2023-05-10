@@ -19,6 +19,7 @@ CmosTime SystemTime;
 #define CMOS_DATA 0x71
 
 float pit_time;
+
 char* daysLUT[7] = {"Sun","Mon","Tue","Wed","Thu","Fri","Sat"};
 uint8_t* null_memory_region;
 
@@ -315,6 +316,28 @@ void merge_sort(int array[], int first, int last)
 
 }
 
+int reboot(void)
+{
+
+    // xprintf("nicho");
+    *(uint16_t*)VGA_TEXT_MEMORY = 0x4141;
+
+    // screen_clear();
+    uint16_t idt_16[3] = {0x0, 0x1234, 0x4567};
+
+    // disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x12, 5, (uint16_t*)(0x800));
+    // disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x1a, 20, (uint16_t*)(0x1800));
+
+    asm("lidt %0" :: "m"(idt_16));
+    
+    uint8_t s = 12;
+    s = s / 0;
+
+    return XANIN_OK;
+
+}
+
+
 
 void* malloc(uint32_t size)
 {
@@ -329,7 +352,6 @@ void* malloc(uint32_t size)
 
     return ret;
 }
-
 
 void* calloc(uint32_t size)
 {
@@ -362,10 +384,11 @@ void* realloc(void* ptr, uint32_t size)
     void* ret;
     asm("mov eax, 102;" // realloc syscall id
         "mov ecx, %1;"
+        "mov edx, %2;"
         "int 0x81;"
         "mov %0, eax;"
         :"=r"(ret)
-        :"g"(size)
+        :"g"(ptr), "g"(size)
         );
 
     return ret;
@@ -378,21 +401,20 @@ IntervalEntry XaninIntervals[INTERVALS_MAX] = {INTERVAL_CLEAR};
 
 interval_id interval_set(interval_handler handler, float ms, address_t* args)
 {
-    interval_id interval;
 
     for(int i = 0; i < INTERVALS_MAX; i++)
     {
         if(!XaninIntervals[i].is_in_use)
         {
-            interval = i;
             XaninIntervals[i].is_in_use = INTERVAL_IN_USE;
             XaninIntervals[i].handler = handler;
             XaninIntervals[i].arguments = args;
             XaninIntervals[i].timeout = ms / 1000;
-            XaninIntervals[i].current_time = pit_time;
+            XaninIntervals[i].start_time = 0;
+            return (interval_id)i;
         }
     }
-    return interval;
+    return INTERVAL_CANT_INIT;
 }
 
 
@@ -405,11 +427,10 @@ void do_interval(interval_id interval)
 {
     if(XaninIntervals[interval].is_in_use)
     {
-        if(pit_time > (XaninIntervals[interval].current_time + XaninIntervals[interval].timeout)) // timeout reached
+        if(pit_time > (XaninIntervals[interval].start_time + XaninIntervals[interval].timeout)) // timeout reached
         {
-            // pit_time = 0;
+            XaninIntervals[interval].start_time = pit_time;
             XaninIntervals[interval].handler(XaninIntervals[interval].arguments);
-            XaninIntervals[interval].current_time = pit_time; // clears timeout
         }
     }
 }

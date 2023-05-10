@@ -1,7 +1,5 @@
 
-
 #include <sys/log/syslog.h>
-
 #include <lib/libc/hal.h>
 #include <fs/xin.h>
 #include <lib/libc/memory.h>
@@ -12,8 +10,6 @@
 #include <lib/libc/stdlibx.h>
 #include <lib/libc/colors.h>
 #include <sys/terminal/vty/vty.h>
-
-
 
 //#define IF_FILE_NOT_EXIST
 #define XIN_OPENED_FILES_COUNTER 100
@@ -122,7 +118,7 @@ XinEntry *xin_find_entry(char *entry_name)
     if(!strlen(entry_name))
         return NULL;
 
-    for (char *i = (char*)XIN_ENTRY_TABLE; (uint32_t)i < XIN_ENTRY_TABLE + (SECTOR_SIZE * 50); i += 64)
+    for (char *i = (char*)XIN_ENTRY_TABLE; (uint32_t)i < XIN_ENTRY_TABLE + (SECTOR_SIZE * 50); i += XIN_ENTRY_SIZE)
     {
         if (strcmp(entry_name, i))
             return (XinEntry *)i;
@@ -133,7 +129,7 @@ XinEntry *xin_find_entry(char *entry_name)
     if(strlen(entry_name) > 40)
         return NULL;
 
-    for (char *i = (char*)XIN_ENTRY_TABLE; (uint32_t)i < XIN_ENTRY_TABLE + (SECTOR_SIZE * 50); i += 64)
+    for (char *i = (char*)XIN_ENTRY_TABLE; (uint32_t)i < XIN_ENTRY_TABLE + (SECTOR_SIZE * 50); i += XIN_ENTRY_SIZE)
     {
         if (strcmp(entry_name, i))
             return (XinEntry *)i;
@@ -173,7 +169,7 @@ XinEntry* xin_get_file_pf(char* path) // pf = parent folder
 
 XinEntry *xin_find_free_entry(void)
 {
-    for (char *i = (char *)XIN_ENTRY_TABLE + 64; (uint32_t)i < XIN_ENTRY_TABLE + (SECTOR_SIZE * 50); i += 64)
+    for (char *i = (char *)XIN_ENTRY_TABLE; (uint32_t)i < XIN_ENTRY_TABLE + (SECTOR_SIZE * 50); i += 64)
     {
         if (*(char *)i == '\0')
             return (XinEntry *)i;
@@ -921,8 +917,8 @@ XinEntry *fopen(char *file_path, char *mode)
             return NULL;
 
         file->FileInfo = (FileInformationBlock*)calloc(sizeof(FileInformationBlock));
-        file->FileInfo->buffer = (uint8_t*)calloc(file->size + SECTOR_SIZE);
-        file->FileInfo->sector_in_use = (bool*)calloc(int_to_sectors(file->size) + 5);
+        file->FileInfo->buffer = (uint8_t*)calloc(file->size + SECTOR_SIZE); // additional space
+        file->FileInfo->sector_in_use = (bool*)calloc(int_to_sectors(file->size) + 1); // additional space
 
         memset(file->FileInfo->rights, '\0', 2); //set file rights
         strcpy(file->FileInfo->rights, mode);

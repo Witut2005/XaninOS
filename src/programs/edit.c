@@ -8,6 +8,7 @@
 #include <lib/libc/memory.h>
 #include <sys/input/input.h>
 
+
 #define MOVE_CURSOR_TO_FIRST_CHARACTER(EditState) while(((uint32_t)EditState->cursor - VGA_TEXT_MEMORY) % 0xA0 != 0) \
             EditState->cursor--
 
@@ -59,8 +60,7 @@ void edit_input(xchar Input, XinEntry* File, EditInfo* EditState)
     if(int_to_sectors(File->FileInfo->tmp_size) > EditState->number_of_sectors)
     {
         EditState->number_of_sectors++;
-        File->FileInfo->buffer = realloc(File->FileInfo->buffer, EditState->number_of_sectors * SECTOR_SIZE);
-        EditState->program_buffer = File->FileInfo->buffer;
+        EditState->program_buffer = File->FileInfo->buffer = realloc(File->FileInfo->buffer, EditState->number_of_sectors * SECTOR_SIZE);
     }
 
     int x_save = Screen.x; 
@@ -297,7 +297,7 @@ int edit(char* file_name)
         xprintf("Couldn't open file %s\n", file_name);
         xprintf("Do want to create it?\nY/n ");
 
-        char selected_option = inputc();
+        char selected_option = inputg().character;
         if(selected_option == 'n' || selected_option == 'N')
             return XANIN_ERROR;
         file = fopen(file_name, "rw");
@@ -307,7 +307,7 @@ int edit(char* file_name)
         file = fopen(file_name, "rw");
     
     screen_clear();
-    
+
 
     fread(file, NULL, file->size );
 

@@ -51,7 +51,7 @@ uint32_t xanin_sys_handle(void)
         case XANIN_REALLOCATE:
         {    
             // ECX = PTR, EDX = SIZE
-            eax = (uint32_t)((void*)ecx, edx);
+            eax = (uint32_t)__sys_realloc((void*)ecx, edx);
             break;
         }
 

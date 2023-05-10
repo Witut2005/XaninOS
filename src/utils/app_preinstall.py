@@ -33,7 +33,7 @@ xin_filesystem_pointers_begin = int(SECTOR_SIZE * 0x12)
 # xin_filesystem_pointers = int(SECTOR_SIZE * 0x12) 
 
 xin_filesystem_pointers = int(SECTOR_SIZE * 0x12 + 0x300)
-xin_filesystem_entries = int(SECTOR_SIZE * 0x1A) 
+xin_filesystem_entries = int(SECTOR_SIZE * 0x1A) + (XIN_ENTRY_SIZE * 10) 
 i = xin_filesystem_entries
 
 while tmp[i] != 0:
