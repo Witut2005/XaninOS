@@ -44,7 +44,8 @@ uint32_t xanin_sys_handle(void)
         case XANIN_FREE:
         {
             // ECX = PTR
-            __sys_free((void*)ecx);
+            // xprintf("0x%x\n", ecx);
+            mmngr_block_free(USER_HEAP, (void*)ecx);
             break;
         }
 

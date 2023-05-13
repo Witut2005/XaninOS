@@ -15,13 +15,9 @@ void* __sys_calloc(uint32_t size)
 void* __sys_realloc(void* ptr, uint32_t size)
 {
     
-    interrupt_disable();
-
-    mmngr_block_free(USER_HEAP, (void*)ptr);
     uint8_t* tmp = (uint8_t*)mmngr_block_allocate(USER_HEAP, size);
     memcpy(tmp, (uint8_t*)ptr, size);
-
-    interrupt_enable();
+    mmngr_block_free(USER_HEAP, (void*)ptr);
 
     return tmp;
 

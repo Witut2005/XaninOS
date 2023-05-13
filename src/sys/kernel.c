@@ -68,7 +68,17 @@ extern bool com_status(void);
 terminal_t* kernel_terminal;
 uint8_t* const zeros;
 
-#define PMMNGR_MEMORY_BLOCKS 2000
+#define PMMNGR_MEMORY_BLOCKS 10000
+
+void terminal_time_update(address_t* args)
+{
+    time_get(&SystemTime);
+    
+    for(int i = 67; i < VGA_WIDTH; i++)
+        Screen.cursor[4][i] = BLANK_SCREEN_CELL;
+
+    xprintf("%h%s: %i:%i:%i\n\n\n", OUTPUT_POSITION_SET(4, 67), daysLUT[SystemTime.weekday], SystemTime.hour, SystemTime.minutes, SystemTime.seconds);
+}
 
 void kernel_loop(void)
 {
@@ -77,6 +87,8 @@ void kernel_loop(void)
     while(1)
     {
 
+        all_intervals_clear(); // clear all intervals added by apps during execution
+        interval_set(terminal_time_update, 1000, NULL); // refresh current time every second
         memset(null_memory_region, 0, SECTOR_SIZE);
 
         screen_clear();
@@ -98,7 +110,7 @@ void kernel_loop(void)
 
         app_exited = false;
 
-        xin_close_all_files();
+        // xin_close_all_files();
 
         while(1)
         {
@@ -136,13 +148,7 @@ void kernel_loop(void)
 
 }
 
-
 uint8_t kernel_mmngr_mmap[PMMNGR_MEMORY_BLOCKS];
-
-void interval_test(address_t* args)
-{
-    xprintf("n");
-}
 
 void _start(void)
 {
@@ -207,7 +213,7 @@ void _start(void)
     // pmmngr_init(0x10000, ppmngr_bitmap);
     // pmmngr_init_region(0x0, 0xFFFFFF);
 
-    mmngr_init(kernel_mmngr_mmap, 0x300000, PMMNGR_MEMORY_BLOCKS);
+    mmngr_init(kernel_mmngr_mmap, 0x100000, PMMNGR_MEMORY_BLOCKS);
 
 
     time_get(&SystemTime);
@@ -394,24 +400,29 @@ void _start(void)
 
     memset((uint8_t *)ArpTable, 0xFF, sizeof(ArpTable[0]));
 
+    __sys_xin_file_create("/syslog");
     printk("To wszystko dla Ciebie Babciu <3");
 
     __sys_xin_folder_create("/config/");
     // xprintf("nicho");
 
-    xprintf("YOUR IP ADDRESS: ");
-    uint32_t base_ip = xanin_ip_get();
-    for(uint8_t i = 3; i > 0; i--)
-    {
-        uint8_t* tmp = (uint8_t*)&base_ip;
-        xprintf("%d.", tmp[i]);
-    }
+    // xprintf("YOUR IP ADDRESS: ");
+    // uint32_t base_ip = xanin_ip_get();
+    // for(uint8_t i = 3; i > 0; i--)
+    // {
+    //     uint8_t* tmp = (uint8_t*)&base_ip;
+    //     xprintf("%d.", tmp[i]);
+    // }
 
-    xprintf("%d\n", base_ip & 0xFF);
+    // xprintf("%d\n", base_ip & 0xF
 
     arp_table_add_entry(LOOPBACK_IP_ADDRESS, null_memory_region);
     arp_module_init();
     icmp_module_init();
+    
+    uint8_t* zeros = (uint8_t*)kcalloc(SECTOR_SIZE);
+
+    while (inputg().scan_code != ENTER);
 
     // system_variable_get(&bufsys, "HOME");
     // xprintf("bufsys: %s\n", bufsys);
@@ -434,22 +445,18 @@ void _start(void)
     // xprintf("%s\n", strconcat("/", hm);
     // inputg();
 
-    xprintf("ARP module status: %d\n", arp_module_status());
+    // xprintf("ARP module status: %d\n", arp_module_status());
 
-    uint8_t* zeros = (uint8_t*)kcalloc(SECTOR_SIZE);
     // xprintf("nicho");
 
-    while (inputg().scan_code != ENTER);
-
-    // address_t* as = NULL;
-
     // screen_clear();
+    //     xprintf("fsadf");
+    //     uint8_t good = 0x02;
+    //     while (good & 0x02)
+    //         good = inbIO(0x64);
+    //     outbIO(0x64, 0xFE);
+    // // address_t* as = NULL;
     
-    // interval_set(interval_test, 1000.0, NULL);
-    // interval_set(interval_test, 1000.0, NULL);
-    // interval_set(interval_test, 1000.0, NULL);
-    // interval_set(interval_test, 1000.0, NULL);
-
     // msleep(10000);
 
     // for(int i = 0; i < 10; i++)

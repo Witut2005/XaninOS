@@ -105,7 +105,8 @@ extern void merge_sort(int array[], int first, int last);
 
 extern void* malloc(uint32_t size);
 extern void* calloc(uint32_t size);
-extern void free(void* ptr);
+// extern void free(void* ptr);
+extern void  free(void* ptr) __attribute__((fastcall));
 extern void* realloc(void* ptr, uint32_t size_new);
 
 extern void* kmalloc(uint32_t size);
@@ -171,6 +172,7 @@ extern "C"{
 interval_id interval_set(interval_handler handler, float ms, address_t* args);
 void interval_clear(interval_id used_interval);
 void do_interval(interval_id interval);
+void all_intervals_clear(void);
 
 #ifdef __cplusplus
 }

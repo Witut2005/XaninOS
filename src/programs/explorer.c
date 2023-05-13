@@ -32,7 +32,7 @@ void handle_selected_option(char* option, ExplorerInfo* AppInfo)
 
     else if(strcmp(option, "rename"))
     {
-        char* new_name = (char*)calloc(MAX_PATH);
+        char* new_name = (char*)calloc(XIN_MAX_PATH_LENGTH);
         Screen.y = 25;
         xprintf("New file name: ");
         xscanf("%s", new_name);
@@ -43,7 +43,7 @@ void handle_selected_option(char* option, ExplorerInfo* AppInfo)
 
     else if(strcmp(option, "link"))
     {
-        char* new_name = (char*)calloc(MAX_PATH);
+        char* new_name = (char*)calloc(XIN_MAX_PATH_LENGTH);
         Screen.y = 25;
 
         xprintf("where do you want to create a link entry: ");
@@ -63,7 +63,7 @@ void handle_selected_option(char* option, ExplorerInfo* AppInfo)
 
     else if(strcmp(option, "copy"))
     {
-        char* new_name = (char*)calloc(MAX_PATH);
+        char* new_name = (char*)calloc(XIN_MAX_PATH_LENGTH);
         Screen.y = 23;
 
         xprintf("where do you want to create a copy entry: ");
@@ -85,7 +85,7 @@ void handle_selected_option(char* option, ExplorerInfo* AppInfo)
 
     else if(strcmp(option, "create"))
     {
-        char* new_name = (char*)calloc(MAX_PATH);
+        char* new_name = (char*)calloc(XIN_MAX_PATH_LENGTH);
         Screen.y = 25;
         xprintf("New file name: ");
         xscanf("%s", new_name);
@@ -168,10 +168,10 @@ int explorer(char* parent_folder)
 
     app_process_register(explorer_app_deconstructor, 2, AppInfo.current_folder, AppInfo.selected_file);
 
-    char* initial_folder = (char*)calloc(MAX_PATH);
+    char* initial_folder = (char*)calloc(XIN_MAX_PATH_LENGTH);
     xin_get_current_directory(initial_folder);
 
-    AppInfo.current_folder = (char*)calloc(MAX_PATH);
+    AppInfo.current_folder = (char*)calloc(XIN_MAX_PATH_LENGTH);
 
     if(!strlen(parent_folder)) // no path given
         xin_get_current_directory(AppInfo.current_folder);

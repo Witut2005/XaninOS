@@ -18,15 +18,13 @@ XinFileDescriptor* FileDescriptorTable;
 
 static XinEntry* XinFilesOpened[XIN_OPENED_FILES_COUNTER];
 
-
 int8_t xin_base_state[100];
 char xin_current_path[38] = {'\0'};
 char xin_current_directory[38] = {'\0'};
 
 char* xin_set_current_directory(char *directory)
 {
-    for (int i = 0; i < sizeof(xin_current_directory); i++)
-        xin_current_directory[i] = '\0';
+    memset(xin_current_directory, 0, XIN_MAX_PATH_LENGTH);
 
     for (int i = 0; directory[i] != '\0'; i++)
         xin_current_directory[i] = directory[i];
@@ -36,21 +34,20 @@ char* xin_set_current_directory(char *directory)
 
 void xin_get_current_directory(char* buf)
 {
-    memcpy((uint8_t*)buf, (uint8_t*)xin_current_directory, MAX_PATH);
+    memcpy((uint8_t*)buf, (uint8_t*)xin_current_directory, XIN_MAX_PATH_LENGTH);
 }
 
 char *xin_get_current_path(char *file_name)
 {
 
-    for (int j = 0; j < 38; j++)
-        xin_current_path[j] = '\0';
+    memset(xin_current_path, 0, XIN_MAX_PATH_LENGTH);
 
     int i = 0x0;
 
     for (i = 0; xin_current_directory[i] != '\0'; i++)
         xin_current_path[i] = xin_current_directory[i];
 
-    for (int pos = 0x0; file_name[pos] != '\0'; i++, pos++)
+    for (int pos = 0; file_name[pos] != '\0'; i++, pos++)
         xin_current_path[i] = file_name[pos];
 
     return xin_current_path;
@@ -113,7 +110,7 @@ void xin_entry_resize(XinEntry* entry, uint32_t new_size)
 }
 
 /* DIRECTORY AND FILES */
-XinEntry *xin_find_entry(char *entry_name)
+XinEntry *xin_find_entry(char* entry_name)
 {
     if(!strlen(entry_name))
         return NULL;
@@ -126,8 +123,8 @@ XinEntry *xin_find_entry(char *entry_name)
 
     entry_name = xin_get_current_path(entry_name);
 
-    if(strlen(entry_name) > 40)
-        return NULL;
+    // if(strlen(entry_name) > 40)
+    //     return NULL;
 
     for (char *i = (char*)XIN_ENTRY_TABLE; (uint32_t)i < XIN_ENTRY_TABLE + (SECTOR_SIZE * 50); i += XIN_ENTRY_SIZE)
     {
@@ -144,7 +141,7 @@ XinEntry* xin_get_file_pf(char* path) // pf = parent folder
     if(strcmp(path, "/"))
         return NULL;
 
-    if(path[0] == '\0')
+    if(!strlen(path))
         return NULL;
         
     bool if_folder = false;
@@ -152,7 +149,7 @@ XinEntry* xin_get_file_pf(char* path) // pf = parent folder
     if(path[strlen(path) - 1] == '/')
         if_folder = true;
 
-    char parent_folder[40] = {0}; 
+    char parent_folder[XIN_MAX_PATH_LENGTH] = {0}; 
 
     int i;
     for(i = strlen(path) - 1 - if_folder; path[i] != '/'; i--);
@@ -160,10 +157,9 @@ XinEntry* xin_get_file_pf(char* path) // pf = parent folder
     for(int j = 0; j <= i; j++)
         parent_folder[j] = path[j];
 
-    if(xin_find_entry(parent_folder) != NULL)
-        return xin_find_entry(parent_folder);   
+    XinEntry* Entry = xin_find_entry(parent_folder);
 
-    return NULL;
+    return Entry != NULL ? Entry : NULL;
 
 }
 
@@ -178,18 +174,21 @@ XinEntry *xin_find_free_entry(void)
     return NULL;
 }
 
-void xin_free_temporary_data(XinEntry** File)
+void xin_free_temporary_data(XinEntry* File)
 {
-    memset((*File)->FileInfo->rights, 0, 2);
-    free((*File)->FileInfo->buffer);
-    free((*File)->FileInfo);
-    *File = NULL;
+    free(File->FileInfo->buffer);
+    free(File->FileInfo);
 }
 
+// DO POPRAWY
 XinEntry *xin_folder_change(char *new_directory)
 {
 
-    char* tmp = (char*)calloc(MAX_PATH);
+    if(strlen(new_directory) > XIN_MAX_PATH_LENGTH) 
+        return NULL;
+
+    char* tmp = (char*)calloc(XIN_MAX_PATH_LENGTH);
+
     strcpy(tmp, new_directory);
     new_directory = tmp;
 
@@ -223,8 +222,6 @@ XinEntry *xin_folder_change(char *new_directory)
 
     if (xin_new_directory == NULL)
     {
-        // xprintf("%zNO SUCH DIRECTORY\n", OUTPUT_COLOR_SET(red, white));
-        // while (KeyInfo.scan_code != ENTER);
         free(new_directory);
         return NULL;
     }
@@ -237,8 +234,6 @@ XinEntry *xin_folder_change(char *new_directory)
 
     else if (new_directory[strlen(new_directory) - 1] != '/')
     {
-        // xprintf("%zMISSING / ENDING CHARACTER IN DIRECTORY NAME\n", OUTPUT_COLOR_SET(red, white));
-        // while (KeyInfo.scan_code != ENTER);
         free(new_directory);
         return NULL;
     }
@@ -247,8 +242,6 @@ XinEntry *xin_folder_change(char *new_directory)
         xin_current_directory[i] = '\0';
 
     strcpy(xin_current_directory, xin_new_directory->path);
-
-    // xprintf("your file: %s", xin_current_directory);
 
     free(new_directory);
     return xin_new_directory;
@@ -280,19 +273,12 @@ int xin_folder_create(char* entry_name)
 
     entry_name[strlen(entry_name) - 1] = '/';
 
-
-
     if(only_entry_name)
     {
-
         char* path = xin_get_current_path(entry_name); 
 
         if(xin_find_entry(entry_name) != NULL)
-        {
-            // xprintf("%zFILE WITH THIS NAME EXISTS\n", stderr);
-            // while(getscan() != ENTER);
             return XIN_FILE_EXISTS;
-        }
 
         strcpy(entry->path, path);
 
@@ -300,10 +286,8 @@ int xin_folder_create(char* entry_name)
 
     else if(!only_entry_name && entry_name[0] != '/')
     {
-
-        // return XANIN_ERROR;
-        char full_path[40];
-        memcpy(full_path, xin_get_current_path(entry_name), 40);
+        char full_path[XIN_MAX_PATH_LENGTH];
+        memcpy(full_path, xin_get_current_path(entry_name), XIN_MAX_PATH_LENGTH);
 
         XinEntry* path = xin_find_entry(xin_get_file_pf(full_path)->path);
 
@@ -316,11 +300,7 @@ int xin_folder_create(char* entry_name)
     else if(xin_get_file_pf(entry_name) != NULL)
     {
         if(xin_find_entry(entry_name) != NULL)
-        {
-            // xprintf("%zFILE WITH THIS NAME EXISTS\n", stderr);
-            // while(getscan() != ENTER);
             return XIN_FILE_EXISTS;
-        }
 
         strcpy(entry->path, entry_name);
     }
@@ -328,12 +308,7 @@ int xin_folder_create(char* entry_name)
 
 
     else
-    {
-        
-        // xprintf("%zFILE CREATE FAILURE\n", stderr);
-        // while(getscan() != ENTER);
         return XANIN_ERROR;
-    }
 
     /* write entry to xin entry date table */
 
@@ -348,8 +323,8 @@ int xin_folder_create(char* entry_name)
     entry->size = 0x0;
     entry->type = XIN_DIRECTORY;
 
-    disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x12, 5, (uint16_t*)(0x800));
-    disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x1a, 10, (uint16_t*)(0x1800));
+    disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x12, 5, (uint16_t*)(XIN_ENTRY_POINTERS));
+    disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x1a, 10, (uint16_t*)(XIN_ENTRY_TABLE));
 
     return XANIN_OK;
 
@@ -502,7 +477,7 @@ int xin_file_create(char* entry_name)
                 break;
         }
 
-        char tmp[40] = {0};
+        char tmp[XIN_MAX_PATH_LENGTH] = {0};
 
         for(int j = 0; j <= i; j++)
             tmp[j] = entry_name[j];
@@ -601,8 +576,8 @@ int xin_file_create(char* entry_name)
     
     free(zeros);
 
-    disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x12, 8, (uint16_t*)0x800);
-    disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x1a, 40, (uint16_t*)(0x1800));
+    disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x12, 8, (uint16_t*)XIN_ENTRY_POINTERS);
+    disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x1a, 40, (uint16_t*)(XIN_ENTRY_TABLE));
 
     return XANIN_OK;
 
@@ -611,7 +586,6 @@ int xin_file_create(char* entry_name)
 int xin_file_reallocate_with_given_size(XinEntry* File, uint32_t size)
 {
 
-    interrupt_disable();
 
     // FileInformationBlock* OldInfo = File->FileInfo;
 
@@ -653,7 +627,7 @@ int xin_file_reallocate_with_given_size(XinEntry* File, uint32_t size)
     File->creation_time = (uint16_t)(SystemTime.hour << 8) | (SystemTime.minutes);
     File->modification_date = (uint32_t)((SystemTime.day_of_month << 24) | (SystemTime.month << 16) | (SystemTime.century << 8) | (SystemTime.year)); 
     File->modification_time = (uint16_t)(SystemTime.hour << 8) | (SystemTime.minutes);
-    File->FileInfo = NULL;
+    // File->FileInfo = NULL;
     File->permissions = PERMISSION_MAX;
     File->size = size;
     // File->type = XIN_FILE;
@@ -670,8 +644,8 @@ int xin_file_reallocate_with_given_size(XinEntry* File, uint32_t size)
 
     disk_write(ATA_FIRST_BUS, ATA_MASTER, File->first_sector, number_of_sectors_to_allocate, (uint16_t*)buf);
     
-    disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x12, 8, (uint16_t*)0x800);
-    disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x1a, 40, (uint16_t*)(0x1800));
+    disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x12, 8, (uint16_t*)XIN_ENTRY_POINTERS);
+    disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x1a, 40, (uint16_t*)(XIN_ENTRY_TABLE));
 
     free(buf);
 
@@ -827,7 +801,6 @@ size_t fwrite(XinEntry *entry, void *buf, size_t count)
     entry->FileInfo->buffer = (uint8_t*)realloc(entry->FileInfo->buffer, (int_to_sectors(entry->FileInfo->tmp_size) + 1) * SECTOR_SIZE);
     entry->FileInfo->sector_in_use = (bool*)realloc(entry->FileInfo->sector_in_use, (int_to_sectors(entry->FileInfo->tmp_size) + 1));
 
-
     uint32_t sectors_to_load = int_to_sectors(count + initial_position);
 
     if(sectors_to_load > int_to_sectors(entry->size))
@@ -854,6 +827,7 @@ size_t fwrite(XinEntry *entry, void *buf, size_t count)
 
     entry->modification_date = (uint32_t)((SystemTime.day_of_month << 24) | (SystemTime.month << 16) | (SystemTime.century << 8) | (SystemTime.year)); 
     entry->modification_time = (uint16_t)(SystemTime.hour << 8) | (SystemTime.minutes);
+    // xprintf("buf: %s\n", entry->FileInfo->buffer);
     return count;
 }
 
@@ -913,12 +887,20 @@ XinEntry *fopen(char *file_path, char *mode)
 
     if(file != NULL)
     {
+        // xprintf("nicho\n");
     	if(file->type != XIN_FILE && file->type != XIN_HARD_LINK)
             return NULL;
+
+        // if(file->FileInfo)
+        // {
+        //     fclose(&file);
+        //     file = xin_find_entry(file_path);
+        // }
 
         file->FileInfo = (FileInformationBlock*)calloc(sizeof(FileInformationBlock));
         file->FileInfo->buffer = (uint8_t*)calloc(file->size + SECTOR_SIZE); // additional space
         file->FileInfo->sector_in_use = (bool*)calloc(int_to_sectors(file->size) + 1); // additional space
+        // xprintf("nicho\n");
 
         memset(file->FileInfo->rights, '\0', 2); //set file rights
         strcpy(file->FileInfo->rights, mode);
@@ -927,6 +909,7 @@ XinEntry *fopen(char *file_path, char *mode)
         file->FileInfo->tmp_size = 0;
         file->FileInfo->is_fully_loaded = false;
         xin_add_files_to_xfo(file);
+        // xprintf("nicho\n");
     }
 
     if(strncmp(mode, "a", 2))
@@ -941,8 +924,8 @@ XinEntry *fopen(char *file_path, char *mode)
         file->FileInfo->position = file->size;
         file->FileInfo->tmp_size = file->size;
         file->FileInfo->is_fully_loaded = true;
-        xin_add_files_to_xfo(file);
-        return file;
+        // xin_add_files_to_xfo(file);
+        // return file;
     }
 
 
@@ -970,20 +953,21 @@ XinEntry *fopen(char *file_path, char *mode)
             file->FileInfo->tmp_size = 0;
             file->FileInfo->is_fully_loaded = false;
             xin_add_files_to_xfo(file);
+        // xprintf("nicho\n");
             return file;
         }
 
         else if(status == XIN_FILE_EXISTS)
         {
+        // xprintf("nicho\n");
             xin_add_files_to_xfo(file);
+        // xprintf("nicho\n");
             return file;
         }
 
         else
             return NULL;
     }
-
-
 
     return NULL;
 }
@@ -1017,7 +1001,7 @@ void fclose(XinEntry** file)
     if(*file == NULL)
         return;
 
-    interrupt_disable();
+    // xprintf("close\n");
 
     uint32_t new_size;
 
@@ -1025,14 +1009,23 @@ void fclose(XinEntry** file)
         new_size = (*file)->FileInfo->tmp_size;
     else
         new_size = (*file)->size;
+    // xprintf("info: 0x%x\n", (*file)->FileInfo);
 
-    if(strncmp((*file)->FileInfo->rights, "r", 2)) // READ-ONLY OPTION
-        xin_file_reallocate_with_given_size((*file), (*file)->size);
-    else
+    if(!strncmp((*file)->FileInfo->rights, "r", 2)) // READ-ONLY OPTION
         xin_file_reallocate_with_given_size((*file), new_size);
+    // else
+    //     xin_file_reallocate_with_given_size((*file), new_size);
 
+    // xprintf("close NICHO\n");
+
+    // xprintf("close buf: %s\n", (*file)->FileInfo->buffer);
+    // xprintf("0x%x\n", (*file)->FileInfo);
     free((*file)->FileInfo->buffer);
     free((*file)->FileInfo);
+    // (*file)->FileInfo->buffer = NULL;
+    // (*file)->FileInfo = NULL;
+
+    // xprintf("close free\n");
 
     for(int i = 0; i < XIN_OPENED_FILES_COUNTER; i++)
     {
@@ -1040,7 +1033,8 @@ void fclose(XinEntry** file)
             XinFilesOpened[i] = NULL;
     }
 
-    interrupt_enable();
+    (*file)->FileInfo = NULL;
+
 
 }
 
@@ -1186,10 +1180,10 @@ __STATUS remove_directory(char* folder_name)
     if(folder == NULL)
         return XIN_ENTRY_NOT_FOUND;
 
-    char name[40];
+    char name[XIN_MAX_PATH_LENGTH];
     uint32_t name_length;
 
-    memcpy(name, folder->path, 40); 
+    memcpy(name, folder->path, XIN_MAX_PATH_LENGTH); 
     name_length = strlen(name) - 1;
 
     for(XinEntry* i = (XinEntry*)XIN_ENTRY_TABLE; i < (XinEntry*)(XIN_ENTRY_TABLE + SECTOR_SIZE * 4); i++)
@@ -1205,14 +1199,14 @@ __STATUS remove_directory(char* folder_name)
         }
     }
 
-    memset(folder->path, 0, 40);
+    memset(folder->path, 0, XIN_MAX_PATH_LENGTH);
     return XANIN_OK;
 
 }
 
 char* xin_get_entry_name(char* path)
 {
-    char* tmp = (char*)calloc(MAX_PATH);
+    char* tmp = (char*)calloc(XIN_MAX_PATH_LENGTH);
 
     if(path[0] == '/' && strlen(path) == 1)
     {
@@ -1233,7 +1227,7 @@ char* xin_get_entry_name(char* path)
     
     for(; path[index-1] != '/'; index--);
 
-    for(int i = 0; i < MAX_PATH; i++)
+    for(int i = 0; i < XIN_MAX_PATH_LENGTH; i++)
         tmp[i] = path[index+i];
 
     // if(path[strlen(path)-1] == '/')

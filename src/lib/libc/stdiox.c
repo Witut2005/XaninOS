@@ -14,7 +14,7 @@ void screen_background_color_set(uint8_t color)
 {
     uint8_t* vga_ptr = (uint8_t*)VGA_TEXT_MEMORY;
 
-    for(int i = 1; i < VGA_SCREEN_RESOLUTION; i+=2)
+    for(int i = 1; i < VGA_SCREEN_RESOLUTION * 2; i+=2)
     {
         vga_ptr[i] &= 0xF;
         vga_ptr[i] |= color << 4;
@@ -120,7 +120,10 @@ void xprintf(char* str, ... )
     va_list args;
     va_start(args,str);
 
+    uint8_t x = Screen.x;
+    uint8_t y = Screen.y;
 
+    bool position_change_switch_used = false;
 
     uint32_t string_counter = 0;
 
@@ -415,9 +418,10 @@ void xprintf(char* str, ... )
 
                 case 'h':
                 {
+                    position_change_switch_used = true;
                     number = (uint16_t)va_arg(args,uint32_t);
-                    Screen.x = (number >> 8) & 0xFF;
-                    Screen.y = number & 0xFF;
+                    Screen.y = (number >> 8) & 0xFF;
+                    Screen.x = number & 0xFF;
                     break;
                 }
 
@@ -542,6 +546,12 @@ void xprintf(char* str, ... )
 
 
 
+    }
+
+    if(position_change_switch_used) // restore Screen.x and Screen.y
+    {
+        Screen.y = y;
+        Screen.x = x;
     }
 
     va_end(args);

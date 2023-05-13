@@ -10,13 +10,10 @@
 
 void printk(const char * str)
 {
-    return;
-
-    interrupt_disable();
-
-    XinEntry* file = fopen("/syslog", "w");
 
     char buf[VGA_WIDTH] = {0};
+
+    XinEntry* file = fopen("/syslog", "rw");
 
     char separator = ':';
     fseek(file, file->size);
@@ -35,11 +32,7 @@ void printk(const char * str)
 
     fwrite(file, (void*)str, strlen(str));
 
-    fwrite(file, "\n", 2);
-
-
-    // current_line++;
+    fwrite(file, "\n", 1);
 
     fclose(&file);
-    interrupt_enable();
 }

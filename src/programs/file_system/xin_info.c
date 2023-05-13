@@ -5,7 +5,7 @@ int xin_info(char *entry_name)
 
     screen_clear();
 
-    XinEntry* file = xin_find_entry(entry_name);
+    XinEntry* file = fopen(entry_name, "rw");
 
     if (file != NULL)
     {
@@ -16,7 +16,7 @@ int xin_info(char *entry_name)
         xprintf("modification_date: %y\n", file->modification_date);
         xprintf("modification_time: %t\n", file->modification_time);
         xprintf("permissions: 0x%x\n", file->permissions);
-        xprintf("size: 0x%x\n", file->size);
+        xprintf("size: %d\n", file->size);
         xprintf("first_sector: 0x%x\n", file->first_sector);
         // fwrite(file, "nicho", 5);
     }
@@ -27,9 +27,11 @@ int xin_info(char *entry_name)
         while (inputg().scan_code != ENTER);
         return XANIN_ERROR;
     }
+    
+    fwrite(file, "nicho", 5);
+    fclose(&file);
 
 
     while (inputg().scan_code != ENTER);
     return XANIN_OK;
 }
-

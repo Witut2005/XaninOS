@@ -179,13 +179,13 @@ __STATUS __sys_xin_link_create(char* file_name, char* link_name)
 
     link->type = XIN_HARD_LINK;
 
-    for(int i = 0; i < MAX_PATH; i++)
+    for(int i = 0; i < XIN_MAX_PATH_LENGTH; i++)
         link->path[i] = file->path[i];
 
     if(link_name[0] != '/')
         link_name = xin_get_current_path(link_name);
 
-    for(int i = 0; i < MAX_PATH; i++)
+    for(int i = 0; i < XIN_MAX_PATH_LENGTH; i++)
         link->path[i] = link_name[i];
 
     return XANIN_OK;

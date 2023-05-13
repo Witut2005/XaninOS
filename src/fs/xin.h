@@ -95,7 +95,7 @@ const uint32_t lteel(int fd);
 uint8_t *xin_find_free_pointer(void);
 uint8_t *xin_find_free_pointer_with_given_size(uint32_t size);
 int xin_get_file_size_in_sectors(XinEntry* File);
-void xin_free_temporary_data(XinEntry** File);
+void xin_free_temporary_data(XinEntry* File);
 XinEntriesPack* xin_get_hard_links(const XinEntry* const File);
 bool xin_add_files_to_xfo(XinEntry* File);
 void xin_close_all_files(void);

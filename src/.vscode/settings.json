@@ -7,6 +7,12 @@
         "scan_codes.h": "c",
         "vty.h": "c",
         "disk.h": "c",
-        "stddef.h": "c"
+        "stddef.h": "c",
+        "real_mode_fswitch.h": "c",
+        "license": "c",
+        "climits": "c",
+        "cstdarg": "c",
+        "cstdbool": "c",
+        "cstdint": "c"
     }
 }

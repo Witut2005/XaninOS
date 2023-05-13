@@ -27,6 +27,7 @@ void exception_print(const char* message)
 
     Screen.x = 0;
     xprintf("%zERROR: %s\n", stderr, message);
+    interrupt_enable();
     while(inputg().scan_code != ENTER);
 }
 

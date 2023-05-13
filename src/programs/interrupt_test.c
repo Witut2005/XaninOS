@@ -1,4 +1,5 @@
 
+#include <lib/libc/stdlibx.h>
 
 int interrupt_test(char* int_id)
 {

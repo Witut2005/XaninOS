@@ -2,13 +2,14 @@
 
 extern int cpp_test(void);
 
+#include <programs/dev_tools.c>
+#include <programs/print_to_syslog.c>
 #include <sys/terminal/interpreter/interpreter.h>
 #include <sys/terminal/interface/terminal.h>
 #include <programs/nic_info.c>
 #include <sys/gyn_cl/gyn.c>
 #include <programs/xin_xpaint.c>
 #include <programs/xgl_test.c>
-
 #include <programs/arp_table_print.c>
 #include <programs/ping.c>
 #include <programs/ip_test.c>
@@ -27,22 +28,7 @@ extern int cpp_test(void);
 #include <fs/loaders/elf/elfdump.c>
 #include <app_config.h>
 #include <lib/libc/stdiox.h>
-
-#ifdef HELP_APP
 #include <programs/help.c>
-#endif
-
-//#include <programs/ls.c>
-//#include <programs/type.c>
-//#include <programs/note.c>
-//#include <programs/hexview.c>
-//#include <programs/execute.c>
-//#include <programs/cd.c>
-//#include <programs/pwd.c>
-//#include <programs/md.c>
-//#include <programs/rd.c>
-//#include <programs/touch.c>
-
 #include <programs/netapi_check.c>
 #include <programs/netplan_apply.c>
 #include <programs/interrupt_test.c>
@@ -59,106 +45,30 @@ extern int cpp_test(void);
 #include <programs/file_system/move.c>
 #include <programs/tetris/tetris.c>
 #include <programs/start_screen.c>
-
-
-#ifdef SHUTDOWN_APP
 #include <programs/shutdown.c>
-#endif
-
-
-#ifdef DEVICE_INFO_APP
 #include <programs/device_info.c>
-#endif
-
-#ifdef LOAD_APP
 #include <programs/load.c>
-#endif
-
-#ifdef LOADCH_APP
 #include <programs/loadch.c>
-#endif
-
-#ifdef EPILEPSY_APP
 #include <programs/epilepsy.c>
-#endif
-
-#ifdef KEYBOARD_TEST_APP
 #include <programs/keyboard_test.c>
-#endif
-
-#ifdef LOGO_APP
 #include <programs/logo.c>
-#endif
-
-// #ifdef REGISTER_DUMP_APP
-// #include <programs/register_dump.c>
-// #endif
-
-#ifdef CPU_INFO_APP
+#include <programs/register_dump.c>
 #include <programs/cpu_info.c>
-#endif
-
-#ifdef CALC_APP
 #include <programs/calc.c>
-#endif
-
-#ifdef PONG_APP 
 #include <programs/pong/pong.c>
-#endif
-
-#ifdef TIMER_TEST_APP
 #include <programs/timer_test.c>
-#endif
-
-#ifdef ZSK_APP
 #include <programs/zsk.c>
-#endif
-
-#ifdef EXECUTE_ADDR_APP
 #include <programs/execute_addr.c>
-#endif
-
-#ifdef DISK_LOAD_APP
 #include <programs/disk_load.c>
-#endif
-
-#ifdef DISK_WRITE_APP
 #include <programs/disk_write.c>
-#endif
-
-#ifdef RUN_APP
 #include <programs/run.c>
-#endif
-
-#ifdef RUN16_APP
 #include <programs/run16.c>
-#endif
-
-#ifdef HEXEDITOR_APP
 #include <programs/hexeditor/hexeditor.c>
-#endif
-
-// #ifdef MOUSE_APP
 #include <programs/mouse.c>
-// #endif
-
-// #include <programsxin.h>
-
-#ifdef NOTE_APP
 #include <programs/xin_note.c>
-#endif
-
-#ifdef PAINT_APP
 #include <programs/xin_paint.c>
-#endif
-
-#ifdef CAT_APP
 #include <programs/file_system/cat.c>
-#endif
-
-#ifdef XIN_INFO_APP
 #include <programs/file_system/xin_info.c>
-#endif
 
 
 int last_command_exit_status;
@@ -183,7 +93,7 @@ void check_external_apps(void)
     for(int i = 0; program_name[i] != '\0'; i++)
         app[ARRAY_LENGTH("/external_apps/") + i - 1] = program_name[i];
 
-    if(strlen(app) > MAX_PATH)
+    if(strlen(app) > XIN_MAX_PATH_LENGTH)
         return;
 
     XinEntry* file = fopen(app, "r");
@@ -202,6 +112,7 @@ void scan(void)
 {
 
     screen_clear();
+    all_intervals_clear(); // clear kernel intervals
     last_command_exit_status = XANIN_OK;
     
     //legacy reasons
@@ -212,7 +123,7 @@ void scan(void)
     
     for(int i = 0; i < 5; i++)
     {
-        if(strlen(argv[i]) == 0)
+        if(!strlen(argv[i]))
             break;
         argc = i;
     }
@@ -233,123 +144,74 @@ void scan(void)
         }
     }
 
+    XANIN_ADD_APP_ENTRY1("dev_tools", dev_tools)
     XANIN_ADD_APP_ENTRY0("netplan_apply", netplan_apply)
     XANIN_ADD_APP_ENTRY1("netapi_check", netapi_check)
     XANIN_ADD_APP_ENTRY0("usb_info", usb_controller_info)
     XANIN_ADD_APP_ENTRY0("memtest", memory_test)
-    // XANIN_ADD_APP_ENTRY0("grapher", grapher)
+    XANIN_ADD_APP_ENTRY0("grapher", grapher)
     XANIN_ADD_APP_ENTRY0("petris", ptetris)
     XANIN_ADD_APP_ENTRY0("ptetris", ptetris)
     XANIN_ADD_APP_ENTRY1("explorer", explorer)
     XANIN_ADD_APP_ENTRY1("int", interrupt_test)
-
     XANIN_ADD_APP_ENTRY0("idt", idt_examine)
     XANIN_ADD_APP_ENTRY0("start_screen", start_screen)
     XANIN_ADD_APP_ENTRY0("screensaver", start_screen)
     XANIN_ADD_APP_ENTRY2("load_file", load_file)
     XANIN_ADD_APP_ENTRY0("mouse_test", mouse_test)
-
-    #ifdef HELP_APP
     XANIN_ADD_APP_ENTRY1("help", help)
+    XANIN_ADD_APP_ENTRY1("printk", print_to_syslog)
     XANIN_ADD_APP_ENTRY1("h", help)
-    #endif
-
-    #ifdef TIMER_TEST_APP
     XANIN_ADD_APP_ENTRY0("timer_test", timer_test)
-    #endif
-
-    #ifdef CAT_APP
     XANIN_ADD_APP_ENTRY1("cat", cat)
-    #endif
-
     XANIN_ADD_APP_ENTRY1("zsk", zsk)
-
-    #ifdef EPILEPSY_APP
     XANIN_ADD_APP_ENTRY0("epilepsy", epilepsy)
-    #endif
-
-    #ifdef ELF_LOADER_APP 
     XANIN_ADD_APP_ENTRY1("elft", elfreader)
     XANIN_ADD_APP_ENTRY1("elf", elfreader)
     XANIN_ADD_APP_ENTRY1("elfdump", elfdump)
-    #endif
-
-    #ifdef HEXEDITOR_APP
     XANIN_ADD_APP_ENTRY2("hexeditor", hexeditor)
-    #endif
-
-    #ifdef RUN16_APP
     XANIN_ADD_APP_ENTRY1("run16", run16)
-    #endif
-
-    #ifdef RUN_APP
     XANIN_ADD_APP_ENTRY1("run", run)
-    #endif
-
-    #ifdef CPP_TEST_APP
     XANIN_ADD_APP_ENTRY0("test", cpp_test)
-    #endif
-
-    #ifdef CPU_INFO_APP
     XANIN_ADD_APP_ENTRY1("cpu_info", cpu_info)
-    #endif
-
-    #ifdef CALC_APP
     XANIN_ADD_APP_ENTRY1("calc", calc)
-    #endif
-
-    #ifdef PAINT_APP
     XANIN_ADD_APP_ENTRY1("paint", xin_paint)
-    #endif
-
-    // #ifdef REGISTER_DUMP_APP
-    // XANIN_ADD_APP_ENTRY0("reg_dump", reg_dump)
-    // #endif
-
-    #ifdef LOAD_APP
+    XANIN_ADD_APP_ENTRY0("reg_dump", reg_dump)
     XANIN_ADD_APP_ENTRY1("load", load)
-    #endif
-
-    #ifdef DISK_LOAD_APP
     XANIN_ADD_APP_ENTRY3("disk_load", disk_load)
-    #endif
-
-    #ifdef DISK_WRITE_APP
     XANIN_ADD_APP_ENTRY3("disk_write", disk_write_data)
-    #endif
-
-    #ifdef EXECUTE_ADDR_APP
     XANIN_ADD_APP_ENTRY1("execute_addr", execute_addr)
-    #endif
-
-    #ifdef KEYBOARD_TEST_APP
     XANIN_ADD_APP_ENTRY0("key-test", keyboard_test)
-    #endif
-
-    #ifdef PONG_APP
     XANIN_ADD_APP_ENTRY0("pong", pong)
-    #endif
-
-    #ifdef LOADCH_APP
     XANIN_ADD_APP_ENTRY1("loadch", loadch)
-    #endif
-
-    #ifdef DEVICE_INFO_APP
     XANIN_ADD_APP_ENTRY0("dev-info", get_device_info)
-    #endif
 
-    // #ifdef REBOOT_APP
-    XANIN_ADD_APP_ENTRY0("reboot", reboot)
-    // #endif
+    else if(strcmp(program_name, "reboot"))
+    {
 
-    // XANIN_ADD_APP_ENTRY1("create", __sys_xin_file_create)
+        // halt();
+        // *(uint16_t*)VGA_TEXT_MEMORY = 0x4141;
+
+        uint16_t idt_16[3] = {0x0, 0x0, 0x0};
+        asm("lidt %0" :: "m"(idt_16));
+        uint8_t s = 12;
+        s = s / 0;
+
+        // // screen_clear();
+
+        // // // disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x12, 5, (uint16_t*)(0x800));
+        // // // disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x1a, 20, (uint16_t*)(0x1800));
+
+        
+        // uint8_t s = 12;
+        // s = s / 0;
+
+    // return XANIN_OK;
+
+    }
     XANIN_ADD_APP_ENTRY1("create", xin_create_file_app)
     XANIN_ADD_APP_ENTRY1("mkdir", xin_create_folder_app)
-
-    #ifdef SHUTDOWN_APP
     XANIN_ADD_APP_ENTRY0("shutdown", shutdown)
-    #endif
-    
     XANIN_ADD_APP_ENTRY1("rm", xin_entry_remove_app)
     XANIN_ADD_APP_ENTRY1("rd", xin_folder_remove_app)
     XANIN_ADD_APP_ENTRY1("cd", xin_folder_change_app)
@@ -360,61 +222,28 @@ void scan(void)
         while(inputg().scan_code != ENTER);
     }
 
-    // XANIN_ADD_APP_ENTRY1("pf", xin_get_file_pf_test)
-
-    #ifdef XIN_MOVE_APP
     XANIN_ADD_APP_ENTRY2("move", xin_move_entry_app)
     XANIN_ADD_APP_ENTRY2("mv", xin_move_entry_app)
-    #endif
-
-    #ifdef XIN_COPY_APP
     XANIN_ADD_APP_ENTRY2("copy", xin_copy_app)
     XANIN_ADD_APP_ENTRY2("cp", xin_copy_app)
-    #endif
-
-    #ifdef XIN_LINK_APP
     XANIN_ADD_APP_ENTRY2("link", xin_link_create_app)
     XANIN_ADD_APP_ENTRY2("lk", xin_link_create_app)
-    #endif
-
-    #ifdef XIN_INFO_APP
     XANIN_ADD_APP_ENTRY1("xin_info", xin_info)
-    #endif
-
     XANIN_ADD_APP_ENTRY0("cls", screen_clear)
     XANIN_ADD_APP_ENTRY0("clear", screen_clear)
-
-    #ifdef LIST_FILES_APP
-    
     else if(strcmp(program_name, "ls"))
     {
         xin_list_files_app(argv);
     }
-
-    // XANIN_ADD_APP_ENTRY1("ls", __sys_xin_list_files)
-    // XANIN_ADD_APP_ENTRY1("dir", __sys_xin_list_files)
-    #endif
-
-    #ifdef NOTE_APP
     XANIN_ADD_APP_ENTRY1("note", xin_note)
-    #endif
-
-    #ifdef LOGO_APP
     XANIN_ADD_APP_ENTRY2("logo", logo_color_change)
-    #endif
-
     XANIN_ADD_APP_ENTRY1("nic_info", nic_info)
-
     XANIN_ADD_APP_ENTRY1("gyn", gyn_interpreter)
-
     XANIN_ADD_APP_ENTRY0("screenshot", screenshot)
-
     XANIN_ADD_APP_ENTRY1("xpaint", xin_xpaint)
-
     XANIN_ADD_APP_ENTRY0("xgm", xagame_test)
     XANIN_ADD_APP_ENTRY0("tetris", tetris)
     XANIN_ADD_APP_ENTRY0("xgl_test", xgl_test)
-
     XANIN_ADD_APP_ENTRY2("arp", arp_table_print)
     XANIN_ADD_APP_ENTRY1("ping", ping)
     XANIN_ADD_APP_ENTRY1("ip_test", ip_test)

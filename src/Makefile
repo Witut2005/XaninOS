@@ -359,6 +359,9 @@ build:
 	@echo [ASM] CRT0
 	@nasm -f elf32 ./lib/libc/crt0.asm -o ./lib/libc/crt0.o
 
+	@echo [ASM] ALLOC.ASM
+	@nasm -f elf32 ./lib/libc/alloc.asm -o ./lib/libc/alloc.o
+
 	@echo "\n///////////////////////////////////////////////"
 
 	@echo "\033[0;32mREGULAR CPP LIBRARY COMPILATION PHARSE"
@@ -396,9 +399,6 @@ build:
 	@echo [C] edit.c
 	@$(C) $(C_OPTIONS) ./programs/edit.c -o ./programs/edit.o
 
-	@echo [C] register_dump.c
-	@$(C) $(C_OPTIONS) ./programs/register_dump.c -o ./programs/register_dump.o
-
 	@echo [CC] xagame_test.cpp
 	@$(CC) $(CC_OPTIONS) ./programs/xagames/xagame_test.cpp -o ./programs/xagames/xagame_test.o
 
@@ -427,6 +427,7 @@ build:
 	./lib/libc/memory.o \
 	./lib/libc/stdiox.o \
 	./lib/libc/stdlibx.o \
+	./lib/libc/alloc.o \
 	./lib/libc/string.o \
 	./sys/log/syslog.o \
 	./lib/libc/system.o \
@@ -445,14 +446,13 @@ build:
 	./sys/devices/hda/disk.o \
 	./sys/terminal/interface/terminal.o -o ./lib/libc/libc.o
 
-	@i386-elf-gcc -shared -Ttext 0x900000 -o ./lib/libc/libc.so ./lib/libc/libc.o
-	@i386-elf-ar rsc ./lib/libc/libc.a ./lib/libc/libc.o ./lib/libc/crt0.o
+	# @i386-elf-gcc -shared -Ttext 0x900000 -o ./lib/libc/libc.so ./lib/libc/libc.o
+	# @i386-elf-ar rsc ./lib/libc/libc.a ./lib/libc/libc.o ./lib/libc/crt0.o
 
 	@echo [C] kernel.c
 	@$(C) $(C_COMPILE) ./sys/kernel.c \
 	./sys/pmmngr/alloc.o \
 	./sys/input/input.o \
-	./programs/register_dump.o \
 	./sys/call/xanin_sys/pmmngr/alloc.o \
 	./sys/interrupts/handlers/entries/divide_by_zero_exception.o \
 	./sys/interrupts/handlers/entries/debug_exception.o \
@@ -524,10 +524,8 @@ build:
 	@$(C) $(C_COMPILE) ./boot/disk_freestanding_driver.c ./boot/linker.ld -Ttext 0xA00000 -o ./boot/disk_freestanding_driver
 	python3 ./utils/align_file.py -file ./boot/disk_freestanding_driver -size 512
 	
-	cp ./lib/libc/libc.o ./external_apps/libc.o
 	cp ./lib/libc/libc.a ./external_apps/libc.a
 	cp ./lib/libc/crt0.o ./external_apps/crt0.o
-	cp ./lib/libc/libc.so ./external_apps/libsharedc.so
 
 	python3 ./utils/XaninSupervisor.py
 	
@@ -547,6 +545,8 @@ build:
 	python3 ./utils/align_file.py -f ./xanin.img -size 800000
 	@mv xanin.img -f ../bin
 	@mv xanin.bin -f ../bin
+
+	rm ./external_apps/libc.a
 	
 	@python3 ./utils/app_preinstall.py -files external_apps/ ./etc/net/ ./etc/var/ -image $(XANIN_BINARIES)/xanin.img 
 

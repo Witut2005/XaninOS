@@ -6,7 +6,7 @@ int memory_test(void)
 {
 
     xprintf("mmngr map kernel space: 0x%x\n", mmngr_mmap);
-    xprintf("mmngr map kernel space: 0x%x\n", &mmngr_mmap[user_heap_offset]);
+    xprintf("mmngr map user space: 0x%x\n", &mmngr_mmap[user_heap_offset]);
 
     xprintf("base\n");
     xprintf("kernel: 0x%x\n", kernel_heap_base_get());

@@ -37,12 +37,11 @@ uint32_t int_to_sectors(uint32_t num)
 
 void exit(void)
 {
-    interrupt_enable();
     eoi_send();
-    // kernel_loop();
+    kernel_loop();
     
-    asm("mov eax, 1\n\t"
-        "int 0x80");
+    // asm("mov eax, 1\n\t"
+    //     "int 0x80");
 
     app_process_unregister();
 }
@@ -346,7 +345,7 @@ void* malloc(uint32_t size)
         "mov ecx, %1;"
         "int 0x81;"
         "mov %0, eax;"
-        :"=r"(ret)
+        :"=g"(ret)
         :"g"(size)
         );
 
@@ -360,7 +359,7 @@ void* calloc(uint32_t size)
         "mov ecx, %1;"
         "int 0x81;"
         "mov %0, eax;"
-        :"=r"(ret)
+        :"=g"(ret)
         :"g"(size)
         );
 
@@ -368,15 +367,16 @@ void* calloc(uint32_t size)
 }
 
 
-void free(void* ptr)
-{
-    asm("mov eax, 103;" // free syscall id
-        "mov ecx, %0;"
-        "int 0x81;"
-        :
-        :"g"(ptr)
-        );
-}
+// void free(void* ptr)
+// {
+//     asm("mov eax, 103;" // free syscall id
+//         "mov ecx, %0;"
+//         "int 0x81"
+//         :
+//         :"r"(ptr) //r
+//         : "eax", "ecx"
+//         );
+// }
 
 
 void* realloc(void* ptr, uint32_t size)
@@ -387,7 +387,7 @@ void* realloc(void* ptr, uint32_t size)
         "mov edx, %2;"
         "int 0x81;"
         "mov %0, eax;"
-        :"=r"(ret)
+        :"=g"(ret)
         :"g"(ptr), "g"(size)
         );
 
@@ -417,10 +417,15 @@ interval_id interval_set(interval_handler handler, float ms, address_t* args)
     return INTERVAL_CANT_INIT;
 }
 
-
-void interval_clear(interval_id interval)
+void interval_clear(interval_id used_interval)
 {
-    XaninIntervals[interval].is_in_use = INTERVAL_CLEAR;
+    XaninIntervals[used_interval].is_in_use = INTERVAL_CLEAR;
+}
+
+void all_intervals_clear(void)
+{
+    for(int i = 0; i < INTERVALS_MAX; i++)
+        XaninIntervals[i].is_in_use = INTERVAL_CLEAR;
 }
 
 void do_interval(interval_id interval)

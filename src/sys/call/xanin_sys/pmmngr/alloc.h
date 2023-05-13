@@ -13,7 +13,6 @@ void* __sys_realloc(void* ptr, uint32_t size);
 
 static inline void __sys_free(void* ptr)
 {
-    mmngr_block_free(USER_HEAP, (void*)ptr);
 }
 
 static inline void* __sys_malloc(uint32_t size)
