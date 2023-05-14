@@ -107,7 +107,8 @@ extern void* malloc(uint32_t size);
 extern void* calloc(uint32_t size);
 // extern void free(void* ptr);
 extern void  free(void* ptr) __attribute__((fastcall));
-extern void* realloc(void* ptr, uint32_t size_new);
+extern void*  realloc(void* ptr, uint32_t size) __attribute__((fastcall));
+// extern void* realloc(void* ptr, uint32_t size_new);
 
 extern void* kmalloc(uint32_t size);
 extern void* kcalloc(uint32_t size);

@@ -5,7 +5,7 @@ int xin_info(char *entry_name)
 
     screen_clear();
 
-    XinEntry* file = fopen(entry_name, "rw");
+    XinEntry* file = xin_find_entry(entry_name);
 
     if (file != NULL)
     {
@@ -27,10 +27,6 @@ int xin_info(char *entry_name)
         while (inputg().scan_code != ENTER);
         return XANIN_ERROR;
     }
-    
-    fwrite(file, "nicho", 5);
-    fclose(&file);
-
 
     while (inputg().scan_code != ENTER);
     return XANIN_OK;

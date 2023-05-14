@@ -336,65 +336,6 @@ int reboot(void)
 
 }
 
-
-
-void* malloc(uint32_t size)
-{
-    void* ret;
-    asm("mov eax, 100;" // malloc syscall id
-        "mov ecx, %1;"
-        "int 0x81;"
-        "mov %0, eax;"
-        :"=g"(ret)
-        :"g"(size)
-        );
-
-    return ret;
-}
-
-void* calloc(uint32_t size)
-{
-    void* ret;
-    asm("mov eax, 101;" // callolc syscall id
-        "mov ecx, %1;"
-        "int 0x81;"
-        "mov %0, eax;"
-        :"=g"(ret)
-        :"g"(size)
-        );
-
-    return ret;
-}
-
-
-// void free(void* ptr)
-// {
-//     asm("mov eax, 103;" // free syscall id
-//         "mov ecx, %0;"
-//         "int 0x81"
-//         :
-//         :"r"(ptr) //r
-//         : "eax", "ecx"
-//         );
-// }
-
-
-void* realloc(void* ptr, uint32_t size)
-{
-    void* ret;
-    asm("mov eax, 102;" // realloc syscall id
-        "mov ecx, %1;"
-        "mov edx, %2;"
-        "int 0x81;"
-        "mov %0, eax;"
-        :"=g"(ret)
-        :"g"(ptr), "g"(size)
-        );
-
-    return ret;
-}
-
-
 bool app_exited = false;
 
 IntervalEntry XaninIntervals[INTERVALS_MAX] = {INTERVAL_CLEAR};
