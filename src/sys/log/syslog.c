@@ -6,8 +6,28 @@
 
 #define PRINTK_STRING_MAX_LENGTH 70
 
+bool syslog_enabled;
+
+void syslog_disable(void)
+{
+    syslog_enabled = false;
+}
+
+void syslog_enable(void)
+{
+    syslog_enabled = true;
+}
+
+bool is_syslog_enabled(void)
+{
+    return syslog_enabled;
+}
+
 void printk(const char * str)
 {
+
+    if(!is_syslog_enabled())
+        return;
 
     char buf[4] = {0};
 

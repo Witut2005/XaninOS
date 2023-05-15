@@ -10,7 +10,7 @@ XANIN_BINARIES = /home/witut/Desktop/xaninOS/bin
 C_COMPILE  = -O0 -masm=intel -Wno-discarded-qualifiers -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-int-conversion -Wno-unused-function -Wno-div-by-zero -Wno-address-of-packed-member -I $(XANIN_PATH) 
 CC_OPTIONS =  -O0 -fno-exceptions -lstdc++ -masm=intel -std=c++17 -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Wno-write-strings -fno-rtti -fconcepts-ts -I $(XANIN_PATH) -c
 C_OPTIONS  =  -O0 -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wattributes -Wno-unused-function -Werror=return-type -I $(XANIN_PATH) -c
-
+PREINSTALL = true
 ASM	= nasm
 APPS = ./programs
 
@@ -562,7 +562,12 @@ build:
 	@python3 ./utils/align_file.py -f ./xanin.img -size 800000
 	@mv xanin.img -f ../bin
 	@mv xanin.bin -f ../bin
-	# @python3 ./utils/app_preinstall.py -files external_apps/ -image $(XANIN_BINARIES)/xanin.img 
+	
+ifeq ($(PREINSTALL), true)
+	python3 ./utils/app_preinstall.py -files external_apps/ -image $(XANIN_BINARIES)/xanin.img 
+else
+	@echo "NO PREINSTALL"
+endif
 
 	@rm -rf ./utils/__pycache__
 

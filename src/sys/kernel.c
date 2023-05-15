@@ -153,6 +153,9 @@ uint8_t kernel_mmngr_mmap[PMMNGR_MEMORY_BLOCKS];
 void _start(void)
 {
 
+    syslog_disable();
+    memset((uint8_t*)XIN_ENTRY_POINTERS, 1, 0x280);
+    
     interrupt_disable();
 
     INTERRUPT_REGISTER(0, divide_by_zero_exception_entry);
@@ -330,7 +333,7 @@ void _start(void)
     keyboard_init(apic_keyboard_redirect != NULL ? apic_keyboard_redirect->global_system_int_table + APIC_IRQ_BASE : PIC_KEYBOARD_VECTOR);
     i8254x_init(apic_nic_redirect != NULL ? apic_nic_redirect->global_system_int_table + APIC_IRQ_BASE : PIC_NIC_VECTOR);
                 
-    interrupt_enable();
+    interrupt_disable();
 
     // ioapic_ioredtbl_configure((APIC_IRQ_BASE + 0xC)
     //                                   << APIC_VECTOR |
@@ -374,8 +377,7 @@ void _start(void)
     disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x12, 8, (uint16_t *)XIN_ENTRY_POINTERS);
     disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x1a, 10, (uint16_t *)XIN_ENTRY_TABLE);
 
-    xin_init_fs();
-    memset((uint8_t*)XIN_ENTRY_POINTERS, 1, 0x280);
+    // xin_init_fs();
     xin_folder_change("/");
     
     FileDescriptorTable = (XinFileDescriptor*)kcalloc(sizeof(XinFileDescriptor) * 200); // 200 = number o entries
@@ -383,8 +385,8 @@ void _start(void)
     memset((uint8_t *)ArpTable, 0xFF, sizeof(ArpTable[0]));
 
     __sys_xin_file_create("/syslog");
+    syslog_enable();
     printk("To wszystko dla Ciebie Babciu <3");
-    // while(1);
 
     __sys_xin_folder_create("/config/");
     // xprintf("nicho");
@@ -404,6 +406,8 @@ void _start(void)
     icmp_module_init();
     
     uint8_t* zeros = (uint8_t*)kcalloc(SECTOR_SIZE);
+
+    interrupt_enable();
 
     while (inputg().scan_code != ENTER);
 
