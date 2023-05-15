@@ -6,6 +6,7 @@
 #include <fs/xin_entry.h>
 #include <stdbool.h>
 #include <lib/libc/stdlibx.h>
+#include <lib/libc/file.h>
 
 #define XIN_SYSTEM_FOLDER '/'
 #define XIN_BASE_FILE_ADDRESS_TO_LOAD 0x100000
@@ -70,21 +71,24 @@ XinEntry* xin_find_free_entry(void);
 int xin_file_create(char* entry_name);
 int xin_folder_create(char* entry_name);
 XinEntry* xin_folder_change(char* new_directory);
-XinEntry* fopen(char* file_path, char* mode);
-int open(char* file_path, uint32_t options);
-size_t fwrite(XinEntry *entry, void *buf, size_t count);
-size_t fread(XinEntry *entry, void *buf, size_t count);
-size_t write(int fd, void *buf, size_t count);
-size_t read(int fd, void *buf, size_t count);
+
+XinEntry* __xin_fopen(char* file_path, char* mode);
+size_t __xin_fwrite(XinEntry *entry, void *buf, size_t count);
+size_t __xin_fread(XinEntry *entry, void *buf, size_t count);
+void __xin_fclose(XinEntry** file);
+
+int __xin_open(char* file_path, uint32_t options);
+size_t __xin_write(int fd, void *buf, size_t count);
+size_t __xin_read(int fd, void *buf, size_t count);
+void __xin_close(int fd);
+
 void fseek(XinEntry *file, uint32_t new_position);
 void lseek(int fd, uint32_t new_position);
 XinEntry* xin_get_file_pf(char* path); // pf = parent folder
 XinEntry* xin_find_entry(char *entry_name);
 __STATUS remove_directory(char* folder_name);
 void create_file_kernel(char* entry_name);
-void fclose(XinEntry** file);
 void fclose_with_given_size(XinEntry** file, uint32_t new_size);
-void close(int fd);
 char* getline(XinEntry* file, int line_id);
 char* getline_from_ptr(char* data, int line_id);
 XinChildrenEntries* xin_get_children_entries(char* folder, bool show_hidden);

@@ -11,54 +11,12 @@
 
 __STATUS __sys_xin_file_create(char* entry_name)
 {
-
-    int status = xin_file_create(entry_name); 
-
-    if(status == XIN_FILE_EXISTS)
-    {
-        // xprintf("%zFILE WITH THIS NAME EXISTS\n", stderr);
-        // while(KeyInfo.scan_code != ENTER);
-        return XIN_FILE_EXISTS;
-    }
-
-    else if(status == XANIN_ERROR)
-    {
-        // xprintf("%zFILE CREATE ERROR: %s\n", stderr, entry_name);
-        // while(KeyInfo.scan_code != ENTER);
-        return XANIN_ERROR;
-    }
-
-    return XANIN_OK;
+    return xin_file_create(entry_name); 
 }
-
 
 __STATUS __sys_xin_folder_create(char* entry_name)
 {
-
-    int status = xin_folder_create(entry_name);
-
-    if(status == XIN_FILE_EXISTS)
-    {
-        // xprintf("%zDIRECTORY WITH THIS NAME EXISTS: %s\n", stderr, entry_name);
-        // while(KeyInfo.scan_code != ENTER);
-        return XIN_FILE_EXISTS;
-    }
-
-    else if(status == XANIN_ERROR)
-    {
-        // xprintf("%zDIRECTORY CREATION ERROR: %s\n", stderr, entry_name);
-        // while(KeyInfo.scan_code != ENTER);
-        return XANIN_ERROR;
-    }
-
-    else if(status == XIN_BAD_FOLDER_NAME)
-    {
-        // xprintf("%zDIRECTORY CREATION ERROR (missing / and the end): %s\n", stderr, entry_name);
-        // while(KeyInfo.scan_code != ENTER);
-        return XIN_BAD_FOLDER_NAME;
-    }
-
-    return XANIN_OK;
+    return xin_folder_create(entry_name);
 }
 
 __STATUS __sys_xin_entry_move(char* entry_name, char* new_name)
@@ -98,13 +56,7 @@ __STATUS __sys_xin_entry_move(char* entry_name, char* new_name)
 
 __STATUS __sys_xin_folder_remove(char* folder_name)
 {
-    __STATUS status = remove_directory(folder_name);
-
-    if(status == XIN_ENTRY_NOT_FOUND)
-        return XIN_ENTRY_NOT_FOUND;
-
-    return XANIN_OK;
-
+    return remove_directory(folder_name);
 }
 
 
@@ -207,7 +159,6 @@ __STATUS __sys_xin_list_files(char** argv)
             path = argv[i];
     }
 
-
     XinEntry* i = (XinEntry*)XIN_ENTRY_TABLE; 
 
     int printed_text = 0;
@@ -216,7 +167,7 @@ __STATUS __sys_xin_list_files(char** argv)
     if(xin_find_entry(path) == NULL && strlen(path) > 0)
         return XANIN_ERROR;
 
-    while((uint32_t)i < XIN_ENTRY_TABLE + SECTOR_SIZE * 50)
+    while((uint32_t)i < XIN_ENTRY_TABLE + (SECTOR_SIZE * 50))
     {
         
         if((substr_find(i->path, "/.") && !strcmp(options, "-la")) || (!i->path))
@@ -224,6 +175,7 @@ __STATUS __sys_xin_list_files(char** argv)
             i++;
             continue; 
         }
+
         else if(!strlen(path))
         {
             if(xin_get_file_pf(i->path) != NULL)

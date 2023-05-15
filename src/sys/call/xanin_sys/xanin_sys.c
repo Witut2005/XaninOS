@@ -6,7 +6,7 @@
 
 #include <sys/call/xanin_sys/pmmngr/alloc.h>
 #include <sys/input/input.h>
-
+#include <fs/xin.h>
 
 uint32_t xanin_sys_handle(void)
 {
@@ -17,7 +17,6 @@ uint32_t xanin_sys_handle(void)
         "mov %1, ecx;"     
         "mov %2, edx;"     
         "mov %3, ebx;"     
-  
         : "=g"(eax), "=g"(ecx), "=g"(edx), "=g"(ebx)
         :
         : "ecx", "edx", "ebx"
@@ -27,6 +26,62 @@ uint32_t xanin_sys_handle(void)
 
     switch (eax)
     {
+        
+        // XinFs
+
+        case XANIN_FOPEN:
+        {
+            // ECX = file name, EDX = options_str
+            eax = (uint32_t)__xin_fopen((char*)ecx, (char*)edx);
+            break;
+        }
+
+        case XANIN_FREAD:
+        {
+            eax = __xin_fread((XinEntry*)ecx, (void*)edx, ebx);
+            break;
+        }
+
+        case XANIN_FWRITE:
+        {
+            eax = __xin_fwrite((XinEntry*)ecx, (void*)edx, ebx);
+            break;
+        }
+
+        case XANIN_FCLOSE:
+        {
+            __xin_fclose((XinEntry**)ecx);
+            break;
+        }
+
+        case XANIN_OPEN:
+        {
+            eax = __xin_open((char*)ecx, edx);
+            break;
+        }
+
+        case XANIN_READ:
+        {
+            eax = __xin_read(ecx, (void*)edx, ebx);
+            break;
+        }
+
+        case XANIN_WRITE:
+        {
+            eax = __xin_write(ecx, (void*)edx, ebx);
+            break;
+        }
+
+        case XANIN_CLOSE:
+        {
+            __xin_close(ecx);
+            break;
+        }
+
+
+
+        // Memory Allocation
+
         case XANIN_ALLOCATE:
         {
             // ECX = SIZE
@@ -51,10 +106,12 @@ uint32_t xanin_sys_handle(void)
 
         case XANIN_REALLOCATE:
         {    
-            // ECX = PTR, EDX = SIZE
+            // ECX = ptr, EDX = size
             eax = (uint32_t)__sys_realloc((void*)ecx, edx);
             break;
         }
+
+        // Input
 
         case XANIN_GETCHAR: 
         {
@@ -71,9 +128,7 @@ uint32_t xanin_sys_handle(void)
         case XANIN_INPUTG:
         {
             // ECX = PTR
-            // xprintf("ecx 0x%x\n", ecx);
             *(xchar*)ecx = inputg();
-            // while(1);
             break;
         }
 
@@ -88,8 +143,6 @@ uint32_t xanin_sys_handle(void)
         case XANIN_KEYINFO_GET:
         {
             *(key_info_t*)ecx = KeyInfo;
-            // xprintf("ecx 0x%x\n", ecx);
-            // while(1);
             break;
         }
 

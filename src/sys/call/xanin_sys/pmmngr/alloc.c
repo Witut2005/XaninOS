@@ -16,8 +16,10 @@ void* __sys_realloc(void* ptr, uint32_t size)
 {
     
     uint8_t* tmp = (uint8_t*)mmngr_block_allocate(USER_HEAP, size);
-    memcpy(tmp, (uint8_t*)ptr, size);
     mmngr_block_free(USER_HEAP, (void*)ptr);
+
+    // if(tmp != (uint8_t*)ptr)
+        memcpy(tmp, (uint8_t*)ptr, size);
 
     return tmp;
 

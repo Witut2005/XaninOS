@@ -103,12 +103,10 @@ extern void int_swap(int *xp, int *yp);
 extern void bubble_sort(int* array, int n);  extern void merge(int* array, int first, int middle, int last);
 extern void merge_sort(int array[], int first, int last);
 
-extern void* malloc(uint32_t size);
-extern void* calloc(uint32_t size);
-// extern void free(void* ptr);
+extern void* malloc(uint32_t size) __attribute__((fastcall));
+extern void* calloc(uint32_t size) __attribute__((fastcall));
 extern void  free(void* ptr) __attribute__((fastcall));
 extern void*  realloc(void* ptr, uint32_t size) __attribute__((fastcall));
-// extern void* realloc(void* ptr, uint32_t size_new);
 
 extern void* kmalloc(uint32_t size);
 extern void* kcalloc(uint32_t size);

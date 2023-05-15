@@ -117,7 +117,10 @@ void* mmngr_block_allocate(uint8_t mode, uint32_t size)
     uint32_t mmap_index = mmngr_mmap_free_block_find(mode, size_to_blocks_allocated(size));
 
     if(mmap_index == UINT32_MAX) // NO AVAILABLE MEMORY
+    {
+        printk("USER HEAP FULL");
         return (void*)NULL;
+    }
 
     uint32_t blocks_allocated = size_to_blocks_allocated(size);
 
@@ -130,7 +133,6 @@ void* mmngr_block_allocate(uint8_t mode, uint32_t size)
     if(mode == KERNEL_HEAP)
         return kernel_heap_base + (mmap_index * PMMNGR_BLOCK_SIZE);
 
-    // xprintf("index: %d allocated: %d\n", mmap_index, blocks_allocated);
     return user_heap_base + (mmap_index * PMMNGR_BLOCK_SIZE);
 
 }

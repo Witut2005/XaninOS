@@ -1,6 +1,7 @@
 
 #include <sys/net/netapi/network_device.h>
 #include <sys/net/netapi/loopback/loopback.h>
+#include <lib/libc/file.h>
 #include <fs/xin.h>
 #include <lib/libcpp/ostream.h>
 #include <lib/libc/string.h>

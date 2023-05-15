@@ -42,9 +42,9 @@ uint32_t syscall_handle(void)
         case __NR_exit:
         {
             last_command_exit_status = ebx;
-    interrupt_enable();
-            // exit();
-            kernel_loop();
+            interrupt_enable();
+            exit();
+            // kernel_loop();
             break;
         }
 
@@ -54,23 +54,14 @@ uint32_t syscall_handle(void)
                 xscan_range((char*)ecx, edx);
 
             else
-                eax = read(ebx, (void*)ecx, edx);
+                eax = __xin_read(ebx, (void*)ecx, edx);
 
             break;
         }
 
         case __NR_write:
         {
-            int how_many_writed;
-            if(!FileDescriptorTable[ebx].is_used)
-            {
-                for(int i = 0; i < edx; i++)
-                    xprintf("%c", *(uint8_t*)(ecx + i));    
-            }
-            
-            else
-                eax = write(ebx, (void*)ecx, edx);
-
+            eax = __xin_write(ebx, (void*)ecx, edx);
             break;
         }
         
@@ -82,13 +73,13 @@ uint32_t syscall_handle(void)
 
         case __NR_open:
         {                
-            eax = open((char*)ebx, ecx); //edx = mode
+            eax = __xin_open((char*)ebx, ecx); //edx = mode
             break;
         }
         
         case __NR_close:
         {
-            close(ebx);
+            __xin_close(ebx);
             break;
         }
         

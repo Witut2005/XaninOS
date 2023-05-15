@@ -365,6 +365,10 @@ void xin_file_create_at_given_sector(char *path, uint32_t first_sector, uint8_t 
 
 void xin_init_fs(void)
 {
+
+    disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x12, XIN_ENTRY_POINTERS_SECTORS, (uint16_t*)(XIN_ENTRY_POINTERS));
+    disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x1a, XIN_ENTRY_TABLE_SECTORS, (uint16_t*)(XIN_ENTRY_TABLE));
+
     if(xin_find_entry("/") == NULL)
         xin_folder_create("/");
 
@@ -587,8 +591,6 @@ int xin_file_reallocate_with_given_size(XinEntry* File, uint32_t size)
 {
 
 
-    // FileInformationBlock* OldInfo = File->FileInfo;
-
     uint8_t* buf = (uint8_t*)calloc(int_to_sectors(size) * SECTOR_SIZE); 
     memcpy(buf, File->FileInfo->buffer, size);
     memset(&buf[size], 0, (int_to_sectors(size) * SECTOR_SIZE) - size);
@@ -688,7 +690,7 @@ uint32_t xin_get_start_sector(char *entry_name)
     return xin_file_descriptor->first_sector;
 }
 
-size_t fread(XinEntry *entry, void *buf, size_t count)
+size_t __xin_fread(XinEntry *entry, void *buf, size_t count)
 {
 
     //////////////////VALIDATION///////////////////
@@ -751,7 +753,7 @@ size_t fread(XinEntry *entry, void *buf, size_t count)
 
 }
 
-size_t read(int fd, void *buf, size_t count)
+size_t __xin_read(int fd, void *buf, size_t count)
 {
 
     //////////////////VALIDATION///////////////////
@@ -778,7 +780,7 @@ size_t read(int fd, void *buf, size_t count)
 
 }
 
-size_t fwrite(XinEntry *entry, void *buf, size_t count)
+size_t __xin_fwrite(XinEntry *entry, void *buf, size_t count)
 {
     //////////////////VALIDATION///////////////////
     
@@ -831,7 +833,7 @@ size_t fwrite(XinEntry *entry, void *buf, size_t count)
     return count;
 }
 
-size_t write(int fd, void* buf, size_t count)
+size_t __xin_write(int fd, void* buf, size_t count)
 {
 
     ////////////////////VALIDATION/////////////////////
@@ -879,37 +881,25 @@ const uint32_t lteel(int fd)
         return ftell(FileDescriptorTable[fd].entry);
 }
 
-XinEntry *fopen(char *file_path, char *mode)
+XinEntry *__xin_fopen(char *file_path, char *mode)
 {
 
     XinEntry* file = xin_find_entry(file_path);
 
-
     if(file != NULL)
     {
-        // xprintf("nicho\n");
     	if(file->type != XIN_FILE && file->type != XIN_HARD_LINK)
             return NULL;
-
-        // if(file->FileInfo)
-        // {
-        //     fclose(&file);
-        //     file = xin_find_entry(file_path);
-        // }
 
         file->FileInfo = (FileInformationBlock*)calloc(sizeof(FileInformationBlock));
         file->FileInfo->buffer = (uint8_t*)calloc(file->size + SECTOR_SIZE); // additional space
         file->FileInfo->sector_in_use = (bool*)calloc(int_to_sectors(file->size) + 1); // additional space
-        // xprintf("nicho\n");
 
-        memset(file->FileInfo->rights, '\0', 2); //set file rights
         strcpy(file->FileInfo->rights, mode);
 
         file->FileInfo->position = 0;
         file->FileInfo->tmp_size = 0;
-        file->FileInfo->is_fully_loaded = false;
         xin_add_files_to_xfo(file);
-        // xprintf("nicho\n");
     }
 
     if(strncmp(mode, "a", 2))
@@ -918,14 +908,13 @@ XinEntry *fopen(char *file_path, char *mode)
         file->FileInfo->buffer = (uint8_t*)calloc(file->size + SECTOR_SIZE);
         file->FileInfo->sector_in_use = (bool*)calloc(int_to_sectors(file->size) + 5);
 
-        memset(file->FileInfo->rights, '\0', 2); //set file rights
         strcpy(file->FileInfo->rights, mode);
 
         file->FileInfo->position = file->size;
         file->FileInfo->tmp_size = file->size;
-        file->FileInfo->is_fully_loaded = true;
-        // xin_add_files_to_xfo(file);
-        // return file;
+        xin_add_files_to_xfo(file);
+
+        return file;
     }
 
 
@@ -946,22 +935,17 @@ XinEntry *fopen(char *file_path, char *mode)
             file->FileInfo->buffer = (uint8_t*)calloc(file->size + SECTOR_SIZE);
             file->FileInfo->sector_in_use = (bool*)calloc(int_to_sectors(file->size) + 5);
 
-            memset(file->FileInfo->rights, '\0', 2); //set file rights
             strcpy(file->FileInfo->rights, mode);
 
             file->FileInfo->position = 0;
             file->FileInfo->tmp_size = 0;
-            file->FileInfo->is_fully_loaded = false;
             xin_add_files_to_xfo(file);
-        // xprintf("nicho\n");
             return file;
         }
 
         else if(status == XIN_FILE_EXISTS)
         {
-        // xprintf("nicho\n");
             xin_add_files_to_xfo(file);
-        // xprintf("nicho\n");
             return file;
         }
 
@@ -974,58 +958,15 @@ XinEntry *fopen(char *file_path, char *mode)
 
 void fclose_with_given_size(XinEntry** file, uint32_t new_size)
 {
-    interrupt_disable();
 
-    if(strncmp((*file)->FileInfo->rights, "r", 2)) //READ-ONLY OPTION
-        xin_file_reallocate_with_given_size((*file), (*file)->size);
-    else
-        xin_file_reallocate_with_given_size((*file), new_size);
-
-    free((*file)->FileInfo->buffer);
-    free((*file)->FileInfo);
-
-    for(int i = 0; i < XIN_OPENED_FILES_COUNTER; i++)
-    {
-        if(XinFilesOpened[i] == (*file))
-            XinFilesOpened[i] = NULL;
-    }
-
-    interrupt_enable();
-
-}
-
-
-
-void fclose(XinEntry** file)
-{
     if(*file == NULL)
         return;
 
-    // xprintf("close\n");
-
-    uint32_t new_size;
-
-    if((*file)->FileInfo->tmp_size > (*file)->size)
-        new_size = (*file)->FileInfo->tmp_size;
-    else
-        new_size = (*file)->size;
-    // xprintf("info: 0x%x\n", (*file)->FileInfo);
-
-    if(!strncmp((*file)->FileInfo->rights, "r", 2)) // READ-ONLY OPTION
+    if(!strncmp((*file)->FileInfo->rights, "r", 2)) //READ-ONLY OPTION
         xin_file_reallocate_with_given_size((*file), new_size);
-    // else
-    //     xin_file_reallocate_with_given_size((*file), new_size);
 
-    // xprintf("close NICHO\n");
-
-    // xprintf("close buf: %s\n", (*file)->FileInfo->buffer);
-    // xprintf("0x%x\n", (*file)->FileInfo);
     free((*file)->FileInfo->buffer);
     free((*file)->FileInfo);
-    // (*file)->FileInfo->buffer = NULL;
-    // (*file)->FileInfo = NULL;
-
-    // xprintf("close free\n");
 
     for(int i = 0; i < XIN_OPENED_FILES_COUNTER; i++)
     {
@@ -1034,11 +975,42 @@ void fclose(XinEntry** file)
     }
 
     (*file)->FileInfo = NULL;
-
+    (*file) = NULL;
 
 }
 
-void close(int fd)
+
+
+void __xin_fclose(XinEntry** file)
+{
+    if(*file == NULL)
+        return;
+
+    uint32_t new_size;
+
+    if((*file)->FileInfo->tmp_size > (*file)->size)
+        new_size = (*file)->FileInfo->tmp_size;
+    else
+        new_size = (*file)->size;
+
+    if(!strncmp((*file)->FileInfo->rights, "r", 2)) // READ-ONLY OPTION
+        xin_file_reallocate_with_given_size((*file), new_size);
+
+    free((*file)->FileInfo->buffer);
+    free((*file)->FileInfo);
+
+    for(int i = 0; i < XIN_OPENED_FILES_COUNTER; i++)
+    {
+        if(XinFilesOpened[i] == (*file))
+            XinFilesOpened[i] = NULL;
+    }
+
+    (*file)->FileInfo = NULL;
+    (*file) = NULL;
+
+}
+
+void __xin_close(int fd)
 {
 
     if(!FileDescriptorTable[fd].is_used)
@@ -1052,7 +1024,7 @@ void close(int fd)
 
 }
 
-int open(char* file_path, uint32_t options)
+int __xin_open(char* file_path, uint32_t options)
 {
 
     XinEntry* file = xin_find_entry(file_path);

@@ -9,7 +9,7 @@ XANIN_BINARIES = /home/witut/Desktop/xaninOS/bin
 # C_OPTIONS  = -O0 -masm=intel -Wno-discarded-qualifiers -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-int-conversion -Wno-unused-function -Wno-div-by-zero -Wno-address-of-packed-member -I $(XANIN_PATH) -c
 C_COMPILE  = -O0 -masm=intel -Wno-discarded-qualifiers -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-int-conversion -Wno-unused-function -Wno-div-by-zero -Wno-address-of-packed-member -I $(XANIN_PATH) 
 CC_OPTIONS =  -O0 -fno-exceptions -lstdc++ -masm=intel -std=c++17 -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Wno-write-strings -fno-rtti -fconcepts-ts -I $(XANIN_PATH) -c
-C_OPTIONS  =  -O0 -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Werror=return-type -I $(XANIN_PATH) -c
+C_OPTIONS  =  -O0 -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wattributes -Wno-unused-function -Werror=return-type -I $(XANIN_PATH) -c
 
 ASM	= nasm
 APPS = ./programs
@@ -30,7 +30,6 @@ build:
 
 	@echo "\n///////////////////////////////////////////////"
 	
-
 	@echo "\033[0;32mFILE SYSTEM MODULE COMPILATION PHARSE"
 	@echo "\033[0m"
 
@@ -99,6 +98,14 @@ build:
 	@echo [C] xanin_sys.c
 	@$(C) $(C_OPTIONS) ./sys/call/xanin_sys/xanin_sys.c -o ./sys/call/xanin_sys/xanin_sys.o
 
+	@echo "\n///////////////////////////////////////////////"
+
+	@echo "\033[0;32mDEBUG KERNEL MODULE COMPILATION PHARSE"
+	@echo "\033[0m"
+
+	@echo [C] debug.c
+	@$(C) $(C_OPTIONS) ./sys/debug/debug.c -o ./sys/debug/debug.o
+	
 	@echo "\n///////////////////////////////////////////////"
 
 	@echo "\033[0;32mINTERRUPT MODULE COMPILATION PHARSE"
@@ -305,6 +312,9 @@ build:
 	@echo [ASM] xanin_state.asm
 	@$(ASM) -f elf32 ./lib/libc/xanin_state.asm -o ./lib/libc/xanin_state.o
 
+	@echo [ASM] file.asm
+	@$(ASM) -f elf32 ./lib/libc/file.asm -o ./lib/libc/file.o
+
 	@echo [C] memory.c
 	@$(C) $(C_OPTIONS) ./lib/libc/memory.c -o ./lib/libc/memory.o
 
@@ -474,9 +484,11 @@ build:
 	./sys/interrupts/handlers/entries/machine_check_exception.o \
 	./sys/interrupts/handlers/entries/simd_floating_point_exception.o \
 	./sys/interrupts/handlers/entries/virtualization_exception.o \
-	./lib/libc/libc.o \
 	./sys/devices/pit/pit.o \
 	./sys/devices/pit/pit_entry.o \
+	./sys/debug/debug.o \
+	./lib/libc/libc.o \
+	./lib/libc/file.o \
 	./lib/libcpp/algorithm.o \
 	./lib/libcpp/regex.o \
 	./lib/tui/tui.o \
@@ -527,7 +539,7 @@ build:
 	cp ./lib/libc/libc.a ./external_apps/libc.a
 	cp ./lib/libc/crt0.o ./external_apps/crt0.o
 
-	python3 ./utils/XaninSupervisor.py
+	@# python3 ./utils/XaninSupervisor.py
 	
 	@echo "\033[0;32mCOMPILING XANIN EXTERNAL APPS"
 	@echo "\033[0m"
@@ -542,15 +554,18 @@ build:
 	@cat ./boot/boot ./lib/libc/enter_real_mode ./programs/xanin_apps_space ./programs/blank_sector ./fs/xin_pointers ./fs/entries_table ./boot/kernelLoader ./boot/disk_freestanding_driver kernel.bin > xanin.bin
 
 	@dd if=xanin.bin of=xanin.img
-	python3 ./utils/align_file.py -f ./xanin.img -size 800000
-	@mv xanin.img -f ../bin
-	@mv xanin.bin -f ../bin
 
 	rm ./external_apps/libc.a
-	
-	@python3 ./utils/app_preinstall.py -files external_apps/ ./etc/net/ ./etc/var/ -image $(XANIN_BINARIES)/xanin.img 
-
 	@find ./ -name "*.o" -type f -delete
+
+	
+	@python3 ./utils/align_file.py -f ./xanin.img -size 800000
+	@mv xanin.img -f ../bin
+	@mv xanin.bin -f ../bin
+	# @python3 ./utils/app_preinstall.py -files external_apps/ -image $(XANIN_BINARIES)/xanin.img 
+
+	@rm -rf ./utils/__pycache__
+
 
 run:
 	@sudo qemu-system-i386 -m 4096 -drive file=../bin/xanin.img,cache=unsafe -net nic -net tap,ifname=tap0,script=no,downscript=no

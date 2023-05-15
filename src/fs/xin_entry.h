@@ -9,6 +9,8 @@ enum xin_fs_properties
     
     XIN_ENTRY_POINTERS = 0x800,
     XIN_ENTRY_TABLE = 0x1800,
+    XIN_ENTRY_POINTERS_SECTORS = 8,
+    XIN_ENTRY_TABLE_SECTORS = 50,
 
     XIN_ALLOCATED = 0x1,
     XIN_UNALLOCATED = 0x0,
@@ -32,7 +34,6 @@ struct FileInformationBlock
     uint8_t* buffer;
     uint32_t tmp_size;
     bool* sector_in_use;
-    bool is_fully_loaded;
 }__attribute__((packed));
 
 #ifndef __cplusplus

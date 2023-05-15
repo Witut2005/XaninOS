@@ -97,7 +97,7 @@ void kernel_loop(void)
         xprintf("%z    _/      _/                      _/              _/_/      _/_/_/       \n", OUTPUT_COLOR_SET(logo_back_color, logo_front_color));
         xprintf("%z     _/  _/      _/_/_/  _/_/_/        _/_/_/    _/    _/  _/              \n", OUTPUT_COLOR_SET(logo_back_color, logo_front_color));
         xprintf("%z      _/      _/    _/  _/    _/  _/  _/    _/  _/    _/    _/_/           \n", OUTPUT_COLOR_SET(logo_back_color, logo_front_color));
-        xprintf("%z   _/  _/    _/    _/  _/    _/  _/  _/    _/  _/    _/        _/%z   version 1.0v\n",OUTPUT_COLOR_SET(logo_back_color, logo_front_color), OUTPUT_COLOR_SET(black,white) );
+        xprintf("%z   _/  _/    _/    _/  _/    _/  _/  _/    _/  _/    _/        _/%z   version 1.5v\n",OUTPUT_COLOR_SET(logo_back_color, logo_front_color), OUTPUT_COLOR_SET(black,white) );
         xprintf("%z_/      _/    _/_/_/  _/    _/  _/  _/    _/    _/_/    _/_/_/     %z%s: %i:%i:%i\n\n\n", OUTPUT_COLOR_SET(logo_back_color, logo_front_color), OUTPUT_COLOR_SET(black,white), daysLUT[SystemTime.weekday], SystemTime.hour, SystemTime.minutes, SystemTime.seconds);                                       
 
         Screen.x = 0;
@@ -110,7 +110,7 @@ void kernel_loop(void)
 
         app_exited = false;
 
-        // xin_close_all_files();
+        xin_close_all_files();
 
         while(1)
         {
@@ -200,26 +200,11 @@ void _start(void)
 
     disable_cursor();
 
-    // pmmngr_init(0x10000, ppmngr_bitmap);
-    // pmmngr_init_region(0x1000, XANIN_PMMNGR_BLOCK_SIZE * (0x10000 / XANIN_PMMNGR_BLOCK_SIZE));
-
-    // static uint8_t ppmngr_bitmap[0x10000];
-
-    // pmmngr_init(0x10000, ppmngr_bitmap);
-    // pmmngr_init_region(0x20000, XANIN_PMMNGR_BLOCK_SIZE * 500);
-
-    // uint8_t ppmngr_bitmap[0x2000] = {0};
-
-    // pmmngr_init(0x10000, ppmngr_bitmap);
-    // pmmngr_init_region(0x0, 0xFFFFFF);
 
     mmngr_init(kernel_mmngr_mmap, 0x100000, PMMNGR_MEMORY_BLOCKS);
 
-
     time_get(&SystemTime);
 
-
-    // set_pit();
     keyboard_command = command_buffer;
     screen_clear();
 
@@ -229,8 +214,6 @@ void _start(void)
     // null_memory_region = (uint8_t*)calloc(VGA_SCREEN_RESOLUTION);
     // kernel_terminal = terminal_create();
     // terminal_set((terminal_t*)null_memory_region, kernel_terminal);
-
-    // xprintf("Memory Block Size Allocated: 0x%x\n", null_memory_region);
 
     rsdp = get_acpi_rsdp_address_base();
 
@@ -392,16 +375,16 @@ void _start(void)
     disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x1a, 10, (uint16_t *)XIN_ENTRY_TABLE);
 
     xin_init_fs();
-
-    memset(XIN_ENTRY_POINTERS, 1, 0x280);
-
-    FileDescriptorTable = (XinFileDescriptor*)kcalloc(sizeof(XinFileDescriptor) * 512);
-    // xprintf("nicho");
+    memset((uint8_t*)XIN_ENTRY_POINTERS, 1, 0x280);
+    xin_folder_change("/");
+    
+    FileDescriptorTable = (XinFileDescriptor*)kcalloc(sizeof(XinFileDescriptor) * 200); // 200 = number o entries
 
     memset((uint8_t *)ArpTable, 0xFF, sizeof(ArpTable[0]));
 
     __sys_xin_file_create("/syslog");
     printk("To wszystko dla Ciebie Babciu <3");
+    // while(1);
 
     __sys_xin_folder_create("/config/");
     // xprintf("nicho");
@@ -414,7 +397,7 @@ void _start(void)
     //     xprintf("%d.", tmp[i]);
     // }
 
-    // xprintf("%d\n", base_ip & 0xF
+    // xprintf("%d\n", base_ip & 0xFF);
 
     arp_table_add_entry(LOOPBACK_IP_ADDRESS, null_memory_region);
     arp_module_init();
@@ -449,23 +432,6 @@ void _start(void)
 
     // xprintf("nicho");
 
-    // screen_clear();
-    //     xprintf("fsadf");
-    //     uint8_t good = 0x02;
-    //     while (good & 0x02)
-    //         good = inbIO(0x64);
-    //     outbIO(0x64, 0xFE);
-    // // address_t* as = NULL;
-    
-    // msleep(10000);
-
-    // for(int i = 0; i < 10; i++)
-    // {
-    //     xprintf("a");
-    //     msleep(1000);
-    // }
-
-    // while (inputg().scan_code != ENTER);
 
     kernel_loop();
 

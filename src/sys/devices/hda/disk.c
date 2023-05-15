@@ -91,6 +91,7 @@ void disk_read(uint16_t base, uint8_t master, uint32_t sector_number,
                                 uint16_t how_many_sectors, uint16_t* where)
 {
 
+
     for(int i = 0; i < how_many_sectors; i++)
         disk_read_single_sector(base, master, sector_number + i, (uint16_t*)((uint32_t)where + (i * SECTOR_SIZE)));
 
@@ -117,6 +118,10 @@ void disk_flush(uint16_t base, uint8_t master)
 
 void disk_write_single_sector(uint16_t base, uint8_t master, uint32_t sector_number, uint16_t* where)
 {
+    
+    if(!sector_number) // DO NOT ALLOW BOOTLOADER OVERRIDING
+        return;
+
     uint8_t disk_status;
 
 
