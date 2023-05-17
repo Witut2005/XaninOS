@@ -17,6 +17,12 @@ extern void set_idt(void);
     set_idt();\
 }
 
+#define INTERRUPT_UNREGISTER(interrupt_id)\
+{\
+    interrupt_handlers[interrupt_id] = NULL;\
+    set_idt();\
+}
+
 #ifdef __cplusplus
 }
 #endif

@@ -30,6 +30,7 @@ lba48: dd 0x0
 ; refresh_rate: dw 10
 
 _loadSector:
+
 mov [BOOT_DISK_NUMBER], dl
 
 ;INITIALIZE SCREEN

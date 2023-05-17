@@ -11,7 +11,7 @@
 #include <lib/libc/math.h>
 #include <sys/devices/keyboard/keyboard_init.c>
 #include <sys/devices/pci/pci.h>
-#include <sys/devices/acpi/ACPI.h>
+#include <sys/devices/acpi/acpi.h>
 #include <sys/devices/usb/usb.h>
 #include <sys/devices/hda/disk.h>
 #include <sys/devices/vga/vga.h>
@@ -22,7 +22,6 @@
 #include <sys/devices/apic/apic.h>
 #include <sys/devices/ioapic/ioapic.h>
 #include <fs/loaders/elf/elf_loader.h>
-#include <sys/devices/acpi/ACPI.h>
 #include <sys/log/syslog.h>
 #include <sys/devices/nic/8254x.h>
 #include <sys/devices/pcspk/pc_speaker.h>
@@ -156,6 +155,7 @@ void _start(void)
     syslog_disable();
     memset((uint8_t*)XIN_ENTRY_POINTERS, 1, 0x280);
     
+    disk_write(ATA_FIRST_BUS, ATA_MASTER, 1000, 2, 0x0); // load ivt to /ivt file
     interrupt_disable();
 
     INTERRUPT_REGISTER(0, divide_by_zero_exception_entry);
@@ -191,10 +191,6 @@ void _start(void)
     INTERRUPT_REGISTER(31, general_protection_exception_entry);
     INTERRUPT_REGISTER(32, general_protection_exception_entry);
     
-
-    
-    // INTERRUPT_REGISTER(0x21, keyboard_handler_init);
-
     screen_init(); // init screen management system
     screen_clear();
     keyboard_init(0x21);
@@ -218,37 +214,42 @@ void _start(void)
     // kernel_terminal = terminal_create();
     // terminal_set((terminal_t*)null_memory_region, kernel_terminal);
 
-    rsdp = get_acpi_rsdp_address_base();
+    acpi_rsdp_set(acpi_rsdp_address_base_get());
 
     xprintf("%z----------------------------\n", OUTPUT_COLOR_SET(black, green));
 
     xprintf("CHECKSUM CHECK RSDP: ");
-    1 == acpi_rsdp_checksum_check(rsdp) ? xprintf("%zVALID", OUTPUT_COLOR_SET(green, white)) : xprintf("%zINVALID", OUTPUT_COLOR_SET(red, white));
-    xprintf("\nRSDP address: 0x%x\n", rsdp);
 
-    rsdt = rsdp->rsdt_address;
+    SystemAcpiRSDP* rsdp = acpi_rsdp_reference_get();
+
+    1 == acpi_rsdp_checksum_check(rsdp) ? xprintf("%zVALID", OUTPUT_COLOR_SET(green, white)) : xprintf("%zINVALID", OUTPUT_COLOR_SET(red, white));
+    xprintf("\nRSDP address: 0x%x\n", acpi_rsdp_reference_get());
+
+    acpi_rsdt_set(rsdp->rsdt_address);
 
     xprintf("%z----------------------------\n", OUTPUT_COLOR_SET(black, green));
 
     xprintf("CHECKSUM CHECK RSDT: ");
+    const SystemAcpiRSDT* const rsdt = acpi_rsdt_get();
     1 == acpi_rsdt_checksum_check(rsdt) ? xprintf("%zVALID", OUTPUT_COLOR_SET(green, white)) : xprintf("%zINVALID", OUTPUT_COLOR_SET(red, white));
     xprintf("\nRSDT address: 0x%x\n", rsdt);
 
-    apic_sdt = apic_sdt_find();
+    acpi_apic_sdt_set(apic_sdt_find());
+    SystemAcpiSDT* apic_sdt = acpi_apic_sdt_get();
 
     xprintf("%z----------------------------\n", OUTPUT_COLOR_SET(black, green));
 
-    xprintf("CHECKSUM CHECK MADT: ");
-    1 == acpi_rsdt_checksum_check(rsdt) ? xprintf("%zVALID", OUTPUT_COLOR_SET(green, white)) : xprintf("%zINVALID", OUTPUT_COLOR_SET(red, white));
-    xprintf("\nMADT address: 0x%x\n", rsdt);
-
+    xprintf("FADT address: 0x%x\n", acpi_fadt_find());
+    xprintf("MADT address: 0x%x\n", apic_sdt);
+    xprintf("MADT entries: 0x%x\n", (uint8_t*)apic_sdt + 0x28);
+    
     pic_disable();
     pic_mode_disable();
 
     madt_entries_get(apic_sdt);
 
     xprintf("YOUR IOAPIC\n");
-    for (int i = 0; (*madt_entry_type1_ptr[i]).entry_type == 1; i++)
+    for (int i = 0; (*madt_entry_type1_ptr[i]).entry_type == 1; i++) // ignore not initialized enttries
     {
         if ((*madt_entry_type1_ptr[i]).length == 0xC)
         {

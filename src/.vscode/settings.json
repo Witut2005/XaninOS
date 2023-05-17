@@ -13,6 +13,10 @@
         "climits": "c",
         "cstdarg": "c",
         "cstdbool": "c",
-        "cstdint": "c"
-    }
+        "cstdint": "c",
+        "hal.h": "c",
+        "alloc.h": "c",
+        "stdiox.h": "c"
+    },
+    "C_Cpp.errorSquiggles": "disabled"
 }

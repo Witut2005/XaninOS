@@ -118,7 +118,7 @@ void* mmngr_block_allocate(uint8_t mode, uint32_t size)
 
     if(mmap_index == UINT32_MAX) // NO AVAILABLE MEMORY
     {
-        printk("USER HEAP FULL");
+        printk("HEAP FULL");
         return (void*)NULL;
     }
 

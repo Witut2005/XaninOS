@@ -17,6 +17,7 @@ extern void syscall_entry(void);
 #define IDT_SIZE 256 * 8 - 1
 
 
+#define NULL_SEGMENT 0
 #define CODE_SEGMENT 0x8
 
 /* configure interrupt descriptor table entry */
@@ -66,27 +67,30 @@ void set_idt(void)
     interrupt_disable();
 
     /* configure IDT entries*/
-    configure_idt_entry(0x0, interrupt_handlers[0], CODE_SEGMENT);
-    configure_idt_entry(0x1, interrupt_handlers[1], CODE_SEGMENT);
-    configure_idt_entry(0x2, interrupt_handlers[2],CODE_SEGMENT);
-    configure_idt_entry(0x3, interrupt_handlers[3], CODE_SEGMENT);
-    configure_idt_entry(0x4, interrupt_handlers[4], CODE_SEGMENT);
-    configure_idt_entry(0x5, interrupt_handlers[5],CODE_SEGMENT);
-    configure_idt_entry(0x6, interrupt_handlers[6],CODE_SEGMENT);
-    configure_idt_entry(0x7, interrupt_handlers[7],CODE_SEGMENT);
-    configure_idt_entry(0x8, interrupt_handlers[8],CODE_SEGMENT);
-    configure_idt_entry(0x9, interrupt_handlers[9],CODE_SEGMENT);
-    configure_idt_entry(0xa, interrupt_handlers[0xa],CODE_SEGMENT);
-    configure_idt_entry(0xb, interrupt_handlers[0xb],CODE_SEGMENT);
-    configure_idt_entry(0xc, interrupt_handlers[0xc],CODE_SEGMENT);
+    // configure_idt_entry(0x0, NULL, 0);
+    configure_idt_entry(0, interrupt_handlers[0], CODE_SEGMENT);
+    configure_idt_entry(1, interrupt_handlers[1], CODE_SEGMENT);
+    configure_idt_entry(2, interrupt_handlers[2], CODE_SEGMENT);
+    configure_idt_entry(3, interrupt_handlers[3], CODE_SEGMENT);
+    configure_idt_entry(4, interrupt_handlers[4], CODE_SEGMENT);
+    configure_idt_entry(5, interrupt_handlers[5], CODE_SEGMENT);
+    configure_idt_entry(6, interrupt_handlers[6], CODE_SEGMENT);
+    configure_idt_entry(7, interrupt_handlers[7], CODE_SEGMENT);
+    configure_idt_entry(8, interrupt_handlers[8], CODE_SEGMENT);
+    // configure_idt_entry(0x8, NULL, 0);
+    configure_idt_entry(9, interrupt_handlers[9], CODE_SEGMENT);
+    configure_idt_entry(10, interrupt_handlers[10],CODE_SEGMENT);
+    configure_idt_entry(11, interrupt_handlers[11],CODE_SEGMENT);
+    configure_idt_entry(12, interrupt_handlers[12], CODE_SEGMENT);
     configure_idt_entry(13, interrupt_handlers[13], CODE_SEGMENT);
-    configure_idt_entry(0xe, interrupt_handlers[14], CODE_SEGMENT);
-    configure_idt_entry(0xf, interrupt_handlers[15], CODE_SEGMENT);
+    // configure_idt_entry(13, NULL, 0);
+    configure_idt_entry(14, interrupt_handlers[14], CODE_SEGMENT);
+    configure_idt_entry(15, interrupt_handlers[15], CODE_SEGMENT);
     configure_idt_entry(17, interrupt_handlers[17], CODE_SEGMENT);
-    configure_idt_entry(18, interrupt_handlers[18],CODE_SEGMENT);
+    configure_idt_entry(18, interrupt_handlers[18], CODE_SEGMENT);
     configure_idt_entry(19, interrupt_handlers[19], CODE_SEGMENT);
-    configure_idt_entry(20, interrupt_handlers[20],CODE_SEGMENT);
-    configure_idt_entry(21, interrupt_handlers[21],CODE_SEGMENT);
+    configure_idt_entry(20, interrupt_handlers[20], CODE_SEGMENT);
+    configure_idt_entry(21, interrupt_handlers[21], CODE_SEGMENT);
     configure_idt_entry(22, interrupt_handlers[22], CODE_SEGMENT);
     configure_idt_entry(23, interrupt_handlers[23], CODE_SEGMENT);
     configure_idt_entry(24, interrupt_handlers[24], CODE_SEGMENT);
@@ -111,14 +115,16 @@ void set_idt(void)
     configure_idt_entry(0x2B+6, interrupt_handlers[0x2B+6], CODE_SEGMENT);
     configure_idt_entry(0x2B+7, interrupt_handlers[0x2B+7], CODE_SEGMENT);
 
-
-
     configure_idt_entry(0x2C, interrupt_handlers[0x2C], CODE_SEGMENT);
     configure_idt_entry(0x50, interrupt_handlers[0x50], CODE_SEGMENT);
 
     configure_idt_entry(0x80, syscall_entry, CODE_SEGMENT);
     configure_idt_entry(0x81, xanin_sys_entry, CODE_SEGMENT);
     // configure_idt_entry(0x81, interrupt_handlers[0x81], CODE_SEGMENT);
+
+    configure_idt_entry(150, NULL, NULL_SEGMENT);
+    // configure_idt_entry(0xFF, reboot_interrupt, CODE_SEGMENT);
+
     configure_idt_entry(0xFF, reboot_interrupt, CODE_SEGMENT);
 
     // configure_idt_entry(0x21, keyboard_handler_init,CODE_SEGMENT);
@@ -146,6 +152,6 @@ void set_idt(void)
     };
 
     /* load IDT Register with proper struct */
-    asm("lidt %0" : : "m"(idtr));
+    asm("lidt %0" :: "m"(idtr));
     interrupt_enable();
 }

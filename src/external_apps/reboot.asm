@@ -1,12 +1,15 @@
 
 
-section .text
-
-global _start
+[org 0x10000]
 
 _start:
+lidt [data]
 mov edx, 0
 div edx
+
+data:
+    dd 0x0
+
 ; mov eax, 88
 ; mov ebx, 0xfee1dead
 ; mov ecx, 672274793

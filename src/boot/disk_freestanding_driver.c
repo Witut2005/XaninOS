@@ -322,10 +322,10 @@ void elf_load(void)
     
     print("kernel loaded");
 
-    void(*tmp)(void) = entry_point;
+    void(*kernel)(void) = entry_point;
 
     asm("cli");
-    tmp();
+    kernel();
 
 }
 

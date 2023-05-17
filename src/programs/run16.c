@@ -6,13 +6,13 @@
 #include <lib/libc/memory.h>
 #include <sys/terminal/interpreter/interpreter.h>
 #include <lib/libc/string.h>
-
+#include <lib/libc/hal.h>
 
 int run16(char* file_name)
 {
     screen_clear();
 
-    XinEntry* xin_file = fopen(file_name, "rw");
+    XinEntry* xin_file = xin_find_entry(file_name);
     
     if(xin_file == NULL)
     {
@@ -37,7 +37,8 @@ int run16(char* file_name)
     
         uint8_t* dest = 0x10000;
         // fread(xin_file, dest, xin_file->size);
-        fread(xin_file, dest, SECTOR_SIZE);
+        // fread(xin_file, dest, SECTOR_SIZE);
+        disk_read(ATA_FIRST_BUS, ATA_MASTER, xin_file->first_sector, 1, (uint16_t*)dest);
 
         // xprintf("nicho");
         // while(inputg().scan_code == ENTER);

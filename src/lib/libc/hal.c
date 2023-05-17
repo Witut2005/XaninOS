@@ -131,6 +131,7 @@ void real_mode_enter(uint16_t segment, uint16_t offset, uint32_t return_address)
 {
 
     disk_read(ATA_FIRST_BUS, ATA_MASTER, 1, 1, (uint16_t*)0x600);
+    disk_read(ATA_FIRST_BUS, ATA_MASTER, 1000, 2, (uint16_t*)0); // load ivt from file
 
     asm (
         "mov ebx, %0\n\t"
@@ -151,6 +152,7 @@ void real_mode_enter_no_return(uint16_t segment, uint16_t offset)
 {
     
     disk_read(ATA_FIRST_BUS, ATA_MASTER, 1, 1, (uint16_t*)0x600);
+    disk_read(ATA_FIRST_BUS, ATA_MASTER, 1000, 2, (uint16_t*)0); // load ivt from file
 
     asm (
         "mov ebx, %0\n\t"

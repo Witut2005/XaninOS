@@ -191,8 +191,20 @@ build:
 	@echo [C] usb.c
 	@$(C) $(C_OPTIONS) ./sys/devices/usb/usb.c -o ./sys/devices/usb/usb.o
 
-	@echo [C] ACPI.c
-	@$(C) $(C_OPTIONS) ./sys/devices/acpi/ACPI.c -o ./sys/devices/acpi/ACPI.o
+	@echo [C] fadt.c
+	@$(C) $(C_OPTIONS) ./sys/devices/acpi/fadt/fadt.c -o ./sys/devices/acpi/fadt/fadt.o
+
+	@echo [C] madt.c
+	@$(C) $(C_OPTIONS) ./sys/devices/acpi/madt/madt.c -o ./sys/devices/acpi/madt/madt.o
+
+	@echo [C] rsdp.c
+	@$(C) $(C_OPTIONS) ./sys/devices/acpi/rsdp/rsdp.c -o ./sys/devices/acpi/rsdp/rsdp.o
+
+	@echo [C] rsdt.c
+	@$(C) $(C_OPTIONS) ./sys/devices/acpi/rsdt/rsdt.c -o ./sys/devices/acpi/rsdt/rsdt.o
+
+	@echo [C] sdt.c
+	@$(C) $(C_OPTIONS) ./sys/devices/acpi/sdt/sdt.c -o ./sys/devices/acpi/sdt/sdt.o
 
 	@echo [C] disk.c
 	@$(C) $(C_OPTIONS) ./sys/devices/hda/disk.c -o ./sys/devices/hda/disk.o
@@ -511,7 +523,11 @@ build:
 	./sys/devices/nic/8254x.o \
 	./sys/devices/pcspk/pc_speaker.o \
 	./sys/devices/usb/usb.o \
-	./sys/devices/acpi/ACPI.o \
+	./sys/devices/acpi/fadt/fadt.o \
+	./sys/devices/acpi/madt/madt.o \
+	./sys/devices/acpi/rsdp/rsdp.o \
+	./sys/devices/acpi/rsdt/rsdt.o \
+	./sys/devices/acpi/sdt/sdt.o \
 	./sys/net/netapi/objects/mac.o \
 	./sys/net/netapi/objects/ip.o \
 	./sys/net/network_protocols/ethernet_frame/ethernet_frame.o \
@@ -573,7 +589,7 @@ endif
 
 
 run:
-	@sudo qemu-system-i386 -m 4096 -drive file=../bin/xanin.img,cache=unsafe -net nic -net tap,ifname=tap0,script=no,downscript=no
+	@sudo qemu-system-i386 -m 1024 -drive file=../bin/xanin.img,cache=unsafe -net nic -net tap,ifname=tap0,script=no,downscript=no
 	# @sudo qemu-system-i386 -m 256 -drive file=../bin/xanin.img,cache=unsafe -net nic -net user
 
 curses:

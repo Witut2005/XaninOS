@@ -369,37 +369,6 @@ void xin_init_fs(void)
     disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x12, XIN_ENTRY_POINTERS_SECTORS, (uint16_t*)(XIN_ENTRY_POINTERS));
     disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x1a, XIN_ENTRY_TABLE_SECTORS, (uint16_t*)(XIN_ENTRY_TABLE));
 
-    if(xin_find_entry("/") == NULL)
-        xin_folder_create("/");
-
-    if(xin_find_entry("/ivt") == NULL)
-        xin_file_create_at_given_sector("/ivt",                      0x0, 0x3);
-
-    if(xin_find_entry("/file_system.bin") == NULL)
-        xin_file_create_at_given_sector("/file_system.bin",          0x4, 20);
-
-    if(xin_find_entry("/enter_real_mode.bin") == NULL)
-        xin_file_create_at_given_sector("/enter_real_mode.bin",      0x1, 0x1);
-
-    if(xin_find_entry("/boot.bin") == NULL)
-        xin_file_create_at_given_sector("/boot.bin",                 0, 0x1);
-
-    if(xin_find_entry("/shutdown.bin") == NULL)
-        xin_file_create_at_given_sector("/shutdown.bin",             0x2, 0x1);    
-
-    // if(xin_find_entry("/syscall_test.bin") == NULL)
-    //     xin_file_create_at_given_sector("/syscall_test.bin",         0x0, 0x0, 0x0, 0x0, 0x0, PERMISSION_MAX, 0x500,0x1,    XIN_FILE, 7);
-
-    if(xin_find_entry("/fast_real_mode_enter.bin") == NULL)
-        xin_file_create_at_given_sector("/fast_real_mode_enter.bin", 0x5, 0x1);
-
-    if(xin_find_entry("/fast_real_mode_return.bin") == NULL)
-        xin_file_create_at_given_sector("/fast_real_mode_return.bin",  0x6, 0x1);
-
-    
-    if(xin_find_entry("/screenshot/") == NULL)
-        xin_folder_create("/screenshot/");
-
 
     xin_folder_change("/");
 

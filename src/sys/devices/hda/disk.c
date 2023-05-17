@@ -119,7 +119,7 @@ void disk_flush(uint16_t base, uint8_t master)
 void disk_write_single_sector(uint16_t base, uint8_t master, uint32_t sector_number, uint16_t* where)
 {
     
-    if(!sector_number) // DO NOT ALLOW BOOTLOADER OVERRIDING
+    if(sector_number==1) // DO NOT ALLOW BOOTLOADER OVERRIDING
         return;
 
     uint8_t disk_status;
