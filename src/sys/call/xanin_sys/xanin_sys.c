@@ -5,6 +5,7 @@
 #include <lib/libc/memory.h>
 
 #include <sys/call/xanin_sys/pmmngr/alloc.h>
+#include <sys/devices/hda/disk.h>
 #include <sys/input/input.h>
 #include <fs/xin.h>
 
@@ -149,12 +150,17 @@ uint32_t xanin_sys_handle(void)
 
         case XANIN_DISK_READ:
         {
-
+            // ECX = sector_id, EDX = how_many, EBX = where to load
+            disk_read(ATA_FIRST_BUS, ATA_MASTER, ecx, edx, (uint16_t*)ebx);
+            eax = (uint32_t)ebx;
+            break;
         }
 
         case XANIN_DISK_WRITE:
         {
-
+            // ECX = sector_id, EDX = how_many, EBX = from where to load
+            disk_write(ATA_FIRST_BUS, ATA_MASTER, ecx, edx, (uint16_t*)ebx);
+            break;
         }
 
     }

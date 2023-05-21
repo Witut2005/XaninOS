@@ -95,6 +95,9 @@ build:
 	@echo [ASM] xanin_sys_entry.asm
 	@$(ASM) -f elf32 ./sys/call/xanin_sys_entry.asm -o ./sys/call/xanin_sys_entry.o
 
+	@echo [ASM] xanin_calls.asm
+	@$(ASM) -f elf32 ./sys/call/xanin_sys/xanin_calls.asm -o ./sys/call/xanin_sys/xanin_calls.o
+
 	@echo [C] xanin_sys.c
 	@$(C) $(C_OPTIONS) ./sys/call/xanin_sys/xanin_sys.c -o ./sys/call/xanin_sys/xanin_sys.o
 
@@ -514,6 +517,7 @@ build:
 	./sys/call/syscall_entry.o \
 	./sys/call/xanin_sys_entry.o \
 	./sys/call/xanin_sys/xanin_sys.o \
+	./sys/call/xanin_sys/xanin_calls.o \
 	./programs/edit.o \
 	./programs/test/cpp_test.o \
 	./sys/devices/mouse/mouse_init.o \

@@ -1,4 +1,5 @@
 
+#include <sys/call/xanin_sys/xanin_sys.h>
 #include <sys/log/syslog.h>
 #include <lib/libc/hal.h>
 #include <fs/xin.h>
@@ -366,8 +367,8 @@ void xin_file_create_at_given_sector(char *path, uint32_t first_sector, uint8_t 
 void xin_init_fs(void)
 {
 
-    disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x12, XIN_ENTRY_POINTERS_SECTORS, (uint16_t*)(XIN_ENTRY_POINTERS));
-    disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x1a, XIN_ENTRY_TABLE_SECTORS, (uint16_t*)(XIN_ENTRY_TABLE));
+    __disk_read(0x12, XIN_ENTRY_POINTERS_SECTORS, (uint16_t*)(XIN_ENTRY_POINTERS));
+    __disk_read(0x1a, XIN_ENTRY_TABLE_SECTORS, (uint16_t*)(XIN_ENTRY_TABLE));
 
 
     xin_folder_change("/");
@@ -705,7 +706,7 @@ size_t __xin_fread(XinEntry *entry, void *buf, size_t count)
     {
         if(!entry->FileInfo->sector_in_use[i])
         {
-            disk_read(ATA_FIRST_BUS, ATA_MASTER, entry->first_sector + i, 1, (uint16_t*)(entry->FileInfo->buffer + (i * SECTOR_SIZE)));
+            __disk_read(entry->first_sector + i, 1, (uint16_t*)(entry->FileInfo->buffer + (i * SECTOR_SIZE)));
             entry->FileInfo->sector_in_use[i] = true;
         }
     }
@@ -781,7 +782,7 @@ size_t __xin_fwrite(XinEntry *entry, void *buf, size_t count)
     {
         if(!entry->FileInfo->sector_in_use[i])
         {
-            disk_read(ATA_FIRST_BUS, ATA_MASTER, entry->first_sector + i, 1, (uint16_t*)(entry->FileInfo->buffer + (i * SECTOR_SIZE)));
+            __disk_read(entry->first_sector + i, 1, (uint16_t*)(entry->FileInfo->buffer + (i * SECTOR_SIZE)));
             entry->FileInfo->sector_in_use[i] = true;
         }
     }

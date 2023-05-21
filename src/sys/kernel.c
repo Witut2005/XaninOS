@@ -382,8 +382,9 @@ void _start(void)
     argv[4] = program_parameters3;
 
     // LOAD XIN TABLES
-    disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x12, 8, (uint16_t *)XIN_ENTRY_POINTERS);
-    disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x1a, 10, (uint16_t *)XIN_ENTRY_TABLE);
+    // disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x12, 8, (uint16_t *)XIN_ENTRY_POINTERS);
+    // disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x1a, 10, (uint16_t *)XIN_ENTRY_TABLE);
+    xin_init_fs();
 
     disk_write(ATA_FIRST_BUS, ATA_MASTER, xin_find_entry("/ivt")->first_sector, 2, 0x0); // load ivt to /ivt file
 
