@@ -24,10 +24,8 @@ typedef struct SystemAcpiRSDP SystemAcpiRSDP;
 // extern SystemAcpiRSDP* rsdp;
 
 bool acpi_rsdp_checksum_check(SystemAcpiRSDP* header);
-SystemAcpiRSDP* acpi_rsdp_address_base_get(void);
-void acpi_print_rsdp(void);
+SystemAcpiRSDP* acpi_rsdp_find(void);
+void acpi_print_rsdp(SystemAcpiRSDP* rsdp);
 
-SystemAcpiRSDP acpi_rsdp_copy_get(void);
-SystemAcpiRSDP* acpi_rsdp_reference_get(void);
 
 void acpi_rsdp_set(SystemAcpiRSDP* RSDPAddress);

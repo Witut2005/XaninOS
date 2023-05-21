@@ -25,6 +25,7 @@
 #include <sys/log/syslog.h>
 #include <sys/devices/nic/8254x.h>
 #include <sys/devices/pcspk/pc_speaker.h>
+#include <sys/devices/acpi/fadt/fadt.h>
 // #include <sys/net/network_protocols/ethernet_frame/ethernet_frame.h>
 #include <sys/net/netapi/network_device.h>
 #include <sys/net/network_protocols/arp/arp.h>
@@ -155,7 +156,6 @@ void _start(void)
     syslog_disable();
     memset((uint8_t*)XIN_ENTRY_POINTERS, 1, 0x280);
     
-    disk_write(ATA_FIRST_BUS, ATA_MASTER, 1000, 2, 0x0); // load ivt to /ivt file
     interrupt_disable();
 
     INTERRUPT_REGISTER(0, divide_by_zero_exception_entry);
@@ -190,6 +190,8 @@ void _start(void)
     INTERRUPT_REGISTER(30, general_protection_exception_entry);
     INTERRUPT_REGISTER(31, general_protection_exception_entry);
     INTERRUPT_REGISTER(32, general_protection_exception_entry);
+
+    interrupt_enable();
     
     screen_init(); // init screen management system
     screen_clear();
@@ -214,16 +216,14 @@ void _start(void)
     // kernel_terminal = terminal_create();
     // terminal_set((terminal_t*)null_memory_region, kernel_terminal);
 
-    acpi_rsdp_set(acpi_rsdp_address_base_get());
-
     xprintf("%z----------------------------\n", OUTPUT_COLOR_SET(black, green));
 
     xprintf("CHECKSUM CHECK RSDP: ");
 
-    SystemAcpiRSDP* rsdp = acpi_rsdp_reference_get();
+    SystemAcpiRSDP* rsdp = acpi_rsdp_find();
 
     1 == acpi_rsdp_checksum_check(rsdp) ? xprintf("%zVALID", OUTPUT_COLOR_SET(green, white)) : xprintf("%zINVALID", OUTPUT_COLOR_SET(red, white));
-    xprintf("\nRSDP address: 0x%x\n", acpi_rsdp_reference_get());
+    xprintf("\nRSDP address: 0x%x\n", rsdp);
 
     acpi_rsdt_set(rsdp->rsdt_address);
 
@@ -234,19 +234,25 @@ void _start(void)
     1 == acpi_rsdt_checksum_check(rsdt) ? xprintf("%zVALID", OUTPUT_COLOR_SET(green, white)) : xprintf("%zINVALID", OUTPUT_COLOR_SET(red, white));
     xprintf("\nRSDT address: 0x%x\n", rsdt);
 
-    acpi_apic_sdt_set(apic_sdt_find());
-    SystemAcpiSDT* apic_sdt = acpi_apic_sdt_get();
+    SystemAcpiSDT* AcpiApicSDT = apic_sdt_find();
 
     xprintf("%z----------------------------\n", OUTPUT_COLOR_SET(black, green));
 
-    xprintf("FADT address: 0x%x\n", acpi_fadt_find());
-    xprintf("MADT address: 0x%x\n", apic_sdt);
-    xprintf("MADT entries: 0x%x\n", (uint8_t*)apic_sdt + 0x28);
+    SystemAcpiFADT* AcpiFADT = acpi_fadt_find();
+
+    xprintf("FADT address: ");
+    xprintf("%z0x%x\n", OUTPUT_COLOR_SET(black, acpi_sdt_checksum_check((uint8_t*)AcpiFADT, AcpiFADT->length) == true ? green : red), AcpiFADT);
+    
+    xprintf("MADT address: ");
+    xprintf("%z0x%x\n", OUTPUT_COLOR_SET(black, acpi_sdt_checksum_check((uint8_t*)AcpiApicSDT, AcpiApicSDT->length) == true ? green : red), AcpiApicSDT);
+
+    xprintf("MADT entries: 0x%x\n", (uint8_t*)AcpiApicSDT + 0x28);
+
     
     pic_disable();
     pic_mode_disable();
 
-    madt_entries_get(apic_sdt);
+    madt_entries_get(AcpiApicSDT);
 
     xprintf("YOUR IOAPIC\n");
     for (int i = 0; (*madt_entry_type1_ptr[i]).entry_type == 1; i++) // ignore not initialized enttries
@@ -375,8 +381,11 @@ void _start(void)
     argv[3] = program_parameters2;
     argv[4] = program_parameters3;
 
+    // LOAD XIN TABLES
     disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x12, 8, (uint16_t *)XIN_ENTRY_POINTERS);
     disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x1a, 10, (uint16_t *)XIN_ENTRY_TABLE);
+
+    disk_write(ATA_FIRST_BUS, ATA_MASTER, xin_find_entry("/ivt")->first_sector, 2, 0x0); // load ivt to /ivt file
 
     // xin_init_fs();
     xin_folder_change("/");

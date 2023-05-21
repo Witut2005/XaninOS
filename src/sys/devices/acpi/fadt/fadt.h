@@ -9,8 +9,9 @@ struct GenericAddressStructure
   uint8_t BitWidth;
   uint8_t BitOffset;
   uint8_t AccessSize;
-  uint64_t Address;
-};
+  uint32_t address_low;
+  uint32_t address_high;
+}__attribute__((packed));
 
 typedef struct GenericAddressStructure GenericAddressStructure;
 
@@ -77,18 +78,29 @@ struct SystemAcpiFADT
     uint8_t  ResetValue;
     uint8_t  Reserved3[3];
  
-    // 64bit pointers - Available on ACPI 2.0+
-    uint64_t                X_FirmwareControl;
-    uint64_t                X_Dsdt;
+    // XaninOS dont need ACPI 2.0  pfff
+    // 64bit pointers - Available on ACPI 2.0
+    // uint64_t                X_FirmwareControl;
+    // uint64_t                X_Dsdt;
  
-    GenericAddressStructure X_PM1aEventBlock;
-    GenericAddressStructure X_PM1bEventBlock;
-    GenericAddressStructure X_PM1aControlBlock;
-    GenericAddressStructure X_PM1bControlBlock;
-    GenericAddressStructure X_PM2ControlBlock;
-    GenericAddressStructure X_PMTimerBlock;
-    GenericAddressStructure X_GPE0Block;
-    GenericAddressStructure X_GPE1Block;
-};
+    // GenericAddressStructure X_PM1aEventBlock;
+    // GenericAddressStructure X_PM1bEventBlock;
+    // GenericAddressStructure X_PM1aControlBlock;
+    // GenericAddressStructure X_PM1bControlBlock;
+    // GenericAddressStructure X_PM2ControlBlock;
+    // GenericAddressStructure X_PMTimerBlock;
+    // GenericAddressStructure X_GPE0Block;
+    // GenericAddressStructure X_GPE1Block;
+}__attribute__((packed));
 
 typedef struct SystemAcpiFADT SystemAcpiFADT;
+
+#ifdef __cplusplus
+extern "C"{
+#endif
+
+const SystemAcpiFADT* const acpi_fadt_find(void);
+
+#ifdef __cplusplus
+}
+#endif

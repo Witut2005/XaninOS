@@ -3,24 +3,9 @@
 #include <stddef.h>
 #include <lib/libc/string.h>
 
-SystemAcpiRSDP* rsdp;
 
-SystemAcpiRSDP acpi_rsdp_copy_get(void)
-{
-    return *rsdp;
-}
 
-SystemAcpiRSDP* acpi_rsdp_reference_get(void)
-{
-    return rsdp;
-}
-
-void acpi_rsdp_set(SystemAcpiRSDP* RSDPAddress)
-{
-    rsdp = RSDPAddress;
-}
-
-SystemAcpiRSDP* acpi_rsdp_address_base_get(void)
+SystemAcpiRSDP* acpi_rsdp_find(void)
 {
     char *acpi_string = (char *)0xE000;
 
@@ -51,7 +36,7 @@ bool acpi_rsdp_checksum_check(SystemAcpiRSDP* header)
     return sum == 0;
 }
 
-void acpi_print_rsdp(void)
+void acpi_print_rsdp(SystemAcpiRSDP* rsdp)
 {
     xprintf("RDSP data: %x\n", rsdp);
 

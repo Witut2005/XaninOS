@@ -34,36 +34,13 @@ void acpi_print_sdt(SystemAcpiSDT* x)
     xprintf("creator_revision : 0x%x\n", x->creator_revision);
 }
 
-SystemAcpiSDT* apic_sdt_find(void)
+
+bool acpi_sdt_checksum_check(uint8_t* header, uint32_t length)
 {
-    uint32_t* sdt_pointers = acpi_rsdt_get()->pointer_to_sdt;
+    uint8_t sum = 0;
 
-    for(int i = 0; i < 10; i++)
-    {
-        if(strncmp(sdt_pointers[i], "APIC", 4))
-            return sdt_pointers[i];
-    }
-    return NULL;
-}
+    for (int i = 0; i < length; i++)
+        sum += header[i];
 
-SystemAcpiFADT* acpi_fadt_find(void)
-{
-    uint32_t* sdt_pointers = acpi_rsdt_get()->pointer_to_sdt;
-
-    for(int i = 0; i < 10; i++)
-    {
-        if(strncmp(sdt_pointers[i], "FACP", 4))
-            return sdt_pointers[i];
-    }
-    return NULL;
-}
-
-SystemAcpiSDT* acpi_apic_sdt_get(void)
-{
-    return ApicSDT;
-}
-
-void acpi_apic_sdt_set(SystemAcpiSDT* ApicSDTAddress)
-{
-    ApicSDT = ApicSDTAddress;
+    return sum == 0;
 }

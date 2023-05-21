@@ -115,7 +115,7 @@ loader:
 cli
 
 mov word si, [kernel + 0x12]  ;machine type
-cmp si, 0x3
+cmp si, 0x3 ;i386
 je machine_good
 
 cli
@@ -181,7 +181,6 @@ mov ax, 0x30
 ltr ax
 
 mov dword eax, [kernel + 0x18]
-
 
 jmp eax
 

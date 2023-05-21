@@ -1,6 +1,7 @@
 
 #pragma once
 #include <stdint.h>
+#include <stdbool.h>
 #include <sys/devices/acpi/fadt/fadt.h>
 
 struct SystemAcpiSDT
@@ -23,7 +24,4 @@ typedef struct SystemAcpiSDT SystemAcpiSDT;
 extern SystemAcpiSDT* ApicSDT;
 
 void acpi_print_sdt(SystemAcpiSDT *x);
-SystemAcpiSDT* acpi_apic_sdt_get(void);
-void acpi_apic_sdt_set(SystemAcpiSDT *ApicSDTAddress);
-SystemAcpiSDT* apic_sdt_find(void);
-SystemAcpiFADT* acpi_fadt_find(void);
+bool acpi_sdt_checksum_check(uint8_t* header, uint32_t length);

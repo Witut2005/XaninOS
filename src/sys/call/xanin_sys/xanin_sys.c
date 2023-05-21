@@ -147,6 +147,16 @@ uint32_t xanin_sys_handle(void)
         }
 
 
+        case XANIN_DISK_READ:
+        {
+
+        }
+
+        case XANIN_DISK_WRITE:
+        {
+
+        }
+
     }
 
     return eax;

@@ -64,8 +64,6 @@ irq_handler interrupt_handlers[0x100];
 
 void set_idt(void)
 {
-    interrupt_disable();
-
     /* configure IDT entries*/
     // configure_idt_entry(0x0, NULL, 0);
     configure_idt_entry(0, interrupt_handlers[0], CODE_SEGMENT);
@@ -153,5 +151,4 @@ void set_idt(void)
 
     /* load IDT Register with proper struct */
     asm("lidt %0" :: "m"(idtr));
-    interrupt_enable();
 }

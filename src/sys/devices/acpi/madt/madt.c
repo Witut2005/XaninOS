@@ -1,9 +1,10 @@
 
-#include <sys/devices/acpi/madt/madt.h>
-#include <sys/devices/acpi/sdt/sdt.h>
+#include <lib/libc/string.h>
 #include <sys/pmmngr/alloc.h>
+#include <sys/devices/acpi/sdt/sdt.h>
+#include <sys/devices/acpi/rsdt/rsdt.h>
+#include <sys/devices/acpi/madt/madt.h>
 
-SystemAcpiSDT* apic_sdt;
 uint8_t* madt_entries[0x10];
 uint8_t madt_entry_type0_counter = 0;
 uint8_t madt_entry_type1_counter = 0;
@@ -68,7 +69,17 @@ uint8_t madt_checksum_check(SystemAcpiSDT* entry)
     for(int i = 0; i < entry->length; i++)
         sum += field[i];
     
-
     return sum == 0;
+}
 
+const SystemAcpiSDT* const apic_sdt_find(void)
+{
+    const uint32_t* const sdt_pointers = (const uint32_t* const)(acpi_rsdt_get()->pointer_to_sdt);
+
+    for(int i = 0; i < 10; i++)
+    {
+        if(strncmp((char*)sdt_pointers[i], "APIC", 4))
+            return (const SystemAcpiFADT* const)(sdt_pointers[i]);
+    }
+    return NULL;
 }

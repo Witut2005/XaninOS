@@ -113,5 +113,14 @@ extern const madt_entry_type9** madt_entry_type9_ptr;
 
 extern uint8_t* madt_entries[0x10];
 
+#ifdef __cplusplus
+extern "C"{
+#endif
+
+const SystemAcpiSDT* const apic_sdt_find(void);
 void madt_entries_get(SystemAcpiSDT* apic_entry);
 uint8_t madt_checksum_check(SystemAcpiSDT* entry);
+
+#ifdef __cplusplus
+}
+#endif

@@ -575,7 +575,7 @@ build:
 	@find ./ -name "*.o" -type f -delete
 
 	
-	@python3 ./utils/align_file.py -f ./xanin.img -size 800000
+	@python3 ./utils/align_file.py -f ./xanin.img -size 819200
 	@mv xanin.img -f ../bin
 	@mv xanin.bin -f ../bin
 	
@@ -589,7 +589,7 @@ endif
 
 
 run:
-	@sudo qemu-system-i386 -m 1024 -drive file=../bin/xanin.img,cache=unsafe -net nic -net tap,ifname=tap0,script=no,downscript=no
+	@sudo qemu-system-i386 -m 2048 -drive file=../bin/xanin.img,cache=unsafe -net nic -net tap,ifname=tap0,script=no,downscript=no
 	# @sudo qemu-system-i386 -m 256 -drive file=../bin/xanin.img,cache=unsafe -net nic -net user
 
 curses:
