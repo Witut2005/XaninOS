@@ -6,57 +6,57 @@
 #include <sys/devices/acpi/madt/madt.h>
 
 uint8_t* madt_entries[0x10];
-uint8_t madt_entry_type0_counter = 0;
-uint8_t madt_entry_type1_counter = 0;
-uint8_t madt_entry_type2_counter = 0;
-uint8_t madt_entry_type3_counter = 0;
-uint8_t madt_entry_type4_counter = 0;
-uint8_t madt_entry_type5_counter = 0;
-uint8_t madt_entry_type9_counter = 0;
+uint8_t acpi_madt0_counter = 0;
+uint8_t acpi_madt1_counter = 0;
+uint8_t acpi_madt2_counter = 0;
+uint8_t acpi_madt3_counter = 0;
+uint8_t acpi_madt4_counter = 0;
+uint8_t acpi_madt5_counter = 0;
+uint8_t acpi_madt9_counter = 0;
 
-const madt_entry_type0** madt_entry_type0_ptr;
-const madt_entry_type1** madt_entry_type1_ptr;
-const madt_entry_type2** madt_entry_type2_ptr;
-const madt_entry_type3** madt_entry_type3_ptr;
-const madt_entry_type4** madt_entry_type4_ptr;
-const madt_entry_type5** madt_entry_type5_ptr;
-const madt_entry_type9** madt_entry_type9_ptr;
+const SystemAcpiMADT0** AcpiMADT0Pointers;
+const SystemAcpiMADT1** AcpiMADT1Pointers;
+const SystemAcpiMADT2** AcpiMADT2Pointers;
+const SystemAcpiMADT3** AcpiMADT3Pointers;
+const SystemAcpiMADT4** AcpiMADT4Pointers;
+const SystemAcpiMADT5** AcpiMADT5Pointers;
+const SystemAcpiMADT9** AcpiMADT9Pointers;
 
 void madt_entries_get(SystemAcpiSDT* apic_entry)
 {
 
-    madt_entry_type0_ptr = kmalloc(sizeof(madt_entry_type0) * 10);
-    madt_entry_type1_ptr = kmalloc(sizeof(madt_entry_type1) * 10);
-    madt_entry_type2_ptr = kmalloc(sizeof(madt_entry_type2) * 10);
-    madt_entry_type3_ptr = kmalloc(sizeof(madt_entry_type3) * 10);
-    madt_entry_type4_ptr = kmalloc(sizeof(madt_entry_type4) * 10);
-    madt_entry_type5_ptr = kmalloc(sizeof(madt_entry_type5) * 10);
-    madt_entry_type9_ptr = kmalloc(sizeof(madt_entry_type9) * 10);
+    AcpiMADT0Pointers = kmalloc(sizeof(SystemAcpiMADT0) * 10);
+    AcpiMADT1Pointers = kmalloc(sizeof(SystemAcpiMADT1) * 10);
+    AcpiMADT2Pointers = kmalloc(sizeof(SystemAcpiMADT2) * 10);
+    AcpiMADT3Pointers = kmalloc(sizeof(SystemAcpiMADT3) * 10);
+    AcpiMADT4Pointers = kmalloc(sizeof(SystemAcpiMADT4) * 10);
+    AcpiMADT5Pointers = kmalloc(sizeof(SystemAcpiMADT5) * 10);
+    AcpiMADT9Pointers = kmalloc(sizeof(SystemAcpiMADT9) * 10);
 
     uint8_t *tmp = (uint8_t*)(apic_entry) + 0x2C;
 
     for (int i = 0; i < 0x10; tmp += *(tmp + 1), i++)
     {
         if (*tmp == 0)
-            madt_entry_type0_ptr[madt_entry_type0_counter++] = (madt_entry_type0 *)tmp;
+            AcpiMADT0Pointers[acpi_madt0_counter++] = (SystemAcpiMADT0 *)tmp;
 
         else if (*tmp == 1)
-            madt_entry_type1_ptr[madt_entry_type1_counter++] = (madt_entry_type1 *)tmp;
+            AcpiMADT1Pointers[acpi_madt1_counter++] = (SystemAcpiMADT1 *)tmp;
 
         else if (*tmp == 2)
-            madt_entry_type2_ptr[madt_entry_type2_counter++] = (madt_entry_type2 *)tmp;
+            AcpiMADT2Pointers[acpi_madt2_counter++] = (SystemAcpiMADT2 *)tmp;
 
         else if (*tmp == 3)
-            madt_entry_type3_ptr[madt_entry_type3_counter++] = (madt_entry_type3 *)tmp;
+            AcpiMADT3Pointers[acpi_madt3_counter++] = (SystemAcpiMADT3 *)tmp;
 
         else if (*tmp == 4)
-            madt_entry_type4_ptr[madt_entry_type4_counter++] = (madt_entry_type4 *)tmp;
+            AcpiMADT4Pointers[acpi_madt4_counter++] = (SystemAcpiMADT4 *)tmp;
 
         else if (*tmp == 5)
-            madt_entry_type5_ptr[madt_entry_type5_counter++] = (madt_entry_type5 *)tmp;
+            AcpiMADT5Pointers[acpi_madt5_counter++] = (SystemAcpiMADT5 *)tmp;
 
         else if (*tmp == 9)
-            madt_entry_type9_ptr[madt_entry_type9_counter++] = (madt_entry_type9 *)tmp;
+            AcpiMADT9Pointers[acpi_madt9_counter++] = (SystemAcpiMADT9 *)tmp;
     }
 }
 

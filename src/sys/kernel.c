@@ -154,7 +154,6 @@ void _start(void)
 {
 
     syslog_disable();
-    memset((uint8_t*)XIN_ENTRY_POINTERS, 1, 0x280);
     
     interrupt_disable();
 
@@ -255,17 +254,17 @@ void _start(void)
     madt_entries_get(AcpiApicSDT);
 
     xprintf("YOUR IOAPIC\n");
-    for (int i = 0; (*madt_entry_type1_ptr[i]).entry_type == 1; i++) // ignore not initialized enttries
+    for (int i = 0; (*AcpiMADT1Pointers[i]).entry_type == 1; i++) // ignore not initialized enttries
     {
-        if ((*madt_entry_type1_ptr[i]).length == 0xC)
+        if ((*AcpiMADT1Pointers[i]).length == 0xC)
         {
-            xprintf("ENTRY_TYPE     0x%x\n", (*madt_entry_type1_ptr[i]).entry_type);
-            xprintf("ENTRY LENGTH   0x%x\n", (*madt_entry_type1_ptr[i]).length);
-            xprintf("ID             0x%x\n", (*madt_entry_type1_ptr[i]).io_apic_id);
-            xprintf("RES            0x%x\n", (*madt_entry_type1_ptr[i]).reserved);
-            xprintf("IOAPIC BASE    0x%x\n", (*madt_entry_type1_ptr[i]).io_apic_base);
-            xprintf("GSIB           0x%x\n", (*madt_entry_type1_ptr[i]).global_system_int_table);
-            ioapic_init((*madt_entry_type1_ptr[i]).io_apic_base);
+            xprintf("ENTRY_TYPE     0x%x\n", (*AcpiMADT1Pointers[i]).entry_type);
+            xprintf("ENTRY LENGTH   0x%x\n", (*AcpiMADT1Pointers[i]).length);
+            xprintf("ID             0x%x\n", (*AcpiMADT1Pointers[i]).io_apic_id);
+            xprintf("RES            0x%x\n", (*AcpiMADT1Pointers[i]).reserved);
+            xprintf("IOAPIC BASE    0x%x\n", (*AcpiMADT1Pointers[i]).io_apic_base);
+            xprintf("GSIB           0x%x\n", (*AcpiMADT1Pointers[i]).global_system_int_table);
+            ioapic_init((*AcpiMADT1Pointers[i]).io_apic_base);
             break;
         }
     }
@@ -278,13 +277,13 @@ void _start(void)
     uint8_t used_irqs[32] = {0xFF};
     uint8_t used_irqs_counter = 0;
     
-    for (int i = 0; (*madt_entry_type2_ptr[i]).entry_type == 2; i++)
+    for (int i = 0; (*AcpiMADT2Pointers[i]).entry_type == 2; i++)
     {
         bool is_already_used = false;
 
         for(int j = 0; j < 32; j++)
         {
-            if(used_irqs[j] == (*madt_entry_type2_ptr[i]).irq_source)
+            if(used_irqs[j] == (*AcpiMADT2Pointers[i]).irq_source)
             {
                 is_already_used = true;
                 break;
@@ -293,29 +292,29 @@ void _start(void)
 
         if(!is_already_used)
         {
-            xprintf(" %d %d |", (*madt_entry_type2_ptr[i]).irq_source, (*madt_entry_type2_ptr[i]).global_system_int_table);
+            xprintf(" %d %d |", (*AcpiMADT2Pointers[i]).irq_source, (*AcpiMADT2Pointers[i]).global_system_int_table);
             ioapic_iso_couter++;
-            used_irqs[used_irqs_counter++] = (*madt_entry_type2_ptr[i]).irq_source;
+            used_irqs[used_irqs_counter++] = (*AcpiMADT2Pointers[i]).irq_source;
         }
     }
 
     xprintf("\n");
 
-    madt_entry_type2 *apic_keyboard_redirect = NULL;
-    madt_entry_type2 *apic_pit_redirect = NULL;
-    madt_entry_type2 *apic_nic_redirect = NULL;
-    madt_entry_type2 *apic_mouse_redirect = NULL;
+    SystemAcpiMADT2 *apic_keyboard_redirect = NULL;
+    SystemAcpiMADT2 *apic_pit_redirect = NULL;
+    SystemAcpiMADT2 *apic_nic_redirect = NULL;
+    SystemAcpiMADT2 *apic_mouse_redirect = NULL;
 
-    for (int i = 0; (*madt_entry_type2_ptr[i]).entry_type == 2; i++)
+    for (int i = 0; (*AcpiMADT2Pointers[i]).entry_type == 2; i++)
     {
-        if ((*madt_entry_type2_ptr[i]).irq_source == 1)
-            apic_keyboard_redirect = madt_entry_type2_ptr[i];
+        if ((*AcpiMADT2Pointers[i]).irq_source == 1)
+            apic_keyboard_redirect = AcpiMADT2Pointers[i];
 
-        else if ((*madt_entry_type2_ptr[i]).irq_source == 0)
-            apic_pit_redirect = madt_entry_type2_ptr[i];
+        else if ((*AcpiMADT2Pointers[i]).irq_source == 0)
+            apic_pit_redirect = AcpiMADT2Pointers[i];
 
-        else if ((*madt_entry_type2_ptr[i]).irq_source == 0xB)
-            apic_nic_redirect = madt_entry_type2_ptr[i];
+        else if ((*AcpiMADT2Pointers[i]).irq_source == 0xB)
+            apic_nic_redirect = AcpiMADT2Pointers[i];
         
     }
 
@@ -359,7 +358,7 @@ void _start(void)
 
     // for (int i = 0; i < 10; i++)
     // {
-    //     if (madt_entry_type0_ptr[i] != NULL)
+    //     if (AcpiMADT0Pointers[i] != NULL)
     //         number_of_cores++;
     // }
 

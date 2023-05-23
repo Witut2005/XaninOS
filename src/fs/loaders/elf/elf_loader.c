@@ -104,19 +104,20 @@ void elf_load(XinEntry* file)
         
     }
 
-    typedef void(*EntryPoint)(char*, char*, char*);
+    typedef void(*EntryPoint)(void);
     EntryPoint tmp;
     tmp = entry_point;
-    interrupt_disable();
     if(strcmp(argv[0], "elf") || strcmp(argv[0], "elft")) 
     {
         // for(int i = 1; i < 5; i++)
         //     xprintf("\n0x%x", argv[i]);
         
-        tmp(argv[1], argv[2], argv[3]);
+        tmp();
+        // tmp(argv[1], argv[2], argv[3]);
     }
     else
-        tmp(argv[0], argv[1], argv[2]);
+        tmp();
+        // tmp(argv[0], argv[1], argv[2]);
     
     free(data);
 }

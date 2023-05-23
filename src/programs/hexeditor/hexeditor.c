@@ -6,6 +6,23 @@ static char* data_pointer;
 static uint32_t data_pointer_position;
 static uint8_t tmp; 
 
+#define HEXEDITOR_BYTES_IN_ROW 16
+#define HEXEDITOR_SCREEN_ROW_WIDTH 46
+
+void hexeditor_letters_refresh(void)
+{
+    for(int i = 0; i < VGA_HEIGHT; i++)
+    {
+        Screen.x = 51;
+        Screen.y = i;
+
+        for(int j = 0; j < HEXEDITOR_BYTES_IN_ROW; j++)
+            putchar(data_pointer[ (HEXEDITOR_BYTES_IN_ROW * i) + j]);
+
+        xprintf("\n");
+    }
+}
+
 void hexeditor_input(xchar x)
 {
 
@@ -30,7 +47,7 @@ void hexeditor_input(xchar x)
 
         //data_pointer_position -= 26;
 
-        data_pointer_position -= 26;
+        data_pointer_position -= HEXEDITOR_BYTES_IN_ROW;
 
     }
 
@@ -50,7 +67,7 @@ void hexeditor_input(xchar x)
 
         Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | (((white << 4) | black) << 8));
 
-        data_pointer_position += 26;
+        data_pointer_position += HEXEDITOR_BYTES_IN_ROW;
 
     }
 
@@ -61,22 +78,20 @@ void hexeditor_input(xchar x)
             return;
 
         Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | (((black << 4) | white) << 8));
+        Screen.x++;
 
-        if(Screen.x == 76)
+        if(Screen.x >= HEXEDITOR_SCREEN_ROW_WIDTH)
         {
-            Screen.x = 0x0;
+            Screen.x = 0;
             Screen.y++;
             data_pointer_position++;
         }
 
-        if(Screen.cursor[Screen.y][Screen.x + 1] == (uint16_t)( ' '| (((black << 4) | white) << 8)))
+        else if(Screen.cursor[Screen.y][Screen.x] == (uint16_t)( ' '| (((black << 4) | white) << 8)))
         {
             Screen.x++;
             data_pointer_position++;
         }
-
-        Screen.x++;
-        
 
         Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | (((white << 4) | black) << 8));
 
@@ -92,18 +107,19 @@ void hexeditor_input(xchar x)
     
         if(Screen.x == 0)
         {
-            Screen.x = 78;
+            Screen.x = HEXEDITOR_SCREEN_ROW_WIDTH;
             Screen.y--;
             data_pointer_position--;
         }
 
-        if(Screen.cursor[Screen.y][Screen.x - 1] == (uint16_t)( ' '| (((black << 4) | white) << 8)))
+        else if(Screen.cursor[Screen.y][Screen.x - 1] == (uint16_t)( ' '| (((black << 4) | white) << 8)))
         {
-            Screen.x--;
+            Screen.x = Screen.x - 2;
             data_pointer_position--;
         }
 
-        Screen.x--;
+        else 
+            Screen.x--;
 
         Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | (((white << 4) | black) << 8));
 
@@ -125,7 +141,7 @@ void hexeditor_input(xchar x)
         }
         
 
-        if(Screen.x >= 77)
+        if(Screen.x >= HEXEDITOR_SCREEN_ROW_WIDTH)
         {
             Screen.x = 0;
             Screen.y++;
@@ -181,6 +197,14 @@ void hexeditor_input(xchar x)
 
         x.character = 0;
 
+        uint8_t x_tmp = Screen.x;
+        uint8_t y_tmp = Screen.y;
+
+        hexeditor_letters_refresh();
+
+        Screen.x = x_tmp;
+        Screen.y = y_tmp;
+
     }  
 }
 
@@ -192,12 +216,12 @@ int hexeditor(char* file_name, char* options)
     data_pointer_position = NULL;
     tmp = NULL; 
 
-
-    XinEntry* file = fopen(file_name, "rw");
     uint32_t hexeditor_offset = 0;
 
     if(strcmp(options, "-offset"))
         hexeditor_offset = strtoi(argv[3], HEXADECIMAL);
+
+    XinEntry* file = fopen(file_name, "rw");
 
     if(file == NULL)
     {
@@ -208,27 +232,28 @@ int hexeditor(char* file_name, char* options)
 
     data_pointer = (char*)calloc(VGA_SCREEN_RESOLUTION);
 
-
     screen_clear();
 
     fseek(file, hexeditor_offset);
     fread(file, data_pointer, VGA_SCREEN_RESOLUTION);
 
-    for(int i = 0; i < 28; i++)
+    for(int i = 0; i < VGA_HEIGHT; i++)
     {
-        for(int j = 0; j < 26; j++)
-        {
-            xprintf("%mX ", data_pointer[ (26 * i) + j]);
-        }
+        for(int j = 0; j < HEXEDITOR_BYTES_IN_ROW; j++)
+            xprintf("%mX ", data_pointer[ (HEXEDITOR_BYTES_IN_ROW * i) + j]);
+
+        xprintf("%z | ", OUTPUT_COLOR_SET(black, green));
+
+        for(int j = 0; j < HEXEDITOR_BYTES_IN_ROW; j++)
+            putchar(data_pointer[ (HEXEDITOR_BYTES_IN_ROW * i) + j]);
+
         xprintf("\n");
     }
-
+    
     Screen.x = 0;
     Screen.y = 0;
 
     while(!app_exited)hexeditor_input(inputg());
-
-    screen_clear();
 
     fseek(file, hexeditor_offset);
     fwrite(file, data_pointer, 512);

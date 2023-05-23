@@ -363,15 +363,22 @@ void xin_file_create_at_given_sector(char *path, uint32_t first_sector, uint8_t 
     
 }
 
+void xin_load_tables(void)
+{
+    __disk_read(0x12, XIN_ENTRY_POINTERS_SECTORS, (uint16_t*)(XIN_ENTRY_POINTERS));
+    __disk_read(0x1a, XIN_ENTRY_TABLE_SECTORS, (uint16_t*)(XIN_ENTRY_TABLE));
+}
 
 void xin_init_fs(void)
 {
-
-    __disk_read(0x12, XIN_ENTRY_POINTERS_SECTORS, (uint16_t*)(XIN_ENTRY_POINTERS));
-    __disk_read(0x1a, XIN_ENTRY_TABLE_SECTORS, (uint16_t*)(XIN_ENTRY_TABLE));
-
-
+    xin_load_tables();
     xin_folder_change("/");
+    
+    for(uint8_t* i = XIN_ENTRY_POINTERS; (uint32_t)i < XIN_ENTRY_POINTERS + 0x280; i++)
+    {
+        if(*i == XIN_UNALLOCATED)
+            *i = XIN_EOF;
+    }
 
 }
 

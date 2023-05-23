@@ -1,6 +1,7 @@
 
 // #include "../sys/terminal/vty.h"
 
+typedef unsigned int uint32_t;
 typedef unsigned short uint16_t;
 typedef unsigned char uint8_t;
 
@@ -15,11 +16,12 @@ struct screen_t
 typedef struct screen_t screen_t;
 
 extern screen_t Screen;
+extern void* calloc(uint32_t size);
 
 void main(void)
 {
 
-    char* tmp = (uint8_t*)malloc(100);
+    char* tmp = (uint8_t*)calloc(100);
 
     xprintf("podaj tmp: ");
     xscanf("%s", tmp);

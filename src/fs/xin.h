@@ -65,6 +65,7 @@ char* xin_get_current_path(char* file_name);
 __STATUS __sys_xin_entry_remove(char *entry_name);
 char* xin_get_current_path(char* file_name);
 
+void xin_load_tables(void);
 void xin_init_fs(void);
 XinEntry* xin_find_free_entry(void);
 

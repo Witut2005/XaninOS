@@ -5,7 +5,7 @@
 
 #include <sys/devices/acpi/sdt/sdt.h>
 
-struct madt_entry_type0
+struct SystemAcpiMADT0
 {
     uint8_t entry_type;
     uint8_t length;
@@ -15,9 +15,9 @@ struct madt_entry_type0
     uint32_t flags;
 
 }__attribute__((packed));
-typedef struct madt_entry_type0 madt_entry_type0;
+typedef struct SystemAcpiMADT0 SystemAcpiMADT0;
 
-struct madt_entry_type1
+struct SystemAcpiMADT1
 {
     uint8_t entry_type;
     uint8_t length;
@@ -27,10 +27,10 @@ struct madt_entry_type1
     uint32_t io_apic_base;
     uint32_t global_system_int_table;
 }__attribute__ ((packed));
-typedef struct madt_entry_type1 madt_entry_type1;
+typedef struct SystemAcpiMADT1 SystemAcpiMADT1;
 
 
-struct madt_entry_type2
+struct SystemAcpiMADT2
 {
     uint8_t entry_type;
     uint8_t length;
@@ -40,10 +40,10 @@ struct madt_entry_type2
     uint32_t global_system_int_table;
     uint16_t flags;
 }__attribute__ ((packed));
-typedef struct madt_entry_type2 madt_entry_type2;
+typedef struct SystemAcpiMADT2 SystemAcpiMADT2;
 
 
-struct madt_entry_type3
+struct SystemAcpiMADT3
 {
     uint8_t entry_type;
     uint8_t length;
@@ -53,10 +53,10 @@ struct madt_entry_type3
     uint16_t flags;
     uint32_t global_system_int;
 }__attribute__ ((packed));
-typedef struct madt_entry_type3 madt_entry_type3;
+typedef struct SystemAcpiMADT3 SystemAcpiMADT3;
 
 
-struct madt_entry_type4
+struct SystemAcpiMADT4
 {
     uint8_t entry_type;
     uint8_t length;
@@ -65,9 +65,9 @@ struct madt_entry_type4
     uint16_t flags;
     uint8_t lint;
 }__attribute__ ((packed));
-typedef struct madt_entry_type4 madt_entry_type4;
+typedef struct SystemAcpiMADT4 SystemAcpiMADT4;
 
-struct madt_entry_type5
+struct SystemAcpiMADT5
 {
     uint8_t entry_type;
     uint8_t length;
@@ -78,9 +78,9 @@ struct madt_entry_type5
     uint32_t lapic_address_high; //64bit physical address
 
 }__attribute__ ((packed));
-typedef struct madt_entry_type5 madt_entry_type5;
+typedef struct SystemAcpiMADT5 SystemAcpiMADT5;
 
-struct madt_entry_type9
+struct SystemAcpiMADT9
 {
     uint8_t entry_type;
     uint8_t length;
@@ -91,25 +91,25 @@ struct madt_entry_type9
     uint32_t acpi_id;
 
 }__attribute__ ((packed));
-typedef struct madt_entry_type9 madt_entry_type9;
+typedef struct SystemAcpiMADT9 SystemAcpiMADT9;
 
 
-extern uint8_t madt_entry_type0_counter;
-extern uint8_t madt_entry_type1_counter;
-extern uint8_t madt_entry_type2_counter;
-extern uint8_t madt_entry_type3_counter;
-extern uint8_t madt_entry_type4_counter;
-extern uint8_t madt_entry_type5_counter;
-extern uint8_t madt_entry_type9_counter;
+extern uint8_t acpi_madt0_counter;
+extern uint8_t acpi_madt1_counter;
+extern uint8_t acpi_madt2_counter;
+extern uint8_t acpi_madt3_counter;
+extern uint8_t acpi_madt4_counter;
+extern uint8_t acpi_madt5_counter;
+extern uint8_t acpi_madt9_counter;
 
 
-extern const madt_entry_type0** madt_entry_type0_ptr;
-extern const madt_entry_type1** madt_entry_type1_ptr;
-extern const madt_entry_type2** madt_entry_type2_ptr;
-extern const madt_entry_type3** madt_entry_type3_ptr;
-extern const madt_entry_type4** madt_entry_type4_ptr;
-extern const madt_entry_type5** madt_entry_type5_ptr;
-extern const madt_entry_type9** madt_entry_type9_ptr;
+extern const SystemAcpiMADT0** AcpiMADT0Pointers;
+extern const SystemAcpiMADT1** AcpiMADT1Pointers;
+extern const SystemAcpiMADT2** AcpiMADT2Pointers;
+extern const SystemAcpiMADT3** AcpiMADT3Pointers;
+extern const SystemAcpiMADT4** AcpiMADT4Pointers;
+extern const SystemAcpiMADT5** AcpiMADT5Pointers;
+extern const SystemAcpiMADT9** AcpiMADT9Pointers;
 
 extern uint8_t* madt_entries[0x10];
 
