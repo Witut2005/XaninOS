@@ -56,9 +56,9 @@ char putchar(char character)
         
     Screen.x++;
 
-    if(x == 80)
+    if(Screen.x == VGA_WIDTH)
     {    
-        Screen.x = 0x0;
+        Screen.x = 0;
         Screen.y++;
     }
            
@@ -74,9 +74,9 @@ char putchar_color(uint8_t color, char character)
         
     Screen.x++;
 
-    if(x == 80)
+    if(VGA_WIDTH == 80)
     {    
-        Screen.x = 0x0;
+        Screen.x = 0;
         Screen.y++;
     }
            
@@ -92,7 +92,7 @@ void print_bcd_number(uint8_t x)
     Screen.cursor[Screen.y][Screen.x] = (uint16_t)( (((x & 0xf0) >> 4) + 48)  | (((red << 4) | white) << 8));
     Screen.x += 0x2;
 
-    Screen.cursor[Screen.y][Screen.x] = (uint16_t)(((x & 0x0f) + 48)  | (((red << 4) | white) << 8));
+    Screen.cursor[Screen.y][Screen.x] = (uint16_t)(((x & 0xf) + 48)  | (((red << 4) | white) << 8));
     Screen.x += 0x2;
 
 
@@ -155,7 +155,7 @@ void xprintf(char* str, ... )
                         if(Screen.x == 80)
                         {
                             Screen.y++;
-                            Screen.x = 0x0;
+                            Screen.x = 0;
                         }
                         Screen.x++;
                     }
@@ -230,7 +230,7 @@ void xprintf(char* str, ... )
                         if(Screen.x == 80)
                         {
                             Screen.y++;
-                            Screen.x = 0x0;
+                            Screen.x = 0;
                         }
                         Screen.x++;
                     }
@@ -246,14 +246,14 @@ void xprintf(char* str, ... )
                     stringPtr = va_arg(args,char*);
 
                     if(stringPtr == NULL)
-                        return;
+                        break;
 
 
                     for(int i = 0; stringPtr[i] != '\0'; i++)
                     {
                         if(stringPtr[i] == '\n')
                         {            
-                            Screen.x = 0x0;
+                            Screen.x = 0;
                             Screen.y++;
                             continue;
                         }
@@ -292,7 +292,7 @@ void xprintf(char* str, ... )
                         if(Screen.x == 80)
                         {
                             Screen.y++;
-                            Screen.x = 0x0;
+                            Screen.x = 0;
                         }
                         Screen.x++;
                 
@@ -327,17 +327,17 @@ void xprintf(char* str, ... )
                     if(Screen.x == 80)
                     {
                         Screen.y++;
-                        Screen.x = 0x0;
+                        Screen.x = 0;
                     }
 
                     if(character == '\n')
                     {            
-                        Screen.x = 0x0;
+                        Screen.x = 0;
                         Screen.y++;
                     }
 
                     else if(character == '\0')
-                        return;
+                        break;
 
                     else 
                     {
@@ -367,7 +367,7 @@ void xprintf(char* str, ... )
                         if(Screen.x == 80)
                         {
                             Screen.y++;
-                            Screen.x = 0x0;
+                            Screen.x = 0;
                         }
                         Screen.x++;
                     }
@@ -389,7 +389,7 @@ void xprintf(char* str, ... )
                         if(Screen.x == 80)
                         {
                             Screen.y++;
-                            Screen.x = 0x0;
+                            Screen.x = 0;
                         }
                         Screen.x++;
                     }
@@ -409,7 +409,7 @@ void xprintf(char* str, ... )
                         if(Screen.x == 80)
                         {
                             Screen.y++;
-                            Screen.x = 0x0;
+                            Screen.x = 0;
                         }
                         Screen.x++;
                     }
@@ -444,7 +444,7 @@ void xprintf(char* str, ... )
                                 if(Screen.x == 80)
                                 {
                                     Screen.y++;
-                                    Screen.x = 0x0;
+                                    Screen.x = 0;
                                 }
                                 
                                 Screen.x++;
@@ -469,12 +469,12 @@ void xprintf(char* str, ... )
                                 if(Screen.x == 80)
                                 {
                                     Screen.y++;
-                                    Screen.x = 0x0;
+                                    Screen.x = 0;
                                 }
 
                                 if(Screen.y == 28)
                                 {
-                                    Screen.y = 0x0;
+                                    Screen.y = 0;
                                     break;
                                 }
                                 
@@ -499,7 +499,7 @@ void xprintf(char* str, ... )
 
         else if(str[string_counter] == '\n')
         {            
-            Screen.x = 0x0;
+            Screen.x = 0;
             Screen.y++;
             string_counter++;
         }
@@ -558,27 +558,24 @@ void xprintf(char* str, ... )
 
 }
 
-
-
-
-
 void xscanf(char* str, ... )
 {
 
-    uint32_t str_counter = 0x0;
-    uint32_t counter = 0x0;
-
-    char* string_pointer;
+    uint32_t str_counter = 0;
+    uint32_t counter = 0;
 
     va_list args;
     va_start(args, str);
 
-    char* buffer = (char*)calloc(1000);
-
-    index = 0x0;
+    uint32_t index = 0;
  
-    char* starting_screen_position = (char*)&Screen.cursor[Screen.y][Screen.x - 1];
-    memset(command_buffer, 0, 1000);
+    char* starting_screen_position = (char*)(&Screen.cursor[Screen.y][Screen.x] - 1);
+
+    char field_buffer[1000];
+    memset(field_buffer, 0, 1000);
+
+    char string_typed_buffer[1000];
+    memset(string_typed_buffer, 0, 1000);
 
     start:
 
@@ -607,18 +604,14 @@ void xscanf(char* str, ... )
 
             Screen.x--;
 
-
-
             if(index)
                 index--;
 
-            command_buffer[index] = '\0';
+            string_typed_buffer[index] = '\0';
             Screen.cursor[Screen.y][Screen.x] = '\0';
 
             Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((white << 4) | white) << 8));
 
-
-            //msleep(10);
             KeyInfo.is_bspc = false;
             letters_refresh(&Screen.cursor[Screen.y][Screen.x]);
         }
@@ -674,16 +667,16 @@ void xscanf(char* str, ... )
         //         Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | ((white << 4) | black) << 8);    
         //     }
 
-        //     KeyInfo.scan_code = 0x0;
+        //     KeyInfo.scan_code = 0;
                 
         // }
 
         // else if(KeyInfo.scan_code == ARROW_UP)
         // {
 
-        //     strcpy(keyboard_command, last_used_commands);
-        //     keyboard_command[strlen(last_used_commands)] = ' ';
-        //     strcpy(keyboard_command + strlen(last_used_commands) + 1, last_used_parameters);
+        //     strcpy(string_typed_buffer, last_used_commands);
+        //     string_typed_buffer[strlen(last_used_commands)] = ' ';
+        //     strcpy(string_typed_buffer + strlen(last_used_commands) + 1, last_used_parameters);
 
         //     int x_new = strlen(last_used_commands) + strlen(last_used_parameters);
 
@@ -693,7 +686,7 @@ void xscanf(char* str, ... )
         //     Screen.x = 1;
 
         //     uint16_t first_tmp = (uint16_t)Screen.cursor[Screen.y][Screen.x];
-        //     xprintf("%s", keyboard_command);
+        //     xprintf("%s", string_typed_buffer);
 
 
         //     index = x_new;
@@ -707,46 +700,44 @@ void xscanf(char* str, ... )
 
         else if(Input.scan_code == ENTER)
         {
-            while(str[str_counter])
+            while(str[str_counter] != '\0')
             {
                 if(str[str_counter] == '%')
                 {
                     str_counter++;
                     switch(str[str_counter])
                     {
+
                         case 's':
                         {
+                            char* string_pointer = va_arg(args, char*);
+                            // xprintf("0x%x\n", string_pointer);
 
-                            string_pointer = va_arg(args, char*);
-                            
-                            for(int i = 0; string_pointer[i] != '\0'; i++)
-                                string_pointer[i] = '\0';
+                            for(char* i = string_pointer; *i != '\0'; i++)
+                                *i = '\0';
 
-                            for(int i = 0x0; keyboard_command[counter] != '\0' && keyboard_command[counter] != ' '; i++)
+                            if(!strlen(string_typed_buffer))
+                                break;
+
+                            for(int i = 0; string_typed_buffer[counter] != '\0' && string_typed_buffer[counter] != ' '; i++)
                             {
-                                buffer[i] = keyboard_command[counter];
+                                field_buffer[i] = string_typed_buffer[counter];
                                 counter++;
                             }
                                 
-                                
-                            for(int i = 0; buffer[i] != '\0' && buffer[i] != ' '; i++)
+                            for(int i = 0; field_buffer[i] != '\0' && field_buffer[i] != ' '; i++)
                             {
-                                if((buffer[i] > 127) || (buffer[i] < 0x20))
+                                if((field_buffer[i] > 127) || (field_buffer[i] < 0x20))
                                 {
-                                    string_pointer[i] = '\0';
+                                    string_pointer[i] = '\0'; // invalid ASCII characters
                                     goto end;
                                 }
 
-                                string_pointer[i] = buffer[i];
+                                string_pointer[i] = field_buffer[i];
                             }
 
                             end:
-
-
                             
-                            for(int i = 0x0; i < 50;i++)
-                                buffer[i] = '\0';
-
                             counter++;
                             break;
                         }
@@ -757,15 +748,15 @@ void xscanf(char* str, ... )
 
                             uint32_t* number = va_arg(args, uint32_t*);
                             
-                            for(int i = 0x0; keyboard_command[counter] != '\0' && keyboard_command[counter] != ' '; i++)
+                            for(int i = 0; string_typed_buffer[counter] != '\0' && string_typed_buffer[counter] != ' '; i++)
                             {
-                                buffer[i] = keyboard_command[counter];
+                                field_buffer[i] = string_typed_buffer[counter];
                                 counter++;
                             }
                             
-                            *number = strtoi(buffer, DECIMAL);                       
+                            *number = strtoi(field_buffer, DECIMAL);                       
 
-                            if(buffer[0] == '-')
+                            if(field_buffer[0] == '-')
                                 *number = *number * -1;
 
                             break;
@@ -775,7 +766,7 @@ void xscanf(char* str, ... )
                         {
 
                             char* number = va_arg(args, char*);
-                            *number = keyboard_command[0]; 
+                            *number = string_typed_buffer[0]; 
                             break;
                         }
 
@@ -787,15 +778,15 @@ void xscanf(char* str, ... )
 
                             uint32_t* number = va_arg(args, uint32_t*);
                             
-                            for(int i = 0x0; keyboard_command[counter] != '\0' && keyboard_command[counter] != ' '; i++)
+                            for(int i = 0; string_typed_buffer[counter] != '\0' && string_typed_buffer[counter] != ' '; i++)
                             {
-                                buffer[i] = keyboard_command[counter];
+                                field_buffer[i] = string_typed_buffer[counter];
                                 counter++;
                             }
                             
-                            *number = strtoi(buffer, HEXADECIMAL);                       
+                            *number = strtoi(field_buffer, HEXADECIMAL);                       
                             
-                            if(buffer[0] == '-')
+                            if(field_buffer[0] == '-')
                                 *number = *number * -1;
 
                             break;
@@ -807,13 +798,13 @@ void xscanf(char* str, ... )
 
                             uint32_t* number = va_arg(args, uint32_t*);
                             
-                            for(int i = 0x0; keyboard_command[counter] != '\0' && keyboard_command[counter] != ' '; i++)
+                            for(int i = 0; string_typed_buffer[counter] != '\0' && string_typed_buffer[counter] != ' '; i++)
                             {
-                                buffer[i] = keyboard_command[counter];
+                                field_buffer[i] = string_typed_buffer[counter];
                                 counter++;
                             }
                             
-                            *number = strtoi(buffer, BINARY);                       
+                            *number = strtoi(field_buffer, BINARY);                       
 
                             break;
                         }
@@ -826,20 +817,19 @@ void xscanf(char* str, ... )
                 }
 
                 else
-                {
                     str_counter++;
-                }
+                
 
             }
 
-        memset(buffer, 0, 1000); 
-        memset(command_buffer, 0, 1000);
+            memset(field_buffer, 0, 1000); 
+            memset(string_typed_buffer, 0, 1000);
 
-        Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((black << 4) | white) << 8));
-           
-        xprintf("\n");
-        free(buffer);
-        return;
+            Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((black << 4) | white) << 8));
+            
+            xprintf("\n");
+            // free(field_buffer);
+            break;
 
         }
 
@@ -856,25 +846,23 @@ void xscanf(char* str, ... )
             // letters_refresh_add(&Screen.cursor[Screen.y][Screen.x], character_saved);
     
             // uint8_t* tmp_buf = (uint8_t*)calloc(40);
-            // memcpy(tmp_buf, keyboard_command, 40);
+            // memcpy(tmp_buf, string_typed_buffer, 40);
 
             // for(int i = index; i < 40; i++)
-            //     keyboard_command[i+1] = tmp_buf[i];
+            //     string_typed_buffer[i+1] = tmp_buf[i];
             
 
 
             Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((white << 4) | white) << 8));
-            keyboard_command[index] = tmp;
+            string_typed_buffer[index] = tmp;
             index++;
 
         }    
     }
 
-    free(buffer);
+    free(field_buffer);
 
 }
-
-
 
 
 
@@ -883,13 +871,16 @@ void xscanf(char* str, ... )
 void xscan_range(char* string_buffer, uint32_t how_many_chars)
 {
 
-    uint32_t str_counter = 0x0;
-    uint32_t counter = 0x0;
+    uint32_t str_counter = 0;
+    uint32_t counter = 0;
     char* string_pointer;
-    char* buffer = (char*)calloc(how_many_chars);
+    char* field_buffer = (char*)calloc(how_many_chars);
 
-    memset(command_buffer, '\0', sizeof(command_buffer));
-    index = 0;
+    char string_typed_buffer[1000];
+    memset(string_typed_buffer, '\0', sizeof(string_typed_buffer));
+
+    uint32_t index = 0;
+    
     uint8_t screen_offset = 0;
  
     char* starting_screen_position = (char*)&Screen.cursor[Screen.y][Screen.x - 1];
@@ -933,7 +924,7 @@ void xscan_range(char* string_buffer, uint32_t how_many_chars)
             if(screen_offset)
                 screen_offset--;
 
-            command_buffer[index] = '\0';
+            string_typed_buffer[index] = '\0';
             Screen.cursor[Screen.y][Screen.x] = '\0';
 
             Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((white << 4) | white) << 8));
@@ -952,44 +943,32 @@ void xscan_range(char* string_buffer, uint32_t how_many_chars)
             for(int i = 0; string_pointer[i] != '\0'; i++)
                 string_pointer[i] = '\0';
 
-            for(int i = 0x0; keyboard_command[counter] != '\0' && keyboard_command[counter] != ' '; i++)
+            for(int i = 0; string_typed_buffer[counter] != '\0' && string_typed_buffer[counter] != ' '; i++)
             {
-                buffer[i] = keyboard_command[counter];
+                field_buffer[i] = string_typed_buffer[counter];
                 counter++;
             }
                 
                 
-            for(int i = 0; buffer[i] != '\0' && buffer[i] != ' '; i++)
+            for(int i = 0; field_buffer[i] != '\0' && field_buffer[i] != ' '; i++)
             {
-                if((buffer[i] > 127) || (buffer[i] < 0x20))
+                if((field_buffer[i] > 127) || (field_buffer[i] < 0x20))
                 {
                     string_pointer[i] = '\0';
                     goto end;
                 }
 
-                string_pointer[i] = buffer[i];
+                string_pointer[i] = field_buffer[i];
             }
 
             end:
 
-            for(int i = 0x0; i < 50;i++)
-                buffer[i] = '\0';
+            memset(field_buffer, 0, 1000);
 
-        
-
-
-        for(int i = 0; i < 50;i++)
-            keyboard_command[i] = '\0';
-
-
-        for(int i = 0x0; i < 50;i++)
-            buffer[i] = 0x0;
-
-
-        Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((black << 4) | white) << 8));
-           
-        xprintf("\n");
-        return;
+            Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((black << 4) | white) << 8));
+            
+            xprintf("\n");
+            return;
 
         }
 
@@ -999,19 +978,19 @@ void xscan_range(char* string_buffer, uint32_t how_many_chars)
 
             Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][index + x_start]) + (((black << 4) | white) << 8));
             
-            for(int i = 0; i < strlen(keyboard_command); i++)
-                *(text_buffer_start + i) = 0x0;
+            for(int i = 0; i < strlen(field_buffer); i++)
+                *(text_buffer_start + i) = 0;
 
             Screen.x = x_start;
             Screen.y = y_start;
 
             uint8_t* tmp_buf = (uint8_t*)calloc(80);
-            memcpy(tmp_buf, keyboard_command, 80);
+            memcpy(tmp_buf, string_typed_buffer, 80);
 
-            if(keyboard_command[index] != '\0')
+            if(string_typed_buffer[index] != '\0')
             {
                 for(int i = index; i < 50 - 1; i++)
-                    keyboard_command[i+1] = tmp_buf[i];
+                    string_typed_buffer[i+1] = tmp_buf[i];
             }
 
 
@@ -1019,11 +998,11 @@ void xscan_range(char* string_buffer, uint32_t how_many_chars)
 
             if(index < how_many_chars)
             {
-                keyboard_command[index] = tmp;
+                string_typed_buffer[index] = tmp;
                 index++;
             }
             
-            xprintf("%s", keyboard_command);
+            xprintf("%s", string_typed_buffer);
 
             screen_offset++;
             Screen.x = screen_offset + x_start;
@@ -1031,7 +1010,7 @@ void xscan_range(char* string_buffer, uint32_t how_many_chars)
         }    
     }
 
-    free(buffer);
+    free(field_buffer);
 
 }
 

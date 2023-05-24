@@ -10,6 +10,8 @@
 uint8_t newInput;
 uint8_t oldInput;
 
+extern uint8_t x;
+extern uint8_t y;
 
 void printCube(void)
 {

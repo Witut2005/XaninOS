@@ -3,6 +3,9 @@ section .text
 extern main
 extern screen_init
 
+%define XANIN_ARGC_GET 400
+%define XANIN_ARGV_GET 401
+
 global _start
 _start:
 	; # Set up end of the stack frame linked list.
@@ -26,6 +29,14 @@ _start:
 	; popq %rsi
 
 	call screen_init ; init XaninOS screen  
+
+	mov eax, XANIN_ARGV_GET
+	int 0x81
+	push eax
+
+	mov eax, XANIN_ARGC_GET
+	int 0x81
+	push eax
 
 	; # Run main
 	call main

@@ -23,8 +23,6 @@ char program_parameters1[40];
 char program_parameters2[40];
 char program_parameters3[40];
 
-int argc = 0;
-char* argv[5];
 
 char last_used_commands[40];
 char last_used_parameters[40];
@@ -65,13 +63,10 @@ void screen_init(void)
 
 void letters_refresh(uint16_t* cursor_current_positon)
 {
-
     cursor_current_positon++;
 
     for(uint16_t* i = cursor_current_positon; (uint32_t)i < VGA_TEXT_MEMORY + VGA_SCREEN_RESOLUTION; i++)
-    {
         *(i - 1) = *i;
-    }
 }
 
 void letters_refresh_add(uint16_t* cursor_current_positon, char character_saved)
@@ -90,20 +85,20 @@ void letters_refresh_add(uint16_t* cursor_current_positon, char character_saved)
 
 }
 
-void keyboard_refresh_add(uint8_t keyboard_index_position, char character_saved)
-{
+// void keyboard_refresh_add(uint8_t keyboard_index_position, char character_saved)
+// {
 
-    char tmp;
+//     char tmp;
 
-    uint8_t counter = keyboard_index_position;
+//     uint8_t counter = keyboard_index_position;
 
-    for(char* i = &keyboard_command[keyboard_index_position]; counter < 50; counter++, i++)
-    {
-        tmp = *i;
-        *i = character_saved;
-        character_saved = tmp;
-    }
-}
+//     for(char* i = &keyboard_command[keyboard_index_position]; counter < 50; counter++, i++)
+//     {
+//         tmp = *i;
+//         *i = character_saved;
+//         character_saved = tmp;
+//     }
+// }
 
 
 static char app_exit_status_text[40];

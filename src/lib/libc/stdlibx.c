@@ -9,8 +9,6 @@
 #include <lib/libc/memory.h>
 #include <lib/libc/process.h>
 
-char command_buffer[1000];
-char* keyboard_command;
 uint8_t null_region[20] = {0};
 
 CmosTime SystemTime;
@@ -37,11 +35,11 @@ uint32_t int_to_sectors(uint32_t num)
 
 void exit(void)
 {
-    eoi_send();
-    kernel_loop();
+    // eoi_send();
+    // kernel_loop();
     
-    // asm("mov eax, 1\n\t"
-    //     "int 0x80");
+    asm("mov eax, 1\n\t"
+        "int 0x80");
 
     app_process_unregister();
 }
@@ -93,11 +91,11 @@ void __sys_keyinfo_get(key_info_t* ptr)
     );
 }
 
-void keyboard_buffer_refresh(uint16_t* screen_buffer)
-{
-    for(int i = 0; i < 50; i++)
-        keyboard_command[i] = *(char*)(screen_buffer + i);
-}
+// void keyboard_buffer_refresh(uint16_t* screen_buffer)
+// {
+//     for(int i = 0; i < 50; i++)
+//         string_typed_buffer[i] = *(char*)(screen_buffer + i);
+// }
 
 CmosTime* time_get(CmosTime* Time)
 {

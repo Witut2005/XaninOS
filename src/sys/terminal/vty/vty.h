@@ -23,7 +23,6 @@ struct screen_t
     uint16_t** cursor;
     uint8_t x;
     uint8_t y;
-
 };
 
 typedef struct screen_t screen_t;
@@ -31,9 +30,6 @@ typedef struct screen_t screen_t;
 extern screen_t Screen;
 
 extern uint16_t* screen_rows[25];
-extern uint8_t index;
-
-extern uint8_t y,x;
 
 void setTerminal();
 void screen_init(void);
@@ -62,9 +58,6 @@ extern char program_parameters[40];
 extern char program_parameters1[40];
 extern char program_parameters2[40];
 extern char program_parameters3[40];
-
-extern int argc;
-extern char* argv[5];
 
 extern char last_used_commands[40];
 extern char last_used_parameters[40];

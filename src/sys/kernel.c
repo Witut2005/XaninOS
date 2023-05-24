@@ -117,19 +117,14 @@ void kernel_loop(void)
             if(app_exited)
             {
                 app_exited = false;
-                for(int i = 0; i < sizeof(command_buffer); i++)
-                    keyboard_command[i] = '\0';
                 break;
             }
 
 
-            char scanf_str[40] = "%s %s %s %s %s";
+            char scanf_str[] = "%s %s %s %s %s";
 
-            for(int i = 0; i < 40; i++)
-                program_name[i] = '\0';
-            
-            for(int i = 0; i < 40; i++)
-                program_parameters[i] = '\0';
+            // for(int i = 0; i < 5; i++)
+            //     memset(argv[i], 0, 40);
 
             xscanf(scanf_str,program_name, program_parameters, program_parameters1, program_parameters2, program_parameters3);
 
@@ -205,7 +200,6 @@ void _start(void)
 
     time_get(&SystemTime);
 
-    keyboard_command = command_buffer;
     screen_clear();
 
     null_memory_region = (uint8_t*)kcalloc(VGA_SCREEN_RESOLUTION);

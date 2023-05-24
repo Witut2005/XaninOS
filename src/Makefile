@@ -95,6 +95,9 @@ build:
 	@echo [ASM] xanin_sys_entry.asm
 	@$(ASM) -f elf32 ./sys/call/xanin_sys_entry.asm -o ./sys/call/xanin_sys_entry.o
 
+	@echo [ASM] CALLS disk.asm
+	@$(ASM) -f elf32 ./sys/call/devices/disk.asm -o ./sys/call/devices/disk.o
+
 	@echo [ASM] xanin_calls.asm
 	@$(ASM) -f elf32 ./sys/call/xanin_sys/xanin_calls.asm -o ./sys/call/xanin_sys/xanin_calls.o
 
@@ -465,14 +468,16 @@ build:
 	./lib/libc/signal.o \
 	./lib/libc/process.o \
 	./lib/libc/registers_values_get.o \
-	./fs/xin.o \
+	./lib/libc/file.o \
 	./fs/xin_syscalls.o \
 	./sys/terminal/vty/vty.o \
 	./sys/devices/hda/disk.o \
+	./fs/xin.o \
+	./sys/call/devices/disk.o \
 	./sys/terminal/interface/terminal.o -o ./lib/libc/libc.o
 
 	# @i386-elf-gcc -shared -Ttext 0x900000 -o ./lib/libc/libc.so ./lib/libc/libc.o
-	# @i386-elf-ar rsc ./lib/libc/libc.a ./lib/libc/libc.o ./lib/libc/crt0.o
+	@i386-elf-ar rsc ./lib/libc/libc.a ./lib/libc/libc.o ./lib/libc/crt0.o
 
 	@echo [C] kernel.c
 	@$(C) $(C_COMPILE) ./sys/kernel.c \
@@ -503,7 +508,6 @@ build:
 	./sys/devices/pit/pit_entry.o \
 	./sys/debug/debug.o \
 	./lib/libc/libc.o \
-	./lib/libc/file.o \
 	./lib/libcpp/algorithm.o \
 	./lib/libcpp/regex.o \
 	./lib/tui/tui.o \
@@ -550,13 +554,14 @@ build:
 	./programs/screenshot.o \
 	./lib/game_engine/xagame.o \
 	./programs/xagames/xagame_test.o \
-	./programs/xagames/tetris.o -Ttext 0xB00000 -o kernel.bin
+	./programs/xagames/tetris.o -Ttext 0x1500000 -o kernel.bin
 
 	@echo [C] disk_freestanding_driver.c
 	@$(C) $(C_COMPILE) ./boot/disk_freestanding_driver.c ./boot/linker.ld -Ttext 0xA00000 -o ./boot/disk_freestanding_driver
 	python3 ./utils/align_file.py -file ./boot/disk_freestanding_driver -size 512
 	
 	cp ./lib/libc/libc.a ./external_apps/libc.a
+	cp ./lib/libc/libc.o ./external_apps/libc.o
 	cp ./lib/libc/crt0.o ./external_apps/crt0.o
 
 	@# python3 ./utils/XaninSupervisor.py

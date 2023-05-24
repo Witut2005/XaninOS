@@ -44,6 +44,7 @@ void elf_load(XinEntry* file)
     xprintf("file size: %d\n", file->size);
 
     xprintf("press ENTER to start: ");
+
     while(inputg().scan_code != ENTER);
 
     uint8_t* write_to_memory;
@@ -107,17 +108,11 @@ void elf_load(XinEntry* file)
     typedef void(*EntryPoint)(void);
     EntryPoint tmp;
     tmp = entry_point;
+
     if(strcmp(argv[0], "elf") || strcmp(argv[0], "elft")) 
-    {
-        // for(int i = 1; i < 5; i++)
-        //     xprintf("\n0x%x", argv[i]);
-        
         tmp();
-        // tmp(argv[1], argv[2], argv[3]);
-    }
     else
         tmp();
-        // tmp(argv[0], argv[1], argv[2]);
     
     free(data);
 }

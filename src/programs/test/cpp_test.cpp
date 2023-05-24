@@ -25,7 +25,7 @@
 #include <lib/libcpp/memory.h>
 #include <lib/libcpp/command_parser.h>
 #include <sys/terminal/vty/vty.h>
-
+#include <sys/terminal/interpreter/interpreter.h>
 #include <sys/input/input.h>
 
 class Test

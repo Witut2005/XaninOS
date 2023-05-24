@@ -30,3 +30,6 @@
 // Disk
 #define XANIN_DISK_READ 300
 #define XANIN_DISK_WRITE 301
+
+#define XANIN_ARGC_GET 400
+#define XANIN_ARGV_GET 401

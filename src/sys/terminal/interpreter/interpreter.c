@@ -71,6 +71,8 @@ extern int cpp_test(void);
 #include <programs/file_system/xin_info.c>
 
 
+int argc;
+char* argv[5];
 int last_command_exit_status;
 extern terminal_t* kernel_terminal;
 
@@ -119,14 +121,14 @@ void scan(void)
     KeyInfo.scan_code = 0;
     KeyInfo.character = 0;
     argc = 0;
-
     
     for(int i = 0; i < 5; i++)
     {
         if(!strlen(argv[i]))
             break;
-        argc = i;
+        argc++;
     }
+
 
     // terminal_t* app_terminal = terminal_create();
     // terminal_set(kernel_terminal, app_terminal);
@@ -172,7 +174,7 @@ void scan(void)
     XANIN_ADD_APP_ENTRY2("hexeditor", hexeditor)
     XANIN_ADD_APP_ENTRY1("run16", run16)
     XANIN_ADD_APP_ENTRY1("run", run)
-    XANIN_ADD_APP_ENTRY0("test", cpp_test)
+    XANIN_ADD_APP_ENTRY0("cpptest", cpp_test)
     XANIN_ADD_APP_ENTRY1("cpu_info", cpu_info)
     XANIN_ADD_APP_ENTRY1("calc", calc)
     XANIN_ADD_APP_ENTRY1("paint", xin_paint)

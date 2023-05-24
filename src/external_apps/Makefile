@@ -12,6 +12,6 @@ all:
 	i386-elf-ld link_create.o -o link_create 
 
 	i386-elf-gcc test.c -c
-	# # i386-elf-gcc test.o -Wl,--whole-archive -L/home/witut/Desktop/xaninOS/src/external_apps -o test -l sharedc
-	i386-elf-gcc test.o -L /home/witut/Desktop/xaninOS/src/external_apps -o test -l c -I /home/witut/Desktop/xaninOS/src/
+	i386-elf-gcc test.o -L /home/witut/Desktop/xaninOS/src/external_apps -o test -l c 
+	#-I /home/witut/Desktop/xaninOS/src/
 

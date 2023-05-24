@@ -41,7 +41,6 @@ extern CmosTime SystemTime;
 
 extern char* daysLUT[7];
 
-extern char command_buffer[1000];
 extern char* keyboard_command;
 
 extern uint8_t* null_memory_region;

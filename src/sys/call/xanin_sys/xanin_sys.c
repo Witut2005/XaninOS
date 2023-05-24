@@ -8,6 +8,7 @@
 #include <sys/devices/hda/disk.h>
 #include <sys/input/input.h>
 #include <fs/xin.h>
+#include <sys/terminal/interpreter/interpreter.h>
 
 uint32_t xanin_sys_handle(void)
 {
@@ -147,7 +148,6 @@ uint32_t xanin_sys_handle(void)
             break;
         }
 
-
         case XANIN_DISK_READ:
         {
             // ECX = sector_id, EDX = how_many, EBX = where to load
@@ -160,6 +160,18 @@ uint32_t xanin_sys_handle(void)
         {
             // ECX = sector_id, EDX = how_many, EBX = from where to load
             disk_write(ATA_FIRST_BUS, ATA_MASTER, ecx, edx, (uint16_t*)ebx);
+            break;
+        }
+
+        case XANIN_ARGC_GET:
+        {
+            eax = (uint32_t)argc;
+            break;
+        }
+
+        case XANIN_ARGV_GET:
+        {
+            eax = (uint32_t)argv;
             break;
         }
 
