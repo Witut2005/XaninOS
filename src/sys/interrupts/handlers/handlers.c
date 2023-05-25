@@ -20,10 +20,10 @@ extern void keyboard_handler_init(void);
 
 void exception_print(const char* message) 
 {
-    if(Screen.y != VGA_HEIGHT - 1)
+    if(Screen.y != VGA_MAX_Y)
         Screen.y++;
     else
-        Screen.y = VGA_HEIGHT - 1;
+        Screen.y = VGA_MAX_Y;
 
     Screen.x = 0;
     xprintf("%zERROR: %s\n", stderr, message);

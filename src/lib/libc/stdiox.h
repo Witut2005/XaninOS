@@ -29,6 +29,8 @@ enum screen_macros
 #define mkstr(str) #str
 #define SCREEN_CELL_SET_FROM_POINTER(ptr, background, foreground, character) *ptr = (uint16_t)((foreground | (background << 4)) << 8 | (character & 0xFF))
 
+#define VGA_MAX_Y (VGA_HEIGHT - 1)
+
 extern char* color_attributes[16];
 
 #ifdef __cplusplus

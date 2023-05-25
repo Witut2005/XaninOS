@@ -334,7 +334,7 @@ int edit(char* file_name)
 
         if(Screen.cursor[VGA_HEIGHT-1][70] == BLANK_SCREEN_CELL)
         { 
-            cursor_set_position(70, VGA_HEIGHT - 1); 
+            cursor_set_position(70, VGA_MAX_Y); 
             for(int i = 0; i < 5; i++)
                 Screen.cursor[Screen.y][Screen.x + i] = BLANK_SCREEN_CELL;
 

@@ -164,11 +164,10 @@ void mmngr_block_free(uint8_t mode, void* ptr)
             return;
         else
             index = ((uint32_t)((uint32_t)ptr - (uint32_t)user_heap_base) / PMMNGR_BLOCK_SIZE);
-        // xprintf("free start\n");
-        // xprintf("0x%x\n", ptr);
-        // xprintf("free: %d\n", index);
     }
 
+    if(mmngr_mmap[index] == MEMORY_UNALLOCATED) // already freed
+        return;
 
     for(; mmngr_mmap[index] != MEMORY_ALLOCATED_REGION_END; index++)
         mmngr_mmap[index] = MEMORY_UNALLOCATED;

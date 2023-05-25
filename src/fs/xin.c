@@ -382,47 +382,6 @@ void xin_init_fs(void)
 
 }
 
-void create_file_kernel(char* entry_name)
-{
-
-
-    if(xin_find_entry(entry_name) != NULL)
-        return;
-
-    /* write entry to xin entry pointers table */
-    uint8_t *write_entry = xin_find_free_pointer();
-
-    for (int i = 0; i < 15; i++)
-        write_entry[i] = XIN_ALLOCATED;
-
-    write_entry[15] = XIN_EOF;
-
-    /* write entry to xin entry date table */
-    XinEntry *entry = xin_find_free_entry();
-
-    time_get(&SystemTime);
-
-    strcpy(entry->path, entry_name);
-
-    entry->creation_date = (uint32_t)((SystemTime.day_of_month << 24) | (SystemTime.month << 16) | (SystemTime.century << 8) | (SystemTime.year)); 
-    entry->creation_time = (uint16_t)(SystemTime.hour << 8) | (SystemTime.minutes);
-    entry->modification_date = (uint32_t)((SystemTime.day_of_month << 24) | (SystemTime.month << 16) | (SystemTime.century << 8) | (SystemTime.year)); 
-    entry->modification_time = (uint16_t)(SystemTime.hour << 8) | (SystemTime.minutes);
-    entry->FileInfo = NULL;
-    entry->permissions = PERMISSION_MAX;
-    entry->size = SECTOR_SIZE * 16;
-    entry->type = XIN_FILE;
-
-    entry->first_sector = (uint32_t)write_entry - XIN_ENTRY_POINTERS;
-
-    // disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x12, 8, (uint16_t*)0x800);
-
-    // for(int i = 0; i < 40; i++)
-    //     disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x1a + i, 1, (uint16_t*)(0x1800 + (i * SECTOR_SIZE)));
-
-}
-
-
 int xin_file_create(char* entry_name)
 {
 

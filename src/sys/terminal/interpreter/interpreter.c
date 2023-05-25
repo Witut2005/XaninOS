@@ -69,6 +69,7 @@ extern int cpp_test(void);
 #include <programs/xin_paint.c>
 #include <programs/file_system/cat.c>
 #include <programs/file_system/xin_info.c>
+#include <programs/buffers.c>
 
 
 int argc;
@@ -148,6 +149,7 @@ void scan(void)
 
     XANIN_ADD_APP_ENTRY1("dev_tools", dev_tools)
     XANIN_ADD_APP_ENTRY0("netplan_apply", netplan_apply)
+    XANIN_ADD_APP_ENTRY0("buffers", buffers_view)
     XANIN_ADD_APP_ENTRY1("netapi_check", netapi_check)
     XANIN_ADD_APP_ENTRY0("usb_info", usb_controller_info)
     XANIN_ADD_APP_ENTRY0("memtest", memory_test)
