@@ -209,7 +209,7 @@ class List
         // if constexpr((std::is_pointer<T>::value) && (sizeof(std::remove_pointer<T>) == sizeof(char)))
         if constexpr(is_char_ptr(T))
         {
-            while(!strcmp((char*)Tmp->value, (char*)index))
+            while(!bstrcmp((char*)Tmp->value, (char*)index))
             {
                 if(Tmp->next != NULL)
                     Tmp = Tmp->next;

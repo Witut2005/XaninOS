@@ -71,7 +71,7 @@ for entry in xanin_entries_to_preinstall:
 
 # file.close()
 
-xin_filesystem_pointers = int(SECTOR_SIZE * 0x12 + 1002) # must be higher the begin
+xin_filesystem_pointers = int(SECTOR_SIZE * 0x12 + (SECTOR_SIZE * 3)) # must be higher the begin
 print('EXTERNAL APPS LOCATION: ', hex(xin_filesystem_entries), ' ', hex(xin_filesystem_pointers))
 
 directories = set() 

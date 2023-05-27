@@ -118,7 +118,7 @@ XinEntry *xin_find_entry(char* entry_name)
 
     for (char *i = (char*)XIN_ENTRY_TABLE; (uint32_t)i < XIN_ENTRY_TABLE + (SECTOR_SIZE * 50); i += XIN_ENTRY_SIZE)
     {
-        if (strcmp(entry_name, i))
+        if (bstrcmp(entry_name, i))
             return (XinEntry *)i;
     }
 
@@ -129,7 +129,7 @@ XinEntry *xin_find_entry(char* entry_name)
 
     for (char *i = (char*)XIN_ENTRY_TABLE; (uint32_t)i < XIN_ENTRY_TABLE + (SECTOR_SIZE * 50); i += XIN_ENTRY_SIZE)
     {
-        if (strcmp(entry_name, i))
+        if (bstrcmp(entry_name, i))
             return (XinEntry *)i;
     }
 
@@ -139,7 +139,7 @@ XinEntry *xin_find_entry(char* entry_name)
 XinEntry* xin_get_file_pf(char* path) // pf = parent folder
 {
 
-    if(strcmp(path, "/"))
+    if(bstrcmp(path, "/"))
         return NULL;
 
     if(!strlen(path))
@@ -193,9 +193,9 @@ XinEntry *xin_folder_change(char *new_directory)
     strcpy(tmp, new_directory);
     new_directory = tmp;
 
-    if(strcmp(new_directory, ".."))
+    if(bstrcmp(new_directory, ".."))
     {
-        if(strcmp(xin_current_directory, "/"))
+        if(bstrcmp(xin_current_directory, "/"))
             return NULL;
         else 
         {
@@ -838,7 +838,7 @@ XinEntry *__xin_fopen(char *file_path, char *mode)
         xin_add_files_to_xfo(file);
     }
 
-    if(strncmp(mode, "a", 2))
+    if(bstrncmp(mode, "a", 2))
     {
         file->FileInfo = (FileInformationBlock*)calloc(sizeof(FileInformationBlock));
         file->FileInfo->buffer = (uint8_t*)calloc(file->size + SECTOR_SIZE);
@@ -854,13 +854,13 @@ XinEntry *__xin_fopen(char *file_path, char *mode)
     }
 
 
-    else if(strncmp(mode, "r", 2))
+    else if(bstrncmp(mode, "r", 2))
     {
         xin_add_files_to_xfo(file);
         return file;
     }
 
-    else if(strncmp(mode, "rw", 2) || strncmp(mode, "w", 2))
+    else if(bstrncmp(mode, "rw", 2) || bstrncmp(mode, "w", 2))
     {
         int status = xin_file_create(file_path);
 
@@ -898,7 +898,7 @@ void fclose_with_given_size(XinEntry** file, uint32_t new_size)
     if(*file == NULL)
         return;
 
-    if(!strncmp((*file)->FileInfo->rights, "r", 2)) //READ-ONLY OPTION
+    if(!bstrncmp((*file)->FileInfo->rights, "r", 2)) //READ-ONLY OPTION
         xin_file_reallocate_with_given_size((*file), new_size);
 
     free((*file)->FileInfo->buffer);
@@ -929,7 +929,7 @@ void __xin_fclose(XinEntry** file)
     else
         new_size = (*file)->size;
 
-    if(!strncmp((*file)->FileInfo->rights, "r", 2)) // READ-ONLY OPTION
+    if(!bstrncmp((*file)->FileInfo->rights, "r", 2)) // READ-ONLY OPTION
         xin_file_reallocate_with_given_size((*file), new_size);
 
     free((*file)->FileInfo->buffer);
@@ -1097,7 +1097,7 @@ __STATUS remove_directory(char* folder_name)
     for(XinEntry* i = (XinEntry*)XIN_ENTRY_TABLE; i < (XinEntry*)(XIN_ENTRY_TABLE + SECTOR_SIZE * 4); i++)
     {
 
-        if(strncmp(name, i -> path, name_length))
+        if(bstrncmp(name, i -> path, name_length))
         {
             char* tmp = (char*)i;
             for(char* j = (char*)i; j < tmp + 64; j++)
@@ -1158,9 +1158,9 @@ XinChildrenEntries* xin_get_children_entries(char* folder, bool get_hidden)
 
     while((uint32_t)i < XIN_ENTRY_TABLE + SECTOR_SIZE * 50)
     {
-        if(strcmp(xin_get_file_pf(i->path)->path, folder) && i->path[0])
+        if(bstrcmp(xin_get_file_pf(i->path)->path, folder) && i->path[0])
         {
-            if(!strcmp(i->path, folder))
+            if(!bstrcmp(i->path, folder))
             {
                 if(xin_get_entry_name(i->path)[0] != '.' || get_hidden)
                 {
@@ -1191,9 +1191,9 @@ XinChildrenEntries* xin_get_children_entries_type(char* folder, uint8_t type)
     while((uint32_t)i < XIN_ENTRY_TABLE + SECTOR_SIZE * 50)
     {
 
-        if(strcmp(xin_get_file_pf(i->path)->path, folder) && i->path[0])
+        if(bstrcmp(xin_get_file_pf(i->path)->path, folder) && i->path[0])
         {
-            if((!strcmp(i->path, folder)) && (i->type == type))
+            if((!bstrcmp(i->path, folder)) && (i->type == type))
             {
                 Children->children[finded_entries] = i;
                 finded_entries++;

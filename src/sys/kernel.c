@@ -123,8 +123,8 @@ void kernel_loop(void)
 
             char scanf_str[] = "%s %s %s %s %s";
 
-            // for(int i = 0; i < 5; i++)
-            //     memset(argv[i], 0, 40);
+            for(int i = 0; i < 5; i++)
+                memset(argv[i], 0, 40);
 
             xscanf(scanf_str,program_name, program_parameters, program_parameters1, program_parameters2, program_parameters3);
 

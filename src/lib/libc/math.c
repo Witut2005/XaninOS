@@ -7,7 +7,6 @@ uint32_t pow(uint32_t a, uint32_t b)
     
     uint32_t operation_result = a;
     
-
     if(!b)
         return 1;
     
@@ -17,5 +16,12 @@ uint32_t pow(uint32_t a, uint32_t b)
 
     return operation_result;
 
+}
+
+int abs(int num)
+{
+    if(num < 0)
+        num = num * (-1);
+    return num;
 }
 

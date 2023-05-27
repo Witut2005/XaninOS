@@ -15,7 +15,7 @@ enum operation_types
 int calc(char* options)
 {
 
-    if(strcmp(options, "help"))
+    if(bstrcmp(options, "help"))
     {
         screen_clear();
         xprintf("xaninOS developer tools\n");

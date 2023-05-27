@@ -14,7 +14,7 @@ enum ELF_FIELD
 
 bool elf_check_magic(uint8_t* data)
 {
-    return strncmp(data + 1, "ELF", 3);// && data[0] == 0x7F;
+    return bstrncmp(data + 1, "ELF", 3);// && data[0] == 0x7F;
 }
 
 bool elf_check_arch(uint8_t* file)
@@ -109,7 +109,7 @@ void elf_load(XinEntry* file)
     EntryPoint tmp;
     tmp = entry_point;
 
-    if(strcmp(argv[0], "elf") || strcmp(argv[0], "elft")) 
+    if(bstrcmp(argv[0], "elf") || bstrcmp(argv[0], "elft")) 
         tmp();
     else
         tmp();

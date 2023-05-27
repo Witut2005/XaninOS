@@ -11,7 +11,7 @@ int netapi_check(char* protocol)
     
     NetworkResponse* Response;
 
-    if(strcmp(protocol, "ARP"))
+    if(bstrcmp(protocol, "ARP"))
     {
         response_object_create(&Response, sizeof(AddressResolutionProtocol));
         AddressResolutionProtocol* ArpPacket = (AddressResolutionProtocol*)calloc(sizeof(AddressResolutionProtocol));
@@ -28,7 +28,7 @@ int netapi_check(char* protocol)
         }
     }
 
-    else if(strcmp(protocol, "ICMP"))
+    else if(bstrcmp(protocol, "ICMP"))
     {
         response_object_create(&Response, sizeof(IcmpPacket));
         icmp_ping((127 << 24) | (1), Response);

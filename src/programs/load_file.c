@@ -9,7 +9,7 @@ int load_file(char* file_name, char* options)
 
     uint32_t offset = 0;
 
-    if(strcmp(options, "-offset"))
+    if(bstrcmp(options, "-offset"))
         offset = strtoi(argv[3], HEXADECIMAL);
 
     screen_clear();

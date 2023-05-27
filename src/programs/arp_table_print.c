@@ -7,7 +7,7 @@ int arp_table_print(char* arg, char* options)
 
     uint32_t offset = 0;
 
-    if(strcmp(options, "--offset"))
+    if(bstrcmp(options, "--offset"))
         offset = strtoi(argv[2], DECIMAL);
 
     const ArpTableEntry* table = (ArpTableEntry*)ArpTable;

@@ -61,7 +61,7 @@ K CommandParser::parse_arg(CommandParser& parser, const char* index)
     
     for(int i = 0; i < 4; i++)
     {
-        if(strcmp(parser.argv[i], (char*)index))
+        if(bstrcmp(parser.argv[i], (char*)index))
         {
             parser.ValueMap[index].first = parser.argv[i+1];
             no_such_element = false;

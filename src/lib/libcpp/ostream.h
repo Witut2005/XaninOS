@@ -281,7 +281,7 @@ void print(const char* str, X&& arg, T&& ... args)
     if(!i)
         return;
 
-    if(strncmp((char*)str, "{}", 2))
+    if(bstrncmp((char*)str, "{}", 2))
     {
         print(arg);
         print(str+2, (args)...);
@@ -289,17 +289,17 @@ void print(const char* str, X&& arg, T&& ... args)
 
     else if(*str == '%')
     {
-        if(strncmp((char*)str, "%d", 2))
+        if(bstrncmp((char*)str, "%d", 2))
         {
             xprintf("%d", arg);
         }
 
-        else if(strncmp((char*)str, "%x", 2))
+        else if(bstrncmp((char*)str, "%x", 2))
         {
             xprintf("%x", arg);
         }
 
-        else if(strncmp((char*)str, "%b", 2))
+        else if(bstrncmp((char*)str, "%b", 2))
         {
             xprintf("%b", arg);
         }

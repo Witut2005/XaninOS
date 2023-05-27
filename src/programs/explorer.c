@@ -24,13 +24,13 @@ typedef struct ExplorerInfo ExplorerInfo;
 
 void handle_selected_option(char* option, ExplorerInfo* AppInfo)
 {
-    if(strcmp(option, "remove"))
+    if(bstrcmp(option, "remove"))
     {
         xprintf("selected file: %s\n", AppInfo->selected_file);
         __sys_xin_entry_remove(AppInfo->selected_file);
     }
 
-    else if(strcmp(option, "rename"))
+    else if(bstrcmp(option, "rename"))
     {
         char* new_name = (char*)calloc(XIN_MAX_PATH_LENGTH);
         Screen.y = 25;
@@ -41,7 +41,7 @@ void handle_selected_option(char* option, ExplorerInfo* AppInfo)
         free(new_name);
     }
 
-    else if(strcmp(option, "link"))
+    else if(bstrcmp(option, "link"))
     {
         char* new_name = (char*)calloc(XIN_MAX_PATH_LENGTH);
         Screen.y = 25;
@@ -61,7 +61,7 @@ void handle_selected_option(char* option, ExplorerInfo* AppInfo)
         free(new_name);
     }
 
-    else if(strcmp(option, "copy"))
+    else if(bstrcmp(option, "copy"))
     {
         char* new_name = (char*)calloc(XIN_MAX_PATH_LENGTH);
         Screen.y = 23;
@@ -78,12 +78,12 @@ void handle_selected_option(char* option, ExplorerInfo* AppInfo)
     }
 
 
-    else if(strcmp(option, "edit"))
+    else if(bstrcmp(option, "edit"))
     {
         edit(AppInfo->selected_file);
     }
 
-    else if(strcmp(option, "create"))
+    else if(bstrcmp(option, "create"))
     {
         char* new_name = (char*)calloc(XIN_MAX_PATH_LENGTH);
         Screen.y = 25;
@@ -94,7 +94,7 @@ void handle_selected_option(char* option, ExplorerInfo* AppInfo)
         free(new_name);
     }
 
-    else if(strcmp(option, "info"))
+    else if(bstrcmp(option, "info"))
     {
         xin_info(AppInfo->selected_file);
     }
@@ -106,13 +106,13 @@ void hfs(char* omg, ExplorerInfo* AppInfo)
 {
 
     
-    if(strcmp(omg, "exit"))
+    if(bstrcmp(omg, "exit"))
     {
         AppInfo->exit_tui_app = true;
         return;
     }
 
-    else if(strcmp(omg, ""))
+    else if(bstrcmp(omg, ""))
     {
         table_t* fro = table_create(0, 15, 1, 20, black, white, 1);
         table_insert(fro, 0, "create", black, white, 0);
@@ -123,11 +123,11 @@ void hfs(char* omg, ExplorerInfo* AppInfo)
         return;
     }
 
-    else if(strcmp(omg, "..") && strcmp(AppInfo->current_folder, "/"))
+    else if(bstrcmp(omg, "..") && bstrcmp(AppInfo->current_folder, "/"))
         AppInfo->exit_tui_app = true;
 
 
-    else if(strcmp(omg, ".."))
+    else if(bstrcmp(omg, ".."))
     {
         xin_get_current_directory(AppInfo->current_folder);
         __sys_xin_folder_change(xin_get_file_pf(AppInfo->current_folder)->path);

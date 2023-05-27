@@ -9,7 +9,7 @@ int help(char* command)
 {
 
 
-    if(strcmp(command, "help"))
+    if(bstrcmp(command, "help"))
     {
         screen_clear();
         xprintf("AVAILABLE COMMANDS:\n");
@@ -31,7 +31,7 @@ int help(char* command)
         xprintf("gyn                 screenshot\n");
     }
 
-    else if(strcmp(command, ""))
+    else if(bstrcmp(command, ""))
     {
         screen_clear();
         xprintf("AVAILABLE COMMANDS:\n");
@@ -53,30 +53,30 @@ int help(char* command)
         xprintf("gyn                 screenshot\n");
     }
 
-    else if(strcmp(command, "cls"))
+    else if(bstrcmp(command, "cls"))
     {
         xprintf("clears screen (useless)");
     }
 
-    else if(strcmp(command, "note"))
+    else if(bstrcmp(command, "note"))
     {
         xprintf("command syntax: note file_name");
         xprintf("Note app allow you to edit your files in ASCII format\n");
     }
 
-    else if(strcmp(command, "create"))
+    else if(bstrcmp(command, "create"))
     {
         xprintf("command syntax: create file_name\n");
         xprintf("Creates new file\n");
     }
 
-    else if(strcmp(command, "mkdir"))
+    else if(bstrcmp(command, "mkdir"))
     {
         xprintf("command syntax: mkdir file_name\n");
         xprintf("creates new directory");
     }
 
-    else if(strcmp(command, "pong"))
+    else if(bstrcmp(command, "pong"))
     {
         xprintf("command syntax: pong\n");
         xprintf("simple pong game\n\n");
@@ -94,26 +94,26 @@ int help(char* command)
 
     }
 
-    else if(strcmp(command, "cd"))
+    else if(bstrcmp(command, "cd"))
     {
         xprintf("command syntax: cd new_directory\n");
         xprintf("changes directory\n");
     }
 
-    else if(strcmp(command, "reg_dump"))
+    else if(bstrcmp(command, "reg_dump"))
     {
         xprintf("command syntax: reg_dump\n");
         xprintf("print current values of registers\n");
     }
 
 
-    else if(strcmp(command, "cpu_info"))
+    else if(bstrcmp(command, "cpu_info"))
     {
         xprintf("command syntax: cpu_info\n");
         xprintf("print basic info about CPU\n");
     }
 
-    else if(strcmp(command, "load"))
+    else if(bstrcmp(command, "load"))
     {
         xprintf("command syntax: load hex_address\n");
         xprintf("Load program loads given address to the screen in hexadecimal format\n");
@@ -122,7 +122,7 @@ int help(char* command)
         xprintf("loadch 85f0\n");
     }
 
-    else if(strcmp(command, "loadch"))
+    else if(bstrcmp(command, "loadch"))
     {
         xprintf("Load program loads given address to the screen in ASCII format\n");
         xprintf("USAGE EXAMPLES\n");
@@ -130,7 +130,7 @@ int help(char* command)
         xprintf("load 85f0\n");
     }
 
-    else if(strcmp(command, "paint"))
+    else if(bstrcmp(command, "paint"))
     {
         xprintf("command syntax: paint file_name\n");
         xprintf("Simple paint program\n\n");
@@ -141,25 +141,25 @@ int help(char* command)
 
     }
 
-    else if(strcmp(command, "note"))
+    else if(bstrcmp(command, "note"))
     {
         xprintf("command syntax: note file_name\n");
         xprintf("opens note text editor with given file\n");
     }
 
-    else if(strcmp(command, "pwd"))
+    else if(bstrcmp(command, "pwd"))
     {
         xprintf("command syntax: pwd\n");
         xprintf("print current directory name\n");
     }
 
-    else if(strcmp(command, "epilepsy"))
+    else if(bstrcmp(command, "epilepsy"))
     {
         xprintf("weird program for stickewq\n");
     }
 
 
-    else if(strcmp(command, "logo"))
+    else if(bstrcmp(command, "logo"))
     {
         xprintf("command syntax: logo new_logo_color\n");
         xprintf("changes current logo color\n");
@@ -168,58 +168,58 @@ int help(char* command)
         xprintf("For all color attributes type 'help color'");
     }
 
-    else if(strcmp(command, "key-test"))
+    else if(bstrcmp(command, "key-test"))
     {
         xprintf("key-test program\n");
     }
 
-    else if(strcmp(command, "elft"))
+    else if(bstrcmp(command, "elft"))
     {
         xprintf("command syntax: elft file_name\n");
         xprintf("runs executable file in ELF format\n");
     }
 
-    else if(strcmp(command,"hexeditor"))
+    else if(bstrcmp(command,"hexeditor"))
     {
         xprintf("command syntax: hexeditor file_name\n");
         xprintf("opens hexeditor with given file\n");
     }
 
-    else if(strcmp(command, "run16"))
+    else if(bstrcmp(command, "run16"))
     {
         xprintf("command syntax: run16 file_name\n");
         xprintf("runs 16bit raw executable file\n");
     }
 
-    else if(strcmp(command, "run32"))
+    else if(bstrcmp(command, "run32"))
     {
         xprintf("command syntax: run32 file_name\n");
         xprintf("runs 32bit raw executable file\n");
     }
 
-    else if(strcmp(command, "calc"))
+    else if(bstrcmp(command, "calc"))
     {
         xprintf("calculator :))\n");
     }
 
-    else if(strcmp(command, "reboot"))
+    else if(bstrcmp(command, "reboot"))
     {
         xprintf("reboots computer\n");
     }
 
-    else if (strcmp(command, "shutdown"))
+    else if (bstrcmp(command, "shutdown"))
     {
         xprintf("shutdowns computer\n");
     }
 
-    else if(strcmp(command, "move/mv"))
+    else if(bstrcmp(command, "move/mv"))
     {
         xprintf("command syntax: move/mv src dest\n");
         xprintf("moves file to another directory\n");
     }
 
 
-    else if(strcmp(command, "color"))
+    else if(bstrcmp(command, "color"))
     {
         xprintf("Color attributes:\n");
 
@@ -228,43 +228,43 @@ int help(char* command)
 
     }
     
-    else if(strcmp(command, "gyn"))
+    else if(bstrcmp(command, "gyn"))
     {
         xprintf("command syntax: gyn file_name\n");
         xprintf("gyn command language interpreter\n");
     }
 
-    else if(strcmp(command, "nic_info"))
+    else if(bstrcmp(command, "nic_info"))
     {
         xprintf("prints info about network card\n");
     }
 
-    else if(strcmp(command, "cp"))
+    else if(bstrcmp(command, "cp"))
     {
         xprintf("command syntax: cp src dest\n");
         xprintf("copies files\n");
 
     }
 
-    else if(strcmp(command, "xin_info"))
+    else if(bstrcmp(command, "xin_info"))
     {
         xprintf("command syntax: xin_info file_name\n");
         xprintf("prints info about XinEntry\n");
     }
 
-    else if(strcmp(command, "xpaint"))
+    else if(bstrcmp(command, "xpaint"))
     {
         xprintf("command syntax: xpaint file_name\n");
         xprintf("open xpaint editor with given file (highly expermental\n");
     }
 
-    else if(strcmp(command, "ls"))
+    else if(bstrcmp(command, "ls"))
     {
         xprintf("command syntax: ls directory_name\n");
         xprintf("list all entries within given directory\n");
     }
 
-    else if(strcmp(command, "screenshot"))
+    else if(bstrcmp(command, "screenshot"))
     {
         xprintf("makes screenshot (can be ignited with PrtSc key)");
     }

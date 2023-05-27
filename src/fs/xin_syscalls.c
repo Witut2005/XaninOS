@@ -170,7 +170,7 @@ __STATUS __sys_xin_list_files(char** argv)
     while((uint32_t)i < XIN_ENTRY_TABLE + (SECTOR_SIZE * 50))
     {
         
-        if((substr_find(i->path, "/.") && !strcmp(options, "-la")) || (!i->path))
+        if((substr_find(i->path, "/.") && !bstrcmp(options, "-la")) || (!i->path))
         {
             i++;
             continue; 
@@ -180,7 +180,7 @@ __STATUS __sys_xin_list_files(char** argv)
         {
             if(xin_get_file_pf(i->path) != NULL)
             {
-                if(strcmp(xin_get_file_pf(i->path)->path, xin_current_directory))
+                if(bstrcmp(xin_get_file_pf(i->path)->path, xin_current_directory))
                 {
                     xprintf("%z%s", OUTPUT_COLOR_SET(black, i->type + 0x2), i);
                     xprintf("   ");
@@ -201,7 +201,7 @@ __STATUS __sys_xin_list_files(char** argv)
                     printed_text += strlen(i->path);
                 }
 
-                if(strcmp(xin_get_file_pf(i->path)->path, path))
+                if(bstrcmp(xin_get_file_pf(i->path)->path, path))
                 {
                     xprintf("%z%s", OUTPUT_COLOR_SET(black, i->type + 0x2), i);
                     xprintf("  ");
@@ -212,7 +212,7 @@ __STATUS __sys_xin_list_files(char** argv)
         
             else
             {
-                if(strcmp(xin_get_file_pf(i->path)->path, xin_get_current_path(path)))
+                if(bstrcmp(xin_get_file_pf(i->path)->path, xin_get_current_path(path)))
                 {
                     xprintf("%z%s", OUTPUT_COLOR_SET(black, i->type + 0x2), i);
                     xprintf("  ");

@@ -218,7 +218,7 @@ int hexeditor(char* file_name, char* options)
 
     uint32_t hexeditor_offset = 0;
 
-    if(strcmp(options, "-offset"))
+    if(bstrcmp(options, "-offset"))
         hexeditor_offset = strtoi(argv[3], HEXADECIMAL);
 
     XinEntry* file = fopen(file_name, "rw");

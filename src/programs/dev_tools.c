@@ -35,7 +35,7 @@ int dev_tools(char* program)
         xprintf(">");
         xscanf("%s %s", command, param);
 
-        if(strcmp(command, "enable"))
+        if(bstrcmp(command, "enable"))
         {
             xprintf("which module of XaninOS would you like to observe:\n\n");
 
@@ -47,7 +47,7 @@ int dev_tools(char* program)
 
             for(int i = 0; i < 6; i++)
             {
-                if(strcmp(option, xanin_modules[i]))
+                if(bstrcmp(option, xanin_modules[i]))
                     memset((uint8_t*)(&DebugInfo) + i, true, 1);
             }
 
@@ -55,7 +55,7 @@ int dev_tools(char* program)
             
         }
 
-        else if(strcmp(command, "disable"))
+        else if(bstrcmp(command, "disable"))
         {
             xprintf("which module of XaninOS would you like not to observe:\n\n");
 
@@ -67,32 +67,32 @@ int dev_tools(char* program)
 
             for(int i = 0; i < 6; i++)
             {
-                if(strcmp(option, xanin_modules[i]))
+                if(bstrcmp(option, xanin_modules[i]))
                     memset((uint8_t*)(&DebugInfo) + i, false, 1);
             }
 
             kernel_debug_block_set(DebugInfo);
         }
 
-        else if(strcmp(command, "fclose"))
+        else if(bstrcmp(command, "fclose"))
         {
             XinEntry* tmp = fopen("/syslog", "rw");
             fclose(&tmp);
         }
 
-        else if(strcmp(command, "printk"))
+        else if(bstrcmp(command, "printk"))
         {
             printk(param);
         }
 
-        else if(strcmp(command, "read"))
+        else if(bstrcmp(command, "read"))
         {
             char buf[10] = {0};
             fread(fopen("/syslog", "r"), buf, 9);
             xprintf("%s\n", buf);
         }
 
-        else if(strcmp(command, "exit"))
+        else if(bstrcmp(command, "exit"))
         {
             break;
         }

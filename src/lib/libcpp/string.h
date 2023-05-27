@@ -203,12 +203,12 @@ class string
 
     inline bool operator == (std::string x) 
     {
-        return strcmp(this->c_str(), x.c_str()) == 0;
+        return bstrcmp(this->c_str(), x.c_str()) == 0;
     }
 
     inline bool operator!=(std::string x) 
     {
-        return strcmp(this->c_str(), x.c_str()) != 0;
+        return bstrcmp(this->c_str(), x.c_str()) != 0;
     }
 
     char& operator [](uint32_t index)

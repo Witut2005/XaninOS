@@ -15,7 +15,7 @@ void system_variable_get(char** buf, char* value)
         char* line = getline(file, 1);
         xprintf("\n%s", line);
 
-        if(strncmp(line, value, strlen(value) - 1))
+        if(bstrncmp(line, value, strlen(value) - 1))
         {
             for(int j = strlen(value); j < strlen(line); j++)
                 (*buf)[j - strlen(value)] = line[j];

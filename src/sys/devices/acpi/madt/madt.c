@@ -78,7 +78,7 @@ const SystemAcpiSDT* const apic_sdt_find(void)
 
     for(int i = 0; i < 10; i++)
     {
-        if(strncmp((char*)sdt_pointers[i], "APIC", 4))
+        if(bstrncmp((char*)sdt_pointers[i], "APIC", 4))
             return (const SystemAcpiFADT* const)(sdt_pointers[i]);
     }
     return NULL;

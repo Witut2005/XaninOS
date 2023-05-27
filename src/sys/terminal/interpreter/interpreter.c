@@ -77,10 +77,10 @@ char* argv[5];
 int last_command_exit_status;
 extern terminal_t* kernel_terminal;
 
-#define XANIN_ADD_APP_ENTRY0(app_name, exec_name) else if(strcmp(program_name, app_name)) {last_command_exit_status = exec_name();}
-#define XANIN_ADD_APP_ENTRY1(app_name, exec_name) else if(strcmp(program_name, app_name)) {last_command_exit_status = exec_name(program_parameters);}
-#define XANIN_ADD_APP_ENTRY2(app_name, exec_name) else if(strcmp(program_name, app_name)) {last_command_exit_status = exec_name(program_parameters, program_parameters1);}
-#define XANIN_ADD_APP_ENTRY3(app_name, exec_name) else if(strcmp(program_name, app_name)) {last_command_exit_status = exec_name(program_parameters, program_parameters1, program_parameters2);}
+#define XANIN_ADD_APP_ENTRY0(app_name, exec_name) else if(bstrcmp(program_name, app_name)) {last_command_exit_status = exec_name();}
+#define XANIN_ADD_APP_ENTRY1(app_name, exec_name) else if(bstrcmp(program_name, app_name)) {last_command_exit_status = exec_name(program_parameters);}
+#define XANIN_ADD_APP_ENTRY2(app_name, exec_name) else if(bstrcmp(program_name, app_name)) {last_command_exit_status = exec_name(program_parameters, program_parameters1);}
+#define XANIN_ADD_APP_ENTRY3(app_name, exec_name) else if(bstrcmp(program_name, app_name)) {last_command_exit_status = exec_name(program_parameters, program_parameters1, program_parameters2);}
 
 extern bool gyn_cl_on;
 bool is_external_app = false;
@@ -137,7 +137,7 @@ void scan(void)
     // for(int i = 0; i < VGA_SCREEN_RESOLUTION; i++)
     //     app_terminal->buffer[i] = 0x0;
 
-    if(strcmp(program_name, "\0"))
+    if(bstrcmp(program_name, "\0"))
     {
         if(!is_logo_color_blocked)
         {
@@ -190,7 +190,7 @@ void scan(void)
     XANIN_ADD_APP_ENTRY1("loadch", loadch)
     XANIN_ADD_APP_ENTRY0("dev-info", get_device_info)
 
-    else if(strcmp(program_name, "reboot"))
+    else if(bstrcmp(program_name, "reboot"))
     {
 
             
@@ -217,7 +217,7 @@ void scan(void)
     XANIN_ADD_APP_ENTRY1("rd", xin_folder_remove_app)
     XANIN_ADD_APP_ENTRY1("cd", xin_folder_change_app)
 
-    else if(strcmp(program_name,"pwd"))
+    else if(bstrcmp(program_name,"pwd"))
     {
         xprintf("%s\n", xin_current_directory);
         while(inputg().scan_code != ENTER);
@@ -232,7 +232,7 @@ void scan(void)
     XANIN_ADD_APP_ENTRY1("xin_info", xin_info)
     XANIN_ADD_APP_ENTRY0("cls", screen_clear)
     XANIN_ADD_APP_ENTRY0("clear", screen_clear)
-    else if(strcmp(program_name, "ls"))
+    else if(bstrcmp(program_name, "ls"))
     {
         xin_list_files_app(argv);
     }
@@ -256,7 +256,7 @@ void scan(void)
     XANIN_ADD_APP_ENTRY0("nic_print", nic_print)
     XANIN_ADD_APP_ENTRY0("grapher", grapher)
 
-    else if(strcmp("real_mode_fswitch", program_name))
+    else if(bstrcmp("real_mode_fswitch", program_name))
     {
         XinEntry* real_mode_enter = fopen("/fast_real_mode_enter.bin", "r");
         disk_read(ATA_FIRST_BUS, ATA_MASTER, real_mode_enter->first_sector, 1, (uint16_t*)0x600);

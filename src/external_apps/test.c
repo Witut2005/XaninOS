@@ -24,6 +24,7 @@ static char tmp[100];
 
 void main(int argc, char* argv[])
 {
+    xprintf("fasdg %d ", argc);
     // char* tmp = (uint8_t*)calloc(100);
     memset(tmp, 0, 100);
     xprintf("tmp 0x%x\n", tmp);

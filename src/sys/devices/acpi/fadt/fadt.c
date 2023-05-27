@@ -10,7 +10,7 @@ const SystemAcpiFADT* const acpi_fadt_find(void)
 
     for(int i = 0; i < 10; i++)
     {
-        if(strncmp((char*)sdt_pointers[i], "FACP", 4))
+        if(bstrncmp((char*)sdt_pointers[i], "FACP", 4))
             return (const SystemAcpiFADT* const)sdt_pointers[i];
     }
     return NULL;

@@ -1,3 +1,20 @@
+
+C	= i386-elf-gcc
+CC 	= i386-elf-g++
+
+XANIN_PATH = /home/witut/Desktop/xaninOS/src/
+XANIN_BINARIES = /home/witut/Desktop/xaninOS/bin
+
+# C_OPTIONS  = -O0 -masm=intel -Wno-discarded-qualifiers -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-int-conversion -Wno-unused-function -Wno-div-by-zero -Wno-address-of-packed-member -I $(XANIN_PATH) -c
+C_COMPILE  = -O0 -masm=intel -Wno-discarded-qualifiers -Wno-builtin-declaration-mismatch -ffreestanding -Wno-int-conversion -Wno-unused-function -Wno-div-by-zero -Wno-address-of-packed-member -I $(XANIN_PATH) 
+CC_OPTIONS =  -O0 -fno-exceptions -lstdc++ -masm=intel -std=c++17 -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Wno-write-strings -fno-rtti -fconcepts-ts -I $(XANIN_PATH) -c
+C_OPTIONS  =  -O0 -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wattributes -Wno-unused-function -Werror=return-type -I $(XANIN_PATH) -c
+PREINSTALL = true
+ASM	= nasm
+APPS = ./programs
+
+HANDLERS = ./sys/interrupts/handlers
+
 all:
 	nasm -f elf32 write.asm -o write.o
 	i386-elf-ld write.o -o write 
@@ -11,7 +28,8 @@ all:
 	nasm -f elf32 link_create.asm -o link_create.o
 	i386-elf-ld link_create.o -o link_create 
 
-	i386-elf-gcc test.c -c
-	i386-elf-gcc test.o -L /home/witut/Desktop/xaninOS/src/external_apps -o test -l c 
-	#-I /home/witut/Desktop/xaninOS/src/
+	# i386-elf-gcc test.c -c
+	# i386-elf-gcc test.o -L /home/witut/Desktop/xaninOS/src/external_apps -o test -l c 
+
+	$(C) $(C_COMPILE) brainfuck.c -L /home/witut/Desktop/xaninOS/src/external_apps -o brainfuck -l c 
 

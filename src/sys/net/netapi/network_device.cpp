@@ -98,7 +98,7 @@ extern "C" {
         {
             if(XaninNetworkDevices[i])
             {
-                if(strcmp(const_cast<char*>(XaninNetworkDevices[i]->name_get()), device_name))
+                if(bstrcmp(const_cast<char*>(XaninNetworkDevices[i]->name_get()), device_name))
                     return XaninNetworkDevices[i]->pci_info_get();
             }
         }
@@ -161,7 +161,7 @@ extern "C" {
         {
             if(XaninNetworkDevices[i])
             {
-                if(strcmp(const_cast<char*>(XaninNetworkDevices[i]->name_get()), device_name))
+                if(bstrcmp(const_cast<char*>(XaninNetworkDevices[i]->name_get()), device_name))
                     return XaninNetworkDevices[i]->mac_get();
             }
         }
@@ -175,7 +175,7 @@ extern "C" {
         {
             if(XaninNetworkDevices[i])
             {
-                if(strcmp(const_cast<char*>(XaninNetworkDevices[i]->name_get()), old_name))
+                if(bstrcmp(const_cast<char*>(XaninNetworkDevices[i]->name_get()), old_name))
                 {
                     XaninNetworkDevices[i]->name_set(new_name);
                     return XANIN_OK;

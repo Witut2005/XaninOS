@@ -100,8 +100,23 @@ char* reverse_string(char* str)
 
 // }
 
-
 uint32_t strcmp(char* a, const char* b)
+{
+    uint32_t diffrences = 0;
+
+    if(strlen(a) != strlen(b))
+        return abs(strlen(a) - strlen(b));
+
+    for(int i = 0; i < strlen(a); i++)
+    {
+        if(a[i] != b[i])
+            diffrences++;
+    }
+
+    return diffrences;
+}
+
+bool bstrcmp(char* a, const char* b)
 {
 
     uint32_t lengtha = strlen(a);
@@ -122,7 +137,7 @@ uint32_t strcmp(char* a, const char* b)
     return 1;		
 }
 
-uint32_t strncmp(char* a, const char* b, size_t string_size)
+bool bstrncmp(char* a, const char* b, size_t string_size)
 {
     for(int i = 0; i < string_size;i ++)
     {
@@ -394,7 +409,7 @@ uint32_t strtoi(const char* str, uint8_t format)
     if(format > 16) 
         format = 16;
 
-    if(format == 16 && (strncmp((char*)str, "0x", 2) || strncmp((char*)str, "0b", 2) || strncmp((char*)str, "0o", 2)))
+    if(format == 16 && (bstrncmp((char*)str, "0x", 2) || bstrncmp((char*)str, "0b", 2) || bstrncmp((char*)str, "0o", 2)))
         str += 2;
 
     uint16_t* tmp_text = (uint16_t*)VGA_TEXT_MEMORY;
@@ -625,7 +640,7 @@ char* substr_find(char *str, const char *substr)
 {
     while(*str != '\0')
     {
-        if(strncmp(str, substr, strlen(substr)))
+        if(bstrncmp(str, substr, strlen(substr)))
             return str;
         str++;
     }

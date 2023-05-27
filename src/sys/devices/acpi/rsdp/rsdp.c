@@ -2,8 +2,7 @@
 #include <sys/devices/acpi/rsdp/rsdp.h>
 #include <stddef.h>
 #include <lib/libc/string.h>
-
-
+#include <lib/libc/stdiox.h>
 
 SystemAcpiRSDP* acpi_rsdp_find(void)
 {
@@ -11,7 +10,7 @@ SystemAcpiRSDP* acpi_rsdp_find(void)
 
     while (acpi_string < (char *)0xFFFFF)
     {
-        if (strncmp(acpi_string, "RSD PTR ", 8))
+        if (bstrncmp(acpi_string, "RSD PTR ", 8))
         {
             return (SystemAcpiRSDP*)acpi_string;
         }
