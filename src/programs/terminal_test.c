@@ -8,7 +8,7 @@ int terminal_test(void)
 
     XtbInit(VGA_WIDTH, VGA_HEIGHT, (uint16_t *)VGA_TEXT_MEMORY);
 
-    Xtf* Frontend = XtfInit(30);
+    Xtf* Frontend = XtfInit(50);
 
     // xprintf("0x%x\n", Frontend);
     // xprintf("0x%x\n", Frontend->buffer);
@@ -18,7 +18,7 @@ int terminal_test(void)
 
     // getchar();
 
-    for(int i = 0; i < Frontend->vwidth * VGA_HEIGHT * 2; i++)
+    for(int i = 0; i < Frontend->vwidth * 15 * 2; i++)
         XtfCellPut(Frontend, 'a' + (i / Frontend->vwidth), OUTPUT_COLOR_SET(black, green));
 
     XtfFlush(Frontend);
@@ -31,18 +31,22 @@ int terminal_test(void)
             case ARROW_UP: 
             {
                 XtbScrollUp(Frontend);
+                KeyInfo.scan_code = NULL;
                 break;
             }
             case ARROW_DOWN:
             {
 
                 XtbScrollDown(Frontend);
+                KeyInfo.scan_code = NULL;
                 break;
             }
         }
         Screen.x = Screen.y = 0;
-        xprintf("y: %d", Frontend->y);
-        KeyInfo.scan_code = NULL;
+        xprintf("y: %d\n", Frontend->y);
+        xprintf("y: %d\n", Frontend->current_height);
+        xprintf("y: %d\n", Frontend->y_begin);
+        xprintf("buf: 0x%x\n", Frontend->buffer);
     }
 
     // XtfFlush(Frontend);

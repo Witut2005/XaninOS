@@ -9,7 +9,6 @@
 #include <lib/libc/file.h>
 
 #define XIN_SYSTEM_FOLDER '/'
-#define XIN_BASE_FILE_ADDRESS_TO_LOAD 0x100000
 #define XIN_FILE_BEGIN 0
 #define XIN_ENTRY_SIZE 64
 

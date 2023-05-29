@@ -55,9 +55,9 @@ void XtfCellPut(Xtf* XtFrontend, char c, uint8_t color)
         XtFrontend->y++;
         
         if(XtFrontend->y > XtFrontend->current_height)
-            XtFrontend->current_height++;
+            XtFrontend->current_height = XtFrontend->y;
 
-        if(XtbGet()->vga_height < XtFrontend->current_height - XtbGet()->vga_height)
+        if(XtbGet()->vga_height < XtFrontend->y)
         {
             XtbScrollDown(XtFrontend);
         }
