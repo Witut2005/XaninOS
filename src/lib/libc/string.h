@@ -10,7 +10,6 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-// #define NULL 0x0
 #define VGA_TEXT_MEMORY 0xb8000
 #define BAD_IP_ADDRESS 0xFFFFFFFF
 

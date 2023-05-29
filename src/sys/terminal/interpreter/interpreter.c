@@ -70,7 +70,7 @@ extern int cpp_test(void);
 #include <programs/file_system/cat.c>
 #include <programs/file_system/xin_info.c>
 #include <programs/buffers.c>
-
+#include <programs/terminal_test.c>
 
 int argc;
 char* argv[5];
@@ -149,6 +149,7 @@ void scan(void)
 
     XANIN_ADD_APP_ENTRY1("dev_tools", dev_tools)
     XANIN_ADD_APP_ENTRY0("netplan_apply", netplan_apply)
+    XANIN_ADD_APP_ENTRY0("ttest", terminal_test)
     XANIN_ADD_APP_ENTRY0("buffers", buffers_view)
     XANIN_ADD_APP_ENTRY1("netapi_check", netapi_check)
     XANIN_ADD_APP_ENTRY0("usb_info", usb_controller_info)

@@ -16,7 +16,9 @@
         "cstdint": "c",
         "hal.h": "c",
         "alloc.h": "c",
-        "stdiox.h": "c"
+        "stdiox.h": "c",
+        "backend.h": "c",
+        "memory.h": "c"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }

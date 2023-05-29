@@ -409,6 +409,17 @@ build:
 
 	@echo "\n///////////////////////////////////////////////"
 
+	@echo "\033[0;32mXANIN VIRTUAL TERMINAL MODULE" 
+	@echo "\033[0m"
+
+	@echo [C] frontend.c
+	@$(C) $(C_OPTIONS) ./sys/terminal/frontend/frontend.c -o ./sys/terminal/frontend/frontend.o
+
+	@echo [C] backend.c
+	@$(C) $(C_OPTIONS) ./sys/terminal/backend/backend.c -o ./sys/terminal/backend/backend.o
+
+	@echo "\n///////////////////////////////////////////////"
+
 	@echo "\033[0;32mXANIN GRAPHICS LIBRARIES COMPILATION PHARSE"
 	@echo "\033[0m"
 	
@@ -522,6 +533,8 @@ build:
 	./sys/call/xanin_sys_entry.o \
 	./sys/call/xanin_sys/xanin_sys.o \
 	./sys/call/xanin_sys/xanin_calls.o \
+	./sys/terminal/frontend/frontend.o \
+	./sys/terminal/backend/backend.o \
 	./programs/edit.o \
 	./programs/test/cpp_test.o \
 	./sys/devices/mouse/mouse_init.o \

@@ -93,6 +93,8 @@ void mmngr_init(uint8_t* map, uint8_t* base, uint32_t blocks)
 {
     mmngr_mmap = map;
 
+    memset(mmngr_mmap, 0, blocks);
+
     kernel_heap_offset = 0;
     kernel_heap_base = base;
     kernel_heap_blocks = (blocks / 3) + (blocks % 3);
@@ -123,7 +125,6 @@ void* mmngr_block_allocate(uint8_t mode, uint32_t size)
     }
 
     uint32_t blocks_allocated = size_to_blocks_allocated(size);
-
 
     for(int i = mmap_index; i < mmap_index + blocks_allocated - 1; i++)
         mmngr_mmap[i] = MEMORY_ALLOCATED;
@@ -183,9 +184,7 @@ void* kmalloc(uint32_t size)
 void* kcalloc(uint32_t size)
 {
     uint8_t* tmp = mmngr_block_allocate(KERNEL_HEAP, size);
-
-    for(int i = 0; i < size; i++)
-        tmp[i] = 0;
+    memset(tmp, 0, size);
 
     return tmp;
 }
