@@ -483,6 +483,8 @@ build:
 	./fs/xin_syscalls.o \
 	./sys/terminal/vty/vty.o \
 	./sys/devices/hda/disk.o \
+	./sys/terminal/backend/backend.o \
+	./sys/terminal/frontend/frontend.o \
 	./fs/xin.o \
 	./sys/call/devices/disk.o \
 	./sys/terminal/interface/terminal.o -o ./lib/libc/libc.o
@@ -533,8 +535,6 @@ build:
 	./sys/call/xanin_sys_entry.o \
 	./sys/call/xanin_sys/xanin_sys.o \
 	./sys/call/xanin_sys/xanin_calls.o \
-	./sys/terminal/frontend/frontend.o \
-	./sys/terminal/backend/backend.o \
 	./programs/edit.o \
 	./programs/test/cpp_test.o \
 	./sys/devices/mouse/mouse_init.o \

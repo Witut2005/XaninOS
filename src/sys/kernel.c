@@ -34,6 +34,7 @@
 #include <lib/libc/xanin_state.h>
 #include <lib/libc/system.h>
 #include <sys/interrupts/handlers/entries/handler_entries.h>
+#include <sys/terminal/frontend/frontend.h>
 
 extern void v86_mode_enter(void);
 extern void mouse_enable(void);
@@ -144,6 +145,8 @@ void kernel_loop(void)
 }
 
 uint8_t kernel_mmngr_mmap[PMMNGR_MEMORY_BLOCKS];
+
+Xtf* VtyFront;
 
 void _start(void)
 {
@@ -412,6 +415,9 @@ void _start(void)
     uint8_t* zeros = (uint8_t*)kcalloc(SECTOR_SIZE);
 
     interrupt_enable();
+
+    XtbInit(VGA_WIDTH, VGA_HEIGHT, VGA_TEXT_MEMORY);
+    stdio_vty_set(XtfInit(100));
 
     while (inputg().scan_code != ENTER);
 

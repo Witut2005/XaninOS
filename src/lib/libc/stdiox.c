@@ -80,11 +80,28 @@ char putchar_color(uint8_t color, char character)
         Screen.y++;
     }
            
-
     return character;
-
 }
 
+Xtf* StdioFront;
+
+void stdio_vty_set(Xtf* Front)
+{
+    StdioFront = Front;
+}
+
+Xtf* stdio_vty_get(void)
+{
+    return StdioFront;
+}
+
+void putst(const char* str)
+{
+    for(int i = 0; i < strlen(str); i++)
+        XtfCharacterPut(StdioFront, str[i]);
+        
+    XtbFlush(StdioFront);
+}
 
 void print_bcd_number(uint8_t x)
 {

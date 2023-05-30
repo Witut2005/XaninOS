@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <sys/terminal/frontend/frontend.h>
+#include <lib/libc/stdiox.h>
 
 struct Xtb{
     uint32_t y;             // real y position
@@ -24,6 +25,7 @@ void XtbRowAdd(Xtf* XtFrontend);
 void XtbFlush(Xtf* XtFrontend);
 void XtbScrollUp(Xtf* XtFrontend);
 void XtbScrollDown(Xtf* XtFrontend);
+void XtbFlush(Xtf* XtFrontend);
 
 #ifdef __cplusplus
 }

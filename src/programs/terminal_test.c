@@ -1,14 +1,15 @@
 
 #include <sys/terminal/backend/backend.h>
 #include <sys/terminal/frontend/frontend.h>
+#include <lib/libc/stdiox.h>
 
 int terminal_test(void)
 {
 
 
-    XtbInit(VGA_WIDTH, VGA_HEIGHT, (uint16_t *)VGA_TEXT_MEMORY);
+    // XtbInit(VGA_WIDTH, VGA_HEIGHT, (uint16_t *)VGA_TEXT_MEMORY);
 
-    Xtf* Frontend = XtfInit(50);
+    // Xtf* Frontend = XtfInit(50);
 
     // xprintf("0x%x\n", Frontend);
     // xprintf("0x%x\n", Frontend->buffer);
@@ -18,10 +19,17 @@ int terminal_test(void)
 
     // getchar();
 
-    for(int i = 0; i < Frontend->vwidth * 15 * 2; i++)
-        XtfCellPut(Frontend, 'a' + (i / Frontend->vwidth), OUTPUT_COLOR_SET(black, green));
+    // for(int i = 0; i < Frontend->vwidth * 15 * 2; i++)
+    //     XtfCellPut(Frontend, 'a' + (i / Frontend->vwidth), OUTPUT_COLOR_SET(black, green));
+    
+    char tmp[] = "a\n";
 
-    XtfFlush(Frontend);
+    for(int i = 0; i < 30; i++)
+    {
+        tmp[0] = 'a' + i;
+        putst(tmp);
+    }
+    // XtfFlush(Frontend);
 
 
     while(KeyInfo.scan_code != ENTER)
@@ -30,23 +38,23 @@ int terminal_test(void)
         {
             case ARROW_UP: 
             {
-                XtbScrollUp(Frontend);
+                XtbScrollUp(stdio_vty_get());
                 KeyInfo.scan_code = NULL;
                 break;
             }
             case ARROW_DOWN:
             {
 
-                XtbScrollDown(Frontend);
+                XtbScrollDown(stdio_vty_get());
                 KeyInfo.scan_code = NULL;
                 break;
             }
         }
-        Screen.x = Screen.y = 0;
-        xprintf("y: %d\n", Frontend->y);
-        xprintf("y: %d\n", Frontend->current_height);
-        xprintf("y: %d\n", Frontend->y_begin);
-        xprintf("buf: 0x%x\n", Frontend->buffer);
+        // Screen.x = Screen.y = 0;
+        // xprintf("y: %d\n", Frontend->y);
+        // xprintf("y: %d\n", Frontend->current_height);
+        // xprintf("y: %d\n", Frontend->y_begin);
+        // xprintf("buf: 0x%x\n", Frontend->buffer);
     }
 
     // XtfFlush(Frontend);
