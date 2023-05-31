@@ -1,17 +1,11 @@
 
 #include <sys/terminal/backend/backend.h>
+#include <lib/libc/stdlibx.h>
+#include <lib/libc/memory.h>
 
 static Xtb* XtBackend;
 
-static inline uint32_t XtbCalculateY(Xtf* XtFrontend)
-{
-    if(XtFrontend->y >= XtBackend->vga_height)
-        return XtBackend->y = XtBackend->vga_height - 1;
-    else
-        XtFrontend->y;
-}
-
-void XtbInit(uint32_t vga_width, uint32_t vga_height, uint16_t* vram)
+void xtb_init(uint32_t vga_width, uint32_t vga_height, uint16_t* vram)
 {
     XtBackend = (Xtb*)calloc(sizeof(XtBackend));
     XtBackend->vga_width = vga_width;
@@ -20,20 +14,20 @@ void XtbInit(uint32_t vga_width, uint32_t vga_height, uint16_t* vram)
 }
 
 
-Xtb* XtbGet(void)
+Xtb* xtb_get(void)
 {
     return XtBackend;
 }
 
-void XtbRowRemove(Xtf* Terminal)
-{
+// void XtbRowRemove(Xtf* Terminal)
+// {
 
-}
+// }
 
-void XtbRowAdd(Xtf* Terminal)
-{
+// void XtbRowAdd(Xtf* Terminal)
+// {
 
-}
+// }
 
 // uint32_t XtbRowSizeGet(Xtf* XtFrontend, uint32_t row)
 // {
@@ -57,7 +51,7 @@ void XtbRowAdd(Xtf* Terminal)
 
 // DO BACKENDU MUSI MIEC DOSTEP DO PRAWDZIWYCH WYMIAROW
 
-void XtbScrollUp(Xtf* XtFrontend)
+void xtb_scroll_up(Xtf* XtFrontend)
 {
     if(!XtFrontend->y_begin)
         return;
@@ -72,14 +66,13 @@ void XtbScrollUp(Xtf* XtFrontend)
         return;
     }
 
-    memmove(VGA_TEXT_MEMORY + (XtBackend->vga_width * sizeof(terminal_cell)), VGA_TEXT_MEMORY , XtBackend->vga_width * XtBackend->vga_height * sizeof(terminal_cell));
-    memcpy(VGA_TEXT_MEMORY, &XtFrontend->buffer[start_index], 
+    memmove((uint8_t*)VGA_TEXT_MEMORY + (XtBackend->vga_width * sizeof(terminal_cell)), (uint8_t*)VGA_TEXT_MEMORY , XtBackend->vga_width * XtBackend->vga_height * sizeof(terminal_cell));
+    memcpy((uint8_t*)VGA_TEXT_MEMORY, (uint8_t*)&XtFrontend->buffer[start_index], 
         number_of_bytes_to_copy == -1 ? 0 : number_of_bytes_to_copy);
 
 }
 
-
-void XtbScrollDown(Xtf* XtFrontend)
+void xtb_scroll_down(Xtf* XtFrontend)
 {
     if((XtBackend->vga_height < XtFrontend->vheight) && (XtFrontend->y_begin + XtBackend->vga_height) < XtFrontend->current_height)
     {
@@ -89,15 +82,16 @@ void XtbScrollDown(Xtf* XtFrontend)
         if(start_index == XT_NO_SUCH_LINE)
             return;
 
-        memmove(VGA_TEXT_MEMORY, VGA_TEXT_MEMORY + (XtBackend->vga_width * sizeof(terminal_cell)), XtBackend->vga_width * XtBackend->vga_height * sizeof(terminal_cell));
-        memcpy(VGA_TEXT_MEMORY + ((XtBackend->vga_height - 1) * XtBackend->vga_width * sizeof(terminal_cell)), 
-            &XtFrontend->buffer[start_index], number_of_bytes_to_copy == -1 ? 0 : number_of_bytes_to_copy);
+        memmove((uint8_t*)VGA_TEXT_MEMORY, (uint8_t*)VGA_TEXT_MEMORY + (XtBackend->vga_width * sizeof(terminal_cell)), XtBackend->vga_width * XtBackend->vga_height * sizeof(terminal_cell));
+
+        memcpy((uint8_t*)VGA_TEXT_MEMORY + ((XtBackend->vga_height - 1) * XtBackend->vga_width * sizeof(terminal_cell)), 
+            (uint8_t*)&XtFrontend->buffer[start_index], number_of_bytes_to_copy == -1 ? 0 : number_of_bytes_to_copy);
 
         XtFrontend->y_begin++;
     }
 }
 
-void XtbFlush(Xtf* XtFrontend)
+void xtb_flush(Xtf* XtFrontend)
 {
     screen_clear();
 
@@ -114,5 +108,4 @@ void XtbFlush(Xtf* XtFrontend)
         vram[vram_index++] = XtFrontend->buffer[i];
     }
 
-    // memcpy((uint8_t*)VGA_TEXT_MEMORY, (uint8_t*)&XtFrontend->buffer[XtFrontend->y_begin * XtFrontend->vwidth], VGA_SCREEN_RESOLUTION * sizeof(terminal_cell));    
 }

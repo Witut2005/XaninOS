@@ -23,7 +23,6 @@ uint8_t* null_memory_region;
 
 extern void kernel_loop(void);
 
-#define SECTOR_SIZE 512
 
 uint32_t int_to_sectors(uint32_t num)
 {
@@ -115,7 +114,7 @@ CmosTime* time_get(CmosTime* Time)
     Time->hour = inbIO(CMOS_DATA);
 
     
-    if((Time->hour & 0xF0) == 2 && (Time->hour & 0x0F) >= 2)
+    if((((Time->hour & 0xF0) >> 8) == 2) && ((Time->hour & 0x0F) >= 2))
     {
         Time->hour &= 0x0F;
         Time->hour -= 2;

@@ -36,8 +36,8 @@ time_offset_t* start(void)
 
 void stop(time_offset_t* time)
 {
-    time_offset_t tmp = pit_time;
-    *time = pit_time - *time;
+    // time_offset_t tmp = pit_time;
+   *time = pit_time - *time;
 }
 
 // void msleep_

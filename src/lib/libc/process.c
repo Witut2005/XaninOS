@@ -3,7 +3,7 @@
 #include <stdarg.h>
 #include <lib/libc/stdlibx.h>
 
-static int process_id = 0;
+// static int process_id = 0;
 static uint32_t number_of_pointers_to_clear = 0;
 static uint8_t** process_pointers = NULL;
 static void (*process_deconstructor)(void);

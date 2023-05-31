@@ -55,8 +55,6 @@ char* reverse_string(char* str)
 {
 
 
-    uint8_t length = strlen(str);
-
     char buf;
     char* end = str + strlen(str) - 1;
 
@@ -412,7 +410,6 @@ uint32_t strtoi(const char* str, uint8_t format)
     if(format == 16 && (bstrncmp((char*)str, "0x", 2) || bstrncmp((char*)str, "0b", 2) || bstrncmp((char*)str, "0o", 2)))
         str += 2;
 
-    uint16_t* tmp_text = (uint16_t*)VGA_TEXT_MEMORY;
     uint8_t digit_counter = strlen(str);
 	uint32_t tmp;
 

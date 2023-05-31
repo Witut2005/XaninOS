@@ -16,6 +16,7 @@ struct Xtf
     uint32_t current_height;
     terminal_cell* buffer;
     uint32_t size;
+    uint32_t size_allocated;
 };
 
 typedef struct Xtf Xtf;
@@ -40,8 +41,8 @@ extern "C" {
 
 Xtf* XtfInit(uint32_t virtual_height);
 void XtfDestroy(Xtf* XtFrontend);
-void XtfCharacterPut(Xtf* XtFrontend, char c);
-void XtfCellPut(Xtf* XtFrontend, char c, uint8_t color);
+void xtf_character_put(Xtf* XtFrontend, char c);
+void xtf_cell_put(Xtf* XtFrontend, char c, uint8_t color);
 int xtf_buffer_nth_line_index_get(Xtf* XtFrontend, uint32_t line_number); // starting with 0
 int xtf_buffer_nth_line_size_get(Xtf* XtFrontend, uint32_t line_number); // starting with 0
 

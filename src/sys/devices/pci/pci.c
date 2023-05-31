@@ -3,6 +3,8 @@
 #include <lib/libc/hal.h>
 #include <sys/devices/pci/pci.h>
 
+static pci_config_register pci_config_address;
+
 uint16_t pci_get_vendor_id(const uint8_t bus, const uint8_t slot, 
                         const uint8_t function)
 { 

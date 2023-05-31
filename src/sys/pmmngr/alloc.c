@@ -5,6 +5,7 @@
 #include <stddef.h>
 #include <lib/libc/memory.h>
 #include <sys/pmmngr/alloc.h>
+#include <sys/log/syslog.h>
 
 typedef	uint32_t physical_addr;
 
@@ -149,7 +150,7 @@ void mmngr_block_free(uint8_t mode, void* ptr)
         if((uint32_t)ptr < (uint32_t)kernel_heap_base)
             return;
 
-        else if((uint32_t)ptr > (kernel_heap_base + (kernel_heap_blocks * PMMNGR_BLOCK_SIZE)))
+        else if((uint32_t)ptr > (uint32_t)(kernel_heap_base + (kernel_heap_blocks * PMMNGR_BLOCK_SIZE)))
             return;
 
         else
@@ -161,7 +162,7 @@ void mmngr_block_free(uint8_t mode, void* ptr)
         if((uint32_t)ptr < (uint32_t)user_heap_base)
             return;
 
-        else if((uint32_t)ptr > (user_heap_base + (user_heap_blocks * PMMNGR_BLOCK_SIZE)))
+        else if((uint32_t)ptr > (uint32_t)(user_heap_base + (user_heap_blocks * PMMNGR_BLOCK_SIZE)))
             return;
         else
             index = ((uint32_t)((uint32_t)ptr - (uint32_t)user_heap_base) / PMMNGR_BLOCK_SIZE);

@@ -12,7 +12,7 @@
 
 uint32_t xanin_sys_handle(void)
 {
-    uint32_t eax, ecx, edx, ebx, esi, edi;
+    uint32_t eax, ecx, edx, ebx;    //, esi, edi;
 
     asm(
         "mov %0, eax;"     

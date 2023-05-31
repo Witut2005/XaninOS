@@ -416,7 +416,7 @@ void _start(void)
 
     interrupt_enable();
 
-    XtbInit(VGA_WIDTH, VGA_HEIGHT, VGA_TEXT_MEMORY);
+    xtb_init(VGA_WIDTH, VGA_HEIGHT, VGA_TEXT_MEMORY);
     stdio_vty_set(XtfInit(100));
 
     while (inputg().scan_code != ENTER);

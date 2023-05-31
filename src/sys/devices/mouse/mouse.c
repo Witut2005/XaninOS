@@ -13,7 +13,7 @@ static uint8_t mouse_cycle;     //unsigned char
 static uint8_t mouse_uint8_t[3];    //signed char
 static int32_t mouse_x;         //signed char
 static int32_t mouse_y;         //signed char
-static uint8_t flip_flop;
+// static uint8_t flip_flop;
 static uint32_t packet_limiter_x;
 static uint32_t packet_limiter_y;
 

@@ -129,9 +129,6 @@ struct pci_config_register
     typedef struct pci_config_register pci_config_register;
 #endif
     
-static pci_config_register pci_config_address;
-
-
 enum PCI_DEVICES
 {
    USB_CLASS_CONTROLLER_CODE = 0x0C,
@@ -142,23 +139,23 @@ enum PCI_DEVICES
 };
 
 
-static char* pci_device_name[15] = 
-{
-    "unclassified",
-    "mass storage controller",
-    "network controller",
-    "display controller",
-    "multimedia controller",
-    "memory controller",
-    "bridge",
-    "simple communication controller",
-    "base system peripheral",
-    "input decide controller",
-    "docking station",
-    "processor",
-    "serial bus controller"
+// static char* pci_device_name[15] = 
+// {
+//     "unclassified",
+//     "mass storage controller",
+//     "network controller",
+//     "display controller",
+//     "multimedia controller",
+//     "memory controller",
+//     "bridge",
+//     "simple communication controller",
+//     "base system peripheral",
+//     "input decide controller",
+//     "docking station",
+//     "processor",
+//     "serial bus controller"
 
-};
+// };
 
 
 struct PciDevicePack 

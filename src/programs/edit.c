@@ -63,9 +63,6 @@ void edit_input(xchar Input, XinEntry* File, EditInfo* EditState)
         EditState->program_buffer = File->FileInfo->buffer = realloc(File->FileInfo->buffer, EditState->number_of_sectors * SECTOR_SIZE);
     }
 
-    int x_save = Screen.x; 
-    int y_save = Screen.y;
-
     if(KeyInfo.is_ctrl == true)
     {
         if(Input.character == '$')
@@ -247,8 +244,6 @@ void edit_input(xchar Input, XinEntry* File, EditInfo* EditState)
             MOVE_CURSOR_TO_NEXT_ROW(EditState);
 
         MOVE_CURSOR_TO_FIRST_CHARACTER(EditState);
-
-        int i;
 
         while(EditState->program_buffer[EditState->file_position] != '\n')
             EditState->file_position++;

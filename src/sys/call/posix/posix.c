@@ -21,7 +21,7 @@ uint32_t syscall_handle(void)
 {
    
 
-    uint32_t eax, ecx, edx, ebx, esi, edi;
+    uint32_t eax, ecx, edx, ebx; // esi, edi;
 
     asm(
         "mov %0, eax;"     
@@ -89,7 +89,7 @@ uint32_t syscall_handle(void)
             if(folder_name[strlen(folder_name) - 1] != '/')
             {
                 folder_name = (char*)calloc(strlen(folder_name) + 1);
-                memcpy(folder_name, (uint8_t*)ebx, strlen((char*)ebx));
+                memcpy((uint8_t*)folder_name, (uint8_t*)ebx, strlen((char*)ebx));
                 folder_name[strlen(folder_name)] = '/';
                 allocated_additional_memory = true;
             }

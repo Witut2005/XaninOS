@@ -7,7 +7,7 @@ int terminal_test(void)
 {
 
 
-    // XtbInit(VGA_WIDTH, VGA_HEIGHT, (uint16_t *)VGA_TEXT_MEMORY);
+    // xtb_init(VGA_WIDTH, VGA_HEIGHT, (uint16_t *)VGA_TEXT_MEMORY);
 
     // Xtf* Frontend = XtfInit(50);
 
@@ -20,11 +20,13 @@ int terminal_test(void)
     // getchar();
 
     // for(int i = 0; i < Frontend->vwidth * 15 * 2; i++)
-    //     XtfCellPut(Frontend, 'a' + (i / Frontend->vwidth), OUTPUT_COLOR_SET(black, green));
+    //     xtf_cell_put(Frontend, 'a' + (i / Frontend->vwidth), OUTPUT_COLOR_SET(black, green));
     
     char tmp[] = "abc\n";
 
-    for(int i = 0; i < 30; i++)
+    putst("fromini fromini fromini fromini fromini fromini fromini fromini fromini fromini fromini fromini fromini fromini fromini fromini fromini fromini fromini fromini");
+
+    for(int i = 0; i < 29; i++)
     {
         tmp[0] = 'a' + i;
         putst(tmp);
@@ -38,14 +40,14 @@ int terminal_test(void)
         {
             case ARROW_UP: 
             {
-                XtbScrollUp(stdio_vty_get());
+                xtb_scroll_up(stdio_vty_get());
                 KeyInfo.scan_code = NULL;
                 break;
             }
             case ARROW_DOWN:
             {
 
-                XtbScrollDown(stdio_vty_get());
+                xtb_scroll_down(stdio_vty_get());
                 KeyInfo.scan_code = NULL;
                 break;
             }

@@ -25,7 +25,7 @@ char xin_current_directory[38] = {'\0'};
 
 char* xin_set_current_directory(char *directory)
 {
-    memset(xin_current_directory, 0, XIN_MAX_PATH_LENGTH);
+    memset((uint8_t*)xin_current_directory, 0, XIN_MAX_PATH_LENGTH);
 
     for (int i = 0; directory[i] != '\0'; i++)
         xin_current_directory[i] = directory[i];
@@ -41,7 +41,7 @@ void xin_get_current_directory(char* buf)
 char *xin_get_current_path(char *file_name)
 {
 
-    memset(xin_current_path, 0, XIN_MAX_PATH_LENGTH);
+    memset((uint8_t*)xin_current_path, 0, XIN_MAX_PATH_LENGTH);
 
     int i = 0x0;
 
@@ -288,7 +288,7 @@ int xin_folder_create(char* entry_name)
     else if(!only_entry_name && entry_name[0] != '/')
     {
         char full_path[XIN_MAX_PATH_LENGTH];
-        memcpy(full_path, xin_get_current_path(entry_name), XIN_MAX_PATH_LENGTH);
+        memcpy((uint8_t*)full_path, (uint8_t*)xin_get_current_path(entry_name), XIN_MAX_PATH_LENGTH);
 
         XinEntry* path = xin_find_entry(xin_get_file_pf(full_path)->path);
 
@@ -374,7 +374,7 @@ void xin_init_fs(void)
     xin_load_tables();
     xin_folder_change("/");
     
-    for(uint8_t* i = XIN_ENTRY_POINTERS; (uint32_t)i < XIN_ENTRY_POINTERS + 0x280; i++)
+    for(uint8_t* i = (uint8_t*)XIN_ENTRY_POINTERS; (uint32_t)i < XIN_ENTRY_POINTERS + 0x280; i++)
     {
         if(*i == XIN_UNALLOCATED)
             *i = XIN_EOF;
@@ -406,8 +406,6 @@ int xin_file_create(char* entry_name)
 
     if(!only_entry_name && entry_name[0] != '/')
     {
-
-        char* full_path = xin_get_current_path(entry_name);
 
 
         int i;
@@ -994,7 +992,7 @@ char* getline_from_ptr(char* data, int line_id)
 
     while(current_line < line_id)
     {
-        memset(line, 0, 200);
+        memset((uint8_t*)line, 0, 200);
 
         while(file_data[file_offset] != '\n')
         {
@@ -1042,7 +1040,7 @@ char* getline(XinEntry* file, int line_id)
 
     while(current_line < line_id)
     {
-        memset(line, 0, 200);
+        memset((uint8_t*)line, 0, 200);
 
         while(file_data[file_offset] != '\n')
         {
@@ -1057,7 +1055,10 @@ char* getline(XinEntry* file, int line_id)
                 }
 
                 else
+                {
+                    free(line);
                     return NULL;
+                }
                 break;
             }
 
@@ -1073,6 +1074,7 @@ char* getline(XinEntry* file, int line_id)
         current_line++;
     }
 
+    free(line);
     return line;
 
 
@@ -1091,7 +1093,7 @@ __STATUS remove_directory(char* folder_name)
     char name[XIN_MAX_PATH_LENGTH];
     uint32_t name_length;
 
-    memcpy(name, folder->path, XIN_MAX_PATH_LENGTH); 
+    memcpy((uint8_t*)name, (uint8_t*)folder->path, XIN_MAX_PATH_LENGTH); 
     name_length = strlen(name) - 1;
 
     for(XinEntry* i = (XinEntry*)XIN_ENTRY_TABLE; i < (XinEntry*)(XIN_ENTRY_TABLE + SECTOR_SIZE * 4); i++)
@@ -1107,7 +1109,7 @@ __STATUS remove_directory(char* folder_name)
         }
     }
 
-    memset(folder->path, 0, XIN_MAX_PATH_LENGTH);
+    memset((uint8_t*)folder->path, 0, XIN_MAX_PATH_LENGTH);
     return XANIN_OK;
 
 }

@@ -707,7 +707,7 @@ unsigned get_fb_seg(void)
 	return seg;
 }
 
-#define	_vmemwr(DS,DO,S,N)	memcpy((char *)((DS) * 16 + (DO)), S, N)
+#define	_vmemwr(DS,DO,S,N)	memcpy((uint8_t*)((DS) * 16 + (DO)), S, N)
 
 void vmemwr(unsigned dst_off, unsigned char *src, unsigned count)
 {

@@ -7,6 +7,7 @@
 #include <stdarg.h>
 #include <lib/libc/time.h>
 #include <lib/libc/stdiox.h>
+#include <sys/terminal/backend/backend.h>
 
 char* color_attributes[16] = {"black", "blue", "green", "cyan", "red", "magenta", "brown", "lgray", "dgray","lblue", "lgreen", "lcyan", "lred", "lmagenta", "yellow", "white"};
 
@@ -98,9 +99,9 @@ Xtf* stdio_vty_get(void)
 void putst(const char* str)
 {
     for(int i = 0; i < strlen(str); i++)
-        XtfCharacterPut(StdioFront, str[i]);
+        xtf_character_put(StdioFront, str[i]);
         
-    XtbFlush(StdioFront);
+    xtb_flush(StdioFront);
 }
 
 void print_bcd_number(uint8_t x)
@@ -125,7 +126,7 @@ void printf(char* str, ... )
     uint32_t number;
 
 
-    memset(tmp, '\0', sizeof(tmp));
+    memset((uint8_t*)tmp, '\0', sizeof(tmp));
 
     char* stringPtr;
 
@@ -581,7 +582,7 @@ void xprintf(char* str, ... )
     uint32_t number;
 
 
-    memset(tmp, '\0', sizeof(tmp));
+    memset((uint8_t*)tmp, '\0', sizeof(tmp));
 
     char* stringPtr;
 
@@ -1309,8 +1310,6 @@ void xscanf(char* str, ... )
             char tmp = Input.character;
 
             Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((black << 4) | white) << 8));
-            char character_saved = (char)(Screen.cursor[Screen.y][Screen.x]);
-            
 
             xprintf("%c", tmp);
     
@@ -1342,7 +1341,6 @@ void xscanf(char* str, ... )
 void xscan_range(char* string_buffer, uint32_t how_many_chars)
 {
 
-    uint32_t str_counter = 0;
     uint32_t counter = 0;
     char* string_pointer;
     char* field_buffer = (char*)calloc(how_many_chars);
@@ -1359,9 +1357,6 @@ void xscan_range(char* string_buffer, uint32_t how_many_chars)
 
     uint8_t x_start = Screen.x;
     uint8_t y_start = Screen.y;
-
-    uint8_t x_current, y_current;
-
 
     start:
 

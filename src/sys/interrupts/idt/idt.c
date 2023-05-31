@@ -21,6 +21,7 @@ extern void syscall_entry(void);
 #define CODE_SEGMENT 0x8
 
 /* configure interrupt descriptor table entry */
+
 // #define configure_idt_entry(idt_entry,off,seg)\
 //     idtEntries[idt_entry].off_0_15 = (uint16_t)(((uint32_t)&off & 0x0000ffff));\
 //     idtEntries[idt_entry].off_16_31 = (uint16_t)((uint32_t)&off >> 16);\

@@ -101,7 +101,7 @@ void letters_refresh_add(uint16_t* cursor_current_positon, char character_saved)
 // }
 
 
-static char app_exit_status_text[40];
+// static char app_exit_status_text[40];
 
 // char* app_exit_status_text_get(void)
 // {

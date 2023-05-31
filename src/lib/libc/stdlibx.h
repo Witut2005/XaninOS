@@ -6,6 +6,7 @@
 #include <stdbool.h>
 #include <sys/devices/keyboard/scan_codes.h>
 #include <sys/input/key_info.h>
+#include <fs/xin_entry.h>
 
 #define XANIN_PMMNGR_BLOCK_SIZE 4096
 

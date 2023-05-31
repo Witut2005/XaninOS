@@ -148,8 +148,8 @@ __STATUS __sys_xin_link_create(char* file_name, char* link_name)
 __STATUS __sys_xin_list_files(char** argv)
 {
     
-    char* options = null_region;
-    char* path = null_region;
+    char* options = (char*)null_region;
+    char* path = (char*)null_region;
 
     for(int i = 1; argv[i][0] != '\0'; i++)
     {
@@ -162,7 +162,6 @@ __STATUS __sys_xin_list_files(char** argv)
     XinEntry* i = (XinEntry*)XIN_ENTRY_TABLE; 
 
     int printed_text = 0;
-    char* current_path = xin_get_current_path(path);
 
     if(xin_find_entry(path) == NULL && strlen(path) > 0)
         return XANIN_ERROR;

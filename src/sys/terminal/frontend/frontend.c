@@ -5,14 +5,16 @@
 #include <sys/pmmngr/alloc.h>
 #include <lib/libc/stdiox.h>
 #include <lib/libc/memory.h>
+#include <lib/libc/stdlibx.h>
 
-Xtf* XtfInit(uint32_t virtual_height)
+Xtf* XtfInit(uint32_t buffer_size)
 {
     Xtf* XtFrontend = (Xtf*)calloc(sizeof(XtFrontend)); // all variables = zeros    
 
     XtFrontend->vwidth = VGA_WIDTH; // 80
-    XtFrontend->vheight = virtual_height;
-    XtFrontend->buffer = (terminal_cell*)calloc(XtFrontend->vwidth * XtFrontend->vheight * sizeof(terminal_cell));
+    XtFrontend->vheight = 1000; //useless
+    XtFrontend->size_allocated = buffer_size;
+    XtFrontend->buffer = (terminal_cell*)calloc(buffer_size);
     XtFrontend->current_height = VGA_HEIGHT; 
 
     return XtFrontend;
@@ -68,7 +70,7 @@ int xtf_buffer_nth_line_index_get(Xtf* XtFrontend, uint32_t line_number) // star
 }
 
 
-void XtfCharacterPut(Xtf* XtFrontend, char c)
+void xtf_character_put(Xtf* XtFrontend, char c)
 {
 
     XtFrontend->x++;
@@ -81,16 +83,22 @@ void XtfCharacterPut(Xtf* XtFrontend, char c)
         if(XtFrontend->y > XtFrontend->current_height)
             XtFrontend->current_height = XtFrontend->y;
     }
+
+    if(XtFrontend->size > XtFrontend->size_allocated)
+    {
+        XtFrontend->buffer = (terminal_cell*)realloc(XtFrontend->buffer, XtFrontend->size + SECTOR_SIZE);
+        XtFrontend->size_allocated = XtFrontend->size + SECTOR_SIZE;
+    }
     
     XtFrontend->buffer[XtFrontend->size++] = c | AS_COLOR(DEFAULT_COLOR);
 
-    if(XtFrontend->x >= XtFrontend->vwidth)
-        XtfCharacterPut(XtFrontend, '\n');
+    if(XtFrontend->x >= XtFrontend->vwidth-1)
+        xtf_character_put(XtFrontend, '\n');
 
 }
 
 
-void XtfCellPut(Xtf* XtFrontend, char c, uint8_t color)
+void xtf_cell_put(Xtf* XtFrontend, char c, uint8_t color)
 {
     XtFrontend->x++;
 
@@ -101,14 +109,20 @@ void XtfCellPut(Xtf* XtFrontend, char c, uint8_t color)
 
         if(XtFrontend->y > XtFrontend->current_height)
             XtFrontend->current_height = XtFrontend->y;
+    }
+
+    if(XtFrontend->size > XtFrontend->size_allocated)
+    {
+        XtFrontend->buffer = (terminal_cell*)realloc(XtFrontend->buffer, XtFrontend->size + SECTOR_SIZE);
+        XtFrontend->size_allocated = XtFrontend->size + SECTOR_SIZE;
     }
 
     XtFrontend->buffer[XtFrontend->size++] = c | AS_COLOR(color);
 
     if(XtFrontend->x >= XtFrontend->vwidth)
-        XtfCharacterPut(XtFrontend, '\n');
+        xtf_character_put(XtFrontend, '\n');
 
-    if(XtbGet()->vga_height < XtFrontend->y + (XtFrontend->x / XtbGet()->vga_width))
-        XtbScrollDown(XtFrontend);
+    if(xtb_get()->vga_height < XtFrontend->y + (XtFrontend->x / xtb_get()->vga_width))
+        xtb_scroll_down(XtFrontend);
 
 }

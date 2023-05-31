@@ -1,7 +1,7 @@
 
 /* macros */
 
-#pragma ocne
+#pragma once 
 
 #define PIC1_COMMAND_REG 0x20
 #define PIC1_STATUS_REG 0x20

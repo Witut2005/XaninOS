@@ -18,14 +18,14 @@ typedef struct Xtb Xtb;
 extern "C" {
 #endif
 
-void XtbInit(uint32_t vga_width, uint32_t vga_height, uint16_t* vram);
-Xtb* XtbGet(void);
-void XtbRowRemove(Xtf* Terminal);
-void XtbRowAdd(Xtf* XtFrontend);
-void XtbFlush(Xtf* XtFrontend);
-void XtbScrollUp(Xtf* XtFrontend);
-void XtbScrollDown(Xtf* XtFrontend);
-void XtbFlush(Xtf* XtFrontend);
+void xtb_init(uint32_t vga_width, uint32_t vga_height, uint16_t* vram);
+Xtb* xtb_get(void);
+// void XtbRowRemove(Xtf* Terminal);
+// void XtbRowAdd(Xtf* XtFrontend);
+void xtb_flush(Xtf* XtFrontend);
+void xtb_scroll_up(Xtf* XtFrontend);
+void xtb_scroll_down(Xtf* XtFrontend);
+void xtb_flush(Xtf* XtFrontend);
 
 #ifdef __cplusplus
 }
