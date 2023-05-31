@@ -24,6 +24,10 @@ enum XANIN_TERMINAL_SPECIAL_CHARACTERS{
     NEW_LINE = '\n'
 };
 
+enum XANIN_TERMINAL_LINE{
+    XT_NO_SUCH_LINE = -1
+};
+
 enum XANIN_TERMINAL_COLORS{
     DEFAULT_COLOR = 0x0F
 };
@@ -38,6 +42,8 @@ Xtf* XtfInit(uint32_t virtual_height);
 void XtfDestroy(Xtf* XtFrontend);
 void XtfCharacterPut(Xtf* XtFrontend, char c);
 void XtfCellPut(Xtf* XtFrontend, char c, uint8_t color);
+int xtf_buffer_nth_line_index_get(Xtf* XtFrontend, uint32_t line_number); // starting with 0
+int xtf_buffer_nth_line_size_get(Xtf* XtFrontend, uint32_t line_number); // starting with 0
 
 #ifdef __cplusplus
 }

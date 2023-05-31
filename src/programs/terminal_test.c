@@ -22,7 +22,7 @@ int terminal_test(void)
     // for(int i = 0; i < Frontend->vwidth * 15 * 2; i++)
     //     XtfCellPut(Frontend, 'a' + (i / Frontend->vwidth), OUTPUT_COLOR_SET(black, green));
     
-    char tmp[] = "a\n";
+    char tmp[] = "abc\n";
 
     for(int i = 0; i < 30; i++)
     {
@@ -51,7 +51,8 @@ int terminal_test(void)
             }
         }
         // Screen.x = Screen.y = 0;
-        // xprintf("y: %d\n", Frontend->y);
+        // xprintf("y: %d, %c %d", xtf_buffer_nth_line_index_get(stdio_vty_get(),1), (char)stdio_vty_get()->buffer[xtf_buffer_nth_line_index_get(stdio_vty_get(), 1)], 
+                    // xtf_buffer_nth_line_size_get(stdio_vty_get(), 1));
         // xprintf("y: %d\n", Frontend->current_height);
         // xprintf("y: %d\n", Frontend->y_begin);
         // xprintf("buf: 0x%x\n", Frontend->buffer);

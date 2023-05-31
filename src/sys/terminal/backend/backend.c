@@ -35,45 +35,25 @@ void XtbRowAdd(Xtf* Terminal)
 
 }
 
-uint32_t XtbRowSizeGet(Xtf* XtFrontend, uint32_t row)
-{
+// uint32_t XtbRowSizeGet(Xtf* XtFrontend, uint32_t row)
+// {
 
-    int index = 0;
-    int new_line_counter = 0;
+//     int index = 0;
+//     int new_line_counter = 0;
 
-    while(new_line_counter < row - 1)
-    {
-        if(XtFrontend->size < index)
-            return 0;
+//     while(new_line_counter <= row )
+//     {
+//         if(XtFrontend->size < index)
+//             return 0;
 
-        if(XtFrontend->buffer[index] == '\n')
-            new_line_counter++;
-        index++;
-    }
+//         if(XtFrontend->buffer[index] == '\n')
+//             new_line_counter++;
+//         index++;
+//     }
 
-    return;
+//     return;
 
-}
-
-uint32_t XtbRowIndexGet(Xtf* XtFrontend, uint32_t row)
-{
-
-    int index = 0;
-    int new_line_counter = 0;
-
-    while(new_line_counter < row - 1)
-    {
-        if(XtFrontend->size < index)
-            return 0;
-
-        if(XtFrontend->buffer[index] == '\n')
-            new_line_counter++;
-        index++;
-    }
-
-    return;
-
-}
+// }
 
 // DO BACKENDU MUSI MIEC DOSTEP DO PRAWDZIWYCH WYMIAROW
 
@@ -82,16 +62,37 @@ void XtbScrollUp(Xtf* XtFrontend)
     if(!XtFrontend->y_begin)
         return;
 
+    XtFrontend->y_begin--;
+    int start_index = xtf_buffer_nth_line_index_get(XtFrontend, XtFrontend->y_begin);
+    int number_of_bytes_to_copy = xtf_buffer_nth_line_size_get(XtFrontend, XtFrontend->y_begin);
+
+    if(start_index == XT_NO_SUCH_LINE)
+    {
+        XtFrontend->y_begin++;
+        return;
+    }
+
     memmove(VGA_TEXT_MEMORY + (XtBackend->vga_width * sizeof(terminal_cell)), VGA_TEXT_MEMORY , XtBackend->vga_width * XtBackend->vga_height * sizeof(terminal_cell));
-    memcpy(VGA_TEXT_MEMORY, &XtFrontend->buffer[(--XtFrontend->y_begin) * XtFrontend->vwidth], XtbRow
+    memcpy(VGA_TEXT_MEMORY, &XtFrontend->buffer[start_index], 
+        number_of_bytes_to_copy == -1 ? 0 : number_of_bytes_to_copy);
+
 }
+
 
 void XtbScrollDown(Xtf* XtFrontend)
 {
     if((XtBackend->vga_height < XtFrontend->vheight) && (XtFrontend->y_begin + XtBackend->vga_height) < XtFrontend->current_height)
     {
+        int start_index = xtf_buffer_nth_line_index_get(XtFrontend, XtFrontend->y_begin + XtBackend->vga_height);
+        int number_of_bytes_to_copy = xtf_buffer_nth_line_size_get(XtFrontend, XtFrontend->y_begin + XtBackend->vga_height);
+
+        if(start_index == XT_NO_SUCH_LINE)
+            return;
+
         memmove(VGA_TEXT_MEMORY, VGA_TEXT_MEMORY + (XtBackend->vga_width * sizeof(terminal_cell)), XtBackend->vga_width * XtBackend->vga_height * sizeof(terminal_cell));
-        memcpy(VGA_TEXT_MEMORY + ((XtBackend->vga_height - 1) * XtBackend->vga_width * sizeof(terminal_cell)), &XtFrontend->buffer[(XtFrontend->y_begin + XtBackend->vga_height) * XtFrontend->vwidth], XtBackend->vga_width * sizeof(terminal_cell));
+        memcpy(VGA_TEXT_MEMORY + ((XtBackend->vga_height - 1) * XtBackend->vga_width * sizeof(terminal_cell)), 
+            &XtFrontend->buffer[start_index], number_of_bytes_to_copy == -1 ? 0 : number_of_bytes_to_copy);
+
         XtFrontend->y_begin++;
     }
 }

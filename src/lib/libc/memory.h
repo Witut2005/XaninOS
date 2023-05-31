@@ -12,6 +12,7 @@ extern "C" {
     bool memcmp(uint8_t *dst, uint8_t* src, size_t size);
     void memset(uint8_t *dst, uint8_t value, size_t size);
     void memmove(uint8_t* dst, uint8_t* src, size_t size);
+    void memcpy_with_skip(uint8_t *dst, uint8_t* src, size_t size, uint32_t skip);
 
 #ifdef __cplusplus
 }

@@ -47,3 +47,21 @@ void memmove(uint8_t *dst, uint8_t* src, size_t size)
     }
 
 }
+
+void memcpy_with_skip(uint8_t *dst, uint8_t* src, size_t size, uint32_t skip)
+{
+    int skip_counter = skip;
+    dst[0] = src[0];
+
+    for(int i = 0; i < size; i++)
+    {
+        if(!skip_counter)
+        {
+            dst[i] = src[i];
+            skip_counter = skip;
+            continue;
+        }
+        skip_counter--;
+    }
+
+}
