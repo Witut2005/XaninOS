@@ -127,10 +127,10 @@ void* mmngr_block_allocate(uint8_t mode, uint32_t size)
 
     uint32_t blocks_allocated = size_to_blocks_allocated(size);
 
-    for(int i = mmap_index; i < mmap_index + blocks_allocated - 1; i++)
+    for(int i = mmap_index; i < mmap_index + blocks_allocated; i++)
         mmngr_mmap[i] = MEMORY_ALLOCATED;
 
-    mmngr_mmap[mmap_index + blocks_allocated - 1] = MEMORY_ALLOCATED_REGION_END;
+    mmngr_mmap[mmap_index + blocks_allocated] = MEMORY_ALLOCATED_REGION_END;
         
     if(mode == KERNEL_HEAP)
         return kernel_heap_base + (mmap_index * PMMNGR_BLOCK_SIZE);

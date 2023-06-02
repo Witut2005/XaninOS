@@ -40,9 +40,26 @@ int xtf_buffer_nth_line_size_get(Xtf* XtFrontend, uint32_t line_number)
 
 }
 
+int xtf_get_number_of_lines(Xtf* XtFrontend)
+{
+    const char* buffer = (char*)XtFrontend->buffer;
+    int lines_total = 0;
+
+    while(*buffer != '\0')
+    {
+        if(*buffer == '\n')
+            lines_total++;
+
+        buffer += 2;
+    }
+
+    return lines_total;
+
+}
+
 int xtf_buffer_nth_line_index_get(Xtf* XtFrontend, uint32_t line_number) // starting with 0
 {
-    terminal_cell* buffer = XtFrontend->buffer;
+    const terminal_cell* buffer = XtFrontend->buffer;
     int current_line = 0;
     int index = 0;
  
@@ -53,18 +70,26 @@ int xtf_buffer_nth_line_index_get(Xtf* XtFrontend, uint32_t line_number) // star
     {
         if ((char)*buffer == '\n')
         {
-                current_line++;
-                
-                if (current_line + 1 > line_number)
-                    break;
+            current_line++;
+            
+            if (current_line >= line_number)
+                break;
         }
 
         buffer++;
         index++;
     }
 
-    if (current_line < line_number)
+    if ((char)*buffer == '\0')
+    {
+        screen_clear();
+        xprintf("current: %d\n", current_line);
+        xprintf("index: %d\n", index);
+        xprintf("total lines: %d\n", xtf_get_number_of_lines(XtFrontend));
+        xprintf("buf: 0x%x\n", stdio_vty_get()->buffer);
+        asm("int 0");
         return -1;
+    }
     
     return index + 1;
 }
@@ -74,29 +99,30 @@ void xtf_character_put(Xtf* XtFrontend, char c)
 {
 
     XtFrontend->x++;
-    
-    if(c == NEW_LINE)
+
+    if(XtFrontend->size + SECTOR_SIZE > XtFrontend->size_allocated)
+    {
+        XtFrontend->buffer = (terminal_cell*)realloc(XtFrontend->buffer, XtFrontend->size + SECTOR_SIZE);
+        XtFrontend->size_allocated = XtFrontend->size + SECTOR_SIZE;
+    }
+
+    XtFrontend->buffer[XtFrontend->size++] = c | AS_COLOR(DEFAULT_COLOR);
+        
+    if((c == NEW_LINE) || (XtFrontend->x >= XtFrontend->vwidth))
     {
         XtFrontend->y++; 
         XtFrontend->x = 0;
 
         if(XtFrontend->y > XtFrontend->current_height)
             XtFrontend->current_height = XtFrontend->y;
+
+        if(xtb_get()->vga_height < XtFrontend->y)
+            xtb_scroll_down(XtFrontend);
     }
-
-    if(XtFrontend->size > XtFrontend->size_allocated)
-    {
-        XtFrontend->buffer = (terminal_cell*)realloc(XtFrontend->buffer, XtFrontend->size + SECTOR_SIZE);
-        XtFrontend->size_allocated = XtFrontend->size + SECTOR_SIZE;
-    }
-    
-    XtFrontend->buffer[XtFrontend->size++] = c | AS_COLOR(DEFAULT_COLOR);
-
-    if(XtFrontend->x >= XtFrontend->vwidth-1)
-        xtf_character_put(XtFrontend, '\n');
-
+        
 }
 
+// 0x442c00
 
 void xtf_cell_put(Xtf* XtFrontend, char c, uint8_t color)
 {
@@ -121,8 +147,5 @@ void xtf_cell_put(Xtf* XtFrontend, char c, uint8_t color)
 
     if(XtFrontend->x >= XtFrontend->vwidth)
         xtf_character_put(XtFrontend, '\n');
-
-    if(xtb_get()->vga_height < XtFrontend->y + (XtFrontend->x / xtb_get()->vga_width))
-        xtb_scroll_down(XtFrontend);
 
 }
