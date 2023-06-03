@@ -23,8 +23,11 @@ uint8_t keyboard_self_test()
 void keyboard_reset(void)
 {
     outbIO(0x64, KEYBOARD_DISABLE);             // KEYBOARD OFF
-    for(int i = 0; i < 10; i++)
+
+    for(int i = 0; i < 10; i++){
         io_wait();
+    }
+
 	outbIO(0x64, KEYBOARD_ENABLE);             // KEYBOARD ON
 }
 

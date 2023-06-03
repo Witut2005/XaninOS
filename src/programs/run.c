@@ -34,7 +34,7 @@ int run(char* file_name)
             return XANIN_ERROR;
         }
     
-        uint8_t* where_to_load = 0x10000;
+        uint8_t* where_to_load = (uint8_t*)0x10000;
 
         fread(xin_file, where_to_load, xin_file->size);
 

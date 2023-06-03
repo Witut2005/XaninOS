@@ -50,6 +50,7 @@ void xscan_range(char* string_buffer, uint32_t how_many_chars);
 void screen_background_color_set(uint8_t color);
 void stdio_vty_set(Xtf* Front);
 Xtf* stdio_vty_get(void);
+void putst(const char* str);
 
 #ifdef __cplusplus
 }

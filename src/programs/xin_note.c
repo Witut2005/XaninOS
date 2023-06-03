@@ -10,11 +10,6 @@
 void note_input(xchar x)
 {
 
-
-
-    static uint8_t selected_character;
-    
-
     if(KeyInfo.scan_code == F4_KEY || KeyInfo.scan_code == ESC)
         app_exited = true;
 
@@ -158,13 +153,13 @@ int xin_note(char* file_name)
     {
 
         for(int i = 0; i < 16; i++)
-            disk_read(ATA_FIRST_BUS, ATA_MASTER, xin_file->first_sector + i, 1, (xin_file->first_sector + i) * SECTOR_SIZE);
+            disk_read(ATA_FIRST_BUS, ATA_MASTER, xin_file->first_sector + i, 1, (uint16_t*)((xin_file->first_sector + i) * SECTOR_SIZE));
         
         screen_clear();
 
-        char* data_pointer = xin_file->first_sector * SECTOR_SIZE;
+        char* data_pointer = (char*)(xin_file->first_sector * SECTOR_SIZE);
 
-        uint16_t* bruh_moment = VGA_TEXT_MEMORY;
+        uint16_t* bruh_moment = (uint16_t*)VGA_TEXT_MEMORY;
         
         for(int i = 0;  i < VGA_SCREEN_RESOLUTION / 2; i++)
             bruh_moment[i] = (uint16_t) (data_pointer[i] + (((black << 4) | white) << 8));

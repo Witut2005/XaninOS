@@ -257,15 +257,15 @@ void scan(void)
     XANIN_ADD_APP_ENTRY0("nic_print", nic_print)
     XANIN_ADD_APP_ENTRY0("grapher", grapher)
 
-    else if(bstrcmp("real_mode_fswitch", program_name))
-    {
-        XinEntry* real_mode_enter = fopen("/fast_real_mode_enter.bin", "r");
-        disk_read(ATA_FIRST_BUS, ATA_MASTER, real_mode_enter->first_sector, 1, (uint16_t*)0x600);
+    // else if(bstrcmp("real_mode_fswitch", program_name))
+    // {
+    //     XinEntry* real_mode_enter = fopen("/fast_real_mode_enter.bin", "r");
+    //     disk_read(ATA_FIRST_BUS, ATA_MASTER, real_mode_enter->first_sector, 1, (uint16_t*)0x600);
 
-        XinEntry* real_mode_return = fopen("/fast_real_mode_return.bin", "r");
-        disk_read(ATA_FIRST_BUS, ATA_MASTER, real_mode_return->first_sector, 1, (uint16_t*)0x400);
-        real_mode_fswitch("0x0", "0x0");
-    }
+    //     XinEntry* real_mode_return = fopen("/fast_real_mode_return.bin", "r");
+    //     disk_read(ATA_FIRST_BUS, ATA_MASTER, real_mode_return->first_sector, 1, (uint16_t*)0x400);
+    //     real_mode_fswitch("0x0", "0x0");
+    // }
 
     else
     {

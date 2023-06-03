@@ -53,19 +53,20 @@ int terminal_test(void)
             case ARROW_UP: 
             {
                 xtb_scroll_up(stdio_vty_get());
-                KeyInfo.scan_code = NULL;
+                KeyInfo.scan_code = 0;
                 break;
             }
             case ARROW_DOWN:
             {
 
                 xtb_scroll_down(stdio_vty_get());
-                KeyInfo.scan_code = NULL;
+                KeyInfo.scan_code = 0;
                 break;
             }
         }
     }
 
     // XtfFlush(Frontend);
+    return XANIN_OK;
 
 }

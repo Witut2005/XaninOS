@@ -9,9 +9,7 @@ void elf_data_load(XinEntry* file)
     fread(file, data, file->size * SECTOR_SIZE);
     char* magic = data;
     
-    uint8_t* write_to_memory;
-    uint8_t* read_from_file;
-    uint32_t file_base = data;
+    uint32_t file_base = (uint32_t)data;
 
     uint16_t phnum = *(uint16_t*)((uint8_t*)data + 0x2C);
 

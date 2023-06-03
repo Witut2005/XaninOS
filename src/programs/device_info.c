@@ -7,7 +7,7 @@ int get_device_info(void)
 {
 
 
-    uint32_t pci_selector = 0x0;
+    // uint32_t pci_selector = 0x0;
 
     // do
     // {

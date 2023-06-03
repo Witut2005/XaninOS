@@ -52,11 +52,10 @@ void handle_selected_option(char* option, ExplorerInfo* AppInfo)
         xprintf("\ngiven name: %s\n", new_name);
         // while(1);
 
-        int status;
         if(new_name[0] != '/')
-            status = __sys_xin_link_create(AppInfo->selected_file, xin_get_current_path(new_name));
+            __sys_xin_link_create(AppInfo->selected_file, xin_get_current_path(new_name));
         else
-            status = __sys_xin_link_create(AppInfo->selected_file, new_name);
+            __sys_xin_link_create(AppInfo->selected_file, new_name);
         
         free(new_name);
     }

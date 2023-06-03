@@ -35,7 +35,7 @@ int run16(char* file_name)
             return XANIN_ERROR;
         }
     
-        uint8_t* dest = 0x10000;
+        uint8_t* dest = (uint8_t*)0x10000;
         // fread(xin_file, dest, xin_file->size);
         // fread(xin_file, dest, SECTOR_SIZE);
         disk_read(ATA_FIRST_BUS, ATA_MASTER, xin_file->first_sector, 1, (uint16_t*)dest);

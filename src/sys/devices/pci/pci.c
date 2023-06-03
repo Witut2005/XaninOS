@@ -258,7 +258,7 @@ uint32_t pci_find_device(uint16_t class, uint16_t device_id, pci_device* device_
 
     uint32_t pci_address_selector = 0x0;
 
-    uint32_t* device_tmp = (uint32_t*)device_data;
+    // uint32_t* device_tmp = (uint32_t*)device_data;
 
     for(pci_address_selector = 0x0; pci_address_selector < 2500000; pci_address_selector++) 
     {

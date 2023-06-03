@@ -31,7 +31,7 @@ void zsk_init(void)
 
 void zsk_move(uint32_t delay)
 {
-    uint16_t* tmp = VGA_TEXT_MEMORY;
+    uint16_t* tmp = (uint16_t*)VGA_TEXT_MEMORY;
 
     
     if(*tmp == (uint16_t)('#' + (((black << 4) | white) << 8)))

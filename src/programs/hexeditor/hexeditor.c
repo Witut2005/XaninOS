@@ -213,8 +213,8 @@ int hexeditor(char* file_name, char* options)
 {
 
     data_pointer = (char*)NULL;
-    data_pointer_position = NULL;
-    tmp = NULL; 
+    data_pointer_position = 0;
+    tmp = 0; 
 
     uint32_t hexeditor_offset = 0;
 

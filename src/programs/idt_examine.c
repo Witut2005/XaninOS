@@ -16,21 +16,9 @@ int idt_examine(void)
 
     memcpy(tmp, bytes, 10);
 
-    interrupt_disable();
-    
-    uint16_t nicholatte[3] = {0x0, 0x0, 0x0};
-    asm("lidt %0" :: "m"(nicholatte));
-
-    // interrupt_handlers[0] = divide_by_zero_exception;
-    for(int i = 0; i < 32; i++)
-        INTERRUPT_UNREGISTER(0);
 
     xprintf("device by zero:");
-    // xprintf("0x%x ", divide_by_zero_exception);
     xprintf("0x%x\n", interrupt_handlers[0]);
-    int x = 0;
-    int a = 1 / x;
-
     xprintf("0x%x ", keyboard_handler_init);
     xprintf("0x%x\n", interrupt_handlers[0x21]);
 

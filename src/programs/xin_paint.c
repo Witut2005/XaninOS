@@ -148,8 +148,7 @@ int xin_paint(char* file_name)
         char* data_pointer_save = data_pointer;
         fread(xin_file, data_pointer, VGA_SCREEN_RESOLUTION);
         
-        uint16_t* bruh_moment = VGA_TEXT_MEMORY;
-
+        uint16_t* bruh_moment = (uint16_t*)VGA_TEXT_MEMORY;
 
         for(int i = 0;  i < (VGA_SCREEN_RESOLUTION / 2); i++)
             bruh_moment[i] = (uint16_t)(' ' | ((data_pointer[i]) << 8));

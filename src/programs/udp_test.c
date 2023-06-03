@@ -12,5 +12,7 @@ int udp_test(char* ip_addr_str)
 
     while(KeyInfo.scan_code != ENTER)
         udp_ipv4_packet_send(endian_switch32(ip_dest), create_ip_address(src_ip), 80, 80, 200, (uint8_t*)0x0);
+
+    return XANIN_OK;
     
 }

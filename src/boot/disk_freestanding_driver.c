@@ -268,7 +268,7 @@ void elf_load(void)
     
     uint8_t* write_to_memory;
     uint8_t* read_from_file;
-    uint32_t file_base = (uint32_t)data;
+    // uint32_t file_base = (uint32_t)data;
     uint32_t begin_of_code = (uint32_t)data;
 
     uint16_t phnum = *(uint16_t*)((uint8_t*)data + 0x2C);
@@ -276,7 +276,7 @@ void elf_load(void)
     uint32_t p_offset;      //offset in file image
     uint32_t p_vaddr;       //virtual address of the segment in memory
     uint32_t p_filesz;      //size in bytes of segment in file image
-    uint32_t p_memsz;       //size in bytes of segment in memory
+    // uint32_t p_memsz;       //size in bytes of segment in memory
     uint32_t entry_point = *(uint32_t*)((uint8_t*)data + 0x18);
 
 
@@ -299,7 +299,7 @@ void elf_load(void)
             p_offset = p_offset + begin_of_code;
             p_vaddr  = *(uint32_t*)(data + 0x8);
             p_filesz = *(uint32_t*)(data + 0x10);
-            p_memsz  = *(uint32_t*)(data + 0x14);
+            // p_memsz  = *(uint32_t*)(data + 0x14);
 
             print_hex(p_offset);
             print_hex(p_vaddr);
@@ -322,7 +322,7 @@ void elf_load(void)
     
     print("kernel loaded");
 
-    void(*kernel)(void) = entry_point;
+    void(*kernel)(void) = (void(*)(void))entry_point;
 
     kernel();
 

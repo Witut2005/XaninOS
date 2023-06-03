@@ -12,4 +12,6 @@ int dhcp_test(void)
         sleep(1);
     }
 
+    return XANIN_OK;
+
 }

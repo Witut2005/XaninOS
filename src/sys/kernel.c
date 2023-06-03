@@ -199,7 +199,7 @@ void _start(void)
     disable_cursor();
 
 
-    mmngr_init(kernel_mmngr_mmap, 0x100000, PMMNGR_MEMORY_BLOCKS);
+    mmngr_init(kernel_mmngr_mmap, (uint8_t*)0x100000, PMMNGR_MEMORY_BLOCKS);
 
     time_get(&SystemTime);
 
@@ -221,7 +221,7 @@ void _start(void)
     1 == acpi_rsdp_checksum_check(rsdp) ? xprintf("%zVALID", OUTPUT_COLOR_SET(green, white)) : xprintf("%zINVALID", OUTPUT_COLOR_SET(red, white));
     xprintf("\nRSDP address: 0x%x\n", rsdp);
 
-    acpi_rsdt_set(rsdp->rsdt_address);
+    acpi_rsdt_set((SystemAcpiRSDT*)rsdp->rsdt_address);
 
     xprintf("%z----------------------------\n", OUTPUT_COLOR_SET(black, green));
 
@@ -300,7 +300,7 @@ void _start(void)
     SystemAcpiMADT2 *apic_keyboard_redirect = NULL;
     SystemAcpiMADT2 *apic_pit_redirect = NULL;
     SystemAcpiMADT2 *apic_nic_redirect = NULL;
-    SystemAcpiMADT2 *apic_mouse_redirect = NULL;
+    // SystemAcpiMADT2 *apic_mouse_redirect = NULL;
 
     for (int i = 0; (*AcpiMADT2Pointers[i]).entry_type == 2; i++)
     {
@@ -351,7 +351,7 @@ void _start(void)
 
     xprintf("Press ENTER to continue...\n");
 
-    static int number_of_cores;
+    // static int number_of_cores;
 
     // for (int i = 0; i < 10; i++)
     // {
@@ -412,11 +412,11 @@ void _start(void)
     arp_module_init();
     icmp_module_init();
     
-    uint8_t* zeros = (uint8_t*)kcalloc(SECTOR_SIZE);
+    // uint8_t* zeros = (uint8_t*)kcalloc(SECTOR_SIZE);
 
     interrupt_enable();
 
-    xtb_init(VGA_WIDTH, VGA_HEIGHT, VGA_TEXT_MEMORY);
+    xtb_init(VGA_WIDTH, VGA_HEIGHT, (uint16_t*)VGA_TEXT_MEMORY);
     stdio_vty_set(XtfInit(100));
 
     while (inputg().scan_code != ENTER);

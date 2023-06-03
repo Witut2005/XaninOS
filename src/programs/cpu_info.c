@@ -76,15 +76,15 @@ int cpu_info(char* options)
     char cpu_vendor_string[12];
     char cpu_brand_string[48];
 
-    __get_cpuid(0,0, (uint32_t)cpu_vendor_string, (uint32_t)(&cpu_vendor_string[8]), (uint32_t)(&cpu_vendor_string[4]));
+    __get_cpuid(0,0, (unsigned int*)cpu_vendor_string, (unsigned int*)(&cpu_vendor_string[8]), (unsigned int*)(&cpu_vendor_string[4]));
     
     screen_clear();
 
 
 
-    __get_cpuid(0x80000002, (uint32_t)cpu_brand_string, (uint32_t)(cpu_brand_string + 4), (uint32_t)(cpu_brand_string + 8), (uint32_t)(cpu_brand_string + 12));
-    __get_cpuid(0x80000003, (uint32_t)(cpu_brand_string + 16), (uint32_t)(cpu_brand_string + 20), (uint32_t)(cpu_brand_string + 24), (uint32_t)(cpu_brand_string + 28));
-    __get_cpuid(0x80000004, (uint32_t)(cpu_brand_string + 32), (uint32_t)(cpu_brand_string + 36), (uint32_t)(cpu_brand_string + 40), (uint32_t)(cpu_brand_string + 44));
+    __get_cpuid(0x80000002, (unsigned int*)cpu_brand_string, (unsigned int*)(cpu_brand_string + 4), (unsigned int*)(cpu_brand_string + 8), (unsigned int*)(cpu_brand_string + 12));
+    __get_cpuid(0x80000003, (unsigned int*)(cpu_brand_string + 16), (unsigned int*)(cpu_brand_string + 20), (unsigned int*)(cpu_brand_string + 24), (unsigned int*)(cpu_brand_string + 28));
+    __get_cpuid(0x80000004, (unsigned int*)(cpu_brand_string + 32), (unsigned int*)(cpu_brand_string + 36), (unsigned int*)(cpu_brand_string + 40), (unsigned int*)(cpu_brand_string + 44));
 
 
 
@@ -98,7 +98,7 @@ int cpu_info(char* options)
 
     xprintf("CPU speed: %dMHz\n\n", cpu_mhz);
 
-    __get_cpuid(0,1, &ebx, &ecx, &edx);
+    __get_cpuid(0, (unsigned int*)1, &ebx, &ecx, &edx);
 
     xprintf("EBX flags features: 0x%x\n", ebx);
     xprintf("ECX flags features: 0x%x\n", ecx);

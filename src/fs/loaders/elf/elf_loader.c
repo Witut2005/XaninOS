@@ -49,14 +49,14 @@ void elf_load(XinEntry* file)
 
     uint8_t* write_to_memory;
     uint8_t* read_from_file;
-    uint32_t file_base = data;
+    uint32_t file_base = (uint32_t)data;
 
     uint16_t phnum = *(uint16_t*)((uint8_t*)data + 0x2C);
 
     uint32_t p_offset;      //offset in file image
     uint32_t p_vaddr;       //virtual address of the segment in memory
     uint32_t p_filesz;      //size in bytes of segment in file image
-    uint32_t p_memsz;       //size in bytes of segment in memory
+    // uint32_t p_memsz;       //size in bytes of segment in memory
     uint32_t entry_point = *(uint32_t*)((uint8_t*)data + 0x18);
 
     if(!elf_check_magic(data))
@@ -89,7 +89,7 @@ void elf_load(XinEntry* file)
             p_offset = *(uint32_t*)((uint8_t*)data + 0x4) + file_base;
             p_vaddr  = *(uint32_t*)((uint8_t*)data + 0x8);
             p_filesz = *(uint32_t*)((uint8_t*)data + 0x10);
-            p_memsz  = *(uint32_t*)((uint8_t*)data + 0x14);
+            // p_memsz  = *(uint32_t*)((uint8_t*)data + 0x14);
 
             read_from_file = (uint8_t*)p_offset;
             write_to_memory = (uint8_t*)p_vaddr;
@@ -107,7 +107,7 @@ void elf_load(XinEntry* file)
 
     typedef void(*EntryPoint)(void);
     EntryPoint tmp;
-    tmp = entry_point;
+    tmp = (EntryPoint)entry_point;
 
     if(bstrcmp(argv[0], "elf") || bstrcmp(argv[0], "elft")) 
         tmp();

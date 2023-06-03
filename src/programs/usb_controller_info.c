@@ -11,4 +11,6 @@ int usb_controller_info(void)
     xprintf("0x%x\n", USBController->_class);
     while(inputg().scan_code != ENTER);
 
+    return XANIN_OK;
+
 }
