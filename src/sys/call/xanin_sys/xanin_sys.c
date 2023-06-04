@@ -9,10 +9,12 @@
 #include <sys/input/input.h>
 #include <fs/xin.h>
 #include <sys/terminal/interpreter/interpreter.h>
+#include <lib/libc/hal.h>
 
 uint32_t xanin_sys_handle(void)
 {
     uint32_t eax, ecx, edx, ebx;    //, esi, edi;
+    interrupt_enable();
 
     asm(
         "mov %0, eax;"     

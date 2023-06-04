@@ -136,7 +136,6 @@ void kernel_loop(void)
             erase_spaces(program_name);
             erase_spaces(program_parameters);
             
-
             scan();
         }   
 
@@ -394,19 +393,7 @@ void _start(void)
     __sys_xin_file_create("/syslog");
     syslog_enable();
     printk("To wszystko dla Ciebie Babciu <3");
-
     __sys_xin_folder_create("/config/");
-    // xprintf("nicho");
-
-    // xprintf("YOUR IP ADDRESS: ");
-    // uint32_t base_ip = xanin_ip_get();
-    // for(uint8_t i = 3; i > 0; i--)
-    // {
-    //     uint8_t* tmp = (uint8_t*)&base_ip;
-    //     xprintf("%d.", tmp[i]);
-    // }
-
-    // xprintf("%d\n", base_ip & 0xFF);
 
     arp_table_add_entry(LOOPBACK_IP_ADDRESS, null_memory_region);
     arp_module_init();
@@ -417,7 +404,7 @@ void _start(void)
     interrupt_enable();
 
     xtb_init(VGA_WIDTH, VGA_HEIGHT, (uint16_t*)VGA_TEXT_MEMORY);
-    stdio_vty_set(XtfInit(100));
+    vty_set(xtf_init(100));
 
     while (inputg().scan_code != ENTER);
 

@@ -9,6 +9,8 @@
 #define OUTPUT_COLOR_SET(background, foreground) ((background & 0xF) << 4 | (foreground & 0xF))
 #define OUTPUT_POSITION_SET(y, x) (((y & 0xFF) << 8) | (x & 0xFF))
 
+typedef uint8_t color_t;
+
 #define cursor_set_position(x_new, y_new) \
 Screen.x = x_new; \
 Screen.y = y_new
@@ -47,10 +49,11 @@ void printf(char* str, ... );
 void xprintf(char* str, ... );
 void xscanf(char* str, ... );
 void xscan_range(char* string_buffer, uint32_t how_many_chars);
-void screen_background_color_set(uint8_t color);
+void screen_background_color_set(color_t color);
 void stdio_vty_set(Xtf* Front);
 Xtf* stdio_vty_get(void);
 void putst(const char* str);
+void putct(const char* str, color_t color);
 
 #ifdef __cplusplus
 }

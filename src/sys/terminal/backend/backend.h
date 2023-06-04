@@ -20,12 +20,17 @@ extern "C" {
 
 void xtb_init(uint32_t vga_width, uint32_t vga_height, uint16_t* vram);
 Xtb* xtb_get(void);
-// void XtbRowRemove(Xtf* Terminal);
-// void XtbRowAdd(Xtf* XtFrontend);
 void xtb_flush(Xtf* XtFrontend);
 void xtb_scroll_up(Xtf* XtFrontend);
 void xtb_scroll_down(Xtf* XtFrontend);
 void xtb_flush(Xtf* XtFrontend);
+void xtb_cell_put(Xtf* XtFrontend, char c, uint8_t color);
+
+static inline void xtb_character_put(Xtf* XtFrontend, char c)
+{
+    xtb_cell_put(XtFrontend, c, DEFAULT_COLOR);
+}
+
 
 #ifdef __cplusplus
 }

@@ -6,16 +6,13 @@ key_info_t KeyInfo = {0};
 
 char inputc(void)
 {
-    interrupt_enable();
-    KeyInfo.scan_code = 0x0;
-    while(KeyInfo.character== 0x0);
-    return KeyInfo.character;
+    return inputg().character;
 }
 
 
 xchar inputg(void)
 {
-    interrupt_enable();
+
     KeyInfo.scan_code = 0xFF;
 
     while(KeyInfo.scan_code > 0x80); // break codes doesnt count

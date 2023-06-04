@@ -6,67 +6,43 @@
 int terminal_test(void)
 {
 
-
-    // xtb_init(VGA_WIDTH, VGA_HEIGHT, (uint16_t *)VGA_TEXT_MEMORY);
-
-    // Xtf* Frontend = XtfInit(50);
-
-    // xprintf("0x%x\n", Frontend);
-    // xprintf("0x%x\n", Frontend->buffer);
-
-    // xprintf("%d\n", Frontend->vwidth);
-    // xprintf("%d\n", Frontend->height);
-
-    // getchar();
-
-    // for(int i = 0; i < Frontend->vwidth * 15 * 2; i++)
-    //     xtf_cell_put(Frontend, 'a' + (i / Frontend->vwidth), OUTPUT_COLOR_SET(black, green));
-    
-    char tmp[] = "a";
-
-    // putst("fromini fromini fromini fromini fromini fromini fromini fromini fromini fromini fromini fromini fromini fromini fromini fromini fromini fromini fromini fromini");
+    char tmp[] = "a\n";
 
     // for(int i = 0; i < 29; i++)
     // {
     //     tmp[0] = 'a' + i;
-    //     putst(tmp);
+    //     putct(tmp, (rand() % 10) + 2);
     // }
 
-    for(int i = 0; i < 29; i++)
-    {
-        for(int j = 0; j < 40; j++)
-        {
-            // xtf_character_put(stdio_vty_get(), 'a' + i);
-            tmp[0] = 'a' + i;
-            putst(tmp);
-        }
-        // xtf_character_put(stdio_vty_get(), '\n');
-        putst("\n");
-    }
-    
-    xtb_flush(stdio_vty_get());
+    char fro[100] = {'\0'};
+    xscanft("%s", fro);
 
-    while(KeyInfo.scan_code != ENTER)
+    for(int i = 0; i < 30; i++)
+        xprintft("%s\n", fro);
+
+    // xtb_flush(vty_get());
+
+    while(inputg().scan_code != ENTER)
     {
         switch(KeyInfo.scan_code)
         {
             case ARROW_UP: 
             {
-                xtb_scroll_up(stdio_vty_get());
-                KeyInfo.scan_code = 0;
+                xtb_scroll_up(vty_get());
                 break;
             }
             case ARROW_DOWN:
             {
 
-                xtb_scroll_down(stdio_vty_get());
-                KeyInfo.scan_code = 0;
+                xtb_scroll_down(vty_get());
                 break;
             }
         }
+
+        KeyInfo.scan_code = 0;
+
     }
 
-    // XtfFlush(Frontend);
     return XANIN_OK;
 
 }

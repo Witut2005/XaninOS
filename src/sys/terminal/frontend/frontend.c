@@ -5,9 +5,20 @@
 #include <sys/pmmngr/alloc.h>
 #include <lib/libc/stdiox.h>
 #include <lib/libc/memory.h>
-#include <lib/libc/stdlibx.h>
 
-Xtf* XtfInit(uint32_t buffer_size)
+static Xtf* CurrentVty; 
+
+void vty_set(Xtf* XtFrontend)
+{
+    CurrentVty = XtFrontend;
+}
+
+Xtf* vty_get(void)
+{
+    return CurrentVty;
+}
+
+Xtf* xtf_init(uint32_t buffer_size)
 {
     Xtf* XtFrontend = (Xtf*)calloc(sizeof(XtFrontend)); // all variables = zeros    
 
@@ -18,11 +29,6 @@ Xtf* XtfInit(uint32_t buffer_size)
     XtFrontend->current_height = VGA_HEIGHT; 
 
     return XtFrontend;
-}
-
-void XtfDestroy(Xtf* XtFrontend)
-{
-    free(XtFrontend);
 }
 
 int xtf_buffer_nth_line_size_get(Xtf* XtFrontend, uint32_t line_number)
@@ -81,71 +87,12 @@ int xtf_buffer_nth_line_index_get(Xtf* XtFrontend, uint32_t line_number) // star
     }
 
     if ((char)*buffer == '\0')
-    {
-        screen_clear();
-        xprintf("current: %d\n", current_line);
-        xprintf("index: %d\n", index);
-        xprintf("total lines: %d\n", xtf_get_number_of_lines(XtFrontend));
-        xprintf("buf: 0x%x\n", stdio_vty_get()->buffer);
-        asm("int 0");
         return -1;
-    }
     
     return index + 1;
 }
 
-
-void xtf_character_put(Xtf* XtFrontend, char c)
+void xtf_remove_last_cell(Xtf* XtFrontend)
 {
-
-    XtFrontend->x++;
-
-    if(XtFrontend->size + SECTOR_SIZE > XtFrontend->size_allocated)
-    {
-        XtFrontend->buffer = (terminal_cell*)realloc(XtFrontend->buffer, XtFrontend->size + SECTOR_SIZE);
-        XtFrontend->size_allocated = XtFrontend->size + SECTOR_SIZE;
-    }
-
-    XtFrontend->buffer[XtFrontend->size++] = c | AS_COLOR(DEFAULT_COLOR);
-        
-    if((c == NEW_LINE) || (XtFrontend->x >= XtFrontend->vwidth))
-    {
-        XtFrontend->y++; 
-        XtFrontend->x = 0;
-
-        if(XtFrontend->y > XtFrontend->current_height)
-            XtFrontend->current_height = XtFrontend->y;
-
-        if(xtb_get()->vga_height < XtFrontend->y)
-            xtb_scroll_down(XtFrontend);
-    }
-        
-}
-
-// 0x442c00
-
-void xtf_cell_put(Xtf* XtFrontend, char c, uint8_t color)
-{
-    XtFrontend->x++;
-
-    if(c == NEW_LINE)
-    {
-        XtFrontend->y++; 
-        XtFrontend->x = 0;
-
-        if(XtFrontend->y > XtFrontend->current_height)
-            XtFrontend->current_height = XtFrontend->y;
-    }
-
-    if(XtFrontend->size > XtFrontend->size_allocated)
-    {
-        XtFrontend->buffer = (terminal_cell*)realloc(XtFrontend->buffer, XtFrontend->size + SECTOR_SIZE);
-        XtFrontend->size_allocated = XtFrontend->size + SECTOR_SIZE;
-    }
-
-    XtFrontend->buffer[XtFrontend->size++] = c | AS_COLOR(color);
-
-    if(XtFrontend->x >= XtFrontend->vwidth)
-        xtf_character_put(XtFrontend, '\n');
-
+    XtFrontend->buffer[XtFrontend->size--] = '\0';
 }

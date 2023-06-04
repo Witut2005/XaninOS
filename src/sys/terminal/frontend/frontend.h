@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <stddef.h>
+#include <lib/libc/stdlibx.h>
 
 typedef uint16_t terminal_cell;
 
@@ -39,12 +40,19 @@ enum XANIN_TERMINAL_COLORS{
 extern "C" {
 #endif
 
-Xtf* XtfInit(uint32_t virtual_height);
-void XtfDestroy(Xtf* XtFrontend);
-void xtf_character_put(Xtf* XtFrontend, char c);
-void xtf_cell_put(Xtf* XtFrontend, char c, uint8_t color);
+Xtf* xtf_init(uint32_t virtual_height);
+
+static inline void xtf_destroy(Xtf* XtFrontend)
+{
+    free(XtFrontend);
+}
+
 int xtf_buffer_nth_line_index_get(Xtf* XtFrontend, uint32_t line_number); // starting with 0
 int xtf_buffer_nth_line_size_get(Xtf* XtFrontend, uint32_t line_number); // starting with 0
+void vty_set(Xtf* XtFrontend);
+Xtf* vty_get(void);
+void xtf_remove_last_cell(Xtf* XtFrontend);
+
 
 #ifdef __cplusplus
 }
