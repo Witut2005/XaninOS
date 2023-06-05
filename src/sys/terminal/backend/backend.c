@@ -66,16 +66,33 @@ void xtb_flush(Xtf* XtFrontend)
     screen_clear();
 
     int vram_index = 0;
+    XtFrontend->x_screen = XtFrontend->y_screen = 0;
 
     for(int i = xtf_buffer_nth_line_index_get(XtFrontend, XtFrontend->y_begin); i < XtFrontend->size; i++)
     {
         if((char)(XtFrontend->buffer[i]) == NEW_LINE){
             vram_index = vram_index + (XtBackend->vga_width - (vram_index % XtBackend->vga_width));
+            XtFrontend->y_screen++;
+            XtFrontend->x_screen = 0;
             continue;
         }
 
+        XtFrontend->x_screen++;
         uint16_t* vram = (uint16_t*)VGA_TEXT_MEMORY;
-        vram[vram_index++] = XtFrontend->buffer[i];
+        vram[vram_index] = XtFrontend->buffer[i];
+
+        if((XtFrontend->Cursor.is_used) && (XtFrontend->Cursor.position == i)) 
+        {
+            vram[vram_index] = (char)vram[vram_index] | AS_COLOR(XtFrontend->Cursor.color);
+        }
+        
+        vram_index++;
+    }
+
+    if((XtFrontend->Cursor.is_used) && (XtFrontend->Cursor.position == CURSOR_POSITION_END)) 
+    {
+        uint16_t* vram = (uint16_t*)VGA_TEXT_MEMORY;
+        vram[vram_index] = (char)vram[vram_index] | AS_COLOR(XtFrontend->Cursor.color);
     }
 
 }
@@ -91,7 +108,7 @@ void xtb_cell_put(Xtf* XtFrontend, char c, uint8_t color)
     }
 
     XtFrontend->buffer[XtFrontend->size++] = c | AS_COLOR(color);
-        
+    XtFrontend->Cursor.position = CURSOR_POSITION_END;
     if((c == NEW_LINE) || (XtFrontend->x >= XtFrontend->vwidth))
     {
         XtFrontend->y++; 
@@ -105,3 +122,42 @@ void xtb_cell_put(Xtf* XtFrontend, char c, uint8_t color)
     }
 
 }
+
+void xtb_cursor_inc(Xtf* XtFrontend)
+{
+
+    if(XtFrontend->Cursor.position == CURSOR_POSITION_END)
+        return;
+
+    XtFrontend->Cursor.position++;
+
+    if(XtFrontend->Cursor.position >= XtFrontend->size)
+        XtFrontend->Cursor.position = CURSOR_POSITION_END;
+
+    xtb_flush(XtFrontend);
+}
+
+void xtb_cursor_dec(Xtf* XtFrontend)
+{
+    if(XtFrontend->Cursor.position == CURSOR_POSITION_END)
+        XtFrontend->Cursor.position = XtFrontend->size;
+
+    XtFrontend->Cursor.position--;
+    xtb_flush(XtFrontend);
+}
+
+// void xtb_cursor_on(Xtf* XtFrontend, color_t color)
+// {
+    
+// }
+
+// void xtb_virtual_cursor_screen_add(Xtf* XtFrontend, color_t color)
+// {
+//     terminal_cell* vram = XtBackend->vram;
+//     vram[XtFrontend->y_screen * XtBackend->vga_width + XtFrontend->x_screen] = 'a' | AS_COLOR(color);
+// }
+
+// void xtb_virtual_cursor_add(Xtf* XtFrontend, color_t color)
+// {
+//     XtFrontend->buffer[XtFrontend->size] = 'd' | AS_COLOR(DEFAULT_COLOR);
+// }

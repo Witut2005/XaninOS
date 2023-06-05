@@ -9,7 +9,6 @@
 #define OUTPUT_COLOR_SET(background, foreground) ((background & 0xF) << 4 | (foreground & 0xF))
 #define OUTPUT_POSITION_SET(y, x) (((y & 0xFF) << 8) | (x & 0xFF))
 
-typedef uint8_t color_t;
 
 #define cursor_set_position(x_new, y_new) \
 Screen.x = x_new; \

@@ -837,6 +837,7 @@ void xscanft(char* str, ... )
 
     start:
 
+    xtf_cursor_on(StdioVty, OUTPUT_COLOR_SET(white, black));
     xtb_flush(StdioVty);
 
     while(1)
@@ -852,8 +853,8 @@ void xscanft(char* str, ... )
         {
             xtf_remove_last_cell(StdioVty);
 
-            if(&Screen.cursor[Screen.y][Screen.x - 1] == (uint16_t*)starting_screen_position)
-                goto start;
+            // if(&Screen.cursor[Screen.y][Screen.x - 1] == (uint16_t*)starting_screen_position)
+            //     goto start;
 
             if(index)
                 index--;
@@ -861,6 +862,17 @@ void xscanft(char* str, ... )
             string_typed_buffer[index] = '\0';
 
             KeyInfo.is_bspc = false;
+            xtb_flush(StdioVty);
+        }
+
+        else if(Input.scan_code == ARROW_LEFT)
+        {
+            xtb_cursor_dec(StdioVty);
+        }
+
+        else if(Input.scan_code == ARROW_RIGHT)
+        {
+            xtb_cursor_inc(StdioVty);
         }
 
         else if(Input.scan_code == LSHIFT)
@@ -996,10 +1008,6 @@ void xscanft(char* str, ... )
             memset(field_buffer, 0, 1000); 
             memset(string_typed_buffer, 0, 1000);
 
-            Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((black << 4) | white) << 8));
-            
-            xprintf("\n");
-            // free(field_buffer);
             break;
 
         }
@@ -1008,27 +1016,12 @@ void xscanft(char* str, ... )
         {
             char tmp = Input.character;
 
-            Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((black << 4) | white) << 8));
-
-            xprintf("%c", tmp);
-    
-            // letters_refresh_add(&Screen.cursor[Screen.y][Screen.x], character_saved);
-    
-            // uint8_t* tmp_buf = (uint8_t*)calloc(40);
-            // memcpy(tmp_buf, string_typed_buffer, 40);
-
-            // for(int i = index; i < 40; i++)
-            //     string_typed_buffer[i+1] = tmp_buf[i];
-            
-
-
-            Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((white << 4) | white) << 8));
-            string_typed_buffer[index] = tmp;
-            index++;
-
+            xprintft("%c", tmp);
+            string_typed_buffer[index++] = tmp;
         }    
     }
 
+    xtf_cursor_off(StdioVty);
     xtb_flush(StdioVty);
     free(field_buffer);
 

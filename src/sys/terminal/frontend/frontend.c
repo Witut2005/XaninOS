@@ -27,6 +27,7 @@ Xtf* xtf_init(uint32_t buffer_size)
     XtFrontend->size_allocated = buffer_size;
     XtFrontend->buffer = (terminal_cell*)calloc(buffer_size);
     XtFrontend->current_height = VGA_HEIGHT; 
+    XtFrontend->Cursor.position = -1;
 
     return XtFrontend;
 }
@@ -94,5 +95,28 @@ int xtf_buffer_nth_line_index_get(Xtf* XtFrontend, uint32_t line_number) // star
 
 void xtf_remove_last_cell(Xtf* XtFrontend)
 {
+    if(XtFrontend->x == 0)
+    {
+        XtFrontend->y--;
+
+        if(XtFrontend->y < XtFrontend->y_begin)
+            XtFrontend->y_begin = XtFrontend->y;
+
+    }
+
+    else
+        XtFrontend->x--;
+
     XtFrontend->buffer[XtFrontend->size--] = '\0';
+}
+
+void xtf_cursor_on(Xtf* XtFrontend, color_t color)
+{
+    XtFrontend->Cursor.is_used = true;
+    XtFrontend->Cursor.color = color;
+}
+
+void xtf_cursor_off(Xtf* XtFrontend)
+{
+    XtFrontend->Cursor.is_used = false;
 }

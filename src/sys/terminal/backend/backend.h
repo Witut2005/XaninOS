@@ -4,7 +4,6 @@
 #include <stdint.h>
 #include <sys/terminal/frontend/frontend.h>
 #include <lib/libc/stdiox.h>
-
 struct Xtb{
     uint32_t y;             // real y position
     uint32_t vga_height;    // screen height
@@ -25,6 +24,8 @@ void xtb_scroll_up(Xtf* XtFrontend);
 void xtb_scroll_down(Xtf* XtFrontend);
 void xtb_flush(Xtf* XtFrontend);
 void xtb_cell_put(Xtf* XtFrontend, char c, uint8_t color);
+void xtb_cursor_inc(Xtf* XtFrontend);
+void xtb_cursor_dec(Xtf* XtFrontend);
 
 static inline void xtb_character_put(Xtf* XtFrontend, char c)
 {

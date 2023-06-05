@@ -5,7 +5,17 @@
 #include <stddef.h>
 #include <lib/libc/stdlibx.h>
 
+typedef uint8_t color_t;
 typedef uint16_t terminal_cell;
+
+struct XtfCursor{
+    bool is_used;
+    int position;
+    terminal_cell saved_cell;
+    color_t color;
+};
+
+typedef struct XtfCursor XtfCursor;
 
 struct Xtf
 {
@@ -18,9 +28,19 @@ struct Xtf
     terminal_cell* buffer;
     uint32_t size;
     uint32_t size_allocated;
+
+    uint32_t x_screen;
+    uint32_t y_screen;
+    XtfCursor Cursor;
+
+
 };
 
 typedef struct Xtf Xtf;
+
+enum XANIN_TERMINAL_CURSOR_POSTIONS{
+    CURSOR_POSITION_END = -1
+};
 
 enum XANIN_TERMINAL_SPECIAL_CHARACTERS{
     NEW_LINE = '\n'
@@ -52,6 +72,7 @@ int xtf_buffer_nth_line_size_get(Xtf* XtFrontend, uint32_t line_number); // star
 void vty_set(Xtf* XtFrontend);
 Xtf* vty_get(void);
 void xtf_remove_last_cell(Xtf* XtFrontend);
+void xtf_virtual_cursor_add(Xtf* XtFrontend, color_t color);
 
 
 #ifdef __cplusplus

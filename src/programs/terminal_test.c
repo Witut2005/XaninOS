@@ -17,8 +17,8 @@ int terminal_test(void)
     char fro[100] = {'\0'};
     xscanft("%s", fro);
 
-    for(int i = 0; i < 30; i++)
-        xprintft("%s\n", fro);
+    // for(int i = 0; i < 30; i++)
+    xprintft("%s\n", fro);
 
     // xtb_flush(vty_get());
 
