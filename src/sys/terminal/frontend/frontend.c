@@ -28,6 +28,7 @@ Xtf* xtf_init(uint32_t buffer_size)
     XtFrontend->buffer = (terminal_cell*)calloc(buffer_size);
     XtFrontend->current_height = VGA_HEIGHT; 
     XtFrontend->Cursor.position = -1;
+    XtFrontend->scrolling_enabled = true;
 
     return XtFrontend;
 }
@@ -119,4 +120,27 @@ void xtf_cursor_on(Xtf* XtFrontend, color_t color)
 void xtf_cursor_off(Xtf* XtFrontend)
 {
     XtFrontend->Cursor.is_used = false;
+}
+
+void xtf_scrolling_on(Xtf* XtFrontend)
+{
+    XtFrontend->scrolling_enabled = true;
+}
+
+void xtf_scrolling_off(Xtf* XtFrontend)
+{
+    XtFrontend->scrolling_enabled = false;
+}
+
+void xtf_clear_buffer(Xtf* XtFrontend)
+{
+    XtFrontend->size = 0;
+    XtFrontend->size_allocated = XANIN_PMMNGR_BLOCK_SIZE;
+    XtFrontend->vwidth = VGA_WIDTH; // 80
+    XtFrontend->vheight = 1000; //useless
+    XtFrontend->buffer = (terminal_cell*)realloc(XtFrontend->buffer, XtFrontend->size_allocated);
+    XtFrontend->current_height = VGA_HEIGHT; 
+    XtFrontend->Cursor.position = -1;
+
+    XtFrontend->x = XtFrontend->y = XtFrontend->y_begin = 0;
 }

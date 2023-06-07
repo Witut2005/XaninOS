@@ -274,7 +274,7 @@ void scan(void)
         
         if(!is_external_app)
         {
-            xprintf("%zunknown command: %s", stderr, program_name);
+            xprintf("%zunknown command: %s\n", stderr, program_name);
             screen_background_color_set(red);
             msleep(400);
             last_command_exit_status = XANIN_ERROR;

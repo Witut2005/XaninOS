@@ -41,6 +41,10 @@ void xtb_scroll_up(Xtf* XtFrontend)
 
 void xtb_scroll_down(Xtf* XtFrontend)
 {
+
+    if(!XtFrontend->scrolling_enabled)
+        return;
+
     if((XtBackend->vga_height < XtFrontend->vheight) && (XtFrontend->y_begin + XtBackend->vga_height) < XtFrontend->current_height)
     {
         int start_index = xtf_buffer_nth_line_index_get(XtFrontend, XtFrontend->y_begin + XtBackend->vga_height);
@@ -70,7 +74,25 @@ void xtb_flush(Xtf* XtFrontend)
 
     for(int i = xtf_buffer_nth_line_index_get(XtFrontend, XtFrontend->y_begin); i < XtFrontend->size; i++)
     {
-        if((char)(XtFrontend->buffer[i]) == NEW_LINE){
+        if((char)(XtFrontend->buffer[i]) == SAFE_NEW_LINE)
+        {
+            if((!(vram_index % XtBackend->vga_width)) && ((char)XtFrontend->buffer[i-1] != SAFE_NEW_LINE))
+            {
+                XtFrontend->y_screen++;
+                XtFrontend->x_screen = 0;
+                continue;
+            }
+
+            XtFrontend->y_screen++;
+            XtFrontend->x_screen = 0;
+            vram_index = vram_index + (XtBackend->vga_width - (vram_index % XtBackend->vga_width));
+            continue;
+
+        }
+
+        else if((char)(XtFrontend->buffer[i]) == NEW_LINE)
+        {
+            
             vram_index = vram_index + (XtBackend->vga_width - (vram_index % XtBackend->vga_width));
             XtFrontend->y_screen++;
             XtFrontend->x_screen = 0;
@@ -82,9 +104,7 @@ void xtb_flush(Xtf* XtFrontend)
         vram[vram_index] = XtFrontend->buffer[i];
 
         if((XtFrontend->Cursor.is_used) && (XtFrontend->Cursor.position == i)) 
-        {
             vram[vram_index] = (char)vram[vram_index] | AS_COLOR(XtFrontend->Cursor.color);
-        }
         
         vram_index++;
     }
@@ -99,7 +119,7 @@ void xtb_flush(Xtf* XtFrontend)
 
 void xtb_cell_put(Xtf* XtFrontend, char c, uint8_t color)
 {
-    XtFrontend->x++;
+    // XtFrontend->x++;
 
     if(XtFrontend->size + SECTOR_SIZE > XtFrontend->size_allocated)
     {
@@ -109,7 +129,8 @@ void xtb_cell_put(Xtf* XtFrontend, char c, uint8_t color)
 
     XtFrontend->buffer[XtFrontend->size++] = c | AS_COLOR(color);
     XtFrontend->Cursor.position = CURSOR_POSITION_END;
-    if((c == NEW_LINE) || (XtFrontend->x >= XtFrontend->vwidth))
+
+    if((c == NEW_LINE) || (c == SAFE_NEW_LINE) || (XtFrontend->x >= XtFrontend->vwidth))
     {
         XtFrontend->y++; 
         XtFrontend->x = 0;

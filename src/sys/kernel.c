@@ -71,15 +71,15 @@ uint8_t* const zeros;
 
 #define PMMNGR_MEMORY_BLOCKS 10000
 
-void terminal_time_update(address_t* args)
-{
-    time_get(&SystemTime);
+// void terminal_time_update(address_t* args)
+// {
+//     time_get(&SystemTime);
     
-    for(int i = 67; i < VGA_WIDTH; i++)
-        Screen.cursor[4][i] = BLANK_SCREEN_CELL;
+//     for(int i = 67; i < VGA_WIDTH; i++)
+//         Screen.cursor[4][i] = BLANK_SCREEN_CELL;
 
-    xprintf("%h%s: %i:%i:%i\n\n\n", OUTPUT_POSITION_SET(4, 67), daysLUT[SystemTime.weekday], SystemTime.hour, SystemTime.minutes, SystemTime.seconds);
-}
+//     xprintf("%h%s: %i:%i:%i\n\n\n", OUTPUT_POSITION_SET(4, 67), daysLUT[SystemTime.weekday], SystemTime.hour, SystemTime.minutes, SystemTime.seconds);
+// }
 
 void kernel_loop(void)
 {
@@ -89,20 +89,14 @@ void kernel_loop(void)
     {
 
         all_intervals_clear(); // clear all intervals added by apps during execution
-        interval_set(terminal_time_update, 1000, NULL); // refresh current time every second
+        // interval_set(terminal_time_update, 1000, NULL); // refresh current time every second
         memset(null_memory_region, 0, SECTOR_SIZE);
+        xtf_scrolling_on(vty_get());
 
-        screen_clear();
+        // screen_clear();
         time_get(&SystemTime);
 
-        xprintf("%z    _/      _/                      _/              _/_/      _/_/_/       \n", OUTPUT_COLOR_SET(logo_back_color, logo_front_color));
-        xprintf("%z     _/  _/      _/_/_/  _/_/_/        _/_/_/    _/    _/  _/              \n", OUTPUT_COLOR_SET(logo_back_color, logo_front_color));
-        xprintf("%z      _/      _/    _/  _/    _/  _/  _/    _/  _/    _/    _/_/           \n", OUTPUT_COLOR_SET(logo_back_color, logo_front_color));
-        xprintf("%z   _/  _/    _/    _/  _/    _/  _/  _/    _/  _/    _/        _/%z   version 1.5v\n",OUTPUT_COLOR_SET(logo_back_color, logo_front_color), OUTPUT_COLOR_SET(black,white) );
-        xprintf("%z_/      _/    _/_/_/  _/    _/  _/  _/    _/    _/_/    _/_/_/     %z%s: %i:%i:%i\n\n\n", OUTPUT_COLOR_SET(logo_back_color, logo_front_color), OUTPUT_COLOR_SET(black,white), daysLUT[SystemTime.weekday], SystemTime.hour, SystemTime.minutes, SystemTime.seconds);                                       
-
-        Screen.x = 0;
-        Screen.y = 8;
+        puts("\n");
 
         for(int i = 0; xin_current_directory[i + 1] != '\0'; i++)
             xprintf("%z%c", OUTPUT_COLOR_SET(black, lblue), xin_current_directory[i]);
@@ -112,6 +106,7 @@ void kernel_loop(void)
         app_exited = false;
 
         xin_close_all_files();
+        // while(1);
 
         while(1)
         {
@@ -127,7 +122,7 @@ void kernel_loop(void)
             for(int i = 0; i < 5; i++)
                 memset(argv[i], 0, 40);
 
-            xscanf(scanf_str,program_name, program_parameters, program_parameters1, program_parameters2, program_parameters3);
+            xscanft(scanf_str,program_name, program_parameters, program_parameters1, program_parameters2, program_parameters3);
 
             memcpy(last_used_commands, program_name, sizeof(program_name));
             memcpy(last_used_parameters, program_parameters, sizeof(program_parameters));
@@ -200,9 +195,10 @@ void _start(void)
 
     mmngr_init(kernel_mmngr_mmap, (uint8_t*)0x100000, PMMNGR_MEMORY_BLOCKS);
 
-    time_get(&SystemTime);
+    xtb_init(VGA_WIDTH, VGA_HEIGHT, (uint16_t*)VGA_TEXT_MEMORY);
+    vty_set(xtf_init(100));
 
-    screen_clear();
+    time_get(&SystemTime);
 
     null_memory_region = (uint8_t*)kcalloc(VGA_SCREEN_RESOLUTION);
     // xprintf("Memory Block Size Allocated: 0x%x\n", null_memory_region);
@@ -243,7 +239,6 @@ void _start(void)
 
     xprintf("MADT entries: 0x%x\n", (uint8_t*)AcpiApicSDT + 0x28);
 
-    
     pic_disable();
     pic_mode_disable();
 
@@ -403,36 +398,14 @@ void _start(void)
 
     interrupt_enable();
 
-    xtb_init(VGA_WIDTH, VGA_HEIGHT, (uint16_t*)VGA_TEXT_MEMORY);
-    vty_set(xtf_init(100));
-
     while (inputg().scan_code != ENTER);
+    xtf_clear_buffer(vty_get());
 
-    // system_variable_get(&bufsys, "HOME");
-    // xprintf("bufsys: %s\n", bufsys);
-
-    // stack_t* MyStack = stack_create();
-    // for(int i = 0; i < 10; i++)
-    //     stack_push(MyStack, i);
-    // screen_clear();
-    // xprintf("poped value: \n");
-    // for(int i = 0; stack_is_empty(MyStack) != true; i++)
-    // {
-    //     xprintf("%d\n", stack_pop(MyStack));
-    // }
-    // time_offset_t* omg = start();
-    // stop(omg);
-    // xprintf("time offset: %d\n", *omg);
-
-    // char* hm = (char*)calloc(10);
-    // strcpy(hm, "piwko");
-    // xprintf("%s\n", strconcat("/", hm);
-    // inputg();
-
-    // xprintf("ARP module status: %d\n", arp_module_status());
-
-    // xprintf("nicho");
-
+    xprintf("%z    _/      _/                      _/              _/_/      _/_/_/       \n", OUTPUT_COLOR_SET(logo_back_color, logo_front_color));
+    xprintf("%z     _/  _/      _/_/_/  _/_/_/        _/_/_/    _/    _/  _/              \n", OUTPUT_COLOR_SET(logo_back_color, logo_front_color));
+    xprintf("%z      _/      _/    _/  _/    _/  _/  _/    _/  _/    _/    _/_/           \n", OUTPUT_COLOR_SET(logo_back_color, logo_front_color));
+    xprintf("%z   _/  _/    _/    _/  _/    _/  _/  _/    _/  _/    _/        _/%z   version 1.5v\x1e", OUTPUT_COLOR_SET(logo_back_color, logo_front_color), OUTPUT_COLOR_SET(black,white));
+    xprintf("%z_/      _/    _/_/_/  _/    _/  _/  _/    _/    _/_/    _/_/_/     %z%s: %i:%i:%i\x1e\x1e", OUTPUT_COLOR_SET(logo_back_color, logo_front_color), OUTPUT_COLOR_SET(black,white), daysLUT[SystemTime.weekday], SystemTime.hour, SystemTime.minutes, SystemTime.seconds);                                       
 
     kernel_loop();
 

@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <stddef.h>
+#include <lib/libc/memory.h>
 #include <lib/libc/stdlibx.h>
 
 typedef uint8_t color_t;
@@ -32,6 +33,7 @@ struct Xtf
     uint32_t x_screen;
     uint32_t y_screen;
     XtfCursor Cursor;
+    bool scrolling_enabled;
 
 
 };
@@ -43,7 +45,8 @@ enum XANIN_TERMINAL_CURSOR_POSTIONS{
 };
 
 enum XANIN_TERMINAL_SPECIAL_CHARACTERS{
-    NEW_LINE = '\n'
+    NEW_LINE = '\n',
+    SAFE_NEW_LINE = '\x1e'
 };
 
 enum XANIN_TERMINAL_LINE{
@@ -73,6 +76,7 @@ void vty_set(Xtf* XtFrontend);
 Xtf* vty_get(void);
 void xtf_remove_last_cell(Xtf* XtFrontend);
 void xtf_virtual_cursor_add(Xtf* XtFrontend, color_t color);
+void xtf_clear_buffer(Xtf* XtFrontend);
 
 
 #ifdef __cplusplus

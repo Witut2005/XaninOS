@@ -18,7 +18,7 @@ int terminal_test(void)
     xscanft("%s", fro);
 
     // for(int i = 0; i < 30; i++)
-    xprintft("%s\n", fro);
+    xprintf("%s\n", fro);
 
     // xtb_flush(vty_get());
 
