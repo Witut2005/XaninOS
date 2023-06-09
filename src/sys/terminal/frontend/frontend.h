@@ -34,11 +34,11 @@ struct Xtf
     uint32_t y_screen;
     XtfCursor Cursor;
     bool scrolling_enabled;
-
-
 };
 
 typedef struct Xtf Xtf;
+
+#include <sys/call/terminal/terminal.h>
 
 enum XANIN_TERMINAL_CURSOR_POSTIONS{
     CURSOR_POSITION_END = -1
@@ -65,18 +65,16 @@ extern "C" {
 
 Xtf* xtf_init(uint32_t virtual_height);
 
-static inline void xtf_destroy(Xtf* XtFrontend)
-{
-    free(XtFrontend);
-}
+void xtf_destroy(Xtf* XtFrontend);
 
 int xtf_buffer_nth_line_index_get(Xtf* XtFrontend, uint32_t line_number); // starting with 0
 int xtf_buffer_nth_line_size_get(Xtf* XtFrontend, uint32_t line_number); // starting with 0
-void vty_set(Xtf* XtFrontend);
-Xtf* vty_get(void);
+// void vty_set(Xtf* XtFrontend);
+// Xtf* vty_get(void);
 void xtf_remove_last_cell(Xtf* XtFrontend);
 void xtf_virtual_cursor_add(Xtf* XtFrontend, color_t color);
-void xtf_clear_buffer(Xtf* XtFrontend);
+void xtf_buffer_clear(Xtf* XtFrontend);
+void xtf_cursor_on(Xtf* XtFrontend, color_t color);
 
 
 #ifdef __cplusplus

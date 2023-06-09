@@ -97,6 +97,12 @@ build:
 	@echo [ASM] CALLS disk.asm
 	@$(ASM) -f elf32 ./sys/call/devices/disk.asm -o ./sys/call/devices/disk.o
 
+	@echo [ASM] CALLS stdio.asm
+	@$(ASM) -f elf32 ./sys/call/xanin_sys/stdio/stdio.asm -o ./sys/call/xanin_sys/stdio/stdio.o 
+
+	@echo [ASM] CALLS terminal.asm
+	@$(ASM) -f elf32 ./sys/call/terminal/terminal.asm -o ./sys/call/terminal/terminal.o
+
 	@echo [ASM] xanin_calls.asm
 	@$(ASM) -f elf32 ./sys/call/xanin_sys/xanin_calls.asm -o ./sys/call/xanin_sys/xanin_calls.o
 
@@ -486,6 +492,8 @@ build:
 	./sys/terminal/frontend/frontend.o \
 	./fs/xin.o \
 	./sys/call/devices/disk.o \
+	./sys/call/xanin_sys/stdio/stdio.o \
+	./sys/call/terminal/terminal.o \
 	./sys/terminal/interface/terminal.o -o ./lib/libc/libc.o
 
 	# @i386-elf-gcc -shared -Ttext 0x900000 -o ./lib/libc/libc.so ./lib/libc/libc.o

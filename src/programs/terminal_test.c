@@ -15,7 +15,7 @@ int terminal_test(void)
     // }
 
     char fro[100] = {'\0'};
-    xscanft("%s", fro);
+    xscanf("%s", fro);
 
     // for(int i = 0; i < 30; i++)
     xprintf("%s\n", fro);

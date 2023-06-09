@@ -41,11 +41,9 @@ void elf_load(XinEntry* file)
 
     fread(file, data, file->size);
 
-    xprintf("file size: %d\n", file->size);
-
-    xprintf("press ENTER to start: ");
-
-    while(inputg().scan_code != ENTER);
+    // xprintf("file size: %d\n", file->size);
+    // xprintf("press ENTER to start: ");
+    // while(inputg().scan_code != ENTER);
 
     uint8_t* write_to_memory;
     uint8_t* read_from_file;
@@ -75,8 +73,6 @@ void elf_load(XinEntry* file)
 
     data += ELF_HEADER_SIZE;
     uint32_t load_sum = 0;
-
-    screen_clear();
 
     while(phnum)
     {

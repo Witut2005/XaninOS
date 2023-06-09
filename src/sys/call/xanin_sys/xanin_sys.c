@@ -2,6 +2,7 @@
 #include <stdint.h>
 #include <sys/call/xanin_sys/xanin_syscalls.h>
 #include <lib/libc/stdlibx.h>
+#include <lib/libc/stdiox.h>
 #include <lib/libc/memory.h>
 
 #include <sys/call/xanin_sys/pmmngr/alloc.h>
@@ -10,6 +11,9 @@
 #include <fs/xin.h>
 #include <sys/terminal/interpreter/interpreter.h>
 #include <lib/libc/hal.h>
+#include <sys/call/terminal/terminal.c>
+
+stdio_mode_t stdio_current_mode;
 
 uint32_t xanin_sys_handle(void)
 {
@@ -174,6 +178,55 @@ uint32_t xanin_sys_handle(void)
         case XANIN_ARGV_GET:
         {
             eax = (uint32_t)argv;
+            break;
+        }
+
+        case XANIN_STDIO_MODE_SET:
+        {
+            switch(ecx)
+            {
+                case STDIO_MODE_CANVAS:
+                    stdio_current_mode = ecx; 
+                    break;
+                case STDIO_MODE_TERMINAL:
+                    stdio_current_mode = ecx; 
+                    break;
+                default:
+                    stdio_current_mode = STDIO_MODE_TERMINAL;
+                    break;
+
+            }
+            break;
+        }
+
+        case XANIN_STDIO_MODE_GET:
+        {
+            eax = stdio_current_mode;
+            break;
+        }
+
+        case XANIN_VTY_SET:
+        {
+            __vty_set((Xtf*)ecx);
+            eax = (uint32_t)__vty_get();
+            break;
+        }
+
+        case XANIN_VTY_GET:
+        {
+            eax = (uint32_t)__vty_get();
+            break;
+        }
+
+        case XANIN_XTB_GET:
+        {
+            eax = (uint32_t)__xtb_get();
+            break;
+        }
+
+        case XANIN_XTB_INIT:
+        {
+            __xtb_init(ecx, edx, ebx);
             break;
         }
 

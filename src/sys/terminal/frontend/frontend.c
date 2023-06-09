@@ -6,17 +6,7 @@
 #include <lib/libc/stdiox.h>
 #include <lib/libc/memory.h>
 
-static Xtf* CurrentVty; 
 
-void vty_set(Xtf* XtFrontend)
-{
-    CurrentVty = XtFrontend;
-}
-
-Xtf* vty_get(void)
-{
-    return CurrentVty;
-}
 
 Xtf* xtf_init(uint32_t buffer_size)
 {
@@ -31,6 +21,11 @@ Xtf* xtf_init(uint32_t buffer_size)
     XtFrontend->scrolling_enabled = true;
 
     return XtFrontend;
+}
+
+void xtf_destroy(Xtf* XtFrontend) 
+{
+    free(XtFrontend);
 }
 
 int xtf_buffer_nth_line_size_get(Xtf* XtFrontend, uint32_t line_number)
@@ -102,7 +97,6 @@ void xtf_remove_last_cell(Xtf* XtFrontend)
 
         if(XtFrontend->y < XtFrontend->y_begin)
             XtFrontend->y_begin = XtFrontend->y;
-
     }
 
     else
@@ -132,7 +126,7 @@ void xtf_scrolling_off(Xtf* XtFrontend)
     XtFrontend->scrolling_enabled = false;
 }
 
-void xtf_clear_buffer(Xtf* XtFrontend)
+void xtf_buffer_clear(Xtf* XtFrontend)
 {
     XtFrontend->size = 0;
     XtFrontend->size_allocated = XANIN_PMMNGR_BLOCK_SIZE;

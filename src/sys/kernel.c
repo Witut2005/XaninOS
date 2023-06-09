@@ -88,6 +88,7 @@ void kernel_loop(void)
     while(1)
     {
 
+        stdio_mode_set(STDIO_MODE_TERMINAL);
         all_intervals_clear(); // clear all intervals added by apps during execution
         // interval_set(terminal_time_update, 1000, NULL); // refresh current time every second
         memset(null_memory_region, 0, SECTOR_SIZE);
@@ -122,7 +123,7 @@ void kernel_loop(void)
             for(int i = 0; i < 5; i++)
                 memset(argv[i], 0, 40);
 
-            xscanft(scanf_str,program_name, program_parameters, program_parameters1, program_parameters2, program_parameters3);
+            xscanf(scanf_str,program_name, program_parameters, program_parameters1, program_parameters2, program_parameters3);
 
             memcpy(last_used_commands, program_name, sizeof(program_name));
             memcpy(last_used_parameters, program_parameters, sizeof(program_parameters));
@@ -197,6 +198,7 @@ void _start(void)
 
     xtb_init(VGA_WIDTH, VGA_HEIGHT, (uint16_t*)VGA_TEXT_MEMORY);
     vty_set(xtf_init(100));
+    stdio_mode_set(STDIO_MODE_TERMINAL);
 
     time_get(&SystemTime);
 
@@ -288,8 +290,6 @@ void _start(void)
             used_irqs[used_irqs_counter++] = (*AcpiMADT2Pointers[i]).irq_source;
         }
     }
-
-    xprintf("\n");
 
     SystemAcpiMADT2 *apic_keyboard_redirect = NULL;
     SystemAcpiMADT2 *apic_pit_redirect = NULL;
@@ -399,7 +399,7 @@ void _start(void)
     interrupt_enable();
 
     while (inputg().scan_code != ENTER);
-    xtf_clear_buffer(vty_get());
+    xtf_buffer_clear(vty_get());
 
     xprintf("%z    _/      _/                      _/              _/_/      _/_/_/       \n", OUTPUT_COLOR_SET(logo_back_color, logo_front_color));
     xprintf("%z     _/  _/      _/_/_/  _/_/_/        _/_/_/    _/    _/  _/              \n", OUTPUT_COLOR_SET(logo_back_color, logo_front_color));

@@ -97,7 +97,11 @@ void check_external_apps(void)
         app[ARRAY_LENGTH("/external_apps/") + i - 1] = program_name[i];
 
     if(strlen(app) > XIN_MAX_PATH_LENGTH)
+    {
+        free(external_apps_folder);
+        free(app);
         return;
+    }
 
     XinEntry* file = fopen(app, "r");
 
@@ -114,7 +118,7 @@ void check_external_apps(void)
 void scan(void)
 {
 
-    screen_clear();
+    // screen_clear();
     all_intervals_clear(); // clear kernel intervals
     last_command_exit_status = XANIN_OK;
     
@@ -129,6 +133,7 @@ void scan(void)
             break;
         argc++;
     }
+
 
 
     // terminal_t* app_terminal = terminal_create();

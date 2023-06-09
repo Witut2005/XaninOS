@@ -17,7 +17,6 @@ typedef struct Xtb Xtb;
 extern "C" {
 #endif
 
-void xtb_init(uint32_t vga_width, uint32_t vga_height, uint16_t* vram);
 Xtb* xtb_get(void);
 void xtb_flush(Xtf* XtFrontend);
 void xtb_scroll_up(Xtf* XtFrontend);

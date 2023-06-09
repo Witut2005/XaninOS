@@ -34,12 +34,15 @@ void jmp_fwd();
 void jmp_bwd();
 
 int main(int argc, char *argv[]) {
-    xprintf("Brainfuck\n=========\n");
+    
+    // stdio_mode_set(STDIO_MODE_CANVAS);
+    // vty_set(vty_get());
 
+    xprintf("Brainfuck\n=========\n");
+    
     if (argc < 2) 
     {
         xprintf("Bad. No program specified.");
-        getchar();
         return 1;
     }
 
@@ -50,7 +53,6 @@ int main(int argc, char *argv[]) {
     buffer = calloc(strlen(program));
     if (buffer == NULL) {
         xprintf("Memory allocation fault.");
-        getchar();
         return 2;
     }
 
@@ -90,12 +92,12 @@ int main(int argc, char *argv[]) {
                 jmp_bwd();
                 break;
             default:
-                xprintf("Bad. Illegal character in program string.");
+                xprintf("Bad. Illegal character in program string: %c", current);
                 return 3;
         }
     }
 
-    getchar();
+    xprintf("\nOK\n");
     return 0;
 }
 

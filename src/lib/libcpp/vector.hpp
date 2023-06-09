@@ -8,7 +8,7 @@
 
 namespace std{
     
-template <class T, class ... X>
+template <class T>
 class vector
 {
     
@@ -60,11 +60,8 @@ public:
         this->begin_ptr = (T*)calloc(sizeof(T) * items.size());
         int index = 0;
         for(auto it = items.begin(); it != items.end(); it++, index++)
-        {
             this->begin_ptr[index] = *it;
-            //std::cout << "wektor: " << this->begin_ptr[index] << std::endl;
-            
-        }
+
         this->size = items.size();
     }
     
@@ -72,6 +69,11 @@ public:
     {
         this->begin_ptr = (T*)calloc(sizeof(T));
         this->size = 0;
+    }
+
+    ~vector()
+    {
+        free(this->begin_ptr);
     }
     
     void print(void)
@@ -84,7 +86,6 @@ public:
         }
         
         std::cout << *it;
-        
         std::cout << "]";
     }
     

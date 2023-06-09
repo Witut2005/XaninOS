@@ -284,6 +284,8 @@ void edit_input(xchar Input, XinEntry* File, EditInfo* EditState)
 int edit(char* file_name)
 {
 
+    stdio_mode_set(STDIO_MODE_CANVAS);
+
     screen_clear();
     XinEntry* file = xin_find_entry(file_name);
 
@@ -303,14 +305,13 @@ int edit(char* file_name)
     
     screen_clear();
 
-
     fread(file, NULL, file->size );
 
     EditInfo EditState = {0, (uint16_t*)VGA_TEXT_MEMORY, 0, 0, 0, xin_get_file_size_in_sectors(file), 
                             file->FileInfo->buffer, file->FileInfo->buffer};
 
     xprintf("%s", EditState.program_buffer);
-    
+   
     for(int i = 0; EditState.program_buffer[i] != '\0'; i++)
     {
         if(EditState.program_buffer[i] == '\n')
@@ -329,11 +330,11 @@ int edit(char* file_name)
 
         if(Screen.cursor[VGA_HEIGHT-1][70] == BLANK_SCREEN_CELL)
         { 
-            cursor_set_position(70, VGA_MAX_Y); 
+            // cursor_set_position(70, VGA_MAX_Y); 
             for(int i = 0; i < 5; i++)
-                Screen.cursor[Screen.y][Screen.x + i] = BLANK_SCREEN_CELL;
+                Screen.cursor[VGA_MAX_Y][70 + i] = BLANK_SCREEN_CELL;
 
-            xprintf("%d/%d", EditState.current_line, EditState.total_lines);
+            xprintf("%h%d/%d", OUTPUT_POSITION_SET(VGA_MAX_Y, 70) ,EditState.current_line, EditState.total_lines);
         }
 
     }
