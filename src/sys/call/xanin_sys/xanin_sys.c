@@ -5,13 +5,16 @@
 #include <lib/libc/stdiox.h>
 #include <lib/libc/memory.h>
 
-#include <sys/call/xanin_sys/pmmngr/alloc.h>
 #include <sys/devices/hda/disk.h>
 #include <sys/input/input.h>
 #include <fs/xin.h>
 #include <sys/terminal/interpreter/interpreter.h>
 #include <lib/libc/hal.h>
-#include <sys/call/terminal/terminal.c>
+
+
+// SYSCALLS FUNCTIONS
+#include <sys/call/xanin_sys/pmmngr/alloc.h>
+#include <sys/call/xanin_sys/terminal/terminal.c>
 
 stdio_mode_t stdio_current_mode;
 

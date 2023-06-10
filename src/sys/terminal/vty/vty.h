@@ -52,12 +52,6 @@ extern char selected_character;
 typedef void (*keyboard_handle_input)(void);
 
 extern keyboard_handle_input keyboard_handle;
- 
-extern char program_name[40];
-extern char program_parameters[40];
-extern char program_parameters1[40];
-extern char program_parameters2[40];
-extern char program_parameters3[40];
 
 extern char last_used_commands[40];
 extern char last_used_parameters[40];

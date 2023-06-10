@@ -858,13 +858,9 @@ void xscanf(char* str, ... )
     if(stdio_mode_get() == STDIO_MODE_CANVAS)
     {
 
-        char tmp[128];
-        char* temporary_pointer = tmp;
+        char* temporary_pointer = (char*)calloc(1000);
         
         uint32_t number;
-
-
-        memset((uint8_t*)tmp, '\0', sizeof(tmp));
 
         char* stringPtr;
 
@@ -884,9 +880,6 @@ void xscanf(char* str, ... )
 
         while(str[string_counter])
         {
-
-            for(int i = 0; i < sizeof(tmp); i++)
-                tmp[i] = '\0';
 
             if(str[string_counter] == '%')
             {
@@ -973,7 +966,7 @@ void xscanf(char* str, ... )
                     {
                         number = va_arg(args,int);
 
-                        temporary_pointer = bin_to_str(number,tmp);
+                        bin_to_str(number, temporary_pointer);
 
                         for(int i = 0; temporary_pointer[i] != '\0'; i++)
                         { 
@@ -1305,6 +1298,8 @@ void xscanf(char* str, ... )
             Screen.x = x;
         }
 
+        free(temporary_pointer);
+
         va_end(args);
     }
 
@@ -1319,14 +1314,13 @@ void xscanf(char* str, ... )
         uint32_t index = 0;
     
 
-        char field_buffer[1000];
-        memset(field_buffer, 0, 1000);
+        char* field_buffer = (char*)calloc(XANIN_PMMNGR_BLOCK_SIZE * 2 * 5);
+        char* string_typed_buffer = (char*)calloc(XANIN_PMMNGR_BLOCK_SIZE * 2);
 
-        char string_typed_buffer[1000];
-        memset(string_typed_buffer, 0, 1000);
 
         Xtf* StdioVty = vty_get();
         uint32_t begin_index = StdioVty->size;
+        xtf_scrolling_on(StdioVty);
 
         start:
 
@@ -1356,6 +1350,16 @@ void xscanf(char* str, ... )
 
                 KeyInfo.is_bspc = false;
                 xtb_flush(StdioVty);
+            }
+
+            else if(Input.scan_code == ARROW_UP)
+            {
+                xtb_scroll_up(StdioVty);
+            }
+
+            else if(Input.scan_code == ARROW_DOWN)
+            {
+                xtb_scroll_down(StdioVty);
             }
 
             else if(Input.scan_code == ARROW_LEFT)
@@ -1517,7 +1521,9 @@ void xscanf(char* str, ... )
         puts("\n");
         xtf_cursor_off(StdioVty);
         xtb_flush(StdioVty);
+        
         free(field_buffer);
+        free(string_typed_buffer);
 
     }
 

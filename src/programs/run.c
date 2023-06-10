@@ -17,7 +17,7 @@ int run(char* file_name)
     
     if(xin_file == NULL)
     {
-        xprintf("%zNO SUCH FILE %s\n",OUTPUT_COLOR_SET(red,white),program_parameters);
+        xprintf("%zNO SUCH FILE %s\n",OUTPUT_COLOR_SET(red,white),argv[1]);
 
         while(inputg().scan_code == ENTER);
         return XANIN_ERROR;

@@ -16,13 +16,6 @@ char selected_character;
 typedef void (*keyboard_handle_input)(void);
 
 keyboard_handle_input keyboard_handle = NULL;
- 
-char program_name[1000];
-char program_parameters[40];
-char program_parameters1[40];
-char program_parameters2[40];
-char program_parameters3[40];
-
 
 char last_used_commands[40];
 char last_used_parameters[40];

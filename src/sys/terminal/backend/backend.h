@@ -2,16 +2,9 @@
 #pragma once
 
 #include <stdint.h>
-#include <sys/terminal/frontend/frontend.h>
 #include <lib/libc/stdiox.h>
-struct Xtb{
-    uint32_t y;             // real y position
-    uint32_t vga_height;    // screen height
-    uint32_t vga_width;     // screen width
-    uint16_t* vram;         // ptr to text memory
-};
-
-typedef struct Xtb Xtb;
+#include <sys/terminal/frontend/frontend.h>
+#include <sys/call/xanin_sys/terminal/terminal.h>
 
 #ifdef __cplusplus
 extern "C" {

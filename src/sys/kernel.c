@@ -71,15 +71,19 @@ uint8_t* const zeros;
 
 #define PMMNGR_MEMORY_BLOCKS 10000
 
-// void terminal_time_update(address_t* args)
-// {
-//     time_get(&SystemTime);
+void terminal_time_update(address_t* args)
+{
+    time_get(&SystemTime);
     
-//     for(int i = 67; i < VGA_WIDTH; i++)
-//         Screen.cursor[4][i] = BLANK_SCREEN_CELL;
+    stdio_mode_set(STDIO_MODE_CANVAS);
 
-//     xprintf("%h%s: %i:%i:%i\n\n\n", OUTPUT_POSITION_SET(4, 67), daysLUT[SystemTime.weekday], SystemTime.hour, SystemTime.minutes, SystemTime.seconds);
-// }
+    xprintf("%hposx:   %d", OUTPUT_POSITION_SET(15, VGA_WIDTH-10), vty_get()->x);
+    xprintf("%hposy:   %d", OUTPUT_POSITION_SET(16, VGA_WIDTH-10), vty_get()->y);
+    xprintf("%hybegin: %d", OUTPUT_POSITION_SET(17, VGA_WIDTH-10), vty_get()->y_begin);
+
+    xprintf("%h%s: %i:%i:%i\n\n\n", OUTPUT_POSITION_SET(VGA_MAX_Y, VGA_WIDTH - 13), daysLUT[SystemTime.weekday], SystemTime.hour, SystemTime.minutes, SystemTime.seconds);
+    stdio_mode_set(STDIO_MODE_TERMINAL);
+}
 
 void kernel_loop(void)
 {
@@ -90,7 +94,7 @@ void kernel_loop(void)
 
         stdio_mode_set(STDIO_MODE_TERMINAL);
         all_intervals_clear(); // clear all intervals added by apps during execution
-        // interval_set(terminal_time_update, 1000, NULL); // refresh current time every second
+        // interval_set(terminal_time_update, 50, NULL); // refresh current time every second
         memset(null_memory_region, 0, SECTOR_SIZE);
         xtf_scrolling_on(vty_get());
 
@@ -123,14 +127,14 @@ void kernel_loop(void)
             for(int i = 0; i < 5; i++)
                 memset(argv[i], 0, 40);
 
-            xscanf(scanf_str,program_name, program_parameters, program_parameters1, program_parameters2, program_parameters3);
+            xscanf(scanf_str,argv[0], argv[1], argv[2], argv[3], argv[4]);
 
-            memcpy(last_used_commands, program_name, sizeof(program_name));
-            memcpy(last_used_parameters, program_parameters, sizeof(program_parameters));
+            memcpy(last_used_commands, argv[0], sizeof(argv[0]));
+            memcpy(last_used_parameters, argv[1], sizeof(argv[1]));
 
 
-            erase_spaces(program_name);
-            erase_spaces(program_parameters);
+            erase_spaces(argv[0]);
+            erase_spaces(argv[1]);
             
             scan();
         }   
@@ -360,16 +364,11 @@ void _start(void)
     disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x1, 0x1, (uint16_t *)0x600);
     disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x2, 0x1, (uint16_t *)0x400);
 
-    // disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x0, 0x1, (uint16_t*)0x7C00);
-
-    // disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x4, 1, (uint16_t *)(0x500 * SECTOR_SIZE));
-    // disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x500, 1, (uint16_t *)(0x500 * SECTOR_SIZE));
-
-    argv[0] = program_name;
-    argv[1] = program_parameters;
-    argv[2] = program_parameters1;
-    argv[3] = program_parameters2;
-    argv[4] = program_parameters3;
+    argv[0] = (char*)calloc(XANIN_PMMNGR_BLOCK_SIZE * 2); 
+    argv[1] = (char*)calloc(XANIN_PMMNGR_BLOCK_SIZE * 2); 
+    argv[2] = (char*)calloc(XANIN_PMMNGR_BLOCK_SIZE * 2); 
+    argv[3] = (char*)calloc(XANIN_PMMNGR_BLOCK_SIZE * 2); 
+    argv[4] = (char*)calloc(XANIN_PMMNGR_BLOCK_SIZE * 2); 
 
     // LOAD XIN TABLES
     // disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x12, 8, (uint16_t *)XIN_ENTRY_POINTERS);
@@ -399,13 +398,13 @@ void _start(void)
     interrupt_enable();
 
     while (inputg().scan_code != ENTER);
-    xtf_buffer_clear(vty_get());
+    screen_clear();
 
     xprintf("%z    _/      _/                      _/              _/_/      _/_/_/       \n", OUTPUT_COLOR_SET(logo_back_color, logo_front_color));
     xprintf("%z     _/  _/      _/_/_/  _/_/_/        _/_/_/    _/    _/  _/              \n", OUTPUT_COLOR_SET(logo_back_color, logo_front_color));
     xprintf("%z      _/      _/    _/  _/    _/  _/  _/    _/  _/    _/    _/_/           \n", OUTPUT_COLOR_SET(logo_back_color, logo_front_color));
     xprintf("%z   _/  _/    _/    _/  _/    _/  _/  _/    _/  _/    _/        _/%z   version 1.5v\x1e", OUTPUT_COLOR_SET(logo_back_color, logo_front_color), OUTPUT_COLOR_SET(black,white));
-    xprintf("%z_/      _/    _/_/_/  _/    _/  _/  _/    _/    _/_/    _/_/_/     %z%s: %i:%i:%i\x1e\x1e", OUTPUT_COLOR_SET(logo_back_color, logo_front_color), OUTPUT_COLOR_SET(black,white), daysLUT[SystemTime.weekday], SystemTime.hour, SystemTime.minutes, SystemTime.seconds);                                       
+    xprintf("%z_/      _/    _/_/_/  _/    _/  _/  _/    _/    _/_/    _/_/_/     %z%s: %i:%i:%i\x1e", OUTPUT_COLOR_SET(logo_back_color, logo_front_color), OUTPUT_COLOR_SET(black,white), daysLUT[SystemTime.weekday], SystemTime.hour, SystemTime.minutes, SystemTime.seconds);                                       
 
     kernel_loop();
 
