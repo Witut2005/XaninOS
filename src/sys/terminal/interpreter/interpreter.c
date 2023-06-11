@@ -71,6 +71,7 @@ extern int cpp_test(void);
 #include <programs/file_system/xin_info.c>
 #include <programs/buffers.c>
 #include <programs/terminal_test.c>
+#include <programs/ssaver.c>
 
 int argc;
 char* argv[5];
@@ -152,6 +153,7 @@ void scan(void)
         }
     }
 
+    XANIN_ADD_APP_ENTRY1("ssaver", screen_saver)
     XANIN_ADD_APP_ENTRY1("dev_tools", dev_tools)
     XANIN_ADD_APP_ENTRY0("netplan_apply", netplan_apply)
     XANIN_ADD_APP_ENTRY0("ttest", terminal_test)

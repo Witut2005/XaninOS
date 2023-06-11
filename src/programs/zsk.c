@@ -33,19 +33,13 @@ void zsk_move(uint32_t delay)
 {
     uint16_t* tmp = (uint16_t*)VGA_TEXT_MEMORY;
 
-    
     if(*tmp == (uint16_t)('#' + (((black << 4) | white) << 8)))
-    {
         zsk_init();
-    }
 
     for(int i = 0; i < VGA_SCREEN_RESOLUTION; i++)
-    {
         tmp[i] = tmp[i + 1];
-    }
 
-
-        msleep(delay);
+    msleep(delay);
 
 }
 

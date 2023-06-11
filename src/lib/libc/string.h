@@ -20,6 +20,16 @@ enum STRTOI_OPTIONS{
     HEXADECIMAL = 16
 };
 
+struct StringRectangle
+{
+    uint32_t size_x;
+    uint32_t size_y;
+    uint32_t position_x;
+    uint32_t position_y;
+};
+
+typedef struct StringRectangle StringRectangle;
+
 enum STRING_ERNNO_VALUES{
     IPV4_ERRNO = 0x1
 };
@@ -52,6 +62,7 @@ uint32_t str2ipv4(char* str);
 char* substr_find(char *str, const char *substr);
 char* strconcat(char* str1, char* buf); //concatenate str1 and buf (first str1)
 uint32_t check_string_errors(uint32_t mask);
+uint32_t number_of_lines_get(const char* str);
 
 #ifdef __cplusplus
 }

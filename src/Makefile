@@ -609,7 +609,7 @@ build:
 	@mv xanin.bin -f ../bin
 	
 ifeq ($(PREINSTALL), true)
-	python3 ./utils/app_preinstall.py -files external_apps/ -image $(XANIN_BINARIES)/xanin.img 
+	python3 ./utils/app_preinstall.py -files external_apps/ etc/ -image $(XANIN_BINARIES)/xanin.img 
 else
 	@echo "NO PREINSTALL"
 endif

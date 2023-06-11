@@ -664,3 +664,54 @@ char* strconcat(char* str1, char* buf) //concatenate str1 and buf (first str1)
     return buf;
 }
 
+uint32_t number_of_lines_get(const char* str) 
+{
+    uint32_t lines = 0;
+
+    while (*str) {
+        if (*str == '\n') {
+            lines++;
+        }
+        str++;
+    }
+    return lines+1;
+}
+
+uint32_t size_of_biggest_line_get(const char* str)
+{
+
+    int max_line_size = 0;
+    int current_line_size = 0;
+
+    while (*str) 
+    {
+        if (*str == '\n') // do not include \x1e
+        {
+            if (current_line_size > max_line_size) 
+                max_line_size= current_line_size;
+
+            current_line_size = 0;
+        } 
+        else 
+            current_line_size++;
+
+        str++;
+    }
+
+    if (current_line_size > max_line_size) 
+        max_line_size = current_line_size;
+
+    return max_line_size;
+
+}
+
+StringRectangle* const string_rectangle_create(const char* buf, uint32_t position_x, uint32_t position_y)
+{
+    StringRectangle* Rect = (StringRectangle*)calloc(sizeof(StringRectangle));
+    Rect->size_x = size_of_biggest_line_get(buf);
+    Rect->size_y = number_of_lines_get(buf);
+    Rect->position_x = position_x;
+    Rect->position_y = position_y;
+
+    return Rect;
+}

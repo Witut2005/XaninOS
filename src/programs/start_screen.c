@@ -22,6 +22,25 @@ static inline uint8_t get_new_front_color(void)
 
 static inline void print_xanin_os_string(void)
 {
+
+    if(bstrcmp(argv[1], "-f"))
+    {
+        char* buf = (char*)calloc(VGA_SCREEN_RESOLUTION * sizeof(terminal_cell));
+
+        XinEntry* File = fopen(argv[2], "r");
+
+        if(File == NULL)
+        {
+            exit();
+        }
+
+        fread(File, buf, File->size);
+
+        xprintf("%h%s", OUTPUT_POSITION_SET(VGA_MAX_Y - 10, 80), buf);
+        free(buf);
+        return;
+    }
+
     for(int i = 0; i < string_y; i++)
         xprintf("\n");
 
@@ -44,6 +63,7 @@ static inline void print_xanin_os_string(void)
 int start_screen(void)
 {
 
+    stdio_mode_set(STDIO_MODE_CANVAS);
     screen_clear();
 
     logo_front_color = white;
@@ -121,11 +141,7 @@ int start_screen(void)
             }
 
         }
-
-
         msleep(300);
     }
-
     return XANIN_OK;
-
 }
