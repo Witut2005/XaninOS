@@ -73,9 +73,7 @@ int xtf_buffer_nth_line_index_get(Xtf* XtFrontend, uint32_t line_number) // star
     {
         if (((char)*buffer == '\n') || ((char)*buffer == '\x1e'))
         {
-            current_line++;
-            
-            if (current_line >= line_number)
+            if (++current_line >= line_number)
                 break;
         }
 

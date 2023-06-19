@@ -20,7 +20,8 @@
         "backend.h": "c",
         "memory.h": "c",
         "frontend.h": "c",
-        "colors.h": "c"
+        "colors.h": "c",
+        "terminal.h": "c"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }

@@ -1313,10 +1313,8 @@ void xscanf(char* str, ... )
 
         uint32_t index = 0;
     
-
         char* field_buffer = (char*)calloc(XANIN_PMMNGR_BLOCK_SIZE * 2 * 5);
         char* string_typed_buffer = (char*)calloc(XANIN_PMMNGR_BLOCK_SIZE * 2);
-
 
         Xtf* StdioVty = vty_get();
         uint32_t begin_index = StdioVty->size;
@@ -1355,15 +1353,23 @@ void xscanf(char* str, ... )
             else if(Input.scan_code == ARROW_UP)
             {
                 xtb_scroll_up(StdioVty);
+                stdio_mode_set(STDIO_MODE_CANVAS);
+                xprintf("%hposx: %d", OUTPUT_POSITION_SET(20, 70), StdioVty->y_begin);
+                stdio_mode_set(STDIO_MODE_TERMINAL);
             }
 
             else if(Input.scan_code == ARROW_DOWN)
             {
                 xtb_scroll_down(StdioVty);
+                stdio_mode_set(STDIO_MODE_CANVAS);
+                xprintf("%hposx: %d", OUTPUT_POSITION_SET(20, 70), StdioVty->y_begin);
+                stdio_mode_set(STDIO_MODE_TERMINAL);
             }
 
             else if(Input.scan_code == ARROW_LEFT)
             {
+                if(begin_index == StdioVty->size)
+                    continue;
                 xtb_cursor_dec(StdioVty);
             }
 
