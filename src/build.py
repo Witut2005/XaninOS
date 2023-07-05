@@ -52,6 +52,14 @@ def create_c_library(objpath, libpath, libraries, added=[]):
     os.system(args.linker + ' -r ' + final_string + ' -o ' + objpath)
     os.system(args.archive + ' rsc ' + libpath + ' ' + objpath + ' ./lib/libc/crt0.o') 
 
+    os.system('cp ./lib/libc/libc.a ./external_apps/libc.a')
+    os.system('cp ./lib/libc/libc.o ./external_apps/libc.o')
+    os.system('cp ./lib/libc/crt0.o ./external_apps/crt0.o')
+
+    os.system('cd ./external_apps/')
+    os.system('make ./external_apps/')
+    os.system('cd ..')
+
 def compile_kernel(*kargs):
     final_string = ''
     modules = kargs[0]
@@ -62,12 +70,25 @@ def compile_kernel(*kargs):
             continue
 
         for object in modules[module]:
-            if(object.output_name.split('.')[-1] == 'bin'):
+            if object.output_name.split('.')[-1] == 'bin' or object.path.split('/')[-1] == 'crt0.asm':
                 continue
 
             final_string = final_string + ' ' + object.output_name
 
-    os.system(builders['c'] + ' ' + builder_options['c']['kernel'] + ' ./sys/kernel.c' + final_string)
+    os.system(builders['c'] + ' ' + builder_options['c']['kernel'] + ' ./sys/kernel.c' + final_string + ' -o ' + './kernel.bin')
+    os.system('cat ./programs/shutdown ./programs/current_app ./programs/syscall_test ./lib/libc/real_mode_fswitch_asm ./lib/libc/fast_return_to_32_mode > ./programs/xanin_external_apps')
+    os.system('dd if=./programs/xanin_external_apps of=./programs/xanin_apps_space bs=512 count=16 conv=notrunc')
+    os.system('cat ./boot/boot ./lib/libc/enter_real_mode ./programs/xanin_apps_space ./programs/blank_sector ./fs/xin_pointers ./fs/entries_table ./boot/kernelLoader ./boot/disk_freestanding_driver kernel.bin > xanin.bin')
+    os.system('dd if=xanin.bin of=xanin.img')
+
+    os.system('python3 ./utils/align_file.py -f ./xanin.img -size 819200')
+    os.system('mv xanin.img -f ../bin')
+    os.system('mv xanin.bin -f ../bin')
+
+    if(args.preinstall == 'yes'):
+        os.system('python3 ./utils/app_preinstall.py -files external_apps/ etc/ -image ../bin/xanin.img')
+    
+
     
 C = 'i386-elf-gcc'
 CC = 'i386-elf-g++'
@@ -80,7 +101,7 @@ parser = argparse.ArgumentParser()
 
 parser.add_argument('--srcpath', type=str)
 parser.add_argument('--binpath', type=str)
-parser.add_argument('--preinstall', type=bool, default=True)
+parser.add_argument('--preinstall', type=str, default='yes')
 
 parser.add_argument('--assembler', type=str, default='nasm')
 parser.add_argument('--cbuilder', type=str, default='i386-elf-gcc')
@@ -91,8 +112,6 @@ parser.add_argument('--archive', type=str, default='i386-elf-ar')
 parser.add_argument('--long', action='store_true')
 
 args = parser.parse_args()
-
-if_preinstall = args.preinstall
 
 builders = {
     'asm': args.assembler,
@@ -135,7 +154,7 @@ objects_to_compile = {
 
     'drivers': [
         CompileObject('./sys/devices/keyboard/keyboard.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
-        CompileObject('./sys/devices/pit/pit.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
+        CompileObject('./sys/devices/pit/pit.asm', builders['asm'], builder_options['asm']['elf32'], './sys/devices/pit/pit_entry.o'),
         CompileObject('./sys/devices/pcspk/pc_speaker.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./sys/devices/mouse/mouse.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./sys/devices/mouse/mouse.asm', builders['asm'], builder_options['asm']['elf32'], './sys/devices/mouse/mouse_init.o'),
@@ -155,7 +174,7 @@ objects_to_compile = {
         CompileObject('./sys/devices/acpi/sdt/sdt.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./sys/devices/hda/disk.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./sys/devices/nic/ne2000.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
-        # CompileObject('./sys/devices/pit/pit.c', builders['c'], builder_options['c']['default'], OBJECT),
+        CompileObject('./sys/devices/pit/pit.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./sys/devices/keyboard/key_map.c', builders['c'], builder_options['c']['default'], OBJECT),
     ],
 
@@ -306,7 +325,7 @@ for os_module, objects in objects_to_compile.items():
 
         print(colored('OK', 'green'))
     
-print(colored('\nXANIN OS IMAGE BUILDED\n', 'green'))
+print(colored('\nXANIN OS MODULES BUILDED\n', 'green'))
     
 create_c_library('./lib/libc/libc.o', './lib/libc/libc.a',objects_to_compile['libc'], [
         './sys/log/syslog.o', './fs/xin_syscalls.o', './sys/terminal/vty/vty.o', './sys/devices/hda/disk.o', './sys/terminal/backend/backend.o', 
@@ -318,3 +337,5 @@ create_c_library('./lib/libc/libc.o', './lib/libc/libc.a',objects_to_compile['li
 #                 objects_to_compile['built-in programs'] + objects_to_compile['libc'] + objects_to_compile['libcpp'] + objects_to_compile['network'] + objects_to_compile['netapi'] + objects_to_compile[''])
 
 compile_kernel(objects_to_compile)
+
+print(colored('\nXANIN OS IMAGE BUILDED\n', 'green'))

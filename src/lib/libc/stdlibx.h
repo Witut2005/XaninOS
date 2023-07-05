@@ -103,6 +103,7 @@ extern void int_swap(int *xp, int *yp);
 extern void bubble_sort(int* array, int n);  extern void merge(int* array, int first, int middle, int last);
 extern void merge_sort(int array[], int first, int last);
 
+int integer(void* value);
 extern void* malloc(uint32_t size) __attribute__((fastcall));
 extern void* calloc(uint32_t size) __attribute__((fastcall));
 extern void  free(void* ptr) __attribute__((fastcall));

@@ -23,6 +23,10 @@ uint8_t* null_memory_region;
 
 extern void kernel_loop(void);
 
+int integer(void* value)
+{
+    return (int)value;
+}
 
 uint32_t int_to_sectors(uint32_t num)
 {

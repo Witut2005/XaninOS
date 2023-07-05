@@ -265,5 +265,5 @@ static inline void cpu_halt(void)
 
 void registers_values_get(Registers* Reg)
 {
-    __asm_registers_values_get(Reg);
+    // __asm_registers_values_get(Reg);
 }

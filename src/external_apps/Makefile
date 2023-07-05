@@ -2,8 +2,8 @@
 C	= i386-elf-gcc
 CC 	= i386-elf-g++
 
-XANIN_PATH = /home/witut/Desktop/xaninOS/src/
-XANIN_BINARIES = /home/witut/Desktop/xaninOS/bin
+XANIN_PATH = ../
+XANIN_BINARIES = ../bin
 
 # C_OPTIONS  = -O0 -masm=intel -Wno-discarded-qualifiers -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-int-conversion -Wno-unused-function -Wno-div-by-zero -Wno-address-of-packed-member -I $(XANIN_PATH) -c
 C_COMPILE  = -O0 -masm=intel -Wno-discarded-qualifiers -Wno-builtin-declaration-mismatch -ffreestanding -Wno-int-conversion -Wno-unused-function -Wno-div-by-zero -Wno-address-of-packed-member -I $(XANIN_PATH) 

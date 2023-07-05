@@ -160,6 +160,16 @@ void puts(const char* str)
 
 }
 
+void fprintf(XinEntry* Entry, const char* format, ...)
+{
+    // if(((int)Entry > 0) && ((int)Entry < 3))
+
+    if(((int)Entry == XANIN_STDOUT) || ((int)Entry == XANIN_STDERR))
+    {
+        // xprintf(fromat, )
+    }
+}
+
 void xprintf(char* str, ... )
 {
 
