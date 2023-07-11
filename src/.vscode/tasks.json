@@ -1,0 +1,14 @@
+{
+    "tasks": [
+      {
+        "label": "build",
+        "type": "shell",
+        "command": "python3 build.py",
+        "group": "test",
+        "presentation": {
+          "reveal": "always",
+          "panel": "new"
+        }
+      }
+    ]
+  }
