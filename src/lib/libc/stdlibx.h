@@ -16,6 +16,7 @@ extern void(*keyboard_handle)(void);
 #define KEYBOARD_KEYSTROKE_HANLDER_UNLOAD() keyboard_handle = NULL 
 
 typedef uint8_t* address_t;
+typedef uint8_t* object_t;
 typedef int __STATUS;
 
 extern uint8_t* const zeros;

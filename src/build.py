@@ -2,6 +2,7 @@
 
 import os
 import argparse
+import sys
 from colorama import init
 from termcolor import colored
 
@@ -42,6 +43,11 @@ class CompileObject:
             return self.builder + ' ' + self.options + ' ' + self.path + ' -o ' + self.output_name
 
 
+def check_exit_code(exit_code: int):
+    if exit_code != 0:
+        sys.exit(1)
+    return
+
 def create_c_library(objpath, libpath, libraries, added=[]):
     final_string = ''
     for lib in libraries:
@@ -49,16 +55,20 @@ def create_c_library(objpath, libpath, libraries, added=[]):
     for lib in added:
         final_string = final_string + ' ' + lib
 
-    os.system(args.linker + ' -r ' + final_string + ' -o ' + objpath)
-    os.system(args.archive + ' rsc ' + libpath + ' ' + objpath + ' ./lib/libc/crt0.o') 
+    commands = [
+        args.linker + ' -r ' + final_string + ' -o ' + objpath,
+        args.archive + ' rsc ' + libpath + ' ' + objpath + ' ./lib/libc/crt0.o', 
+        'cp ./lib/libc/libc.a ./external_apps/libc.a',
+        'cp ./lib/libc/libc.o ./external_apps/libc.o',
+        'cp ./lib/libc/crt0.o ./external_apps/crt0.o',
+        'cd ./external_apps/',
+        'make ./external_apps/',
+        'cd ..'
+    ]
 
-    os.system('cp ./lib/libc/libc.a ./external_apps/libc.a')
-    os.system('cp ./lib/libc/libc.o ./external_apps/libc.o')
-    os.system('cp ./lib/libc/crt0.o ./external_apps/crt0.o')
+    for command in commands:
+        check_exit_code(command)
 
-    os.system('cd ./external_apps/')
-    os.system('make ./external_apps/')
-    os.system('cd ..')
 
 def compile_kernel(*kargs):
     final_string = ''
@@ -75,19 +85,22 @@ def compile_kernel(*kargs):
 
             final_string = final_string + ' ' + object.output_name
 
-    os.system(builders['c'] + ' ' + builder_options['c']['kernel'] + ' ./sys/kernel.c' + final_string + ' -o ' + './kernel.bin')
-    os.system('cat ./programs/shutdown ./programs/current_app ./programs/syscall_test ./lib/libc/real_mode_fswitch_asm ./lib/libc/fast_return_to_32_mode > ./programs/xanin_external_apps')
-    os.system('dd if=./programs/xanin_external_apps of=./programs/xanin_apps_space bs=512 count=16 conv=notrunc')
-    os.system('cat ./boot/boot ./lib/libc/enter_real_mode ./programs/xanin_apps_space ./programs/blank_sector ./fs/xin_pointers ./fs/entries_table ./boot/kernelLoader ./boot/disk_freestanding_driver kernel.bin > xanin.bin')
-    os.system('dd if=xanin.bin of=xanin.img')
-
-    os.system('python3 ./utils/align_file.py -f ./xanin.img -size 819200')
-    os.system('mv xanin.img -f ../bin')
-    os.system('mv xanin.bin -f ../bin')
+    commands = [
+        builders['c'] + ' ' + builder_options['c']['kernel'] + ' ./sys/kernel.c' + final_string + ' -o ' + './kernel.bin',
+        'cat ./programs/shutdown ./programs/current_app ./programs/syscall_test ./lib/libc/real_mode_fswitch_asm ./lib/libc/fast_return_to_32_mode > ./programs/xanin_external_apps',
+        'dd if=./programs/xanin_external_apps of=./programs/xanin_apps_space bs=512 count=16 conv=notrunc',
+        'cat ./boot/boot ./lib/libc/enter_real_mode ./programs/xanin_apps_space ./programs/blank_sector ./fs/xin_pointers ./fs/entries_table ./boot/kernelLoader ./boot/disk_freestanding_driver kernel.bin > xanin.bin',
+        'dd if=xanin.bin of=xanin.img',
+        'python3 ./utils/align_file.py -f ./xanin.img -size 819200',
+        'mv xanin.img -f ../bin',
+        'mv xanin.bin -f ../bin'
+    ]
 
     if(args.preinstall == 'yes'):
-        os.system('python3 ./utils/app_preinstall.py -files external_apps/ etc/ -image ../bin/xanin.img')
+        commands.append('python3 ./utils/app_preinstall.py -files external_apps/ etc/ -image ../bin/xanin.img')
     
+    for command in commands:
+        check_exit_code(os.system(command))
 
     
 C = 'i386-elf-gcc'
@@ -149,7 +162,7 @@ objects_to_compile = {
         CompileObject('./fs/xin.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./fs/xin_syscalls.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./fs/xin_extended_table.asm', builders['asm'], builder_options['asm']['bin'], BINARY),
-        CompileObject('./fs/xanin_apps_space.asm', builders['asm'], builder_options['asm']['bin'], BINARY),
+        # CompileObject('./fs/xanin_apps_space.asm', builders['asm'], builder_options['asm']['bin'], BINARY),
     ],
 
     'drivers': [
@@ -316,7 +329,9 @@ objects_to_compile = {
 for os_module, objects in objects_to_compile.items():
     print(colored('\ncompling {} module'.format(os_module).upper(), 'green'))
     for object in objects:
-        os.system(object.command())
+        status = os.system(object.command())
+        if status != 0:
+            sys.exit(1)
         
         if args.long == False:
             print(object.path.ljust(90, ' '), end='')

@@ -65,11 +65,7 @@ uint16_t Intel8254xDriver::eeprom_read(uint8_t address)
     if(!this->is_present)
         return USHRT_MAX;
 
-    uint32_t address32 = static_cast<uint32_t>((address << 8));
-
-    address32 = address32 | 0x1;
-
-    this->write(nic::EERD, address32);
+    this->write(nic::EERD, (uint32_t)((address << 8) | 0x1));
     
     while(!(this->read(nic::EERD) & (1 << 4)));
     
