@@ -43,7 +43,7 @@ class CompileObject:
             return self.builder + ' ' + self.options + ' ' + self.path + ' -o ' + self.output_name
 
 
-def check_exit_code(exit_code: int):
+def terminate_if_error(exit_code: int):
     if exit_code != 0:
         sys.exit(1)
     return
@@ -56,7 +56,7 @@ def create_c_library(objpath, libpath, libraries, added=[]):
         final_string = final_string + ' ' + lib
 
     commands = [
-        args.linker + ' -r ' + final_string + ' -o ' + objpath,
+        args.linker + ' -r' + final_string + ' -o ' + objpath,
         args.archive + ' rsc ' + libpath + ' ' + objpath + ' ./lib/libc/crt0.o', 
         'cp ./lib/libc/libc.a ./external_apps/libc.a',
         'cp ./lib/libc/libc.o ./external_apps/libc.o',
@@ -67,7 +67,7 @@ def create_c_library(objpath, libpath, libraries, added=[]):
     ]
 
     for command in commands:
-        check_exit_code(command)
+        terminate_if_error(os.system(command))
 
 
 def compile_kernel(*kargs):
@@ -87,7 +87,7 @@ def compile_kernel(*kargs):
 
     commands = [
         builders['c'] + ' ' + builder_options['c']['kernel'] + ' ./sys/kernel.c' + final_string + ' -o ' + './kernel.bin',
-        'cat ./programs/shutdown ./programs/current_app ./programs/syscall_test ./lib/libc/real_mode_fswitch_asm ./lib/libc/fast_return_to_32_mode > ./programs/xanin_external_apps',
+        'cat ./programs/shutdown.bin ./programs/current_app ./programs/syscall_test ./lib/libc/real_mode_fswitch_asm ./lib/libc/fast_return_to_32_mode > ./programs/xanin_external_apps',
         'dd if=./programs/xanin_external_apps of=./programs/xanin_apps_space bs=512 count=16 conv=notrunc',
         'cat ./boot/boot ./lib/libc/enter_real_mode ./programs/xanin_apps_space ./programs/blank_sector ./fs/xin_pointers ./fs/entries_table ./boot/kernelLoader ./boot/disk_freestanding_driver kernel.bin > xanin.bin',
         'dd if=xanin.bin of=xanin.img',
@@ -100,7 +100,7 @@ def compile_kernel(*kargs):
         commands.append('python3 ./utils/app_preinstall.py -files external_apps/ etc/ -image ../bin/xanin.img')
     
     for command in commands:
-        check_exit_code(os.system(command))
+        terminate_if_error(os.system(command))
 
     
 C = 'i386-elf-gcc'
@@ -342,9 +342,9 @@ for os_module, objects in objects_to_compile.items():
     
 print(colored('\nXANIN OS MODULES BUILDED\n', 'green'))
     
-create_c_library('./lib/libc/libc.o', './lib/libc/libc.a',objects_to_compile['libc'], [
-        './sys/log/syslog.o', './fs/xin_syscalls.o', './sys/terminal/vty/vty.o', './sys/devices/hda/disk.o', './sys/terminal/backend/backend.o', 
-        './sys/terminal/frontend/frontend.o', './fs/xin.o', './sys/call/xanin_sys/devices/disk.o', './sys/call/xanin_sys/stdio/stdio.o', './sys/call/xanin_sys/terminal/terminal.o', './sys/terminal/interface/terminal.o'        
+create_c_library('./lib/libc/libc.o', './lib/libc/libc.a', objects_to_compile['libc'], [
+        # './sys/log/syslog.o', './fs/xin_syscalls.o', './sys/terminal/vty/vty.o', './sys/devices/hda/disk.o', './sys/terminal/backend/backend.o', 
+        # './sys/terminal/frontend/frontend.o', './fs/xin.o', './sys/call/xanin_sys/devices/disk.o', './sys/call/xanin_sys/stdio/stdio.o', './sys/call/xanin_sys/terminal/terminal.o', './sys/terminal/interface/terminal.o'        
                 ])
 
 # print(objects_to_compile['kmodules'] + objects_to_compile['interrupt'])
