@@ -4,6 +4,7 @@
 #include <sys/devices/apic/apic_registers.h>
 #include <sys/devices/hda/disk.h>
 #include <fs/xin.h>
+#include <lib/libc/stdiox.h>
 
 #define IVT_MEMORY_LOCATION NULL
 
@@ -95,6 +96,16 @@ uint32_t indIO(uint16_t port)
 
 }
 
+//https://wiki.osdev.org/Text_Mode_Cursor
+void enable_cursor(uint8_t cursor_start, uint8_t cursor_end)
+{
+	outbIO(0x3D4, 0x0A);
+	outbIO(0x3D5, (inbIO(0x3D5) & 0xC0) | cursor_start);
+ 
+	outbIO(0x3D4, 0x0B);
+	outbIO(0x3D5, (inbIO(0x3D5) & 0xE0) | cursor_end);
+}
+
 void disable_cursor(void)
 {
     outbIO(0x3D4, 0x0A);
@@ -102,14 +113,26 @@ void disable_cursor(void)
 }
 
 
-void update_cursor(int x, int y)
+
+//to move to cerain cell this cell cant be NULL
+void update_cursor(uint32_t x, uint32_t y)
 {
-	uint16_t pos = y * 90 + x;
+	uint32_t pos = (y * VGA_WIDTH) + x;
  
 	outbIO(0x3D4, 0x0F);
 	outbIO(0x3D5, (uint8_t) (pos & 0xFF));
 	outbIO(0x3D4, 0x0E);
 	outbIO(0x3D5, (uint8_t) ((pos >> 8) & 0xFF));
+}
+
+uint16_t get_cursor_position(void)
+{
+    uint16_t pos = 0;
+    outbIO(0x3D4, 0x0F);
+    pos |= inbIO(0x3D5);
+    outbIO(0x3D4, 0x0E);
+    pos |= ((uint16_t)inbIO(0x3D5)) << 8;
+    return pos;
 }
 
 void eoi_send(void)
