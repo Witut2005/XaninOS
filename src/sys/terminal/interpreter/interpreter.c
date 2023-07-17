@@ -3,6 +3,7 @@
 extern int cpp_test(void);
 
 #include <programs/dev_tools.c>
+#include <programs/file_format_tools/bmp_info.c>
 #include <programs/print_to_syslog.c>
 #include <sys/terminal/interpreter/interpreter.h>
 #include <sys/terminal/interface/terminal.h>
@@ -72,6 +73,7 @@ extern int cpp_test(void);
 #include <programs/buffers.c>
 #include <programs/terminal_test.c>
 #include <programs/ssaver.c>
+#include <programs/xgl_mode_set.c>
 
 int argc;
 char* argv[5];
@@ -154,8 +156,10 @@ void scan(void)
     }
 
     XANIN_ADD_APP_ENTRY1("ssaver", screen_saver)
+    XANIN_ADD_APP_ENTRY1("bmp_info", bmp_info)
     XANIN_ADD_APP_ENTRY1("dev_tools", dev_tools)
     XANIN_ADD_APP_ENTRY0("netplan_apply", netplan_apply)
+    XANIN_ADD_APP_ENTRY0("xgl_mode_set", xgl_mode_set)
     XANIN_ADD_APP_ENTRY0("ttest", terminal_test)
     XANIN_ADD_APP_ENTRY0("buffers", buffers_view)
     XANIN_ADD_APP_ENTRY1("netapi_check", netapi_check)

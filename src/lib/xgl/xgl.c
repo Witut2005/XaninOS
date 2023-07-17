@@ -1,23 +1,48 @@
 
 
-#include <sys/devices/vga/vga.h>
 #include <lib/xgl/xgl.h>
 
-void xgl_init(void)
+void xgl_init(xgm_t mode)
 {
-   vga_mode_set(VGA_GRAPHICS_320x200x256); 
+   vga_mode_set(mode); 
 
-    for(int i = 0; i < 200; i++)
-    {
-        for(int j = 0; j < 320; j++)
-            pixel_set(j, i, 0);            
-    }
+    // for(int i = 0; i < 200; i++)
+    // {
+    //     for(int j = 0; j < 320; j++)
+    //         pixel_set(j, i, 0);            
+    // }
+}
+
+uint8_t rgb2vga(int r, int g, int b) 
+{
+//     float rf = (float)r, gf = (float)g, bf = (float)b;
+//     float closest = FLOAT_MAX;
+//     float gs = sample[1];
+//     float bs = sample[2];
+//     float dst =
+//     sqrt(powf(rs - rf, 2.0) + powf(gs - gf, 2.0) + powf(bs - bf, 2.0));
+//     (rs - rf)*(rs - rf) + (gs - gf)*(gs - gf) + (bs - bf)*(bs - bf);
+
+//     if (closest > dst) 
+//     {
+
+//     }
+
+//    return (uint8_t)ndx;
+    return 0;
+
 }
 
 void pixel_set(uint32_t x, uint32_t y, uint8_t given_color) 
 {
     uint8_t* vga_pointer = vga_get_buffer_segment();
     vga_pointer[y * 320 + x] = color(given_color);
+}
+
+void pixel_set_rgb(uint32_t x, uint32_t y, uint8_t r, uint8_t g, uint8_t b) 
+{
+    uint8_t* vga_pointer = vga_get_buffer_segment();
+    vga_pointer[y * 320 + x] = color(rgb2vga(r, g, b));
 }
 
 void rectangle_create(uint32_t x, uint32_t y, uint32_t x_size, uint32_t y_size, uint8_t given_color)

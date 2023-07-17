@@ -397,12 +397,11 @@ void _start(void)
 
     interrupt_enable();
 
-    screen_clear();
-    vga_mode_set(VGA_GRAPHICS_320x200x256);
-    vga_mode_set(VGA_TEXT_80x25);
+    // screen_clear();
+    // vga_mode_set(VGA_GRAPHICS_320x200x256);
+    // vga_mode_set(VGA_TEXT_80x25);
 
-
-    while (inputg().scan_code != ENTER);
+    while(inputg().scan_code != ENTER);
     screen_clear();
 
     xprintf("%z    _/      _/                      _/              _/_/      _/_/_/       \n", OUTPUT_COLOR_SET(logo_back_color, logo_front_color));

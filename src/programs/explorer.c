@@ -113,7 +113,7 @@ void hfs(char* omg, ExplorerInfo* AppInfo)
 
     else if(bstrcmp(omg, ""))
     {
-        table_t* fro = table_create(0, 15, 1, 20, black, white, 1);
+        table_t* fro = table_create(0, 15, 1, 20, black, white, 1, NULL);
         table_insert(fro, 0, "create", black, white, 0);
         table_add_handler(fro, (tui_table_handler)handle_selected_option, (address_t)AppInfo);
         table_row_select(fro);
@@ -137,7 +137,7 @@ void hfs(char* omg, ExplorerInfo* AppInfo)
 
     if(status == XANIN_ERROR)
     {
-        table_t* fro = table_create(0, 15, 6, 20, black, white, 1);
+        table_t* fro = table_create(0, 15, 6, 20, black, white, 1, NULL);
         table_insert(fro , 0, "remove", black, white, 0);
         table_insert(fro , 1, "rename", black, white, 0);
         table_insert(fro , 2, "link", black, white, 0);
@@ -197,7 +197,7 @@ int explorer(char* parent_folder)
         xin_get_current_directory(AppInfo.current_folder);
         xprintf("CURRENT DIRECTORY: %s\n", AppInfo.current_folder);
         XinChildrenEntries* hoho = xin_get_children_entries(AppInfo.current_folder, false);
-        AppInfo.MainTable = table_create(0,1, 10, 80, black, white, TUI_TEST_SITES);
+        AppInfo.MainTable = table_create(0,1, 10, 80, black, white, TUI_TEST_SITES, NULL);
 
         if(AppInfo.MainTable== NULL)
         {

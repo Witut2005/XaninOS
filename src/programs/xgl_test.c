@@ -6,7 +6,7 @@
 int xgl_test(void)
 {
 
-    xgl_init();
+    xgl_init(VGA_GRAPHICS_320x200x256);
 
     for(int i = 0; i < 10; i++)
         rectangle_create(0, i * 20, 100, 20, rand());

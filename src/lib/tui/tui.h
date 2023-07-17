@@ -1,4 +1,6 @@
 
+#pragma once
+
 #include <stdint.h>
 #include <lib/libc/stdiox.h>
 #include <sys/terminal/vty/vty.h>
@@ -64,7 +66,7 @@ static inline char screen_cell_get_character(uint8_t x, uint8_t y)
 }
 
 void screen_cell_set(uint8_t x, uint8_t y, char character, uint8_t background_color, uint8_t foreground_color);
-table_t* table_create(uint16_t x, uint16_t y, uint8_t number_of_rows, uint8_t row_size, uint8_t background_color, uint8_t foreground_color, uint8_t number_of_sites);
+table_t* table_create(uint16_t x, uint16_t y, uint8_t number_of_rows, uint8_t row_size, uint8_t background_color, uint8_t foreground_color, uint8_t number_of_sites, ...);
 void table_insert(table_t* Table, uint8_t row_id, char* data, uint8_t background_color, uint8_t foreground_color, uint8_t page_id);
 void table_row_select(table_t* Table);
 char* table_get_row_data(table_t* Table, uint8_t row_id, uint8_t page_id);

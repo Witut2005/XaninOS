@@ -1,7 +1,10 @@
 
+#include <stdarg.h>
 #include <lib/tui/tui.h>
 #include <lib/libc/stdlibx.h>
 #include <sys/devices/keyboard/scan_codes.h>
+
+// DO NOT USE STDIOX FUNCTIONS
 
 void screen_cell_set(uint8_t x, uint8_t y, char character, uint8_t background_color, uint8_t foreground_color)
 {
@@ -13,8 +16,12 @@ void screen_cell_set(uint8_t x, uint8_t y, char character, uint8_t background_co
     cursor[x + y * VGA_WIDTH] = (uint16_t)(character | (((background_color << 4) | foreground_color) << 8));
 }
 
-table_t* table_create(uint16_t x, uint16_t y, uint8_t number_of_rows, uint8_t row_size, uint8_t background_color, uint8_t foreground_color, uint8_t number_of_sites)
+table_t* table_create(uint16_t x, uint16_t y, uint8_t number_of_rows, uint8_t row_size, uint8_t background_color, uint8_t foreground_color, uint8_t number_of_sites, ...)
 {
+
+    va_list args;
+    va_start(args, number_of_sites);
+
     if((!number_of_rows) || (!row_size))
         return (table_t*)NULL;
     
@@ -68,6 +75,10 @@ table_t* table_create(uint16_t x, uint16_t y, uint8_t number_of_rows, uint8_t ro
     screen_cell_set(x+1, y, '/', background_color, foreground_color);
     screen_cell_set(x+2, y, (char)(number_of_sites + '0' - 1), background_color, foreground_color);
 
+    uint32_t row_id = 0;
+    for(char* i = va_arg(args, char*); i != NULL; i = va_arg(args, char*), row_id++)
+        table_insert(tmp, row_id, i, black, white, 0);
+
     return tmp;
 }
 
@@ -114,10 +125,9 @@ void table_row_select(table_t* Table)
     for(int i = 1; i < Table->row_size-1; i++)
         screen_cell_set(cursor_x+i, cursor_y, buffer[i-1], white, black);
     
-    __sys_inputg(&UserInput);
-
     while(UserInput.scan_code != ENTER)
     {
+        __sys_inputg(&UserInput);
         if(UserInput.scan_code == ARROW_RIGHT)
         {
             if(current_page < Table->sites-1)

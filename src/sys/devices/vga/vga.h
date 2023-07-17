@@ -28,11 +28,16 @@ enum VGA_REGISTERS
 
 enum VGA_STATES
 {
-    VGA_TEXT_90x60 = 0,
-    VGA_TEXT_80x25 = 1,
-    VGA_GRAPHICS_720x480x16 = 2,
-	VGA_GRAPHICS_320x200x256 = 3
+    VGA_TEXT_90x60,
+    VGA_TEXT_80x25,
+    VGA_GRAPHICS_320x200x4, 
+    VGA_GRAPHICS_640x480x16,
+    VGA_GRAPHICS_720x480x16,
+	VGA_GRAPHICS_320x200x256,
+    VGA_GRAPHICS_320x200x256_MODEX
 };
+
+typedef uint8_t xgm_t;
 
 
 //these resources helped me a lot!!!
@@ -45,9 +50,9 @@ enum VGA_STATES
 // extern unsigned char g_90x60_text[];
 // extern unsigned char g_80x25_text[];
 // extern unsigned char g_720x480x16[];
-extern unsigned char g_320x200x256[];
-extern unsigned char g_8x8_font[];
-extern unsigned char g_8x16_font[];
+// extern unsigned char g_320x200x256[];
+// extern unsigned char g_8x8_font[];
+// extern unsigned char g_8x16_font[];
 
 #ifdef __cplusplus
 extern "C" {
