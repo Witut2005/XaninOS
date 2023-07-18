@@ -883,8 +883,6 @@ void setFontVGA(const unsigned char * buffer, int h)
    writeRegVGA(VGA_GFX_REG, VGA_GFX_I_BITMASK, 0xFF);
 }
 
-
-
 void vga_mode_set(xgm_t mode)
 {
 

@@ -2,19 +2,18 @@
 #pragma once
 
 #include <lib/xgl/xgl.h>
+#include <lib/libc/stdiox.h>
 
 int xgl_test(void)
 {
 
-    xgl_init(VGA_GRAPHICS_320x200x256);
+    // xprintf("rgb2vga: %d\n", rgb2vga(0xFF, 0, 0));
+    xgl_init(VGA_GRAPHICS_320x200x256_MODEX);
 
-    for(int i = 0; i < 10; i++)
-        rectangle_create(0, i * 20, 100, 20, rand());
-
-    // for(int i = 0; i < 200; i++)
-    //     line_horizontal_create(0, i, 320, rand());
-
-
-    while(1);
+    // for(int i = 0; i < 320 * 100; i++)
+    pixel_set(0, 0, 14);
+    
+    getchar();
+    // while(1);
 
 }

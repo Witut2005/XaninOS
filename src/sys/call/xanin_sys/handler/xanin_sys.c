@@ -1,6 +1,6 @@
 
 #include <stdint.h>
-#include <sys/call/xanin_sys/xanin_syscalls.h>
+#include <sys/call/xanin_sys/ids/xanin_syscalls.h>
 #include <lib/libc/stdlibx.h>
 #include <lib/libc/stdiox.h>
 #include <lib/libc/memory.h>
@@ -13,8 +13,9 @@
 
 
 // SYSCALLS FUNCTIONS
-#include <sys/call/xanin_sys/pmmngr/alloc.h>
-#include <sys/call/xanin_sys/terminal/terminal.c>
+#include <sys/call/xanin_sys/calls/pmmngr/alloc.h>
+#include <sys/call/xanin_sys/calls/vga/vga.h>
+#include <sys/call/xanin_sys/calls/terminal/terminal.c>
 
 stdio_mode_t stdio_current_mode;
 
@@ -230,6 +231,12 @@ uint32_t xanin_sys_handle(void)
         case XANIN_XTB_INIT:
         {
             __xtb_init(ecx, edx, ebx);
+            break;
+        }
+
+        case XANIN_VGA_BUFFER_SEGMENT_GET:
+        {
+            eax = __vga_buffer_segment_get();
             break;
         }
 

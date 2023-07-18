@@ -1,5 +1,5 @@
 
-#include <sys/call/xanin_sys/pmmngr/alloc.h>
+#include <sys/call/xanin_sys/calls/pmmngr/alloc.h>
 #include <lib/libc/memory.h>
 #include <lib/libc/hal.h>
 

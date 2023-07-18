@@ -18,7 +18,7 @@ uint32_t pow(uint32_t a, uint32_t b)
 }
 
     
-float fpow(float base, float exponent)
+float powf(float base, float exponent)
 {
     float result = 1.0;
 
@@ -47,3 +47,9 @@ float fabs(float num)
     return num;
 }
 
+float sqrt (float x)
+{
+  float res;
+  asm ("fsqrt" : "=t" (res) : "0" (x));
+  return res;
+}

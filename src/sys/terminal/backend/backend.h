@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include <lib/libc/stdiox.h>
 #include <sys/terminal/frontend/frontend.h>
-#include <sys/call/xanin_sys/terminal/terminal.h>
+#include <sys/call/xanin_sys/calls/terminal/terminal.h>
 
 #ifdef __cplusplus
 extern "C" {

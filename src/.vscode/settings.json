@@ -21,7 +21,10 @@
         "memory.h": "c",
         "frontend.h": "c",
         "colors.h": "c",
-        "terminal.h": "c"
+        "terminal.h": "c",
+        "xgl.h": "c",
+        "float.h": "c",
+        "vga_rgb.h": "c"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }

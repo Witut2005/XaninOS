@@ -5,7 +5,7 @@
 #include <stddef.h>
 #include <lib/libc/memory.h>
 #include <lib/libc/stdlibx.h>
-#include <sys/call/xanin_sys/terminal/terminal.h>
+#include <sys/call/xanin_sys/calls/terminal/terminal.h>
 
 #ifdef __cplusplus
 extern "C" {

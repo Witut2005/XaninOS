@@ -192,13 +192,14 @@ objects_to_compile = {
     ],
 
     'syscalls': [
-        CompileObject('./sys/call/syscall_entry.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
-        CompileObject('./sys/call/xanin_sys_entry.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
-        CompileObject('./sys/call/xanin_sys/devices/disk.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
-        CompileObject('./sys/call/xanin_sys/stdio/stdio.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
-        CompileObject('./sys/call/xanin_sys/terminal/terminal.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
-        CompileObject('./sys/call/xanin_sys/xanin_calls.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
-        CompileObject('./sys/call/xanin_sys/xanin_sys.c', builders['c'], builder_options['c']['default'], OBJECT),
+        CompileObject('./sys/call/posix/syscall_entry.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
+        CompileObject('./sys/call/xanin_sys/handler/xanin_sys_entry.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
+        CompileObject('./sys/call/xanin_sys/calls/devices/disk.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
+        CompileObject('./sys/call/xanin_sys/calls/stdio/stdio.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
+        CompileObject('./sys/call/xanin_sys/calls/terminal/terminal.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
+        CompileObject('./sys/call/xanin_sys/calls/vga/vga.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
+        # CompileObject('./sys/call/xanin_sys/calls/xanin_calls.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
+        CompileObject('./sys/call/xanin_sys/handler/xanin_sys.c', builders['c'], builder_options['c']['default'], OBJECT),
     ],
 
     'debug': [
@@ -257,7 +258,7 @@ objects_to_compile = {
     ],
 
     'xanin_sys': [
-        CompileObject('./sys/call/xanin_sys/pmmngr/alloc.c', builders['c'], builder_options['c']['default'], OBJECT),
+        CompileObject('./sys/call/xanin_sys/calls/pmmngr/alloc.c', builders['c'], builder_options['c']['default'], OBJECT),
     ],
 
     'libc':[
@@ -304,6 +305,7 @@ objects_to_compile = {
     
     'graphics_libraries': [
         CompileObject('./lib/xgl/xgl.c', builders['c'], builder_options['c']['default'], OBJECT),
+        CompileObject('./lib/xgl/vga_rgb.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./lib/game_engine/xagame.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
     ],
 
