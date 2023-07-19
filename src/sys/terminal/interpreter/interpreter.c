@@ -15,7 +15,7 @@ extern int cpp_test(void);
 #include <programs/ping.c>
 #include <programs/ip_test.c>
 #include <programs/udp_test.c>
-#include <lib/libc/real_mode_fswitch.h>
+#include <lib/cpu/code/real_mode_fswitch.c>
 #include <programs/arp_check.c>
 #include <programs/dhcp_test.c>
 #include <programs/nic_rename.c>

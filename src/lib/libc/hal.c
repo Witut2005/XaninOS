@@ -5,23 +5,11 @@
 #include <sys/devices/hda/disk.h>
 #include <fs/xin.h>
 #include <lib/libc/stdiox.h>
+#include <lib/libc/hal.h>
 
 #define IVT_MEMORY_LOCATION NULL
 
-struct Registers
-{
-    uint32_t eax;
-    uint32_t ecx;
-    uint32_t edx;
-    uint32_t ebx;
-    uint32_t esp;
-    uint32_t ebp;
-    uint32_t esi;
-    uint32_t edi;
-};
 
-typedef struct Registers Registers;
-extern void __asm_registers_values_get(Registers*);
 
 void outbIO(uint16_t port,uint8_t al)
 {
@@ -243,50 +231,4 @@ void pic_mode_disable(void)
 { 
     outbIO(0x22, 0x70); //select interrupt mode control register
     outbIO(0x23, 0x1);  //force nmi and intr signals through the apic        
-}
-
-static inline void sti(void)
-{
-    asm("sti");
-}
-
-static inline void cli(void)
-{
-    asm("cli");
-}
-
-static inline void stc(void)
-{
-    asm("stc");
-}
-
-static inline void clc(void)
-{
-    asm("clc");
-}
-
-static inline void std(void)
-{
-    asm("std");
-}
-
-static inline void cld(void)
-{
-    asm("cld");
-}
-
-static inline void cmc(void)
-{
-    asm("cmc");
-}
-
-static inline void cpu_halt(void)
-{
-    asm("cli");
-    asm("hlt");
-}
-
-void registers_values_get(Registers* Reg)
-{
-    // __asm_registers_values_get(Reg);
 }

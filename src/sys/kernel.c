@@ -30,11 +30,11 @@
 #include <sys/net/netapi/network_device.h>
 #include <sys/net/network_protocols/arp/arp.h>
 // #include <sys/net/network_protocols/internet_protocol/ipv4/ip.h>
-#include <lib/libc/instruction_pointer.h>
 #include <lib/libc/xanin_state.h>
 #include <lib/libc/system.h>
 #include <sys/interrupts/handlers/entries/handler_entries.h>
 #include <sys/terminal/frontend/frontend.h>
+#include <lib/cpu/headers/cpu_state_info.h>
 
 extern void v86_mode_enter(void);
 extern void mouse_enable(void);
@@ -400,6 +400,23 @@ void _start(void)
     // screen_clear();
     // vga_mode_set(VGA_GRAPHICS_320x200x256);
     // vga_mode_set(VGA_TEXT_80x25);
+
+    screen_clear();
+    Registers Regs;
+    xprintf("0x%x\n", &Regs);
+    __asm_registers_values_get(&Regs);
+
+    for(uint32_t i = 0; i < 9; i++)
+    {
+        xprintf("0x%x\n", *((uint32_t*)(&Regs) + i));
+    }
+
+    uint16_t* seg_regs = (uint16_t*)((uint32_t*)(&Regs) + 9);
+
+    for(uint32_t i = 0; i < 4; i++)
+    {
+        xprintf("0x%x\n", seg_regs[i]);
+    }
 
     while(inputg().scan_code != ENTER);
     screen_clear();

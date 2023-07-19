@@ -266,6 +266,7 @@ objects_to_compile = {
         CompileObject('./lib/libc/file.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
         CompileObject('./lib/libc/crt0.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
         CompileObject('./lib/libc/alloc.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
+        CompileObject('./lib/cpu/code/cpu_state_info.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
         # CompileObject('./lib/libc/real_mode_fswitch.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./lib/libc/hal.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./lib/libc/math.c', builders['c'], builder_options['c']['default'], OBJECT),

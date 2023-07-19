@@ -13,4 +13,5 @@ debug:
 
 clean:
 	find ./ -type f \( -name "*.bin" -o -name "*.o" \) -delete
+	find ./ -type f ! -name "*.*"
 
