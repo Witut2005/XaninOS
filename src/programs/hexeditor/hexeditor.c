@@ -212,6 +212,7 @@ void hexeditor_input(xchar x)
 int hexeditor(char* file_name, char* options)
 {
 
+    stdio_mode_set(STDIO_MODE_CANVAS);
     data_pointer = (char*)NULL;
     data_pointer_position = 0;
     tmp = 0; 

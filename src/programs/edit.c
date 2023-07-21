@@ -340,7 +340,6 @@ int edit(char* file_name)
     }
 
     fclose_with_given_size(&file, strlen(EditState.program_buffer) + 1);//we need to include '\0' character
-
     return XANIN_OK;
 
 }

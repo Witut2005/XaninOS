@@ -230,13 +230,13 @@ uint32_t xanin_sys_handle(void)
 
         case XANIN_XTB_INIT:
         {
-            __xtb_init(ecx, edx, ebx);
+            __xtb_init(ecx, edx, (uint16_t*)ebx);
             break;
         }
 
         case XANIN_VGA_BUFFER_SEGMENT_GET:
         {
-            eax = __vga_buffer_segment_get();
+            eax = (uint32_t)__vga_buffer_segment_get();
             break;
         }
 

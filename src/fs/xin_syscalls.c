@@ -169,7 +169,7 @@ __STATUS __sys_xin_list_files(char** argv)
     while((uint32_t)i < XIN_ENTRY_TABLE + (SECTOR_SIZE * 50))
     {
         
-        if((substr_find(i->path, "/.") && !bstrcmp(options, "-la")) || (!i->path))
+        if((substr_find(i->path, "/.") && !bstrcmp(options, "-la")))// || (i->path != NULL))
         {
             i++;
             continue; 

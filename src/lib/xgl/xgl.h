@@ -3,6 +3,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <lib/libc/math.h>
 #include <sys/devices/vga/vga.h>
 
 

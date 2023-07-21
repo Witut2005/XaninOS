@@ -2,5 +2,6 @@
 #pragma once
 
 #include <stdint.h>
+#include <fs/xin.h>
 
-void real_mode_fswitch(uint16_t segment, uint16_t offset);
+void real_mode_fswitch(XinEntry* File);

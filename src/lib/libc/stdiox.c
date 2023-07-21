@@ -80,16 +80,12 @@ char putchar(char character)
     if(stdio_mode_get() == STDIO_MODE_CANVAS)
     {
         Screen.cursor[Screen.y][Screen.x] = (uint16_t) (character + (((black << 4) | white) << 8));
-            
-        Screen.x++;
 
-        if(Screen.x == VGA_WIDTH)
+        if((++Screen.x) == VGA_WIDTH)
         {    
             Screen.x = 0;
             Screen.y++;
         }
-
-        return character;
     }
 
     else if(stdio_mode_get() == STDIO_MODE_TERMINAL)
@@ -170,20 +166,21 @@ void fprintf(XinEntry* Entry, const char* format, ...)
     }
 }
 
+bool stdio_canvas_is_buffer_full(void)
+{
+    return Screen.y >= VGA_HEIGHT;
+}
+
 void xprintf(char* str, ... )
 {
 
     if(stdio_mode_get() == STDIO_MODE_CANVAS)
     {
 
-        char tmp[128];
+        char tmp[128] = {0};
         char* temporary_pointer = tmp;
         
         uint32_t number;
-
-
-        memset((uint8_t*)tmp, '\0', sizeof(tmp));
-
         char* stringPtr;
 
         va_list args;
@@ -214,12 +211,15 @@ void xprintf(char* str, ... )
                 {
                     case 'd':
                     {
-                        number = va_arg(args,int);
 
+                        number = va_arg(args,int);
                         int_to_str(number,temporary_pointer);
 
                         for(int i = 0; temporary_pointer[i] != '\0'; i++)
                         {                        
+                            if(stdio_canvas_is_buffer_full())
+                                break; 
+
                             Screen.cursor[Screen.y][Screen.x] = (uint16_t) (temporary_pointer[i] + (((background_color << 4) | font_color) << 8));
                             if(Screen.x == 80)
                             {
@@ -247,14 +247,23 @@ void xprintf(char* str, ... )
                         uint32_t time_mask = 0xF0000000;
                         uint32_t time_shift = 28;
 
+                        if(stdio_canvas_is_buffer_full())
+                            break; 
+
                         for(int i = 0; i < 8; i++, time_mask = time_mask >> 4, time_shift -= 4)
                         {
+                            if(stdio_canvas_is_buffer_full())
+                                break; 
+
                             if(i == 2 || i == 4)
                             {
 
                                 Screen.cursor[Screen.y][Screen.x] = (uint16_t) '-'  | (((background_color << 4) | font_color) << 8);
                                 Screen.x++;
                             }
+
+                            if(stdio_canvas_is_buffer_full())
+                                break; 
 
                             Screen.cursor[Screen.y][Screen.x] = (uint16_t)( (((time & time_mask) >> time_shift) + '0')  | (((background_color << 4) | font_color) << 8));
                             Screen.x++;
@@ -274,6 +283,9 @@ void xprintf(char* str, ... )
 
                         for(int i = 0; i < 4; i++, time_mask = time_mask >> 4, time_shift -= 4)
                         {
+                            if(stdio_canvas_is_buffer_full())
+                                break; 
+
                             if(i == 2)
                             {
 
@@ -295,6 +307,9 @@ void xprintf(char* str, ... )
 
                         for(int i = 0; temporary_pointer[i] != '\0'; i++)
                         { 
+                            if(stdio_canvas_is_buffer_full())
+                                break; 
+
                             Screen.cursor[Screen.y][Screen.x] = (uint16_t) (temporary_pointer[i] + (((background_color << 4) | font_color) << 8));
                             if(Screen.x == 80)
                             {
@@ -317,19 +332,22 @@ void xprintf(char* str, ... )
                         if(stringPtr == NULL)
                             break;
 
-
                         for(int i = 0; stringPtr[i] != '\0'; i++)
                         {
+
+                            if(stringPtr[i] == '\r')
+                            {
+                                Screen.x = 0;
+                                continue;
+                            }
+
+                            if(stdio_canvas_is_buffer_full())
+                                break; 
+
                             if(stringPtr[i] == '\n')
                             {            
                                 Screen.x = 0;
                                 Screen.y++;
-                                continue;
-                            }
-
-                            else if(stringPtr[i] == '\r')
-                            {
-                                Screen.x = 0;
                                 continue;
                             }
 
@@ -376,9 +394,15 @@ void xprintf(char* str, ... )
                     {
 
                         uint8_t number = (uint8_t)va_arg(args, uint32_t);
+                        
+                        if(stdio_canvas_is_buffer_full())
+                            break; 
 
                         Screen.cursor[Screen.y][Screen.x] = (uint16_t)( (((number & 0xf0) >> 4) + '0')  | (((background_color << 4) | font_color) << 8));
                         Screen.x++;
+
+                        if(stdio_canvas_is_buffer_full())
+                            break; 
 
                         Screen.cursor[Screen.y][Screen.x] = (uint16_t)(((number & 0x0f) + '0')  | (((background_color << 4) | font_color) << 8));
                         Screen.x++;
@@ -392,6 +416,9 @@ void xprintf(char* str, ... )
 
                         char character;
                         character = (char)va_arg(args,int);
+
+                        if(stdio_canvas_is_buffer_full())
+                            break; 
                         
                         if(Screen.x == 80)
                         {
@@ -405,7 +432,7 @@ void xprintf(char* str, ... )
                             Screen.y++;
                         }
 
-                        else if(character == '\0')
+                        else if(character == '\0') //handle other characters
                             break;
 
                         else 
@@ -420,6 +447,10 @@ void xprintf(char* str, ... )
                     case 'z':
                     {
                         font_color = (uint8_t)va_arg(args,int);
+
+                        if(stdio_canvas_is_buffer_full())
+                            break; 
+
                         background_color = (font_color & 0xf0) >> 4;
                         font_color = font_color & 0x0f;
                         break;
@@ -432,6 +463,9 @@ void xprintf(char* str, ... )
 
                         for(int i = 0; temporary_pointer[i] != '\0'; i++)
                         {
+                            if(stdio_canvas_is_buffer_full())
+                                break; 
+
                             Screen.cursor[Screen.y][Screen.x] = (uint16_t) (temporary_pointer[i] + (((background_color << 4) | font_color) << 8));
                             if(Screen.x == 80)
                             {
@@ -449,11 +483,15 @@ void xprintf(char* str, ... )
                     case 'X':
                     {
                         number = va_arg(args,int);
+
                         int_to_hex_str(number,temporary_pointer);
                         toupper(temporary_pointer);
 
                         for(int i = 0; temporary_pointer[i] != '\0'; i++)
                         {
+                            if(stdio_canvas_is_buffer_full())
+                                break; 
+                            
                             Screen.cursor[Screen.y][Screen.x] = (uint16_t) (temporary_pointer[i] + (((background_color << 4) | font_color) << 8));
                             if(Screen.x == 80)
                             {
@@ -470,10 +508,14 @@ void xprintf(char* str, ... )
                     case 'o':
                     {
                         number = va_arg(args,int);
+
                         int_to_oct_str(number,temporary_pointer);
 
                         for(int i = 0; temporary_pointer[i] != '\0'; i++)
                         {
+                            if(stdio_canvas_is_buffer_full())
+                                break; 
+
                             Screen.cursor[Screen.y][Screen.x] = (uint16_t) (temporary_pointer[i] + (((background_color << 4) | font_color) << 8));
                             if(Screen.x == 80)
                             {
@@ -489,6 +531,10 @@ void xprintf(char* str, ... )
                     {
                         position_change_switch_used = true;
                         number = (uint16_t)va_arg(args,uint32_t);
+
+                        if(stdio_canvas_is_buffer_full())
+                            break; 
+
                         Screen.y = (number >> 8) & 0xFF;
                         Screen.x = number & 0xFF;
                         break;
@@ -508,6 +554,9 @@ void xprintf(char* str, ... )
 
                                 for(int i = 0; temporary_pointer[i] != '\0'; i++)
                                 {
+                                    if(stdio_canvas_is_buffer_full())
+                                        break; 
+
                                     Screen.cursor[Screen.y][Screen.x] = (uint16_t) (temporary_pointer[i] + (((background_color << 4) | font_color) << 8));
                                     
                                     if(Screen.x == 80)
@@ -527,12 +576,17 @@ void xprintf(char* str, ... )
                             case 'X':
                             {
 
-                                uint8_t number_hex = (uint8_t)va_arg(args,uint32_t);
+                                uint8_t number_hex = (uint8_t)va_arg(args, uint32_t);
+
+
                                 xint_to_hex_str(number_hex,temporary_pointer, sizeof(uint8_t));
                                 toupper(temporary_pointer);
                                 
                                 for(int i = 0; temporary_pointer[i] != '\0'; i++)
                                 {
+                                    if(stdio_canvas_is_buffer_full())
+                                        break; 
+
                                     Screen.cursor[Screen.y][Screen.x] = (uint16_t) (temporary_pointer[i] + (((background_color << 4) | font_color) << 8));
                                     
                                     if(Screen.x == 80)
@@ -566,23 +620,24 @@ void xprintf(char* str, ... )
                 string_counter++;
             }
 
-            else if(str[string_counter] == '\n')
+            else if(str[string_counter++] == '\n')
             {            
                 Screen.x = 0;
                 Screen.y++;
-                string_counter++;
             }
 
-            else if(str[string_counter] == '\r')
-            {
+            else if(str[string_counter++] == '\r')
                 Screen.x = 0;
-                string_counter++;
-            }
 
-            else if(str[string_counter] == '\t')
+            else if(str[string_counter++] == '\t')
             {
+
                 for(int i = 0; i < 3; i++)
                 {
+
+                    if(stdio_canvas_is_buffer_full())
+                        continue; 
+
                     if(Screen.x + i == 80)
                     {
                         Screen.x = 0;
@@ -592,14 +647,14 @@ void xprintf(char* str, ... )
                 }
 
                 Screen.x += 3;
-                string_counter++;
             }
 
 
-            else if(str[string_counter] == '\\')
+            else if(str[string_counter++] == '\\')
             {
+                if(stdio_canvas_is_buffer_full())
+                    continue; 
                 Screen.cursor[Screen.y][Screen.x] = (uint16_t)('\\' + (((background_color << 4) | font_color) << 8));
-                string_counter++;
             }
 
             else
@@ -607,10 +662,18 @@ void xprintf(char* str, ... )
                 //cursor[bufCounter] = (uint16_t) (str[string_counter] + (((background_color << 4) | font_color) << 8));
 
                 //x++;
+                if(stdio_canvas_is_buffer_full())
+                {
+                    string_counter++;
+                    continue; 
+                }
 
-                Screen.cursor[Screen.y][Screen.x] = (uint16_t) (str[string_counter] + (((background_color << 4) | font_color) << 8));
-                Screen.x++;
-                string_counter++;
+                Screen.cursor[Screen.y][Screen.x++] = (uint16_t) (str[string_counter++] + (((background_color << 4) | font_color) << 8));
+                if(Screen.x == VGA_WIDTH)
+                {
+                    Screen.x = 0;
+                    Screen.y++;
+                }
             }
 
 
@@ -803,7 +866,7 @@ void xprintf(char* str, ... )
 
                     case 'h':
                     {
-                        (uint16_t)va_arg(args,uint32_t);
+                        // (uint16_t)va_arg(args,uint32_t);
                         break;
                     }
 

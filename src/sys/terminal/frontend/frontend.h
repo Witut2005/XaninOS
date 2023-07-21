@@ -23,6 +23,7 @@ void xtf_remove_last_cell(Xtf* XtFrontend);
 void xtf_virtual_cursor_add(Xtf* XtFrontend, color_t color);
 void xtf_buffer_clear(Xtf* XtFrontend);
 void xtf_cursor_on(Xtf* XtFrontend, color_t color);
+void xtf_cursor_off(Xtf* XtFrontend);
 void xtf_scrolling_on(Xtf* XtFrontend);
 void xtf_scrolling_off(Xtf* XtFrontend);
 

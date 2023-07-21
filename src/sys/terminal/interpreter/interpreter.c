@@ -267,6 +267,7 @@ void scan(void)
     XANIN_ADD_APP_ENTRY2("nic_rename", nic_rename)
     XANIN_ADD_APP_ENTRY0("nic_print", nic_print)
     XANIN_ADD_APP_ENTRY0("grapher", grapher)
+    XANIN_ADD_APP_ENTRY1("realfs", real_mode_fswitch)
 
     // else if(bstrcmp("real_mode_fswitch", argv[0]))
     // {
