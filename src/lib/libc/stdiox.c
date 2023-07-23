@@ -73,6 +73,14 @@ void putc(char* str, uint32_t count)
     );
 }
 
+bool stdio_canvas_put_character(uint32_t x, uint32_t y, char c, uint8_t color)
+{
+    if(stdio_canvas_is_buffer_full())
+        return false;
+    
+    Screen.cursor[y][x] = (color << 8) | c;
+    return true;
+}
 
 char putchar(char character)
 {
@@ -168,7 +176,8 @@ void fprintf(XinEntry* Entry, const char* format, ...)
 
 bool stdio_canvas_is_buffer_full(void)
 {
-    return Screen.y >= VGA_HEIGHT;
+
+    return (Screen.y + (Screen.x / VGA_WIDTH)) >= VGA_HEIGHT;
 }
 
 void xprintf(char* str, ... )
@@ -620,16 +629,22 @@ void xprintf(char* str, ... )
                 string_counter++;
             }
 
-            else if(str[string_counter++] == '\n')
+            // DONT USE else if(str[string_counter++] == '\n') IT WILL INCREMENT ALSO WHEN FALSE
+
+            else if(str[string_counter] == '\n')
             {            
                 Screen.x = 0;
                 Screen.y++;
+                string_counter++;
             }
 
-            else if(str[string_counter++] == '\r')
+            else if(str[string_counter] == '\r')
+            {
                 Screen.x = 0;
+                string_counter++;
+            }
 
-            else if(str[string_counter++] == '\t')
+            else if(str[string_counter] == '\t')
             {
 
                 for(int i = 0; i < 3; i++)
@@ -646,12 +661,14 @@ void xprintf(char* str, ... )
                     Screen.cursor[Screen.y][Screen.x + i] = (uint16_t)(' ' + (((background_color << 4) | font_color) << 8));
                 }
 
+                string_counter++;
                 Screen.x += 3;
             }
 
 
-            else if(str[string_counter++] == '\\')
+            else if(str[string_counter] == '\\')
             {
+                string_counter++;
                 if(stdio_canvas_is_buffer_full())
                     continue; 
                 Screen.cursor[Screen.y][Screen.x] = (uint16_t)('\\' + (((background_color << 4) | font_color) << 8));
@@ -668,16 +685,14 @@ void xprintf(char* str, ... )
                     continue; 
                 }
 
-                Screen.cursor[Screen.y][Screen.x++] = (uint16_t) (str[string_counter++] + (((background_color << 4) | font_color) << 8));
+                Screen.cursor[Screen.y][Screen.x++] = (uint16_t) (str[string_counter] + (((background_color << 4) | font_color) << 8));
+                string_counter++;
                 if(Screen.x == VGA_WIDTH)
                 {
                     Screen.x = 0;
                     Screen.y++;
                 }
             }
-
-
-
         }
 
         if(position_change_switch_used) // restore Screen.x and Screen.y

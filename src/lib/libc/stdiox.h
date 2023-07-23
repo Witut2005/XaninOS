@@ -62,6 +62,7 @@ void puts(const char* str);
 void xscanf(char* str, ... );
 void xscan_range(char* string_buffer, uint32_t how_many_chars);
 void screen_background_color_set(color_t color);
+bool stdio_canvas_is_buffer_full(void);
 void stdio_vty_set(Xtf* Front);
 Xtf* stdio_vty_get(void);
 void putst(const char* str);
