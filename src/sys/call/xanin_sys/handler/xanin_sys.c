@@ -16,6 +16,7 @@
 #include <sys/call/xanin_sys/calls/pmmngr/alloc.h>
 #include <sys/call/xanin_sys/calls/vga/vga.h>
 #include <sys/call/xanin_sys/calls/terminal/terminal.c>
+#include <sys/devices/vga/vga.h>
 
 stdio_mode_t stdio_current_mode;
 
@@ -236,7 +237,7 @@ uint32_t xanin_sys_handle(void)
 
         case XANIN_VGA_BUFFER_SEGMENT_GET:
         {
-            eax = (uint32_t)__vga_buffer_segment_get();
+            eax = (uint32_t)vga_get_buffer_segment();
             break;
         }
 

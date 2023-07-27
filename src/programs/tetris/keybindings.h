@@ -7,7 +7,7 @@
 uint16_t buf;
 uint8_t colorTetris = 0x1;
 
-uint16_t* petris_cursor = (uint16_t*)VGA_TEXT_MEMORY;
+uint16_t* petris_cursor = (uint16_t*)0xB8000;
 
 
 void tetris_input()

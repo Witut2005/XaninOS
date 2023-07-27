@@ -418,6 +418,8 @@ void _start(void)
     //     xprintf("0x%x\n", seg_regs[i]);
     // }
 
+    xprintf("vga: 0x%x\n", __vga_buffer_segment_get());
+
     while(inputg().scan_code != ENTER);
     screen_clear();
 

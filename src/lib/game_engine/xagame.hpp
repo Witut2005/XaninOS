@@ -2,8 +2,9 @@
 #include <stdint.h>
 #include <lib/libcpp/utility.h>
 #include <lib/libc/stdiox.h>
+#include <sys/call/xanin_sys/calls/vga/vga.h>
 
-#define VGA_TEXT_MEMORY 0xb8000
+#define VGA_TEXT_MEMORY (__vga_buffer_segment_get())
 #define VGA_WIDTH 80
 #define VGA_HEIGHT 25
 

@@ -24,7 +24,8 @@
         "terminal.h": "c",
         "xgl.h": "c",
         "float.h": "c",
-        "vga_rgb.h": "c"
+        "vga_rgb.h": "c",
+        "vga.h": "c"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }

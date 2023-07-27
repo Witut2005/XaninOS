@@ -15,8 +15,9 @@
 #define PIC2_DATA 0xA1    
 #define PIC_MASK_REG 0xA1
 
+#include <sys/call/xanin_sys/calls/vga/vga.h>
 
-#define VGA_TEXT_MEMORY 0xb8000
+#define VGA_TEXT_MEMORY (__vga_buffer_segment_get())
 
 #include <programs/register_dump.h>
 

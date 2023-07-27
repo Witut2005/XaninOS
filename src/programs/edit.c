@@ -9,7 +9,7 @@
 #include <sys/input/input.h>
 
 
-#define MOVE_CURSOR_TO_FIRST_CHARACTER(EditState) while(((uint32_t)EditState->cursor - VGA_TEXT_MEMORY) % 0xA0 != 0) \
+#define MOVE_CURSOR_TO_FIRST_CHARACTER(EditState) while(((uint32_t)EditState->cursor - (uint32_t)VGA_TEXT_MEMORY) % 0xA0 != 0) \
             EditState->cursor--
 
 #define MOVE_CURSOR_TO_END_OF_LINE(EditState) while((char)(*EditState->cursor) != '\0') \

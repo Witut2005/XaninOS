@@ -6,9 +6,10 @@
 #include <stddef.h>
 #include <stdbool.h>
 #include <lib/libc/colors.h> 
+#include <sys/call/xanin_sys/calls/vga/vga.h>
 
 
-#define VGA_TEXT_MEMORY 0xb8000
+#define VGA_TEXT_MEMORY (__vga_buffer_segment_get())
 
 // #ifndef VGA_HEIGHT
 // #define VGA_HEIGHT 25

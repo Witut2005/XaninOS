@@ -787,16 +787,7 @@ void vga_font_write(char *buf, unsigned font_height)
     /* write font to plane P4 */
     set_plane(2);
     
-    uint8_t* ptr = (unsigned char *) 0xB8000;
     int j;
-
-    /* write font 0 */
-    for(i = 0; i < 256; i++)
-    {
-        for(j = 0; j < font_height; j++)
-            ptr[32 * i + j] = buf[font_height * i + j];
-    }
-
 
     /* restore registers */
     outbIO(VGA_SEQUENCER_INDEX_REGISTER, 2);

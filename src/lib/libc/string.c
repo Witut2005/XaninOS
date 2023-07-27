@@ -248,7 +248,6 @@ char* tolower(char* str)
 
 char* int_to_hex_str(uint32_t x, char* buf)
 {
-
     char hex_values[16] = {'0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f'};
 
     int i = 0;
@@ -261,20 +260,14 @@ char* int_to_hex_str(uint32_t x, char* buf)
         return buf;
     }
     
-    //uint16_t* debug_cursor = (uint16_t*)0xb8000;
-
     for(i = 0; x != 0; i++)
     {
         buf[i] = hex_values[x % 16]; 
         x = x / 16;
     }
 
-
     buf = reverse_string(buf);
-    //*(buf + i) = '\0';
-    
     return buf;
-
 }
 
 uint32_t hex_str_to_int(char* str)
