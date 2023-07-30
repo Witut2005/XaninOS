@@ -874,6 +874,8 @@ void setFontVGA(const unsigned char * buffer, int h)
    writeRegVGA(VGA_GFX_REG, VGA_GFX_I_BITMASK, 0xFF);
 }
 
+uint32_t vga_text_mode_width, vga_text_mode_height;
+
 void vga_mode_set(xgm_t mode)
 {
 
@@ -892,6 +894,8 @@ void vga_mode_set(xgm_t mode)
         case VGA_TEXT_80x25:
         {
             vga_registers_write(g_80x25_text);
+			vga_text_mode_height = 25;
+			vga_text_mode_width = 80;
             setFontVGA(g_8x16_font, 16);
             break;
         }

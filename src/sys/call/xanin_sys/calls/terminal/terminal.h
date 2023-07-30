@@ -25,8 +25,11 @@ typedef struct XtfCursor XtfCursor;
 struct Xtf
 {
     uint32_t x;         // virtual x 
+    uint8_t* rows_changed; 
+    // uint32_t x_when_last_flushed;
     uint32_t y_begin;
     uint32_t y;         // virtual y
+    // uint32_t y_when_last_flushed;
     uint32_t vwidth;
     uint32_t vheight;   // how many rows
     uint32_t current_height;

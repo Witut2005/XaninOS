@@ -24,7 +24,7 @@ void screen_background_color_set(color_t color)
 
 int screen_buffer_clear(void)
 {
-    uint16_t* screen_cleaner = (uint16_t*)VGA_TEXT_MEMORY;
+    uint16_t* screen_cleaner = (uint16_t*)__vga_buffer_segment_get();
     for(int i = 0; i < (80 * 28); i++)
     {
         *screen_cleaner = '\0';
@@ -87,6 +87,9 @@ char putchar(char character)
 
     if(stdio_mode_get() == STDIO_MODE_CANVAS)
     {
+        if(stdio_canvas_is_buffer_full())
+            return character;
+
         Screen.cursor[Screen.y][Screen.x] = (uint16_t) (character + (((black << 4) | white) << 8));
 
         if((++Screen.x) == VGA_WIDTH)
@@ -99,7 +102,7 @@ char putchar(char character)
     else if(stdio_mode_get() == STDIO_MODE_TERMINAL)
     {
         xtb_character_put(vty_get(), character);
-        xtb_flush(vty_get());
+        // xtb_flush(vty_get());
     }
 
     return character;
@@ -935,7 +938,7 @@ void xprintf(char* str, ... )
         }
 
         va_end(args);
-        xtb_flush(StdioVty);
+        // xtb_flush(StdioVty);
     }
 
 }

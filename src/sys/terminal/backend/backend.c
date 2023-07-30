@@ -52,15 +52,22 @@ void xtb_scroll_down(Xtf* XtFrontend)
 
 void xtb_flush(Xtf* XtFrontend)
 {
-    screen_buffer_clear();
+    // if(!XtFrontend->size)
+    // {
+        screen_buffer_clear();
+    //     memset(XtFrontend->rows_changed, true, XtFrontend->current_height);
+    // }
 
     int vram_index = 0;
     XtFrontend->x_screen = XtFrontend->y_screen = 0;
+
+    uint32_t current_row_to_display = XtFrontend->y_begin; //first row to display on screen
 
     for(int i = xtf_buffer_nth_line_index_get(XtFrontend, XtFrontend->y_begin); i < XtFrontend->size; i++)
     {
         if((char)(XtFrontend->buffer[i]) == SAFE_NEW_LINE)
         {
+            current_row_to_display++;
             if((!(vram_index % xtb_get()->vga_width)) && ((char)XtFrontend->buffer[i-1] != SAFE_NEW_LINE))
             {
                 XtFrontend->y_screen++;
@@ -77,7 +84,7 @@ void xtb_flush(Xtf* XtFrontend)
 
         else if((char)(XtFrontend->buffer[i]) == NEW_LINE)
         {
-            
+            current_row_to_display++;
             vram_index = vram_index + (xtb_get()->vga_width - (vram_index % xtb_get()->vga_width));
             XtFrontend->y_screen++;
             XtFrontend->x_screen = 0;
@@ -85,8 +92,10 @@ void xtb_flush(Xtf* XtFrontend)
         }
 
         XtFrontend->x_screen++;
-        uint16_t* vram = (uint16_t*)VGA_TEXT_MEMORY;
-        vram[vram_index] = XtFrontend->buffer[i];
+        uint16_t* vram = (uint16_t*)__vga_buffer_segment_get();
+        
+        // if(XtFrontend->rows_changed[current_row_to_display])
+            vram[vram_index] = XtFrontend->buffer[i];
 
         if((XtFrontend->Cursor.is_used) && (XtFrontend->Cursor.position == i)) 
             vram[vram_index] = (char)vram[vram_index] | AS_COLOR(XtFrontend->Cursor.color);
@@ -99,7 +108,7 @@ void xtb_flush(Xtf* XtFrontend)
         uint16_t* vram = (uint16_t*)VGA_TEXT_MEMORY;
         vram[vram_index] = (char)vram[vram_index] | AS_COLOR(XtFrontend->Cursor.color);
     }
-
+    memset((uint8_t*)XtFrontend->rows_changed, false, XtFrontend->current_height * sizeof(uint8_t));
 }
 
 void xtb_cell_put(Xtf* XtFrontend, char c, uint8_t color)
@@ -122,11 +131,16 @@ void xtb_cell_put(Xtf* XtFrontend, char c, uint8_t color)
         XtFrontend->x = 0;
 
         if(XtFrontend->y > XtFrontend->current_height)
+        {
             XtFrontend->current_height = XtFrontend->y;
+            XtFrontend->rows_changed = (uint8_t*)realloc(XtFrontend->rows_changed, XtFrontend->current_height * sizeof(uint8_t));
+        }
 
         if(xtb_get()->vga_height < XtFrontend->y)
             xtb_scroll_down(XtFrontend);
     }
+    else
+        XtFrontend->rows_changed[XtFrontend->y] = true; // mark current row as changed
 
 }
 

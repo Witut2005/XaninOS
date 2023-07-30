@@ -85,6 +85,11 @@ void terminal_time_update(address_t* args)
     stdio_mode_set(STDIO_MODE_TERMINAL);
 }
 
+void xtb_flush_buffer(address_t* address)
+{
+    xtb_flush(vty_get());
+}
+
 void kernel_loop(void)
 {
 
@@ -93,8 +98,11 @@ void kernel_loop(void)
     {
 
         stdio_mode_set(STDIO_MODE_TERMINAL);
+        screen_background_color_set(black);
+        
         all_intervals_clear(); // clear all intervals added by apps during execution
         // interval_set(terminal_time_update, 50, NULL); // refresh current time every second
+        interval_set(xtb_flush_buffer, 100, NULL);
         memset(null_memory_region, 0, SECTOR_SIZE);
         xtf_scrolling_on(vty_get());
 
@@ -187,6 +195,9 @@ void _start(void)
     INTERRUPT_REGISTER(31, general_protection_exception_entry);
     INTERRUPT_REGISTER(32, general_protection_exception_entry);
 
+    vga_text_mode_height = 25;
+    vga_text_mode_width = 80;
+
     interrupt_enable();
     
     screen_init(); // init screen management system
@@ -196,11 +207,9 @@ void _start(void)
     // idt_examine();
 
     disable_cursor();
-
-
     mmngr_init(kernel_mmngr_mmap, (uint8_t*)0x100000, PMMNGR_MEMORY_BLOCKS);
 
-    xtb_init(VGA_WIDTH, VGA_HEIGHT, (uint16_t*)VGA_TEXT_MEMORY);
+    xtb_init(__vga_text_mode_width_get(), __vga_text_mode_height_get(), (uint16_t*)__vga_buffer_segment_get());
     vty_set(xtf_init(100));
     stdio_mode_set(STDIO_MODE_TERMINAL);
 
@@ -418,7 +427,9 @@ void _start(void)
     //     xprintf("0x%x\n", seg_regs[i]);
     // }
 
-    xprintf("vga: 0x%x\n", __vga_buffer_segment_get());
+    xprintf("vga: 0x%x width: %d height: %d\n", __vga_buffer_segment_get(), __vga_text_mode_width_get(), __vga_text_mode_height_get());
+    xprintf("buf: 0x%x\n", vty_get()->rows_changed);
+    xprintf("buf: 0x%x\n", vty_get()->buffer);
 
     while(inputg().scan_code != ENTER);
     screen_clear();

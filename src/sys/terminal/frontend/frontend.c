@@ -7,18 +7,22 @@
 #include <lib/libc/memory.h>
 
 
-
+// if size_allocated is to small then error
 Xtf* xtf_init(uint32_t buffer_size)
 {
     Xtf* XtFrontend = (Xtf*)calloc(sizeof(XtFrontend)); // all variables = zeros    
 
     XtFrontend->vwidth = VGA_WIDTH; // 80
     XtFrontend->vheight = 1000; //useless
-    XtFrontend->size_allocated = buffer_size;
-    XtFrontend->buffer = (terminal_cell*)calloc(buffer_size);
-    XtFrontend->current_height = VGA_HEIGHT; 
+    XtFrontend->size_allocated = buffer_size >= XANIN_PMMNGR_BLOCK_SIZE * 2 ? buffer_size : XANIN_PMMNGR_BLOCK_SIZE * 2;
+    XtFrontend->size = 0;
+    XtFrontend->current_height = __vga_text_mode_height_get(); 
     XtFrontend->Cursor.position = -1;
     XtFrontend->scrolling_enabled = true;
+    XtFrontend->buffer = (terminal_cell*)calloc(XtFrontend->size_allocated);
+    XtFrontend->rows_changed = (uint8_t*)calloc(XtFrontend->current_height * sizeof(uint8_t));
+
+    memset(XtFrontend->rows_changed, true, XtFrontend->current_height);
 
     return XtFrontend;
 }
@@ -135,4 +139,5 @@ void xtf_buffer_clear(Xtf* XtFrontend)
     XtFrontend->Cursor.position = -1;
 
     XtFrontend->x = XtFrontend->y = XtFrontend->y_begin = 0;
+    xtb_flush(XtFrontend);
 }

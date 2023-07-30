@@ -1,12 +1,12 @@
 
-
 #pragma once
+#include <lib/ascii/ascii.h>
 
 int load(char* address_string)
 {
 
-    stdio_mode_set(STDIO_MODE_CANVAS);
-    screen_clear();
+    // stdio_mode_set(STDIO_MODE_CANVAS);
+    // screen_clear();
 
     char* data_pointer = (char*)strtoi(address_string, HEXADECIMAL); 
 
@@ -24,7 +24,14 @@ int load(char* address_string)
         xprintf(" %z| ", OUTPUT_COLOR_SET(black, green));
 
         for(int j = 0; j < 16; j++)
-            putchar(data_pointer[ (16 * i) + j]);
+        {
+            
+            // if(data_pointer[ (16 * i) + j] < ASCII_SPACE)
+                putchar(' ');
+            // else
+            //     putchar(data_pointer[ (16 * i) + j]);
+        }
+        xtb_flush(vty_get());
 
         xprintf("\n");
     }

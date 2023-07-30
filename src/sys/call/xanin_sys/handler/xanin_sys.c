@@ -241,6 +241,18 @@ uint32_t xanin_sys_handle(void)
             break;
         }
 
+        case XANIN_VGA_TEXT_MODE_WIDTH_GET:
+        {
+            eax = vga_text_mode_width;
+            break;
+        }
+
+        case XANIN_VGA_TEXT_MODE_HEIGHT_GET:
+        {
+            eax = vga_text_mode_height;
+            break;
+        }
+
     }
 
     return eax;

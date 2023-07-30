@@ -38,7 +38,7 @@ enum VGA_STATES
 };
 
 typedef uint8_t xgm_t;
-
+extern uint32_t vga_text_mode_width, vga_text_mode_height;
 
 //these resources helped me a lot!!!
 //https://www.youtube.com/watch?v=N68cYNWZgy8&list=PLHh55M_Kq4OApWScZyPl5HhgsTJS9MZ6M&index=13

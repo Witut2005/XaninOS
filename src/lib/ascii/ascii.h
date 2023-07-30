@@ -1,0 +1,5 @@
+
+
+enum ASCII_CHARACTERS {
+    ASCII_SPACE = 0x20
+};
