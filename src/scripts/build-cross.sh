@@ -3,9 +3,9 @@
 #Installing dependencies
 
 sudo apt-get update
-sudo apt-get upgrade
-sudo apt-get install python3 pip3
-sudo apt-get install curl nasm qemu qemu-system-x86 virt-manager virt-viewer dnsmasq vde2 bridge-utils openbsd-netcat base-devel bison flex libgmp-dev libmpc-dev libmpfr-dev texinfo
+sudo apt-get upgrade -y
+sudo apt-get install python3 pip3 -y
+sudo apt-get install make curl nasm qemu qemu-system-x86 virt-manager virt-viewer dnsmasq vde2 bridge-utils bison flex libgmp-dev libmpc-dev libmpfr-dev texinfo -y
 
 #----------------------------------------------------------------
 #Actual building
