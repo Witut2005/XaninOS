@@ -1,8 +1,10 @@
 #pragma once
+#define SIZE_OF_POINTED_TYPE(MACRO_PTR) sizeof(*(MACRO_PTR))
 
 #include <stdint.h>
 #include <stddef.h>
 #include <stdbool.h>
+
 
 #ifdef __cplusplus
 extern "C" {

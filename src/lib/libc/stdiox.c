@@ -41,8 +41,8 @@ int screen_clear(void)
 
     if(stdio_mode_get() == STDIO_MODE_CANVAS)
     {
-        uint16_t* screen_cleaner = (uint16_t*)VGA_TEXT_MEMORY;
-        for(int i = 0; i < (80 * 28); i++)
+        uint16_t* screen_cleaner = (uint16_t*)__vga_buffer_segment_get();
+        for(int i = 0; i < (__vga_text_mode_width_get() * __vga_text_mode_height_get()); i++)
         {
             *screen_cleaner = '\0';
             screen_cleaner++;
@@ -55,7 +55,6 @@ int screen_clear(void)
     else if(stdio_mode_get() == STDIO_MODE_TERMINAL)
     {
         xtf_buffer_clear(vty_get());
-        xtb_flush(vty_get());
     }
     return XANIN_OK;
 }
@@ -1444,17 +1443,17 @@ void xscanf(char* str, ... )
             else if(Input.scan_code == ARROW_UP)
             {
                 xtb_scroll_up(StdioVty);
-                stdio_mode_set(STDIO_MODE_CANVAS);
-                xprintf("%hposx: %d", OUTPUT_POSITION_SET(20, 70), StdioVty->y_begin);
-                stdio_mode_set(STDIO_MODE_TERMINAL);
+                // stdio_mode_set(STDIO_MODE_CANVAS);
+                // xprintf("%hposx: %d", OUTPUT_POSITION_SET(20, 70), StdioVty->y_begin);
+                // stdio_mode_set(STDIO_MODE_TERMINAL);
             }
 
             else if(Input.scan_code == ARROW_DOWN)
             {
                 xtb_scroll_down(StdioVty);
-                stdio_mode_set(STDIO_MODE_CANVAS);
-                xprintf("%hposx: %d", OUTPUT_POSITION_SET(20, 70), StdioVty->y_begin);
-                stdio_mode_set(STDIO_MODE_TERMINAL);
+                // stdio_mode_set(STDIO_MODE_CANVAS);
+                // xprintf("%hposx: %d", OUTPUT_POSITION_SET(20, 70), StdioVty->y_begin);
+                // stdio_mode_set(STDIO_MODE_TERMINAL);
             }
 
             else if(Input.scan_code == ARROW_LEFT)

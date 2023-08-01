@@ -20,9 +20,9 @@ Xtf* xtf_init(uint32_t buffer_size)
     XtFrontend->Cursor.position = -1;
     XtFrontend->scrolling_enabled = true;
     XtFrontend->buffer = (terminal_cell*)calloc(XtFrontend->size_allocated);
-    XtFrontend->rows_changed = (uint8_t*)calloc(XtFrontend->current_height * sizeof(uint8_t));
+    XtFrontend->rows_changed = (uint8_t*)calloc(XtFrontend->current_height * SIZE_OF_POINTED_TYPE(XtFrontend->rows_changed));
 
-    memset(XtFrontend->rows_changed, true, XtFrontend->current_height);
+    memset(XtFrontend->rows_changed, true, XtFrontend->current_height * SIZE_OF_POINTED_TYPE(XtFrontend->rows_changed));
 
     return XtFrontend;
 }
