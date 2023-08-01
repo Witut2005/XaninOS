@@ -7,6 +7,9 @@
 #include <lib/libc/stdlibx.h>
 #include <sys/call/xanin_sys/calls/terminal/terminal.h>
 
+#define XTF_ROW_CHANGED true
+#define XTF_ROW_NOT_CHANGED false
+
 #ifdef __cplusplus
 extern "C" {
 #endif

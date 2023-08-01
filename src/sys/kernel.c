@@ -91,6 +91,13 @@ void xtb_flush_buffer(address_t* address)
     xtb_flush(vty_get());
 }
 
+void vty_print_y(address_t* address)
+{
+    stdio_mode_set(STDIO_MODE_CANVAS);
+    xprintf("%h%d", OUTPUT_POSITION_SET(__vga_text_mode_height_get() - 1, __vga_text_mode_width_get() - 10), vty_get()->y_begin);
+    stdio_mode_set(STDIO_MODE_TERMINAL);
+}
+
 void kernel_loop(void)
 {
 
@@ -102,7 +109,7 @@ void kernel_loop(void)
         screen_background_color_set(black);
         
         all_intervals_clear(); // clear all intervals added by apps during execution
-        // interval_set(terminal_time_update, 50, NULL); // refresh current time every second
+        interval_set(vty_print_y, 50, NULL); // refresh current time every second
         interval_set(xtb_flush_buffer, 100, NULL);
         memset(null_memory_region, 0, SECTOR_SIZE);
         xtf_scrolling_on(vty_get());
@@ -389,8 +396,8 @@ void _start(void)
 
     // xin_init_fs();
     xin_folder_change("/");
+    FileDescriptorTable = (XinFileDescriptor*)kcalloc((XinFileDescriptor) * 200); // 200 = number o entries
     
-    FileDescriptorTable = (XinFileDescriptor*)kcalloc(sizeof(XinFileDescriptor) * 200); // 200 = number o entries
 
     memset((uint8_t *)ArpTable, 0xFF, sizeof(ArpTable[0]));
 
