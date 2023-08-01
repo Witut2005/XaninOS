@@ -396,7 +396,7 @@ void _start(void)
 
     // xin_init_fs();
     xin_folder_change("/");
-    FileDescriptorTable = (XinFileDescriptor*)kcalloc((XinFileDescriptor) * 200); // 200 = number o entries
+    FileDescriptorTable = (XinFileDescriptor*)kcalloc(sizeof(XinFileDescriptor) * 200); // 200 = number o entries
     
 
     memset((uint8_t *)ArpTable, 0xFF, sizeof(ArpTable[0]));

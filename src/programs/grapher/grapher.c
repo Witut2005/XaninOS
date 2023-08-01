@@ -12,7 +12,7 @@ int grapher(){
     unsigned short DispY=VGA_MAX_Y;
     bool RunFlag= true;
 
-    unsigned char D[79][VGA_MAX_Y]= {};
+    unsigned char D[79][50]= {};
     unsigned short POSX=0;
     unsigned short POSY=0;
 

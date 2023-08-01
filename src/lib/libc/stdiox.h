@@ -19,10 +19,11 @@ Screen.y = y_new
 #define stderr ( red << 4 | white)
 #define ARRAY_LENGTH(x) sizeof(x) / sizeof(x[0])
 
+#define VGA_WIDTH __vga_text_mode_width_get()
+#define VGA_HEIGHT __vga_text_mode_height_get()
+
 enum SCREEN_MACROS 
 {
-    VGA_WIDTH = 80,
-    VGA_HEIGHT = 25,
     VGA_SCREEN_CELL_SIZE = 2
 };
 
