@@ -1,4 +1,5 @@
 
+#include <lib/ascii/ascii.h>
 #include <sys/devices/pit/pit.h>
 #include <sys/terminal/interface/terminal.h>
 #include <lib/libc/data_structures.h>
