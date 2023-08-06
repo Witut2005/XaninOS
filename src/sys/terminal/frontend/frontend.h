@@ -26,6 +26,7 @@ void xtf_cursor_on(Xtf* XtFrontend, color_t color);
 void xtf_cursor_off(Xtf* XtFrontend);
 void xtf_scrolling_on(Xtf* XtFrontend);
 void xtf_scrolling_off(Xtf* XtFrontend);
+int xtf_get_line_number_from_position(Xtf* XtFrontend, uint32_t position);
 
 
 #ifdef __cplusplus
