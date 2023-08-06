@@ -16,6 +16,7 @@
 #include <lib/libc/hal.h>
 #include <sys/terminal/vty/vty.h>
 #include <sys/devices/apic/apic_registers.h>
+#include <sys/terminal/backend/backend.h>
 
 extern int screenshot(void);
 
@@ -150,6 +151,11 @@ void keyboard_driver(void)
     keyboard_driver_shift_remap_keys();
 
 
+    if(KeyInfo.is_ctrl & KeyInfo.is_alt)
+    {
+        memset(vty_get()->rows_changed, true, vty_get()->current_height * sizeof(uint8_t));
+        xtb_flush(vty_get());
+    }
 
     // if(keyboard_handle != NULL)
     // {

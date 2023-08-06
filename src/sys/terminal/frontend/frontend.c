@@ -1,5 +1,6 @@
 
 
+#include <sys/macros.h>
 #include <sys/terminal/backend/backend.h>
 #include <sys/terminal/frontend/frontend.h>
 #include <sys/pmmngr/alloc.h>
@@ -91,14 +92,37 @@ int xtf_buffer_nth_line_index_get(Xtf* XtFrontend, uint32_t line_number) // star
     return index + 1;
 }
 
+int xtf_get_line_number_from_position(Xtf* XtFrontend, uint32_t position)
+{
+
+    if(position > XtFrontend->size)
+        return XT_NO_SUCH_LINE;
+
+    int current_line = 0;
+
+    for(int i = 0; i < position; i++)
+    {
+        if((XtFrontend->buffer[i] == SAFE_NEW_LINE) || (XtFrontend->buffer[i] == NEW_LINE))
+            current_line++;
+    }
+
+    return current_line;
+
+}
+
 void xtf_remove_last_cell(Xtf* XtFrontend)
 {
+
+    XtFrontend->rows_changed[XtFrontend->y] = true;
     if(XtFrontend->x == 0)
     {
         XtFrontend->y--;
+        XtFrontend->rows_changed[XtFrontend->y] = true;
 
         if(XtFrontend->y < XtFrontend->y_begin)
             XtFrontend->y_begin = XtFrontend->y;
+
+        XtFrontend->buffer[XtFrontend->size--] = '\0';
     }
 
     else
@@ -109,6 +133,7 @@ void xtf_remove_last_cell(Xtf* XtFrontend)
 
 void xtf_cursor_on(Xtf* XtFrontend, color_t color)
 {
+    XANIN_DEBUG_RETURN();
     XtFrontend->Cursor.is_used = true;
     XtFrontend->Cursor.color = color;
 }
@@ -137,6 +162,7 @@ void xtf_buffer_clear(Xtf* XtFrontend)
     XtFrontend->buffer = (terminal_cell*)realloc(XtFrontend->buffer, XtFrontend->size_allocated);
     XtFrontend->current_height = VGA_HEIGHT; 
     XtFrontend->Cursor.position = -1;
+    XtFrontend->x_screen = XtFrontend->y_screen = 0;
 
     XtFrontend->x = XtFrontend->y = XtFrontend->y_begin = 0;
     xtb_flush(XtFrontend);

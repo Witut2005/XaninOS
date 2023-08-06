@@ -1,0 +1,4 @@
+
+#pragma once
+
+#define XANIN_DEBUG_RETURN(RETURN_VALUE) return RETURN_VALUE

@@ -53,9 +53,7 @@ int screen_clear(void)
     }
 
     else if(stdio_mode_get() == STDIO_MODE_TERMINAL)
-    {
         xtf_buffer_clear(vty_get());
-    }
     return XANIN_OK;
 }
 
@@ -812,7 +810,7 @@ void xprintf(char* str, ... )
 
                     case 's':
                     {
-                        stringPtr = va_arg(args,char*);
+                        stringPtr = va_arg(args, char*);
 
                         if(stringPtr == NULL)
                             break;
@@ -937,7 +935,7 @@ void xprintf(char* str, ... )
         }
 
         va_end(args);
-        // xtb_flush(StdioVty);
+        xtb_flush(StdioVty);
     }
 
 }

@@ -106,10 +106,6 @@ def compile_kernel(*kargs):
 C = 'i386-elf-gcc'
 CC = 'i386-elf-g++'
 
-C_COMPILE = '-O0 -Wall -Wno-discarded-qualifiers -Wno-parentheses -Wno-comment -Wno-address-of-packed-member -Wno-maybe-uninitialized -Wno-pointer-sign -Wno-div-by-zero -Wno-duplicate-decl-specifier -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding  -Wno-unused-function -Wno-div-by-zero -I $(XANIN_PATH)'
-CC_OPTIONS = '-O0 -fno-exceptions -lstdc++ -masm=intel -std=c++17 -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Wno-write-strings -fno-rtti -fconcepts-ts -I $(XANIN_PATH) -c'
-C_OPTIONS = '-O0 -Wall -Wno-discarded-qualifiers -Wno-parentheses -Wno-comment -Wno-address-of-packed-member -Wno-maybe-uninitialized -Wno-pointer-sign -Wno-div-by-zero -Wno-duplicate-decl-specifier -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Werror=return-type -I $(XANIN_PATH) -c'
-
 parser = argparse.ArgumentParser()
 
 parser.add_argument('--srcpath', type=str)
@@ -139,7 +135,7 @@ builder_options = {
     },
 
     'c':{
-        'default': '-O0 -Wall -Werror -Wno-unused-variable -Wno-discarded-qualifiers -Wno-parentheses -Wno-comment -Wno-address-of-packed-member -Wno-maybe-uninitialized -Wno-pointer-sign -Wno-div-by-zero -Wno-duplicate-decl-specifier -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Werror=return-type -I ./ -c',
+        'default': '-O0 -Wall -Werror -Wno-unused-but-set-variable -Wno-unused-variable -Wno-discarded-qualifiers -Wno-parentheses -Wno-comment -Wno-address-of-packed-member -Wno-maybe-uninitialized -Wno-pointer-sign -Wno-div-by-zero -Wno-duplicate-decl-specifier -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Werror=return-type -I ./ -c',
         'kernel': '-O0 -Wall -Wno-discarded-qualifiers -Wno-parentheses -Wno-comment -Wno-address-of-packed-member -Wno-maybe-uninitialized -Wno-pointer-sign -Wno-div-by-zero -Wno-duplicate-decl-specifier -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding  -Wno-unused-function -Wno-div-by-zero -I ./'
     },
 

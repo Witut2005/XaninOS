@@ -86,18 +86,6 @@ void terminal_time_update(address_t* args)
     stdio_mode_set(STDIO_MODE_TERMINAL);
 }
 
-void xtb_flush_buffer(address_t* address)
-{
-    xtb_flush(vty_get());
-}
-
-void vty_print_y(address_t* address)
-{
-    stdio_mode_set(STDIO_MODE_CANVAS);
-    xprintf("%h%d", OUTPUT_POSITION_SET(__vga_text_mode_height_get() - 1, __vga_text_mode_width_get() - 10), vty_get()->y_begin);
-    stdio_mode_set(STDIO_MODE_TERMINAL);
-}
-
 void kernel_loop(void)
 {
 
@@ -109,8 +97,7 @@ void kernel_loop(void)
         screen_background_color_set(black);
         
         all_intervals_clear(); // clear all intervals added by apps during execution
-        interval_set(vty_print_y, 50, NULL); // refresh current time every second
-        interval_set(xtb_flush_buffer, 100, NULL);
+        // interval_set(terminal_time_update, 50, NULL); // refresh current time every second
         memset(null_memory_region, 0, SECTOR_SIZE);
         xtf_scrolling_on(vty_get());
 
@@ -435,9 +422,10 @@ void _start(void)
     //     xprintf("0x%x\n", seg_regs[i]);
     // }
 
-    xprintf("vga: 0x%x width: %d height: %d\n", __vga_buffer_segment_get(), __vga_text_mode_width_get(), __vga_text_mode_height_get());
-    xprintf("buf: 0x%x\n", vty_get()->rows_changed);
-    xprintf("buf: 0x%x\n", vty_get()->buffer);
+    // xprintf("vga: 0x%x width: %d height: %d\n", __vga_buffer_segment_get(), __vga_text_mode_width_get(), __vga_text_mode_height_get());
+    // xprintf("buf: 0x%x\n", vty_get()->rows_changed);
+    // xprintf("buf: 0x%x\n", vty_get()->buffer);
+    // xtb_flush(vty_get());
 
     while(inputg().scan_code != ENTER);
     screen_clear();

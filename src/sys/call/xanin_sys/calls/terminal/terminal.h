@@ -2,7 +2,15 @@
 #pragma once
 
 typedef uint8_t color_t;
-typedef uint16_t terminal_cell;
+
+// struct terminal_cell{
+//     char character;
+//     color_t color;
+// }
+
+// typedef struct terminal_cell terminal_cell;
+
+typedef uint16_t terminal_cell; // should be struct
 
 struct Xtb{
     uint32_t y;             // real y position
@@ -36,6 +44,7 @@ struct Xtf
     terminal_cell* buffer;
     uint32_t size;
     uint32_t size_allocated;
+    uint32_t cursor_vram_index;
 
     uint32_t x_screen;
     uint32_t y_screen;
