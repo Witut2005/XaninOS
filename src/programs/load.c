@@ -26,10 +26,10 @@ int load(char* address_string)
         for(int j = 0; j < 16; j++)
         {
             
-            // if(data_pointer[ (16 * i) + j] < ASCII_SPACE)
+            if(data_pointer[ (16 * i) + j] < ASCII_SPACE)
                 putchar(' ');
-            // else
-            //     putchar(data_pointer[ (16 * i) + j]);
+            else
+                putchar(data_pointer[ (16 * i) + j]);
         }
         xtb_flush(vty_get());
 
