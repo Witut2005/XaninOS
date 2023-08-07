@@ -6,6 +6,7 @@
 #include <sys/pmmngr/alloc.h>
 #include <lib/libc/stdiox.h>
 #include <lib/libc/memory.h>
+#include <sys/terminal/vty/vty.h>
 
 
 // if size_allocated is to small then error
@@ -114,21 +115,42 @@ void xtf_remove_last_cell(Xtf* XtFrontend)
 {
 
     XtFrontend->rows_changed[XtFrontend->y] = true;
-    if(XtFrontend->x == 0)
+
+    if(((char)XtFrontend->buffer[XtFrontend->size] == '\n') || ((char)XtFrontend->buffer[XtFrontend->size] == SAFE_NEW_LINE))
     {
+        XtFrontend->buffer[--XtFrontend->size] = '\0';
         XtFrontend->y--;
+        XtFrontend->x = XtFrontend->vwidth;
         XtFrontend->rows_changed[XtFrontend->y] = true;
 
         if(XtFrontend->y < XtFrontend->y_begin)
             XtFrontend->y_begin = XtFrontend->y;
 
-        XtFrontend->buffer[XtFrontend->size--] = '\0';
     }
 
     else
-        XtFrontend->x--;
+        XtFrontend->buffer[--XtFrontend->size] = BLANK_SCREEN_CELL;
 
-    XtFrontend->buffer[XtFrontend->size--] = '\0';
+    for(int i = XtFrontend->size; i < XtFrontend->size_allocated; i++)
+        XtFrontend->buffer[i] = BLANK_SCREEN_CELL;
+
+    if(!XtFrontend->x)
+    {
+        XtFrontend->buffer[--XtFrontend->size] = '\0';
+        XtFrontend->y--;
+        XtFrontend->x = XtFrontend->vwidth;
+        XtFrontend->rows_changed[XtFrontend->y] = true;
+
+        if(XtFrontend->y < XtFrontend->y_begin)
+            XtFrontend->y_begin = XtFrontend->y;
+    }
+    
+    XtFrontend->x--;
+    
+    Screen.cursor[24][70] = (char)XtFrontend->buffer[XtFrontend->size-1] | AS_COLOR(0x41); 
+    Screen.cursor[24][71] = (XtFrontend->x + '0') | AS_COLOR(0x41);
+
+
 }
 
 void xtf_cursor_on(Xtf* XtFrontend, color_t color)
@@ -155,6 +177,9 @@ void xtf_scrolling_off(Xtf* XtFrontend)
 
 void xtf_buffer_clear(Xtf* XtFrontend)
 {
+
+    memset((uint8_t*)XtFrontend->buffer, 0, XtFrontend->size);
+
     XtFrontend->size = 0;
     XtFrontend->size_allocated = XANIN_PMMNGR_BLOCK_SIZE;
     XtFrontend->vwidth = VGA_WIDTH; // 80
