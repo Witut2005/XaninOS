@@ -28,7 +28,8 @@ void xtb_scroll_down(Xtf* XtFrontend)
     // if(!XtFrontend->scrolling_enabled)
     //     return;
 
-    // if((xtb_get()->vga_height < XtFrontend->vheight))// && (XtFrontend->y_begin + xtb_get()->vga_height - 1) <= XtFrontend->current_height)
+    // if((xtb_get()->vga_height < XtFrontend->vheight) && ((XtFrontend->y_begin + xtb_get()->vga_height - 1) <= XtFrontend->current_height) && (XtFrontend->y_begin > 0)) 
+    if(XtFrontend->y > xtb_get()->vga_height)
     {
         int start_index = xtf_buffer_nth_line_index_get(XtFrontend, (XtFrontend->y_begin++) + xtb_get()->vga_height);
         int number_of_bytes_to_copy = xtf_buffer_nth_line_size_get(XtFrontend, XtFrontend->y_begin + xtb_get()->vga_height) * sizeof(terminal_cell);
@@ -46,13 +47,14 @@ void xtb_flush(Xtf* XtFrontend)
     if(!XtFrontend->size)
     {
         screen_buffer_clear();
-        memset(XtFrontend->rows_changed, true, XtFrontend->current_height * SIZE_OF_POINTED_TYPE(XtFrontend->rows_changed));
-    }
+    //     memset(XtFrontend->rows_changed, true, XtFrontend->current_height);
+    // }
 
     int vram_index = 0;
     __vga_buffer_segment_get()[XtFrontend->cursor_vram_index] = BLANK_SCREEN_CELL;
 
     uint32_t current_row_to_display = XtFrontend->y_begin; //first row to display on screen
+    bool row_cleared = false;
 
     for(int i = xtf_buffer_nth_line_index_get(XtFrontend, XtFrontend->y_begin); i < XtFrontend->size; i++)
     {
@@ -88,6 +90,7 @@ void xtb_flush(Xtf* XtFrontend)
                 row_cleared = true;
             }
             vram[vram_index] = XtFrontend->buffer[i];
+        }
 
         if((XtFrontend->Cursor.is_used) && (XtFrontend->Cursor.position == i)) 
             vram[vram_index] = (char)vram[vram_index] | AS_COLOR(XtFrontend->Cursor.color);
@@ -149,6 +152,8 @@ void xtb_cell_put(Xtf* XtFrontend, char c, uint8_t color)
             XtFrontend->current_height = XtFrontend->y;
             XtFrontend->rows_changed = (uint8_t*)realloc(XtFrontend->rows_changed, XtFrontend->current_height * SIZE_OF_POINTED_TYPE(XtFrontend->rows_changed));
         }
+        
+        XtFrontend->rows_changed[XtFrontend->y] = true; // mark current row as changed
 
         if(xtb_get()->vga_height < XtFrontend->y)
             xtb_scroll_down(XtFrontend);
