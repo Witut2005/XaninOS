@@ -39,7 +39,7 @@ void xtb_scroll_down(Xtf* XtFrontend)
         
         memmove((uint8_t*)VGA_TEXT_MEMORY, (uint8_t*)VGA_TEXT_MEMORY + (xtb_get()->vga_width * sizeof(terminal_cell)), xtb_get()->vga_width * (xtb_get()->vga_height - 1) * sizeof(terminal_cell));
         memset((uint8_t*)VGA_TEXT_MEMORY + ((xtb_get()->vga_height - 1) * xtb_get()->vga_width * sizeof(terminal_cell)), 0, xtb_get()->vga_width * sizeof(terminal_cell));
-
+    }
 }
 
 void xtb_flush(Xtf* XtFrontend)
@@ -47,8 +47,9 @@ void xtb_flush(Xtf* XtFrontend)
     if(!XtFrontend->size)
     {
         screen_buffer_clear();
-    //     memset(XtFrontend->rows_changed, true, XtFrontend->current_height);
-    // }
+        memset(XtFrontend->rows_changed, true, XtFrontend->current_height);
+        return;
+    }
 
     int vram_index = 0;
     __vga_buffer_segment_get()[XtFrontend->cursor_vram_index] = BLANK_SCREEN_CELL;
