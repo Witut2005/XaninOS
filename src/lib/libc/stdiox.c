@@ -1441,17 +1441,11 @@ void xscanf(char* str, ... )
             else if(Input.scan_code == ARROW_UP)
             {
                 xtb_scroll_up(StdioVty);
-                // stdio_mode_set(STDIO_MODE_CANVAS);
-                // xprintf("%hposx: %d", OUTPUT_POSITION_SET(20, 70), StdioVty->y_begin);
-                // stdio_mode_set(STDIO_MODE_TERMINAL);
             }
 
             else if(Input.scan_code == ARROW_DOWN)
             {
                 xtb_scroll_down(StdioVty);
-                // stdio_mode_set(STDIO_MODE_CANVAS);
-                // xprintf("%hposx: %d", OUTPUT_POSITION_SET(20, 70), StdioVty->y_begin);
-                // stdio_mode_set(STDIO_MODE_TERMINAL);
             }
 
             else if(Input.scan_code == ARROW_LEFT)
