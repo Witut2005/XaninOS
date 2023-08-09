@@ -39,7 +39,7 @@ int xtf_buffer_nth_line_size_get(Xtf* XtFrontend, uint32_t line_number)
     int index = xtf_buffer_nth_line_index_get(XtFrontend, line_number);
     int size = 0;
 
-    while((((char)XtFrontend->buffer[index] != '\n') || ((char)XtFrontend->buffer[index] != '\x1e')) && ((char)XtFrontend->buffer[index] != '\0'))
+    while((((char)XtFrontend->buffer[index] != '\n') || ((char)XtFrontend->buffer[index] != SAFE_NEW_LINE)) && ((char)XtFrontend->buffer[index] != '\0'))
     {
         size++;
         index++;
@@ -77,10 +77,13 @@ int xtf_buffer_nth_line_index_get(Xtf* XtFrontend, uint32_t line_number) // star
 
     while ((char)*buffer != '\0')
     {
-        if (((char)*buffer == '\n') || ((char)*buffer == '\x1e'))
+        if (((char)*buffer == '\n') || ((char)*buffer == SAFE_NEW_LINE))
         {
-            if (++current_line >= line_number)
+            if (current_line + 1 >= line_number)
+            {
+                current_line++;
                 break;
+            }
         }
 
         buffer++;
