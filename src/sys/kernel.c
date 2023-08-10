@@ -86,6 +86,13 @@ void terminal_time_update(address_t* args)
     stdio_mode_set(STDIO_MODE_TERMINAL);
 }
 
+void print_ybegin(address_t* args)
+{
+    stdio_mode_set(STDIO_MODE_CANVAS);
+    xprintf("%h%d", OUTPUT_POSITION_SET(15, VGA_WIDTH-10), vty_get()->y_begin);//xtf_buffer_nth_line_index_get(vty_get(), vty_get()->y_begin));
+    stdio_mode_set(STDIO_MODE_TERMINAL);
+}
+
 void kernel_loop(void)
 {
 
@@ -97,19 +104,18 @@ void kernel_loop(void)
         screen_background_color_set(black);
         
         all_intervals_clear(); // clear all intervals added by apps during execution
-        // interval_set(terminal_time_update, 50, NULL); // refresh current time every second
+        interval_set(print_ybegin, 100, NULL); // refresh current time every second
+        
         memset(null_memory_region, 0, SECTOR_SIZE);
         xtf_scrolling_on(vty_get());
 
         // screen_clear();
         time_get(&SystemTime);
 
-        puts("\n");
-
         for(int i = 0; xin_current_directory[i + 1] != '\0'; i++)
             xprintf("%z%c", OUTPUT_COLOR_SET(black, lblue), xin_current_directory[i]);
 
-        xprintf(">");
+        xprintf("\n>");
 
         app_exited = false;
 
