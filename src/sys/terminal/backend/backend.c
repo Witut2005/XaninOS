@@ -39,7 +39,7 @@ void xtb_scroll_down(Xtf* XtFrontend)
 
     if(XtFrontend->y >= XtBackend->vga_height)
     {
-        int start_index = xtf_buffer_nth_line_index_get(XtFrontend, (XtFrontend->y_begin) + XtBackend->vga_height);
+        int start_index = xtf_buffer_nth_line_index_get(XtFrontend, XtFrontend->y_begin + XtBackend->vga_height);
         int number_of_cells_to_copy = xtf_buffer_nth_line_size_get(XtFrontend, XtFrontend->y_begin + XtBackend->vga_height);
 
         if(start_index == XT_NO_SUCH_LINE)

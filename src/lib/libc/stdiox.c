@@ -1410,7 +1410,8 @@ void xscanf(char* str, ... )
 
         start:
 
-        xtf_cursor_on(StdioVty, OUTPUT_COLOR_SET(white, black));
+        // xtf_cursor_on(StdioVty, OUTPUT_COLOR_SET(white, black));
+        xtf_cursor_off(StdioVty);
         xtb_flush(StdioVty);
 
         while(1)

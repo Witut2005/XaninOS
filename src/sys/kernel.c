@@ -88,16 +88,8 @@ void terminal_time_update(address_t* args)
 
 void print_ybegin(address_t* args)
 {
-    // stdio_mode_set(STDIO_MODE_CANVAS);
-    // xprintf("%h%d", OUTPUT_POSITION_SET(15, VGA_WIDTH-10), vty_get()->y_begin);//xtf_buffer_nth_line_index_get(vty_get(), vty_get()->y_begin));
-    // Screen.cursor[22][70] = (xtf_buffer_nth_line_size_get(vty_get(), 0) / 10) + '0' | AS_COLOR(0x41);
-    // Screen.cursor[22][71] = (xtf_buffer_nth_line_size_get(vty_get(), 0) % 10) + '0' | AS_COLOR(0x41);
-    // Screen.cursor[23][70] = (xtf_buffer_nth_line_size_get(vty_get(), 1) / 10) + '0' | AS_COLOR(0x41);
-    // Screen.cursor[23][71] = (xtf_buffer_nth_line_size_get(vty_get(), 1) % 10) + '0' | AS_COLOR(0x41);
-    // Screen.cursor[24][70] = (xtf_buffer_nth_line_size_get(vty_get(), 2) / 10) + '0' | AS_COLOR(0x41);
-    // Screen.cursor[24][71] = (xtf_buffer_nth_line_size_get(vty_get(), 2) % 10) + '0' | AS_COLOR(0x41);
-    // Screen.cursor[0][0] = vty_get()->Cursor.position + '0' | AS_COLOR(0x41);
-    // stdio_mode_set(STDIO_MODE_TERMINAL);
+    Screen.cursor[22][70] = (vty_get()->y_begin / 10) + '0' | AS_COLOR(0x41);
+    Screen.cursor[22][71] = (vty_get()->y_begin % 10) + '0' | AS_COLOR(0x41);
 }
 
 void kernel_loop(void)
@@ -443,11 +435,11 @@ void _start(void)
     while(inputg().scan_code != ENTER);
     screen_clear();
 
-    xprintf("%z    _/      _/                      _/              _/_/      _/_/_/       \n", OUTPUT_COLOR_SET(logo_back_color, logo_front_color));
-    xprintf("%z     _/  _/      _/_/_/  _/_/_/        _/_/_/    _/    _/  _/              \n", OUTPUT_COLOR_SET(logo_back_color, logo_front_color));
-    xprintf("%z      _/      _/    _/  _/    _/  _/  _/    _/  _/    _/    _/_/           \n", OUTPUT_COLOR_SET(logo_back_color, logo_front_color));
-    xprintf("%z   _/  _/    _/    _/  _/    _/  _/  _/    _/  _/    _/        _/%z   version 1.5v", OUTPUT_COLOR_SET(logo_back_color, logo_front_color), OUTPUT_COLOR_SET(black,white));
-    xprintf("%z_/      _/    _/_/_/  _/    _/  _/  _/    _/    _/_/    _/_/_/     %z%s: %i:%i:%i\n", OUTPUT_COLOR_SET(logo_back_color, logo_front_color), OUTPUT_COLOR_SET(black,white), daysLUT[SystemTime.weekday], SystemTime.hour, SystemTime.minutes, SystemTime.seconds);                                       
+    // xprintf("%z    _/      _/                      _/              _/_/      _/_/_/       \n", OUTPUT_COLOR_SET(logo_back_color, logo_front_color));
+    // xprintf("%z     _/  _/      _/_/_/  _/_/_/        _/_/_/    _/    _/  _/              \n", OUTPUT_COLOR_SET(logo_back_color, logo_front_color));
+    // xprintf("%z      _/      _/    _/  _/    _/  _/  _/    _/  _/    _/    _/_/           \n", OUTPUT_COLOR_SET(logo_back_color, logo_front_color));
+    // xprintf("%z   _/  _/    _/    _/  _/    _/  _/  _/    _/  _/    _/        _/%z   version 1.5v", OUTPUT_COLOR_SET(logo_back_color, logo_front_color), OUTPUT_COLOR_SET(black,white));
+    // xprintf("%z_/      _/    _/_/_/  _/    _/  _/  _/    _/    _/_/    _/_/_/     %z%s: %i:%i:%i\n", OUTPUT_COLOR_SET(logo_back_color, logo_front_color), OUTPUT_COLOR_SET(black,white), daysLUT[SystemTime.weekday], SystemTime.hour, SystemTime.minutes, SystemTime.seconds);                                       
 
     kernel_loop();
 

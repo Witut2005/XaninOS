@@ -47,6 +47,9 @@ int xtf_get_number_of_lines(Xtf* XtFrontend)
         buffer += 2;
     }
 
+    if((*(buffer - 2) != '\n') && (*(buffer - 2) != SAFE_NEW_LINE))
+        lines_total++;
+    
     return lines_total;
 
 }
@@ -62,6 +65,7 @@ int xtf_buffer_nth_line_index_get(Xtf* XtFrontend, uint32_t line_number) // star
 
     if(line_number >= xtf_get_number_of_lines(XtFrontend))
         return XT_NO_SUCH_LINE;
+    
 
     while((char)XtFrontend->buffer[index] != '\0')
     {
