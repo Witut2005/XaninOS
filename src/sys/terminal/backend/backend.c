@@ -7,8 +7,8 @@
 
 void xtb_scroll_up(Xtf* XtFrontend)
 {
-    // if(!XtFrontend->y_begin)
-    //     return;
+    if(!XtFrontend->y_begin)
+        return;
 
     XtFrontend->y_begin--;
     int start_index = xtf_buffer_nth_line_index_get(XtFrontend, XtFrontend->y_begin);
@@ -21,7 +21,6 @@ void xtb_scroll_up(Xtf* XtFrontend)
         Screen.cursor[20][0] = 0x4141;
         return;
     }
-    // xtb_flush(XtFrontend);
 
     memmove((uint8_t*)VGA_TEXT_MEMORY + (xtb_get()->vga_width * sizeof(terminal_cell)), (uint8_t*)VGA_TEXT_MEMORY , xtb_get()->vga_width * xtb_get()->vga_height * sizeof(terminal_cell)); // move terminal data
     memset((uint8_t*)VGA_TEXT_MEMORY, 0, xtb_get()->vga_width * sizeof(terminal_cell)); // clear row
@@ -33,8 +32,8 @@ void xtb_scroll_up(Xtf* XtFrontend)
 void xtb_scroll_down(Xtf* XtFrontend)
 {
 
-    // if(!XtFrontend->scrolling_enabled)
-    //     return;
+    if(!XtFrontend->scrolling_enabled)
+        return;
 
     Xtb* XtBackend = xtb_get();
 
@@ -42,15 +41,11 @@ void xtb_scroll_down(Xtf* XtFrontend)
     {
         int start_index = xtf_buffer_nth_line_index_get(XtFrontend, (XtFrontend->y_begin) + XtBackend->vga_height);
         int number_of_cells_to_copy = xtf_buffer_nth_line_size_get(XtFrontend, XtFrontend->y_begin + XtBackend->vga_height);
-        XtFrontend->y_begin++;
 
         if(start_index == XT_NO_SUCH_LINE)
-        {
-            XtFrontend->y_begin = XtFrontend->current_height - xtb_get()->vga_height;
             return;
-        }
 
-        // xtb_flush(XtFrontend);
+        XtFrontend->y_begin++;
         
         memmove((uint8_t*)VGA_TEXT_MEMORY, (uint8_t*)VGA_TEXT_MEMORY + (xtb_get()->vga_width * sizeof(terminal_cell)), xtb_get()->vga_width * (xtb_get()->vga_height - 1) * sizeof(terminal_cell)); // move terminal data
         memset((uint8_t*)VGA_TEXT_MEMORY + ((xtb_get()->vga_height - 1) * xtb_get()->vga_width * sizeof(terminal_cell)), 0, xtb_get()->vga_width * sizeof(terminal_cell)); // clear row
@@ -69,12 +64,13 @@ void xtb_flush(Xtf* XtFrontend)
     }
 
     int vram_index = 0;
-    __vga_buffer_segment_get()[XtFrontend->cursor_vram_index] = BLANK_SCREEN_CELL;
+    // __vga_buffer_segment_get()[XtFrontend->cursor_vram_index] = BLANK_SCREEN_CELL;
 
     uint32_t current_row_to_display = XtFrontend->y_begin; //first row to display on screen
     bool row_cleared = false;
 
-    for(int i = xtf_buffer_nth_line_index_get(XtFrontend, XtFrontend->y_begin); i < XtFrontend->size; i++)
+    int i;
+    for(i = xtf_buffer_nth_line_index_get(XtFrontend, XtFrontend->y_begin); i < XtFrontend->size; i++)
     {
         if((char)(XtFrontend->buffer[i]) == SAFE_NEW_LINE)
         {
@@ -103,8 +99,8 @@ void xtb_flush(Xtf* XtFrontend)
         {
             if(!row_cleared)
             {
-                for(int i = 0; i < XtFrontend->vwidth; i++)
-                    vram[vram_index + i] = BLANK_SCREEN_CELL;
+                for(int j = 0; j < XtFrontend->vwidth; j++)
+                    vram[vram_index + j] = BLANK_SCREEN_CELL;
                 row_cleared = true;
             }
             vram[vram_index] = XtFrontend->buffer[i];
@@ -116,28 +112,26 @@ void xtb_flush(Xtf* XtFrontend)
         vram_index++;
     }
 
-    for(; vram_index < xtb_get()->vga_height * xtb_get()->vga_width * sizeof(terminal_cell); vram_index++)
-    {
-        uint16_t* vram = (uint16_t*)__vga_buffer_segment_get();
-        vram[vram_index] = BLANK_SCREEN_CELL;
-    }
-
     if((XtFrontend->Cursor.is_used) && (XtFrontend->Cursor.position == CURSOR_POSITION_END)) 
     {
         uint16_t* vram = (uint16_t*)__vga_buffer_segment_get();
         vram[vram_index] = (char)vram[vram_index] | AS_COLOR(XtFrontend->Cursor.color);
         XtFrontend->cursor_vram_index = vram_index;
     }
+    
+    vram_index++;
+
+    for(; vram_index < xtb_get()->vga_height * xtb_get()->vga_width * sizeof(terminal_cell); vram_index++, i++)
+    {
+        uint16_t* vram = (uint16_t*)__vga_buffer_segment_get();
+        vram[vram_index] = BLANK_SCREEN_CELL;
+        
+        if((XtFrontend->Cursor.is_used) && (XtFrontend->Cursor.position == i)) 
+            vram[vram_index] = (char)vram[vram_index] | AS_COLOR(XtFrontend->Cursor.color);
+
+    }
 
 
-    // for(int i = XtFrontend->y_begin; i < XtFrontend->current_height; i++) 
-    // {
-    //     if(XtFrontend->rows_changed[i])
-    //         Screen.cursor[i][__vga_text_mode_width_get() - 1] = 0x4141;
-    //     else
-    //         Screen.cursor[i][__vga_text_mode_width_get() - 1] = 0x4242;
-
-    // }
 
     memset((uint8_t*)XtFrontend->rows_changed, false, XtFrontend->current_height * sizeof(uint8_t));
     // memset((char*)XtFrontend->buffer + XtFrontend->size, 0, XtFrontend->size_allocated - XtFrontend->size); 
@@ -184,8 +178,6 @@ void xtb_cell_put(Xtf* XtFrontend, char c, uint8_t color)
 
 void xtb_cursor_inc(Xtf* XtFrontend)
 {
-    XANIN_DEBUG_RETURN();
-
     if(XtFrontend->Cursor.position == CURSOR_POSITION_END)
         return;
 
@@ -200,8 +192,6 @@ void xtb_cursor_inc(Xtf* XtFrontend)
 
 void xtb_cursor_dec(Xtf* XtFrontend)
 {
-    XANIN_DEBUG_RETURN();
-
     if(XtFrontend->Cursor.position == CURSOR_POSITION_END)
         XtFrontend->Cursor.position = XtFrontend->size;
 

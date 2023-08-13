@@ -60,6 +60,9 @@ int xtf_buffer_nth_line_index_get(Xtf* XtFrontend, uint32_t line_number) // star
     if(!line_number)
         return 0;
 
+    if(line_number >= xtf_get_number_of_lines(XtFrontend))
+        return XT_NO_SUCH_LINE;
+
     while((char)XtFrontend->buffer[index] != '\0')
     {
         if(((char)XtFrontend->buffer[index]== '\n') || ((char)XtFrontend->buffer[index] == SAFE_NEW_LINE))
@@ -158,7 +161,6 @@ void xtf_remove_last_cell(Xtf* XtFrontend)
 
 void xtf_cursor_on(Xtf* XtFrontend, color_t color)
 {
-    XANIN_DEBUG_RETURN();
     XtFrontend->Cursor.is_used = true;
     XtFrontend->Cursor.color = color;
 }

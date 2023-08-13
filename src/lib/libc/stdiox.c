@@ -1607,8 +1607,9 @@ void xscanf(char* str, ... )
         }
 
         xprintf("\n");
-        xtf_cursor_off(StdioVty);
+        // xtf_cursor_off(StdioVty);
         xtb_flush(StdioVty);
+        xtb_cursor_inc(StdioVty);
         
         free(field_buffer);
         free(string_typed_buffer);
