@@ -21,6 +21,7 @@ void xtb_scroll_up(Xtf* XtFrontend)
         Screen.cursor[20][0] = 0x4141;
         return;
     }
+    // xtb_flush(XtFrontend);
 
     memmove((uint8_t*)VGA_TEXT_MEMORY + (xtb_get()->vga_width * sizeof(terminal_cell)), (uint8_t*)VGA_TEXT_MEMORY , xtb_get()->vga_width * xtb_get()->vga_height * sizeof(terminal_cell)); // move terminal data
     memset((uint8_t*)VGA_TEXT_MEMORY, 0, xtb_get()->vga_width * sizeof(terminal_cell)); // clear row
@@ -35,10 +36,12 @@ void xtb_scroll_down(Xtf* XtFrontend)
     // if(!XtFrontend->scrolling_enabled)
     //     return;
 
-    if(XtFrontend->y > xtb_get()->vga_height)
+    Xtb* XtBackend = xtb_get();
+
+    if(XtFrontend->y >= XtBackend->vga_height)
     {
-        int start_index = xtf_buffer_nth_line_index_get(XtFrontend, (XtFrontend->y_begin) + xtb_get()->vga_height);
-        int number_of_cells_to_copy = xtf_buffer_nth_line_size_get(XtFrontend, XtFrontend->y_begin + xtb_get()->vga_height);
+        int start_index = xtf_buffer_nth_line_index_get(XtFrontend, (XtFrontend->y_begin) + XtBackend->vga_height);
+        int number_of_cells_to_copy = xtf_buffer_nth_line_size_get(XtFrontend, XtFrontend->y_begin + XtBackend->vga_height);
         XtFrontend->y_begin++;
 
         if(start_index == XT_NO_SUCH_LINE)
@@ -47,6 +50,7 @@ void xtb_scroll_down(Xtf* XtFrontend)
             return;
         }
 
+        // xtb_flush(XtFrontend);
         
         memmove((uint8_t*)VGA_TEXT_MEMORY, (uint8_t*)VGA_TEXT_MEMORY + (xtb_get()->vga_width * sizeof(terminal_cell)), xtb_get()->vga_width * (xtb_get()->vga_height - 1) * sizeof(terminal_cell)); // move terminal data
         memset((uint8_t*)VGA_TEXT_MEMORY + ((xtb_get()->vga_height - 1) * xtb_get()->vga_width * sizeof(terminal_cell)), 0, xtb_get()->vga_width * sizeof(terminal_cell)); // clear row
@@ -136,6 +140,7 @@ void xtb_flush(Xtf* XtFrontend)
     // }
 
     memset((uint8_t*)XtFrontend->rows_changed, false, XtFrontend->current_height * sizeof(uint8_t));
+    // memset((char*)XtFrontend->buffer + XtFrontend->size, 0, XtFrontend->size_allocated - XtFrontend->size); 
 }
 
 void xtb_cell_put(Xtf* XtFrontend, char c, uint8_t color)
@@ -147,8 +152,6 @@ void xtb_cell_put(Xtf* XtFrontend, char c, uint8_t color)
     }
 
     XtFrontend->buffer[XtFrontend->size++] = c | AS_COLOR(color);
-
-
     XtFrontend->Cursor.position = CURSOR_POSITION_END;
     XtFrontend->x++;
 
@@ -169,10 +172,12 @@ void xtb_cell_put(Xtf* XtFrontend, char c, uint8_t color)
         
         XtFrontend->rows_changed[XtFrontend->y] = true; // mark current row as changed
 
-        if(xtb_get()->vga_height < XtFrontend->y)
+        if(XtFrontend->y >= xtb_get()->vga_height)
+        {
+            xtb_flush(XtFrontend);
             xtb_scroll_down(XtFrontend);
+        }
     }
-    
     XtFrontend->rows_changed[XtFrontend->y] = true; // mark current row as changed
 
 }

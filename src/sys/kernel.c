@@ -89,7 +89,14 @@ void terminal_time_update(address_t* args)
 void print_ybegin(address_t* args)
 {
     stdio_mode_set(STDIO_MODE_CANVAS);
-    xprintf("%h%d", OUTPUT_POSITION_SET(15, VGA_WIDTH-10), vty_get()->y_begin);//xtf_buffer_nth_line_index_get(vty_get(), vty_get()->y_begin));
+    // xprintf("%h%d", OUTPUT_POSITION_SET(15, VGA_WIDTH-10), vty_get()->y_begin);//xtf_buffer_nth_line_index_get(vty_get(), vty_get()->y_begin));
+    // Screen.cursor[22][70] = (xtf_buffer_nth_line_size_get(vty_get(), 0) / 10) + '0' | AS_COLOR(0x41);
+    // Screen.cursor[22][71] = (xtf_buffer_nth_line_size_get(vty_get(), 0) % 10) + '0' | AS_COLOR(0x41);
+    // Screen.cursor[23][70] = (xtf_buffer_nth_line_size_get(vty_get(), 1) / 10) + '0' | AS_COLOR(0x41);
+    // Screen.cursor[23][71] = (xtf_buffer_nth_line_size_get(vty_get(), 1) % 10) + '0' | AS_COLOR(0x41);
+    // Screen.cursor[24][70] = (xtf_buffer_nth_line_size_get(vty_get(), 2) / 10) + '0' | AS_COLOR(0x41);
+    // Screen.cursor[24][71] = (xtf_buffer_nth_line_size_get(vty_get(), 2) % 10) + '0' | AS_COLOR(0x41);
+    
     stdio_mode_set(STDIO_MODE_TERMINAL);
 }
 
@@ -196,8 +203,6 @@ void _start(void)
     INTERRUPT_REGISTER(31, general_protection_exception_entry);
     INTERRUPT_REGISTER(32, general_protection_exception_entry);
 
-    vga_text_mode_height = 25;
-    vga_text_mode_width = 80;
 
     interrupt_enable();
     
@@ -209,6 +214,9 @@ void _start(void)
 
     disable_cursor();
     mmngr_init(kernel_mmngr_mmap, (uint8_t*)0x100000, PMMNGR_MEMORY_BLOCKS);
+
+    vga_text_mode_height = 25;
+    vga_text_mode_width = 80;
 
     xtb_init(__vga_text_mode_width_get(), __vga_text_mode_height_get(), (uint16_t*)__vga_buffer_segment_get());
     vty_set(xtf_init(100));

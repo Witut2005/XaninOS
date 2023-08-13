@@ -1606,7 +1606,7 @@ void xscanf(char* str, ... )
             }    
         }
 
-        puts("\n");
+        xprintf("\n");
         xtf_cursor_off(StdioVty);
         xtb_flush(StdioVty);
         

@@ -34,21 +34,6 @@ void xtf_destroy(Xtf* XtFrontend)
     free(XtFrontend);
 }
 
-int xtf_buffer_nth_line_size_get(Xtf* XtFrontend, uint32_t line_number)
-{
-    int index = xtf_buffer_nth_line_index_get(XtFrontend, line_number);
-    int size = 0;
-
-    while((((char)XtFrontend->buffer[index] != '\n') || ((char)XtFrontend->buffer[index] != SAFE_NEW_LINE)) && ((char)XtFrontend->buffer[index] != '\0'))
-    {
-        size++;
-        index++;
-    }
-
-    return size;
-
-}
-
 int xtf_get_number_of_lines(Xtf* XtFrontend)
 {
     const char* buffer = (char*)XtFrontend->buffer;
@@ -68,32 +53,47 @@ int xtf_get_number_of_lines(Xtf* XtFrontend)
 
 int xtf_buffer_nth_line_index_get(Xtf* XtFrontend, uint32_t line_number) // starting with 0
 {
-    const terminal_cell* buffer = XtFrontend->buffer;
+    // const terminal_cell* buffer = XtFrontend->buffer;
     int current_line = 0;
     int index = 0;
  
     if(!line_number)
         return 0;
 
-    while ((char)*buffer != '\0')
+    while((char)XtFrontend->buffer[index] != '\0')
     {
-        if (((char)*buffer == '\n') || ((char)*buffer == SAFE_NEW_LINE))
+        if(((char)XtFrontend->buffer[index]== '\n') || ((char)XtFrontend->buffer[index] == SAFE_NEW_LINE))
         {
-            if (current_line + 1 >= line_number)
-            {
-                current_line++;
+            current_line++;
+            if (current_line == line_number)
                 break;
-            }
         }
 
-        buffer++;
         index++;
     }
 
-    if ((char)*buffer == '\0')
-        return -1;
+    if ((char)XtFrontend->buffer[index] == '\0')
+        return XT_NO_SUCH_LINE;
     
     return index + 1;
+}
+
+int xtf_buffer_nth_line_size_get(Xtf* XtFrontend, uint32_t line_number)
+{
+    int index = xtf_buffer_nth_line_index_get(XtFrontend, line_number);
+    int size = 0;
+
+    if(index == XT_NO_SUCH_LINE)
+        return XT_NO_SUCH_LINE;
+
+    while((((char)XtFrontend->buffer[index] != '\n') && ((char)XtFrontend->buffer[index] != SAFE_NEW_LINE)) && ((char)XtFrontend->buffer[index] != '\0'))
+    {
+        size++;
+        index++;
+    }
+
+    return size;
+
 }
 
 int xtf_get_line_number_from_position(Xtf* XtFrontend, uint32_t position)
