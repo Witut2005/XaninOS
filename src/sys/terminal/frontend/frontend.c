@@ -56,17 +56,15 @@ int xtf_get_number_of_lines(Xtf* XtFrontend)
 
 int xtf_buffer_nth_line_index_get(Xtf* XtFrontend, uint32_t line_number) // starting with 0
 {
-    // const terminal_cell* buffer = XtFrontend->buffer;
     int current_line = 0;
     int index = 0;
  
     if(!line_number)
         return 0;
 
-    if(line_number >= xtf_get_number_of_lines(XtFrontend))
+    if(line_number > xtf_get_number_of_lines(XtFrontend))
         return XT_NO_SUCH_LINE;
     
-
     while((char)XtFrontend->buffer[index] != '\0')
     {
         if(((char)XtFrontend->buffer[index]== '\n') || ((char)XtFrontend->buffer[index] == SAFE_NEW_LINE))
@@ -186,18 +184,16 @@ void xtf_scrolling_off(Xtf* XtFrontend)
 
 void xtf_buffer_clear(Xtf* XtFrontend)
 {
-
-    memset((uint8_t*)XtFrontend->buffer, 0, XtFrontend->size);
-
     XtFrontend->size = 0;
-    XtFrontend->size_allocated = XANIN_PMMNGR_BLOCK_SIZE;
+    XtFrontend->size_allocated = XANIN_PMMNGR_BLOCK_SIZE * 2;
     XtFrontend->vwidth = VGA_WIDTH; // 80
     XtFrontend->vheight = 1000; //useless
     XtFrontend->buffer = (terminal_cell*)realloc(XtFrontend->buffer, XtFrontend->size_allocated);
     XtFrontend->current_height = VGA_HEIGHT; 
     XtFrontend->Cursor.position = -1;
     XtFrontend->x_screen = XtFrontend->y_screen = 0;
-
     XtFrontend->x = XtFrontend->y = XtFrontend->y_begin = 0;
+    memset((uint8_t*)XtFrontend->buffer, 0, XtFrontend->size);
+
     xtb_flush(XtFrontend);
 }

@@ -17,8 +17,6 @@ void xtb_scroll_up(Xtf* XtFrontend)
     if(start_index == XT_NO_SUCH_LINE)
     {
         XtFrontend->y_begin = 0;
-        start_index = 0;
-        Screen.cursor[20][0] = 0x4141;
         return;
     }
 
@@ -54,8 +52,21 @@ void xtb_scroll_down(Xtf* XtFrontend)
     }
 }
 
+void xtb_disable_flushing(void)
+{
+    xtb_get()->is_flushable = false;
+}
+
+void xtb_enable_flushing(void)
+{
+    xtb_get()->is_flushable = true;
+}
+
 void xtb_flush(Xtf* XtFrontend)
 {
+    if(!xtb_get()->is_flushable)
+        return;
+
     if(!XtFrontend->size)
     {
         screen_buffer_clear();
@@ -64,7 +75,6 @@ void xtb_flush(Xtf* XtFrontend)
     }
 
     int vram_index = 0;
-    // __vga_buffer_segment_get()[XtFrontend->cursor_vram_index] = BLANK_SCREEN_CELL;
 
     uint32_t current_row_to_display = XtFrontend->y_begin; //first row to display on screen
     bool row_cleared = false;
@@ -137,6 +147,12 @@ void xtb_flush(Xtf* XtFrontend)
     // memset((char*)XtFrontend->buffer + XtFrontend->size, 0, XtFrontend->size_allocated - XtFrontend->size); 
 }
 
+void xtb_flush_all(Xtf* XtFrontend)
+{
+    memset(XtFrontend->rows_changed, XTF_ROW_CHANGED, XtFrontend->current_height * SIZE_OF_POINTED_TYPE(XtFrontend->rows_changed));
+    xtb_flush(XtFrontend);
+}
+
 void xtb_cell_put(Xtf* XtFrontend, char c, uint8_t color)
 {
     if(XtFrontend->size + SECTOR_SIZE > XtFrontend->size_allocated)
@@ -154,7 +170,7 @@ void xtb_cell_put(Xtf* XtFrontend, char c, uint8_t color)
 
     if((c == NEW_LINE) || (c == SAFE_NEW_LINE) || (XtFrontend->x >= XtFrontend->vwidth))
     {
-        XtFrontend->rows_changed[XtFrontend->y] = true; // mark current row as changed
+        // XtFrontend->rows_changed[XtFrontend->y] = true; // mark current row as changed
         XtFrontend->y++; 
         XtFrontend->x = 0;
 
@@ -172,8 +188,8 @@ void xtb_cell_put(Xtf* XtFrontend, char c, uint8_t color)
             xtb_scroll_down(XtFrontend);
         }
     }
-    XtFrontend->rows_changed[XtFrontend->y] = true; // mark current row as changed
-
+    else
+        XtFrontend->rows_changed[XtFrontend->y] = true; // mark current row as changed
 }
 
 void xtb_cursor_inc(Xtf* XtFrontend)

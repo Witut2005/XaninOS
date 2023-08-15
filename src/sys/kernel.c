@@ -36,6 +36,7 @@
 #include <sys/interrupts/handlers/entries/handler_entries.h>
 #include <sys/terminal/frontend/frontend.h>
 #include <lib/cpu/headers/cpu_state_info.h>
+#include <sys/macros.h>
 
 extern void v86_mode_enter(void);
 extern void mouse_enable(void);
@@ -88,8 +89,11 @@ void terminal_time_update(address_t* args)
 
 void print_ybegin(address_t* args)
 {
-    Screen.cursor[22][70] = (vty_get()->y_begin / 10) + '0' | AS_COLOR(0x41);
-    Screen.cursor[22][71] = (vty_get()->y_begin % 10) + '0' | AS_COLOR(0x41);
+    XANIN_DEBUG_RETURN();
+    Screen.cursor[22][70] = (xtf_get_number_of_lines(vty_get()) / 10) + '0' | AS_COLOR(0x41);
+    Screen.cursor[22][71] = (xtf_get_number_of_lines(vty_get()) % 10) + '0' | AS_COLOR(0x41);
+    Screen.cursor[23][70] = ((vty_get()->y_begin + VGA_HEIGHT) / 10) + '0' | AS_COLOR(0x41);
+    Screen.cursor[23][71] = ((vty_get()->y_begin + VGA_HEIGHT) % 10) + '0' | AS_COLOR(0x41);
 }
 
 void kernel_loop(void)
@@ -435,11 +439,11 @@ void _start(void)
     while(inputg().scan_code != ENTER);
     screen_clear();
 
-    // xprintf("%z    _/      _/                      _/              _/_/      _/_/_/       \n", OUTPUT_COLOR_SET(logo_back_color, logo_front_color));
-    // xprintf("%z     _/  _/      _/_/_/  _/_/_/        _/_/_/    _/    _/  _/              \n", OUTPUT_COLOR_SET(logo_back_color, logo_front_color));
-    // xprintf("%z      _/      _/    _/  _/    _/  _/  _/    _/  _/    _/    _/_/           \n", OUTPUT_COLOR_SET(logo_back_color, logo_front_color));
-    // xprintf("%z   _/  _/    _/    _/  _/    _/  _/  _/    _/  _/    _/        _/%z   version 1.5v", OUTPUT_COLOR_SET(logo_back_color, logo_front_color), OUTPUT_COLOR_SET(black,white));
-    // xprintf("%z_/      _/    _/_/_/  _/    _/  _/  _/    _/    _/_/    _/_/_/     %z%s: %i:%i:%i\n", OUTPUT_COLOR_SET(logo_back_color, logo_front_color), OUTPUT_COLOR_SET(black,white), daysLUT[SystemTime.weekday], SystemTime.hour, SystemTime.minutes, SystemTime.seconds);                                       
+    xprintf("%z    _/      _/                      _/              _/_/      _/_/_/       \n", OUTPUT_COLOR_SET(logo_back_color, logo_front_color));
+    xprintf("%z     _/  _/      _/_/_/  _/_/_/        _/_/_/    _/    _/  _/              \n", OUTPUT_COLOR_SET(logo_back_color, logo_front_color));
+    xprintf("%z      _/      _/    _/  _/    _/  _/  _/    _/  _/    _/    _/_/           \n", OUTPUT_COLOR_SET(logo_back_color, logo_front_color));
+    xprintf("%z   _/  _/    _/    _/  _/    _/  _/  _/    _/  _/    _/        _/%z   version 1.5v", OUTPUT_COLOR_SET(logo_back_color, logo_front_color), OUTPUT_COLOR_SET(black,white));
+    xprintf("%z_/      _/    _/_/_/  _/    _/  _/  _/    _/    _/_/    _/_/_/     %z%s: %i:%i:%i\n", OUTPUT_COLOR_SET(logo_back_color, logo_front_color), OUTPUT_COLOR_SET(black,white), daysLUT[SystemTime.weekday], SystemTime.hour, SystemTime.minutes, SystemTime.seconds);                                       
 
     kernel_loop();
 

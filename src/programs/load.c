@@ -5,12 +5,11 @@
 int load(char* address_string)
 {
 
-    stdio_mode_set(STDIO_MODE_CANVAS);
-    screen_clear();
-
     char* data_pointer = (char*)strtoi(address_string, HEXADECIMAL); 
 
-    for(int i = 0; i < VGA_HEIGHT; i++)
+    xtb_disable_flushing();
+
+    for(int i = 0; i < VGA_HEIGHT - 1; i++)
     {
         char tmp[9] = {0x0};
         xprintf("0x%X:", data_pointer + i * 16);
@@ -27,15 +26,15 @@ int load(char* address_string)
         {
             
             if(data_pointer[ (16 * i) + j] < ASCII_SPACE)
-                putchar(' ');
+                xprintf(" ");
             else
-                putchar(data_pointer[ (16 * i) + j]);
+                xprintf("%c", data_pointer[ (16 * i) + j]);
         }
-        // xtb_flush(vty_get());
-
         xprintf("\n");
     }
-	while(inputg().scan_code != ENTER);
-    return XANIN_OK;
 
+    xtb_enable_flushing();
+    xtb_flush_all();
+
+    return XANIN_OK;
 }

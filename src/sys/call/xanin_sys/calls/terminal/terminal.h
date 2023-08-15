@@ -17,6 +17,7 @@ struct Xtb{
     uint32_t vga_height;    // screen height
     uint32_t vga_width;     // screen width
     uint16_t* vram;         // ptr to text memory
+    bool is_flushable;
 };
 
 typedef struct Xtb Xtb;
