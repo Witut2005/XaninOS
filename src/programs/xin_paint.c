@@ -20,7 +20,7 @@ void paint_input(xchar x)
         selected_cell = '\0';
     }
 
-    if((uint32_t)&Screen.cursor[Screen.y][Screen.x] >= VGA_TEXT_MEMORY + VGA_SCREEN_RESOLUTION * sizeof(terminal_cell))
+    if((uint32_t)&Screen.cursor[Screen.y][Screen.x] >= VGA_TEXT_MEMORY + VGA_SCREEN_RESOLUTION * sizeof(XtCell))
     {
         Screen.x = 79;
         Screen.y = 27;
@@ -48,7 +48,7 @@ void paint_input(xchar x)
     {
         Screen.cursor[Screen.y][Screen.x] = selected_cell;
         
-        if((uint32_t)&Screen.cursor[Screen.y + 1][Screen.x] <= VGA_TEXT_MEMORY + VGA_SCREEN_RESOLUTION * sizeof(terminal_cell))
+        if((uint32_t)&Screen.cursor[Screen.y + 1][Screen.x] <= VGA_TEXT_MEMORY + VGA_SCREEN_RESOLUTION * sizeof(XtCell))
             Screen.y++;
 
         selected_cell = Screen.cursor[Screen.y][Screen.x];
@@ -169,7 +169,7 @@ int xin_paint(char* file_name)
         uint8_t* screen_ptr = (uint8_t*)VGA_TEXT_MEMORY;
 
         fseek(xin_file, 0);
-        for(int i = 0; i < VGA_SCREEN_RESOLUTION * sizeof(terminal_cell); i++, screen_ptr += 2)
+        for(int i = 0; i < VGA_SCREEN_RESOLUTION * sizeof(XtCell); i++, screen_ptr += 2)
         {
             fwrite(xin_file, screen_ptr + 1, 1);
         }

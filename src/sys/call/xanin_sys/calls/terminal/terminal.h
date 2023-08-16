@@ -3,14 +3,23 @@
 
 typedef uint8_t color_t;
 
-// struct terminal_cell{
-//     char character;
-//     color_t color;
-// }
+union XtCell 
+{
+    uint16_t cell;
+    struct {
+        char character;
+        union {
+            uint8_t color;
+            struct  
+            {
+                uint8_t foreground : 4;
+                uint8_t background : 4;
+            }__attribute__((packed));
+        };
+    }__attribute__((packed));
+};
 
-// typedef struct terminal_cell terminal_cell;
-
-typedef uint16_t terminal_cell; // should be struct
+typedef union XtCell XtCell; // should be struct
 
 struct Xtb{
     uint32_t y;             // real y position
@@ -25,7 +34,7 @@ typedef struct Xtb Xtb;
 struct XtfCursor{
     bool is_used;
     int position;
-    terminal_cell saved_cell;
+    XtCell saved_cell;
     color_t color;
 };
 
@@ -42,7 +51,7 @@ struct Xtf
     uint32_t vwidth;
     uint32_t vheight;   // how many rows
     uint32_t current_height;
-    terminal_cell* buffer;
+    XtCell* buffer;
     uint32_t size;
     uint32_t size_allocated;
     uint32_t cursor_vram_index;

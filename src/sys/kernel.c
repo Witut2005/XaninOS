@@ -90,10 +90,8 @@ void terminal_time_update(address_t* args)
 void print_ybegin(address_t* args)
 {
     XANIN_DEBUG_RETURN();
-    Screen.cursor[22][70] = (xtf_get_number_of_lines(vty_get()) / 10) + '0' | AS_COLOR(0x41);
-    Screen.cursor[22][71] = (xtf_get_number_of_lines(vty_get()) % 10) + '0' | AS_COLOR(0x41);
-    Screen.cursor[23][70] = ((vty_get()->y_begin + VGA_HEIGHT) / 10) + '0' | AS_COLOR(0x41);
-    Screen.cursor[23][71] = ((vty_get()->y_begin + VGA_HEIGHT) % 10) + '0' | AS_COLOR(0x41);
+    Screen.cursor[23][70] = ((vty_get()->y) / 10) + '0' | AS_COLOR(0x41);
+    Screen.cursor[23][71] = ((vty_get()->y) % 10) + '0' | AS_COLOR(0x41);
 }
 
 void kernel_loop(void)

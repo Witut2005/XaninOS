@@ -1407,11 +1407,11 @@ void xscanf(char* str, ... )
         Xtf* StdioVty = vty_get();
         uint32_t begin_index = StdioVty->size;
         xtf_scrolling_on(StdioVty);
+        xtf_cursor_on(StdioVty, OUTPUT_COLOR_SET(white, black));
+        // xtf_cursor_off(StdioVty);
 
         start:
 
-        // xtf_cursor_on(StdioVty, OUTPUT_COLOR_SET(white, black));
-        xtf_cursor_off(StdioVty);
         xtb_flush(StdioVty);
 
         while(1)
@@ -1429,6 +1429,8 @@ void xscanf(char* str, ... )
                     continue;
 
                 xtf_remove_last_cell(StdioVty);
+                // StdioVty->rows_changed[StdioVty->y] = XTF_ROW_CHANGED;
+                xtb_flush(StdioVty);
 
                 if(index)
                     index--;
@@ -1436,7 +1438,6 @@ void xscanf(char* str, ... )
                 string_typed_buffer[index] = '\0';
 
                 KeyInfo.is_bspc = false;
-                xtb_flush(StdioVty);
             }
 
             else if(Input.scan_code == ARROW_UP)
@@ -1451,7 +1452,7 @@ void xscanf(char* str, ... )
 
             else if(Input.scan_code == ARROW_LEFT)
             {
-                if(begin_index == StdioVty->size)
+                if(begin_index == StdioVty->Cursor.position)
                     continue;
                 xtb_cursor_dec(StdioVty);
             }
