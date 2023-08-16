@@ -9,7 +9,7 @@ int load(char* address_string)
 
     xtb_disable_flushing();
 
-    for(int i = 0; i < VGA_HEIGHT - 1; i++)
+    for(int i = 0; i < VGA_HEIGHT; i++)
     {
         char tmp[9] = {0x0};
         xprintf("0x%X:", data_pointer + i * 16);
