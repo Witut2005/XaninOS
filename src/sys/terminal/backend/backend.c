@@ -77,7 +77,7 @@ void xtb_flush(Xtf* XtFrontend)
     if(!XtFrontend->size)
     {
         screen_buffer_clear();
-        memset(XtFrontend->rows_changed, true, XtFrontend->current_height);
+        memset(XtFrontend->rows_changed, XTF_ROW_CHANGED, XtFrontend->current_height);
         return;
     }
 
@@ -148,7 +148,7 @@ void xtb_flush(Xtf* XtFrontend)
             vram[vram_index] = (char)vram[vram_index] | AS_COLOR(XtFrontend->Cursor.color);
 
     }
-    memset((uint8_t*)XtFrontend->rows_changed, false, XtFrontend->current_height * sizeof(uint8_t));
+    memset((uint8_t*)XtFrontend->rows_changed, XTF_ROW_NOT_CHANGED, XtFrontend->current_height * sizeof(uint8_t));
 }
 
 void xtb_flush_all(Xtf* XtFrontend)
@@ -186,7 +186,7 @@ void xtb_cell_put(Xtf* XtFrontend, char c, uint8_t color)
             XtFrontend->rows_changed = (uint8_t*)realloc(XtFrontend->rows_changed, XtFrontend->current_height * SIZE_OF_POINTED_TYPE(XtFrontend->rows_changed));
         }
         
-        XtFrontend->rows_changed[XtFrontend->y] = true; // mark current row as changed
+        XtFrontend->rows_changed[XtFrontend->y] = XTF_ROW_CHANGED; // mark current row as changed
 
         if(XtFrontend->y >= XtBackend->vga_height)
         {
@@ -195,7 +195,7 @@ void xtb_cell_put(Xtf* XtFrontend, char c, uint8_t color)
         }
     }
     else
-        XtFrontend->rows_changed[XtFrontend->y] = true; // mark current row as changed
+        XtFrontend->rows_changed[XtFrontend->y] = XTF_ROW_CHANGED; // mark current row as changed
 }
 
 void xtb_cursor_inc(Xtf* XtFrontend)
@@ -208,7 +208,7 @@ void xtb_cursor_inc(Xtf* XtFrontend)
     if(XtFrontend->Cursor.position >= XtFrontend->size)
         XtFrontend->Cursor.position = CURSOR_POSITION_END;
 
-    XtFrontend->rows_changed[xtf_get_line_number_from_position(XtFrontend, XtFrontend->Cursor.position)] = true;
+    XtFrontend->rows_changed[xtf_get_line_number_from_position(XtFrontend, XtFrontend->Cursor.position)] = XTF_ROW_CHANGED;
     xtb_flush(XtFrontend);
 }
 
@@ -218,6 +218,6 @@ void xtb_cursor_dec(Xtf* XtFrontend)
         XtFrontend->Cursor.position = XtFrontend->size;
 
     XtFrontend->Cursor.position--;
-    XtFrontend->rows_changed[xtf_get_line_number_from_position(XtFrontend, XtFrontend->Cursor.position)] = true;
+    XtFrontend->rows_changed[xtf_get_line_number_from_position(XtFrontend, XtFrontend->Cursor.position)] = XTF_ROW_CHANGED;
     xtb_flush(XtFrontend);
 }
