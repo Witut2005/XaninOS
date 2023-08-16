@@ -184,6 +184,7 @@ void xtf_scrolling_off(Xtf* XtFrontend)
 
 void xtf_buffer_clear(Xtf* XtFrontend)
 {
+    memset((uint8_t*)XtFrontend->buffer, BLANK_SCREEN_CELL, XtFrontend->size_allocated);
     XtFrontend->size = 0;
     XtFrontend->size_allocated = XANIN_PMMNGR_BLOCK_SIZE * 2;
     XtFrontend->vwidth = VGA_WIDTH; // 80
@@ -193,7 +194,6 @@ void xtf_buffer_clear(Xtf* XtFrontend)
     XtFrontend->Cursor.position = -1;
     XtFrontend->x_screen = XtFrontend->y_screen = 0;
     XtFrontend->x = XtFrontend->y = XtFrontend->y_begin = 0;
-    memset((uint8_t*)XtFrontend->buffer, 0, XtFrontend->size);
 
     xtb_flush(XtFrontend);
 }

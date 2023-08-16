@@ -153,9 +153,9 @@ void keyboard_driver(void)
 
     if(KeyInfo.is_ctrl & KeyInfo.is_alt)
     {
-        // memset(vty_get()->rows_changed, true, vty_get()->current_height * sizeof(uint8_t));
-        // xtb_flush(vty_get());
-        memcpy(0x0, (uint8_t*)vty_get()->buffer, SECTOR_SIZE);
+        memset(vty_get()->rows_changed, true, vty_get()->current_height * sizeof(uint8_t));
+        xtb_flush(vty_get());
+        // memcpy(0x0, (uint8_t*)vty_get()->buffer, SECTOR_SIZE);
     } 
 
 
