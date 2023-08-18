@@ -25,6 +25,7 @@ static inline void xtb_character_put(Xtf* XtFrontend, char c)
 {
     xtb_cell_put(XtFrontend, c, DEFAULT_COLOR);
 }
+void xtb_cell_put_at_position(Xtf *XtFrontend, char c, uint8_t color, uint32_t position);
 
 
 #ifdef __cplusplus

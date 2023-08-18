@@ -73,25 +73,17 @@ uint8_t* const zeros;
 
 #define PMMNGR_MEMORY_BLOCKS 10000
 
-void terminal_time_update(address_t* args)
+void vty_update_time(address_t* args)
 {
+    Xtf* XtFrontend = vty_get();
+    int time_row_index = xtf_buffer_nth_line_index_get(XtFrontend, 4);
     time_get(&SystemTime);
-    
-    stdio_mode_set(STDIO_MODE_CANVAS);
 
-    xprintf("%hposx:   %d", OUTPUT_POSITION_SET(15, VGA_WIDTH-10), vty_get()->x);
-    xprintf("%hposy:   %d", OUTPUT_POSITION_SET(16, VGA_WIDTH-10), vty_get()->y);
-    xprintf("%hybegin: %d", OUTPUT_POSITION_SET(17, VGA_WIDTH-10), vty_get()->y_begin);
+    xtb_cell_put_at_position(XtFrontend, 'a' + SystemTime.seconds, 0x41 ,time_row_index);
 
-    xprintf("%h%s: %i:%i:%i\n\n\n", OUTPUT_POSITION_SET(VGA_MAX_Y, VGA_WIDTH - 13), daysLUT[SystemTime.weekday], SystemTime.hour, SystemTime.minutes, SystemTime.seconds);
-    stdio_mode_set(STDIO_MODE_TERMINAL);
-}
+    XtFrontend->rows_changed[4] = XTF_ROW_CHANGED; 
+    xtb_flush(XtFrontend);
 
-void print_ybegin(address_t* args)
-{
-    XANIN_DEBUG_RETURN();
-    Screen.cursor[23][70] = ((vty_get()->y) / 10) + '0' | AS_COLOR(0x41);
-    Screen.cursor[23][71] = ((vty_get()->y) % 10) + '0' | AS_COLOR(0x41);
 }
 
 void kernel_loop(void)
@@ -101,11 +93,13 @@ void kernel_loop(void)
     while(1)
     {
 
+        xtb_enable_flushing();
         stdio_mode_set(STDIO_MODE_TERMINAL);
         screen_background_color_set(black);
         
         all_intervals_clear(); // clear all intervals added by apps during execution
-        interval_set(print_ybegin, 100, NULL); // refresh current time every second
+
+        interval_set(vty_update_time, 500, NULL);
         
         memset(null_memory_region, 0, SECTOR_SIZE);
         xtf_scrolling_on(vty_get());

@@ -182,3 +182,4 @@ void xtf_buffer_clear(Xtf* XtFrontend)
 
     xtb_flush(XtFrontend);
 }
+

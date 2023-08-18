@@ -1407,8 +1407,8 @@ void xscanf(char* str, ... )
         Xtf* StdioVty = vty_get();
         uint32_t begin_index = StdioVty->size;
         xtf_scrolling_on(StdioVty);
-        xtf_cursor_on(StdioVty, OUTPUT_COLOR_SET(white, black));
-        // xtf_cursor_off(StdioVty);
+        // xtf_cursor_on(StdioVty, OUTPUT_COLOR_SET(white, black));
+        xtf_cursor_off(StdioVty);
 
         start:
 
