@@ -1,6 +1,8 @@
 
 #pragma once
+
 #include <lib/ascii/ascii.h>
+#include <sys/terminal/backend/backend.h>
 
 int load(char* address_string)
 {
@@ -34,7 +36,7 @@ int load(char* address_string)
     }
 
     xtb_enable_flushing();
-    xtb_flush_all();
+    xtb_flush_all(vty_get());
 
     return XANIN_OK;
 }

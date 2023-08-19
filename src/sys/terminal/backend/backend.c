@@ -227,27 +227,3 @@ void xtb_cell_put(Xtf *XtFrontend, char c, uint8_t color)
     else
         XtFrontend->rows_changed[XtFrontend->y] = XTF_ROW_CHANGED; // mark current row as changed
 }
-
-void xtb_cursor_inc(Xtf *XtFrontend)
-{
-    if (XtFrontend->Cursor.position >= XtFrontend->size)
-        XtFrontend->Cursor.position = XtFrontend->size;
-
-    // if (XtFrontend->Cursor.position == CURSOR_POSITION_END)
-    //     return;
-
-    XtFrontend->Cursor.position++;
-
-    XtFrontend->rows_changed[xtf_get_line_number_from_position(XtFrontend, XtFrontend->Cursor.position)] = XTF_ROW_CHANGED;
-    xtb_flush(XtFrontend);
-}
-
-void xtb_cursor_dec(Xtf *XtFrontend)
-{
-    if (XtFrontend->Cursor.position == 0)
-        return;
-
-    XtFrontend->Cursor.position--;
-    XtFrontend->rows_changed[xtf_get_line_number_from_position(XtFrontend, XtFrontend->Cursor.position)] = XTF_ROW_CHANGED;
-    xtb_flush(XtFrontend);
-}

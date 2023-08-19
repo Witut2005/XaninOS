@@ -1454,12 +1454,12 @@ void xscanf(char* str, ... )
             {
                 if(begin_index == StdioVty->Cursor.position)
                     continue;
-                xtb_cursor_dec(StdioVty);
+                xtf_cursor_dec(StdioVty);
             }
 
             else if(Input.scan_code == ARROW_RIGHT)
             {
-                xtb_cursor_inc(StdioVty);
+                xtf_cursor_inc(StdioVty);
             }
 
             else if(Input.scan_code == LSHIFT)
@@ -1611,7 +1611,7 @@ void xscanf(char* str, ... )
         xprintf("\n");
         // xtf_cursor_off(StdioVty);
         xtb_flush(StdioVty);
-        xtb_cursor_inc(StdioVty);
+        xtf_cursor_inc(StdioVty);
         
         free(field_buffer);
         free(string_typed_buffer);
