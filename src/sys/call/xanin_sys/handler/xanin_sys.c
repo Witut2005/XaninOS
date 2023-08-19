@@ -193,11 +193,10 @@ uint32_t xanin_sys_handle(void)
                 case STDIO_MODE_CANVAS:
                     stdio_current_mode = ecx; 
                     break;
-                case STDIO_MODE_TERMINAL:
-                    stdio_current_mode = ecx; 
-                    break;
                 default:
                     stdio_current_mode = STDIO_MODE_TERMINAL;
+                    memset(vty_get()->rows_changed, XTF_ROW_CHANGED, vty_get()->current_height * SIZE_OF_POINTED_TYPE(vty_get()->rows_changed));
+                    xtb_flush(vty_get());
                     break;
 
             }

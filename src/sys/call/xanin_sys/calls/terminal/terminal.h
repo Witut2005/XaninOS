@@ -2,13 +2,31 @@
 #pragma once
 
 typedef uint8_t color_t;
-typedef uint16_t terminal_cell;
+
+union XtCell 
+{
+    uint16_t cell;
+    struct {
+        char character;
+        union {
+            uint8_t color;
+            struct  
+            {
+                uint8_t foreground : 4;
+                uint8_t background : 4;
+            }__attribute__((packed));
+        };
+    }__attribute__((packed));
+};
+
+typedef union XtCell XtCell; // should be struct
 
 struct Xtb{
     uint32_t y;             // real y position
     uint32_t vga_height;    // screen height
     uint32_t vga_width;     // screen width
     uint16_t* vram;         // ptr to text memory
+    bool is_flushable;
 };
 
 typedef struct Xtb Xtb;
@@ -16,7 +34,7 @@ typedef struct Xtb Xtb;
 struct XtfCursor{
     bool is_used;
     int position;
-    terminal_cell saved_cell;
+    XtCell saved_cell;
     color_t color;
 };
 
@@ -33,9 +51,10 @@ struct Xtf
     uint32_t vwidth;
     uint32_t vheight;   // how many rows
     uint32_t current_height;
-    terminal_cell* buffer;
+    XtCell* buffer;
     uint32_t size;
     uint32_t size_allocated;
+    uint32_t cursor_vram_index;
 
     uint32_t x_screen;
     uint32_t y_screen;

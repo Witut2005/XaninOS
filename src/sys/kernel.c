@@ -36,6 +36,7 @@
 #include <sys/interrupts/handlers/entries/handler_entries.h>
 #include <sys/terminal/frontend/frontend.h>
 #include <lib/cpu/headers/cpu_state_info.h>
+#include <sys/macros.h>
 
 extern void v86_mode_enter(void);
 extern void mouse_enable(void);
@@ -72,23 +73,24 @@ uint8_t* const zeros;
 
 #define PMMNGR_MEMORY_BLOCKS 10000
 
-void terminal_time_update(address_t* args)
+void vty_update_time(address_t* args)
 {
+    Xtf* XtFrontend = vty_get();
+    int time_row_index = xtf_buffer_nth_line_index_get(XtFrontend, 4);
     time_get(&SystemTime);
-    
-    stdio_mode_set(STDIO_MODE_CANVAS);
 
-    xprintf("%hposx:   %d", OUTPUT_POSITION_SET(15, VGA_WIDTH-10), vty_get()->x);
-    xprintf("%hposy:   %d", OUTPUT_POSITION_SET(16, VGA_WIDTH-10), vty_get()->y);
-    xprintf("%hybegin: %d", OUTPUT_POSITION_SET(17, VGA_WIDTH-10), vty_get()->y_begin);
+    xtb_cell_put_at_position(XtFrontend, '0' + ((SystemTime.hour & 0xF0) >> 4), 0xF, time_row_index + 72);
+    xtb_cell_put_at_position(XtFrontend, '0' + (SystemTime.hour & 0xF), 0xF , time_row_index + 73);
 
-    xprintf("%h%s: %i:%i:%i\n\n\n", OUTPUT_POSITION_SET(VGA_MAX_Y, VGA_WIDTH - 13), daysLUT[SystemTime.weekday], SystemTime.hour, SystemTime.minutes, SystemTime.seconds);
-    stdio_mode_set(STDIO_MODE_TERMINAL);
-}
+    xtb_cell_put_at_position(XtFrontend, '0' + ((SystemTime.minutes & 0xF0) >> 4), 0xF, time_row_index + 75);
+    xtb_cell_put_at_position(XtFrontend, '0' + (SystemTime.minutes & 0xF), 0xF , time_row_index + 76);
 
-void xtb_flush_buffer(address_t* address)
-{
-    xtb_flush(vty_get());
+    xtb_cell_put_at_position(XtFrontend, '0' + ((SystemTime.seconds & 0xF0) >> 4), 0xF, time_row_index + 78);
+    xtb_cell_put_at_position(XtFrontend, '0' + (SystemTime.seconds & 0xF), 0xF , time_row_index + 79);
+
+    XtFrontend->rows_changed[4] = XTF_ROW_CHANGED; 
+    xtb_flush(XtFrontend);
+
 }
 
 void kernel_loop(void)
@@ -98,29 +100,28 @@ void kernel_loop(void)
     while(1)
     {
 
+        xtb_enable_flushing();
         stdio_mode_set(STDIO_MODE_TERMINAL);
         screen_background_color_set(black);
         
         all_intervals_clear(); // clear all intervals added by apps during execution
-        // interval_set(terminal_time_update, 50, NULL); // refresh current time every second
-        interval_set(xtb_flush_buffer, 100, NULL);
+
+        interval_set(vty_update_time, 500, NULL);
+        
         memset(null_memory_region, 0, SECTOR_SIZE);
         xtf_scrolling_on(vty_get());
 
         // screen_clear();
         time_get(&SystemTime);
 
-        puts("\n");
-
         for(int i = 0; xin_current_directory[i + 1] != '\0'; i++)
             xprintf("%z%c", OUTPUT_COLOR_SET(black, lblue), xin_current_directory[i]);
 
-        xprintf(">");
+        xprintf("\n>");
 
         app_exited = false;
 
         xin_close_all_files();
-        // while(1);
 
         while(1)
         {
@@ -196,8 +197,6 @@ void _start(void)
     INTERRUPT_REGISTER(31, general_protection_exception_entry);
     INTERRUPT_REGISTER(32, general_protection_exception_entry);
 
-    vga_text_mode_height = 25;
-    vga_text_mode_width = 80;
 
     interrupt_enable();
     
@@ -209,6 +208,9 @@ void _start(void)
 
     disable_cursor();
     mmngr_init(kernel_mmngr_mmap, (uint8_t*)0x100000, PMMNGR_MEMORY_BLOCKS);
+
+    vga_text_mode_height = 25;
+    vga_text_mode_width = 80;
 
     xtb_init(__vga_text_mode_width_get(), __vga_text_mode_height_get(), (uint16_t*)__vga_buffer_segment_get());
     vty_set(xtf_init(100));
@@ -357,7 +359,7 @@ void _start(void)
     xprintf("\n%z----------------------------\n", OUTPUT_COLOR_SET(black, green));
     xprintf("Com port status: 0x%x\n", com_status());
 
-    xprintf("Press ENTER to continue...\n");
+    xprintf("Press ENTER to continue...");
 
     // static int number_of_cores;
 
@@ -389,8 +391,8 @@ void _start(void)
 
     // xin_init_fs();
     xin_folder_change("/");
-    
     FileDescriptorTable = (XinFileDescriptor*)kcalloc(sizeof(XinFileDescriptor) * 200); // 200 = number o entries
+    
 
     memset((uint8_t *)ArpTable, 0xFF, sizeof(ArpTable[0]));
 
@@ -428,18 +430,22 @@ void _start(void)
     //     xprintf("0x%x\n", seg_regs[i]);
     // }
 
-    xprintf("vga: 0x%x width: %d height: %d\n", __vga_buffer_segment_get(), __vga_text_mode_width_get(), __vga_text_mode_height_get());
-    xprintf("buf: 0x%x\n", vty_get()->rows_changed);
-    xprintf("buf: 0x%x\n", vty_get()->buffer);
+    // xprintf("vga: 0x%x width: %d height: %d\n", __vga_buffer_segment_get(), __vga_text_mode_width_get(), __vga_text_mode_height_get());
+    // xprintf("buf: 0x%x\n", vty_get()->rows_changed);
+    // xprintf("buf: 0x%x\n", vty_get()->buffer);
+    // xtb_flush(vty_get());
 
     while(inputg().scan_code != ENTER);
     screen_clear();
 
-    xprintf("%z    _/      _/                      _/              _/_/      _/_/_/       \n", OUTPUT_COLOR_SET(logo_back_color, logo_front_color));
-    xprintf("%z     _/  _/      _/_/_/  _/_/_/        _/_/_/    _/    _/  _/              \n", OUTPUT_COLOR_SET(logo_back_color, logo_front_color));
-    xprintf("%z      _/      _/    _/  _/    _/  _/  _/    _/  _/    _/    _/_/           \n", OUTPUT_COLOR_SET(logo_back_color, logo_front_color));
-    xprintf("%z   _/  _/    _/    _/  _/    _/  _/  _/    _/  _/    _/        _/%z version 1.5v\n", OUTPUT_COLOR_SET(logo_back_color, logo_front_color), OUTPUT_COLOR_SET(black,white));
-    xprintf("%z_/      _/    _/_/_/  _/    _/  _/  _/    _/    _/_/    _/_/_/   %z%s: %i:%i:%i\n", OUTPUT_COLOR_SET(logo_back_color, logo_front_color), OUTPUT_COLOR_SET(black,white), daysLUT[SystemTime.weekday], SystemTime.hour, SystemTime.minutes, SystemTime.seconds);                                       
+    if(vga_text_mode_width == 80)
+    {
+        xprintf("%z    _/      _/                      _/              _/_/      _/_/_/       \n", OUTPUT_COLOR_SET(logo_back_color, logo_front_color));
+        xprintf("%z     _/  _/      _/_/_/  _/_/_/        _/_/_/    _/    _/  _/              \n", OUTPUT_COLOR_SET(logo_back_color, logo_front_color));
+        xprintf("%z      _/      _/    _/  _/    _/  _/  _/    _/  _/    _/    _/_/           \n", OUTPUT_COLOR_SET(logo_back_color, logo_front_color));
+        xprintf("%z   _/  _/    _/    _/  _/    _/  _/  _/    _/  _/    _/        _/%z   version 1.8v", OUTPUT_COLOR_SET(logo_back_color, logo_front_color), OUTPUT_COLOR_SET(black,white));
+        xprintf("%z_/      _/    _/_/_/  _/    _/  _/  _/    _/    _/_/    _/_/_/     %z%s: %i:%i:%i\n", OUTPUT_COLOR_SET(logo_back_color, logo_front_color), OUTPUT_COLOR_SET(black,white), daysLUT[SystemTime.weekday], SystemTime.hour, SystemTime.minutes, SystemTime.seconds);                                       
+    }
 
     kernel_loop();
 

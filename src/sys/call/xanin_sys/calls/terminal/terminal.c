@@ -28,4 +28,5 @@ void __xtb_init(uint32_t vga_width, uint32_t vga_height, uint16_t* vram)
     XtBackend->vga_width = vga_width;
     XtBackend->vga_height = vga_height;
     XtBackend->vram = vram;
+    XtBackend->is_flushable = true;
 }

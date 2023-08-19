@@ -1,14 +1,15 @@
 
 #pragma once
+
 #include <lib/ascii/ascii.h>
+#include <sys/terminal/backend/backend.h>
 
 int load(char* address_string)
 {
 
-    // stdio_mode_set(STDIO_MODE_CANVAS);
-    // screen_clear();
-
     char* data_pointer = (char*)strtoi(address_string, HEXADECIMAL); 
+
+    xtb_disable_flushing();
 
     for(int i = 0; i < VGA_HEIGHT; i++)
     {
@@ -26,16 +27,16 @@ int load(char* address_string)
         for(int j = 0; j < 16; j++)
         {
             
-            // if(data_pointer[ (16 * i) + j] < ASCII_SPACE)
-                putchar(' ');
-            // else
-            //     putchar(data_pointer[ (16 * i) + j]);
+            if(data_pointer[ (16 * i) + j] < ASCII_SPACE)
+                xprintf(" ");
+            else
+                xprintf("%c", data_pointer[ (16 * i) + j]);
         }
-        xtb_flush(vty_get());
-
         xprintf("\n");
     }
-	while(inputg().scan_code != ENTER);
-    return XANIN_OK;
 
+    xtb_enable_flushing();
+    xtb_flush_all(vty_get());
+
+    return XANIN_OK;
 }

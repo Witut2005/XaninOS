@@ -193,13 +193,6 @@ __STATUS __sys_xin_list_files(char** argv)
             {
                 printed_text += strlen(i->path) + 2;
 
-                if(printed_text >= 80)
-                {
-                    printed_text = 0;
-                    xprintf("\n");
-                    printed_text += strlen(i->path);
-                }
-
                 if(bstrcmp(xin_get_file_pf(i->path)->path, path))
                 {
                     xprintf("%z%s", OUTPUT_COLOR_SET(black, i->type + 0x2), i);

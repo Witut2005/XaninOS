@@ -18,11 +18,14 @@ void xtb_flush(Xtf* XtFrontend);
 void xtb_cell_put(Xtf* XtFrontend, char c, uint8_t color);
 void xtb_cursor_inc(Xtf* XtFrontend);
 void xtb_cursor_dec(Xtf* XtFrontend);
-
+void xtb_enable_flushing(void);
+void xtb_disable_flushing(void);
+void xtb_flush_all(Xtf* XtFrontend);
 static inline void xtb_character_put(Xtf* XtFrontend, char c)
 {
     xtb_cell_put(XtFrontend, c, DEFAULT_COLOR);
 }
+void xtb_cell_put_at_position(Xtf *XtFrontend, char c, uint8_t color, uint32_t position);
 
 
 #ifdef __cplusplus

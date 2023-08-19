@@ -53,9 +53,7 @@ int screen_clear(void)
     }
 
     else if(stdio_mode_get() == STDIO_MODE_TERMINAL)
-    {
         xtf_buffer_clear(vty_get());
-    }
     return XANIN_OK;
 }
 
@@ -812,7 +810,7 @@ void xprintf(char* str, ... )
 
                     case 's':
                     {
-                        stringPtr = va_arg(args,char*);
+                        stringPtr = va_arg(args, char*);
 
                         if(stringPtr == NULL)
                             break;
@@ -937,7 +935,7 @@ void xprintf(char* str, ... )
         }
 
         va_end(args);
-        // xtb_flush(StdioVty);
+        xtb_flush(StdioVty);
     }
 
 }
@@ -1409,10 +1407,11 @@ void xscanf(char* str, ... )
         Xtf* StdioVty = vty_get();
         uint32_t begin_index = StdioVty->size;
         xtf_scrolling_on(StdioVty);
+        // xtf_cursor_on(StdioVty, OUTPUT_COLOR_SET(white, black));
+        xtf_cursor_off(StdioVty);
 
         start:
 
-        xtf_cursor_on(StdioVty, OUTPUT_COLOR_SET(white, black));
         xtb_flush(StdioVty);
 
         while(1)
@@ -1430,6 +1429,8 @@ void xscanf(char* str, ... )
                     continue;
 
                 xtf_remove_last_cell(StdioVty);
+                // StdioVty->rows_changed[StdioVty->y] = XTF_ROW_CHANGED;
+                xtb_flush(StdioVty);
 
                 if(index)
                     index--;
@@ -1437,35 +1438,28 @@ void xscanf(char* str, ... )
                 string_typed_buffer[index] = '\0';
 
                 KeyInfo.is_bspc = false;
-                xtb_flush(StdioVty);
             }
 
             else if(Input.scan_code == ARROW_UP)
             {
                 xtb_scroll_up(StdioVty);
-                // stdio_mode_set(STDIO_MODE_CANVAS);
-                // xprintf("%hposx: %d", OUTPUT_POSITION_SET(20, 70), StdioVty->y_begin);
-                // stdio_mode_set(STDIO_MODE_TERMINAL);
             }
 
             else if(Input.scan_code == ARROW_DOWN)
             {
                 xtb_scroll_down(StdioVty);
-                // stdio_mode_set(STDIO_MODE_CANVAS);
-                // xprintf("%hposx: %d", OUTPUT_POSITION_SET(20, 70), StdioVty->y_begin);
-                // stdio_mode_set(STDIO_MODE_TERMINAL);
             }
 
             else if(Input.scan_code == ARROW_LEFT)
             {
-                if(begin_index == StdioVty->size)
+                if(begin_index == StdioVty->Cursor.position)
                     continue;
-                xtb_cursor_dec(StdioVty);
+                xtf_cursor_dec(StdioVty);
             }
 
             else if(Input.scan_code == ARROW_RIGHT)
             {
-                xtb_cursor_inc(StdioVty);
+                xtf_cursor_inc(StdioVty);
             }
 
             else if(Input.scan_code == LSHIFT)
@@ -1614,9 +1608,10 @@ void xscanf(char* str, ... )
             }    
         }
 
-        puts("\n");
-        xtf_cursor_off(StdioVty);
+        xprintf("\n");
+        // xtf_cursor_off(StdioVty);
         xtb_flush(StdioVty);
+        xtf_cursor_inc(StdioVty);
         
         free(field_buffer);
         free(string_typed_buffer);
