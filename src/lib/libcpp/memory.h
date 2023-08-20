@@ -46,7 +46,7 @@ class unique_ptr
 template <class K, class X>
 void make_unique(unique_ptr<K>& ptr, X obj)
 {
-    ptr.ptr = (X*)calloc(sizeof(X));
+    ptr.ptr = (X*)calloc(SIZE_OF(X));
     *(ptr.ptr) = obj;
 }
 
@@ -165,7 +165,7 @@ class weak_ptr
 template <class K, class X>
 void make_shared(shared_ptr<K>& ptr, X obj)
 {
-    ptr.ptr = (X*)calloc(sizeof(X));
+    ptr.ptr = (X*)calloc(SIZE_OF(X));
     *(ptr.ptr) = obj;
 }
 

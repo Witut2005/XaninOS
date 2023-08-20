@@ -134,7 +134,7 @@ class string
 
     size_t reserve(uint32_t size)
     {
-        string_data = (char*)calloc(size * sizeof(char));
+        string_data = (char*)calloc(size * SIZE_OF(char));
         return size;
     }
 
@@ -161,7 +161,7 @@ class string
 
     string(char* str)
     {
-        string_data = (char*)calloc(sizeof(char) * strlen(str));
+        string_data = (char*)calloc(SIZE_OF(char) * strlen(str));
         for(int i = 0; i < strlen(str); i++) 
             string_data[i] = str[i];
          
@@ -169,7 +169,7 @@ class string
 
     string(const char* str)
     {
-        this->string_data = (char*)calloc(sizeof(char) * strlen((char*)str));
+        this->string_data = (char*)calloc(SIZE_OF(char) * strlen((char*)str));
         for(int i = 0; i < strlen((char*)str); i++) 
             string_data[i] = str[i];
 
@@ -177,7 +177,7 @@ class string
     
     string(const string& str)
     {
-        this->string_data = (char*)calloc(sizeof(char) * strlen((char*)str.c_str()));
+        this->string_data = (char*)calloc(SIZE_OF(char) * strlen((char*)str.c_str()));
         strcpy(this->string_data, str.c_str());  
     }
     
@@ -233,7 +233,7 @@ class string
 
     void* operator new (size_t size)
     {
-        return malloc(1 * sizeof(string));
+        return malloc(1 * SIZE_OF(string));
     }
 
     void operator delete (void* element)

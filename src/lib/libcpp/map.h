@@ -99,7 +99,7 @@ namespace std
     public:
         UnorderedMap(initializer_list<pair<K,V>> ListOfElements)
         {
-            this->Head = (ListElement *)malloc(sizeof(ListElement));
+            this->Head = (ListElement *)malloc(SIZE_OF(ListElement));
 
             this->Head->item.first = (*ListOfElements.begin()).first;
             this->Head->item.second = (*ListOfElements.begin()).second;
@@ -108,7 +108,7 @@ namespace std
 
             for(auto a : ListOfElements)
             {
-                Tmp->next = (ListElement *)malloc(sizeof(ListElement));
+                Tmp->next = (ListElement *)malloc(SIZE_OF(ListElement));
                 Tmp = Tmp->next;
                 Tmp->item.first = a.first;
                 Tmp->item.second = a.second;
@@ -129,8 +129,8 @@ namespace std
 
         UnorderedMap()
         {
-            this->Head = (ListElement *)malloc(sizeof(ListElement));
-            this->Tail = (ListElement *)malloc(sizeof(ListElement));
+            this->Head = (ListElement *)malloc(SIZE_OF(ListElement));
+            this->Tail = (ListElement *)malloc(SIZE_OF(ListElement));
             this->Head->next = nullptr;
             this->Head->previous = nullptr;
             this->size = 0;
@@ -140,8 +140,8 @@ namespace std
 
         void init()
         {
-            this->Head = (ListElement *)malloc(sizeof(ListElement));
-            this->Tail = (ListElement *)malloc(sizeof(ListElement));
+            this->Head = (ListElement *)malloc(SIZE_OF(ListElement));
+            this->Tail = (ListElement *)malloc(SIZE_OF(ListElement));
             this->Head->next = nullptr;
             this->Head->previous = nullptr;
             this->size = 0;
@@ -210,7 +210,7 @@ namespace std
 
             ListElement *ItemInserted = goto_last_element();
 
-            ItemInserted->next = (ListElement *)(malloc(sizeof(ListElement)));
+            ItemInserted->next = (ListElement *)(malloc(SIZE_OF(ListElement)));
 
             ItemInserted->next->previous = ItemInserted;
             ItemInserted = ItemInserted->next;
@@ -241,7 +241,7 @@ namespace std
 
             ListElement *ItemInserted = goto_last_element();
 
-            ItemInserted->next = (ListElement *)(malloc(sizeof(ListElement)));
+            ItemInserted->next = (ListElement *)(malloc(SIZE_OF(ListElement)));
 
             ItemInserted->next->previous = ItemInserted;
             ItemInserted = ItemInserted->next;
@@ -296,7 +296,7 @@ namespace std
             }
 
             this->size++;
-            ListElement *NewItem = (ListElement *)malloc(sizeof(ListElement));
+            ListElement *NewItem = (ListElement *)malloc(SIZE_OF(ListElement));
             NewItem->next = this->Head;
             NewItem->previous = nullptr;
             NewItem->item.first = key;

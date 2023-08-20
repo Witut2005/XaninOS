@@ -15,7 +15,7 @@ typedef	uint32_t physical_addr;
 
 
 uint8_t* mmngr_mmap;            //mmap address
-uint32_t mmngr_heap_blocks;       //sizeof mmngr available memory space
+uint32_t mmngr_heap_blocks;       //SIZE_OF mmngr available memory space
 
 uint8_t* kernel_heap_base;
 uint32_t kernel_heap_offset;    

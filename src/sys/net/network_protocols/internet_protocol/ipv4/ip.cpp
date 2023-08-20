@@ -61,7 +61,7 @@ void InternetProtocolInterface::ip4_packet_send(uint32_t dest_ip, uint32_t src_i
 
     uint16_t final_packet_size = packet_size + IPV4_HEADER_SIZE;
 
-    Ipv4Header* IpHeader = (Ipv4Header*)malloc(sizeof(1518));
+    Ipv4Header* IpHeader = (Ipv4Header*)malloc(SIZE_OF(1518));
     IpHeader->version_ihl = 0x5;
     IpHeader->version_ihl |= IPV4_HEADER_VERSION << 4;
     IpHeader->tos =(uint8_t)NULL;
@@ -82,7 +82,7 @@ void InternetProtocolInterface::ip4_packet_send(uint32_t dest_ip, uint32_t src_i
             protocol_header = protocol_header + IPV4_HEADER_SIZE;
             UdpHeader* UdpPacket = (UdpHeader*)protocol_header;
 
-            memcpy((uint8_t*)UdpPacket, data , 1518 - sizeof(Ipv4Header) - sizeof(UdpHeader));
+            memcpy((uint8_t*)UdpPacket, data , 1518 - SIZE_OF(Ipv4Header) - SIZE_OF(UdpHeader));
 
             int arp_table_index = mac_get_from_ip(dest_ip);
             
@@ -113,7 +113,7 @@ void InternetProtocolInterface::ip4_packet_send(uint32_t dest_ip, uint32_t src_i
             // if mac is not in ARP table
             if(arp_table_index == ARP_TABLE_NO_SUCH_ENTRY)
             {
-                AddressResolutionProtocol* ArpPacket = (AddressResolutionProtocol*)calloc(sizeof(AddressResolutionProtocol));
+                AddressResolutionProtocol* ArpPacket = (AddressResolutionProtocol*)calloc(SIZE_OF(AddressResolutionProtocol));
                 prepare_arp_request(ArpPacket, ARP_ETHERNET, ARP_IP_PROTOCOL, ARP_MAC_LENGTH, ARP_IP_LENGTH, ARP_GET_MAC, netapi_mac_get(xanin_ip_get()), xanin_ip_get(), mac_broadcast, dest_ip);
                 
                 for(int i = 0; i < 20; i++)
@@ -164,7 +164,7 @@ void InternetProtocolInterface::ipv4_packet_receive(Ipv4Header* PacketData)
 
         case INTERNET_CONTROL_MESSAGE_PROTOCOL:
         {
-            IcmpPacket* IcmpPacketReceived = (IcmpPacket*)((uint8_t*)(PacketData) + sizeof(Ipv4Header));
+            IcmpPacket* IcmpPacketReceived = (IcmpPacket*)((uint8_t*)(PacketData) + SIZE_OF(Ipv4Header));
             IcmpModule::receive(IcmpPacketReceived, LITTLE_ENDIAN(PacketData->source_ip_address));
             break;
         }
@@ -178,13 +178,13 @@ extern "C"
 
     void ipv4_packet_receive(Ipv4Header* PacketData)
     {
-        InternetProtocolInterface* InternetProtocolSubsystem = (InternetProtocolInterface*)malloc(sizeof(InternetProtocolInterface));
+        InternetProtocolInterface* InternetProtocolSubsystem = (InternetProtocolInterface*)malloc(SIZE_OF(InternetProtocolInterface));
         InternetProtocolSubsystem->ipv4_packet_receive(PacketData);
     }
 
     uint32_t create_ip_address(uint8_t ip_address[4])
     {
-        InternetProtocolInterface* InternetProtocolSubsystem = (InternetProtocolInterface*)malloc(sizeof(InternetProtocolInterface));
+        InternetProtocolInterface* InternetProtocolSubsystem = (InternetProtocolInterface*)malloc(SIZE_OF(InternetProtocolInterface));
         uint32_t tmp = InternetProtocolSubsystem->create_ip_address(ip_address);
         free(InternetProtocolSubsystem);
         return tmp;

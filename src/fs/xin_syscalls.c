@@ -108,7 +108,7 @@ __STATUS __sys_xin_link_remove(char* linkname)
 
     if(file != NULL && file->type == XIN_LINK)
     {
-        memset((uint8_t*)file, 0x0, sizeof(XinEntry));
+        memset((uint8_t*)file, 0x0, SIZE_OF(XinEntry));
         return XANIN_OK;
     }
 
@@ -127,7 +127,7 @@ __STATUS __sys_xin_link_create(char* file_name, char* link_name)
         return XIN_ENTRY_NOT_FOUND;
 
     XinEntry* link = xin_find_free_entry();
-    memcpy((uint8_t*)link, (uint8_t*)file, sizeof(XinEntry));
+    memcpy((uint8_t*)link, (uint8_t*)file, SIZE_OF(XinEntry));
 
     link->type = XIN_HARD_LINK;
 

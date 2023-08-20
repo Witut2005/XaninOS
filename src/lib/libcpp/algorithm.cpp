@@ -5,10 +5,10 @@
 
 // extern "C" int** matrix90rotate32(int** matrix, uint32_t x, uint32_t y)
 // {
-//     int** tmp = (int**)calloc(sizeof(int*) * x);
+//     int** tmp = (int**)calloc(SIZE_OF(int*) * x);
 
 //     for(int i = 0; i < x; i++)
-//     tmp[i] = (int*)calloc(sizeof(int) * y);
+//     tmp[i] = (int*)calloc(SIZE_OF(int) * y);
      
 //     for(int i = 0; i < ; i++)
 //     {                                    

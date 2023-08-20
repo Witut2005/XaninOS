@@ -1,6 +1,7 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+#include <sys/macros.h>
 
 struct XaninKernelDebugBlock
 {

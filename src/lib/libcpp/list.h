@@ -108,7 +108,7 @@ class List
     {
         this->initialized = true;
         size = 1;
-        FirstElement = (ListElement*)malloc(sizeof(FirstElement));
+        FirstElement = (ListElement*)malloc(SIZE_OF(FirstElement));
         FirstElement->next = NULL;
         FirstElement->previous = NULL;
         FirstElement->value = first;
@@ -129,7 +129,7 @@ class List
         if(!this->initialized)
         {
             this->size = 1;
-            this->FirstElement = (ListElement*)malloc(sizeof(FirstElement));
+            this->FirstElement = (ListElement*)malloc(SIZE_OF(FirstElement));
             this->FirstElement->next = NULL;
             this->FirstElement->previous = NULL;
             this->FirstElement->value = value;
@@ -138,7 +138,7 @@ class List
         ListElement* LastItem = this->goto_last_element();
         auto LastItemTmp = LastItem;
 
-        LastItem->next = (ListElement*)malloc(sizeof(ListElement));
+        LastItem->next = (ListElement*)malloc(SIZE_OF(ListElement));
         LastItem = LastItem->next;
 
         LastItem->value = value;
@@ -152,14 +152,14 @@ class List
         if(!this->initialized)
         {
             this->size = 1;
-            this->FirstElement = (ListElement*)malloc(sizeof(FirstElement));
+            this->FirstElement = (ListElement*)malloc(SIZE_OF(FirstElement));
             this->FirstElement->next = NULL;
             this->FirstElement->previous = NULL;
             this->FirstElement->value = value;
         }
 
         decltype(this->FirstElement) NewFirstElement;
-        NewFirstElement = (ListElement*)malloc(sizeof(ListElement));
+        NewFirstElement = (ListElement*)malloc(SIZE_OF(ListElement));
         NewFirstElement->value = value;
         this->FirstElement = NewFirstElement;
 
@@ -183,7 +183,7 @@ class List
     List(std::initializer_list<T> items)
     {
         size = 0;
-        FirstElement = (ListElement*)malloc(sizeof(FirstElement));
+        FirstElement = (ListElement*)malloc(SIZE_OF(FirstElement));
         FirstElement->next = NULL;
         FirstElement->previous = NULL;
 
@@ -206,7 +206,7 @@ class List
     {
         ListElement* Tmp = this->FirstElement;
 
-        // if constexpr((std::is_pointer<T>::value) && (sizeof(std::remove_pointer<T>) == sizeof(char)))
+        // if constexpr((std::is_pointer<T>::value) && (SIZE_OF(std::remove_pointer<T>) == SIZE_OF(char)))
         if constexpr(is_char_ptr(T))
         {
             while(!bstrcmp((char*)Tmp->value, (char*)index))

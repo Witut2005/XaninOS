@@ -13,8 +13,8 @@ int netapi_check(char* protocol)
 
     if(bstrcmp(protocol, "ARP"))
     {
-        response_object_create(&Response, sizeof(AddressResolutionProtocol));
-        AddressResolutionProtocol* ArpPacket = (AddressResolutionProtocol*)calloc(sizeof(AddressResolutionProtocol));
+        response_object_create(&Response, SIZE_OF(AddressResolutionProtocol));
+        AddressResolutionProtocol* ArpPacket = (AddressResolutionProtocol*)calloc(SIZE_OF(AddressResolutionProtocol));
         prepare_arp_request(ArpPacket, ARP_ETHERNET, ARP_IP_PROTOCOL, ARP_MAC_LENGTH, ARP_IP_LENGTH, ARP_GET_MAC, netapi_mac_get(xanin_ip_get()), xanin_ip_get(), mac_broadcast, (192 << 24) | (168 << 16) | (0 << 8) | (160));
         // prepare_arp_request(ArpPacket, ARP_ETHERNET, ARP_IP_PROTOCOL, ARP_MAC_LENGTH, ARP_IP_LENGTH, ARP_GET_MAC, netapi_mac_get(xanin_ip_get()), xanin_ip_get(), mac_broadcast, LOOPBACK_IP_ADDRESS);
         
@@ -30,7 +30,7 @@ int netapi_check(char* protocol)
 
     else if(bstrcmp(protocol, "ICMP"))
     {
-        response_object_create(&Response, sizeof(IcmpPacket));
+        response_object_create(&Response, SIZE_OF(IcmpPacket));
         icmp_ping((127 << 24) | (1), Response);
         NETWORK_RESPONSE_WAIT(2000);
     }

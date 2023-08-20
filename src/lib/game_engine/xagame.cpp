@@ -35,10 +35,10 @@ void xgm::rectangle::create(uint32_t x, uint32_t y, uint32_t size_x, uint32_t si
         free(BlankCells);
     }
 
-    BlankCells = (bool**)calloc(sizeof(bool*) * this->size_y);
+    BlankCells = (bool**)calloc(SIZE_OF(bool*) * this->size_y);
 
     for(int i = 0; i < this->size_y; i++)
-        BlankCells[i] = (bool*)calloc(sizeof(bool) * this->size_x);
+        BlankCells[i] = (bool*)calloc(SIZE_OF(bool) * this->size_x);
 
     for(int i = 0; i < this->size_y; i++)
     {

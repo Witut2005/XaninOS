@@ -24,7 +24,7 @@ Xtb* __xtb_get(void)
 
 void __xtb_init(uint32_t vga_width, uint32_t vga_height, uint16_t* vram)
 {
-    XtBackend = (Xtb*)kcalloc(sizeof(xtb_get()));
+    XtBackend = (Xtb*)kcalloc(SIZE_OF(xtb_get()));
     XtBackend->vga_width = vga_width;
     XtBackend->vga_height = vga_height;
     XtBackend->vram = vram;

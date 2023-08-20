@@ -29,7 +29,7 @@ void msleep(float miliseconds)
 
 time_offset_t* start(void)
 {
-    time_offset_t* time = (time_offset_t*)calloc(sizeof(time_offset_t));
+    time_offset_t* time = (time_offset_t*)calloc(SIZE_OF(time_offset_t));
     *time = (time_offset_t)pit_time;
     return time;
 }

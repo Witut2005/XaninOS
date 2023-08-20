@@ -700,7 +700,7 @@ uint32_t size_of_biggest_line_get(const char* str)
 
 StringRectangle* const string_rectangle_create(const char* buf, uint32_t position_x, uint32_t position_y)
 {
-    StringRectangle* Rect = (StringRectangle*)calloc(sizeof(StringRectangle));
+    StringRectangle* Rect = (StringRectangle*)calloc(SIZE_OF(StringRectangle));
     Rect->size_x = size_of_biggest_line_get(buf);
     Rect->size_y = number_of_lines_get(buf);
     Rect->position_x = position_x;

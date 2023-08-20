@@ -16,7 +16,7 @@ void EthernetFrameInterface::send(const uint8_t* mac_destination, const uint8_t*
     if(length > ETHERNET_FRAME_PAYLOAD_SIZE)
         length = ETHERNET_FRAME_PAYLOAD_SIZE;
     
-    uint8_t* FrameBytes = (uint8_t*)calloc(sizeof(uint8_t) * 2000);
+    uint8_t* FrameBytes = (uint8_t*)calloc(SIZE_OF(uint8_t) * 2000);
     EthernetFrame* FrameHeader = (EthernetFrame*)FrameBytes;
 
     memcpy(FrameHeader->mac_destination, const_cast<uint8_t*>(mac_destination), 6);
@@ -58,7 +58,7 @@ void EthernetFrameInterface::receive(uint8_t* buffer)
         case ARP_ETHER_TYPE: 
         {
             // ArpModule::PacketsInfo[Frame->mac_source]->success = true;
-            // memcpy(ArpModule::PacketsInfo[Frame->mac_source]->data, Frame->data, sizeof(AddressResolutionProtocol));
+            // memcpy(ArpModule::PacketsInfo[Frame->mac_source]->data, Frame->data, SIZE_OF(AddressResolutionProtocol));
 
             arp_reply_handle((AddressResolutionProtocol*)&Frame.data);
             break;
@@ -66,7 +66,7 @@ void EthernetFrameInterface::receive(uint8_t* buffer)
             
         case ETHERNET_TYPE_IPV4:
         {
-            InternetProtocolInterface* InternetProtocolSubsystem = (InternetProtocolInterface*)malloc(sizeof(InternetProtocolInterface));
+            InternetProtocolInterface* InternetProtocolSubsystem = (InternetProtocolInterface*)malloc(SIZE_OF(InternetProtocolInterface));
             InternetProtocolSubsystem->ipv4_packet_receive((Ipv4Header*)&Frame.data);
             break;
         }

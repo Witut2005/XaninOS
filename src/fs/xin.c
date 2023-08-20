@@ -239,7 +239,7 @@ XinEntry *xin_folder_change(char *new_directory)
         return NULL;
     }
 
-    for (int i = 0; i < sizeof(xin_current_directory); i++)
+    for (int i = 0; i < SIZE_OF(xin_current_directory); i++)
         xin_current_directory[i] = '\0';
 
     strcpy(xin_current_directory, xin_new_directory->path);
@@ -825,7 +825,7 @@ XinEntry *__xin_fopen(char *file_path, char *mode)
     	if(file->type != XIN_FILE && file->type != XIN_HARD_LINK)
             return NULL;
 
-        file->FileInfo = (FileInformationBlock*)calloc(sizeof(FileInformationBlock));
+        file->FileInfo = (FileInformationBlock*)calloc(SIZE_OF(FileInformationBlock));
         file->FileInfo->buffer = (uint8_t*)calloc(file->size + SECTOR_SIZE); // additional space
         file->FileInfo->sector_in_use = (bool*)calloc(int_to_sectors(file->size) + 1); // additional space
 
@@ -838,7 +838,7 @@ XinEntry *__xin_fopen(char *file_path, char *mode)
 
     if(bstrncmp(mode, "a", 2))
     {
-        file->FileInfo = (FileInformationBlock*)calloc(sizeof(FileInformationBlock));
+        file->FileInfo = (FileInformationBlock*)calloc(SIZE_OF(FileInformationBlock));
         file->FileInfo->buffer = (uint8_t*)calloc(file->size + SECTOR_SIZE);
         file->FileInfo->sector_in_use = (bool*)calloc(int_to_sectors(file->size) + 5);
 
@@ -865,7 +865,7 @@ XinEntry *__xin_fopen(char *file_path, char *mode)
         if(status == XANIN_OK)
         {
       	    file = xin_find_entry(file_path);
-            file->FileInfo = (FileInformationBlock*)calloc(sizeof(FileInformationBlock));
+            file->FileInfo = (FileInformationBlock*)calloc(SIZE_OF(FileInformationBlock));
             file->FileInfo->buffer = (uint8_t*)calloc(file->size + SECTOR_SIZE);
             file->FileInfo->sector_in_use = (bool*)calloc(int_to_sectors(file->size) + 5);
 
@@ -968,7 +968,7 @@ int __xin_open(char* file_path, uint32_t options)
     {
 
         if(file->FileInfo == NULL)
-            file->FileInfo = (FileInformationBlock*)calloc(sizeof(FileInformationBlock));
+            file->FileInfo = (FileInformationBlock*)calloc(SIZE_OF(FileInformationBlock));
 
         file->FileInfo->position = 0;
         int fd = (int)((uint32_t)file - XIN_ENTRY_TABLE) / 64;
@@ -1152,8 +1152,8 @@ XinChildrenEntries* xin_get_children_entries(char* folder, bool get_hidden)
     if(xin_find_entry(folder) == NULL || strlen(folder) == 0)
         return (XinChildrenEntries*)NULL;
 
-    XinChildrenEntries* Children = (XinChildrenEntries*)calloc(sizeof(XinChildrenEntries));
-    Children->children = (XinEntry**)calloc(sizeof(XinEntry*));
+    XinChildrenEntries* Children = (XinChildrenEntries*)calloc(SIZE_OF(XinChildrenEntries));
+    Children->children = (XinEntry**)calloc(SIZE_OF(XinEntry*));
     XinEntry* i = (XinEntry*)XIN_ENTRY_TABLE; 
 
     uint32_t finded_entries = 0;
@@ -1168,7 +1168,7 @@ XinChildrenEntries* xin_get_children_entries(char* folder, bool get_hidden)
                 {
                     Children->children[finded_entries] = i;
                     finded_entries++;
-                    Children->children = (XinEntry**)realloc(Children->children, sizeof(XinEntry*) * (finded_entries));
+                    Children->children = (XinEntry**)realloc(Children->children, SIZE_OF(XinEntry*) * (finded_entries));
                 }
             }
         }
@@ -1185,8 +1185,8 @@ XinChildrenEntries* xin_get_children_entries_type(char* folder, uint8_t type)
     if(xin_find_entry(folder) == NULL || strlen(folder) == 0)
         return (XinChildrenEntries*)NULL;
 
-    XinChildrenEntries* Children = (XinChildrenEntries*)calloc(sizeof(XinChildrenEntries));
-    Children->children = (XinEntry**)calloc(sizeof(XinEntry*));
+    XinChildrenEntries* Children = (XinChildrenEntries*)calloc(SIZE_OF(XinChildrenEntries));
+    Children->children = (XinEntry**)calloc(SIZE_OF(XinEntry*));
     XinEntry* i = (XinEntry*)XIN_ENTRY_TABLE; 
 
     uint32_t finded_entries = 0;
@@ -1199,7 +1199,7 @@ XinChildrenEntries* xin_get_children_entries_type(char* folder, uint8_t type)
             {
                 Children->children[finded_entries] = i;
                 finded_entries++;
-                Children->children = (XinEntry**)realloc(Children->children, sizeof(XinEntry*) * (finded_entries));
+                Children->children = (XinEntry**)realloc(Children->children, SIZE_OF(XinEntry*) * (finded_entries));
             }
         }
         i++;
@@ -1211,8 +1211,8 @@ XinChildrenEntries* xin_get_children_entries_type(char* folder, uint8_t type)
 XinEntriesPack* xin_get_hard_links(const XinEntry* const File)
 {
 
-    XinEntriesPack* Pack = (XinEntriesPack*)calloc(sizeof(XinEntriesPack));
-    Pack->entries = (XinEntry**)calloc(sizeof(XinEntry*));
+    XinEntriesPack* Pack = (XinEntriesPack*)calloc(SIZE_OF(XinEntriesPack));
+    Pack->entries = (XinEntry**)calloc(SIZE_OF(XinEntry*));
 
     if(File->type != XIN_FILE || !File)
         return Pack;

@@ -12,7 +12,7 @@
 // if size_allocated is to small then error
 Xtf* xtf_init(uint32_t buffer_size)
 {
-    Xtf* XtFrontend = (Xtf*)calloc(sizeof(XtFrontend)); // all variables = zeros    
+    Xtf* XtFrontend = (Xtf*)calloc(SIZE_OF(XtFrontend)); // all variables = zeros    
 
     XtFrontend->vwidth = VGA_WIDTH; // 80
     XtFrontend->vheight = 1000; //useless

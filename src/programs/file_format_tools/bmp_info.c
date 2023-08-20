@@ -15,12 +15,12 @@ __STATUS bmp_info(const char* filename)
         return XANIN_ERROR;
     }
 
-    fread(File, &BmpInfo, sizeof(BitMapFileStructure));
+    fread(File, &BmpInfo, SIZE_OF(BitMapFileStructure));
 
     xprintf("%zBitMapHeader:\n", OUTPUT_COLOR_SET(black, green));
     xprintf("signature: ");
      
-    for(int i = 0; i < sizeof(BmpInfo.Header.signature); i++)
+    for(int i = 0; i < SIZE_OF(BmpInfo.Header.signature); i++)
         putchar(BmpInfo.Header.signature[i]);
     
     xprintf("\nfile_size: %d\n", BmpInfo.Header.file_size);

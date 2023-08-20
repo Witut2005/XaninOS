@@ -4,6 +4,7 @@
 #include <stddef.h>
 #include <lib/libc/stdlibx.h>
 #include <lib/libc/time.h>
+#include <sys/macros.h>
 
 #define NETWORK_RESPONSE_WAIT(ms) msleep(ms)
 

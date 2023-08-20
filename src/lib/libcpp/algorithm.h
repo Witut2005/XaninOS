@@ -3,6 +3,7 @@
 #pragma once
 #include <stdint.h>
 #include <lib/libcpp/utility.h>
+#include <sys/macros.h>
 
 namespace std
 {
@@ -120,10 +121,10 @@ bool equal(T x, X t)
 template<class T>
 T** matrix90_rotate_left(T** matrix, uint32_t x, uint32_t y)
 {
-    T** tmp = (T**)calloc(sizeof(T*) * x);
+    T** tmp = (T**)calloc(SIZE_OF(T*) * x);
 
     for(int i = 0; i < x; i++)
-        tmp[i] = (T*)calloc(sizeof(T) * y);
+        tmp[i] = (T*)calloc(SIZE_OF(T) * y);
      
     for(std::pair<uint32_t, uint32_t>x_vals(0, x - 1); x_vals.first < x; x_vals.first++, x_vals.second--)
     {                                    
@@ -138,10 +139,10 @@ T** matrix90_rotate_left(T** matrix, uint32_t x, uint32_t y)
 template<class T>
 T** matrix90_rotate_right(T** matrix, uint32_t x, uint32_t y)
 {
-    T** tmp = (T**)calloc(sizeof(T*) * x);
+    T** tmp = (T**)calloc(SIZE_OF(T*) * x);
 
     for(int i = 0; i < x; i++)
-        tmp[i] = (T*)calloc(sizeof(T) * y);
+        tmp[i] = (T*)calloc(SIZE_OF(T) * y);
      
     for(int i = 0; i < x; i++)
     {                                    

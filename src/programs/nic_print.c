@@ -4,7 +4,7 @@
 int nic_print(void)
 {
 
-    PciDevicePack* NetworkDevices = (PciDevicePack*)calloc(sizeof(PciDevicePack));
+    PciDevicePack* NetworkDevices = (PciDevicePack*)calloc(SIZE_OF(PciDevicePack));
 
     netapi_all_cards_info_get(NetworkDevices);
 

@@ -139,8 +139,8 @@ void kernel_loop(void)
 
             xscanf(scanf_str,argv[0], argv[1], argv[2], argv[3], argv[4]);
 
-            memcpy(last_used_commands, argv[0], sizeof(argv[0]));
-            memcpy(last_used_parameters, argv[1], sizeof(argv[1]));
+            memcpy(last_used_commands, argv[0], SIZE_OF(argv[0]));
+            memcpy(last_used_parameters, argv[1], SIZE_OF(argv[1]));
 
 
             erase_spaces(argv[0]);
@@ -391,10 +391,10 @@ void _start(void)
 
     // xin_init_fs();
     xin_folder_change("/");
-    FileDescriptorTable = (XinFileDescriptor*)kcalloc(sizeof(XinFileDescriptor) * 200); // 200 = number o entries
+    FileDescriptorTable = (XinFileDescriptor*)kcalloc(SIZE_OF(XinFileDescriptor) * 200); // 200 = number o entries
     
 
-    memset((uint8_t *)ArpTable, 0xFF, sizeof(ArpTable[0]));
+    memset((uint8_t *)ArpTable, 0xFF, SIZE_OF(ArpTable[0]));
 
     __sys_xin_file_create("/syslog");
     syslog_enable();

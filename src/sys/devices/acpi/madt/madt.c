@@ -25,13 +25,13 @@ const SystemAcpiMADT9** AcpiMADT9Pointers;
 void madt_entries_get(SystemAcpiSDT* apic_entry)
 {
 
-    AcpiMADT0Pointers = kmalloc(sizeof(SystemAcpiMADT0) * 10);
-    AcpiMADT1Pointers = kmalloc(sizeof(SystemAcpiMADT1) * 10);
-    AcpiMADT2Pointers = kmalloc(sizeof(SystemAcpiMADT2) * 10);
-    AcpiMADT3Pointers = kmalloc(sizeof(SystemAcpiMADT3) * 10);
-    AcpiMADT4Pointers = kmalloc(sizeof(SystemAcpiMADT4) * 10);
-    AcpiMADT5Pointers = kmalloc(sizeof(SystemAcpiMADT5) * 10);
-    AcpiMADT9Pointers = kmalloc(sizeof(SystemAcpiMADT9) * 10);
+    AcpiMADT0Pointers = kmalloc(SIZE_OF(SystemAcpiMADT0) * 10);
+    AcpiMADT1Pointers = kmalloc(SIZE_OF(SystemAcpiMADT1) * 10);
+    AcpiMADT2Pointers = kmalloc(SIZE_OF(SystemAcpiMADT2) * 10);
+    AcpiMADT3Pointers = kmalloc(SIZE_OF(SystemAcpiMADT3) * 10);
+    AcpiMADT4Pointers = kmalloc(SIZE_OF(SystemAcpiMADT4) * 10);
+    AcpiMADT5Pointers = kmalloc(SIZE_OF(SystemAcpiMADT5) * 10);
+    AcpiMADT9Pointers = kmalloc(SIZE_OF(SystemAcpiMADT9) * 10);
 
     uint8_t *tmp = (uint8_t*)(apic_entry) + 0x2C;
 

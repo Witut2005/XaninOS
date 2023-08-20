@@ -129,8 +129,8 @@ int xin_xpaint(char* file_name)
     else
     {
     
-        uint16_t* data_pointer = (uint16_t*)calloc(VGA_SCREEN_RESOLUTION * sizeof(XtCell));
-        fread(xin_file, data_pointer, VGA_SCREEN_RESOLUTION * sizeof(XtCell));
+        uint16_t* data_pointer = (uint16_t*)calloc(VGA_SCREEN_RESOLUTION * SIZE_OF(XtCell));
+        fread(xin_file, data_pointer, VGA_SCREEN_RESOLUTION * SIZE_OF(XtCell));
         screen_clear();
 
         uint16_t* screen_cell = (uint16_t*)VGA_TEXT_MEMORY;
@@ -151,7 +151,7 @@ int xin_xpaint(char* file_name)
 
         *cursor = saved_cell;
         fseek(xin_file, XIN_FILE_BEGIN);
-        fwrite(xin_file, (char*)VGA_TEXT_MEMORY, VGA_SCREEN_RESOLUTION * sizeof(XtCell));
+        fwrite(xin_file, (char*)VGA_TEXT_MEMORY, VGA_SCREEN_RESOLUTION * SIZE_OF(XtCell));
     }
     fclose(&xin_file);
     return XANIN_OK;

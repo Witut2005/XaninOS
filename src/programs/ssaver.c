@@ -7,7 +7,7 @@ int screen_saver(char* filename)
 
     stdio_mode_set(STDIO_MODE_CANVAS);
 
-    char* buf = (char*)calloc(VGA_SCREEN_RESOLUTION * sizeof(uint16_t));
+    char* buf = (char*)calloc(VGA_SCREEN_RESOLUTION * SIZE_OF(uint16_t));
 
     XinEntry* File = fopen(filename, "r");
     fread(File, buf, File->size);

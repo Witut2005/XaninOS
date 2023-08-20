@@ -406,12 +406,12 @@ PciDevicePack pci_find_devices(uint16_t class, uint16_t device_id)
         device_id_tmp = pci_get_data16((pci_address_selector & 0xFF000000) >> 24, (pci_address_selector & 0xFF0000) >> 16, 
                                             (pci_address_selector & 0xFF00) >> 8, 0x2);
  
-        DevicesPresent.devices = (pci_device**)calloc(sizeof(pci_device) * 10);
+        DevicesPresent.devices = (pci_device**)calloc(SIZE_OF(pci_device) * 10);
 
         if(var == class && tmp != var && device_id == device_id_tmp)   
         {
         
-            DevicesPresent.devices[DevicesPresent.number_of_devices] = (pci_device*)calloc(sizeof(pci_device) * (DevicesPresent.number_of_devices++));
+            DevicesPresent.devices[DevicesPresent.number_of_devices] = (pci_device*)calloc(SIZE_OF(pci_device) * (DevicesPresent.number_of_devices++));
             device_data = DevicesPresent.devices[DevicesPresent.number_of_devices];
             uint32_t* device_tmp = (uint32_t*)device_data;
 
