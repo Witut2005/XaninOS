@@ -75,7 +75,7 @@ void xtb_flush(Xtf *XtFrontend)
 
     if (!XtFrontend->size)
     {
-        screen_buffer_clear();
+        vga_screen_buffer_clear();
         memset(XtFrontend->rows_changed, XTF_ROW_CHANGED, XtFrontend->current_height);
         return;
     }

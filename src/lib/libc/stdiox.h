@@ -52,17 +52,15 @@ extern "C" {
 #endif
 
 int screen_clear(void);
-int screen_buffer_clear(void);
+int vga_screen_buffer_clear(void);
 void putc(char* str, uint32_t count);
 char putchar(char character);
 char putchar_color(uint8_t color, char character);
-void print_bcd_number(uint8_t x);
 void xprintf(char* str, ... );
 void puts(const char* str);
 void xscanf(char* str, ... );
 void xscan_range(char* string_buffer, uint32_t how_many_chars);
 void screen_background_color_set(color_t color);
-bool stdio_canvas_is_buffer_full(void);
 void stdio_vty_set(Xtf* Front);
 Xtf* stdio_vty_get(void);
 void putst(const char* str);
