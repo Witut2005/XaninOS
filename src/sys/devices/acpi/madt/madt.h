@@ -4,6 +4,7 @@
 #include <stdint.h>
 
 #include <sys/devices/acpi/sdt/sdt.h>
+#include <sys/macros.h>
 
 struct SystemAcpiMADT0
 {

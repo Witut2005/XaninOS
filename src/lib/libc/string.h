@@ -2,13 +2,10 @@
 
 #pragma once
 
-
-
-
-// #include <lib/libc/math.h>
 #include <stddef.h>
 #include <stdbool.h>
 #include <stdint.h>
+#include <sys/macros.h>
 
 #define BAD_IP_ADDRESS 0xFFFFFFFF
 

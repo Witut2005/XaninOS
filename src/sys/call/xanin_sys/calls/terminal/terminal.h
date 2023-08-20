@@ -1,5 +1,6 @@
 
 #pragma once
+#include <sys/macros.h>
 
 typedef uint8_t color_t;
 

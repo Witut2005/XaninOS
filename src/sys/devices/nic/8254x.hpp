@@ -3,6 +3,7 @@
 #include <stdint.h>
 #include <sys/devices/pci/pci.h>
 #include <sys/net/netapi/network_device.h>
+#include <sys/macros.h>
 
 // extern "C" int32_t pci_find_device(uint16_t, uint16_t, pci_device*);
 extern "C" uint32_t pci_get_bar(const uint8_t bus, const uint8_t slot, const uint8_t function, const uint8_t bar_number);

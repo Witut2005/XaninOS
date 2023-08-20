@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <lib/libc/stdlibx.h>
+#include <sys/macros.h>
 struct stack_t
 {
     uint32_t number_of_elements;

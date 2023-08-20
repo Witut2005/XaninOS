@@ -259,8 +259,8 @@ int i, j;
 void merge(int* array, int first, int middle, int last)
 {
     int i, j, k;
-    int n1 = middle - first + 1;  //sizeof
-    int n2 = last - middle;        //sizeof
+    int n1 = middle - first + 1;  //SIZE_OF
+    int n2 = last - middle;        //SIZE_OF
     int L[n1], R[n2];
 
     for (i = 0; i<n1; i++)          //copy array into L

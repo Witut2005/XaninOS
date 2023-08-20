@@ -209,7 +209,7 @@ void xprintf(char* str, ... )
         while(str[string_counter])
         {
 
-            for(int i = 0; i < sizeof(tmp); i++)
+            for(int i = 0; i < SIZE_OF(tmp); i++)
                 tmp[i] = '\0';
 
             if(str[string_counter] == '%')
@@ -559,7 +559,7 @@ void xprintf(char* str, ... )
                             {
 
                                 uint8_t number_hex = (uint8_t)va_arg(args,uint32_t);
-                                xint_to_hex_str(number_hex,temporary_pointer, sizeof(uint8_t));
+                                xint_to_hex_str(number_hex,temporary_pointer, SIZE_OF(uint8_t));
 
                                 for(int i = 0; temporary_pointer[i] != '\0'; i++)
                                 {
@@ -588,7 +588,7 @@ void xprintf(char* str, ... )
                                 uint8_t number_hex = (uint8_t)va_arg(args, uint32_t);
 
 
-                                xint_to_hex_str(number_hex,temporary_pointer, sizeof(uint8_t));
+                                xint_to_hex_str(number_hex,temporary_pointer, SIZE_OF(uint8_t));
                                 toupper(temporary_pointer);
                                 
                                 for(int i = 0; temporary_pointer[i] != '\0'; i++)
@@ -708,7 +708,7 @@ void xprintf(char* str, ... )
     {
 
         char tmp[128];
-        memset((uint8_t*)tmp, '\0', sizeof(tmp));
+        memset((uint8_t*)tmp, '\0', SIZE_OF(tmp));
         char* temporary_pointer = tmp;
         
         uint32_t number;
@@ -736,7 +736,7 @@ void xprintf(char* str, ... )
         while(str[string_counter])
         {
 
-            for(int i = 0; i < sizeof(tmp); i++)
+            for(int i = 0; i < SIZE_OF(tmp); i++)
                 tmp[i] = '\0';
 
             if(str[string_counter] == '%')
@@ -895,7 +895,7 @@ void xprintf(char* str, ... )
                             {
 
                                 uint8_t number_hex = (uint8_t)va_arg(args,uint32_t);
-                                xint_to_hex_str(number_hex,temporary_pointer, sizeof(uint8_t));
+                                xint_to_hex_str(number_hex,temporary_pointer, SIZE_OF(uint8_t));
 
                                 for(int i = 0; temporary_pointer[i] != '\0'; i++)
                                     xtb_cell_put(StdioVty, temporary_pointer[i], OUTPUT_COLOR_SET(background_color, font_color));
@@ -907,7 +907,7 @@ void xprintf(char* str, ... )
                             {
 
                                 uint8_t number_hex = (uint8_t)va_arg(args,uint32_t);
-                                xint_to_hex_str(number_hex,temporary_pointer, sizeof(uint8_t));
+                                xint_to_hex_str(number_hex,temporary_pointer, SIZE_OF(uint8_t));
                                 toupper(temporary_pointer);
 
                                 for(int i = 0; temporary_pointer[i] != '\0'; i++)
@@ -1267,7 +1267,7 @@ void xscanf(char* str, ... )
                             {
 
                                 uint8_t number_hex = (uint8_t)va_arg(args,uint32_t);
-                                xint_to_hex_str(number_hex,temporary_pointer, sizeof(uint8_t));
+                                xint_to_hex_str(number_hex,temporary_pointer, SIZE_OF(uint8_t));
 
                                 for(int i = 0; temporary_pointer[i] != '\0'; i++)
                                 {
@@ -1291,7 +1291,7 @@ void xscanf(char* str, ... )
                             {
 
                                 uint8_t number_hex = (uint8_t)va_arg(args,uint32_t);
-                                xint_to_hex_str(number_hex,temporary_pointer, sizeof(uint8_t));
+                                xint_to_hex_str(number_hex,temporary_pointer, SIZE_OF(uint8_t));
                                 toupper(temporary_pointer);
                                 
                                 for(int i = 0; temporary_pointer[i] != '\0'; i++)
@@ -1470,7 +1470,7 @@ void xscanf(char* str, ... )
                 while(str[str_counter] != '\0')
                 {
                     
-                    memset(field_buffer, 0, sizeof(field_buffer));
+                    memset(field_buffer, 0, SIZE_OF(field_buffer));
 
                     if(str[str_counter] == '%')
                     {
@@ -1628,7 +1628,7 @@ void xscan_range(char* string_buffer, uint32_t how_many_chars)
     char* field_buffer = (char*)calloc(how_many_chars);
 
     char string_typed_buffer[1000];
-    memset(string_typed_buffer, '\0', sizeof(string_typed_buffer));
+    memset(string_typed_buffer, '\0', SIZE_OF(string_typed_buffer));
 
     uint32_t index = 0;
     

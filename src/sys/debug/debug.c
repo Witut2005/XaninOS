@@ -6,7 +6,7 @@ XaninKernelDebugBlock XaninKernelDebugInfo;
 
 void kernel_debug_block_set(XaninKernelDebugBlock Block)
 {
-    memcpy((uint8_t*)&XaninKernelDebugInfo, (uint8_t*)&Block, sizeof(XaninKernelDebugInfo));
+    memcpy((uint8_t*)&XaninKernelDebugInfo, (uint8_t*)&Block, SIZE_OF(XaninKernelDebugInfo));
 }
 
 XaninKernelDebugBlock kernel_debug_block_get(void)

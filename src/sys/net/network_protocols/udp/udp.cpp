@@ -10,7 +10,7 @@
 
 void UserDatagramProtocolInterface::ipv4_send(uint32_t dest_ip, uint32_t src_ip, uint16_t dest_port, uint16_t src_port, uint8_t* data, uint16_t packet_size, NetworkResponse* Response)
 {
-    UdpHeader* UdpPacket = (UdpHeader*)malloc(sizeof(1518));
+    UdpHeader* UdpPacket = (UdpHeader*)malloc(SIZE_OF(1518));
 
     UdpPacket->destination_port = BIG_ENDIAN(dest_port);
     UdpPacket->source_port = BIG_ENDIAN(src_port);
@@ -19,7 +19,7 @@ void UserDatagramProtocolInterface::ipv4_send(uint32_t dest_ip, uint32_t src_ip,
 
     memcpy((uint8_t*)UdpPacket+8, data, packet_size);
 
-    InternetProtocolInterface* IpPacket = (InternetProtocolInterface*)malloc(sizeof(InternetProtocolInterface));
+    InternetProtocolInterface* IpPacket = (InternetProtocolInterface*)malloc(SIZE_OF(InternetProtocolInterface));
     IpPacket->ip4_packet_send(dest_ip, src_ip, USER_DATAGRAM_PROTOCOL, 0xFF, (uint8_t*)UdpPacket, packet_size, NULL);
     free(UdpPacket);
     free(IpPacket);
@@ -31,7 +31,7 @@ extern "C"
 
     void udp_ipv4_packet_send(uint32_t dest_ip, uint32_t src_ip, uint16_t dest_port, uint16_t src_port, uint8_t* data, uint16_t packet_size)
     {
-        UserDatagramProtocolInterface* UdpPacket = (UserDatagramProtocolInterface*)malloc(sizeof(UserDatagramProtocolInterface));
+        UserDatagramProtocolInterface* UdpPacket = (UserDatagramProtocolInterface*)malloc(SIZE_OF(UserDatagramProtocolInterface));
         UdpPacket->ipv4_send(dest_ip, src_ip, dest_port, src_port, data, packet_size, NULL);
         free(UdpPacket);
     }

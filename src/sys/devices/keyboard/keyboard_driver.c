@@ -151,14 +151,6 @@ void keyboard_driver(void)
     keyboard_driver_shift_remap_keys();
 
 
-    if(KeyInfo.is_ctrl & KeyInfo.is_alt)
-    {
-        memset(vty_get()->rows_changed, true, vty_get()->current_height * sizeof(uint8_t));
-        xtb_flush(vty_get());
-        // memcpy(0x0, (uint8_t*)vty_get()->buffer, SECTOR_SIZE);
-    } 
-
-
     // if(keyboard_handle != NULL)
     // {
     //     keyboard_handle();

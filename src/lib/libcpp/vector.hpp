@@ -32,7 +32,7 @@ public:
     
     void push(T item)
     {
-        begin_ptr = (T*)realloc(begin_ptr, sizeof(T) * this->size);
+        begin_ptr = (T*)realloc(begin_ptr, SIZE_OF(T) * this->size);
         begin_ptr[size++] = item;
     }
 
@@ -43,7 +43,7 @@ public:
         
         T tmp = *(begin_ptr + this->size - 1);
         *(begin_ptr + this->size - 1) = (T)null;
-        begin_ptr = (T*)realloc(begin_ptr, sizeof(T) * (--this->size));
+        begin_ptr = (T*)realloc(begin_ptr, SIZE_OF(T) * (--this->size));
         return tmp;
     }
     
@@ -57,7 +57,7 @@ public:
     
     vector (std::initializer_list<T> items)
     {
-        this->begin_ptr = (T*)calloc(sizeof(T) * items.size());
+        this->begin_ptr = (T*)calloc(SIZE_OF(T) * items.size());
         int index = 0;
         for(auto it = items.begin(); it != items.end(); it++, index++)
             this->begin_ptr[index] = *it;
@@ -67,7 +67,7 @@ public:
     
     vector()
     {
-        this->begin_ptr = (T*)calloc(sizeof(T));
+        this->begin_ptr = (T*)calloc(SIZE_OF(T));
         this->size = 0;
     }
 

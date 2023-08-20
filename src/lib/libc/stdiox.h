@@ -17,7 +17,7 @@ Screen.x = x_new; \
 Screen.y = y_new
 
 #define stderr ( red << 4 | white)
-#define ARRAY_LENGTH(x) sizeof(x) / sizeof(x[0])
+#define ARRAY_LENGTH(x) SIZE_OF(x) / SIZE_OF(x[0])
 
 enum SCREEN_MACROS 
 {

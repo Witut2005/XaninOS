@@ -20,7 +20,7 @@ namespace std
 
         stack()
         {
-            stack_pointer = (T*)malloc(sizeof(T));       
+            stack_pointer = (T*)malloc(SIZE_OF(T));       
             size = 0;
         }
 

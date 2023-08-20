@@ -2,6 +2,7 @@
 #pragma once
 
 #include <lib/libc/memory.h>
+#include <sys/macros.h>
 
 namespace net
 {
@@ -15,20 +16,20 @@ struct MacAddress
 
     MacAddress(const uint8_t* mac)
     {
-        memcpy(this->address, const_cast<uint8_t*>(mac), sizeof(address));
+        memcpy(this->address, const_cast<uint8_t*>(mac), SIZE_OF(address));
     }
 
     MacAddress(uint8_t* mac)
     {
-        memcpy(this->address, const_cast<uint8_t*>(mac), sizeof(address));
+        memcpy(this->address, const_cast<uint8_t*>(mac), SIZE_OF(address));
     }
 
     bool operator == (MacAddress other) const{
-        return memcmp(const_cast<uint8_t*>(this->address), other.address, sizeof(address));
+        return memcmp(const_cast<uint8_t*>(this->address), other.address, SIZE_OF(address));
     }
 
     bool operator != (MacAddress other) const{
-        return !memcmp(const_cast<uint8_t*>(this->address), other.address, sizeof(address));
+        return !memcmp(const_cast<uint8_t*>(this->address), other.address, SIZE_OF(address));
     }
 
 };

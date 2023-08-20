@@ -14,7 +14,7 @@ int dev_tools(char* program)
 {
 
     XaninKernelDebugBlock DebugInfo;
-    memset((uint8_t*)&DebugInfo, false, sizeof(DebugInfo));
+    memset((uint8_t*)&DebugInfo, false, SIZE_OF(DebugInfo));
 
     kernel_debug_block_set(DebugInfo);
 

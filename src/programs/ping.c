@@ -35,7 +35,7 @@ int ping(char* ip_addr_str)
     xprintf("%d\n\n\n", tmp[0]);
 
     NetworkResponse* IcmpResponse;
-    response_object_create(&IcmpResponse, sizeof(IcmpPacket));
+    response_object_create(&IcmpResponse, SIZE_OF(IcmpPacket));
 
     for(int i = 0; i < 4; i++)
     {

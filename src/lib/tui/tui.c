@@ -28,7 +28,7 @@ table_t* table_create(uint16_t x, uint16_t y, uint8_t number_of_rows, uint8_t ro
     if(number_of_sites > 9)
         number_of_sites = 9;
 
-    table_t* tmp = (table_t*)calloc(sizeof(table_t));
+    table_t* tmp = (table_t*)calloc(SIZE_OF(table_t));
 
     tmp->x = x;
     tmp->y = y;
@@ -38,19 +38,19 @@ table_t* table_create(uint16_t x, uint16_t y, uint8_t number_of_rows, uint8_t ro
     tmp->foreground_color = foreground_color;	
     tmp->sites = number_of_sites;
 
-    tmp->row_data = (char***)calloc(sizeof(char**) * number_of_sites);
-    tmp->row_background_color = (uint8_t**)calloc(sizeof(uint8_t*) * number_of_sites);
-    tmp->row_foreground_color = (uint8_t**)calloc(sizeof(uint8_t*) * number_of_sites);
+    tmp->row_data = (char***)calloc(SIZE_OF(char**) * number_of_sites);
+    tmp->row_background_color = (uint8_t**)calloc(SIZE_OF(uint8_t*) * number_of_sites);
+    tmp->row_foreground_color = (uint8_t**)calloc(SIZE_OF(uint8_t*) * number_of_sites);
 
     for(int i = 0; i < number_of_sites; i++)
     {
-        tmp->row_background_color[i] = (uint8_t*)calloc(sizeof(uint8_t) * number_of_rows);
-        tmp->row_foreground_color[i] = (uint8_t*)calloc(sizeof(uint8_t) * number_of_rows);
+        tmp->row_background_color[i] = (uint8_t*)calloc(SIZE_OF(uint8_t) * number_of_rows);
+        tmp->row_foreground_color[i] = (uint8_t*)calloc(SIZE_OF(uint8_t) * number_of_rows);
     }
 
     for(int i = 0; i < number_of_sites; i++)
     {
-        tmp->row_data[i] = (char**)calloc(sizeof(char**));
+        tmp->row_data[i] = (char**)calloc(SIZE_OF(char**));
 
         for(int j = 0; j < number_of_rows; j++)
             tmp->row_data[i][j] = (char*)calloc(80);

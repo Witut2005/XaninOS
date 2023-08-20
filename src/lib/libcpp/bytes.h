@@ -25,7 +25,7 @@ class Bytes
         T tmp = 0;
         T result = 0;
 
-        for(int i = 0; i < sizeof(this->copy); i++)
+        for(int i = 0; i < SIZE_OF(this->copy); i++)
         {
             tmp = tmp << 8;
             tmp = tmp | (this->copy & 0xFF);
@@ -40,11 +40,11 @@ class Bytes
         this->copy = bytes;
 
         this->begin_of_data = (uint8_t*)&this->copy;
-        this->end_of_data = (uint8_t*)(&(this->copy)) + sizeof(this->copy);
+        this->end_of_data = (uint8_t*)(&(this->copy)) + SIZE_OF(this->copy);
 
         T tmp = 0;
 
-        for(int i = 0; i < sizeof(this->copy); i++)
+        for(int i = 0; i < SIZE_OF(this->copy); i++)
         {
             tmp = tmp << 8;
             tmp = tmp | (bytes & 0xFF);

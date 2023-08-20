@@ -27,8 +27,8 @@ void terminal_set(terminal_t* previous, terminal_t* terminal)
 
 terminal_t* terminal_create(void)
 {
-    terminal_t* new_terminal = (terminal_t*)calloc(sizeof(terminal_t));
-    new_terminal->buffer = (uint8_t*)calloc(sizeof(VGA_SCREEN_RESOLUTION));
+    terminal_t* new_terminal = (terminal_t*)calloc(SIZE_OF(terminal_t));
+    new_terminal->buffer = (uint8_t*)calloc(SIZE_OF(VGA_SCREEN_RESOLUTION));
 
     new_terminal->x = 0; // i know calloc do this for me but who cares? bla bla bla 
     new_terminal->y = 0;

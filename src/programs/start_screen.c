@@ -25,7 +25,7 @@ static inline void print_xanin_os_string(void)
 
     if(bstrcmp(argv[1], "-f"))
     {
-        char* buf = (char*)calloc(VGA_SCREEN_RESOLUTION * sizeof(XtCell));
+        char* buf = (char*)calloc(VGA_SCREEN_RESOLUTION * SIZE_OF(XtCell));
 
         XinEntry* File = fopen(argv[2], "r");
 
