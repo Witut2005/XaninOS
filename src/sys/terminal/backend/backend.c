@@ -96,7 +96,9 @@ void xtb_flush(Xtf *XtFrontend)
             if ((!(vram_index % XtBackend->vga_width)) && (XtFrontend->buffer[i - 1].character != SAFE_NEW_LINE))
                 continue;
 
-            vram_index = vram_index + (XtBackend->vga_width - (vram_index % XtBackend->vga_width));
+            for(int start_vram_index = vram_index; vram_index < start_vram_index + (XtBackend->vga_width - (start_vram_index % XtBackend->vga_width)); vram_index++)
+                vram[vram_index] = BLANK_SCREEN_CELL;
+
             continue;
         }
 
@@ -104,7 +106,10 @@ void xtb_flush(Xtf *XtFrontend)
         {
             current_row_to_display++;
             row_cleared = false;
-            vram_index = vram_index + (XtBackend->vga_width - (vram_index % XtBackend->vga_width));
+
+            for(int start_vram_index = vram_index; vram_index < start_vram_index + (XtBackend->vga_width - (start_vram_index % XtBackend->vga_width)); vram_index++)
+                vram[vram_index] = BLANK_SCREEN_CELL;
+
             continue;
         }
 
