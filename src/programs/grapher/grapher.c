@@ -6,7 +6,7 @@
 
 //traz was here
 
-int grapher(){
+int grapher(void){
     
     unsigned short DispX=79;
     unsigned short DispY=VGA_MAX_Y;
@@ -28,6 +28,8 @@ int grapher(){
     unsigned short select=0;
     unsigned short RunAgain=0;
     unsigned short Clearing=0;
+
+    stdio_mode_set(STDIO_MODE_CANVAS);
 
     xprintf("?Draw axies?\n[Y/any]: ");
     xscanf("%c", &select);

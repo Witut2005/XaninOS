@@ -26,5 +26,6 @@ bool stdio_legacy_cell_put(char character, uint8_t color, uint8_t x, uint8_t y)
 
 void stdio_legacy_screen_object_restore_defaults(void)
 {
-    Screen.x = Screen.y = 0;
+    Screen.x = 0;
+    Screen.y = 0;
 }
