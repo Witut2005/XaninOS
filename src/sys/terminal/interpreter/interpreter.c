@@ -132,7 +132,10 @@ void scan(void)
         char stdio_selected_option = getchar();
 
         if(stdio_selected_option == 'l')
+        {
             stdio_mode_set(STDIO_MODE_CANVAS);
+            screen_clear();
+        }
 
     }
     

@@ -29,7 +29,7 @@ int grapher(void){
     unsigned short RunAgain=0;
     unsigned short Clearing=0;
 
-    stdio_mode_set(STDIO_MODE_CANVAS);
+    screen_clear();
 
     xprintf("?Draw axies?\n[Y/any]: ");
     xscanf("%c", &select);
