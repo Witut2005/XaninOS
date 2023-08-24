@@ -70,15 +70,6 @@ void putc(char* str, uint32_t count)
     );
 }
 
-bool stdio_canvas_put_character(uint32_t x, uint32_t y, char c, uint8_t color)
-{
-    if(stdio_legacy_canvas_is_buffer_full())
-        return false;
-    
-    Screen.cursor[y][x] = (color << 8) | c;
-    return true;
-}
-
 char putchar(char character)
 {
 
@@ -86,6 +77,8 @@ char putchar(char character)
     {
         if(stdio_legacy_canvas_is_buffer_full())
             return character;
+
+        stdio_legacy_cell_put(character, OUTPUT_COLOR_SET(black, white), &Screen.y, &Screen.x);
 
         Screen.cursor[Screen.y][Screen.x] = (uint16_t) (character + (((black << 4) | white) << 8));
 
@@ -197,9 +190,7 @@ void xprintf(char* str, ... )
 
             if(str[string_counter] == '%')
             {
-
-                string_counter++;
-                switch(str[string_counter])
+                switch(str[++string_counter])
                 {
                     case 'd':
                     {
@@ -208,28 +199,9 @@ void xprintf(char* str, ... )
                         int_to_str(number,temporary_pointer);
 
                         for(int i = 0; temporary_pointer[i] != '\0'; i++)
-                        {                        
-                            if(stdio_legacy_canvas_is_buffer_full())
-                                break; 
-
-                            Screen.cursor[Screen.y][Screen.x] = (uint16_t) (temporary_pointer[i] + (((background_color << 4) | font_color) << 8));
-                            if(Screen.x == 80)
-                            {
-                                Screen.y++;
-                                Screen.x = 0;
-                            }
-                            Screen.x++;
-                        }
+                            stdio_legacy_cell_put_with_interpretation(temporary_pointer[i], OUTPUT_COLOR_SET(background_color, font_color), &Screen.y, &Screen.x);
 
                         break;
-                    }
-
-                    case 'f':
-                    {
-                        //float float_number = (float)va_arg(args,double);
-                        //float_to_string(float_number,temporary_pointer);
-
-
                     }
 
                     case 'y':
@@ -239,26 +211,12 @@ void xprintf(char* str, ... )
                         uint32_t time_mask = 0xF0000000;
                         uint32_t time_shift = 28;
 
-                        if(stdio_legacy_canvas_is_buffer_full())
-                            break; 
-
                         for(int i = 0; i < 8; i++, time_mask = time_mask >> 4, time_shift -= 4)
                         {
-                            if(stdio_legacy_canvas_is_buffer_full())
-                                break; 
-
                             if(i == 2 || i == 4)
-                            {
+                                stdio_legacy_cell_put_with_interpretation('-', OUTPUT_COLOR_SET(background_color, font_color), &Screen.y, &Screen.x);
 
-                                Screen.cursor[Screen.y][Screen.x] = (uint16_t) '-'  | (((background_color << 4) | font_color) << 8);
-                                Screen.x++;
-                            }
-
-                            if(stdio_legacy_canvas_is_buffer_full())
-                                break; 
-
-                            Screen.cursor[Screen.y][Screen.x] = (uint16_t)( (((time & time_mask) >> time_shift) + '0')  | (((background_color << 4) | font_color) << 8));
-                            Screen.x++;
+                            stdio_legacy_cell_put_with_interpretation(((time & time_mask) >> time_shift) + '0',  OUTPUT_COLOR_SET(background_color, font_color), &Screen.y, &Screen.x);
                         }
 
                         break;
@@ -275,18 +233,10 @@ void xprintf(char* str, ... )
 
                         for(int i = 0; i < 4; i++, time_mask = time_mask >> 4, time_shift -= 4)
                         {
-                            if(stdio_legacy_canvas_is_buffer_full())
-                                break; 
-
                             if(i == 2)
-                            {
+                                stdio_legacy_cell_put_with_interpretation(':', OUTPUT_COLOR_SET(background_color, font_color), &Screen.y, &Screen.x);
 
-                                Screen.cursor[Screen.y][Screen.x] = (uint16_t) ':'  | (((background_color << 4) | font_color) << 8);
-                                Screen.x++;
-                            }
-
-                            Screen.cursor[Screen.y][Screen.x] = (uint16_t)( (((time & time_mask) >> time_shift) + '0')  | (((background_color << 4) | font_color) << 8));
-                            Screen.x++;
+                            stdio_legacy_cell_put_with_interpretation(((time & time_mask) >> time_shift) + '0', OUTPUT_COLOR_SET(background_color, font_color), &Screen.y, &Screen.x);
                         }
                         break;
                     }
@@ -294,27 +244,13 @@ void xprintf(char* str, ... )
                     case 'b':
                     {
                         number = va_arg(args,int);
-
                         temporary_pointer = bin_to_str(number,tmp);
 
                         for(int i = 0; temporary_pointer[i] != '\0'; i++)
-                        { 
-                            if(stdio_legacy_canvas_is_buffer_full())
-                                break; 
-
-                            Screen.cursor[Screen.y][Screen.x] = (uint16_t) (temporary_pointer[i] + (((background_color << 4) | font_color) << 8));
-                            if(Screen.x == 80)
-                            {
-                                Screen.y++;
-                                Screen.x = 0;
-                            }
-                            Screen.x++;
-                        }
+                            stdio_legacy_cell_put_with_interpretation(temporary_pointer[i], OUTPUT_COLOR_SET(background_color, font_color), &Screen.y, &Screen.x);
 
                         break;
                     }
-
-                        
 
                     case 's':
                     {
@@ -325,57 +261,7 @@ void xprintf(char* str, ... )
                             break;
 
                         for(int i = 0; stringPtr[i] != '\0'; i++)
-                        {
-
-                            if(stringPtr[i] == '\r')
-                            {
-                                Screen.x = 0;
-                                continue;
-                            }
-
-                            if(stdio_legacy_canvas_is_buffer_full())
-                                break; 
-
-                            if(stringPtr[i] == '\n')
-                            {            
-                                Screen.x = 0;
-                                Screen.y++;
-                                continue;
-                            }
-
-                            else if(stringPtr[i] == '\t')
-                            {
-                                for(int j = 0; j < 3; j++)
-                                {
-                                    if(Screen.x + j == 80)
-                                    {
-                                        Screen.x = 0;
-                                        Screen.y++;
-                                    }
-                                    Screen.cursor[Screen.y][Screen.x + j] = (uint16_t)(' ' + (((background_color << 4) | font_color) << 8));
-                                }
-
-                                Screen.x += 3;
-                                continue;
-                            }
-
-
-                            else if(str[string_counter] == '\\')
-                            {
-                                Screen.cursor[Screen.y][Screen.x] = (uint16_t)('\\' + (((background_color << 4) | font_color) << 8));
-                                continue;
-                            }
-
-
-                            Screen.cursor[Screen.y][Screen.x] = (uint16_t) (stringPtr[i] + (((background_color << 4) | font_color) << 8));
-                            if(Screen.x == 80)
-                            {
-                                Screen.y++;
-                                Screen.x = 0;
-                            }
-                            Screen.x++;
-                    
-                        }
+                            stdio_legacy_cell_put_with_interpretation(stringPtr[i], OUTPUT_COLOR_SET(background_color, font_color), &Screen.y, &Screen.x);
 
                         break;
 
@@ -384,65 +270,23 @@ void xprintf(char* str, ... )
 
                     case 'i':
                     {
-
                         uint8_t number = (uint8_t)va_arg(args, uint32_t);
-                        
-                        if(stdio_legacy_canvas_is_buffer_full())
-                            break; 
 
-                        Screen.cursor[Screen.y][Screen.x] = (uint16_t)( (((number & 0xf0) >> 4) + '0')  | (((background_color << 4) | font_color) << 8));
-                        Screen.x++;
-
-                        if(stdio_legacy_canvas_is_buffer_full())
-                            break; 
-
-                        Screen.cursor[Screen.y][Screen.x] = (uint16_t)(((number & 0x0f) + '0')  | (((background_color << 4) | font_color) << 8));
-                        Screen.x++;
+                        stdio_legacy_cell_put_with_interpretation(((number & 0xF0) >> 4) + '0', OUTPUT_COLOR_SET(background_color, font_color), &Screen.y, &Screen.x);
+                        stdio_legacy_cell_put_with_interpretation((number & 0x0F) + '0', OUTPUT_COLOR_SET(background_color, font_color), &Screen.y, &Screen.x);
                     
                         break;
-
                     }
 
                     case 'c':
                     {
-
-                        char character;
-                        character = (char)va_arg(args,int);
-
-                        if(stdio_legacy_canvas_is_buffer_full())
-                            break; 
-                        
-                        if(Screen.x == 80)
-                        {
-                            Screen.y++;
-                            Screen.x = 0;
-                        }
-
-                        if(character == '\n')
-                        {            
-                            Screen.x = 0;
-                            Screen.y++;
-                        }
-
-                        else if(character == '\0') //handle other characters
-                            break;
-
-                        else 
-                        {
-                            Screen.cursor[Screen.y][Screen.x] = (uint16_t) (character + (((background_color << 4) | font_color) << 8));
-                            Screen.x++;
-                        }
-
+                        stdio_legacy_cell_put_with_interpretation((char)va_arg(args, int), OUTPUT_COLOR_SET(background_color, font_color), &Screen.y, &Screen.x);
                         break;
                     }
 
                     case 'z':
                     {
                         font_color = (uint8_t)va_arg(args,int);
-
-                        if(stdio_legacy_canvas_is_buffer_full())
-                            break; 
-
                         background_color = (font_color & 0xf0) >> 4;
                         font_color = font_color & 0x0f;
                         break;
@@ -454,22 +298,9 @@ void xprintf(char* str, ... )
                         int_to_hex_str(number_hex,temporary_pointer);
 
                         for(int i = 0; temporary_pointer[i] != '\0'; i++)
-                        {
-                            if(stdio_legacy_canvas_is_buffer_full())
-                                break; 
+                            stdio_legacy_cell_put_with_interpretation(temporary_pointer[i], OUTPUT_COLOR_SET(background_color, font_color), &Screen.y, &Screen.x);
 
-                            Screen.cursor[Screen.y][Screen.x] = (uint16_t) (temporary_pointer[i] + (((background_color << 4) | font_color) << 8));
-                            if(Screen.x == 80)
-                            {
-                                Screen.y++;
-                                Screen.x = 0;
-                            }
-                            Screen.x++;
-                        }
-
-                        
                         break;
-
                     }
                     
                     case 'X':
@@ -480,52 +311,25 @@ void xprintf(char* str, ... )
                         toupper(temporary_pointer);
 
                         for(int i = 0; temporary_pointer[i] != '\0'; i++)
-                        {
-                            if(stdio_legacy_canvas_is_buffer_full())
-                                break; 
-                            
-                            Screen.cursor[Screen.y][Screen.x] = (uint16_t) (temporary_pointer[i] + (((background_color << 4) | font_color) << 8));
-                            if(Screen.x == 80)
-                            {
-                                Screen.y++;
-                                Screen.x = 0;
-                            }
-                            Screen.x++;
-                        }
+                            stdio_legacy_cell_put_with_interpretation(temporary_pointer[i], OUTPUT_COLOR_SET(background_color, font_color), &Screen.y, &Screen.x);
 
                         break;
-
                     }
                     
                     case 'o':
                     {
                         number = va_arg(args,int);
-
                         int_to_oct_str(number,temporary_pointer);
 
                         for(int i = 0; temporary_pointer[i] != '\0'; i++)
-                        {
-                            if(stdio_legacy_canvas_is_buffer_full())
-                                break; 
-
-                            Screen.cursor[Screen.y][Screen.x] = (uint16_t) (temporary_pointer[i] + (((background_color << 4) | font_color) << 8));
-                            if(Screen.x == 80)
-                            {
-                                Screen.y++;
-                                Screen.x = 0;
-                            }
-                            Screen.x++;
-                        }
+                            stdio_legacy_cell_put_with_interpretation(temporary_pointer[i], OUTPUT_COLOR_SET(background_color, font_color), &Screen.y, &Screen.x);
                         break;
                     }
 
-                    case 'h':
+                    case 'h': // do zrobienia ze pointerami hmmhmm nicho?
                     {
                         position_change_switch_used = true;
                         number = (uint16_t)va_arg(args,uint32_t);
-
-                        if(stdio_legacy_canvas_is_buffer_full())
-                            break; 
 
                         Screen.y = (number >> 8) & 0xFF;
                         Screen.x = number & 0xFF;
@@ -545,24 +349,9 @@ void xprintf(char* str, ... )
                                 xint_to_hex_str(number_hex,temporary_pointer, SIZE_OF(uint8_t));
 
                                 for(int i = 0; temporary_pointer[i] != '\0'; i++)
-                                {
-                                    if(stdio_legacy_canvas_is_buffer_full())
-                                        break; 
-
-                                    Screen.cursor[Screen.y][Screen.x] = (uint16_t) (temporary_pointer[i] + (((background_color << 4) | font_color) << 8));
-                                    
-                                    if(Screen.x == 80)
-                                    {
-                                        Screen.y++;
-                                        Screen.x = 0;
-                                    }
-                                    
-                                    Screen.x++;
-                                }
-
+                                    stdio_legacy_cell_put_with_interpretation(temporary_pointer[i], OUTPUT_COLOR_SET(background_color, font_color), &Screen.y, &Screen.x);
                         
                                 break;                            
-
                             }
                     
                             case 'X':
@@ -575,107 +364,20 @@ void xprintf(char* str, ... )
                                 toupper(temporary_pointer);
                                 
                                 for(int i = 0; temporary_pointer[i] != '\0'; i++)
-                                {
-                                    if(stdio_legacy_canvas_is_buffer_full())
-                                        break; 
+                                    stdio_legacy_cell_put_with_interpretation(temporary_pointer[i], OUTPUT_COLOR_SET(background_color, font_color), &Screen.y, &Screen.x);
 
-                                    Screen.cursor[Screen.y][Screen.x] = (uint16_t) (temporary_pointer[i] + (((background_color << 4) | font_color) << 8));
-                                    
-                                    if(Screen.x == 80)
-                                    {
-                                        Screen.y++;
-                                        Screen.x = 0;
-                                    }
-
-                                    if(Screen.y == 28)
-                                    {
-                                        Screen.y = 0;
-                                        break;
-                                    }
-                                    
-                                    Screen.x++;
-                                }
-
-                        
                                 break;                            
-
                             }
-
                         }
-
-
                         break;
                     }
-
                 }
 
                 string_counter++;
             }
-
-            // DONT USE else if(str[string_counter++] == '\n') IT WILL INCREMENT ALSO WHEN FALSE
-
-            else if(str[string_counter] == '\n')
-            {            
-                Screen.x = 0;
-                Screen.y++;
-                string_counter++;
-            }
-
-            else if(str[string_counter] == '\r')
-            {
-                Screen.x = 0;
-                string_counter++;
-            }
-
-            else if(str[string_counter] == '\t')
-            {
-
-                for(int i = 0; i < 3; i++)
-                {
-
-                    if(stdio_legacy_canvas_is_buffer_full())
-                        continue; 
-
-                    if(Screen.x + i == 80)
-                    {
-                        Screen.x = 0;
-                        Screen.y++;
-                    }
-                    Screen.cursor[Screen.y][Screen.x + i] = (uint16_t)(' ' + (((background_color << 4) | font_color) << 8));
-                }
-
-                string_counter++;
-                Screen.x += 3;
-            }
-
-
-            else if(str[string_counter] == '\\')
-            {
-                string_counter++;
-                if(stdio_legacy_canvas_is_buffer_full())
-                    continue; 
-                Screen.cursor[Screen.y][Screen.x] = (uint16_t)('\\' + (((background_color << 4) | font_color) << 8));
-            }
-
+            
             else
-            {
-                //cursor[bufCounter] = (uint16_t) (str[string_counter] + (((background_color << 4) | font_color) << 8));
-
-                //x++;
-                if(stdio_legacy_canvas_is_buffer_full())
-                {
-                    string_counter++;
-                    continue; 
-                }
-
-                Screen.cursor[Screen.y][Screen.x++] = (uint16_t) (str[string_counter] + (((background_color << 4) | font_color) << 8));
-                string_counter++;
-                if(Screen.x == VGA_WIDTH)
-                {
-                    Screen.x = 0;
-                    Screen.y++;
-                }
-            }
+                stdio_legacy_cell_put_with_interpretation(str[string_counter++], OUTPUT_COLOR_SET(background_color, font_color), &Screen.y, &Screen.x);
         }
 
         if(position_change_switch_used) // restore Screen.x and Screen.y
@@ -1051,9 +753,6 @@ void xscanf(char* str, ... )
                                 *number = string_typed_buffer[0]; 
                                 break;
                             }
-
-
-
 
                             case 'x':
                             {
