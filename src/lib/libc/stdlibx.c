@@ -86,7 +86,7 @@ void __sys_inputg(xchar* ptr)
 
 void __sys_keyinfo_get(key_info_t* ptr)
 {
-    asm("mov eax, 204;" // inputg syscall id
+    asm("mov eax, 204;" // keyinfo_get syscall id
         "mov ecx, %0;"
         "int 0x81;"
         :

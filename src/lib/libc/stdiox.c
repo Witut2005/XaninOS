@@ -1057,101 +1057,141 @@ void xscanf(char* str, ... )
 void xscan_range(char* string_buffer, uint32_t how_many_chars)
 {
 
-    if(stdio_mode_get() != STDIO_MODE_CANVAS)
-        return;
+    stdio_mode_t stdio_current_mode = stdio_mode_get();
+    xchar Input;
+    key_info_t KeyInfo;
 
-    uint32_t counter = 0;
-    char* string_pointer;
-    char* field_buffer = (char*)calloc(how_many_chars);
-
-    char string_typed_buffer[1000];
-    memset(string_typed_buffer, '\0', SIZE_OF(string_typed_buffer));
-
-    uint32_t index = 0;
-    
-    PairUInt8 InitialScreenPosition = {Screen.y, Screen.x};
-    uint16_t* text_buffer_start = &Screen.cursor[Screen.y][Screen.x];
-
-    while(1)
+    if(stdio_current_mode == STDIO_MODE_TERMINAL)
     {
-        xchar Input;
-        __sys_inputg(&Input);
+        uint32_t buffer_index = 0;
+        char* field_buffer = (char*)calloc(how_many_chars);
 
-        key_info_t KeyInfo;
-        __sys_keyinfo_get(&KeyInfo);
-
-        if(Input.scan_code == BSPC)
+        while(1)
         {
-            stdio_legacy_cell_put((char)Screen.cursor[Screen.y][Screen.x], OUTPUT_COLOR_SET(black, white), &Screen.y, &Screen.x);
+            __sys_inputg(&Input);
+            __sys_keyinfo_get(&KeyInfo);
 
-            if((InitialScreenPosition.first == Screen.y) && (InitialScreenPosition.second == Screen.x))
-                continue;
-
-            if(!Screen.x)
+            if(Input.scan_code == ENTER)
             {
-                Screen.y--;
-                Screen.x = 79;
-                continue;
+                xprintf("\n");
+                return;
             }
 
-            Screen.x--;
+            else if(Input.scan_code == BSPC)
+            {
+                if(!buffer_index)            
+                    continue;
 
-            if(index)
-                index--;
-
-            string_typed_buffer[index] = '\0';
-            stdio_legacy_cell_put((char)Screen.cursor[Screen.y][Screen.x], OUTPUT_COLOR_SET(white, white), &Screen.y, &Screen.x);
-
-            KeyInfo.is_bspc = false;
-            letters_refresh(&Screen.cursor[Screen.y][Screen.x]);
-        }
-
-        else if(Input.scan_code == ENTER)
-        {
-            string_pointer = string_buffer;
+                string_buffer[--buffer_index] = '\0';
+                stdio_legacy_cell_put('\0', OUTPUT_COLOR_SET(black, black), &Screen.y, &Screen.x);
+                xtf_remove_last_cell(vty_get());
+                xtb_flush(vty_get());
+                Screen.x--;
+            }
             
-            for(int i = 0; string_pointer[i] != '\0'; i++)
-                string_pointer[i] = '\0';
+            else if(Input.character)
+            {
+                if(buffer_index == how_many_chars)
+                    continue;
 
-            for(int i = 0; string_typed_buffer[counter] != '\0' && string_typed_buffer[counter] != ' '; i++)
-            {
-                field_buffer[i] = string_typed_buffer[counter];
-                counter++;
+                string_buffer[buffer_index] = Input.character;
+                xtb_cell_put(vty_get(), Input.character, OUTPUT_COLOR_SET(black, white));
+                xtb_flush(vty_get());
+                buffer_index++;
+                Input.character = 0;
             }
-                
-                
-            for(int i = 0; field_buffer[i] != '\0' && field_buffer[i] != ' '; i++)
+        }
+        free(field_buffer);
+    }
+
+    else  // STDIO_MODE_CANVAS
+    {
+
+        uint32_t counter = 0;
+        char* string_pointer;
+        char* field_buffer = (char*)calloc(how_many_chars);
+
+        char string_typed_buffer[1000];
+        memset(string_typed_buffer, '\0', SIZE_OF(string_typed_buffer));
+
+        uint32_t index = 0;
+        uint16_t* text_buffer_start = &Screen.cursor[Screen.y][Screen.x];
+
+        while(1)
+        {
+
+            if(Input.scan_code == ENTER)
             {
-                if((field_buffer[i] > 127) || (field_buffer[i] < 0x20))
-                {
+                string_pointer = string_buffer;
+                
+                for(int i = 0; string_pointer[i] != '\0'; i++)
                     string_pointer[i] = '\0';
-                    break;
+
+                for(int i = 0; string_typed_buffer[counter] != '\0' && string_typed_buffer[counter] != ' '; i++)
+                {
+                    field_buffer[i] = string_typed_buffer[counter];
+                    counter++;
+                }
+                    
+                    
+                for(int i = 0; field_buffer[i] != '\0' && field_buffer[i] != ' '; i++)
+                {
+                    if((field_buffer[i] > 127) || (field_buffer[i] < 0x20))
+                    {
+                        string_pointer[i] = '\0';
+                        break;
+                    }
+
+                    string_pointer[i] = field_buffer[i];
                 }
 
-                string_pointer[i] = field_buffer[i];
+                memset(field_buffer, 0, 1000);
+
+                stdio_legacy_cell_put((char)Screen.cursor[Screen.y][Screen.x], OUTPUT_COLOR_SET(black, white), &Screen.y, &Screen.x);
+                
+                xprintf("\n");
+                return;
             }
 
-            memset(field_buffer, 0, 1000);
+            else if(Input.scan_code == BSPC)
+            {
+                if(!index)
+                    continue;
 
-            stdio_legacy_cell_put((char)Screen.cursor[Screen.y][Screen.x], OUTPUT_COLOR_SET(black, white), &Screen.y, &Screen.x);
-            
-            xprintf("\n");
-            return;
+                stdio_legacy_cell_put((char)Screen.cursor[Screen.y][Screen.x], OUTPUT_COLOR_SET(black, white), &Screen.y, &Screen.x);
+
+                if(!Screen.x)
+                {
+                    Screen.y--;
+                    Screen.x = VGA_WIDTH;
+                    continue;
+                }
+
+                Screen.x--;
+
+                index--;
+
+                string_typed_buffer[index] = '\0';
+                stdio_legacy_cell_put((char)Screen.cursor[Screen.y][Screen.x], OUTPUT_COLOR_SET(white, white), &Screen.y, &Screen.x);
+
+                KeyInfo.is_bspc = false;
+                letters_refresh(&Screen.cursor[Screen.y][Screen.x]);
+            }
+
+            else if(Input.character)
+            {
+
+                if(index == how_many_chars)
+                    continue;
+
+                xprintf("%c", Input.character);
+                string_typed_buffer[index] = Input.character;
+                index++;
+                
+            }    
         }
-
-        else if(Input.character)
-        {
-
-            if(index == how_many_chars)
-                continue;
-
-            xprintf("%c", Input.character);
-            string_typed_buffer[index] = Input.character;
-            index++;
-            
-        }    
+        free(field_buffer);
     }
-    free(field_buffer);
 }
 
 

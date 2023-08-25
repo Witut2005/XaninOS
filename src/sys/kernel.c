@@ -123,18 +123,6 @@ void kernel_loop(void)
 
         xin_close_all_files();
 
-        stdio_mode_set(STDIO_MODE_CANVAS);
-        screen_clear();
-
-        char bufff[10] = {0};
-        xscan_range(bufff, 9);
-
-        xprintf("%s\n", bufff);
-
-        while(1);
-
-        stdio_mode_set(STDIO_MODE_TERMINAL);
-
         while(1)
         {
             if(app_exited)
