@@ -88,3 +88,8 @@ bool stdio_legacy_cell_put_with_interpretation(char character, uint8_t color, ui
 
     return true;
 }
+
+uint16_t* stdio_legacy_vga_position_get(uint8_t y, uint8_t x)
+{
+    return &Screen.cursor[y][x];
+}

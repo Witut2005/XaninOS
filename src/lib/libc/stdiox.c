@@ -1,4 +1,5 @@
 
+#include <lib/libc/pair.h>
 #include <lib/libc/string.h>
 #include <lib/libc/memory.h>
 #include <lib/libc/stdlibx.h>
@@ -634,7 +635,7 @@ void xscanf(char* str, ... )
 
         uint32_t index = 0;
     
-        char* starting_screen_position = (char*)(&Screen.cursor[Screen.y][Screen.x] - 1);
+        PairUInt8 InitialScreenPosition = {Screen.y, Screen.x};
 
         char field_buffer[1000];
         memset(field_buffer, 0, 1000);
@@ -655,7 +656,7 @@ void xscanf(char* str, ... )
             {
                 stdio_legacy_cell_put((char)Screen.cursor[Screen.y][Screen.x], OUTPUT_COLOR_SET(black, white), &Screen.y, &Screen.x);
 
-                if(&Screen.cursor[Screen.y][Screen.x - 1] == (uint16_t*)starting_screen_position)
+                if((InitialScreenPosition.first == Screen.y) && (InitialScreenPosition.second == Screen.x))
                     continue;
 
                 if(!Screen.x)
@@ -1068,15 +1069,8 @@ void xscan_range(char* string_buffer, uint32_t how_many_chars)
 
     uint32_t index = 0;
     
-    uint8_t screen_offset = 0;
- 
-    char* starting_screen_position = (char*)&Screen.cursor[Screen.y][Screen.x - 1];
+    PairUInt8 InitialScreenPosition = {Screen.y, Screen.x};
     uint16_t* text_buffer_start = &Screen.cursor[Screen.y][Screen.x];
-
-    uint8_t x_start = Screen.x;
-    uint8_t y_start = Screen.y;
-
-    start:
 
     while(1)
     {
@@ -1090,23 +1084,20 @@ void xscan_range(char* string_buffer, uint32_t how_many_chars)
         {
             stdio_legacy_cell_put((char)Screen.cursor[Screen.y][Screen.x], OUTPUT_COLOR_SET(black, white), &Screen.y, &Screen.x);
 
-            if(&Screen.cursor[Screen.y][Screen.x - 1] == (uint16_t*)starting_screen_position)
-                goto start;
+            if((InitialScreenPosition.first == Screen.y) && (InitialScreenPosition.second == Screen.x))
+                continue;
 
             if(!Screen.x)
             {
                 Screen.y--;
                 Screen.x = 79;
-                goto start;
+                continue;
             }
 
             Screen.x--;
 
             if(index)
                 index--;
-
-            if(screen_offset)
-                screen_offset--;
 
             string_typed_buffer[index] = '\0';
             stdio_legacy_cell_put((char)Screen.cursor[Screen.y][Screen.x], OUTPUT_COLOR_SET(white, white), &Screen.y, &Screen.x);
@@ -1134,13 +1125,11 @@ void xscan_range(char* string_buffer, uint32_t how_many_chars)
                 if((field_buffer[i] > 127) || (field_buffer[i] < 0x20))
                 {
                     string_pointer[i] = '\0';
-                    goto end;
+                    break;
                 }
 
                 string_pointer[i] = field_buffer[i];
             }
-
-            end:
 
             memset(field_buffer, 0, 1000);
 
@@ -1152,35 +1141,14 @@ void xscan_range(char* string_buffer, uint32_t how_many_chars)
 
         else if(Input.character)
         {
-            char tmp = Input.character;
 
-            // stdio_legacy_cell_put((char)Screen.cursor[Screen.y][index + x_start], OUTPUT_COLOR_SET(black, white), &Screen.y, &Screen.x);
+            if(index == how_many_chars)
+                continue;
+
+            xprintf("%c", Input.character);
+            string_typed_buffer[index] = Input.character;
+            index++;
             
-            for(int i = 0; i < strlen(field_buffer); i++)
-                *(text_buffer_start + i) = 0;
-
-            Screen.x = x_start;
-            Screen.y = y_start;
-
-            uint8_t* tmp_buf = (uint8_t*)calloc(80);
-            memcpy(tmp_buf, string_typed_buffer, 80);
-
-            if(string_typed_buffer[index] != '\0')
-            {
-                for(int i = index; i < 50 - 1; i++)
-                    string_typed_buffer[i+1] = tmp_buf[i];
-            }
-
-            if(index < how_many_chars)
-            {
-                string_typed_buffer[index] = tmp;
-                index++;
-            }
-            
-            xprintf("%s", string_typed_buffer);
-
-            screen_offset++;
-            Screen.x = screen_offset + x_start;
         }    
     }
     free(field_buffer);
