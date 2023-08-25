@@ -75,12 +75,7 @@ char putchar(char character)
 
     if(stdio_mode_get() == STDIO_MODE_CANVAS)
     {
-        if(stdio_legacy_canvas_is_buffer_full())
-            return character;
-
         stdio_legacy_cell_put(character, OUTPUT_COLOR_SET(black, white), &Screen.y, &Screen.x);
-
-        Screen.cursor[Screen.y][Screen.x] = (uint16_t) (character + (((black << 4) | white) << 8));
 
         if((++Screen.x) == VGA_WIDTH)
         {    
@@ -101,7 +96,7 @@ char putchar(char character)
 char putchar_color(uint8_t color, char character)
 {
 
-    Screen.cursor[Screen.y][Screen.x] = (uint16_t) (character + ((((color & 0xF0) << 4) | (color & 0xF)) << 8));
+    stdio_legacy_cell_put(character, color, &Screen.y, &Screen.x);
         
     Screen.x++;
 
@@ -658,7 +653,7 @@ void xscanf(char* str, ... )
 
             if(Input.scan_code == BSPC)
             {
-                Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((black << 4) | white) << 8));
+                stdio_legacy_cell_put((char)Screen.cursor[Screen.y][Screen.x], OUTPUT_COLOR_SET(black, white), &Screen.y, &Screen.x);
 
                 if(&Screen.cursor[Screen.y][Screen.x - 1] == (uint16_t*)starting_screen_position)
                     continue;
@@ -676,9 +671,8 @@ void xscanf(char* str, ... )
                     index--;
 
                 string_typed_buffer[index] = '\0';
-                Screen.cursor[Screen.y][Screen.x] = '\0';
 
-                Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((white << 4) | white) << 8));
+                stdio_legacy_cell_put('\0', OUTPUT_COLOR_SET(white, white), &Screen.y, &Screen.x);
 
                 KeyInfo.is_bspc = false;
                 letters_refresh(&Screen.cursor[Screen.y][Screen.x]);
@@ -697,7 +691,6 @@ void xscanf(char* str, ... )
                             case 's':
                             {
                                 char* string_pointer = va_arg(args, char*);
-                                // xprintf("0x%x\n", string_pointer);
 
                                 for(char* i = string_pointer; *i != '\0'; i++)
                                     *i = '\0';
@@ -741,7 +734,7 @@ void xscanf(char* str, ... )
                                 *number = strtoi(field_buffer, DECIMAL);                       
 
                                 if(field_buffer[0] == '-')
-                                    *number = *number * -1;
+                                    *number = *number * (-1);
 
                                 break;
                             }
@@ -806,8 +799,7 @@ void xscanf(char* str, ... )
                 memset(field_buffer, 0, 1000); 
                 memset(string_typed_buffer, 0, 1000);
 
-                Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((black << 4) | white) << 8));
-                
+                stdio_legacy_cell_put((char)Screen.cursor[Screen.y][Screen.x], OUTPUT_COLOR_SET(black, white), &Screen.y, &Screen.x);
                 xprintf("\n");
                 // free(field_buffer);
                 break;
@@ -818,26 +810,14 @@ void xscanf(char* str, ... )
             {
                 char tmp = Input.character;
 
-                Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((black << 4) | white) << 8));
+                stdio_legacy_cell_put((char)Screen.cursor[Screen.y][Screen.x], OUTPUT_COLOR_SET(black, white), &Screen.y, &Screen.x);
                 char character_saved = (char)(Screen.cursor[Screen.y][Screen.x]);
                 
-
                 xprintf("%c", tmp);
         
-                // letters_refresh_add(&Screen.cursor[Screen.y][Screen.x], character_saved);
-        
-                // uint8_t* tmp_buf = (uint8_t*)calloc(40);
-                // memcpy(tmp_buf, string_typed_buffer, 40);
-
-                // for(int i = index; i < 40; i++)
-                //     string_typed_buffer[i+1] = tmp_buf[i];
-                
-
-
-                Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((white << 4) | white) << 8));
+                stdio_legacy_cell_put((char)Screen.cursor[Screen.y][Screen.x], OUTPUT_COLOR_SET(white, white), &Screen.y, &Screen.x);
                 string_typed_buffer[index] = tmp;
                 index++;
-
             }    
         }
 
@@ -1076,6 +1056,9 @@ void xscanf(char* str, ... )
 void xscan_range(char* string_buffer, uint32_t how_many_chars)
 {
 
+    if(stdio_mode_get() != STDIO_MODE_CANVAS)
+        return;
+
     uint32_t counter = 0;
     char* string_pointer;
     char* field_buffer = (char*)calloc(how_many_chars);
@@ -1105,7 +1088,7 @@ void xscan_range(char* string_buffer, uint32_t how_many_chars)
 
         if(Input.scan_code == BSPC)
         {
-            Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((black << 4) | white) << 8));
+            stdio_legacy_cell_put((char)Screen.cursor[Screen.y][Screen.x], OUTPUT_COLOR_SET(black, white), &Screen.y, &Screen.x);
 
             if(&Screen.cursor[Screen.y][Screen.x - 1] == (uint16_t*)starting_screen_position)
                 goto start;
@@ -1126,10 +1109,7 @@ void xscan_range(char* string_buffer, uint32_t how_many_chars)
                 screen_offset--;
 
             string_typed_buffer[index] = '\0';
-            Screen.cursor[Screen.y][Screen.x] = '\0';
-
-            Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((white << 4) | white) << 8));
-
+            stdio_legacy_cell_put((char)Screen.cursor[Screen.y][Screen.x], OUTPUT_COLOR_SET(white, white), &Screen.y, &Screen.x);
 
             KeyInfo.is_bspc = false;
             letters_refresh(&Screen.cursor[Screen.y][Screen.x]);
@@ -1137,8 +1117,6 @@ void xscan_range(char* string_buffer, uint32_t how_many_chars)
 
         else if(Input.scan_code == ENTER)
         {
- 
-
             string_pointer = string_buffer;
             
             for(int i = 0; string_pointer[i] != '\0'; i++)
@@ -1166,18 +1144,17 @@ void xscan_range(char* string_buffer, uint32_t how_many_chars)
 
             memset(field_buffer, 0, 1000);
 
-            Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((black << 4) | white) << 8));
+            stdio_legacy_cell_put((char)Screen.cursor[Screen.y][Screen.x], OUTPUT_COLOR_SET(black, white), &Screen.y, &Screen.x);
             
             xprintf("\n");
             return;
-
         }
 
         else if(Input.character)
         {
             char tmp = Input.character;
 
-            Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][index + x_start]) + (((black << 4) | white) << 8));
+            // stdio_legacy_cell_put((char)Screen.cursor[Screen.y][index + x_start], OUTPUT_COLOR_SET(black, white), &Screen.y, &Screen.x);
             
             for(int i = 0; i < strlen(field_buffer); i++)
                 *(text_buffer_start + i) = 0;
@@ -1194,9 +1171,6 @@ void xscan_range(char* string_buffer, uint32_t how_many_chars)
                     string_typed_buffer[i+1] = tmp_buf[i];
             }
 
-
-
-
             if(index < how_many_chars)
             {
                 string_typed_buffer[index] = tmp;
@@ -1207,12 +1181,9 @@ void xscan_range(char* string_buffer, uint32_t how_many_chars)
 
             screen_offset++;
             Screen.x = screen_offset + x_start;
-
         }    
     }
-
     free(field_buffer);
-
 }
 
 
