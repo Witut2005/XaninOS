@@ -21,10 +21,11 @@ Screen.y = y_new
 
 enum SCREEN_MACROS 
 {
-    VGA_WIDTH = 80,
-    VGA_HEIGHT = 25,
     VGA_SCREEN_CELL_SIZE = 2
 };
+
+#define VGA_WIDTH (__vga_text_mode_width_get())
+#define VGA_HEIGHT (__vga_text_mode_height_get())
 
 enum STDIO_MODES{
     STDIO_MODE_CANVAS = 0,
@@ -39,7 +40,7 @@ enum XANIN_STANDARD_STREAMS{
 
 
 #define VGA_TEXT_MEMORY (__vga_buffer_segment_get())
-#define VGA_SCREEN_RESOLUTION (25 * 80)
+#define VGA_SCREEN_RESOLUTION (VGA_WIDTH * VGA_HEIGHT)
 #define BLANK_SCREEN_CELL 0
 #define mkstr(str) #str
 #define SCREEN_CELL_SET_FROM_POINTER(ptr, background, foreground, character) *ptr = (uint16_t)((foreground | (background << 4)) << 8 | (character & 0xFF))

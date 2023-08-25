@@ -200,8 +200,6 @@ void _start(void)
 
     interrupt_enable();
     
-    screen_init(); // init screen management system
-    screen_clear();
     keyboard_init(0x21);
     set_pit(0x20);
     // idt_examine();
@@ -209,8 +207,13 @@ void _start(void)
     disable_cursor();
     mmngr_init(kernel_mmngr_mmap, (uint8_t*)0x100000, PMMNGR_MEMORY_BLOCKS);
 
+    // SCREEN MANAGER USES CALLOC
+
     vga_text_mode_height = 25;
     vga_text_mode_width = 80;
+
+    screen_init(); // init screen management system
+    screen_clear();
 
     xtb_init(__vga_text_mode_width_get(), __vga_text_mode_height_get(), (uint16_t*)__vga_buffer_segment_get());
     vty_set(xtf_init(100));
