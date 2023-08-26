@@ -8,7 +8,7 @@
 
 extern "C" void printk(char* str);
 
-bool xgm::Renderer::ScreenManager::screen_cells[VGA_HEIGHT][VGA_WIDTH] = {false};
+bool** xgm::Renderer::ScreenManager::screen_cells;
 
 // xgm::CollisionInfo xgm::make_collision_info(bool x, uint8_t y, xgm::Direction z)
 // {
@@ -247,8 +247,27 @@ uint8_t xgm::rectangle::color_get() const
 
 xgm::Renderer::ScreenManager::ScreenManager(void)
 {
+    uint32_t screen_height = __vga_text_mode_height_get();
+    uint32_t screen_width = __vga_text_mode_width_get();
+
     this->screen_pointer = (uint8_t*)VGA_TEXT_MEMORY;
+    ScreenManager::screen_cells = (bool**)calloc(screen_height * SIZE_OF(bool*));
+
+    for(int i = 0; i < screen_height; i++)
+        ScreenManager::screen_cells[i] = (bool*)calloc(screen_width * SIZE_OF(bool));
+
 }
+
+xgm::Renderer::ScreenManager::~ScreenManager(void)
+{
+    uint32_t screen_height = __vga_text_mode_height_get();
+
+    for(int i = 0; i < screen_height; i++)
+        free(ScreenManager::screen_cells[i]);
+
+    free(ScreenManager::screen_cells);
+}
+
 
 uint8_t& xgm::Renderer::ScreenManager::operator[](uint32_t index)
 {

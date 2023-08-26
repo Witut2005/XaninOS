@@ -15,11 +15,8 @@
 #define PIC2_DATA 0xA1    
 #define PIC_MASK_REG 0xA1
 
-#include <sys/call/xanin_sys/calls/vga/vga.h>
-
-#define VGA_TEXT_MEMORY (__vga_buffer_segment_get())
-
 #include <programs/register_dump.h>
+#include <sys/call/xanin_sys/calls/vga/vga.h>
 
 extern void divide_by_zero_exception_entry(void);
 extern void debug_exception_entry(void);

@@ -9,12 +9,6 @@
 #include <sys/call/xanin_sys/calls/vga/vga.h>
 
 
-#define VGA_TEXT_MEMORY (__vga_buffer_segment_get())
-#define VGA_WIDTH (__vga_text_mode_width_get())
-#define VGA_HEIGHT (__vga_text_mode_height_get())
-
-#define VGA_SCREEN_RESOLUTION (VGA_WIDTH * VGA_HEIGHT)
-
 // #ifndef VGA_HEIGHT
 // #define VGA_HEIGHT 25
 // #endif

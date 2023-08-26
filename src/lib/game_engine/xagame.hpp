@@ -4,10 +4,6 @@
 #include <lib/libc/stdiox.h>
 #include <sys/call/xanin_sys/calls/vga/vga.h>
 
-#define VGA_TEXT_MEMORY (__vga_buffer_segment_get())
-#define VGA_WIDTH 80
-#define VGA_HEIGHT 25
-
 /* USE IN CPP FILES NOT IN C BRUH */
 
 struct screen_t
@@ -114,8 +110,9 @@ class ScreenManager
     private:
         uint8_t* screen_pointer;
     public:
-        static bool screen_cells[VGA_HEIGHT][VGA_WIDTH];
+        static bool** screen_cells;//[VGA_HEIGHT][VGA_WIDTH];
         ScreenManager(void);
+        ~ScreenManager(void);
         uint8_t& operator [](uint32_t index);
         void vertical_line_create(uint8_t x, xgm::color::ColorAttributes color);
         void screen_clear(void);
