@@ -9,8 +9,6 @@
 #include <sys/call/xanin_sys/calls/vga/vga.h>
 
 
-#define VGA_TEXT_MEMORY (__vga_buffer_segment_get())
-
 // #ifndef VGA_HEIGHT
 // #define VGA_HEIGHT 25
 // #endif
@@ -30,7 +28,7 @@ typedef struct screen_t screen_t;
 
 extern screen_t Screen;
 
-extern uint16_t* screen_rows[25];
+extern uint16_t** screen_rows;
 
 void setTerminal();
 void screen_init(void);

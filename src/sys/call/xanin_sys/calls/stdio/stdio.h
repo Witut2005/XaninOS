@@ -13,3 +13,14 @@ stdio_mode_t stdio_mode_get(void);
 #ifdef __cplusplus
 }
 #endif
+
+enum STDIO_MODES{
+    STDIO_MODE_CANVAS = 0,
+    STDIO_MODE_TERMINAL = 1
+};
+
+enum XANIN_STANDARD_STREAMS{
+    XANIN_STDOUT = 0,
+    XANIN_STDIN = 1,
+    XANIN_STDERR = 2
+};

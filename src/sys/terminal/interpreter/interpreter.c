@@ -124,6 +124,21 @@ void scan(void)
     // screen_clear();
     all_intervals_clear(); // clear kernel intervals
     last_command_exit_status = XANIN_OK;
+
+
+    if(KeyInfo.is_ctrl)
+    {
+        xprintf("Stdio mode override: l(legacy)/t(terminal)\n");
+        char stdio_selected_option = getchar();
+
+        if(stdio_selected_option == 'l')
+        {
+            stdio_mode_set(STDIO_MODE_CANVAS);
+            screen_clear();
+        }
+
+    }
+    
     
     //legacy reasons
     KeyInfo.scan_code = 0;
@@ -136,8 +151,6 @@ void scan(void)
             break;
         argc++;
     }
-
-
 
     // terminal_t* app_terminal = terminal_create();
     // terminal_set(kernel_terminal, app_terminal);

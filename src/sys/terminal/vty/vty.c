@@ -3,12 +3,7 @@
 #include <sys/devices/keyboard/key_map.h>
 #include <lib/libc/stdlibx.h>
 #include <lib/libc/string.h>
-
-#define VGA_SCREEN_RESOLUTION 4480
-#define VGA_TEXT_MEMORY 0xb8000
-#define VGA_HEIGHT 25
-// #define NULL 0x0
-
+#include <sys/terminal/vty/vty.h>
 
 bool cursor_show = false;
 char selected_character; 
@@ -27,47 +22,36 @@ uint8_t x = 0, y = 0;
 uint8_t logo_front_color = yellow;
 uint8_t logo_back_color = black;
  
-struct screen_t
-{
-    uint16_t** cursor;
-    uint8_t x;
-    uint8_t y;
-
-};
-
-typedef struct screen_t screen_t;
-screen_t Screen = {(uint16_t**)VGA_TEXT_MEMORY, 0, 0};
-
-uint16_t* screen_rows[VGA_HEIGHT];
+screen_t Screen;
+uint16_t** screen_rows;
 
 void screen_init(void)
 {
-    //screen.cursor = VGA_TEXT_MEMORY;
-    
+    screen_rows = (uint16_t**)kcalloc(VGA_HEIGHT * sizeof(uint16_t*));
     Screen.cursor = screen_rows;
 
     for(int i = 0; i < VGA_HEIGHT; i++)
-        Screen.cursor[i] = (uint16_t*)(VGA_TEXT_MEMORY + (80 * i * 2));  
+        Screen.cursor[i] = (uint16_t*)(VGA_TEXT_MEMORY + (VGA_WIDTH * i * 2));  
 
-    Screen.x = 0x0;
-    Screen.y = 0x0;
-    
+    Screen.x = 0;
+    Screen.y = 0;
 }
 
 void letters_refresh(uint16_t* cursor_current_positon)
 {
+    return;
     cursor_current_positon++;
 
-    for(uint16_t* i = cursor_current_positon; (uint32_t)i < VGA_TEXT_MEMORY + VGA_SCREEN_RESOLUTION; i++)
+    for(uint16_t* i = cursor_current_positon; (uint32_t)i < (uint32_t)(VGA_TEXT_MEMORY + VGA_SCREEN_RESOLUTION * 2); i++)
         *(i - 1) = *i;
 }
 
 void letters_refresh_add(uint16_t* cursor_current_positon, char character_saved)
 {
-
+    return;
     char tmp;
 
-    for(uint16_t* i = cursor_current_positon; (uint32_t)i < VGA_TEXT_MEMORY + VGA_SCREEN_RESOLUTION; i++)
+    for(uint16_t* i = cursor_current_positon; (uint32_t)i < (uint32_t)(VGA_TEXT_MEMORY + VGA_SCREEN_RESOLUTION * 2); i++)
     {
         tmp = *(char*)(i);
         *i = (uint16_t)((char)(character_saved) + (((black << 4) | white) << 8));

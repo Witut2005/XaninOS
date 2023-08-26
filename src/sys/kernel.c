@@ -114,10 +114,12 @@ void kernel_loop(void)
         // screen_clear();
         time_get(&SystemTime);
 
+        xprintf("\n");
+
         for(int i = 0; xin_current_directory[i + 1] != '\0'; i++)
             xprintf("%z%c", OUTPUT_COLOR_SET(black, lblue), xin_current_directory[i]);
 
-        xprintf("\n>");
+        xprintf(">");
 
         app_exited = false;
 
@@ -200,8 +202,6 @@ void _start(void)
 
     interrupt_enable();
     
-    screen_init(); // init screen management system
-    screen_clear();
     keyboard_init(0x21);
     set_pit(0x20);
     // idt_examine();
@@ -209,8 +209,13 @@ void _start(void)
     disable_cursor();
     mmngr_init(kernel_mmngr_mmap, (uint8_t*)0x100000, PMMNGR_MEMORY_BLOCKS);
 
+    // SCREEN MANAGER USES CALLOC
+
     vga_text_mode_height = 25;
     vga_text_mode_width = 80;
+
+    screen_init(); // init screen management system
+    screen_clear();
 
     xtb_init(__vga_text_mode_width_get(), __vga_text_mode_height_get(), (uint16_t*)__vga_buffer_segment_get());
     vty_set(xtf_init(100));
@@ -446,6 +451,24 @@ void _start(void)
         xprintf("%z   _/  _/    _/    _/  _/    _/  _/  _/    _/  _/    _/        _/%z   version 1.8v", OUTPUT_COLOR_SET(logo_back_color, logo_front_color), OUTPUT_COLOR_SET(black,white));
         xprintf("%z_/      _/    _/_/_/  _/    _/  _/  _/    _/    _/_/    _/_/_/     %z%s: %i:%i:%i\n", OUTPUT_COLOR_SET(logo_back_color, logo_front_color), OUTPUT_COLOR_SET(black,white), daysLUT[SystemTime.weekday], SystemTime.hour, SystemTime.minutes, SystemTime.seconds);                                       
     }
+
+    char stdio_legacy_config_buf[6] = {0};
+    XinEntry* StdioLegacyConfig = fopen("/etc/help/stdio_legacy.conf", "rw");
+    fseek(StdioLegacyConfig, ARRAY_LENGTH("PRINT_LEGACY_STDIO_INFO:"));
+    fread(StdioLegacyConfig, stdio_legacy_config_buf, 5);
+
+
+    if(bstrncmp(stdio_legacy_config_buf, "TRUE", 4))
+    {
+        fseek(StdioLegacyConfig, 25);
+        fwrite(StdioLegacyConfig, "FALSE", 6);
+
+        xprintf("SINCE V1.8, XANIN USES TWO DIFFERENT GRAPHIC MODES. IF YOU WANT\nTO RUN THE PROGRAM IN A GIVEN MODE, HOLD CTRL WHILE SUBMITTING A COMMAND\n");
+
+    }
+
+    fclose(&StdioLegacyConfig);
+
 
     kernel_loop();
 

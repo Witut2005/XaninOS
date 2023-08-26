@@ -1,4 +1,5 @@
 
+#include <lib/libc/pair.h>
 #include <lib/libc/string.h>
 #include <lib/libc/memory.h>
 #include <lib/libc/stdlibx.h>
@@ -7,9 +8,9 @@
 #include <stdarg.h>
 #include <lib/libc/time.h>
 #include <lib/libc/stdiox.h>
+#include <lib/libc/stdiox_legacy.h>
 #include <sys/terminal/backend/backend.h>
 
-char* color_attributes[16] = {"black", "blue", "green", "cyan", "red", "magenta", "brown", "lgray", "dgray","lblue", "lgreen", "lcyan", "lred", "lmagenta", "yellow", "white"};
 
 void screen_background_color_set(color_t color)
 {
@@ -22,17 +23,16 @@ void screen_background_color_set(color_t color)
     }
 }
 
-int screen_buffer_clear(void)
+int vga_screen_buffer_clear(void)
 {
     uint16_t* screen_cleaner = (uint16_t*)__vga_buffer_segment_get();
-    for(int i = 0; i < (80 * 28); i++)
+    for(int i = 0; i < (VGA_WIDTH * VGA_HEIGHT); i++)
     {
         *screen_cleaner = '\0';
         screen_cleaner++;
     }
 
-    Screen.x = 0;
-    Screen.y = 0;
+    stdio_legacy_screen_object_restore_defaults();
     return XANIN_OK;
 }
 
@@ -70,24 +70,12 @@ void putc(char* str, uint32_t count)
     );
 }
 
-bool stdio_canvas_put_character(uint32_t x, uint32_t y, char c, uint8_t color)
-{
-    if(stdio_canvas_is_buffer_full())
-        return false;
-    
-    Screen.cursor[y][x] = (color << 8) | c;
-    return true;
-}
-
 char putchar(char character)
 {
 
     if(stdio_mode_get() == STDIO_MODE_CANVAS)
     {
-        if(stdio_canvas_is_buffer_full())
-            return character;
-
-        Screen.cursor[Screen.y][Screen.x] = (uint16_t) (character + (((black << 4) | white) << 8));
+        stdio_legacy_cell_put(character, OUTPUT_COLOR_SET(black, white), &Screen.y, &Screen.x);
 
         if((++Screen.x) == VGA_WIDTH)
         {    
@@ -108,7 +96,7 @@ char putchar(char character)
 char putchar_color(uint8_t color, char character)
 {
 
-    Screen.cursor[Screen.y][Screen.x] = (uint16_t) (character + ((((color & 0xF0) << 4) | (color & 0xF)) << 8));
+    stdio_legacy_cell_put(character, color, &Screen.y, &Screen.x);
         
     Screen.x++;
 
@@ -141,19 +129,6 @@ void putct(const char* str, color_t color)
     xtb_flush(StdioFront);
 }
 
-void print_bcd_number(uint8_t x)
-{
-
-    Screen.cursor[Screen.y][Screen.x] = (uint16_t)( (((x & 0xf0) >> 4) + 48)  | (((red << 4) | white) << 8));
-    Screen.x += 0x2;
-
-    Screen.cursor[Screen.y][Screen.x] = (uint16_t)(((x & 0xf) + 48)  | (((red << 4) | white) << 8));
-    Screen.x += 0x2;
-
-
-    return;
-}
-
 void puts(const char* str)
 {
 
@@ -174,11 +149,7 @@ void fprintf(XinEntry* Entry, const char* format, ...)
     }
 }
 
-bool stdio_canvas_is_buffer_full(void)
-{
 
-    return (Screen.y + (Screen.x / VGA_WIDTH)) >= VGA_HEIGHT;
-}
 
 void xprintf(char* str, ... )
 {
@@ -214,9 +185,7 @@ void xprintf(char* str, ... )
 
             if(str[string_counter] == '%')
             {
-
-                string_counter++;
-                switch(str[string_counter])
+                switch(str[++string_counter])
                 {
                     case 'd':
                     {
@@ -225,28 +194,9 @@ void xprintf(char* str, ... )
                         int_to_str(number,temporary_pointer);
 
                         for(int i = 0; temporary_pointer[i] != '\0'; i++)
-                        {                        
-                            if(stdio_canvas_is_buffer_full())
-                                break; 
-
-                            Screen.cursor[Screen.y][Screen.x] = (uint16_t) (temporary_pointer[i] + (((background_color << 4) | font_color) << 8));
-                            if(Screen.x == 80)
-                            {
-                                Screen.y++;
-                                Screen.x = 0;
-                            }
-                            Screen.x++;
-                        }
+                            stdio_legacy_cell_put_with_interpretation(temporary_pointer[i], OUTPUT_COLOR_SET(background_color, font_color), &Screen.y, &Screen.x);
 
                         break;
-                    }
-
-                    case 'f':
-                    {
-                        //float float_number = (float)va_arg(args,double);
-                        //float_to_string(float_number,temporary_pointer);
-
-
                     }
 
                     case 'y':
@@ -256,26 +206,12 @@ void xprintf(char* str, ... )
                         uint32_t time_mask = 0xF0000000;
                         uint32_t time_shift = 28;
 
-                        if(stdio_canvas_is_buffer_full())
-                            break; 
-
                         for(int i = 0; i < 8; i++, time_mask = time_mask >> 4, time_shift -= 4)
                         {
-                            if(stdio_canvas_is_buffer_full())
-                                break; 
-
                             if(i == 2 || i == 4)
-                            {
+                                stdio_legacy_cell_put_with_interpretation('-', OUTPUT_COLOR_SET(background_color, font_color), &Screen.y, &Screen.x);
 
-                                Screen.cursor[Screen.y][Screen.x] = (uint16_t) '-'  | (((background_color << 4) | font_color) << 8);
-                                Screen.x++;
-                            }
-
-                            if(stdio_canvas_is_buffer_full())
-                                break; 
-
-                            Screen.cursor[Screen.y][Screen.x] = (uint16_t)( (((time & time_mask) >> time_shift) + '0')  | (((background_color << 4) | font_color) << 8));
-                            Screen.x++;
+                            stdio_legacy_cell_put_with_interpretation(((time & time_mask) >> time_shift) + '0',  OUTPUT_COLOR_SET(background_color, font_color), &Screen.y, &Screen.x);
                         }
 
                         break;
@@ -292,18 +228,10 @@ void xprintf(char* str, ... )
 
                         for(int i = 0; i < 4; i++, time_mask = time_mask >> 4, time_shift -= 4)
                         {
-                            if(stdio_canvas_is_buffer_full())
-                                break; 
-
                             if(i == 2)
-                            {
+                                stdio_legacy_cell_put_with_interpretation(':', OUTPUT_COLOR_SET(background_color, font_color), &Screen.y, &Screen.x);
 
-                                Screen.cursor[Screen.y][Screen.x] = (uint16_t) ':'  | (((background_color << 4) | font_color) << 8);
-                                Screen.x++;
-                            }
-
-                            Screen.cursor[Screen.y][Screen.x] = (uint16_t)( (((time & time_mask) >> time_shift) + '0')  | (((background_color << 4) | font_color) << 8));
-                            Screen.x++;
+                            stdio_legacy_cell_put_with_interpretation(((time & time_mask) >> time_shift) + '0', OUTPUT_COLOR_SET(background_color, font_color), &Screen.y, &Screen.x);
                         }
                         break;
                     }
@@ -311,27 +239,13 @@ void xprintf(char* str, ... )
                     case 'b':
                     {
                         number = va_arg(args,int);
-
                         temporary_pointer = bin_to_str(number,tmp);
 
                         for(int i = 0; temporary_pointer[i] != '\0'; i++)
-                        { 
-                            if(stdio_canvas_is_buffer_full())
-                                break; 
-
-                            Screen.cursor[Screen.y][Screen.x] = (uint16_t) (temporary_pointer[i] + (((background_color << 4) | font_color) << 8));
-                            if(Screen.x == 80)
-                            {
-                                Screen.y++;
-                                Screen.x = 0;
-                            }
-                            Screen.x++;
-                        }
+                            stdio_legacy_cell_put_with_interpretation(temporary_pointer[i], OUTPUT_COLOR_SET(background_color, font_color), &Screen.y, &Screen.x);
 
                         break;
                     }
-
-                        
 
                     case 's':
                     {
@@ -342,57 +256,7 @@ void xprintf(char* str, ... )
                             break;
 
                         for(int i = 0; stringPtr[i] != '\0'; i++)
-                        {
-
-                            if(stringPtr[i] == '\r')
-                            {
-                                Screen.x = 0;
-                                continue;
-                            }
-
-                            if(stdio_canvas_is_buffer_full())
-                                break; 
-
-                            if(stringPtr[i] == '\n')
-                            {            
-                                Screen.x = 0;
-                                Screen.y++;
-                                continue;
-                            }
-
-                            else if(stringPtr[i] == '\t')
-                            {
-                                for(int j = 0; j < 3; j++)
-                                {
-                                    if(Screen.x + j == 80)
-                                    {
-                                        Screen.x = 0;
-                                        Screen.y++;
-                                    }
-                                    Screen.cursor[Screen.y][Screen.x + j] = (uint16_t)(' ' + (((background_color << 4) | font_color) << 8));
-                                }
-
-                                Screen.x += 3;
-                                continue;
-                            }
-
-
-                            else if(str[string_counter] == '\\')
-                            {
-                                Screen.cursor[Screen.y][Screen.x] = (uint16_t)('\\' + (((background_color << 4) | font_color) << 8));
-                                continue;
-                            }
-
-
-                            Screen.cursor[Screen.y][Screen.x] = (uint16_t) (stringPtr[i] + (((background_color << 4) | font_color) << 8));
-                            if(Screen.x == 80)
-                            {
-                                Screen.y++;
-                                Screen.x = 0;
-                            }
-                            Screen.x++;
-                    
-                        }
+                            stdio_legacy_cell_put_with_interpretation(stringPtr[i], OUTPUT_COLOR_SET(background_color, font_color), &Screen.y, &Screen.x);
 
                         break;
 
@@ -401,65 +265,23 @@ void xprintf(char* str, ... )
 
                     case 'i':
                     {
-
                         uint8_t number = (uint8_t)va_arg(args, uint32_t);
-                        
-                        if(stdio_canvas_is_buffer_full())
-                            break; 
 
-                        Screen.cursor[Screen.y][Screen.x] = (uint16_t)( (((number & 0xf0) >> 4) + '0')  | (((background_color << 4) | font_color) << 8));
-                        Screen.x++;
-
-                        if(stdio_canvas_is_buffer_full())
-                            break; 
-
-                        Screen.cursor[Screen.y][Screen.x] = (uint16_t)(((number & 0x0f) + '0')  | (((background_color << 4) | font_color) << 8));
-                        Screen.x++;
+                        stdio_legacy_cell_put_with_interpretation(((number & 0xF0) >> 4) + '0', OUTPUT_COLOR_SET(background_color, font_color), &Screen.y, &Screen.x);
+                        stdio_legacy_cell_put_with_interpretation((number & 0x0F) + '0', OUTPUT_COLOR_SET(background_color, font_color), &Screen.y, &Screen.x);
                     
                         break;
-
                     }
 
                     case 'c':
                     {
-
-                        char character;
-                        character = (char)va_arg(args,int);
-
-                        if(stdio_canvas_is_buffer_full())
-                            break; 
-                        
-                        if(Screen.x == 80)
-                        {
-                            Screen.y++;
-                            Screen.x = 0;
-                        }
-
-                        if(character == '\n')
-                        {            
-                            Screen.x = 0;
-                            Screen.y++;
-                        }
-
-                        else if(character == '\0') //handle other characters
-                            break;
-
-                        else 
-                        {
-                            Screen.cursor[Screen.y][Screen.x] = (uint16_t) (character + (((background_color << 4) | font_color) << 8));
-                            Screen.x++;
-                        }
-
+                        stdio_legacy_cell_put_with_interpretation((char)va_arg(args, int), OUTPUT_COLOR_SET(background_color, font_color), &Screen.y, &Screen.x);
                         break;
                     }
 
                     case 'z':
                     {
                         font_color = (uint8_t)va_arg(args,int);
-
-                        if(stdio_canvas_is_buffer_full())
-                            break; 
-
                         background_color = (font_color & 0xf0) >> 4;
                         font_color = font_color & 0x0f;
                         break;
@@ -471,22 +293,9 @@ void xprintf(char* str, ... )
                         int_to_hex_str(number_hex,temporary_pointer);
 
                         for(int i = 0; temporary_pointer[i] != '\0'; i++)
-                        {
-                            if(stdio_canvas_is_buffer_full())
-                                break; 
+                            stdio_legacy_cell_put_with_interpretation(temporary_pointer[i], OUTPUT_COLOR_SET(background_color, font_color), &Screen.y, &Screen.x);
 
-                            Screen.cursor[Screen.y][Screen.x] = (uint16_t) (temporary_pointer[i] + (((background_color << 4) | font_color) << 8));
-                            if(Screen.x == 80)
-                            {
-                                Screen.y++;
-                                Screen.x = 0;
-                            }
-                            Screen.x++;
-                        }
-
-                        
                         break;
-
                     }
                     
                     case 'X':
@@ -497,52 +306,25 @@ void xprintf(char* str, ... )
                         toupper(temporary_pointer);
 
                         for(int i = 0; temporary_pointer[i] != '\0'; i++)
-                        {
-                            if(stdio_canvas_is_buffer_full())
-                                break; 
-                            
-                            Screen.cursor[Screen.y][Screen.x] = (uint16_t) (temporary_pointer[i] + (((background_color << 4) | font_color) << 8));
-                            if(Screen.x == 80)
-                            {
-                                Screen.y++;
-                                Screen.x = 0;
-                            }
-                            Screen.x++;
-                        }
+                            stdio_legacy_cell_put_with_interpretation(temporary_pointer[i], OUTPUT_COLOR_SET(background_color, font_color), &Screen.y, &Screen.x);
 
                         break;
-
                     }
                     
                     case 'o':
                     {
                         number = va_arg(args,int);
-
                         int_to_oct_str(number,temporary_pointer);
 
                         for(int i = 0; temporary_pointer[i] != '\0'; i++)
-                        {
-                            if(stdio_canvas_is_buffer_full())
-                                break; 
-
-                            Screen.cursor[Screen.y][Screen.x] = (uint16_t) (temporary_pointer[i] + (((background_color << 4) | font_color) << 8));
-                            if(Screen.x == 80)
-                            {
-                                Screen.y++;
-                                Screen.x = 0;
-                            }
-                            Screen.x++;
-                        }
+                            stdio_legacy_cell_put_with_interpretation(temporary_pointer[i], OUTPUT_COLOR_SET(background_color, font_color), &Screen.y, &Screen.x);
                         break;
                     }
 
-                    case 'h':
+                    case 'h': // do zrobienia ze pointerami hmmhmm nicho?
                     {
                         position_change_switch_used = true;
                         number = (uint16_t)va_arg(args,uint32_t);
-
-                        if(stdio_canvas_is_buffer_full())
-                            break; 
 
                         Screen.y = (number >> 8) & 0xFF;
                         Screen.x = number & 0xFF;
@@ -562,24 +344,9 @@ void xprintf(char* str, ... )
                                 xint_to_hex_str(number_hex,temporary_pointer, SIZE_OF(uint8_t));
 
                                 for(int i = 0; temporary_pointer[i] != '\0'; i++)
-                                {
-                                    if(stdio_canvas_is_buffer_full())
-                                        break; 
-
-                                    Screen.cursor[Screen.y][Screen.x] = (uint16_t) (temporary_pointer[i] + (((background_color << 4) | font_color) << 8));
-                                    
-                                    if(Screen.x == 80)
-                                    {
-                                        Screen.y++;
-                                        Screen.x = 0;
-                                    }
-                                    
-                                    Screen.x++;
-                                }
-
+                                    stdio_legacy_cell_put_with_interpretation(temporary_pointer[i], OUTPUT_COLOR_SET(background_color, font_color), &Screen.y, &Screen.x);
                         
                                 break;                            
-
                             }
                     
                             case 'X':
@@ -592,107 +359,20 @@ void xprintf(char* str, ... )
                                 toupper(temporary_pointer);
                                 
                                 for(int i = 0; temporary_pointer[i] != '\0'; i++)
-                                {
-                                    if(stdio_canvas_is_buffer_full())
-                                        break; 
+                                    stdio_legacy_cell_put_with_interpretation(temporary_pointer[i], OUTPUT_COLOR_SET(background_color, font_color), &Screen.y, &Screen.x);
 
-                                    Screen.cursor[Screen.y][Screen.x] = (uint16_t) (temporary_pointer[i] + (((background_color << 4) | font_color) << 8));
-                                    
-                                    if(Screen.x == 80)
-                                    {
-                                        Screen.y++;
-                                        Screen.x = 0;
-                                    }
-
-                                    if(Screen.y == 28)
-                                    {
-                                        Screen.y = 0;
-                                        break;
-                                    }
-                                    
-                                    Screen.x++;
-                                }
-
-                        
                                 break;                            
-
                             }
-
                         }
-
-
                         break;
                     }
-
                 }
 
                 string_counter++;
             }
-
-            // DONT USE else if(str[string_counter++] == '\n') IT WILL INCREMENT ALSO WHEN FALSE
-
-            else if(str[string_counter] == '\n')
-            {            
-                Screen.x = 0;
-                Screen.y++;
-                string_counter++;
-            }
-
-            else if(str[string_counter] == '\r')
-            {
-                Screen.x = 0;
-                string_counter++;
-            }
-
-            else if(str[string_counter] == '\t')
-            {
-
-                for(int i = 0; i < 3; i++)
-                {
-
-                    if(stdio_canvas_is_buffer_full())
-                        continue; 
-
-                    if(Screen.x + i == 80)
-                    {
-                        Screen.x = 0;
-                        Screen.y++;
-                    }
-                    Screen.cursor[Screen.y][Screen.x + i] = (uint16_t)(' ' + (((background_color << 4) | font_color) << 8));
-                }
-
-                string_counter++;
-                Screen.x += 3;
-            }
-
-
-            else if(str[string_counter] == '\\')
-            {
-                string_counter++;
-                if(stdio_canvas_is_buffer_full())
-                    continue; 
-                Screen.cursor[Screen.y][Screen.x] = (uint16_t)('\\' + (((background_color << 4) | font_color) << 8));
-            }
-
+            
             else
-            {
-                //cursor[bufCounter] = (uint16_t) (str[string_counter] + (((background_color << 4) | font_color) << 8));
-
-                //x++;
-                if(stdio_canvas_is_buffer_full())
-                {
-                    string_counter++;
-                    continue; 
-                }
-
-                Screen.cursor[Screen.y][Screen.x++] = (uint16_t) (str[string_counter] + (((background_color << 4) | font_color) << 8));
-                string_counter++;
-                if(Screen.x == VGA_WIDTH)
-                {
-                    Screen.x = 0;
-                    Screen.y++;
-                }
-            }
+                stdio_legacy_cell_put_with_interpretation(str[string_counter++], OUTPUT_COLOR_SET(background_color, font_color), &Screen.y, &Screen.x);
         }
 
         if(position_change_switch_used) // restore Screen.x and Screen.y
@@ -946,449 +626,202 @@ void xscanf(char* str, ... )
     if(stdio_mode_get() == STDIO_MODE_CANVAS)
     {
 
-        char* temporary_pointer = (char*)calloc(1000);
-        
-        uint32_t number;
-
-        char* stringPtr;
+        uint32_t str_counter = 0;
+        uint32_t counter = 0;
 
         va_list args;
-        va_start(args,str);
+        va_start(args, str);
 
-        uint8_t x = Screen.x;
-        uint8_t y = Screen.y;
+        uint32_t index = 0;
+    
+        PairUInt8 InitialScreenPosition = {Screen.y, Screen.x};
 
-        bool position_change_switch_used = false;
+        char field_buffer[1000];
+        memset(field_buffer, 0, 1000);
 
-        uint32_t string_counter = 0;
+        char string_typed_buffer[1000];
+        memset(string_typed_buffer, 0, 1000);
 
-        uint8_t background_color = black;
-        uint8_t font_color = white;
-
-
-        while(str[string_counter])
+        while(1)
         {
 
-            if(str[string_counter] == '%')
+            xchar Input;
+            __sys_inputg(&Input);
+
+            key_info_t KeyInfo;
+            __sys_keyinfo_get(&KeyInfo);
+
+            if(Input.scan_code == BSPC)
             {
+                stdio_legacy_cell_put((char)Screen.cursor[Screen.y][Screen.x], OUTPUT_COLOR_SET(black, white), &Screen.y, &Screen.x);
 
-                string_counter++;
-                switch(str[string_counter])
+                if((InitialScreenPosition.first == Screen.y) && (InitialScreenPosition.second == Screen.x))
+                    continue;
+
+                if(!Screen.x)
                 {
-                    case 'd':
+                    Screen.y--;
+                    Screen.x = 79;
+                    continue;
+                }
+
+                Screen.x--;
+
+                if(index)
+                    index--;
+
+                string_typed_buffer[index] = '\0';
+
+                stdio_legacy_cell_put('\0', OUTPUT_COLOR_SET(white, white), &Screen.y, &Screen.x);
+
+                KeyInfo.is_bspc = false;
+                letters_refresh(&Screen.cursor[Screen.y][Screen.x]);
+            }
+
+            else if(Input.scan_code == ENTER)
+            {
+                while(str[str_counter] != '\0')
+                {
+                    if(str[str_counter] == '%')
                     {
-                        number = va_arg(args,int);
-
-                        int_to_str(number,temporary_pointer);
-
-                        for(int i = 0; temporary_pointer[i] != '\0'; i++)
-                        {                        
-                            Screen.cursor[Screen.y][Screen.x] = (uint16_t) (temporary_pointer[i] + (((background_color << 4) | font_color) << 8));
-                            if(Screen.x == 80)
-                            {
-                                Screen.y++;
-                                Screen.x = 0;
-                            }
-                            Screen.x++;
-                        }
-
-                        break;
-                    }
-
-                    case 'f':
-                    {
-                        //float float_number = (float)va_arg(args,double);
-                        //float_to_string(float_number,temporary_pointer);
-
-
-                    }
-
-                    case 'y':
-                    {
-                        uint32_t time = va_arg(args,int);
-                
-                        uint32_t time_mask = 0xF0000000;
-                        uint32_t time_shift = 28;
-
-                        for(int i = 0; i < 8; i++, time_mask = time_mask >> 4, time_shift -= 4)
+                        str_counter++;
+                        switch(str[str_counter])
                         {
-                            if(i == 2 || i == 4)
+
+                            case 's':
                             {
+                                char* string_pointer = va_arg(args, char*);
 
-                                Screen.cursor[Screen.y][Screen.x] = (uint16_t) '-'  | (((background_color << 4) | font_color) << 8);
-                                Screen.x++;
-                            }
+                                for(char* i = string_pointer; *i != '\0'; i++)
+                                    *i = '\0';
 
-                            Screen.cursor[Screen.y][Screen.x] = (uint16_t)( (((time & time_mask) >> time_shift) + '0')  | (((background_color << 4) | font_color) << 8));
-                            Screen.x++;
-                        }
+                                if(!strlen(string_typed_buffer))
+                                    break;
 
-                        break;
-
-                    }
-
-                    case 't':
-                    {
-                    
-                        uint16_t time = va_arg(args,int);
-                
-                        uint16_t time_mask = 0xF000;
-                        uint16_t time_shift = 12;
-
-                        for(int i = 0; i < 4; i++, time_mask = time_mask >> 4, time_shift -= 4)
-                        {
-                            if(i == 2)
-                            {
-
-                                Screen.cursor[Screen.y][Screen.x] = (uint16_t) ':'  | (((background_color << 4) | font_color) << 8);
-                                Screen.x++;
-                            }
-
-                            Screen.cursor[Screen.y][Screen.x] = (uint16_t)( (((time & time_mask) >> time_shift) + '0')  | (((background_color << 4) | font_color) << 8));
-                            Screen.x++;
-                        }
-                        break;
-                    }
-
-                    case 'b':
-                    {
-                        number = va_arg(args,int);
-
-                        bin_to_str(number, temporary_pointer);
-
-                        for(int i = 0; temporary_pointer[i] != '\0'; i++)
-                        { 
-                            Screen.cursor[Screen.y][Screen.x] = (uint16_t) (temporary_pointer[i] + (((background_color << 4) | font_color) << 8));
-                            if(Screen.x == 80)
-                            {
-                                Screen.y++;
-                                Screen.x = 0;
-                            }
-                            Screen.x++;
-                        }
-
-                        break;
-                    }
-
-                        
-
-                    case 's':
-                    {
-
-                        stringPtr = va_arg(args,char*);
-
-                        if(stringPtr == NULL)
-                            break;
-
-
-                        for(int i = 0; stringPtr[i] != '\0'; i++)
-                        {
-                            if(stringPtr[i] == '\n')
-                            {            
-                                Screen.x = 0;
-                                Screen.y++;
-                                continue;
-                            }
-
-                            else if(stringPtr[i] == '\r')
-                            {
-                                Screen.x = 0;
-                                continue;
-                            }
-
-                            else if(stringPtr[i] == '\t')
-                            {
-                                for(int j = 0; j < 3; j++)
+                                for(int i = 0; string_typed_buffer[counter] != '\0' && string_typed_buffer[counter] != ' '; i++)
                                 {
-                                    if(Screen.x + j == 80)
+                                    field_buffer[i] = string_typed_buffer[counter];
+                                    counter++;
+                                }
+                                    
+                                for(int i = 0; field_buffer[i] != '\0' && field_buffer[i] != ' '; i++)
+                                {
+                                    if((field_buffer[i] > 127) || (field_buffer[i] < 0x20))
                                     {
-                                        Screen.x = 0;
-                                        Screen.y++;
+                                        string_pointer[i] = '\0'; // invalid ASCII characters
+                                        break;
                                     }
-                                    Screen.cursor[Screen.y][Screen.x + j] = (uint16_t)(' ' + (((background_color << 4) | font_color) << 8));
+
+                                    string_pointer[i] = field_buffer[i];
                                 }
 
-                                Screen.x += 3;
-                                continue;
+                                counter++;
+                                break;
                             }
 
 
-                            else if(str[string_counter] == '\\')
+                            case 'd':
                             {
-                                Screen.cursor[Screen.y][Screen.x] = (uint16_t)('\\' + (((background_color << 4) | font_color) << 8));
-                                continue;
+
+                                uint32_t* number = va_arg(args, uint32_t*);
+                                
+                                for(int i = 0; string_typed_buffer[counter] != '\0' && string_typed_buffer[counter] != ' '; i++)
+                                {
+                                    field_buffer[i] = string_typed_buffer[counter];
+                                    counter++;
+                                }
+                                
+                                *number = strtoi(field_buffer, DECIMAL);                       
+
+                                if(field_buffer[0] == '-')
+                                    *number = *number * (-1);
+
+                                break;
                             }
 
-
-                            Screen.cursor[Screen.y][Screen.x] = (uint16_t) (stringPtr[i] + (((background_color << 4) | font_color) << 8));
-                            if(Screen.x == 80)
+                            case 'c':
                             {
-                                Screen.y++;
-                                Screen.x = 0;
+
+                                char* number = va_arg(args, char*);
+                                *number = string_typed_buffer[0]; 
+                                break;
                             }
-                            Screen.x++;
-                    
-                        }
 
-                        break;
-
-                    }
-
-
-                    case 'i':
-                    {
-
-                        uint8_t number = (uint8_t)va_arg(args, uint32_t);
-
-                        Screen.cursor[Screen.y][Screen.x] = (uint16_t)( (((number & 0xf0) >> 4) + '0')  | (((background_color << 4) | font_color) << 8));
-                        Screen.x++;
-
-                        Screen.cursor[Screen.y][Screen.x] = (uint16_t)(((number & 0x0f) + '0')  | (((background_color << 4) | font_color) << 8));
-                        Screen.x++;
-                    
-                        break;
-
-                    }
-
-                    case 'c':
-                    {
-
-                        char character;
-                        character = (char)va_arg(args,int);
-                        
-                        if(Screen.x == 80)
-                        {
-                            Screen.y++;
-                            Screen.x = 0;
-                        }
-
-                        if(character == '\n')
-                        {            
-                            Screen.x = 0;
-                            Screen.y++;
-                        }
-
-                        else if(character == '\0')
-                            break;
-
-                        else 
-                        {
-                            Screen.cursor[Screen.y][Screen.x] = (uint16_t) (character + (((background_color << 4) | font_color) << 8));
-                            Screen.x++;
-                        }
-
-                        break;
-                    }
-
-                    case 'z':
-                    {
-                        font_color = (uint8_t)va_arg(args,int);
-                        background_color = (font_color & 0xf0) >> 4;
-                        font_color = font_color & 0x0f;
-                        break;
-                    }
-
-                    case 'x':
-                    {
-                        uint32_t number_hex = va_arg(args,uint32_t);
-                        int_to_hex_str(number_hex,temporary_pointer);
-
-                        for(int i = 0; temporary_pointer[i] != '\0'; i++)
-                        {
-                            Screen.cursor[Screen.y][Screen.x] = (uint16_t) (temporary_pointer[i] + (((background_color << 4) | font_color) << 8));
-                            if(Screen.x == 80)
-                            {
-                                Screen.y++;
-                                Screen.x = 0;
-                            }
-                            Screen.x++;
-                        }
-
-                        
-                        break;
-
-                    }
-                    
-                    case 'X':
-                    {
-                        number = va_arg(args,int);
-                        int_to_hex_str(number,temporary_pointer);
-                        toupper(temporary_pointer);
-
-                        for(int i = 0; temporary_pointer[i] != '\0'; i++)
-                        {
-                            Screen.cursor[Screen.y][Screen.x] = (uint16_t) (temporary_pointer[i] + (((background_color << 4) | font_color) << 8));
-                            if(Screen.x == 80)
-                            {
-                                Screen.y++;
-                                Screen.x = 0;
-                            }
-                            Screen.x++;
-                        }
-
-                        break;
-
-                    }
-                    
-                    case 'o':
-                    {
-                        number = va_arg(args,int);
-                        int_to_oct_str(number,temporary_pointer);
-
-                        for(int i = 0; temporary_pointer[i] != '\0'; i++)
-                        {
-                            Screen.cursor[Screen.y][Screen.x] = (uint16_t) (temporary_pointer[i] + (((background_color << 4) | font_color) << 8));
-                            if(Screen.x == 80)
-                            {
-                                Screen.y++;
-                                Screen.x = 0;
-                            }
-                            Screen.x++;
-                        }
-                        break;
-                    }
-
-                    case 'h':
-                    {
-                        position_change_switch_used = true;
-                        number = (uint16_t)va_arg(args,uint32_t);
-                        Screen.y = (number >> 8) & 0xFF;
-                        Screen.x = number & 0xFF;
-                        break;
-                    }
-
-                    case 'm':
-                    {
-
-                        string_counter++;
-                        switch(str[string_counter])
-                        {
                             case 'x':
                             {
 
-                                uint8_t number_hex = (uint8_t)va_arg(args,uint32_t);
-                                xint_to_hex_str(number_hex,temporary_pointer, SIZE_OF(uint8_t));
-
-                                for(int i = 0; temporary_pointer[i] != '\0'; i++)
+                                uint32_t* number = va_arg(args, uint32_t*);
+                                
+                                for(int i = 0; string_typed_buffer[counter] != '\0' && string_typed_buffer[counter] != ' '; i++)
                                 {
-                                    Screen.cursor[Screen.y][Screen.x] = (uint16_t) (temporary_pointer[i] + (((background_color << 4) | font_color) << 8));
-                                    
-                                    if(Screen.x == 80)
-                                    {
-                                        Screen.y++;
-                                        Screen.x = 0;
-                                    }
-                                    
-                                    Screen.x++;
+                                    field_buffer[i] = string_typed_buffer[counter];
+                                    counter++;
                                 }
+                                
+                                *number = strtoi(field_buffer, HEXADECIMAL);                       
+                                
+                                if(field_buffer[0] == '-')
+                                    *number = *number * -1;
 
-                        
-                                break;                            
-
+                                break;
                             }
-                    
-                            case 'X':
+                        
+
+                            case 'b':
                             {
 
-                                uint8_t number_hex = (uint8_t)va_arg(args,uint32_t);
-                                xint_to_hex_str(number_hex,temporary_pointer, SIZE_OF(uint8_t));
-                                toupper(temporary_pointer);
+                                uint32_t* number = va_arg(args, uint32_t*);
                                 
-                                for(int i = 0; temporary_pointer[i] != '\0'; i++)
+                                for(int i = 0; string_typed_buffer[counter] != '\0' && string_typed_buffer[counter] != ' '; i++)
                                 {
-                                    Screen.cursor[Screen.y][Screen.x] = (uint16_t) (temporary_pointer[i] + (((background_color << 4) | font_color) << 8));
-                                    
-                                    if(Screen.x == 80)
-                                    {
-                                        Screen.y++;
-                                        Screen.x = 0;
-                                    }
-
-                                    if(Screen.y == 28)
-                                    {
-                                        Screen.y = 0;
-                                        break;
-                                    }
-                                    
-                                    Screen.x++;
+                                    field_buffer[i] = string_typed_buffer[counter];
+                                    counter++;
                                 }
+                                
+                                *number = strtoi(field_buffer, BINARY);                       
 
-                        
-                                break;                            
-
+                                break;
                             }
+
 
                         }
 
+                    str_counter++;
 
-                        break;
                     }
+
+                    else
+                        str_counter++;
+                    
 
                 }
 
-                string_counter++;
+                memset(field_buffer, 0, 1000); 
+                memset(string_typed_buffer, 0, 1000);
+
+                stdio_legacy_cell_put((char)Screen.cursor[Screen.y][Screen.x], OUTPUT_COLOR_SET(black, white), &Screen.y, &Screen.x);
+                xprintf("\n");
+                // free(field_buffer);
+                break;
+
             }
 
-            else if(str[string_counter] == '\n')
-            {            
-                Screen.x = 0;
-                Screen.y++;
-                string_counter++;
-            }
-
-            else if(str[string_counter] == '\r')
+            else if(Input.character)
             {
-                Screen.x = 0;
-                string_counter++;
-            }
+                char tmp = Input.character;
 
-            else if(str[string_counter] == '\t')
-            {
-                for(int i = 0; i < 3; i++)
-                {
-                    if(Screen.x + i == 80)
-                    {
-                        Screen.x = 0;
-                        Screen.y++;
-                    }
-                    Screen.cursor[Screen.y][Screen.x + i] = (uint16_t)(' ' + (((background_color << 4) | font_color) << 8));
-                }
-
-                Screen.x += 3;
-                string_counter++;
-            }
-
-
-            else if(str[string_counter] == '\\')
-            {
-                Screen.cursor[Screen.y][Screen.x] = (uint16_t)('\\' + (((background_color << 4) | font_color) << 8));
-                string_counter++;
-            }
-
-            else
-            {
-                //cursor[bufCounter] = (uint16_t) (str[string_counter] + (((background_color << 4) | font_color) << 8));
-
-                //x++;
-
-                Screen.cursor[Screen.y][Screen.x] = (uint16_t) (str[string_counter] + (((background_color << 4) | font_color) << 8));
-                Screen.x++;
-                string_counter++;
-            }
-
-
-
+                stdio_legacy_cell_put((char)Screen.cursor[Screen.y][Screen.x], OUTPUT_COLOR_SET(black, white), &Screen.y, &Screen.x);
+                char character_saved = (char)(Screen.cursor[Screen.y][Screen.x]);
+                
+                xprintf("%c", tmp);
+        
+                stdio_legacy_cell_put((char)Screen.cursor[Screen.y][Screen.x], OUTPUT_COLOR_SET(white, white), &Screen.y, &Screen.x);
+                string_typed_buffer[index] = tmp;
+                index++;
+            }    
         }
 
-        if(position_change_switch_used) // restore Screen.x and Screen.y
-        {
-            Screen.y = y;
-            Screen.x = x;
-        }
-
-        free(temporary_pointer);
-
-        va_end(args);
+        free(field_buffer);
     }
 
     else if(stdio_mode_get() == STDIO_MODE_TERMINAL)
@@ -1623,143 +1056,141 @@ void xscanf(char* str, ... )
 void xscan_range(char* string_buffer, uint32_t how_many_chars)
 {
 
-    uint32_t counter = 0;
-    char* string_pointer;
-    char* field_buffer = (char*)calloc(how_many_chars);
+    stdio_mode_t stdio_current_mode = stdio_mode_get();
+    xchar Input;
+    key_info_t KeyInfo;
 
-    char string_typed_buffer[1000];
-    memset(string_typed_buffer, '\0', SIZE_OF(string_typed_buffer));
-
-    uint32_t index = 0;
-    
-    uint8_t screen_offset = 0;
- 
-    char* starting_screen_position = (char*)&Screen.cursor[Screen.y][Screen.x - 1];
-    uint16_t* text_buffer_start = &Screen.cursor[Screen.y][Screen.x];
-
-    uint8_t x_start = Screen.x;
-    uint8_t y_start = Screen.y;
-
-    start:
-
-    while(1)
+    if(stdio_current_mode == STDIO_MODE_TERMINAL)
     {
-        xchar Input;
-        __sys_inputg(&Input);
+        uint32_t buffer_index = 0;
+        char* field_buffer = (char*)calloc(how_many_chars);
 
-        key_info_t KeyInfo;
-        __sys_keyinfo_get(&KeyInfo);
-
-        if(Input.scan_code == BSPC)
+        while(1)
         {
-            Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((black << 4) | white) << 8));
+            __sys_inputg(&Input);
+            __sys_keyinfo_get(&KeyInfo);
 
-            if(&Screen.cursor[Screen.y][Screen.x - 1] == (uint16_t*)starting_screen_position)
-                goto start;
-
-            if(!Screen.x)
+            if(Input.scan_code == ENTER)
             {
-                Screen.y--;
-                Screen.x = 79;
-                goto start;
+                xprintf("\n");
+                return;
             }
 
-            Screen.x--;
+            else if(Input.scan_code == BSPC)
+            {
+                if(!buffer_index)            
+                    continue;
 
-            if(index)
-                index--;
+                string_buffer[--buffer_index] = '\0';
+                stdio_legacy_cell_put('\0', OUTPUT_COLOR_SET(black, black), &Screen.y, &Screen.x);
+                xtf_remove_last_cell(vty_get());
+                xtb_flush(vty_get());
+                Screen.x--;
+            }
+            
+            else if(Input.character)
+            {
+                if(buffer_index == how_many_chars)
+                    continue;
 
-            if(screen_offset)
-                screen_offset--;
-
-            string_typed_buffer[index] = '\0';
-            Screen.cursor[Screen.y][Screen.x] = '\0';
-
-            Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((white << 4) | white) << 8));
-
-
-            KeyInfo.is_bspc = false;
-            letters_refresh(&Screen.cursor[Screen.y][Screen.x]);
+                string_buffer[buffer_index] = Input.character;
+                xtb_cell_put(vty_get(), Input.character, OUTPUT_COLOR_SET(black, white));
+                xtb_flush(vty_get());
+                buffer_index++;
+                Input.character = 0;
+            }
         }
-
-        else if(Input.scan_code == ENTER)
-        {
- 
-
-            string_pointer = string_buffer;
-            
-            for(int i = 0; string_pointer[i] != '\0'; i++)
-                string_pointer[i] = '\0';
-
-            for(int i = 0; string_typed_buffer[counter] != '\0' && string_typed_buffer[counter] != ' '; i++)
-            {
-                field_buffer[i] = string_typed_buffer[counter];
-                counter++;
-            }
-                
-                
-            for(int i = 0; field_buffer[i] != '\0' && field_buffer[i] != ' '; i++)
-            {
-                if((field_buffer[i] > 127) || (field_buffer[i] < 0x20))
-                {
-                    string_pointer[i] = '\0';
-                    goto end;
-                }
-
-                string_pointer[i] = field_buffer[i];
-            }
-
-            end:
-
-            memset(field_buffer, 0, 1000);
-
-            Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) + (((black << 4) | white) << 8));
-            
-            xprintf("\n");
-            return;
-
-        }
-
-        else if(Input.character)
-        {
-            char tmp = Input.character;
-
-            Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][index + x_start]) + (((black << 4) | white) << 8));
-            
-            for(int i = 0; i < strlen(field_buffer); i++)
-                *(text_buffer_start + i) = 0;
-
-            Screen.x = x_start;
-            Screen.y = y_start;
-
-            uint8_t* tmp_buf = (uint8_t*)calloc(80);
-            memcpy(tmp_buf, string_typed_buffer, 80);
-
-            if(string_typed_buffer[index] != '\0')
-            {
-                for(int i = index; i < 50 - 1; i++)
-                    string_typed_buffer[i+1] = tmp_buf[i];
-            }
-
-
-
-
-            if(index < how_many_chars)
-            {
-                string_typed_buffer[index] = tmp;
-                index++;
-            }
-            
-            xprintf("%s", string_typed_buffer);
-
-            screen_offset++;
-            Screen.x = screen_offset + x_start;
-
-        }    
+        free(field_buffer);
     }
 
-    free(field_buffer);
+    else  // STDIO_MODE_CANVAS
+    {
 
+        uint32_t counter = 0;
+        char* string_pointer;
+        char* field_buffer = (char*)calloc(how_many_chars);
+
+        char string_typed_buffer[1000];
+        memset(string_typed_buffer, '\0', SIZE_OF(string_typed_buffer));
+
+        uint32_t index = 0;
+        uint16_t* text_buffer_start = &Screen.cursor[Screen.y][Screen.x];
+
+        while(1)
+        {
+
+            if(Input.scan_code == ENTER)
+            {
+                string_pointer = string_buffer;
+                
+                for(int i = 0; string_pointer[i] != '\0'; i++)
+                    string_pointer[i] = '\0';
+
+                for(int i = 0; string_typed_buffer[counter] != '\0' && string_typed_buffer[counter] != ' '; i++)
+                {
+                    field_buffer[i] = string_typed_buffer[counter];
+                    counter++;
+                }
+                    
+                    
+                for(int i = 0; field_buffer[i] != '\0' && field_buffer[i] != ' '; i++)
+                {
+                    if((field_buffer[i] > 127) || (field_buffer[i] < 0x20))
+                    {
+                        string_pointer[i] = '\0';
+                        break;
+                    }
+
+                    string_pointer[i] = field_buffer[i];
+                }
+
+                memset(field_buffer, 0, 1000);
+
+                stdio_legacy_cell_put((char)Screen.cursor[Screen.y][Screen.x], OUTPUT_COLOR_SET(black, white), &Screen.y, &Screen.x);
+                
+                xprintf("\n");
+                return;
+            }
+
+            else if(Input.scan_code == BSPC)
+            {
+                if(!index)
+                    continue;
+
+                stdio_legacy_cell_put((char)Screen.cursor[Screen.y][Screen.x], OUTPUT_COLOR_SET(black, white), &Screen.y, &Screen.x);
+
+                if(!Screen.x)
+                {
+                    Screen.y--;
+                    Screen.x = VGA_WIDTH;
+                    continue;
+                }
+
+                Screen.x--;
+
+                index--;
+
+                string_typed_buffer[index] = '\0';
+                stdio_legacy_cell_put((char)Screen.cursor[Screen.y][Screen.x], OUTPUT_COLOR_SET(white, white), &Screen.y, &Screen.x);
+
+                KeyInfo.is_bspc = false;
+                letters_refresh(&Screen.cursor[Screen.y][Screen.x]);
+            }
+
+            else if(Input.character)
+            {
+
+                if(index == how_many_chars)
+                    continue;
+
+                xprintf("%c", Input.character);
+                string_typed_buffer[index] = Input.character;
+                index++;
+                
+            }    
+        }
+        free(field_buffer);
+    }
 }
 
 
