@@ -38,6 +38,7 @@ void stdio_vty_set(Xtf* Front);
 Xtf* stdio_vty_get(void);
 void putst(const char* str);
 void putct(const char* str, color_t color);
+void puts_warning(const char* str);
 
 #ifdef __cplusplus
 }

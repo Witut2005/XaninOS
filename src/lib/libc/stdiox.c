@@ -135,7 +135,9 @@ void puts(const char* str)
     Xtf* StdioVty = vty_get();
 
     while(*str != '\0')
-        xtb_cell_put(StdioVty, *(str++), OUTPUT_COLOR_SET(black, white));
+        xtb_character_put(StdioVty, *(str++));
+
+    xtb_flush(StdioVty);
 
 }
 
@@ -149,7 +151,18 @@ void fprintf(XinEntry* Entry, const char* format, ...)
     }
 }
 
+void puts_warning(const char* str)
+{
+    Xtf* StdioVty = vty_get();
+    const char* warning_message = "[Warning]";
 
+    while(*warning_message != '\0')
+        xtb_cell_put(StdioVty, *(warning_message++), OUTPUT_COLOR_SET(black, yellow));
+
+    xtb_character_put(StdioVty, ' ');
+
+    puts(str);
+}
 
 void xprintf(char* str, ... )
 {

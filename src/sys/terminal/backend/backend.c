@@ -1,9 +1,9 @@
 
-#include <sys/terminal/backend/backend.h>
-#include <lib/libc/stdlibx.h>
-#include <lib/libc/memory.h>
-#include <sys/terminal/vty/vty.h>
 #include <sys/macros.h>
+#include <lib/libc/memory.h>
+#include <lib/libc/stdlibx.h>
+#include <sys/terminal/vty/vty.h>
+#include <sys/terminal/backend/backend.h>
 
 void xtb_scroll_up(Xtf *XtFrontend)
 {

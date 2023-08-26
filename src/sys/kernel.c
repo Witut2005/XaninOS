@@ -102,11 +102,10 @@ void kernel_loop(void)
 
         xtb_enable_flushing();
         stdio_mode_set(STDIO_MODE_TERMINAL);
+        xtb_flush_all(vty_get());
         screen_background_color_set(black);
         
         all_intervals_clear(); // clear all intervals added by apps during execution
-
-        interval_set(vty_update_time, 500, NULL);
         
         memset(null_memory_region, 0, SECTOR_SIZE);
         xtf_scrolling_on(vty_get());
@@ -462,12 +461,11 @@ void _start(void)
         fseek(StdioLegacyConfig, 25);
         fwrite(StdioLegacyConfig, "FALSE", 6);
 
-        xprintf("SINCE V1.8, XANIN USES TWO DIFFERENT GRAPHIC MODES. IF YOU WANT\nTO RUN THE PROGRAM IN A GIVEN MODE, HOLD CTRL WHILE SUBMITTING A COMMAND\n");
+        puts_warning("SINCE V1.8, XANIN USES TWO DIFFERENT GRAPHIC MODES. IF YOU WANT\nTO RUN THE PROGRAM IN A GIVEN MODE, HOLD CTRL WHILE SUBMITTING A COMMAND\n");
 
     }
 
     fclose(&StdioLegacyConfig);
-
 
     kernel_loop();
 
