@@ -648,7 +648,7 @@ size_t __xin_fread(XinEntry *entry, void *buf, size_t count)
         return 0;
 
     if(initial_position + count > entry->size)
-        count = initial_position + count - (entry->size + 1); //0 is start index    
+        count = entry->size - initial_position;
     
     //////////////////////////////////////////////////
 

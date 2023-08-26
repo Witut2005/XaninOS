@@ -457,7 +457,6 @@ void _start(void)
     fseek(StdioLegacyConfig, ARRAY_LENGTH("PRINT_LEGACY_STDIO_INFO:"));
     fread(StdioLegacyConfig, stdio_legacy_config_buf, 5);
 
-
     if(bstrncmp(stdio_legacy_config_buf, "TRUE", 4))
     {
         fseek(StdioLegacyConfig, 25);
