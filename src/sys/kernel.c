@@ -457,12 +457,14 @@ void _start(void)
     fseek(StdioLegacyConfig, ARRAY_LENGTH("PRINT_LEGACY_STDIO_INFO:"));
     fread(StdioLegacyConfig, stdio_legacy_config_buf, 5);
 
-    xprintf("CONF: %s\n", stdio_legacy_config_buf);
 
     if(bstrncmp(stdio_legacy_config_buf, "TRUE", 4))
     {
         fseek(StdioLegacyConfig, 25);
         fwrite(StdioLegacyConfig, "FALSE", 6);
+
+        xprintf("SINCE V1.8, XANIN USES TWO DIFFERENT GRAPHIC MODES. IF YOU WANT\nTO RUN THE PROGRAM IN A GIVEN MODE, HOLD CTRL WHILE SUBMITTING A COMMAND\n");
+
     }
 
     fclose(&StdioLegacyConfig);
