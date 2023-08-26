@@ -11,7 +11,6 @@
 #include <lib/libc/stdiox_legacy.h>
 #include <sys/terminal/backend/backend.h>
 
-char* color_attributes[16] = {"black", "blue", "green", "cyan", "red", "magenta", "brown", "lgray", "dgray","lblue", "lgreen", "lcyan", "lred", "lmagenta", "yellow", "white"};
 
 void screen_background_color_set(color_t color)
 {

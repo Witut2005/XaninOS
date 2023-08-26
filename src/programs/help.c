@@ -221,6 +221,7 @@ int help(char* command)
 
     else if(bstrcmp(command, "color"))
     {
+        char* color_attributes[16] = {"black", "blue", "green", "cyan", "red", "magenta", "brown", "lgray", "dgray","lblue", "lgreen", "lcyan", "lred", "lmagenta", "yellow", "white"};
         xprintf("Color attributes:\n");
 
         for(int i = 0; i < 16; i++)
