@@ -114,10 +114,12 @@ void kernel_loop(void)
         // screen_clear();
         time_get(&SystemTime);
 
+        xprintf("\n");
+
         for(int i = 0; xin_current_directory[i + 1] != '\0'; i++)
             xprintf("%z%c", OUTPUT_COLOR_SET(black, lblue), xin_current_directory[i]);
 
-        xprintf("\n>");
+        xprintf(">");
 
         app_exited = false;
 
@@ -449,6 +451,22 @@ void _start(void)
         xprintf("%z   _/  _/    _/    _/  _/    _/  _/  _/    _/  _/    _/        _/%z   version 1.8v", OUTPUT_COLOR_SET(logo_back_color, logo_front_color), OUTPUT_COLOR_SET(black,white));
         xprintf("%z_/      _/    _/_/_/  _/    _/  _/  _/    _/    _/_/    _/_/_/     %z%s: %i:%i:%i\n", OUTPUT_COLOR_SET(logo_back_color, logo_front_color), OUTPUT_COLOR_SET(black,white), daysLUT[SystemTime.weekday], SystemTime.hour, SystemTime.minutes, SystemTime.seconds);                                       
     }
+
+    char stdio_legacy_config_buf[6] = {0};
+    XinEntry* StdioLegacyConfig = fopen("/etc/help/stdio_legacy.conf", "rw");
+    fseek(StdioLegacyConfig, ARRAY_LENGTH("PRINT_LEGACY_STDIO_INFO:"));
+    fread(StdioLegacyConfig, stdio_legacy_config_buf, 5);
+
+    xprintf("CONF: %s\n", stdio_legacy_config_buf);
+
+    if(bstrncmp(stdio_legacy_config_buf, "TRUE", 4))
+    {
+        fseek(StdioLegacyConfig, 25);
+        fwrite(StdioLegacyConfig, "FALSE", 6);
+    }
+
+    fclose(&StdioLegacyConfig);
+
 
     kernel_loop();
 
