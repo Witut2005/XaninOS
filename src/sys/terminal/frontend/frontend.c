@@ -16,12 +16,12 @@ Xtf* xtf_init(uint32_t buffer_size)
 
     XtFrontend->vwidth = VGA_WIDTH; // 80
     XtFrontend->vheight = 1000; //useless
-    XtFrontend->size_allocated = buffer_size >= XANIN_PMMNGR_BLOCK_SIZE * 2 ? buffer_size : XANIN_PMMNGR_BLOCK_SIZE * 2;
+    XtFrontend->size_allocated = buffer_size >= XANIN_PMMNGR_BLOCK_SIZE * 100 ? buffer_size : XANIN_PMMNGR_BLOCK_SIZE * 100;
     XtFrontend->size = 0;
     XtFrontend->current_height = __vga_text_mode_height_get(); 
     XtFrontend->Cursor.position = -1;
     XtFrontend->scrolling_enabled = true;
-    XtFrontend->buffer = (XtCell*)calloc(XtFrontend->size_allocated);
+    XtFrontend->buffer = (XtCell*)calloc(XtFrontend->size_allocated * SIZE_OF(XtCell));
     XtFrontend->rows_changed = (uint8_t*)calloc(XtFrontend->current_height * SIZE_OF_POINTED_TYPE(XtFrontend->rows_changed));
 
     memset(XtFrontend->rows_changed, true, XtFrontend->current_height * SIZE_OF_POINTED_TYPE(XtFrontend->rows_changed));

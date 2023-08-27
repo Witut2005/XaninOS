@@ -155,6 +155,11 @@ void keyboard_driver(void)
     // {
     //     keyboard_handle();
     // }
+
+    if(KeyInfo.is_alt & KeyInfo.is_ctrl)
+    {
+        memcpy(NULL, (uint8_t*)VGA_TEXT_MEMORY + (24 * 80 * 2), 160);
+    }
         
     if(KeyInfo.scan_code == LSHIFT || KeyInfo.scan_code == CAPS)
         KeyInfo.character = '\0';

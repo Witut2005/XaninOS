@@ -17,7 +17,7 @@ int load(char* address_string)
         xprintf("0x%X:", data_pointer + i * 16);
         
         for(int k = 0; k < 8 - strlen(int_to_hex_str(data_pointer + i * 16, tmp)); k++) //better address aligment (visually)
-            xprintf(" ");
+            puts(" ");
         
         for(int j = 0; j < 16; j++)
             xprintf(" %mX", data_pointer[ (16 * i) + j]);
@@ -26,13 +26,12 @@ int load(char* address_string)
 
         for(int j = 0; j < 16; j++)
         {
-            
             if(data_pointer[ (16 * i) + j] < ASCII_SPACE)
-                xprintf(" ");
-            else
-                xprintf("%c", data_pointer[ (16 * i) + j]);
+                puts(" ");
+            // else
+            //     xprintf("%c", data_pointer[ (16 * i) + j]);
         }
-        xprintf("\n");
+        puts("\n");
     }
 
     xtb_enable_flushing();

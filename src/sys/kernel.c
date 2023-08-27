@@ -37,6 +37,7 @@
 #include <sys/terminal/frontend/frontend.h>
 #include <lib/cpu/headers/cpu_state_info.h>
 #include <sys/macros.h>
+#include <lib/libc/stdiox_legacy.h>
 
 extern void v86_mode_enter(void);
 extern void mouse_enable(void);
@@ -104,7 +105,7 @@ void kernel_loop(void)
         stdio_mode_set(STDIO_MODE_TERMINAL);
         xtb_flush_all(vty_get());
         screen_background_color_set(black);
-        
+
         all_intervals_clear(); // clear all intervals added by apps during execution
         
         memset(null_memory_region, 0, SECTOR_SIZE);
@@ -126,6 +127,7 @@ void kernel_loop(void)
 
         while(1)
         {
+
             if(app_exited)
             {
                 app_exited = false;
@@ -461,7 +463,7 @@ void _start(void)
         fseek(StdioLegacyConfig, 25);
         fwrite(StdioLegacyConfig, "FALSE", 6);
 
-        puts_error("SINCE V1.8, XANIN USES TWO DIFFERENT GRAPHIC MODES. IF YOU WANT\nTO RUN THE PROGRAM IN A GIVEN MODE, HOLD CTRL WHILE SUBMITTING A COMMAND\n");
+        puts_warning("SINCE V1.8, XANIN USES TWO DIFFERENT GRAPHIC MODES. IF YOU WANT\nTO RUN THE PROGRAM IN A GIVEN MODE, HOLD CTRL WHILE SUBMITTING A COMMAND\n");
 
     }
 

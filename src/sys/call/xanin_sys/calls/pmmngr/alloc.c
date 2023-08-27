@@ -15,11 +15,9 @@ void* __sys_calloc(uint32_t size)
 
 void* __sys_realloc(void* ptr, uint32_t size)
 {
-    mmngr_block_free(USER_HEAP, (void*)ptr);
     uint8_t* tmp = (uint8_t*)mmngr_block_allocate(USER_HEAP, size);
-
-    if((uint32_t)tmp != (uint32_t)ptr)
-        memmove(tmp, (uint8_t*)ptr, size);
+    memcpy(tmp, (uint8_t*)ptr, size);
+    mmngr_block_free(USER_HEAP, (void*)ptr); // FIRST ALLOCATE THEN FREE (REVERSED ORDER MAKES WEIRD BUGS)
 
     return tmp;
 }
