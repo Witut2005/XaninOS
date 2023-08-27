@@ -70,7 +70,7 @@ void putc(char* str, uint32_t count)
     );
 }
 
-char putchar(char character)
+char putchar(char character) // ONLY AVAILABLE IN CANVAS MODE
 {
 
     if(stdio_mode_get() == STDIO_MODE_CANVAS)
@@ -84,42 +84,32 @@ char putchar(char character)
         }
     }
 
-    else if(stdio_mode_get() == STDIO_MODE_TERMINAL)
+    return character;
+}
+
+char putchar_color(uint8_t color, char character) // ONLY AVAILABLE IN CANVAS MODE
+{
+
+    stdio_mode_t mode = stdio_mode_get();
+
+    if(mode == STDIO_MODE_CANVAS)
     {
-        xtb_character_put(vty_get(), character);
-        // xtb_flush(vty_get());
+
+        stdio_legacy_cell_put(character, color, &Screen.y, &Screen.x);
+            
+        Screen.x++;
+
+        if(VGA_WIDTH == 80)
+        {    
+            Screen.x = 0;
+            Screen.y++;
+        }
     }
 
     return character;
 }
 
-char putchar_color(uint8_t color, char character)
-{
-
-    stdio_legacy_cell_put(character, color, &Screen.y, &Screen.x);
-        
-    Screen.x++;
-
-    if(VGA_WIDTH == 80)
-    {    
-        Screen.x = 0;
-        Screen.y++;
-    }
-           
-    return character;
-}
-
-void putst(const char* str)
-{
-    Xtf* StdioFront = vty_get();
-
-    for(int i = 0; i < strlen(str); i++)
-        xtb_character_put(StdioFront, str[i]);
-        
-    xtb_flush(StdioFront);
-}
-
-void putct(const char* str, color_t color)
+void putsc(const char* str, color_t color)
 {
     Xtf* StdioFront = vty_get();
 
@@ -141,6 +131,20 @@ void puts(const char* str)
 
 }
 
+void puts_warning(const char* str)
+{
+    putsc("[Warning]", OUTPUT_COLOR_SET(black, yellow));
+    xtb_character_put(vty_get(), ' ');
+    puts(str);
+}
+
+void puts_error(const char* str)
+{
+    putsc("[Error]", OUTPUT_COLOR_SET(black, lred));
+    xtb_character_put(vty_get(), ' ');
+    puts(str);
+}
+
 void fprintf(XinEntry* Entry, const char* format, ...)
 {
     // if(((int)Entry > 0) && ((int)Entry < 3))
@@ -151,18 +155,7 @@ void fprintf(XinEntry* Entry, const char* format, ...)
     }
 }
 
-void puts_warning(const char* str)
-{
-    Xtf* StdioVty = vty_get();
-    const char* warning_message = "[Warning]";
 
-    while(*warning_message != '\0')
-        xtb_cell_put(StdioVty, *(warning_message++), OUTPUT_COLOR_SET(black, yellow));
-
-    xtb_character_put(StdioVty, ' ');
-
-    puts(str);
-}
 
 void xprintf(char* str, ... )
 {

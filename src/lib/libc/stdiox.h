@@ -26,19 +26,20 @@ extern "C" {
 
 int screen_clear(void);
 int vga_screen_buffer_clear(void);
-void putc(char* str, uint32_t count);
-char putchar(char character);
-char putchar_color(uint8_t color, char character);
+char putchar(char character); // ONLY AVAILABLE IN CANVAS MODE
+char putchar_color(uint8_t color, char character); // ONLY AVAILABLE IN CANVAS MODE
 void xprintf(char* str, ... );
-void puts(const char* str);
 void xscanf(char* str, ... );
 void xscan_range(char* string_buffer, uint32_t how_many_chars);
 void screen_background_color_set(color_t color);
 void stdio_vty_set(Xtf* Front);
 Xtf* stdio_vty_get(void);
-void putst(const char* str);
-void putct(const char* str, color_t color);
+
+void putc(char* str, uint32_t count);
+void putsc(const char* str, color_t color);
+void puts(const char* str);
 void puts_warning(const char* str);
+void puts_error(const char* str);
 
 #ifdef __cplusplus
 }

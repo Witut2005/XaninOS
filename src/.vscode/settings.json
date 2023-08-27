@@ -27,7 +27,8 @@
         "vga_rgb.h": "c",
         "vga.h": "c",
         "pair.h": "c",
-        "stdio.h": "c"
+        "stdio.h": "c",
+        "xanin_syscalls.h": "c"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }
