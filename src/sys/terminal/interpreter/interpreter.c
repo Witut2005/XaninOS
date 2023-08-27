@@ -129,7 +129,7 @@ void scan(void)
 
     if(KeyInfo.is_ctrl)
     {
-        xprintf("Stdio mode override: l(legacy)/t(terminal)\n");
+        puts_warning("Stdio mode override: l(legacy)/t(terminal)\n");
         char stdio_selected_option = getchar();
 
         if(stdio_selected_option == 'l')

@@ -113,12 +113,12 @@ void kernel_loop(void)
         // screen_clear();
         time_get(&SystemTime);
 
-        xprintf("\n");
+        puts("\n");
 
         for(int i = 0; xin_current_directory[i + 1] != '\0'; i++)
             xprintf("%z%c", OUTPUT_COLOR_SET(black, lblue), xin_current_directory[i]);
 
-        xprintf(">");
+        puts(">");
 
         app_exited = false;
 
@@ -231,7 +231,7 @@ void _start(void)
 
     xprintf("%z----------------------------\n", OUTPUT_COLOR_SET(black, green));
 
-    xprintf("CHECKSUM CHECK RSDP: ");
+    puts("CHECKSUM CHECK RSDP: ");
 
     SystemAcpiRSDP* rsdp = acpi_rsdp_find();
 
@@ -242,7 +242,7 @@ void _start(void)
 
     xprintf("%z----------------------------\n", OUTPUT_COLOR_SET(black, green));
 
-    xprintf("CHECKSUM CHECK RSDT: ");
+    puts("CHECKSUM CHECK RSDT: ");
     const SystemAcpiRSDT* const rsdt = acpi_rsdt_get();
     1 == acpi_rsdt_checksum_check(rsdt) ? xprintf("%zVALID", OUTPUT_COLOR_SET(green, white)) : xprintf("%zINVALID", OUTPUT_COLOR_SET(red, white));
     xprintf("\nRSDT address: 0x%x\n", rsdt);
@@ -253,10 +253,10 @@ void _start(void)
 
     SystemAcpiFADT* AcpiFADT = acpi_fadt_find();
 
-    xprintf("FADT address: ");
+    puts("FADT address: ");
     xprintf("%z0x%x\n", OUTPUT_COLOR_SET(black, acpi_sdt_checksum_check((uint8_t*)AcpiFADT, AcpiFADT->length) == true ? green : red), AcpiFADT);
     
-    xprintf("MADT address: ");
+    puts("MADT address: ");
     xprintf("%z0x%x\n", OUTPUT_COLOR_SET(black, acpi_sdt_checksum_check((uint8_t*)AcpiApicSDT, AcpiApicSDT->length) == true ? green : red), AcpiApicSDT);
 
     xprintf("MADT entries: 0x%x\n", (uint8_t*)AcpiApicSDT + 0x28);
@@ -266,7 +266,7 @@ void _start(void)
 
     madt_entries_get(AcpiApicSDT);
 
-    xprintf("YOUR IOAPIC\n");
+    puts("YOUR IOAPIC\n");
     for (int i = 0; (*AcpiMADT1Pointers[i]).entry_type == 1; i++) // ignore not initialized enttries
     {
         if ((*AcpiMADT1Pointers[i]).length == 0xC)
@@ -363,7 +363,7 @@ void _start(void)
     xprintf("\n%z----------------------------\n", OUTPUT_COLOR_SET(black, green));
     xprintf("Com port status: 0x%x\n", com_status());
 
-    xprintf("Press ENTER to continue...");
+    puts("Press ENTER to continue...");
 
     // static int number_of_cores;
 

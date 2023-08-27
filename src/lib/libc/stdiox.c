@@ -939,13 +939,11 @@ void xscanf(char* str, ... )
                                     if((field_buffer[i] > 127) || (field_buffer[i] < 0x20))
                                     {
                                         string_pointer[i] = '\0'; // invalid ASCII characters
-                                        goto end;
+                                        break;
                                     }
 
                                     string_pointer[i] = field_buffer[i];
                                 }
-
-                                end:
                                 
                                 counter++;
                                 break;
@@ -978,9 +976,6 @@ void xscanf(char* str, ... )
                                 *number = string_typed_buffer[0]; 
                                 break;
                             }
-
-
-
 
                             case 'x':
                             {
@@ -1047,7 +1042,7 @@ void xscanf(char* str, ... )
             }    
         }
 
-        xprintf("\n");
+        puts("\n");
         // xtf_cursor_off(StdioVty);
         xtb_flush(StdioVty);
         xtf_cursor_inc(StdioVty);
@@ -1078,7 +1073,7 @@ void xscan_range(char* string_buffer, uint32_t how_many_chars)
 
             if(Input.scan_code == ENTER)
             {
-                xprintf("\n");
+                puts("\n");
                 return;
             }
 
