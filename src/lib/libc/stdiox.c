@@ -13,7 +13,7 @@
 
 void stdio_refresh(address_t* args)
 {
-    if(stdio_mode_get() == STDIO_MODE_TERMINAL)
+    if((stdio_mode_get() == STDIO_MODE_TERMINAL) && (xtb_get()->is_flushable))
         xtb_flush(vty_get());
 }
 
@@ -121,7 +121,7 @@ void putsc(const char* str, color_t color)
     for(int i = 0; i < strlen(str); i++)
         xtb_cell_put(StdioFront, str[i], color);
         
-    xtb_flush(StdioFront);
+    // xtb_flush(StdioFront);
 }
 
 void puts(const char* str)
@@ -132,7 +132,7 @@ void puts(const char* str)
     while(*str != '\0')
         xtb_character_put(StdioVty, *(str++));
 
-    xtb_flush(StdioVty);
+    // xtb_flush(StdioVty);
 }
 
 void puts_warning(const char* str)
@@ -625,7 +625,7 @@ void xprintf(char* str, ... )
         }
 
         va_end(args);
-        xtb_flush(StdioVty);
+        // xtb_flush(StdioVty);
     }
 
 }

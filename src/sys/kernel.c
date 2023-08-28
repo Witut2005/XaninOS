@@ -105,7 +105,6 @@ void kernel_loop(void)
         xtb_enable_flushing();
         stdio_mode_set(STDIO_MODE_TERMINAL);
         xtb_flush_all(vty_get());
-        screen_background_color_set(black);
 
         all_intervals_clear(); // clear all intervals added by apps during execution
 

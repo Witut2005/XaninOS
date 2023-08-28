@@ -304,8 +304,6 @@ void scan(void)
         if(!is_external_app)
         {
             xprintf("%zunknown command: %s\n", stderr, argv[0]);
-            screen_background_color_set(red);
-            msleep(400);
             last_command_exit_status = XANIN_ERROR;
         }
 
@@ -326,7 +324,7 @@ void scan(void)
     keyboard_handle = NULL;
     app_exited = true;
 
-    if(stdio_mode_overriden)
+    if(stdio_mode_overriden) // i want to be careful
         xtf_buffer_clear(vty_get());
 
     // terminal_destroy(app_terminal, kernel_terminal);
