@@ -93,6 +93,8 @@ void vty_update_time(address_t* args)
 
 }
 
+extern uint32_t stdio_refresh_rate;
+
 void kernel_loop(void)
 {
 
@@ -106,6 +108,8 @@ void kernel_loop(void)
         screen_background_color_set(black);
 
         all_intervals_clear(); // clear all intervals added by apps during execution
+
+        interval_set(stdio_refresh, stdio_refresh_rate, NULL); // refresh interval
         
         memset(null_memory_region, 0, SECTOR_SIZE);
         xtf_scrolling_on(vty_get());
@@ -364,7 +368,7 @@ void _start(void)
     xprintf("\n%z----------------------------\n", OUTPUT_COLOR_SET(black, green));
     xprintf("Com port status: 0x%x\n", com_status());
 
-    puts("Press ENTER to continue...");
+    puts("Press ENTER to continue...\n");
 
     // static int number_of_cores;
 
@@ -435,10 +439,29 @@ void _start(void)
     //     xprintf("0x%x\n", seg_regs[i]);
     // }
 
-    // xprintf("vga: 0x%x width: %d height: %d\n", __vga_buffer_segment_get(), __vga_text_mode_width_get(), __vga_text_mode_height_get());
-    // xprintf("buf: 0x%x\n", vty_get()->rows_changed);
-    // xprintf("buf: 0x%x\n", vty_get()->buffer);
-    // xtb_flush(vty_get());
+    // INIT AUTOMATIC STDIO FLUSH
+
+    char* buffer = (char*)kcalloc(100 * SIZE_OF(char));
+
+    XinEntry* StdioRefreshRateConfig = fopen("/etc/stdio/refresh_rate.conf", "r");
+    fseek(StdioRefreshRateConfig, ARRAY_LENGTH("STDIO_REFRESH_RATE: ") - 1);
+
+    fread(StdioRefreshRateConfig, buffer, 99);
+
+    stdio_refresh_rate = strtoi(buffer, 10);
+
+    if(stdio_refresh_rate <= 100)
+        xprintf("Stdio new refresh rate: %d\n", stdio_refresh_rate);
+
+    else
+    {
+        puts_error("Stdio refresh rate cannot be more than 100ms\n");
+        stdio_refresh_rate = 100;
+    }
+
+    kfree(buffer);
+
+    ////////////////////////////////
 
     while(inputg().scan_code != ENTER);
     screen_clear();
@@ -454,7 +477,7 @@ void _start(void)
 
     char stdio_legacy_config_buf[6] = {0};
     XinEntry* StdioLegacyConfig = fopen("/etc/help/stdio_legacy.conf", "rw");
-    fseek(StdioLegacyConfig, ARRAY_LENGTH("PRINT_LEGACY_STDIO_INFO:"));
+    fseek(StdioLegacyConfig, ARRAY_LENGTH("PRINT_LEGACY_STDIO_INFO: ") - 1);
     fread(StdioLegacyConfig, stdio_legacy_config_buf, 5);
 
     if(bstrncmp(stdio_legacy_config_buf, "TRUE", 4))

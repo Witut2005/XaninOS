@@ -16,7 +16,7 @@ Screen.x = x_new; \
 Screen.y = y_new
 
 #define stderr ( red << 4 | white)
-#define ARRAY_LENGTH(x) SIZE_OF(x) / SIZE_OF(x[0])
+#define ARRAY_LENGTH(x) (SIZE_OF(x) / SIZE_OF(x[0]))
 #define mkstr(str) #str
 #define SCREEN_CELL_SET_FROM_POINTER(ptr, background, foreground, character) *ptr = (uint16_t)((foreground | (background << 4)) << 8 | (character & 0xFF))
 
@@ -40,6 +40,8 @@ void putsc(const char* str, color_t color);
 void puts(const char* str);
 void puts_warning(const char* str);
 void puts_error(const char* str);
+
+void stdio_refresh(address_t* args);
 
 #ifdef __cplusplus
 }

@@ -2,6 +2,7 @@
 
 extern int cpp_test(void);
 
+#include <programs/stdio/stdio_apply.c>
 #include <programs/dev_tools.c>
 #include <programs/file_format_tools/bmp_info.c>
 #include <programs/print_to_syslog.c>
@@ -121,8 +122,9 @@ void check_external_apps(void)
 void scan(void)
 {
 
-    // screen_clear();
     all_intervals_clear(); // clear kernel intervals
+    interval_set(stdio_refresh, stdio_refresh_rate, NULL); // refresh interval
+
     last_command_exit_status = XANIN_OK;
 
     bool stdio_mode_overriden = false;
@@ -169,6 +171,7 @@ void scan(void)
         }
     }
 
+    XANIN_ADD_APP_ENTRY0("stdio_apply", stdio_apply)
     XANIN_ADD_APP_ENTRY1("ssaver", screen_saver)
     XANIN_ADD_APP_ENTRY1("bmp_info", bmp_info)
     XANIN_ADD_APP_ENTRY1("dev_tools", dev_tools)

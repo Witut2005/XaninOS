@@ -11,6 +11,11 @@
 #include <lib/libc/stdiox_legacy.h>
 #include <sys/terminal/backend/backend.h>
 
+void stdio_refresh(address_t* args)
+{
+    if(stdio_mode_get() == STDIO_MODE_TERMINAL)
+        xtb_flush(vty_get());
+}
 
 void screen_background_color_set(color_t color)
 {
@@ -128,7 +133,6 @@ void puts(const char* str)
         xtb_character_put(StdioVty, *(str++));
 
     xtb_flush(StdioVty);
-
 }
 
 void puts_warning(const char* str)
