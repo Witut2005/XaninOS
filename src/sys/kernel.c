@@ -72,7 +72,6 @@ extern bool com_status(void);
 terminal_t* kernel_terminal;
 uint8_t* const zeros;
 
-#define PMMNGR_MEMORY_BLOCKS 10000
 
 void vty_update_time(address_t* args)
 {

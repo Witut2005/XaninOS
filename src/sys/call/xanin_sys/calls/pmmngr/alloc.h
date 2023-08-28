@@ -4,6 +4,8 @@
 #include <stdint.h>
 #include <sys/pmmngr/alloc.h>
 
+#define PMMNGR_MEMORY_BLOCKS 15000
+
 #ifdef __cplusplus
 extern "C"{
 #endif

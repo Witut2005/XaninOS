@@ -1,9 +1,8 @@
 
 
-#include <lib/libc/stdiox.h>
 #include <fs/xin.h>
-
-#define PMMNGR_MEMORY_BLOCKS 10000
+#include <lib/libc/stdiox.h>
+#include <sys/call/xanin_sys/calls/pmmngr/alloc.h>
 
 extern uint8_t kernel_mmngr_mmap[PMMNGR_MEMORY_BLOCKS];
 
