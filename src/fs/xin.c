@@ -643,13 +643,9 @@ size_t __xin_fread(XinEntry *entry, void *buf, size_t count)
 
     uint32_t initial_position = ftell(entry);
 
-
-    if(initial_position >= (entry->size - 1)) //last valid byte
-        return 0;
-
     if(initial_position + count > entry->size)
         count = entry->size - initial_position;
-    
+
     //////////////////////////////////////////////////
 
     if(initial_position + count > entry->FileInfo->tmp_size)

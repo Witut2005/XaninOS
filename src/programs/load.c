@@ -9,8 +9,6 @@ int load(char* address_string)
 
     char* data_pointer = (char*)strtoi(address_string, HEXADECIMAL); 
 
-    xtb_disable_flushing();
-
     for(int i = 0; i < VGA_HEIGHT; i++)
     {
         char tmp[9] = {0x0};
@@ -33,9 +31,6 @@ int load(char* address_string)
         }
         puts("\n");
     }
-
-    xtb_enable_flushing();
-    xtb_flush_all(vty_get());
 
     return XANIN_OK;
 }

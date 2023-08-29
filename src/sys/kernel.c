@@ -444,7 +444,6 @@ void _start(void)
 
     XinEntry* StdioRefreshRateConfig = fopen("/etc/stdio/refresh_rate.conf", "r");
     fseek(StdioRefreshRateConfig, ARRAY_LENGTH("STDIO_REFRESH_RATE: ") - 1);
-
     fread(StdioRefreshRateConfig, buffer, 99);
 
     stdio_refresh_rate = strtoi(buffer, 10);
@@ -461,6 +460,7 @@ void _start(void)
     kfree(buffer);
 
     ////////////////////////////////
+    // xprintf("dupa: %d\n", strtoi("1", 10));
 
     while(inputg().scan_code != ENTER);
     screen_clear();
@@ -489,6 +489,7 @@ void _start(void)
     }
 
     fclose(&StdioLegacyConfig);
+
 
     kernel_loop();
 
