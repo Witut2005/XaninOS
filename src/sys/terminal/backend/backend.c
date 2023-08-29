@@ -22,17 +22,20 @@ void xtb_scroll_up(Xtf *XtFrontend)
         XtFrontend->y_begin = 0;
         return;
     }
+    XtBackend->is_flushable = false;
 
     memmove((uint8_t *)VGA_TEXT_MEMORY + (XtBackend->vga_width * SIZE_OF(XtCell)), (uint8_t *)VGA_TEXT_MEMORY, XtBackend->vga_width * XtBackend->vga_height * SIZE_OF(XtCell)); // move terminal data
 
     memset((uint8_t *)VGA_TEXT_MEMORY, BLANK_SCREEN_CELL, XtBackend->vga_width * SIZE_OF(XtCell)); // clear row
     memcpy((uint8_t *)VGA_TEXT_MEMORY, (uint8_t *)&XtFrontend->buffer[start_index],               // display new line
            number_of_bytes_to_copy * SIZE_OF(XtCell));
+    XtBackend->is_flushable = true;
 }
 
 void xtb_scroll_down(Xtf *XtFrontend)
 {
     Xtb *XtBackend = xtb_get();
+
 
     if (!XtFrontend->scrolling_enabled)
         return;
@@ -44,6 +47,8 @@ void xtb_scroll_down(Xtf *XtFrontend)
 
         if (start_index == XT_NO_SUCH_LINE)
             return;
+
+        XtBackend->is_flushable = false;
         
         XtFrontend->y_begin++;
 
@@ -52,6 +57,7 @@ void xtb_scroll_down(Xtf *XtFrontend)
         memset((uint8_t *)VGA_TEXT_MEMORY + ((XtBackend->vga_height - 1) * XtBackend->vga_width * SIZE_OF(XtCell)), BLANK_SCREEN_CELL, XtBackend->vga_width * SIZE_OF(XtCell)); // clear row
         memcpy((uint8_t *)VGA_TEXT_MEMORY + ((XtBackend->vga_height - 1) * XtBackend->vga_width * SIZE_OF(XtCell)),                                                            // display new line
                (uint8_t *)&XtFrontend->buffer[start_index], number_of_cells_to_copy * SIZE_OF(XtCell));
+        XtBackend->is_flushable = true;
     }
 }
 
@@ -73,12 +79,17 @@ void xtb_flush(Xtf *XtFrontend)
     if (!XtBackend->is_flushable)
         return;
 
+    if(XtBackend->is_currently_flushing)
+        return;
+
     if (!XtFrontend->size)
     {
         vga_screen_buffer_clear();
         memset(XtFrontend->rows_changed, XTF_ROW_CHANGED, XtFrontend->current_height);
         return;
     }
+
+    XtBackend->is_currently_flushing = true;
 
     int vram_index = 0;
     uint32_t current_row_to_display = XtFrontend->y_begin; // first row to display on screen
@@ -143,7 +154,9 @@ void xtb_flush(Xtf *XtFrontend)
         vram[vram_index] = BLANK_SCREEN_CELL;
 
     memset((uint8_t *)XtFrontend->rows_changed, XTF_ROW_NOT_CHANGED, XtFrontend->current_height * SIZE_OF_POINTED_TYPE(XtFrontend->rows_changed));
+    XtBackend->is_currently_flushing = false;
 }
+
 
 void xtb_flush_all(Xtf *XtFrontend)
 {
