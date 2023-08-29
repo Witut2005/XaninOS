@@ -10,7 +10,7 @@ void xtb_scroll_up(Xtf *XtFrontend)
 
     Xtb *XtBackend = xtb_get();
 
-    if (!XtFrontend->y_begin)
+    if ((!XtFrontend->scrolling_enabled) || (!XtBackend->is_flushable) || (!XtFrontend->y_begin))
         return;
 
     XtFrontend->y_begin--;
@@ -22,22 +22,24 @@ void xtb_scroll_up(Xtf *XtFrontend)
         XtFrontend->y_begin = 0;
         return;
     }
-    XtBackend->is_flushable = false;
+
+    xtb_disable_flushing();
 
     memmove((uint8_t *)VGA_TEXT_MEMORY + (XtBackend->vga_width * SIZE_OF(XtCell)), (uint8_t *)VGA_TEXT_MEMORY, XtBackend->vga_width * XtBackend->vga_height * SIZE_OF(XtCell)); // move terminal data
 
     memset((uint8_t *)VGA_TEXT_MEMORY, BLANK_SCREEN_CELL, XtBackend->vga_width * SIZE_OF(XtCell)); // clear row
     memcpy((uint8_t *)VGA_TEXT_MEMORY, (uint8_t *)&XtFrontend->buffer[start_index],               // display new line
            number_of_bytes_to_copy * SIZE_OF(XtCell));
-    XtBackend->is_flushable = true;
+
+    xtb_enable_flushing();
+
 }
 
 void xtb_scroll_down(Xtf *XtFrontend)
 {
     Xtb *XtBackend = xtb_get();
 
-
-    if (!XtFrontend->scrolling_enabled)
+    if ((!XtFrontend->scrolling_enabled) || (!XtBackend->is_flushable))
         return;
 
     if ((XtFrontend->y >= XtBackend->vga_height) && (XtFrontend->y_begin + XtBackend->vga_height <= XtFrontend->current_height))
@@ -48,8 +50,8 @@ void xtb_scroll_down(Xtf *XtFrontend)
         if (start_index == XT_NO_SUCH_LINE)
             return;
 
-        XtBackend->is_flushable = false;
-        
+        xtb_disable_flushing();
+
         XtFrontend->y_begin++;
 
         memmove((uint8_t *)VGA_TEXT_MEMORY, (uint8_t *)VGA_TEXT_MEMORY + (xtb_get()->vga_width * SIZE_OF(XtCell)), xtb_get()->vga_width * (xtb_get()->vga_height - 1) * SIZE_OF(XtCell)); // move terminal data
@@ -57,18 +59,10 @@ void xtb_scroll_down(Xtf *XtFrontend)
         memset((uint8_t *)VGA_TEXT_MEMORY + ((XtBackend->vga_height - 1) * XtBackend->vga_width * SIZE_OF(XtCell)), BLANK_SCREEN_CELL, XtBackend->vga_width * SIZE_OF(XtCell)); // clear row
         memcpy((uint8_t *)VGA_TEXT_MEMORY + ((XtBackend->vga_height - 1) * XtBackend->vga_width * SIZE_OF(XtCell)),                                                            // display new line
                (uint8_t *)&XtFrontend->buffer[start_index], number_of_cells_to_copy * SIZE_OF(XtCell));
-        XtBackend->is_flushable = true;
+
+        xtb_enable_flushing();
+
     }
-}
-
-void xtb_disable_flushing(void)
-{
-    xtb_get()->is_flushable = false;
-}
-
-void xtb_enable_flushing(void)
-{
-    xtb_get()->is_flushable = true;
 }
 
 void xtb_flush(Xtf *XtFrontend)
