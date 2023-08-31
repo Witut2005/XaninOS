@@ -1,27 +1,28 @@
 
-#include <sys/interrupts/idt/idt.h>
 #include <lib/libc/stdlibx.h>
+#include <sys/interrupts/idt/idt.h>
 
 extern void divide_by_zero_exception(void);
 extern void keyboard_handler_init(void);
 extern irq_handler interrupt_handlers[0x100];
 
-
-
 int idt_examine(void)
 {
+    char buf[20] = {0};
+    
+    puts("\n\n");
 
-    uint8_t bytes[] = {0xba, 0x0, 0x0, 0x0, 0x0, 0xF7, 0xF2};
-    uint8_t* tmp = (uint8_t*)NULL;
+    xprintf("  id  %z|%z  handler address\n", OUTPUT_COLOR_SET(black, green), OUTPUT_COLOR_SET(black, white));
+    putsc("-------------------------------\n", OUTPUT_COLOR_SET(black, green));
 
-    memcpy(tmp, bytes, 10);
-
-
-    xprintf("device by zero:");
-    xprintf("0x%x\n", interrupt_handlers[0]);
-    xprintf("0x%x ", keyboard_handler_init);
-    xprintf("0x%x\n", interrupt_handlers[0x21]);
-
-    while(inputg().scan_code != ENTER);
+    for(int i = 0; i <= UINT8_MAX; i++)
+    {
+        if(interrupt_handlers[i] != NULL)
+        {
+            string_align_begin(int_to_str(i, buf), ' ', 4);
+            string_align_end(buf, ' ', 6);
+            xprintf("%s%z|%z     0x%x\n", buf, OUTPUT_COLOR_SET(black, green), OUTPUT_COLOR_SET(black, white), interrupt_handlers[i]);
+        }
+    }
     return XANIN_OK;
 }

@@ -9,15 +9,14 @@ int help(char* command)
 {
 
 
-    if(bstrcmp(command, "help"))
+    if(bstrcmp(command, "help") | bstrcmp(command, ""))
     {
-        screen_clear();
         xprintf("AVAILABLE COMMANDS:\n");
         xprintf("cls                 note\n");
         xprintf("create              mkdir\n");
         xprintf("pong                cd\n");
         xprintf("reg_dump            cpu_info\n");
-        xprintf("load addr_in_hex            \n");
+        xprintf("load addr_in_hex    buffers\n");
         xprintf("loadch addr_in_hex  paint\n");
         xprintf("note file_name      pwd\n");
         xprintf("epilepsy            logo\n");
@@ -29,28 +28,7 @@ int help(char* command)
         xprintf("xin_info            xpaint\n");
         xprintf("ls                  nic_info\n");
         xprintf("gyn                 screenshot\n");
-    }
-
-    else if(bstrcmp(command, ""))
-    {
-        screen_clear();
-        xprintf("AVAILABLE COMMANDS:\n");
-        xprintf("cls                 note\n");
-        xprintf("create              mkdir\n");
-        xprintf("pong                cd\n");
-        xprintf("reg_dump            cpu_info\n");
-        xprintf("load addr_in_hex\n");
-        xprintf("loadch addr_in_hex  paint\n");
-        xprintf("note file_name      pwd\n");
-        xprintf("epilepsy            logo\n");
-        xprintf("key-test            elft\n");
-        xprintf("hexeditor           run16\n");
-        xprintf("run                 calc\n");
-        xprintf("reboot              shutdown\n");
-        xprintf("move/mv             cp\n");
-        xprintf("xin_info            xpaint\n");
-        xprintf("ls                  nic_info\n");
-        xprintf("gyn                 screenshot\n");
+        xprintf("idt_examine\n");
     }
 
     else if(bstrcmp(command, "cls"))
@@ -270,8 +248,5 @@ int help(char* command)
         xprintf("makes screenshot (can be ignited with PrtSc key)");
     }
 
-    
-    while(inputg().scan_code != ENTER);
     return XANIN_OK;
-
 }

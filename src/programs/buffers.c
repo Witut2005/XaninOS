@@ -65,8 +65,5 @@ int buffers_view(void)
 
     xprintf("]");
 
-    while(inputg().scan_code != ENTER);
-
     return XANIN_OK;
-    
 }

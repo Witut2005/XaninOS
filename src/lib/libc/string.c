@@ -9,6 +9,8 @@
 #include <sys/devices/keyboard/key_map.h>
 #include <lib/libc/memory.h>
 
+extern void xprintf(char* str, ...);
+
 static uint32_t string_errno;
 
 uint32_t check_string_errors(uint32_t mask)
@@ -53,22 +55,17 @@ char* strncpy(char* x, const char* y, size_t size)
 
 char* reverse_string(char* str)
 {
-
-
     char buf;
     char* end = str + strlen(str) - 1;
 
-
-    for(int i = 0; i < (strlen(str) / 2); i++)
+    for(char* begin = str; (uint32_t)begin < (uint32_t)end; begin++, end--)
     {
-        buf = str[i];
-        str[i] = *end;
+        char buf = *begin;
+
+        *begin = *end;
         *end = buf;
-        end--;
     }
-
     return str;
-
 }
 
 // char* float_to_string(float number, char* str)
@@ -149,7 +146,6 @@ bool bstrncmp(char* a, const char* b, size_t string_size)
 
 char* int_to_str(int x, char* buf)
 {
-
     int i = 0;
 
     if(!x)
@@ -165,11 +161,9 @@ char* int_to_str(int x, char* buf)
         x = x / 10;
     }
 
-
+    buf[i] = '\0';
     buf = reverse_string(buf);
-    *(buf + i) = '\0';
     return buf;
-
 }
 
 
@@ -707,4 +701,33 @@ StringRectangle* const string_rectangle_create(const char* buf, uint32_t positio
     Rect->position_y = position_y;
 
     return Rect;
+}
+
+char* string_align_begin(char* const str, char filler, uint32_t count)
+{
+
+    uint32_t string_length = strlen(str);
+
+    if(string_length >= count) return str;
+
+    memmove(str + (count - string_length), str, string_length);
+
+    int i;
+    for(i = 0; i < count - string_length; i++)
+        str[i] = filler;
+
+    str[count] = '\0'; // put NULL terminator
+
+    return str;
+}
+
+char* string_align_end(char* const str, char filler, uint32_t count)
+{
+    int i;
+    for(i = strlen(str); i < count; i++)
+        str[i] = filler;
+
+    str[i] = '\0'; // put NULL terminator
+
+    return str;
 }

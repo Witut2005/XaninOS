@@ -15,7 +15,6 @@ int cat(char* file_name)
     if(xin_file == NULL)
     {
         xprintf("Could not open file: %s\n", file_name);
-        while(inputg().scan_code != ENTER);
         return XANIN_ERROR;
     }
         
@@ -25,10 +24,8 @@ int cat(char* file_name)
 
         fread(xin_file, file_data, VGA_SCREEN_RESOLUTION);
         xprintf("%s", xin_file->FileInfo->buffer);
-        while(inputg().scan_code != ENTER);
         free(file_data);
         return XANIN_OK;
     }
-
 
 }
