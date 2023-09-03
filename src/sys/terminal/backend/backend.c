@@ -4,6 +4,7 @@
 #include <lib/libc/stdlibx.h>
 #include <sys/terminal/vty/vty.h>
 #include <sys/terminal/backend/backend.h>
+#include <sys/terminal/handlers/handlers.h>
 
 void xtb_scroll_up(Xtf *XtFrontend)
 {
@@ -225,8 +226,7 @@ void xtb_cell_put(Xtf *XtFrontend, char c, uint8_t color)
     XtFrontend->Cursor.position = CURSOR_POSITION_END;
     XtFrontend->x++;
 
-    if (XtFrontend->x >= XtFrontend->vwidth)
-        XtFrontend->buffer[XtFrontend->size++].cell = SAFE_NEW_LINE | AS_COLOR(color);
+    xtf_handle_x_overflow(XtFrontend, xtf_overflow_x_handler);
 
     if ((c == NEW_LINE) || (c == SAFE_NEW_LINE) || (XtFrontend->x >= XtFrontend->vwidth))
     {

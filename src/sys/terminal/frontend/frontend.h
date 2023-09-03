@@ -41,6 +41,8 @@ static inline bool xtf_is_special_character(char c)
     return (c == ASCII_VT) | (c == ASCII_TAB) | (c == NEW_LINE) | (c == SAFE_NEW_LINE);
 }
 
+bool xtf_handle_x_overflow(Xtf* XtFrontend, xtf_handler handler);
+
 
 #ifdef __cplusplus
 }
