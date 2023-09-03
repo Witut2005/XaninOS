@@ -33,7 +33,7 @@ void handle_selected_option(char* option, ExplorerInfo* AppInfo)
     else if(bstrcmp(option, "rename"))
     {
         char* new_name = (char*)calloc(XIN_MAX_PATH_LENGTH);
-        stdio_legacy_move_to_y(VGA_HEIGHT - 2);
+        stdio_canvas_move_to_y(stdio_canvas_get_last_valid_y());
 
         xprintf("New file name: ");
         xscanf("%s", new_name);
@@ -45,7 +45,7 @@ void handle_selected_option(char* option, ExplorerInfo* AppInfo)
     else if(bstrcmp(option, "link"))
     {
         char* new_name = (char*)calloc(XIN_MAX_PATH_LENGTH);
-        stdio_legacy_move_to_y(VGA_HEIGHT - 2);
+        stdio_canvas_move_to_y(stdio_canvas_get_last_valid_y());
 
         xprintf("where do you want to create a link entry: ");
         xscanf("%s", new_name);
@@ -64,7 +64,7 @@ void handle_selected_option(char* option, ExplorerInfo* AppInfo)
     else if(bstrcmp(option, "copy"))
     {
         char* new_name = (char*)calloc(XIN_MAX_PATH_LENGTH);
-        stdio_legacy_move_to_y(VGA_HEIGHT - 2);
+        stdio_canvas_move_to_y(stdio_canvas_get_last_valid_y());
 
         xprintf("where do you want to create a copy entry: ");
         xscanf("%s", new_name);
@@ -86,7 +86,7 @@ void handle_selected_option(char* option, ExplorerInfo* AppInfo)
     else if(bstrcmp(option, "create"))
     {
         char* new_name = (char*)calloc(XIN_MAX_PATH_LENGTH);
-        stdio_legacy_move_to_y(VGA_HEIGHT - 2);
+        stdio_canvas_move_to_y(stdio_canvas_get_last_valid_y());
 
         xprintf("New file name: ");
         xscanf("%s", new_name);

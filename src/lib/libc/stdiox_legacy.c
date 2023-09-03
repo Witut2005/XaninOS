@@ -2,8 +2,8 @@
 #include <lib/libc/string.h>
 #include <lib/libc/memory.h>
 #include <lib/libc/stdlibx.h>
-#include <sys/terminal/vty/vty.h>
 #include <sys/devices/keyboard/scan_codes.h>
+#include <lib/libc/stdiox_legacy.h>
 #include <stdarg.h>
 #include <lib/libc/time.h>
 #include <lib/libc/stdiox.h>
