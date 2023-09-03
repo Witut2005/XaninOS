@@ -460,6 +460,8 @@ void _start(void)
     kfree(buffer);
 
     ////////////////////////////////
+
+    stdio_refresh(NULL);
     // xprintf("dupa: %d\n", strtoi("1", 10));
 
     while(inputg().scan_code != ENTER);

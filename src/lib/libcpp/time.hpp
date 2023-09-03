@@ -59,7 +59,8 @@ namespace std
 
     static inline std::string time_to_string(CmosTime x)
     {
-        char str[9] = {'\0'};
+        char str[50];
+        memset((uint8_t*)str, 0, SIZE_OF(str));
 
         str[0] = x.hour / 0x10 + '0';
         str[1] = x.hour % 0x10 + '0';
@@ -74,14 +75,9 @@ namespace std
         str[6] = x.seconds / 0x10 + '0';
         str[7] = x.seconds % 0x10 + '0';
     
-        std::string ret = str;
-        return ret;
+        return std::string(str);
 
     }
-
-
-
-
     }
 
 }

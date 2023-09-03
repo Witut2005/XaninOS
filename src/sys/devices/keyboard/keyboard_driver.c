@@ -147,18 +147,17 @@ void keyboard_driver(void)
         }
     }
 
+    if(KeyInfo.scan_code == PRINT_SCREEN_KEY_RELEASE)
+    {
+        screenshot();
+    }
+
 
     keyboard_driver_shift_remap_keys();
 
-
-    // if(keyboard_handle != NULL)
-    // {
-    //     keyboard_handle();
-    // }
-
     if(KeyInfo.is_alt & KeyInfo.is_ctrl)
     {
-        memcpy(NULL, (uint8_t*)VGA_TEXT_MEMORY + (24 * 80 * 2), 160);
+        xtb_flush_all(vty_get());
     }
         
     if(KeyInfo.scan_code == LSHIFT || KeyInfo.scan_code == CAPS)

@@ -161,7 +161,7 @@ class string
 
     string(char* str)
     {
-        string_data = (char*)calloc(SIZE_OF(char) * strlen(str));
+        string_data = (char*)calloc(SIZE_OF(char) * strlen(str) + 1);
         for(int i = 0; i < strlen(str); i++) 
             string_data[i] = str[i];
          
@@ -169,7 +169,7 @@ class string
 
     string(const char* str)
     {
-        this->string_data = (char*)calloc(SIZE_OF(char) * strlen((char*)str));
+        this->string_data = (char*)calloc(SIZE_OF(char) * strlen((char*)str) + 1);
         for(int i = 0; i < strlen((char*)str); i++) 
             string_data[i] = str[i];
 
@@ -177,7 +177,7 @@ class string
     
     string(const string& str)
     {
-        this->string_data = (char*)calloc(SIZE_OF(char) * strlen((char*)str.c_str()));
+        this->string_data = (char*)calloc(SIZE_OF(char) * strlen((char*)str.c_str()) + 1);
         strcpy(this->string_data, str.c_str());  
     }
     

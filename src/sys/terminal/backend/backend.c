@@ -230,6 +230,7 @@ void xtb_cell_put(Xtf *XtFrontend, char c, uint8_t color)
 
     if ((c == NEW_LINE) || (c == SAFE_NEW_LINE) || (XtFrontend->x >= XtFrontend->vwidth))
     {
+        XtFrontend->rows_changed[XtFrontend->y] = XTF_ROW_CHANGED; // mark current row as changed
         XtFrontend->y++;
         XtFrontend->x = 0;
 
@@ -239,13 +240,8 @@ void xtb_cell_put(Xtf *XtFrontend, char c, uint8_t color)
             XtFrontend->rows_changed = (uint8_t *)realloc(XtFrontend->rows_changed, XtFrontend->y * SIZE_OF_POINTED_TYPE(XtFrontend->rows_changed));
         }
 
-        XtFrontend->rows_changed[XtFrontend->y] = XTF_ROW_CHANGED; // mark current row as changed
-
         if (XtFrontend->y >= XtBackend->vga_height)
-        {
-            xtb_flush(XtFrontend);
             xtb_scroll_down(XtFrontend);
-        }
     }
     else
         XtFrontend->rows_changed[XtFrontend->y] = XTF_ROW_CHANGED; // mark current row as changed
