@@ -91,8 +91,12 @@ void xtb_flush(Xtf *XtFrontend)
 
     uint16_t *vram = (uint16_t *)VGA_TEXT_MEMORY;
 
-    for (int i = xtf_buffer_nth_line_index_get(XtFrontend, XtFrontend->y_begin); i < XtFrontend->size; i++)
+    for (int i = xtf_buffer_nth_line_index_get(XtFrontend, XtFrontend->y_begin); i < XtFrontend->vheight * XtFrontend->vwidth; i++)
     {
+
+        if(i >= XtFrontend->size_allocated)
+            break;
+
         if (XtFrontend->buffer[i].character == SAFE_NEW_LINE)
         {
             current_row_to_display++;
@@ -210,7 +214,15 @@ void xtb_cell_put(Xtf *XtFrontend, char c, uint8_t color)
         XtFrontend->size_allocated = XtFrontend->size + SECTOR_SIZE * 4;
     }
 
-    XtFrontend->buffer[XtFrontend->size++].cell = c | AS_COLOR(color);
+    if(c == '\r')
+    {
+        XtFrontend->size = xtf_buffer_nth_line_index_get(XtFrontend, xtf_get_line_number_from_position(XtFrontend, XtFrontend->size)); 
+        return;
+    }
+
+    else
+        XtFrontend->buffer[XtFrontend->size++].cell = c | AS_COLOR(color);
+
     XtFrontend->Cursor.position = CURSOR_POSITION_END;
     XtFrontend->x++;
 

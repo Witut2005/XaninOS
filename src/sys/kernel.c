@@ -490,7 +490,6 @@ void _start(void)
 
     fclose(&StdioLegacyConfig);
 
-
     kernel_loop();
 
 }
