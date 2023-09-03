@@ -4,11 +4,14 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <lib/libc/memory.h>
+#include <lib/ascii/ascii.h>
 #include <lib/libc/stdlibx.h>
 #include <sys/call/xanin_sys/calls/terminal/terminal.h>
 
 #define XTF_ROW_CHANGED true
 #define XTF_ROW_NOT_CHANGED false
+
+typedef void(*xtf_handler)(Xtf*);
 
 #ifdef __cplusplus
 extern "C" {
@@ -32,6 +35,11 @@ void xtf_cursor_on(Xtf* XtFrontend, color_t color);
 void xtf_cursor_off(Xtf* XtFrontend);
 void xtf_cursor_inc(Xtf *XtFrontend);
 void xtf_cursor_dec(Xtf *XtFrontend);
+
+static inline bool xtf_is_special_character(char c)
+{
+    return (c == ASCII_VT) | (c == ASCII_TAB) | (c == NEW_LINE) | (c == SAFE_NEW_LINE);
+}
 
 
 #ifdef __cplusplus

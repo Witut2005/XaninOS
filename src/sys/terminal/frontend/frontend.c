@@ -206,3 +206,13 @@ void xtf_cursor_dec(Xtf *XtFrontend)
     XtFrontend->rows_changed[xtf_get_line_number_from_position(XtFrontend, XtFrontend->Cursor.position)] = XTF_ROW_CHANGED;
     xtb_flush(XtFrontend);
 }
+
+bool xtf_handle_x_overflow(Xtf* XtFrontend, xtf_handler handler)
+{
+    if(XtFrontend->x >= XtFrontend->vwidth)
+    {
+        handler(XtFrontend);
+        return true;
+    }
+    return false;
+}

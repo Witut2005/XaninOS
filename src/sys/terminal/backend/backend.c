@@ -202,7 +202,6 @@ void xtb_cell_put_at_position(Xtf *XtFrontend, char c, uint8_t color, uint32_t p
         XtFrontend->rows_changed[XtFrontend->y] = XTF_ROW_CHANGED; // mark current row as changed
 }
 
-
 void xtb_cell_put(Xtf *XtFrontend, char c, uint8_t color)
 {
 
