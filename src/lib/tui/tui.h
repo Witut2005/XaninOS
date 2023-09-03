@@ -2,7 +2,7 @@
 #pragma once
 
 #include <stdint.h>
-#include <lib/libc/stdiox.h>
+#include <lib/libc/stdiox_legacy.h>
 #include <sys/terminal/vty/vty.h>
 
 

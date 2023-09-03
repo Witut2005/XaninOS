@@ -93,3 +93,19 @@ uint16_t* stdio_legacy_vga_position_get(uint8_t y, uint8_t x)
 {
     return &Screen.cursor[y][x];
 }
+
+void stdio_legacy_move_to_y(uint8_t y)
+{
+    if(y >= VGA_HEIGHT)
+        return;
+
+    Screen.y = y;
+}
+
+void stdio_legacy_move_to_x(uint8_t x)
+{
+    if(x >= VGA_WIDTH)
+        return;
+
+    Screen.x = x;
+}
