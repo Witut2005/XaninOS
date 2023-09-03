@@ -15,8 +15,5 @@ int xin_create_folder_app(char* entry_name)
     else if(status == XIN_BAD_FOLDER_NAME)
         xprintf("%zBAD FOLDER NAME MISSING / CHARACTER AT THE END\n", stderr);
 
-    while(inputg().scan_code != ENTER);
-
     return status;
-
 }

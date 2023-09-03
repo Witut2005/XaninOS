@@ -14,6 +14,7 @@ void timer_input(void)
 int timer_test(void)
 {
 
+    stdio_mode_set(STDIO_MODE_CANVAS);
     keyboard_handle = timer_input;
 
     uint32_t current_time = 0;

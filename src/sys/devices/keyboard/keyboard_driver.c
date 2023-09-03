@@ -61,6 +61,7 @@ void keyboard_driver_shift_remap_keys(void)
 void keyboard_driver(void)
 {
 
+    interrupt_disable();
     KeyInfo.scan_code = inbIO(KEYBOARD_DATA_REG); 
     KeyInfo.character = keyboard_map[KeyInfo.scan_code];
 
@@ -173,6 +174,5 @@ void keyboard_driver(void)
         exit();
 
     eoi_send();
-
 }
 

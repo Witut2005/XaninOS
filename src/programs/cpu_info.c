@@ -158,7 +158,5 @@ int cpu_info(char* options)
     xprintf("SSE4_2:               %z%s\n", OUTPUT_COLOR_SET(cpu_state_color[is_present],white), cpu_state[is_present]);
 
 
-    while(getscan() != ENTER);
     return XANIN_OK;
-
 }

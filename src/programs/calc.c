@@ -57,7 +57,6 @@ int calc(char* options)
 
     xprintf("\nresult: %d", result);
 
-    while(getscan() != ENTER);
     return XANIN_OK;
 }
 

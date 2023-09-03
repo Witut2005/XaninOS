@@ -117,6 +117,7 @@ void xpaint_input(xchar Input)
 int xin_xpaint(char* file_name)
 {
 
+    stdio_mode_set(STDIO_MODE_CANVAS);
     XinEntry* xin_file = fopen(file_name, "rw");
 
     if(xin_file == NULL)

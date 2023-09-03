@@ -50,7 +50,5 @@ int netapi_check(char* protocol)
 
     response_object_destroy(&Response);
     
-    while(inputg().scan_code != ENTER);
     return XANIN_OK;
-
 }

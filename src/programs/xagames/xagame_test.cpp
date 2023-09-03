@@ -13,6 +13,7 @@ using namespace xgm::Renderer;
 extern "C" int xagame_test(void)
 {
 
+    stdio_mode_set(STDIO_MODE_CANVAS);
     screen_clear();
 
     rectangle* y = new rectangle(4);

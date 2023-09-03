@@ -11,7 +11,5 @@ int dhcp_test(void)
         dhcp_discover_send();
         sleep(1);
     }
-
     return XANIN_OK;
-
 }

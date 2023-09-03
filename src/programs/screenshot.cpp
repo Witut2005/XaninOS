@@ -25,7 +25,7 @@ int screenshot(void)
     XinEntry* file = xin::fopen(std::chrono::time_to_string(time).c_str(), "rw");
 
     uint8_t* data = (uint8_t*)VGA_TEXT_MEMORY;
-    xin::fwrite(file, data, VGA_SCREEN_RESOLUTION);
+    xin::fwrite(file, data, VGA_SCREEN_RESOLUTION * SIZE_OF(XtCell));
     xin::fclose(&file);
 
     xin::xin_folder_change(current_directory);

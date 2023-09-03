@@ -8,6 +8,8 @@ int epilepsy(void)
     uint16_t* color_picker = (uint16_t*)VGA_TEXT_MEMORY;
     uint8_t color;
 
+    stdio_mode_set(STDIO_MODE_CANVAS);
+
     while(true)
     {
         if((uint32_t)color_picker >= VGA_TEXT_MEMORY + (80 * 28 * 2))

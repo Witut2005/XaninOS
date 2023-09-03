@@ -9,6 +9,7 @@ keyboard_handler_init:
 	call keyboard_driver
 	popad
 	popfd
+	sti
 	iretd
 
 

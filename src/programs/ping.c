@@ -55,10 +55,5 @@ int ping(char* ip_addr_str)
         
 
     }
-
-
-    while(inputg().scan_code != ENTER);
     return XANIN_OK;
-
-
 }

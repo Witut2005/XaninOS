@@ -19,7 +19,5 @@ int memory_test(void)
     xprintf("0x%x\n", tmp);
 
 
-    while(inputg().scan_code != ENTER);
     return XANIN_OK;
-
 }

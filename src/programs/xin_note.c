@@ -138,6 +138,7 @@ void note_input(xchar x)
 
 int xin_note(char* file_name)
 {
+    stdio_mode_set(STDIO_MODE_CANVAS);
     screen_clear();
 
     XinEntry* xin_file = fopen(file_name, "rw");

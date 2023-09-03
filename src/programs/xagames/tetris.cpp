@@ -70,7 +70,6 @@ xgm::rectangle object(0);
 
 extern "C" void tetris_keyboard_handler(void)
 {
-    
     xgm::CollisionInfo CollisionStatus;
 
     CollisionStatus = object.collision_detect();
@@ -128,6 +127,7 @@ extern "C" void tetris_keyboard_handler(void)
 extern "C" int tetris(void)
 {
 
+    stdio_mode_set(STDIO_MODE_CANVAS);
     xgm::Renderer::ScreenManager TetrisScreen;
 
     TetrisScreen.screen_clear();

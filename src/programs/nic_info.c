@@ -49,9 +49,6 @@ int nic_info(const char* network_device_name)
     xprintf("interrupt line (PIC): 0x%x\n", NetDevice->interrupt_line);
 
 
-    while(getscan() != ENTER);
     return XANIN_OK;
-
-
 }
 

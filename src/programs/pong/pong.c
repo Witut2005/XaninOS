@@ -224,6 +224,7 @@ void pong_update(void)
 
 int pong(void)
 {
+    stdio_mode_set(STDIO_MODE_CANVAS);
     pong_init();
 
     while(KeyInfo.scan_code != ESC && KeyInfo.scan_code != ENTER && KeyInfo.scan_code != F4_KEY && app_exited != true)

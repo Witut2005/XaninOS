@@ -5,6 +5,7 @@
 
 int ptetris(void)
 {
+    stdio_mode_set(STDIO_MODE_CANVAS);
     screen_clear();
     printCube();
 

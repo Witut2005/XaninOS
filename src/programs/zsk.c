@@ -12,7 +12,7 @@ void zsk_init(void)
     screen_clear();
 
     Screen.x = 0;
-    Screen.y = 15;
+    Screen.y = 12 ;
 
     xprintf("                                                               \n");
     xprintf("              ############                                     \n");
@@ -46,7 +46,7 @@ void zsk_move(uint32_t delay)
 int zsk(char* delay_str)
 {
     uint32_t delay;
-
+    stdio_mode_set(STDIO_MODE_CANVAS);
 
     if(!strlen(delay_str))
         delay = 100;

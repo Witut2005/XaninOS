@@ -3,7 +3,6 @@
 
 int nic_rename(char* oldname, char* newname)
 {
-
     pci_device* NetDevice = netapi_device_info_get(oldname);
 
     if(NetDevice == NULL)
@@ -24,5 +23,4 @@ int nic_rename(char* oldname, char* newname)
     }
 
     return XANIN_OK;
-
 }
