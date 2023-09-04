@@ -2,6 +2,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <lib/libc/stdiox.h>
 #include <lib/libc/stdiox_legacy.h>
 #include <sys/terminal/vty/vty.h>
 
@@ -72,6 +73,11 @@ void table_row_select(table_t* Table);
 char* table_get_row_data(table_t* Table, uint8_t row_id, uint8_t page_id);
 void table_add_handler(table_t* Table, void(*handler)(char*, uint8_t*), uint8_t* DataObject);
 void table_destroy(table_t* Table);
+
+static void tui_init(void)
+{
+    stdio_mode_set(STDIO_MODE_CANVAS);
+}
 
 #ifdef __cplusplus
 }

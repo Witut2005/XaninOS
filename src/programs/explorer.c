@@ -166,7 +166,7 @@ int explorer(char* parent_folder)
 {
 
     ExplorerInfo AppInfo = {NULL};
-    stdio_mode_set(STDIO_MODE_CANVAS);
+    tui_init();
 
     app_process_register(explorer_app_deconstructor, 2, AppInfo.current_folder, AppInfo.selected_file);
 
