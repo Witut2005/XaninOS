@@ -229,7 +229,7 @@ void xtb_cell_put(Xtf *XtFrontend, char c, uint8_t color)
     xtf_handle_x_overflow(xtf_overflow_x_handler, XtFrontend);
 
     if(!xt_handle_cell_put_line_modifires(xt_cell_put_line_modifiers_handler, XtFrontend, c))
-        XtFrontend->rows_changed[XtFrontend->y] = XTF_ROW_CHANGED; // mark current row as changed
+        XtFrontend->rows_changed[XtFrontend->y] = XTF_ROW_CHANGED; // default handler
 
     // XtFrontend->buffer[XtFrontend->size].cell = '\0'; // prevents displaying trash cells
 }

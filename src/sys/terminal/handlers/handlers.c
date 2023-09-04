@@ -46,10 +46,27 @@ bool xt_handle_cell_put_line_modifires(xtf_handler handler, Xtf* XtFrontend, cha
 
 bool xt_cell_put_special_characters_handler(Xtf* XtFrontend, char c, color_t color) // you must here handle vwidth etc...
 {
-   if(c == ASCII_CR)
+    if(c == ASCII_CR)
     { 
         XtFrontend->size = xtf_buffer_nth_line_index_get(XtFrontend, xtf_get_line_number_from_position(XtFrontend, XtFrontend->size)); 
         return true;
     }
+
+    else if(c == ASCII_VT)
+    {
+        for(int i = 0; i < 3; i++)
+            xtb_cell_put(XtFrontend, '\n', XT_FUNCTION_ARGUMENT_NOT_USED);
+
+        return true;
+    }
+
+    else if(c == ASCII_TAB)
+    {
+        for(int i = 0; i < 3; i++)
+            xtb_cell_put(XtFrontend, ' ', color);
+        
+        return true;
+    }
+
     return false;
 }
