@@ -3,6 +3,7 @@
 #include <sys/macros.h>
 #include <sys/terminal/backend/backend.h>
 #include <sys/terminal/frontend/frontend.h>
+#include <sys/terminal/handlers/handlers.h>
 #include <sys/pmmngr/alloc.h>
 #include <lib/libc/stdiox.h>
 #include <lib/libc/memory.h>
@@ -207,12 +208,4 @@ void xtf_cursor_dec(Xtf *XtFrontend)
     xtb_flush(XtFrontend);
 }
 
-bool xtf_handle_x_overflow(Xtf* XtFrontend, xtf_handler handler)
-{
-    if(XtFrontend->x >= XtFrontend->vwidth)
-    {
-        handler(XtFrontend);
-        return true;
-    }
-    return false;
-}
+

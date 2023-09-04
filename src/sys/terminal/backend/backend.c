@@ -6,6 +6,8 @@
 #include <sys/terminal/backend/backend.h>
 #include <sys/terminal/handlers/handlers.h>
 
+// CURSOR DISABLED GLOBALLY
+
 void xtb_scroll_up(Xtf *XtFrontend)
 {
 
@@ -24,7 +26,7 @@ void xtb_scroll_up(Xtf *XtFrontend)
         return;
     }
 
-    xtb_disable_flushing();
+    xtb_disable_flushing(); // mutex like
 
     memmove((uint8_t *)VGA_TEXT_MEMORY + (XtBackend->vga_width * SIZE_OF(XtCell)), (uint8_t *)VGA_TEXT_MEMORY, XtBackend->vga_width * XtBackend->vga_height * SIZE_OF(XtCell)); // move terminal data
 
@@ -51,7 +53,7 @@ void xtb_scroll_down(Xtf *XtFrontend)
         if (start_index == XT_NO_SUCH_LINE)
             return;
 
-        xtb_disable_flushing();
+        xtb_disable_flushing(); // mutex like
 
         XtFrontend->y_begin++;
 
@@ -74,10 +76,10 @@ void xtb_flush(Xtf *XtFrontend)
     if (!XtBackend->is_flushable)
         return;
 
-    if(XtBackend->is_currently_flushing)
+    if(XtBackend->is_currently_flushing) // is already flushing (probably it is interval)
         return;
 
-    if (!XtFrontend->size)
+    if (!XtFrontend->size) // empty buffer
     {
         vga_screen_buffer_clear();
         memset(XtFrontend->rows_changed, XTF_ROW_CHANGED, XtFrontend->current_height);
@@ -134,18 +136,18 @@ void xtb_flush(Xtf *XtFrontend)
             vram[vram_index] = XtFrontend->buffer[i].cell;
         }
 
-        if ((XtFrontend->Cursor.is_used) && (XtFrontend->Cursor.position == i))
-            vram[vram_index] = (char)vram[vram_index] | AS_COLOR(XtFrontend->Cursor.color);
-
+        // if ((XtFrontend->Cursor.is_used) && (XtFrontend->Cursor.position == i)) 
+        //     vram[vram_index] = (char)vram[vram_index] | AS_COLOR(XtFrontend->Cursor.color);
         vram_index++;
+
     }
 
-    if ((XtFrontend->Cursor.is_used) && (XtFrontend->Cursor.position == CURSOR_POSITION_END))
-    {
-        uint16_t *vram = (uint16_t *)VGA_TEXT_MEMORY;
-        vram[vram_index] = (char)vram[vram_index] | AS_COLOR(XtFrontend->Cursor.color);
-        XtFrontend->cursor_vram_index = vram_index;
-    }
+    // if ((XtFrontend->Cursor.is_used) && (XtFrontend->Cursor.position == CURSOR_POSITION_END))
+    // {
+    //     uint16_t *vram = (uint16_t *)VGA_TEXT_MEMORY;
+    //     vram[vram_index] = (char)vram[vram_index] | AS_COLOR(XtFrontend->Cursor.color);
+    //     XtFrontend->cursor_vram_index = vram_index;
+    // }
 
     vram_index++;
 
@@ -214,11 +216,9 @@ void xtb_cell_put(Xtf *XtFrontend, char c, uint8_t color)
         XtFrontend->size_allocated = XtFrontend->size + SECTOR_SIZE * 4;
     }
 
-    if(c == '\r')
-    {
-        XtFrontend->size = xtf_buffer_nth_line_index_get(XtFrontend, xtf_get_line_number_from_position(XtFrontend, XtFrontend->size)); 
+
+    if(xt_cell_put_special_characters_handler(XtFrontend, c, color))
         return;
-    }
 
     else
         XtFrontend->buffer[XtFrontend->size++].cell = c | AS_COLOR(color);
@@ -226,26 +226,10 @@ void xtb_cell_put(Xtf *XtFrontend, char c, uint8_t color)
     XtFrontend->Cursor.position = CURSOR_POSITION_END;
     XtFrontend->x++;
 
-    xtf_handle_x_overflow(XtFrontend, xtf_overflow_x_handler);
+    xtf_handle_x_overflow(xtf_overflow_x_handler, XtFrontend);
 
-    if ((c == NEW_LINE) || (c == SAFE_NEW_LINE) || (XtFrontend->x >= XtFrontend->vwidth))
-    {
-        XtFrontend->rows_changed[XtFrontend->y] = XTF_ROW_CHANGED; // mark current row as changed
-        XtFrontend->y++;
-        XtFrontend->x = 0;
-
-        if (XtFrontend->y > XtFrontend->current_height)
-        {
-            XtFrontend->current_height = XtFrontend->y;
-            XtFrontend->rows_changed = (uint8_t *)realloc(XtFrontend->rows_changed, XtFrontend->y * SIZE_OF_POINTED_TYPE(XtFrontend->rows_changed));
-        }
-
-        if (XtFrontend->y >= XtBackend->vga_height)
-            xtb_scroll_down(XtFrontend);
-    }
-    else
+    if(!xt_handle_cell_put_line_modifires(xt_cell_put_line_modifiers_handler, XtFrontend, c))
         XtFrontend->rows_changed[XtFrontend->y] = XTF_ROW_CHANGED; // mark current row as changed
 
-    XtFrontend->buffer[XtFrontend->size].cell = '\0';
-
+    // XtFrontend->buffer[XtFrontend->size].cell = '\0'; // prevents displaying trash cells
 }

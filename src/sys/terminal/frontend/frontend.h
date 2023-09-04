@@ -11,7 +11,7 @@
 #define XTF_ROW_CHANGED true
 #define XTF_ROW_NOT_CHANGED false
 
-typedef void(*xtf_handler)(Xtf*);
+typedef void(*xtf_handler)(Xtf*, char, color_t);
 
 #ifdef __cplusplus
 extern "C" {
@@ -40,9 +40,6 @@ static inline bool xtf_is_special_character(char c)
 {
     return (c == ASCII_VT) | (c == ASCII_TAB) | (c == NEW_LINE) | (c == SAFE_NEW_LINE);
 }
-
-bool xtf_handle_x_overflow(Xtf* XtFrontend, xtf_handler handler);
-
 
 #ifdef __cplusplus
 }
