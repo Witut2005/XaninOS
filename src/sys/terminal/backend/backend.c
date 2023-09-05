@@ -88,7 +88,7 @@ void xtb_flush(Xtf *XtFrontend)
 
     XtBackend->is_currently_flushing = true;
 
-    int vram_index = 0;
+    uint32_t vram_index = 0;
     uint32_t current_row_to_display = XtFrontend->y_begin; // first row to display on screen
     bool row_cleared = false;
 
@@ -100,54 +100,25 @@ void xtb_flush(Xtf *XtFrontend)
         if(i >= XtFrontend->size_allocated)
             break;
 
-        if (XtFrontend->buffer[i].character == SAFE_NEW_LINE)
+        if(xt_is_special_character(XtFrontend->buffer[i].character))
+            xt_flush_special_characters_handle(XtFrontend->buffer[i].character, XtFrontend->buffer[i].color, &current_row_to_display, &row_cleared, &vram_index);
+        
+        else
         {
-            current_row_to_display++;
-            row_cleared = false;
-
-            if (!(vram_index % XtBackend->vga_width))// && (XtFrontend->buffer[i - 1].character != SAFE_NEW_LINE))
-                continue;
-
-            for(int start_vram_index = vram_index; vram_index < start_vram_index + (XtBackend->vga_width - (start_vram_index % XtBackend->vga_width)); vram_index++)
-                vram[vram_index] = BLANK_SCREEN_CELL;
-
-            continue;
-        }
-
-        else if (XtFrontend->buffer[i].character == NEW_LINE)
-        {
-            current_row_to_display++;
-            row_cleared = false;
-
-            for(int start_vram_index = vram_index; vram_index < start_vram_index + (XtBackend->vga_width - (start_vram_index % XtBackend->vga_width)); vram_index++)
-                vram[vram_index] = BLANK_SCREEN_CELL;
-
-            continue;
-        }
-
-        if (XtFrontend->rows_changed[current_row_to_display])
-        {
-            if (!row_cleared)
+            if (XtFrontend->rows_changed[current_row_to_display])
             {
-                for (int j = 0; j < XtFrontend->vwidth; j++)
-                    vram[vram_index + j] = BLANK_SCREEN_CELL;
-                row_cleared = true;
+                if (!row_cleared)
+                {
+                    for (int j = 0; j < XtFrontend->vwidth; j++)
+                        vram[vram_index + j] = BLANK_SCREEN_CELL;
+                    row_cleared = true;
+                }
+                vram[vram_index] = XtFrontend->buffer[i].cell;
             }
-            vram[vram_index] = XtFrontend->buffer[i].cell;
+            vram_index++;
         }
-
-        // if ((XtFrontend->Cursor.is_used) && (XtFrontend->Cursor.position == i)) 
-        //     vram[vram_index] = (char)vram[vram_index] | AS_COLOR(XtFrontend->Cursor.color);
-        vram_index++;
 
     }
-
-    // if ((XtFrontend->Cursor.is_used) && (XtFrontend->Cursor.position == CURSOR_POSITION_END))
-    // {
-    //     uint16_t *vram = (uint16_t *)VGA_TEXT_MEMORY;
-    //     vram[vram_index] = (char)vram[vram_index] | AS_COLOR(XtFrontend->Cursor.color);
-    //     XtFrontend->cursor_vram_index = vram_index;
-    // }
 
     vram_index++;
 
@@ -216,20 +187,15 @@ void xtb_cell_put(Xtf *XtFrontend, char c, uint8_t color)
         XtFrontend->size_allocated = XtFrontend->size + SECTOR_SIZE * 4;
     }
 
-
-    if(xt_cell_put_special_characters_handler(XtFrontend, c, color))
-        return;
-
-    else
-        XtFrontend->buffer[XtFrontend->size++].cell = c | AS_COLOR(color);
+    XtFrontend->buffer[XtFrontend->size++].cell = c | AS_COLOR(color);
 
     XtFrontend->Cursor.position = CURSOR_POSITION_END;
     XtFrontend->x++;
 
+    xt_cell_put_special_characters_handler(XtFrontend, c, color);
     xtf_handle_x_overflow(xtf_overflow_x_handler, XtFrontend);
 
     if(!xt_handle_cell_put_line_modifires(xt_cell_put_line_modifiers_handler, XtFrontend, c))
-        XtFrontend->rows_changed[XtFrontend->y] = XTF_ROW_CHANGED; // default handler
+        XtFrontend->rows_changed[XtFrontend->y] = XTF_ROW_CHANGED; // default handler for normal chars
 
-    // XtFrontend->buffer[XtFrontend->size].cell = '\0'; // prevents displaying trash cells
 }

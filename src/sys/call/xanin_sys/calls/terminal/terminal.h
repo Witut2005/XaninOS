@@ -4,6 +4,8 @@
 
 typedef uint8_t color_t;
 
+typedef uint16_t vga_screen_cell_t;
+
 union XtCell 
 {
     uint16_t cell;
