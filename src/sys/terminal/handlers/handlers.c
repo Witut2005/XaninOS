@@ -12,7 +12,7 @@ bool xtf_overflow_x_detect(Xtf* XtFrontend)
 
 bool xt_cell_put_line_modifiers_handler(Xtf* XtFrontend, char c, color_t color) // also handles x overflow
 {
-    if ((c == NEW_LINE) || (c == SAFE_NEW_LINE) || (XtFrontend->x >= XtFrontend->vwidth))
+    if ((c == NEW_LINE) || (c == XT_END_OF_ROW) || (XtFrontend->x >= XtFrontend->vwidth))
     {
         XtFrontend->rows_changed[XtFrontend->y] = XTF_ROW_CHANGED; // mark current row as changed
         XtFrontend->y++;
@@ -34,7 +34,7 @@ bool xt_cell_put_line_modifiers_handler(Xtf* XtFrontend, char c, color_t color) 
 
 bool xt_handle_cell_put_line_modifires(xtf_handler handler, Xtf* XtFrontend, char c)
 {
-    if ((c == NEW_LINE) || (c == SAFE_NEW_LINE) || (XtFrontend->x >= XtFrontend->vwidth))
+    if ((c == NEW_LINE) || (c == XT_END_OF_ROW) || (XtFrontend->x >= XtFrontend->vwidth))
     {
         handler(XtFrontend, c, XT_FUNCTION_ARGUMENT_NOT_USED);
         return true;
@@ -45,7 +45,7 @@ bool xt_handle_cell_put_line_modifires(xtf_handler handler, Xtf* XtFrontend, cha
 bool xt_cell_put_special_characters_handler(Xtf* XtFrontend, char c, color_t color) // you must here handle vwidth etc...
 {
 
-    if ((c == NEW_LINE) || (c == SAFE_NEW_LINE))
+    if ((c == NEW_LINE) || (c == XT_END_OF_ROW))
     {
         XtFrontend->buffer[XtFrontend->size++].cell = c | AS_COLOR(color);
         XtFrontend->rows_changed[XtFrontend->y] = XTF_ROW_CHANGED; // mark current row as changed
@@ -96,7 +96,7 @@ void xt_flush_special_characters_handle(char character, color_t color, uint32_t*
     Xtb* XtBackend = xtb_get();
     vga_screen_cell_t* vram = (vga_screen_cell_t*)VGA_TEXT_MEMORY;
 
-    if (character == SAFE_NEW_LINE)
+    if (character == XT_END_OF_ROW)
     {
         *current_row_to_display += 1;
         *row_cleared = false;

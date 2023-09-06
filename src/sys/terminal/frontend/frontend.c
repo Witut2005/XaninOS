@@ -48,7 +48,7 @@ int xtf_get_number_of_lines(Xtf* XtFrontend)
         buffer += 2;
     }
 
-    if((*(buffer - 2) != '\n') && (*(buffer - 2) != SAFE_NEW_LINE))
+    if((*(buffer - 2) != '\n') && (*(buffer - 2) != XT_END_OF_ROW))
         lines_total++;
     
     return lines_total;
@@ -68,7 +68,7 @@ int xtf_buffer_nth_line_index_get(Xtf* XtFrontend, uint32_t line_number) // star
     
     while(XtFrontend->buffer[index].character != '\0')
     {
-        if((XtFrontend->buffer[index].character == NEW_LINE) || (XtFrontend->buffer[index].character == SAFE_NEW_LINE))
+        if((XtFrontend->buffer[index].character == NEW_LINE) || (XtFrontend->buffer[index].character == XT_END_OF_ROW))
         {
             current_line++;
             if (current_line == line_number)
@@ -92,7 +92,7 @@ int xtf_buffer_nth_line_size_get(Xtf* XtFrontend, uint32_t line_number)
     if(index == XT_NO_SUCH_LINE)
         return XT_NO_SUCH_LINE;
 
-    while(((XtFrontend->buffer[index].character != NEW_LINE) && (XtFrontend->buffer[index].character != SAFE_NEW_LINE)) && (XtFrontend->buffer[index].character != '\0'))
+    while(((XtFrontend->buffer[index].character != NEW_LINE) && (XtFrontend->buffer[index].character != XT_END_OF_ROW)) && (XtFrontend->buffer[index].character != '\0'))
     {
         size++;
         index++;
@@ -112,7 +112,7 @@ int xtf_get_line_number_from_position(Xtf* XtFrontend, uint32_t position)
 
     for(int i = 0; i < position; i++)
     {
-        if((XtFrontend->buffer[i].character == SAFE_NEW_LINE) || (XtFrontend->buffer[i].character == NEW_LINE))
+        if((XtFrontend->buffer[i].character == XT_END_OF_ROW) || (XtFrontend->buffer[i].character == NEW_LINE))
             current_line++;
     }
 
@@ -124,7 +124,7 @@ void xtf_remove_last_cell(Xtf* XtFrontend)
 {
     XtFrontend->rows_changed[XtFrontend->y] = XTF_ROW_CHANGED;
 
-    if((XtFrontend->buffer[XtFrontend->size].character == NEW_LINE) || (XtFrontend->buffer[XtFrontend->size].character == SAFE_NEW_LINE) || (!XtFrontend->x))
+    if((XtFrontend->buffer[XtFrontend->size].character == NEW_LINE) || (XtFrontend->buffer[XtFrontend->size].character == XT_END_OF_ROW) || (!XtFrontend->x))
     {
         XtFrontend->buffer[--XtFrontend->size].cell= BLANK_SCREEN_CELL;
         XtFrontend->y--;

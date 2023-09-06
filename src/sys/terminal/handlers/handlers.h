@@ -20,10 +20,10 @@ void xt_flush_special_characters_handle(char character, color_t color, uint32_t*
 
 static inline bool xt_is_special_character(char character)
 {
-    return (character == NEW_LINE) | (character == SAFE_NEW_LINE) | (character == ASCII_TAB) | (character == ASCII_VT);
+    return (character == NEW_LINE) | (character == XT_END_OF_ROW) | (character == ASCII_TAB) | (character == ASCII_VT);
 }
 
-static inline bool xt_is_normal_character(char character)
+static inline bool xt_is_normal_character(char character) // returns true if character is not special
 {
     return (character >= 0x20) & (character < 0x7F);
 }

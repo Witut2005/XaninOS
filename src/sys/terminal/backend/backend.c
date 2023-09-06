@@ -157,7 +157,7 @@ void xtb_cell_put_at_position(Xtf *XtFrontend, char c, uint8_t color, uint32_t p
     XtFrontend->buffer[position].cell = c | AS_COLOR(color);
     XtFrontend->Cursor.position = CURSOR_POSITION_END;
 
-    if ((c == NEW_LINE) || (c == SAFE_NEW_LINE) || (XtFrontend->x >= XtFrontend->vwidth))
+    if ((c == NEW_LINE) || (c == XT_END_OF_ROW) || (XtFrontend->x >= XtFrontend->vwidth))
     {
         XtFrontend->y++;
         XtFrontend->x = 0;
@@ -199,9 +199,9 @@ void xtb_cell_put(Xtf *XtFrontend, char c, uint8_t color)
         XtFrontend->x++;
     }
 
-    // check if x overflow is met. Adds safe_new_line to let xt_cell_put_special_characters_handler handle this overflow
+    // check if x overflow is met. Adds XT_END_OF_ROW to let xt_cell_put_special_characters_handler handle this overflow
     if(xtf_overflow_x_detect(XtFrontend))
-        c = SAFE_NEW_LINE;
+        c = XT_END_OF_ROW;
 
     // this will handle also x overflow 
     xt_cell_put_special_characters_handler(XtFrontend, c, color);

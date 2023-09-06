@@ -38,7 +38,7 @@ void xtf_cursor_dec(Xtf *XtFrontend);
 
 static inline bool xtf_is_special_character(char c)
 {
-    return (c == ASCII_VT) | (c == ASCII_TAB) | (c == NEW_LINE) | (c == SAFE_NEW_LINE);
+    return (c == ASCII_VT) | (c == ASCII_TAB) | (c == NEW_LINE) | (c == XT_END_OF_ROW);
 }
 
 #ifdef __cplusplus
