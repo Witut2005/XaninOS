@@ -31,6 +31,8 @@ void xtb_scroll_up(Xtf *XtFrontend)
     memmove((uint8_t *)VGA_TEXT_MEMORY + (XtBackend->vga_width * SIZE_OF(XtCell)), (uint8_t *)VGA_TEXT_MEMORY, XtBackend->vga_width * XtBackend->vga_height * SIZE_OF(XtCell)); // move terminal data
 
     memset((uint8_t *)VGA_TEXT_MEMORY, BLANK_SCREEN_CELL, XtBackend->vga_width * SIZE_OF(XtCell)); // clear row
+    
+    // FLUSH GIVEN ROW
     memcpy((uint8_t *)VGA_TEXT_MEMORY, (uint8_t *)&XtFrontend->buffer[start_index],               // display new line
            number_of_bytes_to_copy * SIZE_OF(XtCell));
 
@@ -60,6 +62,8 @@ void xtb_scroll_down(Xtf *XtFrontend)
         memmove((uint8_t *)VGA_TEXT_MEMORY, (uint8_t *)VGA_TEXT_MEMORY + (xtb_get()->vga_width * SIZE_OF(XtCell)), xtb_get()->vga_width * (xtb_get()->vga_height - 1) * SIZE_OF(XtCell)); // move terminal data
 
         memset((uint8_t *)VGA_TEXT_MEMORY + ((XtBackend->vga_height - 1) * XtBackend->vga_width * SIZE_OF(XtCell)), BLANK_SCREEN_CELL, XtBackend->vga_width * SIZE_OF(XtCell)); // clear row
+
+        // FLUSH GIVEN ROW
         memcpy((uint8_t *)VGA_TEXT_MEMORY + ((XtBackend->vga_height - 1) * XtBackend->vga_width * SIZE_OF(XtCell)),                                                            // display new line
                (uint8_t *)&XtFrontend->buffer[start_index], number_of_cells_to_copy * SIZE_OF(XtCell));
 
@@ -187,15 +191,22 @@ void xtb_cell_put(Xtf *XtFrontend, char c, uint8_t color)
         XtFrontend->size_allocated = XtFrontend->size + SECTOR_SIZE * 4;
     }
 
-    XtFrontend->buffer[XtFrontend->size++].cell = c | AS_COLOR(color);
-
-    XtFrontend->Cursor.position = CURSOR_POSITION_END;
-    XtFrontend->x++;
-
-    xt_cell_put_special_characters_handler(XtFrontend, c, color);
-    xtf_handle_x_overflow(xtf_overflow_x_handler, XtFrontend);
-
-    if(!xt_handle_cell_put_line_modifires(xt_cell_put_line_modifiers_handler, XtFrontend, c))
+    // if normal charcater
+    if(xt_is_normal_character(c))
+    {
+        XtFrontend->buffer[XtFrontend->size++].cell = c | AS_COLOR(color);
         XtFrontend->rows_changed[XtFrontend->y] = XTF_ROW_CHANGED; // default handler for normal chars
+        XtFrontend->x++;
+    }
+
+    // check if x overflow is met. Adds safe_new_line to let xt_cell_put_special_characters_handler handle this overflow
+    if(xtf_overflow_x_detect(XtFrontend))
+        c = SAFE_NEW_LINE;
+
+    // this will handle also x overflow 
+    xt_cell_put_special_characters_handler(XtFrontend, c, color);
+    
+    // if(!xt_cell_put_line_modifiers_handler(XtFrontend, c, color))
+    XtFrontend->rows_changed[XtFrontend->y] = XTF_ROW_CHANGED; // default handler for normal chars
 
 }
