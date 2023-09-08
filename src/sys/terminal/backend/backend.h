@@ -18,7 +18,6 @@ void xtb_cell_put(Xtf* XtFrontend, char c, uint8_t color);
 void xtb_cursor_inc(Xtf* XtFrontend);
 void xtb_cursor_dec(Xtf* XtFrontend);
 void xtb_flush_all(Xtf* XtFrontend);
-void xtb_cell_put_at_position(Xtf *XtFrontend, char c, uint8_t color, uint32_t position);
 
 static inline void xtb_character_put(Xtf* XtFrontend, char c)
 {

@@ -72,33 +72,6 @@ extern bool com_status(void);
 terminal_t* kernel_terminal;
 uint8_t* const zeros;
 
-
-void vty_update_time(address_t* args)
-{
-    Xtf* XtFrontend = vty_get();
-
-    int time_row_index = xtf_buffer_nth_line_index_get(XtFrontend, 4);
-    time_get(&SystemTime);
-
-    xtb_cell_put_at_position(XtFrontend, '0' + ((SystemTime.hour & 0xF0) >> 4), 0xF, time_row_index + 72);
-    xtb_cell_put_at_position(XtFrontend, '0' + (SystemTime.hour & 0xF), 0xF , time_row_index + 73);
-
-    xtb_cell_put_at_position(XtFrontend, '0' + ((SystemTime.minutes & 0xF0) >> 4), 0xF, time_row_index + 75);
-    xtb_cell_put_at_position(XtFrontend, '0' + (SystemTime.minutes & 0xF), 0xF , time_row_index + 76);
-
-    xtb_cell_put_at_position(XtFrontend, '0' + ((SystemTime.seconds & 0xF0) >> 4), 0xF, time_row_index + 78);
-    xtb_cell_put_at_position(XtFrontend, '0' + (SystemTime.seconds & 0xF), 0xF , time_row_index + 79);
-
-    XtFrontend->rows_changed[4] = XTF_ROW_CHANGED; 
-    xtb_flush(XtFrontend);
-
-}
-
-void developer_interval(address_t* args)
-{
-    xt_cell_replace_at_given_position(vty_get(), 'a', 0x41, 0);
-}
-
 extern uint32_t stdio_refresh_rate;
 
 void kernel_loop(void)
@@ -115,7 +88,6 @@ void kernel_loop(void)
         all_intervals_clear(); // clear all intervals added by apps during execution
 
         interval_set(stdio_refresh, stdio_refresh_rate, NULL); // refresh interval
-        interval_set(developer_interval, stdio_refresh_rate, NULL); // refresh interval
         // interval_set(vty_update_time, 10, NULL); // refresh interval
         
         memset(null_memory_region, 0, SECTOR_SIZE);

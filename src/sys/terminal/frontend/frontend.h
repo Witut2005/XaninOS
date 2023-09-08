@@ -36,7 +36,6 @@ void xtf_cursor_on(Xtf* XtFrontend, color_t color);
 void xtf_cursor_off(Xtf* XtFrontend);
 void xtf_cursor_inc(Xtf *XtFrontend);
 void xtf_cursor_dec(Xtf *XtFrontend);
-bool xt_cell_replace_at_given_position(Xtf* XtFrontend, char character, color_t color, uint32_t position);
 
 static inline bool xtf_is_special_character(char c)
 {
