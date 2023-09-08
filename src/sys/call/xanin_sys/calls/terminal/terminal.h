@@ -96,6 +96,26 @@ void vty_set(Xtf* XtFrontend) __attribute__((fastcall));
 Xtf* vty_get(void);
 void xtb_init(uint32_t vga_width, uint32_t vga_height, uint16_t* vram)__attribute__((fastcall));
 
+Xtf* __sys_xtf_init(uint32_t virtual_height);
+void __sys_xtf_destroy(Xtf* XtFrontend);
+
+int __sys_xtf_buffer_nth_line_index_get(Xtf* XtFrontend, uint32_t line_number); // starting with 0
+int __sys_xtf_buffer_nth_line_size_get(Xtf* XtFrontend, uint32_t line_number); // starting with 0
+int __sys_xtf_get_line_number_from_position(Xtf* XtFrontend, uint32_t position);
+
+void __sys_xtf_cell_put(Xtf *XtFrontend, char c, uint8_t color);
+void __sys_xtf_remove_last_cell(Xtf* XtFrontend);
+void __sys_xtf_virtual_cursor_add(Xtf* XtFrontend, color_t color);
+void __sys_xtf_buffer_clear(Xtf* XtFrontend);
+
+void __sys_xtf_scrolling_on(Xtf* XtFrontend);
+void __sys_xtf_scrolling_off(Xtf* XtFrontend);
+
+void __sys_xtf_cursor_on(Xtf* XtFrontend, color_t color);
+void __sys_xtf_cursor_off(Xtf* XtFrontend);
+void __sys_xtf_cursor_inc(Xtf *XtFrontend);
+void __sys_xtf_cursor_dec(Xtf *XtFrontend);
+
 #ifdef __cplusplus
 }
 #endif
