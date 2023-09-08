@@ -74,7 +74,7 @@ bool xt_cell_put_special_characters_handler(Xtf* XtFrontend, char c, color_t col
     else if(c == ASCII_VT)
     {
         for(int i = 0; i < 3; i++)
-            xtb_cell_put(XtFrontend, '\n', color);
+            xtf_cell_put(XtFrontend, '\n', color);
 
         return true;
     }
@@ -82,7 +82,7 @@ bool xt_cell_put_special_characters_handler(Xtf* XtFrontend, char c, color_t col
     else if(c == ASCII_TAB)
     {
         for(int i = 0; i < 3; i++)
-            xtb_cell_put(XtFrontend, ' ', color);
+            xtf_cell_put(XtFrontend, ' ', color);
         
         return true;
     }

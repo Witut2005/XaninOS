@@ -88,7 +88,6 @@ void kernel_loop(void)
         all_intervals_clear(); // clear all intervals added by apps during execution
 
         interval_set(stdio_refresh, stdio_refresh_rate, NULL); // refresh interval
-        // interval_set(vty_update_time, 10, NULL); // refresh interval
         
         memset(null_memory_region, 0, SECTOR_SIZE);
         xtf_scrolling_on(vty_get());

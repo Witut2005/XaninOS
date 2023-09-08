@@ -207,3 +207,32 @@ void xtf_cursor_dec(Xtf *XtFrontend)
     XtFrontend->rows_changed[xtf_get_line_number_from_position(XtFrontend, XtFrontend->Cursor.position)] = XTF_ROW_CHANGED;
     xtb_flush(XtFrontend);
 }
+
+void xtf_cell_put(Xtf *XtFrontend, char c, uint8_t color)
+{
+
+    if (XtFrontend->size + 1 >= XtFrontend->size_allocated)
+    {
+        XtFrontend->buffer = (XtCell *)realloc(XtFrontend->buffer, (XtFrontend->size + SECTOR_SIZE * 4) * SIZE_OF(XtCell));
+        XtFrontend->size_allocated = XtFrontend->size + SECTOR_SIZE * 4;
+    }
+
+    // if normal charcater
+    if(xt_is_normal_character(c))
+    {
+        XtFrontend->buffer[XtFrontend->size++].cell = c | AS_COLOR(color);
+        XtFrontend->rows_changed[XtFrontend->y] = XTF_ROW_CHANGED; // default handler for normal chars
+        XtFrontend->x++;
+    }
+
+    // check if x overflow is met. Adds XT_END_OF_ROW to let xt_cell_put_special_characters_handler handle this overflow
+    if(xtf_overflow_x_detect(XtFrontend))
+        c = XT_END_OF_ROW;
+
+    // this will handle also x overflow 
+    xt_cell_put_special_characters_handler(XtFrontend, c, color);
+    
+    // if(!xt_cell_put_line_modifiers_handler(XtFrontend, c, color))
+    XtFrontend->rows_changed[XtFrontend->y] = XTF_ROW_CHANGED; // default handler for normal chars
+
+}

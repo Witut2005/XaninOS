@@ -123,47 +123,17 @@ void xtb_flush(Xtf *XtFrontend)
 
     vram_index++;
 
-    for (; vram_index < XtBackend->vga_height * XtBackend->vga_width * SIZE_OF(XtCell); vram_index++)
-        vram[vram_index] = BLANK_SCREEN_CELL;
+    X86_POINTER vram_to_clear;
+
+    for (; vram_index < XtBackend->vga_height * XtBackend->vga_width * SIZE_OF(XtCell) / (X86_POINTER_SIZE / SIZE_OF(XtCell)); vram_index++)
+        vram_to_clear[vram_index] = BLANK_SCREEN_CELL;
 
     memset((uint8_t *)XtFrontend->rows_changed, XTF_ROW_NOT_CHANGED, XtFrontend->current_height * SIZE_OF_POINTED_TYPE(XtFrontend->rows_changed));
     XtBackend->is_currently_flushing = false;
 }
 
-
 void xtb_flush_all(Xtf *XtFrontend)
 {
     memset(XtFrontend->rows_changed, XTF_ROW_CHANGED, XtFrontend->current_height * SIZE_OF_POINTED_TYPE(XtFrontend->rows_changed));
     xtb_flush(XtFrontend);
-}
-
-void xtb_cell_put(Xtf *XtFrontend, char c, uint8_t color)
-{
-
-    Xtb *XtBackend = xtb_get();
-
-    if (XtFrontend->size + 1 >= XtFrontend->size_allocated)
-    {
-        XtFrontend->buffer = (XtCell *)realloc(XtFrontend->buffer, (XtFrontend->size + SECTOR_SIZE * 4) * SIZE_OF(XtCell));
-        XtFrontend->size_allocated = XtFrontend->size + SECTOR_SIZE * 4;
-    }
-
-    // if normal charcater
-    if(xt_is_normal_character(c))
-    {
-        XtFrontend->buffer[XtFrontend->size++].cell = c | AS_COLOR(color);
-        XtFrontend->rows_changed[XtFrontend->y] = XTF_ROW_CHANGED; // default handler for normal chars
-        XtFrontend->x++;
-    }
-
-    // check if x overflow is met. Adds XT_END_OF_ROW to let xt_cell_put_special_characters_handler handle this overflow
-    if(xtf_overflow_x_detect(XtFrontend))
-        c = XT_END_OF_ROW;
-
-    // this will handle also x overflow 
-    xt_cell_put_special_characters_handler(XtFrontend, c, color);
-    
-    // if(!xt_cell_put_line_modifiers_handler(XtFrontend, c, color))
-    XtFrontend->rows_changed[XtFrontend->y] = XTF_ROW_CHANGED; // default handler for normal chars
-
 }

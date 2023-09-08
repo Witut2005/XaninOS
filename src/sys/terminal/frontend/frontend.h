@@ -25,6 +25,14 @@ int xtf_buffer_nth_line_index_get(Xtf* XtFrontend, uint32_t line_number); // sta
 int xtf_buffer_nth_line_size_get(Xtf* XtFrontend, uint32_t line_number); // starting with 0
 int xtf_get_line_number_from_position(Xtf* XtFrontend, uint32_t position);
 
+void xtf_cell_put(Xtf *XtFrontend, char c, uint8_t color);
+
+static inline void xtf_character_put(Xtf* XtFrontend, char c)
+{
+    xtf_cell_put(XtFrontend, c, DEFAULT_COLOR);
+}
+
+
 void xtf_remove_last_cell(Xtf* XtFrontend);
 void xtf_virtual_cursor_add(Xtf* XtFrontend, color_t color);
 void xtf_buffer_clear(Xtf* XtFrontend);

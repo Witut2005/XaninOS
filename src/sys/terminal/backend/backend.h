@@ -5,6 +5,20 @@
 #include <sys/terminal/frontend/frontend.h>
 #include <sys/call/xanin_sys/calls/terminal/terminal.h>
 
+
+#if __x86_64__
+
+#define X86_POINTER uint64_t*
+#define X86_POINTER_SIZE sizeof(uint8_t*)
+
+#else
+
+#define X86_POINTER uint32_t*
+#define X86_POINTER_SIZE sizeof(uint8_t*)
+
+#endif
+
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -13,16 +27,9 @@ Xtb* xtb_get(void);
 void xtb_flush(Xtf* XtFrontend);
 void xtb_scroll_up(Xtf* XtFrontend);
 void xtb_scroll_down(Xtf* XtFrontend);
-void xtb_flush(Xtf* XtFrontend);
-void xtb_cell_put(Xtf* XtFrontend, char c, uint8_t color);
 void xtb_cursor_inc(Xtf* XtFrontend);
 void xtb_cursor_dec(Xtf* XtFrontend);
 void xtb_flush_all(Xtf* XtFrontend);
-
-static inline void xtb_character_put(Xtf* XtFrontend, char c)
-{
-    xtb_cell_put(XtFrontend, c, DEFAULT_COLOR);
-}
 
 static inline void xtb_is_currently_flushing_set(bool is_flushing)
 {
