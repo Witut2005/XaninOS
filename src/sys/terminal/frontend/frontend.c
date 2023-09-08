@@ -209,3 +209,24 @@ void xtf_cursor_dec(Xtf *XtFrontend)
 }
 
 
+bool xt_cell_replace_at_given_position(Xtf* XtFrontend, char character, color_t color, uint32_t position)
+{
+
+    if(position >= XtFrontend->size)
+        return false;
+
+    if(xt_is_parsed_character(character))
+    {
+        memmove((uint8_t*)&XtFrontend->buffer[position + XT_SIZE_OF_PARSED_CHARS], (uint8_t*)&XtFrontend->buffer[position], XtFrontend->size - position);
+        
+        for(int i = 0; i < XT_SIZE_OF_PARSED_CHARS; i++)
+            XtFrontend->buffer[position].cell = character | AS_COLOR(color);
+    }
+
+    else
+        XtFrontend->buffer[position].cell = character | AS_COLOR(color);
+
+    xtb_flush(XtFrontend);
+
+    return true;
+}

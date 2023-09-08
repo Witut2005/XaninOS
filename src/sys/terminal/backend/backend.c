@@ -7,7 +7,6 @@
 #include <sys/terminal/handlers/handlers.h>
 
 // CURSOR DISABLED GLOBALLY
-
 void xtb_scroll_up(Xtf *XtFrontend)
 {
 
@@ -32,7 +31,6 @@ void xtb_scroll_up(Xtf *XtFrontend)
 
     memset((uint8_t *)VGA_TEXT_MEMORY, BLANK_SCREEN_CELL, XtBackend->vga_width * SIZE_OF(XtCell)); // clear row
     
-    // FLUSH GIVEN ROW
     memcpy((uint8_t *)VGA_TEXT_MEMORY, (uint8_t *)&XtFrontend->buffer[start_index],               // display new line
            number_of_bytes_to_copy * SIZE_OF(XtCell));
 
@@ -63,7 +61,6 @@ void xtb_scroll_down(Xtf *XtFrontend)
 
         memset((uint8_t *)VGA_TEXT_MEMORY + ((XtBackend->vga_height - 1) * XtBackend->vga_width * SIZE_OF(XtCell)), BLANK_SCREEN_CELL, XtBackend->vga_width * SIZE_OF(XtCell)); // clear row
 
-        // FLUSH GIVEN ROW
         memcpy((uint8_t *)VGA_TEXT_MEMORY + ((XtBackend->vga_height - 1) * XtBackend->vga_width * SIZE_OF(XtCell)),                                                            // display new line
                (uint8_t *)&XtFrontend->buffer[start_index], number_of_cells_to_copy * SIZE_OF(XtCell));
 

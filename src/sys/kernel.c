@@ -77,19 +77,6 @@ void vty_update_time(address_t* args)
 {
     Xtf* XtFrontend = vty_get();
 
-    Screen.cursor[0][0] = ((XtFrontend->y / 10) + '0') | AS_COLOR(0x41);
-    Screen.cursor[0][1] = ((XtFrontend->y % 10) + '0') | AS_COLOR(0x41);
-
-    Screen.cursor[1][0] = ((XtFrontend->current_height / 10) + '0') | AS_COLOR(0x41);
-    Screen.cursor[1][1] = ((XtFrontend->current_height % 10) + '0') | AS_COLOR(0x41);
-
-    Screen.cursor[2][0] = ((XtFrontend->y_screen / 10) + '0') | AS_COLOR(0x41);
-    Screen.cursor[2][1] = ((XtFrontend->y_begin % 10) + '0') | AS_COLOR(0x41);
-
-    Screen.cursor[10][0] = 0x4141;
-    
-    XANIN_DEBUG_RETURN();
-
     int time_row_index = xtf_buffer_nth_line_index_get(XtFrontend, 4);
     time_get(&SystemTime);
 
@@ -105,6 +92,11 @@ void vty_update_time(address_t* args)
     XtFrontend->rows_changed[4] = XTF_ROW_CHANGED; 
     xtb_flush(XtFrontend);
 
+}
+
+void developer_interval(address_t* args)
+{
+    xt_cell_replace_at_given_position(vty_get(), 'a', 0x41, 0);
 }
 
 extern uint32_t stdio_refresh_rate;
@@ -123,6 +115,7 @@ void kernel_loop(void)
         all_intervals_clear(); // clear all intervals added by apps during execution
 
         interval_set(stdio_refresh, stdio_refresh_rate, NULL); // refresh interval
+        interval_set(developer_interval, stdio_refresh_rate, NULL); // refresh interval
         // interval_set(vty_update_time, 10, NULL); // refresh interval
         
         memset(null_memory_region, 0, SECTOR_SIZE);
@@ -131,7 +124,7 @@ void kernel_loop(void)
         // screen_clear();
         time_get(&SystemTime);
 
-        puts("\v");
+        puts("\n");
 
         for(int i = 0; xin_current_directory[i + 1] != '\0'; i++)
             xprintf("%z%c", OUTPUT_COLOR_SET(black, lblue), xin_current_directory[i]);

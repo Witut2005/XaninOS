@@ -10,6 +10,7 @@
 
 #define XTF_ROW_CHANGED true
 #define XTF_ROW_NOT_CHANGED false
+#define XT_SIZE_OF_PARSED_CHARS 3
 
 typedef void(*xtf_handler)(Xtf*, char, color_t);
 
@@ -35,11 +36,18 @@ void xtf_cursor_on(Xtf* XtFrontend, color_t color);
 void xtf_cursor_off(Xtf* XtFrontend);
 void xtf_cursor_inc(Xtf *XtFrontend);
 void xtf_cursor_dec(Xtf *XtFrontend);
+bool xt_cell_replace_at_given_position(Xtf* XtFrontend, char character, color_t color, uint32_t position);
 
 static inline bool xtf_is_special_character(char c)
 {
     return (c == ASCII_VT) | (c == ASCII_TAB) | (c == NEW_LINE) | (c == XT_END_OF_ROW);
 }
+
+static inline bool xt_is_parsed_character(char character)
+{
+    return (character == ASCII_VT) | (character == ASCII_TAB);
+}
+
 
 #ifdef __cplusplus
 }
