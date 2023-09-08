@@ -1,21 +1,17 @@
 
-%define XANIN_VTY_SET 2002
-%define XANIN_VTY_GET 2003
-%define XANIN_XTB_GET 2004
-%define XANIN_XTB_INIT 2005
+%include "./sys/call/xanin_sys/calls/terminal/ids.inc"
 
-; %define XANIN_XTF_INIT 2004
-; %define XANIN_XTF_BUFFER_NTH_LINE_SIZE_GET 2005
-; %define XANIN_XTF_GET_NUMBER_OF_LINES 2006
-; %define XANIN_XTF_BUFFER_NTH_LINE_INDEX_GET 2007
-; %define XANIN_XTF_REMOVE_LAST_CELL 2008
-; %define XANIN_XTF_CURSOR_ON 2009
-; %define XANIN_XTF_CURSOR_OFF 2010
-; %define XANIN_XTF_SCROLLING_ON 2011
-; %define XANIN_XTF_SCROLLING_OFF 2012
-; %define XANIN_XTF_BUFFER_CLEAR 2013
+%macro XANIN_INVOKE_SYSTEM_CALL 0
+int 0x81
+%endmacro
 
 global vty_set, vty_get, xtb_get, xtb_init
+global __sys_xtf_init, __sys_xtf_destroy
+global __sys_xtf_buffer_nth_line_index_get, __sys_xtf_buffer_nth_line_size_get, __sys_xtf_get_line_number_from_position
+global __sys_xtf_cell_put, __sys_xtf_remove_last_cell, __sys_xtf_virutal_cursor_add, __sys_xtf_buffer_clear
+global __sys_xtf_scrolling_on, __sys_xtf_scrolling_off
+global __sys_xtf_cursor_on, __sys_xtf_cursor_off, __sys_xtf_cursor_inc, __sys_xtf_cursor_dec
+
 
 vty_set:
 mov eax, XANIN_VTY_SET
@@ -39,3 +35,13 @@ mov eax, XANIN_XTB_INIT
 mov ebx, [esp - 4]
 int 0x81
 ret 
+
+__sys_xtf_init:
+mov eax, XANIN_XTF_INIT
+mov ecx, [esp + 4] ; buffer size
+XANIN_INVOKE_SYSTEM_CALL
+ret
+
+__sys_xtf_destroy:
+
+ret

@@ -1,0 +1,7 @@
+
+%define XANIN_VTY_SET 2002
+%define XANIN_VTY_GET 2003
+%define XANIN_XTB_GET 2004
+%define XANIN_XTB_INIT 2005
+
+%define XANIN_XTF_INIT 2030

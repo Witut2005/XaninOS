@@ -2,6 +2,7 @@
 
 extern int cpp_test(void);
 
+#include <programs/developer/terminal_calls.c>
 #include <programs/stdio/stdio_apply.c>
 #include <programs/dev_tools.c>
 #include <programs/file_format_tools/bmp_info.c>
@@ -171,6 +172,7 @@ void scan(void)
         }
     }
 
+    XANIN_ADD_APP_ENTRY0("xt_calls", terminal_calls_test)
     XANIN_ADD_APP_ENTRY0("stdio_apply", stdio_apply)
     XANIN_ADD_APP_ENTRY1("ssaver", screen_saver)
     XANIN_ADD_APP_ENTRY1("bmp_info", bmp_info)

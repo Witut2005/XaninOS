@@ -96,7 +96,7 @@ void vty_set(Xtf* XtFrontend) __attribute__((fastcall));
 Xtf* vty_get(void);
 void xtb_init(uint32_t vga_width, uint32_t vga_height, uint16_t* vram)__attribute__((fastcall));
 
-Xtf* __sys_xtf_init(uint32_t virtual_height);
+Xtf* __sys_xtf_init(uint32_t buffer_size);
 void __sys_xtf_destroy(Xtf* XtFrontend);
 
 int __sys_xtf_buffer_nth_line_index_get(Xtf* XtFrontend, uint32_t line_number); // starting with 0

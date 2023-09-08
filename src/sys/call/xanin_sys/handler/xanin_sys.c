@@ -234,6 +234,12 @@ uint32_t xanin_sys_handle(void)
             break;
         }
 
+        case XANIN_XTF_INIT:
+        {
+            eax = (uint32_t)xtf_init(ecx);
+            break;
+        }
+
         case XANIN_VGA_BUFFER_SEGMENT_GET:
         {
             eax = (uint32_t)vga_get_buffer_segment();
