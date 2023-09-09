@@ -94,14 +94,20 @@ extern "C" {
 
 void vty_set(Xtf* XtFrontend) __attribute__((fastcall));
 Xtf* vty_get(void);
-void xtb_init(uint32_t vga_width, uint32_t vga_height, uint16_t* vram)__attribute__((fastcall));
+void xtb_init(uint32_t vga_width, uint32_t vga_height, uint16_t* vram);
+
+Xtb* __sys_xtb_get(void);
+void __sys_xtb_flush(Xtf* XtFrontend);
+void __sys_xtb_scroll_up(Xtf* XtFrontend);
+void __sys_xtb_scroll_down(Xtf* XtFrontend);
+void __sys_xtb_flush_all(Xtf* XtFrontend);
 
 Xtf* __sys_xtf_init(uint32_t buffer_size);
 void __sys_xtf_destroy(Xtf* XtFrontend);
 
 int __sys_xtf_buffer_nth_line_index_get(Xtf* XtFrontend, uint32_t line_number); // starting with 0
 int __sys_xtf_buffer_nth_line_size_get(Xtf* XtFrontend, uint32_t line_number); // starting with 0
-int __sys_xtf_get_line_number_from_position(Xtf* XtFrontend, uint32_t position);
+int __sys_xtf_line_number_from_position_get(Xtf* XtFrontend, uint32_t position);
 
 void __sys_xtf_cell_put(Xtf *XtFrontend, char c, uint8_t color);
 void __sys_xtf_remove_last_cell(Xtf* XtFrontend);

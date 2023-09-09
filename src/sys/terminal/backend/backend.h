@@ -27,8 +27,6 @@ Xtb* xtb_get(void);
 void xtb_flush(Xtf* XtFrontend);
 void xtb_scroll_up(Xtf* XtFrontend);
 void xtb_scroll_down(Xtf* XtFrontend);
-void xtb_cursor_inc(Xtf* XtFrontend);
-void xtb_cursor_dec(Xtf* XtFrontend);
 void xtb_flush_all(Xtf* XtFrontend);
 
 static inline void xtb_is_currently_flushing_set(bool is_flushing)

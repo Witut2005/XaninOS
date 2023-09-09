@@ -35,7 +35,7 @@ void xtf_destroy(Xtf* XtFrontend)
     free(XtFrontend);
 }
 
-int xtf_get_number_of_lines(Xtf* XtFrontend)
+int xtf_number_of_lines_get(Xtf* XtFrontend)
 {
     const char* buffer = (char*)XtFrontend->buffer;
     int lines_total = 0;
@@ -63,7 +63,7 @@ int xtf_buffer_nth_line_index_get(Xtf* XtFrontend, uint32_t line_number) // star
     if(!line_number)
         return 0;
 
-    if(line_number > xtf_get_number_of_lines(XtFrontend))
+    if(line_number > xtf_number_of_lines_get(XtFrontend))
         return XT_NO_SUCH_LINE;
     
     while(XtFrontend->buffer[index].character != '\0')
@@ -102,7 +102,7 @@ int xtf_buffer_nth_line_size_get(Xtf* XtFrontend, uint32_t line_number)
 
 }
 
-int xtf_get_line_number_from_position(Xtf* XtFrontend, uint32_t position)
+int xtf_line_number_from_position_get(Xtf* XtFrontend, uint32_t position)
 {
 
     if(position > XtFrontend->size)
@@ -194,7 +194,7 @@ void xtf_cursor_inc(Xtf *XtFrontend)
 
     XtFrontend->Cursor.position++;
 
-    XtFrontend->rows_changed[xtf_get_line_number_from_position(XtFrontend, XtFrontend->Cursor.position)] = XTF_ROW_CHANGED;
+    XtFrontend->rows_changed[xtf_line_number_from_position_get(XtFrontend, XtFrontend->Cursor.position)] = XTF_ROW_CHANGED;
     xtb_flush(XtFrontend);
 }
 
@@ -204,7 +204,7 @@ void xtf_cursor_dec(Xtf *XtFrontend)
         return;
 
     XtFrontend->Cursor.position--;
-    XtFrontend->rows_changed[xtf_get_line_number_from_position(XtFrontend, XtFrontend->Cursor.position)] = XTF_ROW_CHANGED;
+    XtFrontend->rows_changed[xtf_line_number_from_position_get(XtFrontend, XtFrontend->Cursor.position)] = XTF_ROW_CHANGED;
     xtb_flush(XtFrontend);
 }
 

@@ -234,12 +234,6 @@ uint32_t xanin_sys_handle(void)
             break;
         }
 
-        case XANIN_XTF_INIT:
-        {
-            eax = (uint32_t)xtf_init(ecx);
-            break;
-        }
-
         case XANIN_VGA_BUFFER_SEGMENT_GET:
         {
             eax = (uint32_t)vga_get_buffer_segment();
@@ -255,6 +249,97 @@ uint32_t xanin_sys_handle(void)
         case XANIN_VGA_TEXT_MODE_HEIGHT_GET:
         {
             eax = vga_text_mode_height;
+            break;
+        }
+
+        case XANIN_XTF_INIT:
+        {
+            eax = (uint32_t)xtf_init(ecx);
+            break;
+        }
+
+        case XANIN_XTF_DESTROY:
+        {
+            xtf_destroy((Xtf*)ecx);
+            break;
+        }
+
+        case XANIN_XTF_BUFFER_NTH_LINE_INDEX_GET:
+        {
+            eax = (uint32_t)xtf_buffer_nth_line_index_get((Xtf*)ecx, edx);
+            break;
+        }
+
+        case XANIN_XTF_BUFFER_NTH_LINE_SIZE_GET:
+        {
+            eax = (uint32_t)xtf_buffer_nth_line_size_get((Xtf*)ecx, edx);
+            break;
+        }
+
+        case XANIN_XTF_LINE_NUMBER_FROM_POSITION_GET:
+        {
+            eax = (uint32_t)xtf_line_number_from_position_get((Xtf*)ecx, edx);
+            break;
+        }
+
+        case XANIN_XTF_CELL_PUT: 
+        {
+            xtf_cell_put((Xtf*)ecx, (char)edx, (color_t)ebx);
+            break;
+        }
+
+        case XANIN_XTF_REMOVE_LAST_CELL: 
+        {
+            xtf_remove_last_cell((Xtf*)ecx);
+            break;
+        }
+
+        // ADD LATER
+        // case XANIN_XTF_VIRUTAL_CURSOR_ADD:
+        // {
+        //     xtf_virtual_cursor_add((Xtf*)ecx, (color_t)edx);
+        //     break;
+        // }
+
+        case XANIN_XTF_BUFFER_CLEAR:
+        {
+            xtf_buffer_clear((Xtf*)ecx);
+            break;
+        }
+
+        case XANIN_XTF_SCROLLING_ON:
+        {
+            xtf_scrolling_on((Xtf*)ecx);
+            break;
+        }
+
+        case XANIN_XTF_SCROLLING_OFF:
+        {
+            xtf_scrolling_off((Xtf*)ecx);
+            break;
+        }
+
+        case XANIN_XTF_CURSOR_ON:
+        {
+            xtf_cursor_on((Xtf*)ecx, (color_t)edx);
+            break;
+        }
+
+        case XANIN_XTF_CURSOR_OFF:
+        {
+            xtf_cursor_off((Xtf*)ecx);
+            break;
+        }
+
+        case XANIN_XTF_CURSOR_INC:
+        {
+            xtf_cursor_inc((Xtf*)ecx);
+            break;
+        }
+
+        case XANIN_XTF_CURSOR_DEC:
+        {
+            xtf_cursor_dec((Xtf*)ecx);
             break;
         }
 

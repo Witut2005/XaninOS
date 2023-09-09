@@ -67,7 +67,7 @@ bool xt_cell_put_special_characters_handler(Xtf* XtFrontend, char c, color_t col
     else if(c == ASCII_CR)
     { 
         XtFrontend->x = 0;
-        XtFrontend->size = xtf_buffer_nth_line_index_get(XtFrontend, xtf_get_line_number_from_position(XtFrontend, XtFrontend->size)); 
+        XtFrontend->size = xtf_buffer_nth_line_index_get(XtFrontend, xtf_line_number_from_position_get(XtFrontend, XtFrontend->size)); 
         return true;
     }
 
