@@ -156,11 +156,6 @@ void keyboard_driver(void)
 
     keyboard_driver_shift_remap_keys();
 
-    if(KeyInfo.is_alt & KeyInfo.is_ctrl)
-    {
-        xtb_flush_all(vty_get());
-    }
-        
     if(KeyInfo.scan_code == LSHIFT || KeyInfo.scan_code == CAPS)
         KeyInfo.character = '\0';
 

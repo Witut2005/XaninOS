@@ -6,11 +6,28 @@
 #include <sys/terminal/backend/backend.h>
 #include <sys/terminal/handlers/handlers.h>
 
+static Xtb* XtBackend;
+
+Xtb* __xtb_get(void)
+{
+    return XtBackend;
+}
+
+void __xtb_init(uint32_t vga_width, uint32_t vga_height, uint16_t* vram)
+{
+    XtBackend = (Xtb*)kcalloc(SIZE_OF(Xtb));
+    XtBackend->vga_width = vga_width;
+    XtBackend->vga_height = vga_height;
+    XtBackend->vram = vram;
+    XtBackend->is_flushable = true;
+}
+
+
 // CURSOR DISABLED GLOBALLY
-void xtb_scroll_up(Xtf *XtFrontend)
+void __xtb_scroll_up(Xtf *XtFrontend)
 {
 
-    Xtb *XtBackend = xtb_get();
+    Xtb *XtBackend = __xtb_get();
 
     if ((!XtFrontend->scrolling_enabled) || (!XtBackend->is_flushable) || (!XtFrontend->y_begin))
         return;
@@ -38,9 +55,9 @@ void xtb_scroll_up(Xtf *XtFrontend)
 
 }
 
-void xtb_scroll_down(Xtf *XtFrontend)
+void __xtb_scroll_down(Xtf *XtFrontend)
 {
-    Xtb *XtBackend = xtb_get();
+    Xtb *XtBackend = __xtb_get();
 
     if ((!XtFrontend->scrolling_enabled) || (!XtBackend->is_flushable))
         return;
@@ -57,7 +74,7 @@ void xtb_scroll_down(Xtf *XtFrontend)
 
         XtFrontend->y_begin++;
 
-        memmove((uint8_t *)VGA_TEXT_MEMORY, (uint8_t *)VGA_TEXT_MEMORY + (xtb_get()->vga_width * SIZE_OF(XtCell)), xtb_get()->vga_width * (xtb_get()->vga_height - 1) * SIZE_OF(XtCell)); // move terminal data
+        memmove((uint8_t *)VGA_TEXT_MEMORY, (uint8_t *)VGA_TEXT_MEMORY + (__xtb_get()->vga_width * SIZE_OF(XtCell)), __xtb_get()->vga_width * (__xtb_get()->vga_height - 1) * SIZE_OF(XtCell)); // move terminal data
 
         memset((uint8_t *)VGA_TEXT_MEMORY + ((XtBackend->vga_height - 1) * XtBackend->vga_width * SIZE_OF(XtCell)), BLANK_SCREEN_CELL, XtBackend->vga_width * SIZE_OF(XtCell)); // clear row
 
@@ -65,14 +82,13 @@ void xtb_scroll_down(Xtf *XtFrontend)
                (uint8_t *)&XtFrontend->buffer[start_index], number_of_cells_to_copy * SIZE_OF(XtCell));
 
         xtb_enable_flushing();
-
     }
 }
 
-void xtb_flush(Xtf *XtFrontend)
+void __xtb_flush(Xtf *XtFrontend)
 {
 
-    Xtb *XtBackend = xtb_get();
+    Xtb *XtBackend = __xtb_get();
 
     if (!XtBackend->is_flushable)
         return;
@@ -132,8 +148,8 @@ void xtb_flush(Xtf *XtFrontend)
     XtBackend->is_currently_flushing = false;
 }
 
-void xtb_flush_all(Xtf *XtFrontend)
+void __xtb_flush_all(Xtf *XtFrontend)
 {
     memset(XtFrontend->rows_changed, XTF_ROW_CHANGED, XtFrontend->current_height * SIZE_OF_POINTED_TYPE(XtFrontend->rows_changed));
-    xtb_flush(XtFrontend);
+    __xtb_flush(XtFrontend);
 }

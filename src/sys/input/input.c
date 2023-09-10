@@ -6,7 +6,7 @@ key_info_t KeyInfo = {0};
 
 char inputc(void)
 {
-    // xtb_flush(vty_get());
+    // __xtb_flush(__vty_get());
     return inputg().character;
 }
 
@@ -14,7 +14,7 @@ char inputc(void)
 xchar inputg(void)
 {
 
-    // xtb_flush(vty_get());
+    // __xtb_flush(__vty_get());
     KeyInfo.scan_code = 0xFF;
     while(KeyInfo.scan_code > 0x80); // break codes doesnt count
     

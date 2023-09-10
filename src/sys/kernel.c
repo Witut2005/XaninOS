@@ -83,14 +83,14 @@ void kernel_loop(void)
 
         xtb_enable_flushing();
         stdio_mode_set(STDIO_MODE_TERMINAL);
-        xtb_flush_all(vty_get());
+        __xtb_flush_all(__vty_get());
 
         all_intervals_clear(); // clear all intervals added by apps during execution
 
         interval_set(stdio_refresh, stdio_refresh_rate, NULL); // refresh interval
         
         memset(null_memory_region, 0, SECTOR_SIZE);
-        xtf_scrolling_on(vty_get());
+        xtf_scrolling_on(__vty_get());
 
         // screen_clear();
         time_get(&SystemTime);
@@ -196,8 +196,8 @@ void _start(void)
     screen_init(); // init screen management system
     screen_clear();
 
-    xtb_init(__vga_text_mode_width_get(), __vga_text_mode_height_get(), (uint16_t*)__vga_buffer_segment_get());
-    vty_set(xtf_init(100));
+    __xtb_init(__vga_text_mode_width_get(), __vga_text_mode_height_get(), (uint16_t*)__vga_buffer_segment_get());
+    __vty_set(xtf_init(100));
     stdio_mode_set(STDIO_MODE_TERMINAL);
 
     time_get(&SystemTime);

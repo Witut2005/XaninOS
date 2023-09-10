@@ -13,8 +13,8 @@
 
 void stdio_refresh(address_t* args)
 {
-    if((stdio_mode_get() == STDIO_MODE_TERMINAL) && (xtb_get()->is_flushable))
-        xtb_flush(vty_get());
+    if((stdio_mode_get() == STDIO_MODE_TERMINAL) && (__xtb_get()->is_flushable))
+        __sys_xtb_flush(__sys_vty_get());
 }
 
 void screen_background_color_set(color_t color)
@@ -58,7 +58,7 @@ int screen_clear(void)
     }
 
     else if(stdio_mode_get() == STDIO_MODE_TERMINAL)
-        xtf_buffer_clear(vty_get());
+        xtf_buffer_clear(__sys_vty_get());
     return XANIN_OK;
 }
 
@@ -116,36 +116,36 @@ char putchar_color(uint8_t color, char character) // ONLY AVAILABLE IN CANVAS MO
 
 void putsc(const char* str, color_t color)
 {
-    Xtf* StdioFront = vty_get();
+    Xtf* StdioFront = __sys_vty_get();
 
     for(int i = 0; i < strlen(str); i++)
         xtf_cell_put(StdioFront, str[i], color);
         
-    // xtb_flush(StdioFront);
+    // __sys_xtb_flush(StdioFront);
 }
 
 void puts(const char* str)
 {
 
-    Xtf* StdioVty = vty_get();
+    Xtf* StdioVty = __sys_vty_get();
 
     while(*str != '\0')
         xtf_character_put(StdioVty, *(str++));
 
-    // xtb_flush(StdioVty);
+    // __sys_xtb_flush(StdioVty);
 }
 
 void puts_warning(const char* str)
 {
     putsc("[Warning]", OUTPUT_COLOR_SET(black, yellow));
-    xtf_character_put(vty_get(), ' ');
+    xtf_character_put(__sys_vty_get(), ' ');
     puts(str);
 }
 
 void puts_error(const char* str)
 {
     putsc("[Error]", OUTPUT_COLOR_SET(black, lred));
-    xtf_character_put(vty_get(), ' ');
+    xtf_character_put(__sys_vty_get(), ' ');
     puts(str);
 }
 
@@ -404,7 +404,7 @@ void xprintf(char* str, ... )
         uint32_t number;
 
         char* stringPtr;
-        Xtf* StdioVty = vty_get();
+        Xtf* StdioVty = __sys_vty_get();
 
         if(StdioVty == NULL)
             return;
@@ -625,7 +625,7 @@ void xprintf(char* str, ... )
         }
 
         va_end(args);
-        // xtb_flush(StdioVty);
+        // __sys_xtb_flush(StdioVty);
     }
 
 }
@@ -847,7 +847,7 @@ void xscanf(char* str, ... )
         char* field_buffer = (char*)calloc(XANIN_PMMNGR_BLOCK_SIZE * 2 * 5);
         char* string_typed_buffer = (char*)calloc(XANIN_PMMNGR_BLOCK_SIZE * 2);
 
-        Xtf* StdioVty = vty_get();
+        Xtf* StdioVty = __sys_vty_get();
         uint32_t begin_index = StdioVty->size;
         xtf_scrolling_on(StdioVty);
         // xtf_cursor_on(StdioVty, OUTPUT_COLOR_SET(white, black));
@@ -855,7 +855,7 @@ void xscanf(char* str, ... )
 
         start:
 
-        xtb_flush(StdioVty);
+        __sys_xtb_flush(StdioVty);
 
         while(1)
         {
@@ -873,7 +873,7 @@ void xscanf(char* str, ... )
 
                 xtf_remove_last_cell(StdioVty);
                 // StdioVty->rows_changed[StdioVty->y] = XTF_ROW_CHANGED;
-                xtb_flush(StdioVty);
+                __sys_xtb_flush(StdioVty);
 
                 if(index)
                     index--;
@@ -885,12 +885,12 @@ void xscanf(char* str, ... )
 
             else if(Input.scan_code == ARROW_UP)
             {
-                xtb_scroll_up(StdioVty);
+                __sys_xtb_scroll_up(StdioVty);
             }
 
             else if(Input.scan_code == ARROW_DOWN)
             {
-                xtb_scroll_down(StdioVty);
+                __sys_xtb_scroll_down(StdioVty);
             }
 
             else if(Input.scan_code == ARROW_LEFT)
@@ -1048,7 +1048,7 @@ void xscanf(char* str, ... )
 
         puts("\n");
         // xtf_cursor_off(StdioVty);
-        xtb_flush(StdioVty);
+        __sys_xtb_flush(StdioVty);
         xtf_cursor_inc(StdioVty);
         
         free(field_buffer);
@@ -1088,8 +1088,8 @@ void xscan_range(char* string_buffer, uint32_t how_many_chars)
 
                 string_buffer[--buffer_index] = '\0';
                 stdio_legacy_cell_put('\0', OUTPUT_COLOR_SET(black, black), &Screen.y, &Screen.x);
-                xtf_remove_last_cell(vty_get());
-                xtb_flush(vty_get());
+                xtf_remove_last_cell(__sys_vty_get());
+                __sys_xtb_flush(__sys_vty_get());
                 Screen.x--;
             }
             
@@ -1099,8 +1099,8 @@ void xscan_range(char* string_buffer, uint32_t how_many_chars)
                     continue;
 
                 string_buffer[buffer_index] = Input.character;
-                xtf_cell_put(vty_get(), Input.character, OUTPUT_COLOR_SET(black, white));
-                xtb_flush(vty_get());
+                xtf_cell_put(__sys_vty_get(), Input.character, OUTPUT_COLOR_SET(black, white));
+                __sys_xtb_flush(__sys_vty_get());
                 buffer_index++;
                 Input.character = 0;
             }

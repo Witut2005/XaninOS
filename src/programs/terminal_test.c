@@ -20,7 +20,7 @@ int terminal_test(void)
     // for(int i = 0; i < 30; i++)
     xprintf("%s\n", fro);
 
-    // xtb_flush(vty_get());
+    // __sys_xtb_flush(__sys_vty_get());
 
     while(inputg().scan_code != ENTER)
     {
@@ -28,13 +28,13 @@ int terminal_test(void)
         {
             case ARROW_UP: 
             {
-                xtb_scroll_up(vty_get());
+                __sys_xtb_scroll_up(__sys_vty_get());
                 break;
             }
             case ARROW_DOWN:
             {
 
-                xtb_scroll_down(vty_get());
+                __sys_xtb_scroll_down(__sys_vty_get());
                 break;
             }
         }

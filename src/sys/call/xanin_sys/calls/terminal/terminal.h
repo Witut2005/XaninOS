@@ -92,9 +92,9 @@ enum XANIN_TERMINAL_COLORS{
 extern "C" {
 #endif
 
-void vty_set(Xtf* XtFrontend) __attribute__((fastcall));
-Xtf* vty_get(void);
-void xtb_init(uint32_t vga_width, uint32_t vga_height, uint16_t* vram);
+void __sys_vty_set(Xtf* XtFrontend) __attribute__((fastcall));
+Xtf* __sys_vty_get(void);
+void __sys_xtb_init(uint32_t vga_width, uint32_t vga_height, uint16_t* vram);
 
 Xtb* __sys_xtb_get(void);
 void __sys_xtb_flush(Xtf* XtFrontend);

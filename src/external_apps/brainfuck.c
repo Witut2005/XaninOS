@@ -36,7 +36,7 @@ void jmp_bwd();
 int main(int argc, char *argv[]) {
     
     // stdio_mode_set(STDIO_MODE_CANVAS);
-    // vty_set(vty_get());
+    // __sys_vty_set(__sys_vty_get());
 
     xprintf("Brainfuck\n=========\n");
     

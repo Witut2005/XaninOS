@@ -9,6 +9,17 @@
 #include <lib/libc/memory.h>
 #include <sys/terminal/vty/vty.h>
 
+static Xtf* CurrentVty; 
+
+void __vty_set(Xtf* XtFrontend)
+{
+    CurrentVty = XtFrontend;
+}
+
+Xtf* __vty_get(void)
+{
+    return CurrentVty;
+}
 
 // if size_allocated is to small then error
 Xtf* xtf_init(uint32_t buffer_size)
@@ -181,7 +192,7 @@ void xtf_buffer_clear(Xtf* XtFrontend)
     XtFrontend->x_screen = XtFrontend->y_screen = 0;
     XtFrontend->x = XtFrontend->y = XtFrontend->y_begin = 0;
 
-    xtb_flush(XtFrontend);
+    __xtb_flush(XtFrontend);
 }
 
 void xtf_cursor_inc(Xtf *XtFrontend)
@@ -195,7 +206,7 @@ void xtf_cursor_inc(Xtf *XtFrontend)
     XtFrontend->Cursor.position++;
 
     XtFrontend->rows_changed[xtf_line_number_from_position_get(XtFrontend, XtFrontend->Cursor.position)] = XTF_ROW_CHANGED;
-    xtb_flush(XtFrontend);
+    __xtb_flush(XtFrontend);
 }
 
 void xtf_cursor_dec(Xtf *XtFrontend)
@@ -205,7 +216,7 @@ void xtf_cursor_dec(Xtf *XtFrontend)
 
     XtFrontend->Cursor.position--;
     XtFrontend->rows_changed[xtf_line_number_from_position_get(XtFrontend, XtFrontend->Cursor.position)] = XTF_ROW_CHANGED;
-    xtb_flush(XtFrontend);
+    __xtb_flush(XtFrontend);
 }
 
 void xtf_cell_put(Xtf *XtFrontend, char c, uint8_t color)

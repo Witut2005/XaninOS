@@ -24,8 +24,8 @@ bool xt_cell_put_line_modifiers_handler(Xtf* XtFrontend, char c, color_t color) 
             XtFrontend->rows_changed = (uint8_t *)realloc(XtFrontend->rows_changed, XtFrontend->y * SIZE_OF_POINTED_TYPE(XtFrontend->rows_changed));
         }
 
-        if (XtFrontend->y >= xtb_get()->vga_height) 
-            xtb_scroll_down(XtFrontend);
+        if (XtFrontend->y >= __xtb_get()->vga_height) 
+            __xtb_scroll_down(XtFrontend);
 
         return true;
     }
@@ -58,8 +58,8 @@ bool xt_cell_put_special_characters_handler(Xtf* XtFrontend, char c, color_t col
             XtFrontend->rows_changed = (uint8_t *)realloc(XtFrontend->rows_changed, XtFrontend->y * SIZE_OF_POINTED_TYPE(XtFrontend->rows_changed));
         }
 
-        if (XtFrontend->y >= xtb_get()->vga_height) 
-            xtb_scroll_down(XtFrontend);
+        if (XtFrontend->y >= __xtb_get()->vga_height) 
+            __xtb_scroll_down(XtFrontend);
 
         return true;
     }
@@ -93,7 +93,7 @@ bool xt_cell_put_special_characters_handler(Xtf* XtFrontend, char c, color_t col
 void xt_flush_special_characters_handle(char character, color_t color, uint32_t* current_row_to_display, bool* row_cleared, uint32_t* vram_index)
 {
     
-    Xtb* XtBackend = xtb_get();
+    Xtb* XtBackend = __xtb_get();
     vga_screen_cell_t* vram = (vga_screen_cell_t*)VGA_TEXT_MEMORY;
 
     if (character == XT_END_OF_ROW)

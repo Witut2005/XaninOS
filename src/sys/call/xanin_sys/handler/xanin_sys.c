@@ -195,8 +195,8 @@ uint32_t xanin_sys_handle(void)
                     break;
                 default:
                     stdio_current_mode = STDIO_MODE_TERMINAL;
-                    memset(vty_get()->rows_changed, XTF_ROW_CHANGED, vty_get()->current_height * SIZE_OF_POINTED_TYPE(vty_get()->rows_changed));
-                    xtb_flush(vty_get());
+                    memset(__vty_get()->rows_changed, XTF_ROW_CHANGED, __vty_get()->current_height * SIZE_OF_POINTED_TYPE(__vty_get()->rows_changed));
+                    __xtb_flush(__vty_get());
                     break;
 
             }
@@ -236,25 +236,25 @@ uint32_t xanin_sys_handle(void)
 
         case XANIN_XTB_FLUSH:
         {
-            xtb_flush((Xtf*)ecx);
+            __xtb_flush((Xtf*)ecx);
             break;
         }
 
         case XANIN_XTB_FLUSH_ALL:
         {
-            xtb_flush_all((Xtf*)ecx);
+            __xtb_flush_all((Xtf*)ecx);
             break;
         }
 
         case XANIN_XTB_SCROLL_UP:
         {
-            xtb_scroll_up((Xtf*)ecx);
+            __xtb_scroll_up((Xtf*)ecx);
             break;
         }
 
         case XANIN_XTB_SCROLL_DOWN:
         {
-            xtb_scroll_down((Xtf*)ecx);
+            __xtb_scroll_down((Xtf*)ecx);
             break;
         }
 

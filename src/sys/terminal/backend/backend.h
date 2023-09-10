@@ -23,36 +23,37 @@
 extern "C" {
 #endif
 
-Xtb* xtb_get(void);
-void xtb_flush(Xtf* XtFrontend);
-void xtb_scroll_up(Xtf* XtFrontend);
-void xtb_scroll_down(Xtf* XtFrontend);
-void xtb_flush_all(Xtf* XtFrontend);
+Xtb* __xtb_get(void);
+void __xtb_init(uint32_t vga_width, uint32_t vga_height, uint16_t* vram);
+void __xtb_scroll_up(Xtf* XtFrontend);
+void __xtb_scroll_down(Xtf* XtFrontend);
+void __xtb_flush(Xtf* XtFrontend);
+void __xtb_flush_all(Xtf* XtFrontend);
 
 static inline void xtb_is_currently_flushing_set(bool is_flushing)
 {
-    xtb_get()->is_currently_flushing = is_flushing;
+    __xtb_get()->is_currently_flushing = is_flushing;
 }
 
 static inline bool xtb_is_currently_flushing_get(void)
 {
-    return xtb_get()->is_currently_flushing;
+    return __xtb_get()->is_currently_flushing;
 }
 
 
 static inline void xtb_disable_flushing(void)
 {
-    xtb_get()->is_flushable = false;
+    __xtb_get()->is_flushable = false;
 }
 
 static inline void xtb_enable_flushing(void)
 {
-    xtb_get()->is_flushable = true;
+    __xtb_get()->is_flushable = true;
 }
 
 static inline bool xtb_flushing_status_get(void)
 {
-    return xtb_get()->is_flushable;
+    return __xtb_get()->is_flushable;
 }
 
 #ifdef __cplusplus

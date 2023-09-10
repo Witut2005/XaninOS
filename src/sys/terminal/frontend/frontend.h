@@ -18,6 +18,10 @@ typedef void(*xtf_handler)(Xtf*, char, color_t);
 extern "C" {
 #endif
 
+
+void __vty_set(Xtf* XtFrontend);
+Xtf* __vty_get(void);
+
 Xtf* xtf_init(uint32_t virtual_height);
 void xtf_destroy(Xtf* XtFrontend);
 
