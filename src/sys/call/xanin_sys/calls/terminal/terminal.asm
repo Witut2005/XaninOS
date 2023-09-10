@@ -16,18 +16,18 @@ global __sys_xtf_cursor_on, __sys_xtf_cursor_off, __sys_xtf_cursor_inc, __sys_xt
 
 __sys_vty_set:
 mov eax, XANIN_VTY_SET
-; ecx already set
-int 0x81
+ESP_GET_NTH_ARGUMENT ecx, 1
+XANIN_INVOKE_SYSTEM_CALL
 ret
 
 __sys_vty_get:
 mov eax, XANIN_VTY_GET
-int 0x81
+XANIN_INVOKE_SYSTEM_CALL
 ret
 
 __sys_xtb_get:
 mov eax, XANIN_XTB_GET
-int 0x81
+XANIN_INVOKE_SYSTEM_CALL
 ret 
 
 __sys_xtb_init:
@@ -65,13 +65,13 @@ ret
 
 __sys_xtf_init:                                 ;(uint32_t buffer_size);
 mov eax, XANIN_XTF_INIT
-mov ecx, [esp + 4]                              ; buffer size
+ESP_GET_NTH_ARGUMENT ecx, 1                     ; buffer size
 XANIN_INVOKE_SYSTEM_CALL
 ret
 
 __sys_xtf_destroy:                              ;(Xtf* XtFrontend);
 mov eax, XANIN_XTF_DESTROY
-mov ecx, [esp + 4]                              ;XtFrontend
+ESP_GET_NTH_ARGUMENT ecx, 1                      ;XtFrontend
 XANIN_INVOKE_SYSTEM_CALL
 
 ret

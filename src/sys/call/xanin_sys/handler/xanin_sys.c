@@ -15,8 +15,9 @@
 // SYSCALLS FUNCTIONS
 #include <sys/call/xanin_sys/calls/pmmngr/alloc.h>
 #include <sys/call/xanin_sys/calls/vga/vga.h>
-#include <sys/call/xanin_sys/calls/terminal/terminal.c>
 #include <sys/devices/vga/vga.h>
+#include <sys/terminal/frontend/frontend.h>
+#include <sys/terminal/backend/backend.h>
 
 stdio_mode_t stdio_current_mode;
 
