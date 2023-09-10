@@ -54,3 +54,25 @@ Bad:
 #define keyboard_sig_off()
 const uint32_t fileSystemEntryOffset
 ```
+
+## Kernel functions
+
+Names of kernel functions should have '__' prefix. This functions can only be used
+within kernel contex. Otherwise undefined behaviour will occur.
+
+Example:
+
+```c
+void __xtb_init(uint32_t vga_width, uint32_t vga_height, uint16_t* vram);
+```
+
+## XaninOS syscalls
+
+Names of kernel syscall entries should have '__sys' prefix. This functions can be used 
+in any context, but their main purpose is to use them in libraries.
+
+Example:
+
+```c
+void __sys_xtb_init(uint32_t vga_width, uint32_t vga_height, uint16_t* vram);
+```
