@@ -234,21 +234,27 @@ uint32_t xanin_sys_handle(void)
             break;
         }
 
-        case XANIN_VGA_BUFFER_SEGMENT_GET:
+        case XANIN_XTB_FLUSH:
         {
-            eax = (uint32_t)vga_get_buffer_segment();
+            xtb_flush((Xtf*)ecx);
             break;
         }
 
-        case XANIN_VGA_TEXT_MODE_WIDTH_GET:
+        case XANIN_XTB_FLUSH_ALL:
         {
-            eax = vga_text_mode_width;
+            xtb_flush_all((Xtf*)ecx);
             break;
         }
 
-        case XANIN_VGA_TEXT_MODE_HEIGHT_GET:
+        case XANIN_XTB_SCROLL_UP:
         {
-            eax = vga_text_mode_height;
+            xtb_scroll_up((Xtf*)ecx);
+            break;
+        }
+
+        case XANIN_XTB_SCROLL_DOWN:
+        {
+            xtb_scroll_down((Xtf*)ecx);
             break;
         }
 
@@ -342,6 +348,25 @@ uint32_t xanin_sys_handle(void)
             xtf_cursor_dec((Xtf*)ecx);
             break;
         }
+
+        case XANIN_VGA_BUFFER_SEGMENT_GET:
+        {
+            eax = (uint32_t)vga_get_buffer_segment();
+            break;
+        }
+
+        case XANIN_VGA_TEXT_MODE_WIDTH_GET:
+        {
+            eax = vga_text_mode_width;
+            break;
+        }
+
+        case XANIN_VGA_TEXT_MODE_HEIGHT_GET:
+        {
+            eax = vga_text_mode_height;
+            break;
+        }
+
 
     }
 

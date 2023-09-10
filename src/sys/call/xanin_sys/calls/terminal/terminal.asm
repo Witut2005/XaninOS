@@ -39,11 +39,29 @@ XANIN_INVOKE_SYSTEM_CALL
 ret 
 
 
-; __sys_xtb_flush                                 ;(Xtf* XtFrontend);
-; __sys_xtb_scroll_up                             ;(Xtf* XtFrontend);
-; __sys_xtb_scroll_down                           ;(Xtf* XtFrontend);
-; __sys_xtb_flush_all                             ;(Xtf* XtFrontend);
+__sys_xtb_flush:                                ;(Xtf* XtFrontend);
+mov eax, XANIN_XTB_FLUSH
+ESP_GET_NTH_ARGUMENT ecx, 1
+XANIN_INVOKE_SYSTEM_CALL
+ret
 
+__sys_xtb_flush_all:                            ;(Xtf* XtFrontend);
+mov eax, XANIN_XTB_FLUSH_ALL
+ESP_GET_NTH_ARGUMENT ecx, 1
+XANIN_INVOKE_SYSTEM_CALL
+ret
+
+__sys_xtb_scroll_up:                            ;(Xtf* XtFrontend);
+mov eax, XANIN_XTB_SCROLL_UP
+ESP_GET_NTH_ARGUMENT ecx, 1
+XANIN_INVOKE_SYSTEM_CALL
+ret
+
+__sys_xtb_scroll_down:                          ;(Xtf* XtFrontend);
+mov eax, XANIN_XTB_SCROLL_DOWN
+ESP_GET_NTH_ARGUMENT ecx, 1
+XANIN_INVOKE_SYSTEM_CALL
+ret
 
 __sys_xtf_init:                                 ;(uint32_t buffer_size);
 mov eax, XANIN_XTF_INIT
