@@ -30,7 +30,9 @@
         "stdio.h": "c",
         "xanin_syscalls.h": "c",
         "tui.h": "c",
-        "handlers.h": "c"
+        "handlers.h": "c",
+        "stdint.h": "c",
+        "stdint-gcc.h": "c"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }

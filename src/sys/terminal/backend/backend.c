@@ -33,8 +33,8 @@ void __xtb_scroll_up(Xtf *XtFrontend)
         return;
 
     XtFrontend->y_begin--;
-    int start_index = xtf_buffer_nth_line_index_get(XtFrontend, XtFrontend->y_begin);
-    int number_of_bytes_to_copy = xtf_buffer_nth_line_size_get(XtFrontend, XtFrontend->y_begin);
+    int start_index = __xtf_buffer_nth_line_index_get(XtFrontend, XtFrontend->y_begin);
+    int number_of_bytes_to_copy = __xtf_buffer_nth_line_size_get(XtFrontend, XtFrontend->y_begin);
 
     if (start_index == XT_NO_SUCH_LINE)
     {
@@ -64,8 +64,8 @@ void __xtb_scroll_down(Xtf *XtFrontend)
 
     if ((XtFrontend->y >= XtBackend->vga_height) && (XtFrontend->y_begin + XtBackend->vga_height <= XtFrontend->current_height))
     {
-        int start_index = xtf_buffer_nth_line_index_get(XtFrontend, XtFrontend->y_begin + XtBackend->vga_height);
-        int number_of_cells_to_copy = xtf_buffer_nth_line_size_get(XtFrontend, XtFrontend->y_begin + XtBackend->vga_height);
+        int start_index = __xtf_buffer_nth_line_index_get(XtFrontend, XtFrontend->y_begin + XtBackend->vga_height);
+        int number_of_cells_to_copy = __xtf_buffer_nth_line_size_get(XtFrontend, XtFrontend->y_begin + XtBackend->vga_height);
 
         if (start_index == XT_NO_SUCH_LINE)
             return;
@@ -111,7 +111,7 @@ void __xtb_flush(Xtf *XtFrontend)
 
     uint16_t *vram = (uint16_t *)VGA_TEXT_MEMORY;
 
-    for (int i = xtf_buffer_nth_line_index_get(XtFrontend, XtFrontend->y_begin); i < XtFrontend->vheight * XtFrontend->vwidth; i++)
+    for (int i = __xtf_buffer_nth_line_index_get(XtFrontend, XtFrontend->y_begin); i < XtFrontend->vheight * XtFrontend->vwidth; i++)
     {
 
         if(i >= XtFrontend->size_allocated)

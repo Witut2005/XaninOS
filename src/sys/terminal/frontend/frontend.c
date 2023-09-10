@@ -41,7 +41,7 @@ Xtf* xtf_init(uint32_t buffer_size)
     return XtFrontend;
 }
 
-void xtf_destroy(Xtf* XtFrontend) 
+void __xtf_destroy(Xtf* XtFrontend) 
 {
     free(XtFrontend);
 }
@@ -66,7 +66,7 @@ int xtf_number_of_lines_get(Xtf* XtFrontend)
 
 }
 
-int xtf_buffer_nth_line_index_get(Xtf* XtFrontend, uint32_t line_number) // starting with 0
+int __xtf_buffer_nth_line_index_get(Xtf* XtFrontend, uint32_t line_number) // starting with 0
 {
     int current_line = 0;
     int index = 0;
@@ -95,9 +95,9 @@ int xtf_buffer_nth_line_index_get(Xtf* XtFrontend, uint32_t line_number) // star
     return index + 1;
 }
 
-int xtf_buffer_nth_line_size_get(Xtf* XtFrontend, uint32_t line_number)
+int __xtf_buffer_nth_line_size_get(Xtf* XtFrontend, uint32_t line_number)
 {
-    int index = xtf_buffer_nth_line_index_get(XtFrontend, line_number);
+    int index = __xtf_buffer_nth_line_index_get(XtFrontend, line_number);
     int size = 0;
 
     if(index == XT_NO_SUCH_LINE)
@@ -113,7 +113,7 @@ int xtf_buffer_nth_line_size_get(Xtf* XtFrontend, uint32_t line_number)
 
 }
 
-int xtf_line_number_from_position_get(Xtf* XtFrontend, uint32_t position)
+int __xtf_line_number_from_position_get(Xtf* XtFrontend, uint32_t position)
 {
 
     if(position > XtFrontend->size)
@@ -131,7 +131,7 @@ int xtf_line_number_from_position_get(Xtf* XtFrontend, uint32_t position)
 
 }
 
-void xtf_remove_last_cell(Xtf* XtFrontend)
+void __xtf_remove_last_cell(Xtf* XtFrontend)
 {
     XtFrontend->rows_changed[XtFrontend->y] = XTF_ROW_CHANGED;
 
@@ -157,29 +157,29 @@ void xtf_remove_last_cell(Xtf* XtFrontend)
     XtFrontend->x--;
 }
 
-void xtf_cursor_on(Xtf* XtFrontend, color_t color)
+void __xtf_cursor_on(Xtf* XtFrontend, color_t color)
 {
     XtFrontend->Cursor.position = XtFrontend->size;
     XtFrontend->Cursor.is_used = true;
     XtFrontend->Cursor.color = color;
 }
 
-void xtf_cursor_off(Xtf* XtFrontend)
+void __xtf_cursor_off(Xtf* XtFrontend)
 {
     XtFrontend->Cursor.is_used = false;
 }
 
-void xtf_scrolling_on(Xtf* XtFrontend)
+void __xtf_scrolling_on(Xtf* XtFrontend)
 {
     XtFrontend->scrolling_enabled = true;
 }
 
-void xtf_scrolling_off(Xtf* XtFrontend)
+void __xtf_scrolling_off(Xtf* XtFrontend)
 {
     XtFrontend->scrolling_enabled = false;
 }
 
-void xtf_buffer_clear(Xtf* XtFrontend)
+void __xtf_buffer_clear(Xtf* XtFrontend)
 {
     memset((uint8_t*)XtFrontend->buffer, BLANK_SCREEN_CELL, XtFrontend->size_allocated);
     XtFrontend->size = 0;
@@ -195,7 +195,7 @@ void xtf_buffer_clear(Xtf* XtFrontend)
     __xtb_flush(XtFrontend);
 }
 
-void xtf_cursor_inc(Xtf *XtFrontend)
+void __xtf_cursor_inc(Xtf *XtFrontend)
 {
     if (XtFrontend->Cursor.position >= XtFrontend->size)
         XtFrontend->Cursor.position = XtFrontend->size;
@@ -205,21 +205,21 @@ void xtf_cursor_inc(Xtf *XtFrontend)
 
     XtFrontend->Cursor.position++;
 
-    XtFrontend->rows_changed[xtf_line_number_from_position_get(XtFrontend, XtFrontend->Cursor.position)] = XTF_ROW_CHANGED;
+    XtFrontend->rows_changed[__xtf_line_number_from_position_get(XtFrontend, XtFrontend->Cursor.position)] = XTF_ROW_CHANGED;
     __xtb_flush(XtFrontend);
 }
 
-void xtf_cursor_dec(Xtf *XtFrontend)
+void __xtf_cursor_dec(Xtf *XtFrontend)
 {
     if (XtFrontend->Cursor.position == 0)
         return;
 
     XtFrontend->Cursor.position--;
-    XtFrontend->rows_changed[xtf_line_number_from_position_get(XtFrontend, XtFrontend->Cursor.position)] = XTF_ROW_CHANGED;
+    XtFrontend->rows_changed[__xtf_line_number_from_position_get(XtFrontend, XtFrontend->Cursor.position)] = XTF_ROW_CHANGED;
     __xtb_flush(XtFrontend);
 }
 
-void xtf_cell_put(Xtf *XtFrontend, char c, uint8_t color)
+void __xtf_cell_put(Xtf *XtFrontend, char c, uint8_t color)
 {
 
     if (XtFrontend->size + 1 >= XtFrontend->size_allocated)

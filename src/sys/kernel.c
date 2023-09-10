@@ -90,7 +90,7 @@ void kernel_loop(void)
         interval_set(stdio_refresh, stdio_refresh_rate, NULL); // refresh interval
         
         memset(null_memory_region, 0, SECTOR_SIZE);
-        xtf_scrolling_on(__vty_get());
+        __xtf_scrolling_on(__vty_get());
 
         // screen_clear();
         time_get(&SystemTime);

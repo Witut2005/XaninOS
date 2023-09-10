@@ -327,7 +327,7 @@ void scan(void)
     app_exited = true;
 
     if(stdio_mode_overriden) // i want to be careful
-        xtf_buffer_clear(__vty_get());
+        __xtf_buffer_clear(__vty_get());
 
     // terminal_destroy(app_terminal, kernel_terminal);
 

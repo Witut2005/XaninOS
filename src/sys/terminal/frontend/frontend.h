@@ -23,30 +23,30 @@ void __vty_set(Xtf* XtFrontend);
 Xtf* __vty_get(void);
 
 Xtf* xtf_init(uint32_t virtual_height);
-void xtf_destroy(Xtf* XtFrontend);
+void __xtf_destroy(Xtf* XtFrontend);
 
-int xtf_buffer_nth_line_index_get(Xtf* XtFrontend, uint32_t line_number); // starting with 0
-int xtf_buffer_nth_line_size_get(Xtf* XtFrontend, uint32_t line_number); // starting with 0
-int xtf_line_number_from_position_get(Xtf* XtFrontend, uint32_t position);
+int __xtf_buffer_nth_line_index_get(Xtf* XtFrontend, uint32_t line_number); // starting with 0
+int __xtf_buffer_nth_line_size_get(Xtf* XtFrontend, uint32_t line_number); // starting with 0
+int __xtf_line_number_from_position_get(Xtf* XtFrontend, uint32_t position);
 
-void xtf_cell_put(Xtf *XtFrontend, char c, uint8_t color);
+void __xtf_cell_put(Xtf *XtFrontend, char c, uint8_t color);
 
 static inline void xtf_character_put(Xtf* XtFrontend, char c)
 {
-    xtf_cell_put(XtFrontend, c, DEFAULT_COLOR);
+    __xtf_cell_put(XtFrontend, c, DEFAULT_COLOR);
 }
 
 
-void xtf_remove_last_cell(Xtf* XtFrontend);
-void xtf_buffer_clear(Xtf* XtFrontend);
+void __xtf_remove_last_cell(Xtf* XtFrontend);
+void __xtf_buffer_clear(Xtf* XtFrontend);
 
-void xtf_scrolling_on(Xtf* XtFrontend);
-void xtf_scrolling_off(Xtf* XtFrontend);
+void __xtf_scrolling_on(Xtf* XtFrontend);
+void __xtf_scrolling_off(Xtf* XtFrontend);
 
-void xtf_cursor_on(Xtf* XtFrontend, color_t color);
-void xtf_cursor_off(Xtf* XtFrontend);
-void xtf_cursor_inc(Xtf *XtFrontend);
-void xtf_cursor_dec(Xtf *XtFrontend);
+void __xtf_cursor_on(Xtf* XtFrontend, color_t color);
+void __xtf_cursor_off(Xtf* XtFrontend);
+void __xtf_cursor_inc(Xtf *XtFrontend);
+void __xtf_cursor_dec(Xtf *XtFrontend);
 
 static inline bool xtf_is_special_character(char c)
 {

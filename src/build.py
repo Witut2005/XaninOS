@@ -97,6 +97,7 @@ def compile_kernel(*kargs):
     ]
 
     if(args.preinstall == 'yes'):
+        # commands.append('make -C ./external_apps')
         commands.append('python3 ./utils/app_preinstall.py -files external_apps/ etc/ -image ../bin/xanin.img')
     
     for command in commands:
@@ -344,8 +345,8 @@ for os_module, objects in objects_to_compile.items():
 print(colored('\nXANIN OS MODULES BUILDED\n', 'green'))
     
 create_c_library('./lib/libc/libc.o', './lib/libc/libc.a', objects_to_compile['libc'], [
-        # './sys/log/syslog.o', './fs/xin_syscalls.o', './sys/terminal/vty/vty.o', './sys/devices/hda/disk.o', './sys/terminal/backend/backend.o', 
-        # './sys/terminal/frontend/frontend.o', './fs/xin.o', './sys/call/xanin_sys/devices/disk.o', './sys/call/xanin_sys/stdio/stdio.o', './sys/call/xanin_sys/terminal/terminal.o', './sys/terminal/interface/terminal.o'        
+        './sys/log/syslog.o', './fs/xin_syscalls.o', './sys/terminal/vty/vty.o', './sys/devices/hda/disk.o', './sys/terminal/backend/backend.o', 
+        './sys/terminal/frontend/frontend.o', './fs/xin.o', './sys/call/xanin_sys/calls/devices/disk.o', './sys/call/xanin_sys/calls/stdio/stdio.o', './sys/call/xanin_sys/calls/terminal/terminal.o', './sys/terminal/interface/terminal.o'        
                 ])
 
 # print(objects_to_compile['kmodules'] + objects_to_compile['interrupt'])
