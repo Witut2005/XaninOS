@@ -8,7 +8,7 @@ int 0x81
 global vty_set, vty_get, xtb_get, xtb_init
 global __sys_xtf_init, __sys_xtf_destroy
 global __sys_xtf_buffer_nth_line_index_get, __sys_xtf_buffer_nth_line_size_get, __sys_xtf_line_number_from_position_get
-global __sys_xtf_cell_put, __sys_xtf_remove_last_cell, __sys_xtf_buffer_clear, ;__sys_xtf_virtual_cursor_add
+global __sys_xtf_cell_put, __sys_xtf_remove_last_cell, __sys_xtf_buffer_clear ;__sys_xtf_virtual_cursor_add
 global __sys_xtf_scrolling_on, __sys_xtf_scrolling_off
 global __sys_xtf_cursor_on, __sys_xtf_cursor_off, __sys_xtf_cursor_inc, __sys_xtf_cursor_dec
 
@@ -39,10 +39,10 @@ XANIN_INVOKE_SYSTEM_CALL
 ret 
 
 
-__sys_xtb_flush                                 ;(Xtf* XtFrontend);
-__sys_xtb_scroll_up                             ;(Xtf* XtFrontend);
-__sys_xtb_scroll_down                           ;(Xtf* XtFrontend);
-__sys_xtb_flush_all                             ;(Xtf* XtFrontend);
+; __sys_xtb_flush                                 ;(Xtf* XtFrontend);
+; __sys_xtb_scroll_up                             ;(Xtf* XtFrontend);
+; __sys_xtb_scroll_down                           ;(Xtf* XtFrontend);
+; __sys_xtb_flush_all                             ;(Xtf* XtFrontend);
 
 
 __sys_xtf_init:                                 ;(uint32_t buffer_size);
