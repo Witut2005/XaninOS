@@ -97,7 +97,7 @@ def compile_kernel(*kargs):
     ]
 
     if(args.preinstall == 'yes'):
-        # commands.append('make -C ./external_apps')
+        commands.append('make -C ./external_apps')
         commands.append('python3 ./utils/app_preinstall.py -files external_apps/ etc/ -image ../bin/xanin.img')
     
     for command in commands:
@@ -261,7 +261,7 @@ objects_to_compile = {
     'libc':[
         # CompileObject('./lib/libc/real_mode_fswitch.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
         CompileObject('./lib/libc/file.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
-        CompileObject('./lib/libc/crt0.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
+        # CompileObject('./lib/libc/crt0.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
         CompileObject('./lib/libc/alloc.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
         CompileObject('./lib/cpu/code/cpu_state_info.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
         # CompileObject('./lib/libc/real_mode_fswitch.c', builders['c'], builder_options['c']['default'], OBJECT),
@@ -345,8 +345,15 @@ for os_module, objects in objects_to_compile.items():
 print(colored('\nXANIN OS MODULES BUILDED\n', 'green'))
     
 create_c_library('./lib/libc/libc.o', './lib/libc/libc.a', objects_to_compile['libc'], [
-        './sys/log/syslog.o', './fs/xin_syscalls.o', './sys/terminal/vty/vty.o', './sys/devices/hda/disk.o', './sys/terminal/backend/backend.o', 
-        './sys/terminal/frontend/frontend.o', './fs/xin.o', './sys/call/xanin_sys/calls/devices/disk.o', './sys/call/xanin_sys/calls/stdio/stdio.o', './sys/call/xanin_sys/calls/terminal/terminal.o', './sys/terminal/interface/terminal.o'        
+        './sys/log/syslog.o', './fs/xin_syscalls.o', 
+        './sys/terminal/vty/vty.o', 
+        './sys/devices/hda/disk.o', 
+        # './sys/terminal/backend/backend.o', 
+        # './sys/terminal/frontend/frontend.o',
+        './fs/xin.o', './sys/call/xanin_sys/calls/devices/disk.o', './sys/call/xanin_sys/calls/stdio/stdio.o', 
+        './sys/call/xanin_sys/calls/terminal/terminal.o', 
+        './sys/call/xanin_sys/calls/vga/vga.o', 
+        './sys/terminal/interface/terminal.o'        
                 ])
 
 # print(objects_to_compile['kmodules'] + objects_to_compile['interrupt'])

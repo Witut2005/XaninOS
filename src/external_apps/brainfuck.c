@@ -38,6 +38,7 @@ int main(int argc, char *argv[]) {
     // stdio_mode_set(STDIO_MODE_CANVAS);
     // __sys_vty_set(__sys_vty_get());
 
+    stdio_mode_set(STDIO_MODE_TERMINAL);
     xprintf("Brainfuck\n=========\n");
     
     if (argc < 2) 

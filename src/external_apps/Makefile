@@ -31,4 +31,4 @@ all:
 	$(C) $(C_COMPILE) brainfuck.c -I /home/witut/xaninOS/src/ -L /home/witut/xaninOS/src/external_apps -o brainfuck -l c 
 
     # rm bitmap.bmp
-	rm libc.a libc.o crt0.o brainfuck
+	rm libc.a libc.o crt0.o 
