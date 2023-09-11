@@ -247,3 +247,8 @@ void __xtf_cell_put(Xtf *XtFrontend, char c, uint8_t color)
     XtFrontend->rows_changed[XtFrontend->y] = XTF_ROW_CHANGED; // default handler for normal chars
 
 }
+
+void __xtf_character_put(Xtf* XtFrontend, char character)
+{
+    __xtf_cell_put(XtFrontend, character, 0x0F);
+}

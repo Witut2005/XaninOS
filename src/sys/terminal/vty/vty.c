@@ -27,7 +27,8 @@ uint16_t** screen_rows;
 
 void screen_init(void)
 {
-    screen_rows = (uint16_t**)kcalloc(VGA_HEIGHT * sizeof(uint16_t*));
+    // USE THIS -> screen_rows = (uint16_t**)kcalloc(VGA_HEIGHT * sizeof(uint16_t*));
+    screen_rows = (uint16_t**)calloc(VGA_HEIGHT * sizeof(uint16_t*));
     Screen.cursor = screen_rows;
 
     for(int i = 0; i < VGA_HEIGHT; i++)
@@ -61,51 +62,3 @@ void letters_refresh_add(uint16_t* cursor_current_positon, char character_saved)
     *cursor_current_positon = (uint16_t)((char)(*cursor_current_positon) + (((black << 4) | white) << 8));
 
 }
-
-// void keyboard_refresh_add(uint8_t keyboard_index_position, char character_saved)
-// {
-
-//     char tmp;
-
-//     uint8_t counter = keyboard_index_position;
-
-//     for(char* i = &keyboard_command[keyboard_index_position]; counter < 50; counter++, i++)
-//     {
-//         tmp = *i;
-//         *i = character_saved;
-//         character_saved = tmp;
-//     }
-// }
-
-
-// static char app_exit_status_text[40];
-
-// char* app_exit_status_text_get(void)
-// {
-
-//     switch(last_command_exit_status)
-//     {
-//         case XANIN_OK:
-//         {
-//             strcpy(app_exit_status_text, "ok");
-//             break;
-//         }
-
-//         case XANIN_ERROR:
-//         {
-//             strcpy(app_exit_status_text, "error");
-//             break;
-//         }
-
-//         // case XIN:
-//         // {
-//         //     strcpy(app_exit_status_text, "error");
-//         //     break;
-//         // }
-
-//     }
-    
-//     return app_exit_status_text;
-// }
-
-

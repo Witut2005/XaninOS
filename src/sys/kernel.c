@@ -74,6 +74,12 @@ uint8_t* const zeros;
 
 extern uint32_t stdio_refresh_rate;
 
+void stdio_refresh(address_t* args)
+{
+    if((stdio_mode_get() == STDIO_MODE_TERMINAL) && (__xtb_get()->is_flushable))
+        __sys_xtb_flush(__sys_vty_get());
+}
+
 void kernel_loop(void)
 {
 

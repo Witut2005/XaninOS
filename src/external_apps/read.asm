@@ -7,9 +7,9 @@ buffer: resb 50
 
 section .text
 
-global _start
+global _read_external
 
-_start:
+_read_external:
 
 mov eax, 5
 mov ebx, filename

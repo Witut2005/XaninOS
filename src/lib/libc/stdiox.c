@@ -11,11 +11,6 @@
 #include <lib/libc/stdiox_legacy.h>
 #include <sys/terminal/backend/backend.h>
 
-void stdio_refresh(address_t* args)
-{
-    if((stdio_mode_get() == STDIO_MODE_TERMINAL) && (__xtb_get()->is_flushable))
-        __sys_xtb_flush(__sys_vty_get());
-}
 
 void screen_background_color_set(color_t color)
 {
@@ -130,7 +125,7 @@ void puts(const char* str)
     Xtf* StdioVty = __sys_vty_get();
 
     while(*str != '\0')
-        xtf_character_put(StdioVty, *(str++));
+        __sys_xtf_character_put(StdioVty, *(str++));
 
     // __sys_xtb_flush(StdioVty);
 }
@@ -138,14 +133,14 @@ void puts(const char* str)
 void puts_warning(const char* str)
 {
     putsc("[Warning]", OUTPUT_COLOR_SET(black, yellow));
-    xtf_character_put(__sys_vty_get(), ' ');
+    __sys_xtf_character_put(__sys_vty_get(), ' ');
     puts(str);
 }
 
 void puts_error(const char* str)
 {
     putsc("[Error]", OUTPUT_COLOR_SET(black, lred));
-    xtf_character_put(__sys_vty_get(), ' ');
+    __sys_xtf_character_put(__sys_vty_get(), ' ');
     puts(str);
 }
 

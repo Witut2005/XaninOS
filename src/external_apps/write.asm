@@ -14,9 +14,9 @@ tmp: dd 0x0
 
 section .text
 
-global _start
+global _write_external
 
-_start:
+_write_external:
 
 mov eax, 39
 mov ebx, nazwa

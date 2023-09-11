@@ -29,3 +29,6 @@ all:
 	i386-elf-ld link_create.o -o link_create 
 
 	$(C) $(C_COMPILE) brainfuck.c -I /home/witut/xaninOS/src/ -L /home/witut/xaninOS/src/external_apps -o brainfuck -l c 
+
+    # rm bitmap.bmp
+	rm libc.a libc.o crt0.o brainfuck

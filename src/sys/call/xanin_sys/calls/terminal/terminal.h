@@ -110,6 +110,8 @@ int __sys_xtf_buffer_nth_line_size_get(Xtf* XtFrontend, uint32_t line_number); /
 int __sys_xtf_line_number_from_position_get(Xtf* XtFrontend, uint32_t position);
 
 void __sys_xtf_cell_put(Xtf *XtFrontend, char c, uint8_t color);
+void __sys_xtf_character_put(Xtf* XtFrontend, char character);
+
 void __sys_xtf_remove_last_cell(Xtf* XtFrontend);
 void __sys_xtf_virtual_cursor_add(Xtf* XtFrontend, color_t color);
 void __sys_xtf_buffer_clear(Xtf* XtFrontend);

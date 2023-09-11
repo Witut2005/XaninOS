@@ -295,6 +295,12 @@ uint32_t xanin_sys_handle(void)
             break;
         }
 
+        case XANIN_XTF_CHARACTER_PUT:
+        {
+            __xtf_character_put((Xtf*)ecx, (char)edx);
+            break;
+        }
+
         case XANIN_XTF_REMOVE_LAST_CELL: 
         {
             __xtf_remove_last_cell((Xtf*)ecx);

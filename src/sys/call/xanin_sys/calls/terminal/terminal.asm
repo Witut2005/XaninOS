@@ -9,7 +9,7 @@ global __sys_vty_set, __sys_vty_get, __xtb_get, __sys_xtb_init, __sys_xtb_flush,
 global __sys_xtb_scroll_up, __sys_xtb_scroll_down
 global __sys_xtf_init, __sys_xtf_destroy
 global __sys_xtf_buffer_nth_line_index_get, __sys_xtf_buffer_nth_line_size_get, __sys_xtf_line_number_from_position_get
-global __sys_xtf_cell_put, __sys_xtf_remove_last_cell, __sys_xtf_buffer_clear ;__sys_xtf_virtual_cursor_add
+global __sys_xtf_character_put, __sys_xtf_cell_put, __sys_xtf_remove_last_cell, __sys_xtf_buffer_clear ;__sys_xtf_virtual_cursor_add
 global __sys_xtf_scrolling_on, __sys_xtf_scrolling_off
 global __sys_xtf_cursor_on, __sys_xtf_cursor_off, __sys_xtf_cursor_inc, __sys_xtf_cursor_dec
 
@@ -104,6 +104,14 @@ ESP_GET_NTH_ARGUMENT edx, 2                     ;c
 ESP_GET_NTH_ARGUMENT ebx, 3                     ;color
 XANIN_INVOKE_SYSTEM_CALL
 ret
+
+__sys_xtf_character_put:                             ;(Xtf *XtFrontend, char c, uint8_t color);
+mov eax, XANIN_XTF_CHARACTER_PUT
+ESP_GET_NTH_ARGUMENT ecx, 1                     ;XtFrontend
+ESP_GET_NTH_ARGUMENT edx, 2                     ;character
+XANIN_INVOKE_SYSTEM_CALL
+ret
+
 
 __sys_xtf_remove_last_cell:                     ;(Xtf* XtFrontend);
 mov eax, XANIN_XTF_REMOVE_LAST_CELL

@@ -5,9 +5,9 @@ section .data
 
 section .text
 
-global _start
+global _link_external
 
-_start:
+_link_external:
 mov eax, 8
 mov ebx, [ebp + 12]
 mov ecx, [ebp + 8]

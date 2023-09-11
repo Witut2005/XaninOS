@@ -2,7 +2,7 @@
 
 [org 0x10000]
 
-_start:
+_reboot_external:
 lidt [data]
 mov edx, 0
 div edx
