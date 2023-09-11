@@ -1,7 +1,6 @@
 
 #include <lib/ascii/ascii.h>
 #include <sys/devices/pit/pit.h>
-#include <sys/terminal/interface/terminal.h>
 #include <lib/libc/data_structures.h>
 #include <limits.h>
 #include <stdint.h>
@@ -69,7 +68,6 @@ extern bool com_status(void);
 |Ja, rok 2022, 31 grudzień, 17:00:45    |
 /--------------------------------------*/
 
-terminal_t* kernel_terminal;
 uint8_t* const zeros;
 
 extern uint32_t stdio_refresh_rate;
@@ -129,11 +127,11 @@ void kernel_loop(void)
 
             xscanf(scanf_str,argv[0], argv[1], argv[2], argv[3], argv[4]);
 
-            memcpy(last_used_commands, argv[0], SIZE_OF(argv[0]));
-            memcpy(last_used_parameters, argv[1], SIZE_OF(argv[1]));
-
             erase_spaces(argv[0]);
             erase_spaces(argv[1]);
+            erase_spaces(argv[2]);
+            erase_spaces(argv[3]);
+            erase_spaces(argv[4]);
             
             scan();
         }   

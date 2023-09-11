@@ -136,7 +136,7 @@ builder_options = {
     },
 
     'c':{
-        'default': '-O0 -Wall -Werror -Wno-unused-but-set-variable -Wno-unused-variable -Wno-discarded-qualifiers -Wno-parentheses -Wno-comment -Wno-address-of-packed-member -Wno-maybe-uninitialized -Wno-pointer-sign -Wno-div-by-zero -Wno-duplicate-decl-specifier -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Werror=return-type -I ./ -c',
+        'default': '-O0 -Wall -Wno-unused-but-set-variable -Wno-unused-variable -Wno-discarded-qualifiers -Wno-parentheses -Wno-comment -Wno-address-of-packed-member -Wno-maybe-uninitialized -Wno-pointer-sign -Wno-div-by-zero -Wno-duplicate-decl-specifier -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Werror=return-type -I ./ -c',
         'kernel': '-O0 -Wall -Wno-discarded-qualifiers -Wno-parentheses -Wno-comment -Wno-address-of-packed-member -Wno-maybe-uninitialized -Wno-pointer-sign -Wno-div-by-zero -Wno-duplicate-decl-specifier -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding  -Wno-unused-function -Wno-div-by-zero -I ./'
     },
 
@@ -248,7 +248,6 @@ objects_to_compile = {
 
     'kmodules': [
         CompileObject('./sys/screen/screen.c', builders['c'], builder_options['c']['default'], OBJECT),
-        CompileObject('./sys/terminal/interface/terminal.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./sys/pmmngr/alloc.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./sys/input/input.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./sys/log/syslog.c', builders['c'], builder_options['c']['default'], OBJECT),
@@ -353,7 +352,6 @@ create_c_library('./lib/libc/libc.o', './lib/libc/libc.a', objects_to_compile['l
         './fs/xin.o', './sys/call/xanin_sys/calls/devices/disk.o', './sys/call/xanin_sys/calls/stdio/stdio.o', 
         './sys/call/xanin_sys/calls/terminal/terminal.o', 
         './sys/call/xanin_sys/calls/vga/vga.o', 
-        './sys/terminal/interface/terminal.o'        
                 ])
 
 # print(objects_to_compile['kmodules'] + objects_to_compile['interrupt'])

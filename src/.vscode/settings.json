@@ -32,7 +32,8 @@
         "tui.h": "c",
         "handlers.h": "c",
         "stdint.h": "c",
-        "stdint-gcc.h": "c"
+        "stdint-gcc.h": "c",
+        "data_structures.h": "c"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }

@@ -8,7 +8,6 @@ extern int cpp_test(void);
 #include <programs/file_format_tools/bmp_info.c>
 #include <programs/print_to_syslog.c>
 #include <sys/terminal/interpreter/interpreter.h>
-#include <sys/terminal/interface/terminal.h>
 #include <programs/nic_info.c>
 #include <sys/gyn_cl/gyn.c>
 #include <programs/xin_xpaint.c>
@@ -80,7 +79,6 @@ extern int cpp_test(void);
 int argc;
 char* argv[5];
 int last_command_exit_status;
-extern terminal_t* kernel_terminal;
 
 #define XANIN_ADD_APP_ENTRY0(app_name, exec_name) else if(bstrcmp(argv[0], app_name)) {last_command_exit_status = exec_name();}
 #define XANIN_ADD_APP_ENTRY1(app_name, exec_name) else if(bstrcmp(argv[0], app_name)) {last_command_exit_status = exec_name(argv[1]);}
@@ -227,7 +225,6 @@ void scan(void)
             
         static uint16_t idt_16[3] = {0x0, 0x0, 0x0};
 
-        free(kernel_terminal);
         screen_clear();
 
         disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x12, 5, (uint16_t*)(0x800));
