@@ -1,7 +1,6 @@
 section .text
 
 extern main
-extern screen_init
 
 %define XANIN_ARGC_GET 400
 %define XANIN_ARGV_GET 401
@@ -28,7 +27,7 @@ _start:
 	; popq %rdi
 	; popq %rsi
 
-	call screen_init ; init XaninOS screen  
+	; call screen_init ; init XaninOS screen  
 
 	mov eax, XANIN_ARGV_GET
 	int 0x81

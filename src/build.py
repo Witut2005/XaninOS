@@ -349,6 +349,7 @@ create_c_library('./lib/libc/libc.o', './lib/libc/libc.a', objects_to_compile['l
         './sys/devices/hda/disk.o', 
         # './sys/terminal/backend/backend.o', 
         # './sys/terminal/frontend/frontend.o',
+        './sys/call/xanin_sys/calls/screen/screen.o',
         './fs/xin.o', './sys/call/xanin_sys/calls/devices/disk.o', './sys/call/xanin_sys/calls/stdio/stdio.o', 
         './sys/call/xanin_sys/calls/terminal/terminal.o', 
         './sys/call/xanin_sys/calls/vga/vga.o', 

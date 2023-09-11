@@ -36,7 +36,7 @@ void note_input(xchar x)
 
         KeyInfo.is_bspc = false;
         return;
-        letters_refresh(&Screen.cursor[Screen.y][Screen.x]);
+        __sys_letters_refresh(&Screen.cursor[Screen.y][Screen.x]);
     
     }
 
@@ -129,7 +129,7 @@ void note_input(xchar x)
                 
             char character_saved_tmp = (char)Screen.cursor[Screen.y][Screen.x];
             xprintf("%c", getchar());
-            letters_refresh_add(&Screen.cursor[Screen.y][Screen.x], character_saved_tmp);
+            __sys_letters_refresh_add(&Screen.cursor[Screen.y][Screen.x], character_saved_tmp);
         }
     }  
 

@@ -197,7 +197,7 @@ void _start(void)
     vga_text_mode_height = 25;
     vga_text_mode_width = 80;
 
-    screen_init(); // init screen management system
+    __screen_init(); // init screen management system
     screen_clear();
 
     __xtb_init(__vga_text_mode_width_get(), __vga_text_mode_height_get(), (uint16_t*)__vga_buffer_segment_get());

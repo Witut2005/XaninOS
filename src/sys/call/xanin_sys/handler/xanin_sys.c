@@ -358,19 +358,19 @@ uint32_t xanin_sys_handle(void)
 
         case XANIN_SCREEN_INIT:
         {
-            screen_init();
+            __screen_init();
             break;
         }
 
         case XANIN_SCREEN_LETTERS_REFRESH:
         {
-            letters_refresh((uint16_t*)ecx);
+            __letters_refresh((uint16_t*)ecx);
             break;
         } 
 
         case XANIN_SCREEN_LETTERS_REFRESH_ADD:
         {
-            letters_refresh_add((uint16_t*)ecx, (char)edx);
+            __letters_refresh_add((uint16_t*)ecx, (char)edx);
             break;
         }
 

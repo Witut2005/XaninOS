@@ -3,7 +3,7 @@
 #include <lib/libc/string.h>
 #include <lib/libc/memory.h>
 #include <lib/libc/stdlibx.h>
-#include <sys/screen/screen.h>
+#include <sys/call/xanin_sys/calls/screen/screen.h>
 #include <sys/devices/keyboard/scan_codes.h>
 #include <stdarg.h>
 #include <lib/libc/time.h>
@@ -680,7 +680,7 @@ void xscanf(char* str, ... )
                 stdio_legacy_cell_put('\0', OUTPUT_COLOR_SET(white, white), &Screen.y, &Screen.x);
 
                 KeyInfo.is_bspc = false;
-                letters_refresh(&Screen.cursor[Screen.y][Screen.x]);
+                __sys_letters_refresh(&Screen.cursor[Screen.y][Screen.x]);
             }
 
             else if(Input.scan_code == ENTER)
@@ -1174,7 +1174,7 @@ void xscan_range(char* string_buffer, uint32_t how_many_chars)
                 stdio_legacy_cell_put((char)Screen.cursor[Screen.y][Screen.x], OUTPUT_COLOR_SET(white, white), &Screen.y, &Screen.x);
 
                 KeyInfo.is_bspc = false;
-                letters_refresh(&Screen.cursor[Screen.y][Screen.x]);
+                __sys_letters_refresh(&Screen.cursor[Screen.y][Screen.x]);
             }
 
             else if(Input.character)

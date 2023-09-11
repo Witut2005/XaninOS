@@ -15,7 +15,7 @@ uint8_t logo_back_color = black;
 screen_t Screen;
 uint16_t** screen_rows;
 
-void screen_init(void)
+void __screen_init(void)
 {
     // USE THIS -> screen_rows = (uint16_t**)kcalloc(VGA_HEIGHT * sizeof(uint16_t*));
     screen_rows = (uint16_t**)calloc(VGA_HEIGHT * sizeof(uint16_t*));
@@ -28,7 +28,7 @@ void screen_init(void)
     Screen.y = 0;
 }
 
-void letters_refresh(uint16_t* cursor_current_positon)
+void __letters_refresh(uint16_t* cursor_current_positon)
 {
     return;
     cursor_current_positon++;
@@ -37,7 +37,7 @@ void letters_refresh(uint16_t* cursor_current_positon)
         *(i - 1) = *i;
 }
 
-void letters_refresh_add(uint16_t* cursor_current_positon, char character_saved)
+void __letters_refresh_add(uint16_t* cursor_current_positon, char character_saved)
 {
     return;
     char tmp;

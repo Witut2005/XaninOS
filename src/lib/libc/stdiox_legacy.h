@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-#include <sys/screen/screen.h>
+#include <sys/call/xanin_sys/calls/screen/screen.h>
 
 #ifdef __cplusplus
 extern "C" {

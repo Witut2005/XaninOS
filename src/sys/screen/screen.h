@@ -30,11 +30,10 @@ extern screen_t Screen;
 
 extern uint16_t** screen_rows;
 
-void screen_init(void);
 typedef void (*keyboard_handle_input)(void);
 
 extern keyboard_handle_input keyboard_handle;
 
-void terminal(void);
-void letters_refresh (uint16_t* cursor_current_positon) __attribute__((deprecated));
-void letters_refresh_add (uint16_t* cursor_current_positon, char character_saved) __attribute__((deprecated));
+void __screen_init(void);
+void __letters_refresh (uint16_t* cursor_current_positon) __attribute__((deprecated));
+void __letters_refresh_add (uint16_t* cursor_current_positon, char character_saved) __attribute__((deprecated));
