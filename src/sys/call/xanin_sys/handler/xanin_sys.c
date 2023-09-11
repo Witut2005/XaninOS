@@ -356,6 +356,24 @@ uint32_t xanin_sys_handle(void)
             break;
         }
 
+        case XANIN_SCREEN_INIT:
+        {
+            screen_init();
+            break;
+        }
+
+        case XANIN_SCREEN_LETTERS_REFRESH:
+        {
+            letters_refresh((uint16_t*)ecx);
+            break;
+        } 
+
+        case XANIN_SCREEN_LETTERS_REFRESH_ADD:
+        {
+            letters_refresh_add((uint16_t*)ecx, (char)edx);
+            break;
+        }
+
         case XANIN_VGA_BUFFER_SEGMENT_GET:
         {
             eax = (uint32_t)vga_get_buffer_segment();
