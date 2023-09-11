@@ -10,7 +10,6 @@
 #include <lib/libc/string.h>
 #include <lib/libc/stdlibx.h>
 #include <lib/libc/colors.h>
-#include <sys/terminal/vty/vty.h>
 
 //#define IF_FILE_NOT_EXIST
 #define XIN_OPENED_FILES_COUNTER 100

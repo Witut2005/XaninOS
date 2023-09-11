@@ -2,7 +2,7 @@
 #include <sys/macros.h>
 #include <lib/libc/memory.h>
 #include <lib/libc/stdlibx.h>
-#include <sys/terminal/vty/vty.h>
+#include <sys/screen/vty/vty.h>
 #include <sys/terminal/backend/backend.h>
 #include <sys/terminal/handlers/handlers.h>
 

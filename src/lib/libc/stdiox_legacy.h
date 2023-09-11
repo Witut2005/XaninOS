@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-#include <sys/terminal/vty/vty.h>
+#include <sys/screen/vty/vty.h>
 
 #ifdef __cplusplus
 extern "C" {

@@ -4,7 +4,7 @@
 #include <lib/libc/hal.h>
 #include <lib/libc/singal.h>
 #include <lib/libc/stdlibx.h>
-#include <sys/terminal/vty/vty.h>
+#include <sys/screen/vty/vty.h>
 #include <sys/devices/apic/apic_registers.h>
 #include <sys/input/input.h>
 
@@ -14,7 +14,7 @@
 #pragma once
 
 #include <lib/libc/hal.h>
-#include <sys/terminal/vty/vty.h>
+#include <sys/screen/vty/vty.h>
 #include <sys/devices/apic/apic_registers.h>
 #include <sys/terminal/backend/backend.h>
 

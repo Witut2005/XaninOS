@@ -7,7 +7,7 @@
 #include <stdint.h>
 #include <sys/interrupts/idt/idt.h>
 #include <lib/libc/stdlibx.h>
-#include <sys/terminal/vty/vty.h>
+#include <sys/screen/vty/vty.h>
 #include <sys/terminal/interpreter/interpreter.c>
 #include <lib/libc/math.h>
 #include <sys/devices/keyboard/keyboard_init.c>

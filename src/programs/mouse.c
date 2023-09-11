@@ -1,8 +1,6 @@
 
 #pragma once
 
-
-
 #include <lib/libc/stdiox.h>
 
 extern void mouse_enable(void);

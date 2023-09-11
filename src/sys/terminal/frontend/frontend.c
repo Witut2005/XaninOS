@@ -7,7 +7,7 @@
 #include <sys/pmmngr/alloc.h>
 #include <lib/libc/stdiox.h>
 #include <lib/libc/memory.h>
-#include <sys/terminal/vty/vty.h>
+#include <sys/screen/vty/vty.h>
 
 static Xtf* CurrentVty; 
 

@@ -1,5 +1,5 @@
 
-#include <sys/terminal/vty/vty.h>
+#include <sys/screen/vty/vty.h>
 
 bool is_logo_color_blocked;
 
