@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include <lib/libc/stdiox.h>
 #include <lib/libc/stdiox_canvas.h>
-#include <sys/screen/vty/vty.h>
+#include <sys/screen/screen.h>
 
 
 struct table_t

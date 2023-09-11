@@ -2,7 +2,7 @@
 #include <sys/terminal/interface/terminal.h>
 #include <lib/libc/stdiox.h>
 #include <lib/libc/stdlibx.h>
-#include <sys/screen/vty/vty.h>
+#include <sys/screen/screen.h>
 
 void terminal_set(terminal_t* previous, terminal_t* terminal)
 {
