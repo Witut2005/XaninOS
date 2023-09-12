@@ -4,6 +4,8 @@
 #include <lib/xgl/xgl.h>
 #include <lib/libc/stdiox.h>
 
+//CANVAS_APP
+
 int xgl_test(void)
 {
 

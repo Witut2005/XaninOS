@@ -4,6 +4,7 @@
 #include <lib/libc/stdlibx.h>
 #include <lib/libc/time.h>
 
+//CANVAS_APP
 
 void timer_input(void)
 {

@@ -8,6 +8,7 @@
 #include <lib/libc/memory.h>
 #include <sys/input/input.h>
 
+//CANVAS_APP
 
 #define MOVE_CURSOR_TO_FIRST_CHARACTER(EditState) while(((uint32_t)EditState->cursor - (uint32_t)VGA_TEXT_MEMORY) % 0xA0 != 0) \
             EditState->cursor--

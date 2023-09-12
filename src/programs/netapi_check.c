@@ -6,6 +6,8 @@
 #include <sys/net/netapi/network_device.h>
 #include <lib/libc/stdlibx.h>
 
+//TERMINAL_APP
+
 int netapi_check(char* protocol)
 {
     

@@ -6,8 +6,9 @@
 #include <sys/devices/keyboard/scan_codes.h>
 #include <lib/libc/stdlibx.h>
 #include <lib/libcpp/algorithm.h>
-
 #include <sys/input/input.h>
+
+//CANVAS_APP
 
 #define VGA_WIDTH 80
 // #define VGA_HEIGHT 25

@@ -3,6 +3,8 @@
 #include <sys/net/network_protocols/udp/udp.h>
 #include <sys/input/input.h>
 
+//TERMINAL_APP
+
 int ip_test(char* arg)
 {
     

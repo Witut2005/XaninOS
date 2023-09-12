@@ -1,6 +1,9 @@
 #include <lib/libc/hal.h>
 #include <fs/xin.h>
 
+//TERMINAL_APP
+//NEED A CHECK
+
 int netplan_apply(void)
 {
     interrupt_disable();

@@ -2,6 +2,8 @@
 #include <sys/devices/pci/pci.h>
 #include <sys/devices/usb/usb.h>
 
+//TERMINAL_APP
+
 int usb_controller_info(void)
 {
 
@@ -9,7 +11,6 @@ int usb_controller_info(void)
     usb_controller_detect(USBController);
 
     xprintf("0x%x\n", USBController->_class);
-    while(inputg().scan_code != ENTER);
 
     return XANIN_OK;
 

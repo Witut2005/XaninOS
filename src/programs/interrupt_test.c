@@ -1,6 +1,8 @@
 
 #include <lib/libc/stdlibx.h>
 
+//TERMINAL_APP
+
 int interrupt_test(char* int_id)
 {
     int id = strtoi(int_id, 10);

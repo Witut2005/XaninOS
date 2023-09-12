@@ -4,6 +4,8 @@
 
 #include <lib/libc/stdiox.h>
 
+//CANVAS_APP
+
 int loadch(char* address_string)
 {
 

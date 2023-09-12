@@ -2,6 +2,8 @@
 #include <programs/hexeditor/hexeditor.h>
 #include <sys/input/input.h>
 
+//CANVAS_APP
+
 static char* data_pointer;
 static uint32_t data_pointer_position;
 static uint8_t tmp; 

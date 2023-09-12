@@ -1,5 +1,7 @@
 #include <fs/xin.h>
 
+//TERMINAL_APP
+
 int xin_info(char *entry_name)
 {
 

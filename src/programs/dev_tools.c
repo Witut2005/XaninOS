@@ -10,6 +10,8 @@
 
 #define DEV_TOOLS_MAX_OPTIONS_NUMBER 3
 
+//TERMINAL_APP
+
 int dev_tools(char* program)
 {
 

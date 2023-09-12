@@ -28,6 +28,8 @@
 #include <sys/terminal/interpreter/interpreter.h>
 #include <sys/input/input.h>
 
+//TERMINAL_APP
+
 class Test
 {
     public:

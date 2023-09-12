@@ -1,6 +1,8 @@
 
 #include <fs/xin.h>
 
+//TERMINAL_APP
+
 int xin_entry_remove_app(char* entry_name)
 {
     int status = __sys_xin_entry_remove(entry_name);

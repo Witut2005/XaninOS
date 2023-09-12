@@ -7,6 +7,7 @@
 #include <sys/terminal/interpreter/interpreter.h>
 #include <lib/libc/string.h>
 
+//TERMINAL_APP
 
 int run(char* file_name)
 {

@@ -8,6 +8,8 @@
 #include <lib/libc/data_structures.h>
 #include <sys/input/input.h>
 
+//CANVAS_APP
+
 extern int edit(char* file_name);
 extern int xin_info(char *entry_name);
 

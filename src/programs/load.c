@@ -4,6 +4,8 @@
 #include <lib/ascii/ascii.h>
 #include <sys/terminal/backend/backend.h>
 
+//TERMINAL_APP
+
 int load(char* address_string)
 {
 

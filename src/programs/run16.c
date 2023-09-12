@@ -8,6 +8,8 @@
 #include <lib/libc/string.h>
 #include <lib/libc/hal.h>
 
+//TERMINAL_APP
+
 int run16(char* file_name)
 {
     screen_clear();

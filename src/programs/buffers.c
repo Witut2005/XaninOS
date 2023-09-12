@@ -4,6 +4,8 @@
 #include <lib/libc/stdiox.h>
 #include <sys/call/xanin_sys/calls/pmmngr/alloc.h>
 
+//TERMINAL_APP
+
 extern uint8_t kernel_mmngr_mmap[PMMNGR_MEMORY_BLOCKS];
 
 int buffers_view(void)

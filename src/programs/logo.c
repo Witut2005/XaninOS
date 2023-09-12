@@ -1,6 +1,8 @@
 
 #include <sys/terminal/vty/vty.h>
 
+//CANVAS_APP
+
 bool is_logo_color_blocked;
 
 int logo_color_change(char* color, char* options)

@@ -2,6 +2,8 @@
 
 #include <fs/xin.h>
 
+//TERMINAL_APP
+
 int xin_create_folder_app(char* entry_name)
 {
     int status = __sys_xin_folder_create(entry_name);

@@ -5,7 +5,7 @@
 #include <lib/libc/time.h>
 #include <lib/libc/string.h>
 
-
+//CANVAS_APP
 
 void zsk_init(void)
 {

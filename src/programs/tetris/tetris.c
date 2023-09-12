@@ -3,6 +3,8 @@
 #include <programs/tetris/graphics.h>
 #include <sys/input/input.h>
 
+//CANVAS_APP
+
 int ptetris(void)
 {
     stdio_mode_set(STDIO_MODE_CANVAS);

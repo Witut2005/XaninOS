@@ -2,6 +2,8 @@
 #include <lib/libc/stdlibx.h>
 #include <sys/interrupts/idt/idt.h>
 
+//TERMINAL_APP
+
 extern void divide_by_zero_exception(void);
 extern void keyboard_handler_init(void);
 extern irq_handler interrupt_handlers[0x100];

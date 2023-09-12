@@ -6,6 +6,7 @@
 #include <lib/libc/endian.h>
 #include <sys/net/netapi/objects/response.h>
 
+//TERMIMAL_APP
 
 int ping(char* ip_addr_str)
 {

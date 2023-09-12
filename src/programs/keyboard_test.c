@@ -3,6 +3,8 @@
 #include <lib/libc/stdiox.h>
 #include <lib/libc/stdlibx.h>
 
+//CANVAS_APP
+
 int keyboard_test(void)
 {
     

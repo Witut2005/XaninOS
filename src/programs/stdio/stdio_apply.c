@@ -4,6 +4,8 @@
 #include <lib/libc/string.h>
 #include <lib/libc/stdlibx.h>
 
+//TERMINAL_APP
+
 uint32_t stdio_refresh_rate;
 interval_id stdio_refresh_interval_id;
 

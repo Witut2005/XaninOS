@@ -1,7 +1,6 @@
-
-
-
 #include <fs/xin.h>
+
+//TERMINAL_APP
 
 int xin_move_entry_app(char* entry_name, char* new_name)
 {

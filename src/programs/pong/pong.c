@@ -6,6 +6,8 @@
 #include <lib/xaninGraphics/xaninGraphics.h>
 #include <sys/input/input.h>
 
+//CANVAS APP
+
 void pong_get_input(void)
 {
     if(KeyInfo.character == 'w' || KeyInfo.character == 's')

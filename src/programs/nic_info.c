@@ -4,6 +4,8 @@
 #include <sys/net/netapi/network_device.h>
 #include <sys/input/input.h>
 
+//TERMINAL_APP
+
 extern pci_device* i8254x_pci_info_get(void);
 extern uint8_t* i8254x_mac_get(void);
 extern uint32_t i8254x_receive_descriptors_buffer_get(void);
@@ -19,7 +21,6 @@ int nic_info(const char* network_device_name)
     if(NetDevice == NULL)
     {
         xprintf("%zNo Such Device: %s\n", stderr, network_device_name);
-        while(inputg().scan_code != ENTER);
         return XANIN_ERROR;
     }
 
@@ -47,7 +48,6 @@ int nic_info(const char* network_device_name)
     xprintf("%x\n", mac[5]);
 
     xprintf("interrupt line (PIC): 0x%x\n", NetDevice->interrupt_line);
-
 
     return XANIN_OK;
 }

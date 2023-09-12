@@ -1,9 +1,9 @@
 
 #pragma once
 
-
-
 #include <lib/libc/stdiox.h>
+
+//CANVAS_APP
 
 extern void mouse_enable(void);
 extern void mouse_handler(void);

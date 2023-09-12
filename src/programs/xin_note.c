@@ -7,6 +7,8 @@
 #include <lib/libc/string.h>
 #include <sys/input/input.h>
 
+//CANVAS_APP
+
 void note_input(xchar x)
 {
 

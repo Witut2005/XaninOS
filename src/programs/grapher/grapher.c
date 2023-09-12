@@ -5,6 +5,7 @@
 // char 219 is white square
 
 //traz was here
+//CANVAS_APP
 
 int grapher(void){
     

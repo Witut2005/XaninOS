@@ -6,6 +6,8 @@
 #include <lib/libc/string.h>
 #include <sys/input/input.h>
 
+//CANVAS_APP
+
 uint16_t saved_cell;
 uint16_t* cursor;
 

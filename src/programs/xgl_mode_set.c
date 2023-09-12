@@ -1,6 +1,8 @@
 
 #include <lib/tui/tui.h>
 
+//CANVAS_APP
+
 __STATUS xgl_mode_set(void)
 {
     stdio_mode_set(STDIO_MODE_CANVAS);

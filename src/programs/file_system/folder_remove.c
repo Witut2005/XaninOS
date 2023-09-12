@@ -1,6 +1,8 @@
 
 #include <fs/xin.h>
 
+//TERMINAL_APP
+
 int xin_folder_remove_app(char* folder_name)
 {
     int status = __sys_xin_folder_remove(folder_name);

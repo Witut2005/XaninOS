@@ -2,6 +2,7 @@
 #include <lib/libc/stdiox.h>
 #include <lib/libc/time.h>
 
+//TERMINAL_APP
 
 enum {
     CPUID_ECX_SSE3         = 1 << 0, 

@@ -2,6 +2,8 @@
 #include <lib/libc/math.h>
 #include <lib/libc/string.h>
 #include <lib/libc/stdiox.h>
+
+//TERMINAL_APP
  
 enum operation_types
 {

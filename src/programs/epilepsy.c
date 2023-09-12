@@ -3,6 +3,8 @@
 #include <lib/libc/stdiox.h>
 #include <lib/libc/stdlibx.h>
 
+//CANVAS_APP
+
 int epilepsy(void)
 {
     uint16_t* color_picker = (uint16_t*)VGA_TEXT_MEMORY;

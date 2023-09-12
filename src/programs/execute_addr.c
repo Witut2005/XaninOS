@@ -3,6 +3,8 @@
 
 #include <lib/libc/stdiox.h>
 
+//TERMINAL_APP
+
 int execute_addr(char* address_str)
 {
     void (*address_to_execute)(void) = (void(*)(void))(strtoi(address_str, HEXADECIMAL));

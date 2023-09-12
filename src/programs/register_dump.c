@@ -4,6 +4,8 @@
 #include <sys/devices/keyboard/scan_codes.h>
 #include <sys/input/input.h>
 
+//TERMINAL_APP
+
 int reg_dump(void)
 {
     
@@ -61,7 +63,6 @@ int reg_dump(void)
     xprintf("fs: 0x%x\n", SegmentRegister.fs);
     xprintf("gs: 0x%x\n", SegmentRegister.gs);
 
-    while(inputg().scan_code != ENTER);
     return XANIN_OK;
 
 }

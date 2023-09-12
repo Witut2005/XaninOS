@@ -6,6 +6,7 @@
 #include <sys/terminal/interpreter/interpreter.h>
 #include <lib/libc/string.h>
 
+//TERMINAL_APP
 
 int cat(char* file_name)
 {

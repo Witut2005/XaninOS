@@ -3,6 +3,8 @@
 #include <lib/libc/stdiox.h>
 #include <sys/net/network_protocols/arp/arp.h>
 
+//TERMINAL_APP
+
 int arp_check(const char* ip_addr_str)
 {
 

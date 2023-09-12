@@ -1,6 +1,8 @@
 
 #include <fs/xin_syscalls.h>
 
+//TERMINAL_APP
+
 __STATUS xin_copy_app(char* file_name, char* new_file_name)
 {
     int status = __sys_xin_copy(file_name, new_file_name);

@@ -3,6 +3,8 @@
 #include <sys/terminal/frontend/frontend.h>
 #include <lib/libc/stdiox.h>
 
+//TERMINAL_APP
+
 int terminal_test(void)
 {
 

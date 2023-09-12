@@ -2,6 +2,8 @@
 #include <lib/libc/stdlibx.h>
 #include <sys/pmmngr/alloc.h>
 
+//TERMINAL_APP
+
 int memory_test(void)
 {
 

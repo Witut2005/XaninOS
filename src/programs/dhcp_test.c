@@ -4,6 +4,8 @@
 #include <sys/net/network_protocols/dhcp/dhcp.h>
 #include <lib/libc/stdlibx.h>
 
+//TERMINAL_APP
+
 int dhcp_test(void)
 {
     while(KeyInfo.scan_code != ENTER)

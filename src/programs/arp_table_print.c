@@ -2,6 +2,8 @@
 #include <sys/net/network_protocols/arp/arp.h>
 #include <lib/libc/string.h>
 
+//TERMINAL_APP
+
 int arp_table_print(char* arg, char* options)
 {
 

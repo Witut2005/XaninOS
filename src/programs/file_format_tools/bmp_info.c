@@ -2,6 +2,8 @@
 #include <lib/bmp/bmp.h>
 #include <lib/libc/stdiox.h>
 
+//TERMINAL_APP
+
 __STATUS bmp_info(const char* filename)
 {
     XinEntry* File = fopen(filename, "r");

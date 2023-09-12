@@ -132,8 +132,8 @@ void kernel_loop(void)
             memcpy(last_used_commands, argv[0], SIZE_OF(argv[0]));
             memcpy(last_used_parameters, argv[1], SIZE_OF(argv[1]));
 
-            erase_spaces(argv[0]);
-            erase_spaces(argv[1]);
+            for(int i = 0; i < 5; i++)
+                erase_spaces(argv[i]);
             
             scan();
         }   

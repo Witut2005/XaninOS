@@ -8,6 +8,8 @@
 #include <lib/libc/memory.h>
 #include <lib/libc/stdiox.h>
 
+//CANVAS_APP
+
 extern "C" 
 {
 

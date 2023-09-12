@@ -2,6 +2,7 @@
 #include <lib/libc/stdiox.h>
 #include <sys/devices/pci/pci.c>
 
+//TERMINAL_APP
 
 int get_device_info(void)
 {

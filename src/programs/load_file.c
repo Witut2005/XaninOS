@@ -4,6 +4,8 @@
 
 #include <fs/xin.h>
 
+//TERMINAL_APP
+
 int load_file(char* file_name, char* options)
 {
 
@@ -44,8 +46,5 @@ int load_file(char* file_name, char* options)
     
     fclose(&File);
 
-	while(inputg().scan_code != ENTER);
     return XANIN_OK;
-
-
 }

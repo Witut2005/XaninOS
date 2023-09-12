@@ -5,6 +5,8 @@
 #include <lib/libc/string.h>
 #include <sys/devices/keyboard/scan_codes.h>
 
+//TERMINAL_APP
+
 int help(char* command)
 {
 

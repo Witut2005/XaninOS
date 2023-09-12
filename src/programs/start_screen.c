@@ -1,4 +1,6 @@
 
+//CANVAS_APP
+
 uint16_t string_x = 5;
 uint16_t string_y = 0;
 bool if_down = true;

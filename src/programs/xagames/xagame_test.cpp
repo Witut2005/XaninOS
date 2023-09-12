@@ -4,6 +4,8 @@
 #include <lib/libc/colors.h>
 #include <lib/libcpp/new.hpp>
 
+//CANVAS_APP
+
 extern "C" int screen_clear(void);
 extern "C" void msleep(float miliseconds);
 

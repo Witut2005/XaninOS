@@ -4,6 +4,8 @@
 #include <lib/libc/endian.h>
 #include <sys/input/input.h>
 
+//TERMINAL_APP
+
 int udp_test(char* ip_addr_str)
 {
 

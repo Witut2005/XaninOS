@@ -6,6 +6,8 @@
 #include <lib/libc/string.h>
 #include <sys/input/input.h>
 
+//CANVAS_APP
+
 static uint8_t current_color;
 static uint16_t selected_cell;
 

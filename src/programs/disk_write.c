@@ -2,6 +2,8 @@
 
 #include <sys/devices/hda/disk.h>
 
+//TERMINAL_APP
+
 int disk_write_data(char* sector_str, char* how_many_sectors_str, char* address_str)
 {
     uint32_t sector = strtoi(sector_str, HEXADECIMAL);

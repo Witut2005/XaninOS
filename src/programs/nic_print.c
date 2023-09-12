@@ -1,6 +1,8 @@
 
 #include <sys/net/netapi/network_device.h>
 
+//TERMINAL_APP
+
 int nic_print(void)
 {
     PciDevicePack* NetworkDevices = (PciDevicePack*)calloc(SIZE_OF(PciDevicePack));
