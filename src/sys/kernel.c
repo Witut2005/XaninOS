@@ -125,12 +125,9 @@ void kernel_loop(void)
             char scanf_str[] = "%s %s %s %s %s";
 
             for(int i = 0; i < 5; i++)
-                memset(argv[i], 0, 40);
+                memset(argv[i], 0, XANIN_PMMNGR_BLOCK_SIZE * 2);
 
             xscanf(scanf_str,argv[0], argv[1], argv[2], argv[3], argv[4]);
-
-            memcpy(last_used_commands, argv[0], SIZE_OF(argv[0]));
-            memcpy(last_used_parameters, argv[1], SIZE_OF(argv[1]));
 
             for(int i = 0; i < 5; i++)
                 erase_spaces(argv[i]);

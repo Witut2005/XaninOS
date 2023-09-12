@@ -829,9 +829,12 @@ void xscanf(char* str, ... )
         va_start(args, str);
 
         uint32_t index = 0;
+
+        #define XSCANF_FIELD_BUFFER_SIZE XANIN_PMMNGR_BLOCK_SIZE * 2 * 5
+        #define XSCANF_STRING_TYPED_BUFFER_SIZE XANIN_PMMNGR_BLOCK_SIZE * 2 * 5
     
-        char* field_buffer = (char*)calloc(XANIN_PMMNGR_BLOCK_SIZE * 2 * 5);
-        char* string_typed_buffer = (char*)calloc(XANIN_PMMNGR_BLOCK_SIZE * 2);
+        char* field_buffer = (char*)calloc(XSCANF_FIELD_BUFFER_SIZE);
+        char* string_typed_buffer = (char*)calloc(XSCANF_STRING_TYPED_BUFFER_SIZE);
 
         Xtf* StdioVty = __sys_vty_get();
         uint32_t begin_index = StdioVty->size;
@@ -899,7 +902,7 @@ void xscanf(char* str, ... )
                 while(str[str_counter] != '\0')
                 {
                     
-                    memset(field_buffer, 0, SIZE_OF(field_buffer));
+                    memset(field_buffer, 0, XSCANF_FIELD_BUFFER_SIZE);
 
                     if(str[str_counter] == '%')
                     {
