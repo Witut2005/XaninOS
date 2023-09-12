@@ -2,6 +2,19 @@
 
 #pragma once
 
+
+#include <lib/libc/pair.h>
+#include <lib/libc/string.h>
+#include <lib/libc/memory.h>
+#include <lib/libc/stdlibx.h>
+#include <sys/terminal/vty/vty.h>
+#include <sys/devices/keyboard/scan_codes.h>
+#include <stdarg.h>
+#include <lib/libc/time.h>
+#include <lib/libc/stdiox.h>
+#include <lib/libc/stdiox_legacy.h>
+#include <sys/terminal/backend/backend.h>
+
 char canvas_putchar(char character); // ONLY AVAILABLE IN CANVAS MODE
 char canvas_putchar_color(uint8_t color, char character); // ONLY AVAILABLE IN CANVAS MODE
 

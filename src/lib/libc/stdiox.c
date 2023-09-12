@@ -12,16 +12,7 @@
 #include <sys/terminal/backend/backend.h>
 
 
-void screen_background_color_set(color_t color)
-{
-    uint8_t* vga_ptr = (uint8_t*)VGA_TEXT_MEMORY;
 
-    for(int i = 1; i < VGA_SCREEN_RESOLUTION * 2; i+=2)
-    {
-        vga_ptr[i] &= 0xF;
-        vga_ptr[i] |= color << 4;
-    }
-}
 
 int vga_screen_buffer_clear(void)
 {
@@ -1109,6 +1100,10 @@ void xscan_range(char* string_buffer, uint32_t how_many_chars)
         uint32_t counter = 0;
         char* string_pointer;
         char* field_buffer = (char*)calloc(how_many_chars);
+
+        __sys_inputg(&Input);
+        __sys_keyinfo_get(&KeyInfo);
+
 
         char string_typed_buffer[1000];
         memset(string_typed_buffer, '\0', SIZE_OF(string_typed_buffer));

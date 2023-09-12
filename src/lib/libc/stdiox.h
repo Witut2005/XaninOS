@@ -31,7 +31,6 @@ char putchar_color(uint8_t color, char character); // ONLY AVAILABLE IN CANVAS M
 void xprintf(char* str, ... );
 void xscanf(char* str, ... );
 void xscan_range(char* string_buffer, uint32_t how_many_chars);
-void screen_background_color_set(color_t color);
 void stdio_vty_set(Xtf* Front);
 Xtf* stdio_vty_get(void);
 
