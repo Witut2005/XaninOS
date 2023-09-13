@@ -3,6 +3,9 @@
 
 char canvas_putchar(char character)
 {
+    if(stdio_mode_get() != STDIO_MODE_CANVAS) 
+        return character;
+
     stdio_canvas_cell_put(character, OUTPUT_COLOR_SET(black, white), &Screen.y, &Screen.x);
 
     if((++Screen.x) == VGA_WIDTH)
@@ -15,6 +18,9 @@ char canvas_putchar(char character)
 
 char canvas_putchar_color(uint8_t color, char character)
 {
+    if(stdio_mode_get() != STDIO_MODE_CANVAS) 
+        return character;
+
     stdio_legacy_cell_put(character, color, &Screen.y, &Screen.x);
         
     if((++Screen.x) == VGA_WIDTH)
@@ -46,6 +52,8 @@ void canvas_xprintf(char* str, ... )
     uint8_t background_color = black;
     uint8_t font_color = white;
 
+    if(stdio_mode_get() != STDIO_MODE_CANVAS) 
+        return;
 
     while(str[string_counter])
     {
@@ -465,10 +473,14 @@ void canvas_xscan_range(char* string_buffer, uint32_t how_many_chars)
     char* field_buffer = (char*)calloc(how_many_chars);
 
     char string_typed_buffer[1000];
-    memset(string_typed_buffer, '\0', SIZE_OF(string_typed_buffer));
 
     uint32_t index = 0;
     uint16_t* text_buffer_start = &Screen.cursor[Screen.y][Screen.x];
+
+    if(stdio_mode_get() != STDIO_MODE_CANVAS)
+        return;
+
+    memset(string_typed_buffer, '\0', SIZE_OF(string_typed_buffer));
 
     while(1)
     {
@@ -551,6 +563,9 @@ void canvas_xscan_range(char* string_buffer, uint32_t how_many_chars)
 
 void canvas_screen_background_color_set(color_t color)
 {
+    if(stdio_mode_get() != STDIO_MODE_CANVAS)
+        return;
+
     uint8_t* vga_ptr = (uint8_t*)VGA_TEXT_MEMORY;
 
     for(int i = 1; i < VGA_SCREEN_RESOLUTION * 2; i+=2)
