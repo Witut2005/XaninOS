@@ -9,24 +9,24 @@
 
 void zsk_init(void)
 {
-    screen_clear();
+    canvas_screen_clear();
 
     Screen.x = 0;
     Screen.y = 12 ;
 
-    xprintf("                                                               \n");
-    xprintf("              ############                                     \n");
-    xprintf("          #############                                        \n");
-    xprintf("        #######                                                \n");
-    xprintf("       ##                                                      \n");
-    xprintf("      II    ________                                           \n");
-    xprintf("      II    | ----- |                                          \n");   
-    xprintf("   ___II____| |___| |                                          \n");
-    xprintf("  |                 |     __________      __________           \n");
-    xprintf(" |O|                |    |          |    |          |          \n");
-    xprintf("  |_________________|=||=|    %zZSK%z   |=||=|    %zZSK%z   |=|\n", OUTPUT_COLOR_SET(lblue,white), OUTPUT_COLOR_SET(black, white),OUTPUT_COLOR_SET(lblue,white), OUTPUT_COLOR_SET(black, white));
-    xprintf(" /====|_____|====O |     |__________|    |__________|          \n");
-    xprintf("  {___}      L____/        O      O        O      O            \n");
+    canvas_xprintf("                                                               \n");
+    canvas_xprintf("              ############                                     \n");
+    canvas_xprintf("          #############                                        \n");
+    canvas_xprintf("        #######                                                \n");
+    canvas_xprintf("       ##                                                      \n");
+    canvas_xprintf("      II    ________                                           \n");
+    canvas_xprintf("      II    | ----- |                                          \n");   
+    canvas_xprintf("   ___II____| |___| |                                          \n");
+    canvas_xprintf("  |                 |     __________      __________           \n");
+    canvas_xprintf(" |O|                |    |          |    |          |          \n");
+    canvas_xprintf("  |_________________|=||=|    %zZSK%z   |=||=|    %zZSK%z   |=|\n", OUTPUT_COLOR_SET(lblue,white), OUTPUT_COLOR_SET(black, white),OUTPUT_COLOR_SET(lblue,white), OUTPUT_COLOR_SET(black, white));
+    canvas_xprintf(" /====|_____|====O |     |__________|    |__________|          \n");
+    canvas_xprintf("  {___}      L____/        O      O        O      O            \n");
 }
 
 void zsk_move(uint32_t delay)
@@ -54,7 +54,7 @@ int zsk(char* delay_str)
     else
         delay = strtoi(delay_str, DECIMAL);
 
-    xprintf("delay: %d", delay);
+    canvas_xprintf("delay: %d", delay);
     //fwhile(1);
 
     zsk_init();

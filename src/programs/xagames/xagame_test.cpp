@@ -3,6 +3,7 @@
 #include <lib/game_engine/xagame.hpp>
 #include <lib/libc/colors.h>
 #include <lib/libcpp/new.hpp>
+#include <lib/libc/canvas.h>
 
 //CANVAS_APP
 
@@ -16,7 +17,7 @@ extern "C" int xagame_test(void)
 {
 
     stdio_mode_set(STDIO_MODE_CANVAS);
-    screen_clear();
+    canvas_screen_clear();
 
     rectangle* y = new rectangle(4);
 

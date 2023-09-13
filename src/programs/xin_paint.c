@@ -97,7 +97,7 @@ void paint_input(xchar x)
     else if(x.scan_code == F3_KEY)
     {
         selected_cell = 0x0;
-        screen_clear();
+        canvas_screen_clear();
     }
 
     else
@@ -132,13 +132,13 @@ void paint_input(xchar x)
 int xin_paint(char* file_name)
 {
     stdio_mode_set(STDIO_MODE_CANVAS);
-    screen_clear();
+    canvas_screen_clear();
 
     XinEntry* xin_file = fopen(file_name, "rw");
 
     if(xin_file == NULL)
     {
-        xprintf("Could not open file %s\n", file_name);
+        canvas_xprintf("Could not open file %s\n", file_name);
         while(KeyInfo.scan_code != ENTER);
         return XANIN_ERROR;
     }

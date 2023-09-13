@@ -30,16 +30,17 @@ int grapher(void){
     unsigned short RunAgain=0;
     unsigned short Clearing=0;
 
-    screen_clear();
+    stdio_mode_set(STDIO_MODE_CANVAS);
+    canvas_screen_clear();
 
-    xprintf("?Draw axies?\n[Y/any]: ");
-    xscanf("%c", &select);
+    canvas_xprintf("?Draw axies?\n[Y/any]: ");
+    canvas_xscanf("%c", &select);
 
 
     while(RunFlag==true)
     {
     RunFlag=false;
-    screen_clear();
+    canvas_screen_clear();
 
     if(select==121||select==89||select==49)
     //121 -> y 89 -> Y
@@ -86,10 +87,10 @@ int grapher(void){
      /////////////////////////
     //function selecting and running
         
-        xprintf("select function type: \n1 - Constant | 2 - Linear | 3 - Quadratic | 4 - Rational\n");
-        xscanf("%d", &FunctionType);
+        canvas_xprintf("select function type: \n1 - Constant | 2 - Linear | 3 - Quadratic | 4 - Rational\n");
+        canvas_xscanf("%d", &FunctionType);
 
-        screen_clear();
+        canvas_screen_clear();
 
             CenterX=DispX-1;
             CenterX=CenterX/2;
@@ -101,31 +102,31 @@ int grapher(void){
         switch (FunctionType)
             {
             case 1:
-                xprintf("value: !full integers!\n");
-                xscanf("%d", &ValueA);
+                canvas_xprintf("value: !full integers!\n");
+                canvas_xscanf("%d", &ValueA);
                 break;
 
             case 2:
-                xprintf("value a, b: !full integers!\n");
-                xscanf("%d", &ValueA);
-                xscanf("%d", &ValueP);
+                canvas_xprintf("value a, b: !full integers!\n");
+                canvas_xscanf("%d", &ValueA);
+                canvas_xscanf("%d", &ValueP);
                 break;
             
             case 3:
-                xprintf("value a, b, c: !full integers!\n");
-                xscanf("%d", &ValueA);
-                xscanf("%d", &ValueP);
-                xscanf("%d", &ValueQ);
+                canvas_xprintf("value a, b, c: !full integers!\n");
+                canvas_xscanf("%d", &ValueA);
+                canvas_xscanf("%d", &ValueP);
+                canvas_xscanf("%d", &ValueQ);
                 break;
             
             case 4:
-                xprintf("value a, b, c: !full integers!\n");
-                xscanf("%d", &ValueA);
-                xscanf("%d", &ValueP);
-                xscanf("%d", &ValueQ);               
+                canvas_xprintf("value a, b, c: !full integers!\n");
+                canvas_xscanf("%d", &ValueA);
+                canvas_xscanf("%d", &ValueP);
+                canvas_xscanf("%d", &ValueQ);               
                 break;
             }
-        screen_clear();
+        canvas_screen_clear();
         //run function and input result for given x into table
         while (POSX<=DispX-1){
             ValX=POSX-CenterX;
@@ -175,15 +176,15 @@ int grapher(void){
             for(;POSX<=DispX-1;POSX++)
             {
                 if(D[POSX][POSY]==0)
-                    xprintf(" ");//empty space
+                    canvas_xprintf(" ");//empty space
                 else if (D[POSX][POSY]==42)
                 {
-                    xprintf("%z%c",OUTPUT_COLOR_SET(black, lred), D[POSX][POSY]);
+                    canvas_xprintf("%z%c",OUTPUT_COLOR_SET(black, lred), D[POSX][POSY]);
                 }
                 else
-                    xprintf("%z%c", OUTPUT_COLOR_SET(black, white), D[POSX][POSY]);
+                    canvas_xprintf("%z%c", OUTPUT_COLOR_SET(black, white), D[POSX][POSY]);
             }
-            xprintf("\n");
+            canvas_xprintf("\n");
             POSX=0;
         }
             POSY=0;
@@ -191,13 +192,13 @@ int grapher(void){
 
 
     //ask for running again//////////////////
-    xprintf("run again? [Y/any]");
-    xscanf("%c", &RunAgain);
+    canvas_xprintf("run again? [Y/any]");
+    canvas_xscanf("%c", &RunAgain);
     if(RunAgain==121||RunAgain==89||RunAgain==49)
     {
         RunFlag=true;
-        xprintf("clear graph(s)? [Y/any]");
-        xscanf("%c", &Clearing);
+        canvas_xprintf("clear graph(s)? [Y/any]");
+        canvas_xscanf("%c", &Clearing);
 
         if(Clearing==121||Clearing==89||Clearing==49)
         {

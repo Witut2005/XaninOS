@@ -20,15 +20,15 @@ int timer_test(void)
 
     uint32_t current_time = 0;
 
-    screen_clear();
+    canvas_screen_clear();
 
-    xprintf("Press 'a' to start...");
+    canvas_xprintf("Press 'a' to start...");
     while(inputc() != 'a');
 
     while(!app_exited)
     {
-        screen_clear();
-        xprintf("%d", current_time);
+        canvas_screen_clear();
+        canvas_xprintf("%d", current_time);
         current_time++;
         msleep(1000);
     }

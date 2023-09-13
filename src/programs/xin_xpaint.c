@@ -124,7 +124,7 @@ int xin_xpaint(char* file_name)
 
     if(xin_file == NULL)
     {
-        xprintf("Could not open file %s\n", file_name);
+        canvas_xprintf("Could not open file %s\n", file_name);
         while(inputg().scan_code != ENTER);
         return XANIN_ERROR;
     }
@@ -134,7 +134,7 @@ int xin_xpaint(char* file_name)
     
         uint16_t* data_pointer = (uint16_t*)calloc(VGA_SCREEN_RESOLUTION * SIZE_OF(XtCell));
         fread(xin_file, data_pointer, VGA_SCREEN_RESOLUTION * SIZE_OF(XtCell));
-        screen_clear();
+        canvas_screen_clear();
 
         uint16_t* screen_cell = (uint16_t*)VGA_TEXT_MEMORY;
 

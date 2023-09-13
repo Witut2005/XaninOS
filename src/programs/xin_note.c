@@ -111,7 +111,7 @@ void note_input(xchar x)
     else if(x.scan_code == ENTER)
     {
         Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | (((black << 4) | white) << 8));
-        xprintf("\r\n");
+        canvas_xprintf("\r\n");
         Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | (((white << 4) | white) << 8));
     }
 
@@ -130,7 +130,7 @@ void note_input(xchar x)
                 Screen.x--;
                 
             char character_saved_tmp = (char)Screen.cursor[Screen.y][Screen.x];
-            xprintf("%c", getchar());
+            canvas_xprintf("%c", getchar());
             letters_refresh_add(&Screen.cursor[Screen.y][Screen.x], character_saved_tmp);
         }
     }  
@@ -141,13 +141,13 @@ void note_input(xchar x)
 int xin_note(char* file_name)
 {
     stdio_mode_set(STDIO_MODE_CANVAS);
-    screen_clear();
+    canvas_screen_clear();
 
     XinEntry* xin_file = fopen(file_name, "rw");
 
     if(xin_file == NULL)
     {
-        xprintf("Could not open file: %s\n", file_name);
+        canvas_xprintf("Could not open file: %s\n", file_name);
         while(KeyInfo.scan_code != ENTER);
         return XANIN_ERROR;
     }
@@ -158,7 +158,7 @@ int xin_note(char* file_name)
         for(int i = 0; i < 16; i++)
             disk_read(ATA_FIRST_BUS, ATA_MASTER, xin_file->first_sector + i, 1, (uint16_t*)((xin_file->first_sector + i) * SECTOR_SIZE));
         
-        screen_clear();
+        canvas_screen_clear();
 
         char* data_pointer = (char*)(xin_file->first_sector * SECTOR_SIZE);
 

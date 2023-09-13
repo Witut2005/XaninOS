@@ -7,6 +7,7 @@
 #include <lib/libc/stdlibx.h>
 #include <lib/libcpp/algorithm.h>
 #include <sys/input/input.h>
+#include <lib/libc/canvas.h>
 
 //CANVAS_APP
 
@@ -114,7 +115,7 @@ extern "C" void tetris_keyboard_handler(void)
     }
     
     else if(std::KeyInfo.scan_code == S_KEY)
-        screen_clear();
+        canvas_screen_clear();
 
     else if(std::KeyInfo.scan_code == ARROW_DOWN)
     {

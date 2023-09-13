@@ -10,7 +10,7 @@ int loadch(char* address_string)
 {
 
     stdio_mode_set(STDIO_MODE_CANVAS);
-    screen_clear();
+    canvas_screen_clear();
     
     uint32_t address = strtoi(address_string, HEXADECIMAL);
 
@@ -23,7 +23,7 @@ int loadch(char* address_string)
     		Screen.x = 0x0;
             Screen.y++;
     	}
-        putchar(data_pointer[i]);
+        canvas_putchar(data_pointer[i]);
     }
 
 	while(inputg().scan_code != ENTER);

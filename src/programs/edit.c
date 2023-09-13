@@ -1,5 +1,5 @@
 
-#include <lib/libc/stdiox.h>
+#include <lib/libc/canvas.h>
 #include <sys/devices/keyboard/scan_codes.h>
 #include <sys/terminal/vty/vty.h>
 #include <fs/xin.h>
@@ -287,13 +287,13 @@ int edit(char* file_name)
 
     stdio_mode_set(STDIO_MODE_CANVAS);
 
-    screen_clear();
+    canvas_screen_clear();
     XinEntry* file = xin_find_entry(file_name);
 
     if(file == NULL)
     {
-        xprintf("Couldn't open file %s\n", file_name);
-        xprintf("Do want to create it?\nY/n ");
+        canvas_xprintf("Couldn't open file %s\n", file_name);
+        canvas_xprintf("Do want to create it?\nY/n ");
 
         char selected_option = inputg().character;
         if(selected_option == 'n' || selected_option == 'N')
@@ -304,14 +304,14 @@ int edit(char* file_name)
     else
         file = fopen(file_name, "rw");
     
-    screen_clear();
+    canvas_screen_clear();
 
     fread(file, NULL, file->size );
 
     EditInfo EditState = {0, (uint16_t*)VGA_TEXT_MEMORY, 0, 0, 0, xin_get_file_size_in_sectors(file), 
                             file->FileInfo->buffer, file->FileInfo->buffer};
 
-    xprintf("%s", EditState.program_buffer);
+    canvas_xprintf("%s", EditState.program_buffer);
    
     for(int i = 0; EditState.program_buffer[i] != '\0'; i++)
     {
@@ -325,8 +325,8 @@ int edit(char* file_name)
     {
         edit_input(inputg(), file, &EditState);
         EditState.begin_of_current_text = &EditState.program_buffer[edit_get_begin_of_printed_text(&EditState)];
-        screen_clear();
-        xprintf("%s", EditState.begin_of_current_text);
+        canvas_screen_clear();
+        canvas_xprintf("%s", EditState.begin_of_current_text);
         CURSOR_SELECT_MODE_SET(&EditState);
 
         if(Screen.cursor[VGA_HEIGHT-1][70] == BLANK_SCREEN_CELL)
@@ -335,7 +335,7 @@ int edit(char* file_name)
             for(int i = 0; i < 5; i++)
                 Screen.cursor[VGA_MAX_Y][70 + i] = BLANK_SCREEN_CELL;
 
-            xprintf("%h%d/%d", OUTPUT_POSITION_SET(VGA_MAX_Y, 70) ,EditState.current_line, EditState.total_lines);
+            canvas_xprintf("%h%d/%d", OUTPUT_POSITION_SET(VGA_MAX_Y, 70) ,EditState.current_line, EditState.total_lines);
         }
 
     }

@@ -28,7 +28,7 @@ void handle_selected_option(char* option, ExplorerInfo* AppInfo)
 {
     if(bstrcmp(option, "remove"))
     {
-        xprintf("selected file: %s\n", AppInfo->selected_file);
+        canvas_xprintf("selected file: %s\n", AppInfo->selected_file);
         __sys_xin_entry_remove(AppInfo->selected_file);
     }
 
@@ -37,8 +37,8 @@ void handle_selected_option(char* option, ExplorerInfo* AppInfo)
         char* new_name = (char*)calloc(XIN_MAX_PATH_LENGTH);
         stdio_canvas_move_to_y(stdio_canvas_get_last_valid_y());
 
-        xprintf("New file name: ");
-        xscanf("%s", new_name);
+        canvas_xprintf("New file name: ");
+        canvas_xscanf("%s", new_name);
         __sys_xin_entry_move(AppInfo->selected_file, xin_get_current_path(new_name));
 
         free(new_name);
@@ -49,10 +49,10 @@ void handle_selected_option(char* option, ExplorerInfo* AppInfo)
         char* new_name = (char*)calloc(XIN_MAX_PATH_LENGTH);
         stdio_canvas_move_to_y(stdio_canvas_get_last_valid_y());
 
-        xprintf("where do you want to create a link entry: ");
-        xscanf("%s", new_name);
+        canvas_xprintf("where do you want to create a link entry: ");
+        canvas_xscanf("%s", new_name);
 
-        xprintf("\ngiven name: %s\n", new_name);
+        canvas_xprintf("\ngiven name: %s\n", new_name);
         // while(1);
 
         if(new_name[0] != '/')
@@ -68,11 +68,11 @@ void handle_selected_option(char* option, ExplorerInfo* AppInfo)
         char* new_name = (char*)calloc(XIN_MAX_PATH_LENGTH);
         stdio_canvas_move_to_y(stdio_canvas_get_last_valid_y());
 
-        xprintf("where do you want to create a copy entry: ");
-        xscanf("%s", new_name);
+        canvas_xprintf("where do you want to create a copy entry: ");
+        canvas_xscanf("%s", new_name);
 
-        xprintf("selected file: %s\n", AppInfo->selected_file);
-        xprintf("new file: %s\n", new_name[0] != '/' ? xin_get_current_path(new_name) : new_name);
+        canvas_xprintf("selected file: %s\n", AppInfo->selected_file);
+        canvas_xprintf("new file: %s\n", new_name[0] != '/' ? xin_get_current_path(new_name) : new_name);
 
         __sys_xin_copy(AppInfo->selected_file, new_name);
         
@@ -90,10 +90,10 @@ void handle_selected_option(char* option, ExplorerInfo* AppInfo)
         char* new_name = (char*)calloc(XIN_MAX_PATH_LENGTH);
         stdio_canvas_move_to_y(stdio_canvas_get_last_valid_y());
 
-        xprintf("New file name: ");
-        xscanf("%s", new_name);
+        canvas_xprintf("New file name: ");
+        canvas_xscanf("%s", new_name);
         __sys_xin_file_create(new_name);
-        xprintf("new file: %s\n", xin_get_current_path(new_name));
+        canvas_xprintf("new file: %s\n", xin_get_current_path(new_name));
         free(new_name);
     }
 
@@ -188,7 +188,7 @@ int explorer(char* parent_folder)
 
     else  // no such directory 
     { 
-        xprintf("%zNo such directory: %s\n", stderr, parent_folder);
+        canvas_xprintf("%zNo such directory: %s\n", stderr, parent_folder);
         strcpy(AppInfo.current_folder, "/");
         while(inputg().scan_code != ENTER);
         return XANIN_ERROR;
@@ -200,14 +200,14 @@ int explorer(char* parent_folder)
     {
         screen_clear();
         xin_get_current_directory(AppInfo.current_folder);
-        xprintf("CURRENT DIRECTORY: %s\n", AppInfo.current_folder);
+        canvas_xprintf("CURRENT DIRECTORY: %s\n", AppInfo.current_folder);
         XinChildrenEntries* hoho = xin_get_children_entries(AppInfo.current_folder, false);
         AppInfo.MainTable = table_create(0,1, 10, 80, black, white, TUI_TEST_SITES, NULL);
 
         if(AppInfo.MainTable== NULL)
         {
             screen_clear();
-            xprintf("No folders");
+            canvas_xprintf("No folders");
             while(inputg().scan_code != F4_KEY);
             break;
         }

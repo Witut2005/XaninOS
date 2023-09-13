@@ -31,6 +31,22 @@ char canvas_putchar_color(uint8_t color, char character)
     return character;
 }
 
+void canvas_screen_clear(void)
+{
+    if(stdio_mode_get() != STDIO_MODE_CANVAS)
+        return;
+
+    uint16_t* screen_cleaner = (uint16_t*)__vga_buffer_segment_get();
+    for(int i = 0; i < (__vga_text_mode_width_get() * __vga_text_mode_height_get()); i++)
+    {
+        *screen_cleaner = '\0';
+        screen_cleaner++;
+    }
+
+    Screen.x = 0;
+    Screen.y = 0;
+}
+
 void canvas_xprintf(char* str, ... )
 {
     char tmp[128] = {0};
@@ -275,9 +291,13 @@ void canvas_xscanf(char* str, ... )
     PairUInt8 InitialScreenPosition = {Screen.y, Screen.x};
 
     char field_buffer[1000];
-    memset(field_buffer, 0, 1000);
 
     char string_typed_buffer[1000];
+    
+    if(stdio_mode_get() != STDIO_MODE_CANVAS)
+        return;
+
+    memset(field_buffer, 0, 1000);
     memset(string_typed_buffer, 0, 1000);
 
     while(1)

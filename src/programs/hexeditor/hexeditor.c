@@ -19,9 +19,9 @@ void hexeditor_letters_refresh(void)
         Screen.y = i;
 
         for(int j = 0; j < HEXEDITOR_BYTES_IN_ROW; j++)
-            putchar(data_pointer[ (HEXEDITOR_BYTES_IN_ROW * i) + j]);
+            canvas_putchar(data_pointer[ (HEXEDITOR_BYTES_IN_ROW * i) + j]);
 
-        xprintf("\n");
+        canvas_xprintf("\n");
     }
 }
 
@@ -166,7 +166,7 @@ void hexeditor_input(xchar x)
                 data_pointer[data_pointer_position] += tmp;
             }
          
-            xprintf("%c", x.character);
+            canvas_xprintf("%c", x.character);
         }
 
         else if(x.character >= '0' && x.character <= '9')
@@ -187,7 +187,7 @@ void hexeditor_input(xchar x)
                 data_pointer[data_pointer_position] = data_pointer[data_pointer_position] + tmp;
             }
             
-            xprintf("%c", x.character);
+            canvas_xprintf("%c", x.character);
         
         }
             
@@ -228,7 +228,7 @@ int hexeditor(char* file_name, char* options)
 
     if(file == NULL)
     {
-        xprintf("Can't open file %s\n", file_name);
+        canvas_xprintf("Can't open file %s\n", file_name);
         while(KeyInfo.scan_code != ENTER);
         return XANIN_ERROR;
     }
@@ -243,14 +243,14 @@ int hexeditor(char* file_name, char* options)
     for(int i = 0; i < VGA_HEIGHT; i++)
     {
         for(int j = 0; j < HEXEDITOR_BYTES_IN_ROW; j++)
-            xprintf("%mX ", data_pointer[ (HEXEDITOR_BYTES_IN_ROW * i) + j]);
+            canvas_xprintf("%mX ", data_pointer[ (HEXEDITOR_BYTES_IN_ROW * i) + j]);
 
-        xprintf("%z | ", OUTPUT_COLOR_SET(black, green));
+        canvas_xprintf("%z | ", OUTPUT_COLOR_SET(black, green));
 
         for(int j = 0; j < HEXEDITOR_BYTES_IN_ROW; j++)
-            putchar(data_pointer[ (HEXEDITOR_BYTES_IN_ROW * i) + j]);
+            canvas_putchar(data_pointer[ (HEXEDITOR_BYTES_IN_ROW * i) + j]);
 
-        xprintf("\n");
+        canvas_xprintf("\n");
     }
     
     Screen.x = 0;

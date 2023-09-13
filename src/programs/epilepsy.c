@@ -12,6 +12,8 @@ int epilepsy(void)
 
     stdio_mode_set(STDIO_MODE_CANVAS);
 
+    key_info_t EpilepsyKeyInfo;
+
     while(true)
     {
         if((uint32_t)color_picker >= VGA_TEXT_MEMORY + (80 * 28 * 2))
@@ -21,11 +23,10 @@ int epilepsy(void)
         *color_picker = (uint16_t) ('\0' + (((color << 4) | color) << 8));
 
         color_picker++;
+        __sys_keyinfo_get(&EpilepsyKeyInfo);
 
-        if(getchar() == 'q' || getscan() == ENTER || getscan() == ESC)
-        {    
+        if(EpilepsyKeyInfo.scan_code != ESC)
             return XANIN_OK;
-        }
     }
 
 

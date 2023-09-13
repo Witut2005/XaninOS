@@ -3,20 +3,11 @@
 #include <lib/libcpp/utility.h>
 #include <lib/libc/stdiox.h>
 #include <sys/call/xanin_sys/calls/vga/vga.h>
+#include <sys/terminal/vty/vty.h>
 
 /* USE IN CPP FILES NOT IN C BRUH */
 
-struct screen_t
-{
-    uint16_t** cursor;
-    uint8_t x;
-    uint8_t y;
-};
-
-typedef struct screen_t screen_t;
-
 extern screen_t Screen;
-
 
 namespace xgm
 {
