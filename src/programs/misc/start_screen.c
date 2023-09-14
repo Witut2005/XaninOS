@@ -1,6 +1,10 @@
 
 //CANVAS_APP
 
+#include <lib/libc/string.h>
+
+extern char* argv[5];
+
 uint16_t string_x = 5;
 uint16_t string_y = 0;
 bool if_down = true;

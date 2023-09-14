@@ -1,6 +1,6 @@
 
 
-#include <programs/pong/pong.h>
+#include "./pong.h"
 #include <lib/libc/stdlibx.h>
 #include <lib/libc/stdiox.h>
 #include <lib/xaninGraphics/xaninGraphics.h>

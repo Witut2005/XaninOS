@@ -1,4 +1,6 @@
 
+#include <fs/xin.h>
+#include <lib/libc/stdiox.h>
 #include <fs/xin_syscalls.h>
 
 //TERMINAL_APP

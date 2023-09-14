@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include <lib/libc/string.h>
 #include <lib/libc/stdiox.h>
 
 //CANVAS_APP

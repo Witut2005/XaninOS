@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include <programs/tetris/keybindings.h>
+#include "./keybindings.h"
 #include <lib/libc/stdlibx.h>
 #include <lib/libc/time.h>
 

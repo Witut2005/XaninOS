@@ -15,7 +15,7 @@
 #define PIC2_DATA 0xA1    
 #define PIC_MASK_REG 0xA1
 
-#include <programs/register_dump.h>
+#include <programs/internals/register_dump.h>
 #include <sys/call/xanin_sys/calls/vga/vga.h>
 
 extern void divide_by_zero_exception_entry(void);

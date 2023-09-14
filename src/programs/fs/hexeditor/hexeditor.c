@@ -1,5 +1,5 @@
 
-#include <programs/hexeditor/hexeditor.h>
+#include "./hexeditor.h"
 #include <sys/input/input.h>
 
 //CANVAS_APP

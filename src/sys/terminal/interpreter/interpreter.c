@@ -2,80 +2,47 @@
 
 extern int cpp_test(void);
 
-#include <programs/developer/terminal_calls.c>
-#include <programs/stdio/stdio_apply.c>
-#include <programs/dev_tools.c>
-#include <programs/file_format_tools/bmp_info.c>
-#include <programs/print_to_syslog.c>
-#include <sys/terminal/interpreter/interpreter.h>
-#include <sys/terminal/interface/terminal.h>
-#include <programs/nic_info.c>
-#include <sys/gyn_cl/gyn.c>
-#include <programs/xin_xpaint.c>
-#include <programs/xgl_test.c>
-#include <programs/arp_table_print.c>
-#include <programs/ping.c>
-#include <programs/ip_test.c>
-#include <programs/udp_test.c>
-#include <lib/cpu/code/real_mode_fswitch.c>
-#include <programs/arp_check.c>
-#include <programs/dhcp_test.c>
-#include <programs/nic_rename.c>
-#include <programs/nic_print.c>
-#include <programs/zsk.c>
-#include <programs/explorer.c>
-#include <programs/memory_allocator_test.c>
-#include <programs/grapher/grapher.c>
-#include <programs/usb_controller_info.c>
-#include <fs/loaders/elf/elf_loader.c>
-#include <fs/loaders/elf/elfdump.c>
-#include <app_config.h>
-#include <lib/libc/stdiox.h>
-#include <programs/help.c>
-#include <programs/netapi_check.c>
-#include <programs/netplan_apply.c>
-#include <programs/interrupt_test.c>
-#include <programs/idt_examine.c>
-#include <programs/load_file.c>
-#include <programs/file_system/copy_file.c>
-#include <programs/file_system/create_file.c>
-#include <programs/file_system/create_folder.c>
-#include <programs/file_system/entry_remove.c>
-#include <programs/file_system/folder_change.c>
-#include <programs/file_system/folder_remove.c>
-#include <programs/file_system/link_create.c>
-#include <programs/file_system/list_files.c>
-#include <programs/file_system/move.c>
-#include <programs/tetris/tetris.c>
-#include <programs/start_screen.c>
-#include <programs/shutdown.c>
-#include <programs/device_info.c>
-#include <programs/load.c>
-#include <programs/loadch.c>
-#include <programs/epilepsy.c>
-#include <programs/keyboard_test.c>
-#include <programs/logo.c>
-#include <programs/register_dump.c>
-#include <programs/cpu_info.c>
-#include <programs/calc.c>
-#include <programs/pong/pong.c>
-#include <programs/timer_test.c>
-#include <programs/zsk.c>
-#include <programs/execute_addr.c>
-#include <programs/disk_load.c>
-#include <programs/disk_write.c>
-#include <programs/run.c>
-#include <programs/run16.c>
-#include <programs/hexeditor/hexeditor.c>
-#include <programs/mouse.c>
-#include <programs/xin_note.c>
-#include <programs/xin_paint.c>
-#include <programs/file_system/cat.c>
-#include <programs/file_system/xin_info.c>
-#include <programs/buffers.c>
-#include <programs/terminal_test.c>
-#include <programs/ssaver.c>
-#include <programs/xgl_mode_set.c>
+
+#include <programs/fs/copy_file.c>
+#include <programs/fs/create_file.c>
+#include <programs/fs/create_folder.c>
+#include <programs/fs/entry_remove.c>
+#include <programs/fs/folder_change.c>
+#include <programs/fs/folder_remove.c>
+#include <programs/fs/link_create.c>
+#include <programs/fs/list_files.c>
+#include <programs/fs/move.c>
+#include <programs/misc/tetris/tetris.c>
+#include <programs/misc/start_screen.c>
+#include <programs/power/shutdown.c>
+#include <programs/internals/load.c>
+#include <programs/internals/loadch.c>
+#include <programs/misc/epilepsy.c>
+#include <programs/tests/keyboard_test.c>
+#include <programs/misc/logo.c>
+#include <programs/internals/register_dump.c>
+#include <programs/internals/cpu_info.c>
+#include <programs/misc/calc.c>
+#include <programs/misc/pong/pong.c>
+#include <programs/tests/timer_test.c>
+#include <programs/misc/zsk.c>
+
+#include <fs/loaders/bin/bit32/run.c>
+#include <fs/loaders/bin/bit16/run16.c>
+#include <fs/loaders/bin/bit32/execute_addr.c>
+
+#include <programs/developer/disk_load.c>
+#include <programs/developer/disk_write.c>
+#include <programs/fs/hexeditor/hexeditor.c>
+
+#include <programs/fs/xin_note.c>
+#include <programs/fs/xin_paint.c>
+#include <programs/fs/cat.c>
+#include <programs/fs/xin_info.c>
+#include <programs/internals/buffers.c>
+#include <programs/tests/terminal_test.c>
+#include <programs/misc/ssaver.c>
+#include <programs/xgl/xgl_mode_set.c>
 
 int argc;
 char* argv[5];
@@ -119,6 +86,7 @@ void check_external_apps(void)
     free(app);
 }
 
+extern uint32_t stdio_refresh_rate; // USE HERE SYSCALL
 
 void scan(void)
 {

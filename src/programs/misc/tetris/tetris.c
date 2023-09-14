@@ -1,6 +1,6 @@
 #pragma once
 
-#include <programs/tetris/graphics.h>
+#include "./graphics.h"
 #include <sys/input/input.h>
 
 //CANVAS_APP

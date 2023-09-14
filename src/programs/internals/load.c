@@ -2,6 +2,7 @@
 #pragma once
 
 #include <lib/ascii/ascii.h>
+#include <lib/libc/string.h>
 #include <sys/terminal/backend/backend.h>
 
 //TERMINAL_APP

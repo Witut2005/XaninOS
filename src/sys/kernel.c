@@ -1,4 +1,5 @@
 
+#include <sys/net/network_protocols/internet_protocol/ipv4/ip.h>
 #include <lib/ascii/ascii.h>
 #include <sys/devices/pit/pit.h>
 #include <sys/terminal/interface/terminal.h>

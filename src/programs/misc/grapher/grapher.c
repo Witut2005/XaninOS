@@ -1,4 +1,4 @@
-#include <programs/grapher/functions.h>
+#include "./functions.h"
 #include <lib/libc/stdlibx.h>
 #include <lib/libc/stdiox.h>
 //xanin 79x25

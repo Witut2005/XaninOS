@@ -87,7 +87,7 @@ def compile_kernel(*kargs):
 
     commands = [
         builders['c'] + ' ' + builder_options['c']['kernel'] + ' ./sys/kernel.c' + final_string + ' -o ' + './kernel.bin',
-        'cat ./programs/shutdown.bin ./programs/current_app ./programs/syscall_test ./lib/libc/real_mode_fswitch_asm ./lib/libc/fast_return_to_32_mode > ./programs/xanin_external_apps',
+        'cat ./programs/shutdown.bin ./lib/libc/real_mode_fswitch_asm ./lib/libc/fast_return_to_32_mode > ./programs/xanin_external_apps',
         'dd if=./programs/xanin_external_apps of=./programs/xanin_apps_space bs=512 count=16 conv=notrunc',
         'cat ./boot/boot ./lib/libc/enter_real_mode ./programs/xanin_apps_space ./programs/blank_sector ./fs/xin_pointers ./fs/entries_table ./boot/kernelLoader ./boot/disk_freestanding_driver kernel.bin > xanin.bin',
         'dd if=xanin.bin of=xanin.img',
@@ -311,15 +311,15 @@ objects_to_compile = {
     ],
 
     'built-in programs': [
-        CompileObject('./programs/edit.c', builders['c'], builder_options['c']['default'], OBJECT),
+        CompileObject('./programs/fs/edit.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./programs/xagames/xagame_test.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./programs/xagames/tetris.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
-        CompileObject('./programs/screenshot.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
-        CompileObject('./programs/test/cpp_test.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
+        CompileObject('./programs/misc/screenshot.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
+        CompileObject('./programs/tests/cpp_test.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
     ],
 
     'built-in 16bit programs': [
-        CompileObject('./programs/shutdown.asm', builders['asm'], builder_options['asm']['bin'], BINARY),
+        CompileObject('./programs/power/shutdown.asm', builders['asm'], builder_options['asm']['bin'], BINARY),
     ],
     
     '16bit mode': [
