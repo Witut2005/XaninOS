@@ -1,8 +1,10 @@
 
 
-#pragma once
-
 #include <fs/xin.h>
+#include <lib/libc/string.h>
+#include <lib/libc/stdiox.h>
+
+extern char* argv[5]; // USE HERE SYSCALL
 
 //TERMINAL_APP
 
@@ -39,7 +41,13 @@ int load_file(char* file_name, char* options)
         xprintf(" %z| ", OUTPUT_COLOR_SET(black, green));
 
         for(int j = 0; j < 16; j++)
-            putchar(data_pointer[ (16 * i) + j]);
+        {
+
+            if(data_pointer[ (16 * i) + j] <= ASCII_SPACE)
+                putchar(' ');
+            else
+                putchar(data_pointer[ (16 * i) + j]);
+        }
 
         xprintf("\n");
     }

@@ -1,7 +1,9 @@
 
-#pragma once
-
 #include <stddef.h>
+#include <fs/xin.h>
+#include <lib/elf/elf.h>
+#include <sys/input/input.h>
+#include <lib/libc/stdiox.h>
 
 void elf_data_load(XinEntry* file)
 {

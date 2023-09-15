@@ -1,6 +1,6 @@
 #include "./functions.h"
 #include <lib/libc/stdlibx.h>
-#include <lib/libc/stdiox.h>
+#include <lib/libc/canvas.h>
 //xanin 79x25
 // char 219 is white square
 

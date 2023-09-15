@@ -87,7 +87,7 @@ def compile_kernel(*kargs):
 
     commands = [
         builders['c'] + ' ' + builder_options['c']['kernel'] + ' ./sys/kernel.c' + final_string + ' -o ' + './kernel.bin',
-        'cat ./programs/shutdown.bin ./lib/libc/real_mode_fswitch_asm ./lib/libc/fast_return_to_32_mode > ./programs/xanin_external_apps',
+        'cat ./programs/power/shutdown.bin ./lib/libc/real_mode_fswitch_asm ./lib/libc/fast_return_to_32_mode > ./programs/xanin_external_apps',
         'dd if=./programs/xanin_external_apps of=./programs/xanin_apps_space bs=512 count=16 conv=notrunc',
         'cat ./boot/boot ./lib/libc/enter_real_mode ./programs/xanin_apps_space ./programs/blank_sector ./fs/xin_pointers ./fs/entries_table ./boot/kernelLoader ./boot/disk_freestanding_driver kernel.bin > xanin.bin',
         'dd if=xanin.bin of=xanin.img',
@@ -176,6 +176,7 @@ objects_to_compile = {
         CompileObject('./sys/devices/apic/apic.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./sys/devices/vga/vga.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./sys/devices/usb/usb.c', builders['c'], builder_options['c']['default'], OBJECT),
+        CompileObject('./sys/devices/pci/pci.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./sys/devices/acpi/fadt/fadt.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./sys/devices/acpi/madt/madt.c', builders['c'], builder_options['c']['default'], OBJECT),
 
@@ -316,6 +317,35 @@ objects_to_compile = {
         CompileObject('./programs/xagames/tetris.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./programs/misc/screenshot.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./programs/tests/cpp_test.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
+
+        CompileObject('./programs/stdio/stdio_apply.c', builders['c'], builder_options['c']['default'], OBJECT),
+        CompileObject('./programs/file_format_tools/bmp_info.c', builders['c'], builder_options['c']['default'], OBJECT),
+        CompileObject('./programs/developer/dev_tools.c', builders['c'], builder_options['c']['default'], OBJECT),
+        CompileObject('./programs/network/netplan_apply.c', builders['c'], builder_options['c']['default'], OBJECT),
+        CompileObject('./programs/network/netapi_check.c', builders['c'], builder_options['c']['default'], OBJECT),
+        CompileObject('./programs/usb/usb_controller_info.c', builders['c'], builder_options['c']['default'], OBJECT),
+        CompileObject('./programs/tests/memory_allocator_test.c', builders['c'], builder_options['cc']['default'], OBJECT),
+        CompileObject('./programs/misc/grapher/grapher.c', builders['c'], builder_options['c']['default'], OBJECT),
+        CompileObject('./programs/fs/explorer.c', builders['c'], builder_options['c']['default'], OBJECT),
+        CompileObject('./programs/tests/interrupt_test.c', builders['c'], builder_options['c']['default'], OBJECT),
+
+        CompileObject('./programs/internals/idt_examine.c', builders['c'], builder_options['c']['default'], OBJECT),
+        CompileObject('./programs/internals/load_file.c', builders['c'], builder_options['c']['default'], OBJECT),
+        CompileObject('./programs/misc/help.c', builders['c'], builder_options['c']['default'], OBJECT),
+        CompileObject('./programs/internals/print_to_syslog.c', builders['c'], builder_options['c']['default'], OBJECT),
+        CompileObject('./programs/network/nic_info.c', builders['c'], builder_options['c']['default'], OBJECT),
+
+        CompileObject('./programs/fs/xin_xpaint.c', builders['c'], builder_options['c']['default'], OBJECT),
+        CompileObject('./programs/gyn_cl/gyn.c', builders['c'], builder_options['c']['default'], OBJECT),
+        CompileObject('./programs/tests/xgl_test.c', builders['c'], builder_options['c']['default'], OBJECT),
+        CompileObject('./programs/network/arp_table_print.c', builders['c'], builder_options['c']['default'], OBJECT),
+        CompileObject('./programs/network/ping.c', builders['c'], builder_options['c']['default'], OBJECT),
+        CompileObject('./programs/network/ip_test.c', builders['c'], builder_options['c']['default'], OBJECT),
+        CompileObject('./programs/network/udp_test.c', builders['c'], builder_options['c']['default'], OBJECT),
+        CompileObject('./programs/network/arp_check.c', builders['c'], builder_options['c']['default'], OBJECT),
+        CompileObject('./programs/network/dhcp_test.c', builders['c'], builder_options['c']['default'], OBJECT),
+        CompileObject('./programs/network/nic_rename.c', builders['c'], builder_options['c']['default'], OBJECT),
+        CompileObject('./programs/network/nic_print.c', builders['c'], builder_options['c']['default'], OBJECT),
     ],
 
     'built-in 16bit programs': [
@@ -325,6 +355,11 @@ objects_to_compile = {
     '16bit mode': [
         CompileObject('./sys/real_mode/enter_real_mode.asm', builders['asm'], builder_options['asm']['bin'], BINARY),
         CompileObject('./sys/real_mode/fast_return_to_32_mode.asm', builders['asm'], builder_options['asm']['bin'], BINARY),
+    ],
+
+    'XaninOS program loaders': [
+        CompileObject('./fs/loaders/elf/elf_loader.c', builders['c'], builder_options['c']['default'], OBJECT),
+        CompileObject('./fs/loaders/elf/elfdump.c', builders['c'], builder_options['c']['default'], OBJECT),
     ]
 
 }

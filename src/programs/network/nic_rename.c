@@ -1,4 +1,6 @@
 
+#include <stddef.h>
+#include <lib/libc/stdiox.h>
 #include <sys/net/netapi/network_device.h>
 
 //TERMINAL_APP

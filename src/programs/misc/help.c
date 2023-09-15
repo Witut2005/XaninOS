@@ -1,6 +1,4 @@
 
-#pragma once
-
 #include <lib/libc/stdiox.h>
 #include <lib/libc/string.h>
 #include <sys/devices/keyboard/scan_codes.h>

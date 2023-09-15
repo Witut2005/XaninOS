@@ -1,8 +1,11 @@
 
-#pragma once
-
 #include <lib/libc/string.h>
-#include <sys/gyn_cl/gyn.h>
+#include <sys/input/input.h>
+
+#include "./gyn.h"
+
+extern char* argv[5]; // USE SYSCALL HERE
+extern int last_command_exit_status; // RACTOR THIS PLSSSSS, MY EYES ARE BLEEDING
 
 bool gyn_cl_on = false;
 

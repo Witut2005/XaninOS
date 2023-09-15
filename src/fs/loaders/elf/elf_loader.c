@@ -1,16 +1,12 @@
 
-#pragma once
-
-#include <fs/loaders/elf/elf_loader.h>
 #include <stddef.h>
+#include <lib/libc/string.h>
+#include <lib/libc/stdiox.h>
+#include <lib/elf/elf.h>
+#include <sys/input/input.h>
+#include <fs/loaders/elf/elf_loader.h>
 
-
-enum ELF_FIELD
-{
-    X86_E_MACHINE = 0x3,
-    ELF_HEADER_SIZE = 0x34,
-    PT_LOAD = 0x1
-};
+extern char* argv[5]; // USE HERE SYSCALL
 
 bool elf_check_magic(uint8_t* data)
 {

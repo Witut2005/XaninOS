@@ -1,4 +1,5 @@
 
+#include <lib/libc/string.h>
 #include <lib/libc/stdlibx.h>
 
 //TERMINAL_APP

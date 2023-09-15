@@ -5,6 +5,8 @@
 #include <lib/libc/memory.h>
 #include <lib/libc/endian.h>
 #include <sys/net/netapi/objects/response.h>
+#include <sys/input/input.h>
+#include <lib/libc/stdiox.h>
 
 //TERMIMAL_APP
 

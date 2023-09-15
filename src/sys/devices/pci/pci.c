@@ -1,5 +1,3 @@
-#pragma once
-
 #include <lib/libc/hal.h>
 #include <sys/devices/pci/pci.h>
 

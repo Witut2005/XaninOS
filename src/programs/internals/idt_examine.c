@@ -1,4 +1,6 @@
 
+#include <lib/libc/string.h>
+#include <lib/libc/stdiox.h>
 #include <lib/libc/stdlibx.h>
 #include <sys/interrupts/idt/idt.h>
 

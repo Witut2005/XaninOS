@@ -1,7 +1,7 @@
 
 #include <sys/devices/pci/pci.h>
 #include <sys/devices/usb/usb.h>
-
+#include <lib/libc/stdiox.h>
 //TERMINAL_APP
 
 int usb_controller_info(void)

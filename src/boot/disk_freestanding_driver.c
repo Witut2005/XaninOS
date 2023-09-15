@@ -251,14 +251,6 @@ void disk_read(uint16_t base, uint8_t master, uint32_t sector_number,
 }
 
 
-enum ELF_FIELD
-{
-    X86_E_MACHINE = 0x3,
-    ELF_HEADER_SIZE = 0x34,
-    PT_LOAD = 0x1
-};
-
-
 
 
 void elf_load(void)

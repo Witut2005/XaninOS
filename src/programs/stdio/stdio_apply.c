@@ -6,8 +6,8 @@
 
 //TERMINAL_APP
 
-uint32_t stdio_refresh_rate;
-interval_id stdio_refresh_interval_id;
+extern uint32_t stdio_refresh_rate;
+extern interval_id stdio_refresh_interval_id;
 
 __STATUS stdio_apply(void)
 {
@@ -32,5 +32,7 @@ __STATUS stdio_apply(void)
     }
 
     interval_set(stdio_refresh, stdio_refresh_rate, NULL);
+
+    return XANIN_OK;
 
 }

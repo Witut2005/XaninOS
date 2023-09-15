@@ -73,7 +73,8 @@ extern bool com_status(void);
 terminal_t* kernel_terminal;
 uint8_t* const zeros;
 
-extern uint32_t stdio_refresh_rate;
+uint32_t stdio_refresh_rate;
+interval_id stdio_refresh_interval_id;
 
 void stdio_refresh(address_t* args)
 {

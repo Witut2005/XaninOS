@@ -32,7 +32,12 @@
         "tui.h": "c",
         "handlers.h": "c",
         "stdint.h": "c",
-        "stdint-gcc.h": "c"
+        "stdint-gcc.h": "c",
+        "bmp.h": "c",
+        "file.h": "c",
+        "string.h": "c",
+        "input.h": "c",
+        "response.h": "c"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }

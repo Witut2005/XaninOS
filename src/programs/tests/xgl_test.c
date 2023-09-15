@@ -1,6 +1,4 @@
 
-#pragma once
-
 #include <lib/xgl/xgl.h>
 #include <lib/libc/stdiox.h>
 
@@ -17,6 +15,7 @@ int xgl_test(void)
     pixel_set(0, 0, 14);
     
     getchar();
+    return XANIN_OK;
     // while(1);
 
 }

@@ -7,6 +7,8 @@
 #include <lib/libc/process.h>
 #include <lib/libc/data_structures.h>
 #include <sys/input/input.h>
+#include <lib/libc/string.h>
+#include <lib/libc/canvas.h>
 
 //CANVAS_APP
 

@@ -1,4 +1,7 @@
 
+#pragma once
+
+#include <stdint.h>
 
 struct BitMapHeader {
     char signature[2];

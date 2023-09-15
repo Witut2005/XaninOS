@@ -140,7 +140,6 @@ void scan(void)
         }
     }
 
-    XANIN_ADD_APP_ENTRY0("xt_calls", terminal_calls_test)
     XANIN_ADD_APP_ENTRY0("stdio_apply", stdio_apply)
     XANIN_ADD_APP_ENTRY1("ssaver", screen_saver)
     XANIN_ADD_APP_ENTRY1("bmp_info", bmp_info)
@@ -161,7 +160,6 @@ void scan(void)
     XANIN_ADD_APP_ENTRY0("start_screen", start_screen)
     XANIN_ADD_APP_ENTRY0("screensaver", start_screen)
     XANIN_ADD_APP_ENTRY2("load_file", load_file)
-    XANIN_ADD_APP_ENTRY0("mouse_test", mouse_test)
     XANIN_ADD_APP_ENTRY1("help", help)
     XANIN_ADD_APP_ENTRY1("printk", print_to_syslog)
     XANIN_ADD_APP_ENTRY1("h", help)
@@ -187,7 +185,6 @@ void scan(void)
     XANIN_ADD_APP_ENTRY0("key-test", keyboard_test)
     XANIN_ADD_APP_ENTRY0("pong", pong)
     XANIN_ADD_APP_ENTRY1("loadch", loadch)
-    XANIN_ADD_APP_ENTRY0("dev-info", get_device_info)
 
     else if(bstrcmp(argv[0], "reboot"))
     {
@@ -254,7 +251,6 @@ void scan(void)
     XANIN_ADD_APP_ENTRY2("nic_rename", nic_rename)
     XANIN_ADD_APP_ENTRY0("nic_print", nic_print)
     XANIN_ADD_APP_ENTRY0("grapher", grapher)
-    XANIN_ADD_APP_ENTRY1("realfs", real_mode_fswitch)
 
     // else if(bstrcmp("real_mode_fswitch", argv[0]))
     // {

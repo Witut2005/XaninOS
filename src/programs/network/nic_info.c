@@ -6,13 +6,6 @@
 
 //TERMINAL_APP
 
-extern pci_device* i8254x_pci_info_get(void);
-extern uint8_t* i8254x_mac_get(void);
-extern uint32_t i8254x_receive_descriptors_buffer_get(void);
-extern uint32_t i8254x_transmit_descriptors_buffer_get(void);
-extern uint32_t i8254x_transmit_buffer_get(void);
-extern uint32_t i8254x_receive_buffer_get(void);
-
 int nic_info(const char* network_device_name)
 {
 

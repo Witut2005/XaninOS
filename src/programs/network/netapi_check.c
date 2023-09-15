@@ -5,6 +5,9 @@
 #include <sys/net/netapi/objects/response.h>
 #include <sys/net/netapi/network_device.h>
 #include <lib/libc/stdlibx.h>
+#include <lib/libc/string.h>
+#include <lib/libc/stdiox.h>
+#include <sys/input/input.h>
 
 //TERMINAL_APP
 

@@ -1,8 +1,12 @@
 
 #include <sys/net/network_protocols/arp/arp.h>
 #include <lib/libc/string.h>
+#include <lib/libc/stdiox.h>
+#include <sys/input/input.h>
 
 //TERMINAL_APP
+
+extern char* argv[5]; // USE SYSCALL HERE
 
 int arp_table_print(char* arg, char* options)
 {
@@ -34,7 +38,5 @@ int arp_table_print(char* arg, char* options)
         xprintf("%d\n", tmp[0]);
     }
 
-
-    while(inputg().scan_code != ENTER);
     return XANIN_OK;
 }
