@@ -200,7 +200,7 @@ int explorer(char* parent_folder)
 
     while(KeyInfo.scan_code != F4_KEY) 
     {
-        screen_clear();
+        canvas_screen_clear();
         xin_get_current_directory(AppInfo.current_folder);
         canvas_xprintf("CURRENT DIRECTORY: %s\n", AppInfo.current_folder);
         XinChildrenEntries* hoho = xin_get_children_entries(AppInfo.current_folder, false);
@@ -208,7 +208,7 @@ int explorer(char* parent_folder)
 
         if(AppInfo.MainTable== NULL)
         {
-            screen_clear();
+            canvas_screen_clear();
             canvas_xprintf("No folders");
             while(inputg().scan_code != F4_KEY);
             break;

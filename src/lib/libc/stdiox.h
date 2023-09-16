@@ -25,8 +25,10 @@ extern "C" {
 
 int screen_clear(void);
 int vga_screen_buffer_clear(void);
-char putchar(char character); // ONLY AVAILABLE IN CANVAS MODE
-char putchar_color(uint8_t color, char character); // ONLY AVAILABLE IN CANVAS MODE
+
+void putchar(char c);
+void putchar_color(char c, color_t color);
+
 void xprintf(char* str, ... );
 void xscanf(char* str, ... );
 void xscan_range(char* string_buffer, uint32_t how_many_chars);

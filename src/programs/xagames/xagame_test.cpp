@@ -7,7 +7,6 @@
 
 //CANVAS_APP
 
-extern "C" int screen_clear(void);
 extern "C" void msleep(float miliseconds);
 
 using namespace xgm;

@@ -239,7 +239,7 @@ int hexeditor(char* file_name, char* options)
 
     data_pointer = (char*)calloc(VGA_SCREEN_RESOLUTION);
 
-    screen_clear();
+    canvas_screen_clear();
 
     fseek(file, hexeditor_offset);
     fread(file, data_pointer, VGA_SCREEN_RESOLUTION);

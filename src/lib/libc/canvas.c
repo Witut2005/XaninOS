@@ -1,10 +1,10 @@
 
 #include <lib/libc/canvas.h>
 
-char canvas_putchar(char character)
+void canvas_putchar(char character)
 {
     if(stdio_mode_get() != STDIO_MODE_CANVAS) 
-        return character;
+        return;
 
     stdio_canvas_cell_put(character, OUTPUT_COLOR_SET(black, white), &Screen.y, &Screen.x);
 
@@ -13,13 +13,12 @@ char canvas_putchar(char character)
         Screen.x = 0;
         Screen.y++;
     }
-    return character;
 }
 
-char canvas_putchar_color(uint8_t color, char character)
+void canvas_putchar_color(uint8_t color, char character)
 {
     if(stdio_mode_get() != STDIO_MODE_CANVAS) 
-        return character;
+        return;
 
     stdio_legacy_cell_put(character, color, &Screen.y, &Screen.x);
         
@@ -28,7 +27,6 @@ char canvas_putchar_color(uint8_t color, char character)
         Screen.x = 0;
         Screen.y++;
     }
-    return character;
 }
 
 void canvas_screen_clear(void)
@@ -43,8 +41,7 @@ void canvas_screen_clear(void)
         screen_cleaner++;
     }
 
-    Screen.x = 0;
-    Screen.y = 0;
+    stdio_legacy_screen_object_restore_defaults();
 }
 
 void canvas_xprintf(char* str, ... )

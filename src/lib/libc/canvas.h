@@ -19,8 +19,8 @@
 extern "C"{
 #endif
 
-char canvas_putchar(char character); // ONLY AVAILABLE IN CANVAS MODE
-char canvas_putchar_color(uint8_t color, char character); // ONLY AVAILABLE IN CANVAS MODE
+void canvas_putchar(char character); // ONLY AVAILABLE IN CANVAS MODE
+void canvas_putchar_color(uint8_t color, char character); // ONLY AVAILABLE IN CANVAS MODE
 void canvas_screen_clear(void);
 void canvas_xprintf(char* str, ... );
 void canvas_xscanf(char* str, ... );

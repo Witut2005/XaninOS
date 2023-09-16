@@ -8,7 +8,7 @@
 #include <sys/input/input.h>
 #include <lib/screen/screen.h>
 
-//CANVAS APP
+//CANVAS_APP
 
 void pong_get_input(void)
 {
@@ -113,7 +113,7 @@ void result_screen(char* str)
     player1_input = 0;
     player2_input = 0;
 
-    screen_clear();
+    canvas_screen_clear();
     Screen.x = 33;
     Screen.y = 12;
     xprintf("%s wins", str);
@@ -173,7 +173,7 @@ void pong_init(void)
     player1_input = 0;
     player2_input = 0;
 
-    screen_clear();
+    canvas_screen_clear();
 
     draw_line_x(0,79,0,lgreen);
     draw_line_x(0,79,VGA_HEIGHT - 1,lgreen);
