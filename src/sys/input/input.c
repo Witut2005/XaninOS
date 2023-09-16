@@ -6,22 +6,32 @@ key_info_t KeyInfo = {0};
 
 char inputc(void)
 {
-    // __xtb_flush(__vty_get());
     return inputg().character;
 }
 
+void __keyinfo_clear(void)
+{
+    memset((uint8_t*)&KeyInfo, 0, sizeof(KeyInfo));
+}
+
+key_info_t __keyinfo_get(void)
+{
+    return KeyInfo;
+}
 
 xchar inputg(void)
 {
 
-    // __xtb_flush(__vty_get());
-    KeyInfo.scan_code = 0xFF;
-    while(KeyInfo.scan_code > 0x80); // break codes doesnt count
+    key_info_t InputgKeyInfo;
+
+    InputgKeyInfo.scan_code = 0;
+    __keyinfo_clear();
+
+    while(!InputgKeyInfo.scan_code) InputgKeyInfo = __keyinfo_get(); // break codes doesnt count
     
     xchar x;
-
-    x.character = KeyInfo.character;
-    x.scan_code = KeyInfo.scan_code;
+    x.character = InputgKeyInfo.character;
+    x.scan_code = InputgKeyInfo.scan_code;
 
     return x;
 

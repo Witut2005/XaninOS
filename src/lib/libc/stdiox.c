@@ -345,9 +345,6 @@ void xscanf(char* str, ... )
         xchar Input;
         __sys_inputg(&Input);
 
-        key_info_t KeyInfo;
-        __sys_keyinfo_get(&KeyInfo);
-
         if(Input.scan_code == BSPC)
         {
             if(begin_index == StdioVty->size)
@@ -361,8 +358,6 @@ void xscanf(char* str, ... )
                 index--;
 
             string_typed_buffer[index] = '\0';
-
-            KeyInfo.is_bspc = false;
         }
 
         else if(Input.scan_code == ARROW_UP)
@@ -542,7 +537,7 @@ void xscan_range(char* string_buffer, uint32_t how_many_chars)
 
     stdio_mode_t stdio_current_mode = stdio_mode_get();
     xchar Input;
-    key_info_t KeyInfo;
+    key_info_t XscanfKeyInfo;
 
     if(stdio_current_mode != STDIO_MODE_TERMINAL)
         return;
@@ -553,7 +548,7 @@ void xscan_range(char* string_buffer, uint32_t how_many_chars)
     while(1)
     {
         __sys_inputg(&Input);
-        __sys_keyinfo_get(&KeyInfo);
+        __sys_keyinfo_get(&XscanfKeyInfo);
 
         if(Input.scan_code == ENTER)
         {

@@ -156,7 +156,7 @@ uint32_t xanin_sys_handle(void)
 
         case XANIN_KEYINFO_GET:
         {
-            *(key_info_t*)ecx = KeyInfo;
+            *(key_info_t*)ecx = __keyinfo_get();
             break;
         }
 

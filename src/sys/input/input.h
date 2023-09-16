@@ -8,9 +8,9 @@
 extern "C"{
 #endif
 
+key_info_t __keyinfo_get(void);
 char inputc(void);
 xchar inputg(void);
-
 
 #ifdef __cplusplus
 }
