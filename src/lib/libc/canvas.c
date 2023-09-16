@@ -301,10 +301,7 @@ void canvas_xscanf(char* str, ... )
     {
 
         xchar Input;
-        __sys_inputg(&Input);
-
-        key_info_t KeyInfo;
-        __sys_keyinfo_get(&KeyInfo);
+        Input = __sys_inputg();
 
         if(Input.scan_code == BSPC)
         {
@@ -329,7 +326,6 @@ void canvas_xscanf(char* str, ... )
 
             stdio_legacy_cell_put('\0', OUTPUT_COLOR_SET(white, white), &Screen.y, &Screen.x);
 
-            KeyInfo.is_bspc = false;
             letters_refresh(&Screen.cursor[Screen.y][Screen.x]);
         }
 
@@ -483,7 +479,6 @@ void canvas_xscan_range(char* string_buffer, uint32_t how_many_chars)
 {
 
     xchar Input;
-    key_info_t KeyInfo;
 
     uint32_t counter = 0;
     char* string_pointer;
@@ -502,8 +497,7 @@ void canvas_xscan_range(char* string_buffer, uint32_t how_many_chars)
     while(1)
     {
 
-        __sys_inputg(&Input);
-        __sys_keyinfo_get(&KeyInfo);
+        Input = __sys_inputg();
 
         if(Input.scan_code == ENTER)
         {
@@ -559,7 +553,6 @@ void canvas_xscan_range(char* string_buffer, uint32_t how_many_chars)
             string_typed_buffer[index] = '\0';
             stdio_legacy_cell_put((char)Screen.cursor[Screen.y][Screen.x], OUTPUT_COLOR_SET(white, white), &Screen.y, &Screen.x);
 
-            KeyInfo.is_bspc = false;
             letters_refresh(&Screen.cursor[Screen.y][Screen.x]);
         }
 

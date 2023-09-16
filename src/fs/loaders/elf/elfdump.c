@@ -62,7 +62,7 @@ void elf_data_load(XinEntry* file)
 
 
     
-    while(inputg().scan_code != ENTER);
+    while(getxchar().scan_code != ENTER);
     free(data);
 }
 

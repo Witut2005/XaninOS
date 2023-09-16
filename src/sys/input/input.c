@@ -4,9 +4,16 @@
 
 key_info_t KeyInfo = {0};
 
-char inputc(void)
+static key_info_t* KeyboardModuleObservedObjects[100];
+
+void __input_module_init(void)
 {
-    return inputg().character;
+    memset((uint8_t*)&KeyboardModuleObservedObjects, 0, sizeof(KeyboardModuleObservedObjects));
+}
+
+char __inputc(void)
+{
+    return __inputg().character;
 }
 
 void __keyinfo_clear(void)
@@ -19,7 +26,7 @@ key_info_t __keyinfo_get(void)
     return KeyInfo;
 }
 
-xchar inputg(void)
+xchar __inputg(void)
 {
 
     key_info_t InputgKeyInfo;

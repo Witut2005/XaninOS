@@ -170,7 +170,7 @@ int xin_note(char* file_name)
             bruh_moment[i] = (uint16_t) (data_pointer[i] + (((black << 4) | white) << 8));
         
 
-        while(!app_exited)note_input(inputg());
+        while(!app_exited)note_input(getxchar());
 
         uint32_t file_data_counter = 0x0;
 

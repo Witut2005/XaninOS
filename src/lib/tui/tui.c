@@ -127,7 +127,7 @@ void table_row_select(table_t* Table)
     
     while(UserInput.scan_code != ENTER)
     {
-        __sys_inputg(&UserInput);
+        UserInput = __sys_inputg();
         if(UserInput.scan_code == ARROW_RIGHT)
         {
             if(current_page < Table->sites-1)

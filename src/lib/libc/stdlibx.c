@@ -47,58 +47,36 @@ void exit(void)
     app_process_unregister();
 }
 
-
-char getchar(void)
-{
-    char ret;
-
-    asm("mov eax, 201;" // getchar syscall id
-        "mov %0, al;"    
-        "int 0x81;"
-        : "=r"(ret)
-    );
-
-    return ret;
-}
-
-char getscan(void)
-{
-    char ret;
-
-    asm("mov eax, 202;" // getchar syscall id
-        "mov %0, al;"    
-        "int 0x81;"
-        : "=r"(ret)
-    );
-
-    return ret;
-}
-
-void __sys_inputg(xchar* ptr)
-{
-    asm("mov eax, 203;" // inputg syscall id
-        "mov ecx, %0;"
-        "int 0x81;"
-        :
-        : "g"(ptr) 
-    );
-}
-
-void __sys_keyinfo_get(key_info_t* ptr)
-{
-    asm("mov eax, 204;" // keyinfo_get syscall id
-        "mov ecx, %0;"
-        "int 0x81;"
-        :
-        : "r"(ptr) 
-    );
-}
-
 // void keyboard_buffer_refresh(uint16_t* screen_buffer)
 // {
 //     for(int i = 0; i < 50; i++)
 //         string_typed_buffer[i] = *(char*)(screen_buffer + i);
 // }
+
+char getchar(void)
+{
+    return __sys_getchar();
+}
+
+char getscan(void)
+{
+    return __sys_getscan();
+}
+
+xchar getxchar(void)
+{
+    return __sys_getxchar();
+}
+
+xchar inputg(void)
+{
+    return __sys_inputg();
+}
+
+key_info_t keyinfo_get(void)
+{
+    return keyinfo_get();
+}
 
 CmosTime* time_get(CmosTime* Time)
 {

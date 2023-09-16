@@ -43,7 +43,7 @@ int netapi_check(char* protocol)
     else
     {
         xprintf("Unknown protocol: %s\n", protocol);
-        while(inputg().scan_code != ENTER);
+        while(getxchar().scan_code != ENTER);
         return XANIN_OK;
     }
 

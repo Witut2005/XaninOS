@@ -241,7 +241,7 @@ extern "C" int tetris(void)
     Screen.x = 35;
     KEYBOARD_KEYSTROKE_HANLDER_UNLOAD();
     xprintf("Your score: %d\n", score);
-    while(inputg().scan_code != ENTER);
+    while(getxchar().scan_code != ENTER);
     return XANIN_OK;
 
 }

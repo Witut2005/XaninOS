@@ -1,9 +1,6 @@
 
+%include "./sys/call/xanin_sys/calls/macros.inc"
 %include "./sys/call/xanin_sys/calls/terminal/ids.inc"
-
-%macro XANIN_INVOKE_SYSTEM_CALL 0
-int 0x81
-%endmacro
 
 global __sys_vty_set, __sys_vty_get, __xtb_get, __sys_xtb_init, __sys_xtb_flush, __sys_xtb_flush_all
 global __sys_xtb_scroll_up, __sys_xtb_scroll_down

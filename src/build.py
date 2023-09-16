@@ -196,6 +196,7 @@ objects_to_compile = {
         CompileObject('./sys/call/xanin_sys/calls/stdio/stdio.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
         CompileObject('./sys/call/xanin_sys/calls/terminal/terminal.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
         CompileObject('./sys/call/xanin_sys/calls/vga/vga.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
+        CompileObject('./sys/call/xanin_sys/calls/input/input.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
         # CompileObject('./sys/call/xanin_sys/calls/xanin_calls.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
         CompileObject('./sys/call/xanin_sys/handler/xanin_sys.c', builders['c'], builder_options['c']['default'], OBJECT),
     ],
@@ -428,6 +429,7 @@ create_c_library('./lib/libc/libc.o', './lib/libc/libc.a', objects_to_compile['l
         './fs/xin.o', './sys/call/xanin_sys/calls/devices/disk.o', './sys/call/xanin_sys/calls/stdio/stdio.o', 
         './sys/call/xanin_sys/calls/terminal/terminal.o', 
         './sys/call/xanin_sys/calls/vga/vga.o', 
+        './sys/call/xanin_sys/calls/input/input.o', 
                 ])
 
 # print(objects_to_compile['kmodules'] + objects_to_compile['interrupt'])

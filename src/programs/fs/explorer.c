@@ -192,7 +192,7 @@ int explorer(char* parent_folder)
     { 
         canvas_xprintf("%zNo such directory: %s\n", stderr, parent_folder);
         strcpy(AppInfo.current_folder, "/");
-        while(inputg().scan_code != ENTER);
+        while(getxchar().scan_code != ENTER);
         return XANIN_ERROR;
     }
 
@@ -210,7 +210,7 @@ int explorer(char* parent_folder)
         {
             canvas_screen_clear();
             canvas_xprintf("No folders");
-            while(inputg().scan_code != F4_KEY);
+            while(getxchar().scan_code != F4_KEY);
             break;
         }
 

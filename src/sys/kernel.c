@@ -436,7 +436,7 @@ void _start(void)
     stdio_refresh(NULL);
     // xprintf("dupa: %d\n", strtoi("1", 10));
 
-    while(inputg().scan_code != ENTER);
+    while(getxchar().scan_code != ENTER);
     screen_clear();
 
     if(vga_text_mode_width == 80)

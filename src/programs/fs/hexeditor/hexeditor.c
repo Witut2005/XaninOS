@@ -260,7 +260,7 @@ int hexeditor(char* file_name, char* options)
     Screen.x = 0;
     Screen.y = 0;
 
-    while(!app_exited)hexeditor_input(inputg());
+    while(!app_exited)hexeditor_input(getxchar());
 
     fseek(file, hexeditor_offset);
     fwrite(file, data_pointer, 512);

@@ -162,7 +162,7 @@ int xin_paint(char* file_name)
         selected_cell = Screen.cursor[Screen.y][Screen.x];
 
         while(!app_exited)
-            paint_input(inputg());
+            paint_input(getxchar());
 
         uint32_t file_data_counter = 0x1;
 

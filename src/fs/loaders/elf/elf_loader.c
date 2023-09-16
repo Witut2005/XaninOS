@@ -31,7 +31,7 @@ void elf_load(XinEntry* file)
     if(data == NULL)
     {
         xprintf("MEMORY OUT");
-        while(inputg().scan_code != ENTER);
+        while(getxchar().scan_code != ENTER);
         return;
     }
 
@@ -39,7 +39,7 @@ void elf_load(XinEntry* file)
 
     // xprintf("file size: %d\n", file->size);
     // xprintf("press ENTER to start: ");
-    // while(inputg().scan_code != ENTER);
+    // while(getxchar().scan_code != ENTER);
 
     uint8_t* write_to_memory;
     uint8_t* read_from_file;
@@ -56,14 +56,14 @@ void elf_load(XinEntry* file)
     if(!elf_check_magic(data))
     {
         xprintf("%zBAD MAGIC\n", stderr);
-        while(inputg().scan_code != ENTER);
+        while(getxchar().scan_code != ENTER);
         return;
     }
 
     if(!elf_check_arch(data + 0x12))
     {
         xprintf("%zBAD ARCH\n", stderr);
-        while(inputg().scan_code != ENTER);
+        while(getxchar().scan_code != ENTER);
         return;
     }
 
@@ -116,7 +116,7 @@ int elfreader(char* filename)
     if(file == NULL)
     {
         xprintf("%zNO SUCH FILE\n", stderr);
-        while(inputg().scan_code != ENTER);
+        while(getxchar().scan_code != ENTER);
         return XANIN_ERROR;
     }
 

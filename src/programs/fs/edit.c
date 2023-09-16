@@ -295,7 +295,7 @@ int edit(char* file_name)
         canvas_xprintf("Couldn't open file %s\n", file_name);
         canvas_xprintf("Do want to create it?\nY/n ");
 
-        char selected_option = inputg().character;
+        char selected_option = getxchar().character;
         if(selected_option == 'n' || selected_option == 'N')
             return XANIN_ERROR;
         file = fopen(file_name, "rw");
@@ -323,7 +323,7 @@ int edit(char* file_name)
 
     while(KeyInfo.scan_code != F4_KEY && KeyInfo.scan_code != F4_KEY_RELEASE && KeyInfo.scan_code != ESC)
     {
-        edit_input(inputg(), file, &EditState);
+        edit_input(getxchar(), file, &EditState);
         EditState.begin_of_current_text = &EditState.program_buffer[edit_get_begin_of_printed_text(&EditState)];
         canvas_screen_clear();
         canvas_xprintf("%s", EditState.begin_of_current_text);

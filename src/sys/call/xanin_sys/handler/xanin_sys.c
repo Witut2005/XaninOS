@@ -129,20 +129,20 @@ uint32_t xanin_sys_handle(void)
 
         case XANIN_GETCHAR: 
         {
-            eax = inputc();
+            eax = __inputc();
             break;
         }
 
         case XANIN_GETSCAN: 
         {
-            eax = inputg().scan_code;
+            eax = __inputg().scan_code;
             break;
         }
 
         case XANIN_INPUTG:
         {
             // ECX = PTR
-            *(xchar*)ecx = inputg();
+            *(xchar*)ecx = __inputg();
             break;
         }
 

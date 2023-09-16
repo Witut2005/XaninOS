@@ -8,6 +8,7 @@
 #include <sys/input/key_info.h>
 #include <fs/xin_entry.h>
 #include <sys/macros.h>
+#include <sys/call/xanin_sys/calls/input/input.h>
 
 #define XANIN_PMMNGR_BLOCK_SIZE 4096
 #define ARRAY_LENGTH(x) (SIZE_OF(x) / SIZE_OF(x[0]))
@@ -75,14 +76,6 @@ struct
 extern reg_t Register;
 extern seg_t SegmentRegister;
 
-struct xchar
-{
-    char character;
-    uint8_t scan_code;
-};
-
-typedef struct xchar xchar;
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -121,10 +114,13 @@ extern void exit(void);
 extern uint32_t rand(void);
 extern int reboot(void);
 
-void __sys_inputg(xchar* ptr);
-void __sys_keyinfo_get(key_info_t* ptr);
-
 uint32_t int_to_sectors(uint32_t num);
+
+char getchar(void);
+char getscan(void);
+xchar getxchar(void);
+xchar inputg(void);
+key_info_t keyinfo_get(void);
 
 #ifdef __cplusplus
 }
