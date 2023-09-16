@@ -59,17 +59,20 @@ void elf_data_load(XinEntry* file)
         
     }
 
-
-
-    
     while(inputg().scan_code != ENTER);
     free(data);
 }
 
 int elfdump(char* filename)
 {
-    screen_clear();
     XinEntry* file = fopen(filename, "r");
+
+    if(file == NULL)
+    {
+        xprintf("%zError: Couldn't open file '%s'\n", OUTPUT_COLOR_SET(red, white), filename);
+        return XANIN_ERROR;
+    }
+
     elf_data_load(file);
     return XANIN_OK;
 }
