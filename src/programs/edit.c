@@ -1,7 +1,7 @@
 
 #include <lib/libc/stdiox.h>
 #include <sys/devices/keyboard/scan_codes.h>
-#include <sys/screen/screen.h>
+#include <lib/screen/screen.h>
 #include <fs/xin.h>
 #include <lib/libc/stdlibx.h>
 #include <lib/libc/string.h>

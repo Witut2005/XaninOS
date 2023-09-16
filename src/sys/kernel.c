@@ -6,7 +6,7 @@
 #include <stdint.h>
 #include <sys/interrupts/idt/idt.h>
 #include <lib/libc/stdlibx.h>
-#include <sys/screen/screen.h>
+#include <lib/screen/screen.h>
 #include <sys/terminal/interpreter/interpreter.c>
 #include <lib/libc/math.h>
 #include <sys/devices/keyboard/keyboard_init.c>

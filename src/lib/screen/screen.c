@@ -3,7 +3,7 @@
 #include <sys/devices/keyboard/key_map.h>
 #include <lib/libc/stdlibx.h>
 #include <lib/libc/string.h>
-#include <sys/screen/screen.h>
+#include <lib/screen/screen.h>
 
 typedef void (*keyboard_handle_input)(void);
 

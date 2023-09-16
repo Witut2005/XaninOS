@@ -1,5 +1,5 @@
 
-#include <sys/screen/screen.h>
+#include <lib/screen/screen.h>
 
 bool is_logo_color_blocked;
 

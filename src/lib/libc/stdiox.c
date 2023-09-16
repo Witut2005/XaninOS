@@ -3,7 +3,7 @@
 #include <lib/libc/string.h>
 #include <lib/libc/memory.h>
 #include <lib/libc/stdlibx.h>
-#include <sys/screen/screen.h>
+#include <lib/screen/screen.h>
 #include <sys/devices/keyboard/scan_codes.h>
 #include <stdarg.h>
 #include <lib/libc/time.h>

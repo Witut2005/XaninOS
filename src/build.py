@@ -247,7 +247,6 @@ objects_to_compile = {
 
 
     'kmodules': [
-        CompileObject('./sys/screen/screen.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./sys/pmmngr/alloc.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./sys/input/input.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./sys/log/syslog.c', builders['c'], builder_options['c']['default'], OBJECT),
@@ -289,6 +288,7 @@ objects_to_compile = {
     ],
 
     'vty': [
+        CompileObject('./lib/screen/screen.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./sys/terminal/frontend/frontend.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./sys/terminal/backend/backend.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./sys/terminal/handlers/handlers.c', builders['c'], builder_options['c']['default'], OBJECT),
@@ -345,7 +345,7 @@ print(colored('\nXANIN OS MODULES BUILDED\n', 'green'))
     
 create_c_library('./lib/libc/libc.o', './lib/libc/libc.a', objects_to_compile['libc'], [
         './sys/log/syslog.o', './fs/xin_syscalls.o', 
-        './sys/screen/screen.o', 
+        './lib/screen/screen.o', 
         './sys/devices/hda/disk.o', 
         # './sys/terminal/backend/backend.o', 
         # './sys/terminal/frontend/frontend.o',
