@@ -73,20 +73,15 @@ constexpr void swap(T& x, T& y)
     y = tmp;
 }
 
-
 template <class T>
 T* find(const T* beg, const T* end, const T value)
 {
-
     for(; beg != end; beg++)
     {
         if(*beg == value)
             return const_cast<T*> (beg);
     }
-
-    
     return const_cast<T*> (end);
-
 }
 
 template<class T>

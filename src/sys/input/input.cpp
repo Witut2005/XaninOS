@@ -1,14 +1,42 @@
 
 #include <lib/libc/hal.h>
+#include <lib/libc/memory.h>
+#include <lib/libcpp/array.h>
+#include <lib/libcpp/vector.hpp>
 #include <sys/input/input.h>
 
 key_info_t KeyInfo = {0};
 
-static key_info_t* KeyboardModuleObservedObjects[100];
+static std::array<key_info_t*, 100> KeyboardModuleObservedObjects;
+
+extern "C" 
+{
 
 void __input_module_init(void)
 {
     memset((uint8_t*)&KeyboardModuleObservedObjects, 0, sizeof(KeyboardModuleObservedObjects));
+}
+
+int __input_module_add_object_to_observe(key_info_t* KeyInfoToObserve)
+{
+    int index = KeyboardModuleObservedObjects.find_other_than(NULL);
+
+    if(index == -1)
+        return -1;
+
+    KeyboardModuleObservedObjects[index] = KeyInfoToObserve;
+    return 0;
+}
+
+int __input_module_remove_object_from_observe(key_info_t* KeyInfoToRemove)
+{
+    int index = KeyboardModuleObservedObjects.find(KeyInfoToRemove);
+
+    if(index == -1)
+        return -1;
+
+    KeyboardModuleObservedObjects[index] = NULL;
+    return 0;
 }
 
 char __inputc(void)
@@ -41,5 +69,6 @@ xchar __inputg(void)
     x.scan_code = InputgKeyInfo.scan_code;
 
     return x;
+}
 
 }

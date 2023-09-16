@@ -250,7 +250,7 @@ objects_to_compile = {
 
     'kmodules': [
         CompileObject('./sys/pmmngr/alloc.c', builders['c'], builder_options['c']['default'], OBJECT),
-        CompileObject('./sys/input/input.c', builders['c'], builder_options['c']['default'], OBJECT),
+        CompileObject('./sys/input/input.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./sys/log/syslog.c', builders['c'], builder_options['c']['default'], OBJECT),
     ],
 
