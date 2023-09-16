@@ -3,7 +3,7 @@
 #include <stdarg.h>
 #include <stdint.h>
 #include <lib/libc/colors.h>
-#include <sys/terminal/vty/vty.h>
+#include <lib/screen/screen.h>
 #include <lib/libc/stdlibx.h>
 #include <lib/libc/math.h>
 #include <sys/devices/keyboard/key_map.h>

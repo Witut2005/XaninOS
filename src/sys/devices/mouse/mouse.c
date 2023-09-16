@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include <lib/libc/hal.h>
 #include <lib/libc/stdiox.h>
-#include <sys/terminal/vty/vty.h>
+#include <lib/screen/screen.h>
 
 
 #include <sys/interrupts/idt/idt.h>

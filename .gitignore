@@ -1,5 +1,5 @@
 #pycache
-__pycache__/
+**/*.pyc
 
 # Prerequisites
 **/*.d

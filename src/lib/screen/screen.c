@@ -3,21 +3,11 @@
 #include <sys/devices/keyboard/key_map.h>
 #include <lib/libc/stdlibx.h>
 #include <lib/libc/string.h>
-#include <sys/terminal/vty/vty.h>
-
-bool cursor_show = false;
-char selected_character; 
+#include <lib/screen/screen.h>
 
 typedef void (*keyboard_handle_input)(void);
 
 keyboard_handle_input keyboard_handle = NULL;
-
-char last_used_commands[40];
-char last_used_parameters[40];
-
-uint8_t index;
-
-uint8_t x = 0, y = 0;
 
 uint8_t logo_front_color = yellow;
 uint8_t logo_back_color = black;

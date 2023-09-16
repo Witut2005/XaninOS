@@ -7,7 +7,7 @@
 #include <lib/libc/string.h>
 #include <lib/libc/memory.h>
 #include <lib/libc/stdlibx.h>
-#include <sys/terminal/vty/vty.h>
+#include <lib/screen/screen.h>
 #include <sys/devices/keyboard/scan_codes.h>
 #include <stdarg.h>
 #include <lib/libc/time.h>

@@ -3,7 +3,7 @@
 #include <lib/libcpp/utility.h>
 #include <lib/libc/stdiox.h>
 #include <sys/call/xanin_sys/calls/vga/vga.h>
-#include <sys/terminal/vty/vty.h>
+#include <lib/screen/screen.h>
 
 /* USE IN CPP FILES NOT IN C BRUH */
 

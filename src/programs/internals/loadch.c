@@ -2,7 +2,7 @@
 #include <lib/libc/string.h>
 #include <lib/libc/stdiox.h>
 #include <lib/libc/canvas.h>
-#include <sys/terminal/vty/vty.h>
+#include <lib/screen/screen.h>
 #include <sys/input/input.h>
 
 //CANVAS_APP

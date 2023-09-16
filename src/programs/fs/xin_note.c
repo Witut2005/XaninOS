@@ -6,7 +6,7 @@
 #include <sys/terminal/interpreter/interpreter.h>
 #include <lib/libc/string.h>
 #include <sys/input/input.h>
-#include <sys/terminal/vty/vty.h>
+#include <lib/screen/screen.h>
 #include <sys/devices/hda/disk.h>
 
 //CANVAS_APP

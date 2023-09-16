@@ -1,7 +1,7 @@
 
 #include <lib/libc/string.h>
 #include <lib/libc/stdlibx.h>
-#include <sys/terminal/vty/vty.h>
+#include <lib/screen/screen.h>
 
 //CANVAS_APP
 

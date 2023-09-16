@@ -2,13 +2,12 @@
 #include <sys/net/network_protocols/internet_protocol/ipv4/ip.h>
 #include <lib/ascii/ascii.h>
 #include <sys/devices/pit/pit.h>
-#include <sys/terminal/interface/terminal.h>
 #include <lib/libc/data_structures.h>
 #include <limits.h>
 #include <stdint.h>
 #include <sys/interrupts/idt/idt.h>
 #include <lib/libc/stdlibx.h>
-#include <sys/terminal/vty/vty.h>
+#include <lib/screen/screen.h>
 #include <sys/terminal/interpreter/interpreter.c>
 #include <lib/libc/math.h>
 #include <sys/devices/keyboard/keyboard_init.c>
@@ -72,7 +71,6 @@ extern bool com_status(void);
 |Ja, rok 2022, 31 grudzień, 17:00:45    |
 /--------------------------------------*/
 
-terminal_t* kernel_terminal;
 uint8_t* const zeros;
 
 uint32_t stdio_refresh_rate;

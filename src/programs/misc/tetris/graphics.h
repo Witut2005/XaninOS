@@ -7,11 +7,11 @@
 
 #define BLANK 0xa
 
-uint8_t newInput;
-uint8_t oldInput;
+static uint8_t newInput;
+static uint8_t oldInput;
 
-extern uint8_t x;
-extern uint8_t y;
+static uint8_t x;
+static uint8_t y;
 
 void printCube(void)
 {

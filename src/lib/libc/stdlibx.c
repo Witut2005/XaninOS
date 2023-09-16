@@ -1,7 +1,7 @@
 
 #include <lib/libc/hal.h>
 #include <lib/libc/time.h>
-#include <sys/terminal/vty/vty.h>
+#include <lib/screen/screen.h>
 #include <lib/libc/colors.h>
 #include <lib/libc/string.h>
 #include <lib/libc/stdlibx.h>

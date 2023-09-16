@@ -9,7 +9,6 @@
 int argc;
 char* argv[5];
 int last_command_exit_status;
-extern terminal_t* kernel_terminal;
 
 #define XANIN_ADD_APP_ENTRY0(app_name, exec_name) else if(bstrcmp(argv[0], app_name)) {last_command_exit_status = exec_name();}
 #define XANIN_ADD_APP_ENTRY1(app_name, exec_name) else if(bstrcmp(argv[0], app_name)) {last_command_exit_status = exec_name(argv[1]);}

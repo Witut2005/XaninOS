@@ -6,7 +6,7 @@
 #include <lib/libc/time.h>
 #include <lib/xaninGraphics/xaninGraphics.h>
 #include <sys/input/input.h>
-#include <sys/terminal/vty/vty.h>
+#include <lib/screen/screen.h>
 
 //CANVAS APP
 

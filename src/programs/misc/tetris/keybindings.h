@@ -3,7 +3,7 @@
 #include <stdint.h>
 #include <sys/input/input.h>
 #include <lib/libc/colors.h>
-#include <sys/terminal/vty/vty.h>
+#include <lib/screen/screen.h>
 
 
 uint16_t buf;
