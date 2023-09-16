@@ -4,10 +4,23 @@
 
 sudo apt-get update
 sudo apt-get upgrade -y
-sudo apt-get install python3 python3-pip -y
-sudo apt-get install netcat-openbsd build-essential make curl nasm qemu qemu-system-x86 virt-manager virt-viewer dnsmasq vde2 bridge-utils bison flex libgmp-dev libmpc-dev libmpfr-dev texinfo -y
-pip3 install termcolor 
-pip3 install numpy 
+sudo apt-get install python3 -y
+sudo apt-get install python3-pip -y
+sudo apt-get install make -y 
+sudo apt-get install curl -y
+sudo apt-get install nasm -y
+sudo apt-get install qemu-system-x86 -y
+sudo apt-get install virt-manager -y
+sudo apt-get install virt-viewer -y
+sudo apt-get install dnsmasq -y
+sudo apt-get install vde2 -y
+sudo apt-get install bridge-utils -y
+sudo apt-get install bison -y
+sudo apt-get install flex -y
+sudo apt-get install libgmp-dev -y
+sudo apt-get install libmpc-dev -y
+sudo apt-get install libmpfr-dev -y
+sudo apt-get install texinfo -y
 
 #----------------------------------------------------------------
 #Actual building
@@ -42,6 +55,7 @@ echo MAKE INSTALL-TARGET-LIBGCC:
 sudo make install-target-libgcc
 echo HERE U GO MAYBE:
 ls /usr/local/i386elfgcc/bin
-export PATH="$PATH:/usr/local/i386elfgcc/bin"
 
+export PATH="$PATH:/usr/local/i386elfgcc/bin"
 echo 'export PATH="/usr/local/i386elfgcc/bin:$PATH"' >> ~/.bashrc
+sudo reboot
