@@ -1,7 +1,12 @@
 
 //CANVAS_APP
 
+#include <lib/libc/file.h>
+#include <sys/input/input.h>
+#include <lib/libc/canvas.h>
+#include <lib/libc/colors.h>
 #include <lib/libc/string.h>
+#include <lib/libc/stdlibx.h>
 
 extern char* argv[5];
 

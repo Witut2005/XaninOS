@@ -1,6 +1,9 @@
 
 #include "./hexeditor.h"
+#include <lib/libc/string.h>
+#include <lib/libc/canvas.h>
 #include <sys/input/input.h>
+#include <sys/terminal/vty/vty.h>
 
 //CANVAS_APP
 
@@ -36,7 +39,7 @@ void hexeditor_input(xchar x)
 
         Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | (((black << 4) | white) << 8));
         
-        if((uint32_t)&Screen.cursor[Screen.y - 1][Screen.x] < VGA_TEXT_MEMORY)
+        if((uint32_t)&Screen.cursor[Screen.y - 1][Screen.x] < (uint32_t)VGA_TEXT_MEMORY)
         {
 
             Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | (((white << 4) | black) << 8));
@@ -59,7 +62,7 @@ void hexeditor_input(xchar x)
 
         Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | (((black << 4) | white) << 8));
         
-        if((uint32_t)&Screen.cursor[Screen.y + 1][Screen.x] >= VGA_TEXT_MEMORY + VGA_SCREEN_RESOLUTION)
+        if((uint32_t)&Screen.cursor[Screen.y + 1][Screen.x] >= (uint32_t)(VGA_TEXT_MEMORY + VGA_SCREEN_RESOLUTION))
         {
             Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | (((white << 4) | black) << 8));
             return;
@@ -76,7 +79,7 @@ void hexeditor_input(xchar x)
     else if(x.scan_code == ARROW_RIGHT)
     {
         
-        if((uint32_t)&Screen.cursor[Screen.y][Screen.x + 1] > VGA_TEXT_MEMORY + VGA_SCREEN_RESOLUTION - 8)
+        if((uint32_t)&Screen.cursor[Screen.y][Screen.x + 1] > (uint32_t)(VGA_TEXT_MEMORY + VGA_SCREEN_RESOLUTION - 8))
             return;
 
         Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | (((black << 4) | white) << 8));
@@ -102,7 +105,7 @@ void hexeditor_input(xchar x)
     else if(x.scan_code == ARROW_LEFT)
     {
 
-        if((uint32_t)&Screen.cursor[Screen.y][Screen.x - 1] < VGA_TEXT_MEMORY)
+        if((uint32_t)&Screen.cursor[Screen.y][Screen.x - 1] < (uint32_t)VGA_TEXT_MEMORY)
             return;
 
         Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | (((black << 4) | white) << 8));
@@ -136,7 +139,7 @@ void hexeditor_input(xchar x)
     
     else if(x.character != '\0')
     {
-        if((uint32_t)&Screen.cursor[Screen.y][Screen.x] >= VGA_TEXT_MEMORY + VGA_SCREEN_RESOLUTION - 7)
+        if((uint32_t)&Screen.cursor[Screen.y][Screen.x] >= (uint32_t)(VGA_TEXT_MEMORY + VGA_SCREEN_RESOLUTION - 7))
         {
             Screen.x--;
             return;
@@ -210,6 +213,7 @@ void hexeditor_input(xchar x)
     }  
 }
 
+extern char* argv[5]; // USE HERE FUNC
 
 int hexeditor(char* file_name, char* options)
 {

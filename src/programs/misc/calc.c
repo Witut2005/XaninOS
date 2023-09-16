@@ -1,5 +1,6 @@
 
 #include <lib/libc/math.h>
+#include <sys/input/input.h>
 #include <lib/libc/string.h>
 #include <lib/libc/stdiox.h>
 

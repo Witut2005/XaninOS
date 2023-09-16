@@ -11,7 +11,7 @@ extern uint8_t kernel_mmngr_mmap[PMMNGR_MEMORY_BLOCKS];
 int buffers_view(void)
 {
 
-    Screen.y = 10;
+    xprintf("\n\n");
 
     float xin_fs_space_used = 0;
     float xin_fs_space_total = (SECTOR_SIZE * XIN_ENTRY_POINTERS_SECTORS);

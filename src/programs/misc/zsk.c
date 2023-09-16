@@ -1,6 +1,6 @@
-#pragma once
 
-#include <lib/libc/stdiox.h>
+#include <sys/input/input.h>
+#include <lib/libc/canvas.h>
 #include <lib/libc/stdlibx.h>
 #include <lib/libc/time.h>
 #include <lib/libc/string.h>

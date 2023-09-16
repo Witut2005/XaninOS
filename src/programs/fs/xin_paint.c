@@ -4,6 +4,7 @@
 #include <fs/xin.h>
 #include <lib/libc/memory.h>
 #include <lib/libc/string.h>
+#include <lib/libc/canvas.h>
 #include <sys/input/input.h>
 
 //CANVAS_APP
@@ -15,14 +16,14 @@ void paint_input(xchar x)
 {
 
 
-    if((uint32_t)&Screen.cursor[Screen.y][Screen.x] < VGA_TEXT_MEMORY)
+    if((uint32_t)&Screen.cursor[Screen.y][Screen.x] < (uint32_t)VGA_TEXT_MEMORY)
     {
         Screen.x = 0x0;
         Screen.y = 0x0;
         selected_cell = '\0';
     }
 
-    if((uint32_t)&Screen.cursor[Screen.y][Screen.x] >= VGA_TEXT_MEMORY + VGA_SCREEN_RESOLUTION * SIZE_OF(XtCell))
+    if((uint32_t)&Screen.cursor[Screen.y][Screen.x] >= (uint32_t)(VGA_TEXT_MEMORY + VGA_SCREEN_RESOLUTION * SIZE_OF(XtCell)))
     {
         Screen.x = 79;
         Screen.y = 27;
@@ -38,7 +39,7 @@ void paint_input(xchar x)
     {
         Screen.cursor[Screen.y][Screen.x] = selected_cell;
         
-        if((uint32_t)&Screen.cursor[Screen.y - 1][Screen.x] >= VGA_TEXT_MEMORY)
+        if((uint32_t)&Screen.cursor[Screen.y - 1][Screen.x] >= (uint32_t)VGA_TEXT_MEMORY)
             Screen.y--;
    
 
@@ -50,7 +51,7 @@ void paint_input(xchar x)
     {
         Screen.cursor[Screen.y][Screen.x] = selected_cell;
         
-        if((uint32_t)&Screen.cursor[Screen.y + 1][Screen.x] <= VGA_TEXT_MEMORY + VGA_SCREEN_RESOLUTION * SIZE_OF(XtCell))
+        if((uint32_t)&Screen.cursor[Screen.y + 1][Screen.x] <= (uint32_t)(VGA_TEXT_MEMORY + VGA_SCREEN_RESOLUTION * SIZE_OF(XtCell)))
             Screen.y++;
 
         selected_cell = Screen.cursor[Screen.y][Screen.x];

@@ -3,8 +3,10 @@
 #include "./pong.h"
 #include <lib/libc/stdlibx.h>
 #include <lib/libc/stdiox.h>
+#include <lib/libc/time.h>
 #include <lib/xaninGraphics/xaninGraphics.h>
 #include <sys/input/input.h>
+#include <sys/terminal/vty/vty.h>
 
 //CANVAS APP
 

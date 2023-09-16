@@ -1,5 +1,5 @@
-#pragma once
-
+#include <lib/libc/string.h>
+#include <lib/libc/stdlibx.h>
 #include <sys/devices/hda/disk.h>
 
 //TERMINAL_APP

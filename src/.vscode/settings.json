@@ -37,7 +37,8 @@
         "file.h": "c",
         "string.h": "c",
         "input.h": "c",
-        "response.h": "c"
+        "response.h": "c",
+        "time.h": "c"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }

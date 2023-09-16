@@ -1,6 +1,9 @@
 
+#include <lib/libc/file.h>
+#include <lib/libc/time.h>
 #include <lib/libc/string.h>
 #include <lib/libc/stdiox.h>
+#include <sys/input/input.h>
 
 int screen_saver(char* filename)
 {

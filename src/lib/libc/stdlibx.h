@@ -19,7 +19,6 @@ extern void(*keyboard_handle)(void);
 
 typedef uint8_t* address_t;
 typedef uint8_t* object_t;
-typedef int __STATUS;
 
 extern uint8_t* const zeros;
 

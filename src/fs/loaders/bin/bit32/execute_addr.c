@@ -1,7 +1,6 @@
 
-#pragma once
-
-#include <lib/libc/stdiox.h>
+#include <lib/libc/string.h>
+#include <lib/libc/stdlibx.h>
 
 //TERMINAL_APP
 

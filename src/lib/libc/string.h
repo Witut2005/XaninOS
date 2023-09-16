@@ -62,6 +62,10 @@ uint32_t number_of_lines_get(const char* str);
 char* string_align_end(char* const str, char filler, uint32_t count); //puts NULL at end of string
 char* string_align_begin(char* const str, char filler, uint32_t count);// puts NULL at end of string
 
+uint32_t number_of_lines_get(const char* str);
+uint32_t size_of_biggest_line_get(const char* str);
+StringRectangle* const string_rectangle_create(const char* buf, uint32_t position_x, uint32_t position_y);
+
 #ifdef __cplusplus
 }
 #endif

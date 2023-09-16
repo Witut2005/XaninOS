@@ -1,5 +1,6 @@
 
 #include <lib/libc/stdlibx.h>
+#include <lib/libc/stdiox.h>
 #include <sys/pmmngr/alloc.h>
 
 //TERMINAL_APP

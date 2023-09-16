@@ -36,7 +36,7 @@ void update(void)
 
 
 
-    if((uint32_t)petris_cursor >= VGA_TEXT_MEMORY + (27 * 80 * 2))//VGA_TEXT_MEMORY + (25*80*2))
+    if((uint32_t)petris_cursor >= (uint32_t)(VGA_TEXT_MEMORY + (27 * 80 * 2)))//VGA_TEXT_MEMORY + (25*80*2))
     {
         *petris_cursor = buf;            
         printCube();

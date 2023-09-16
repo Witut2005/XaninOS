@@ -1,11 +1,12 @@
 
-
-#pragma once
-
 #include <lib/libc/string.h>
 #include <lib/libc/stdiox.h>
+#include <lib/libc/canvas.h>
+#include <sys/terminal/vty/vty.h>
+#include <sys/input/input.h>
 
 //CANVAS_APP
+//MUST BE CANVAS BECAOUSE CERTAIN CHARACTERS WILL BE INTERPRETER IN TERMINAL MODE
 
 int loadch(char* address_string)
 {

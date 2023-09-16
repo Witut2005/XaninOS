@@ -1,12 +1,12 @@
 
-#pragma once
-
 #include <lib/libc/stdiox.h>
 #include <fs/xin.h>
 #include <lib/libc/memory.h>
 #include <sys/terminal/interpreter/interpreter.h>
 #include <lib/libc/string.h>
 #include <lib/libc/hal.h>
+#include <sys/input/input.h>
+#include <sys/devices/hda/disk.h>
 
 //TERMINAL_APP
 

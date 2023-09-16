@@ -1,6 +1,6 @@
-#pragma once
 
 #include "./graphics.h"
+#include <lib/libc/canvas.h>
 #include <sys/input/input.h>
 
 //CANVAS_APP

@@ -1,48 +1,10 @@
 #pragma once
 
-extern int cpp_test(void);
-
-
-#include <programs/fs/copy_file.c>
-#include <programs/fs/create_file.c>
-#include <programs/fs/create_folder.c>
-#include <programs/fs/entry_remove.c>
-#include <programs/fs/folder_change.c>
-#include <programs/fs/folder_remove.c>
-#include <programs/fs/link_create.c>
-#include <programs/fs/list_files.c>
-#include <programs/fs/move.c>
-#include <programs/misc/tetris/tetris.c>
-#include <programs/misc/start_screen.c>
-#include <programs/power/shutdown.c>
-#include <programs/internals/load.c>
-#include <programs/internals/loadch.c>
-#include <programs/misc/epilepsy.c>
-#include <programs/tests/keyboard_test.c>
-#include <programs/misc/logo.c>
-#include <programs/internals/register_dump.c>
-#include <programs/internals/cpu_info.c>
-#include <programs/misc/calc.c>
-#include <programs/misc/pong/pong.c>
-#include <programs/tests/timer_test.c>
-#include <programs/misc/zsk.c>
-
-#include <fs/loaders/bin/bit32/run.c>
-#include <fs/loaders/bin/bit16/run16.c>
-#include <fs/loaders/bin/bit32/execute_addr.c>
-
-#include <programs/developer/disk_load.c>
-#include <programs/developer/disk_write.c>
-#include <programs/fs/hexeditor/hexeditor.c>
-
-#include <programs/fs/xin_note.c>
-#include <programs/fs/xin_paint.c>
-#include <programs/fs/cat.c>
-#include <programs/fs/xin_info.c>
-#include <programs/internals/buffers.c>
-#include <programs/tests/terminal_test.c>
-#include <programs/misc/ssaver.c>
-#include <programs/xgl/xgl_mode_set.c>
+#include <programs/built-in-apps.h>
+#include <sys/input/input.h>
+#include <lib/libc/stdiox.h>
+#include <lib/libc/string.h>
+#include <lib/libc/file.h>
 
 int argc;
 char* argv[5];
@@ -87,6 +49,7 @@ void check_external_apps(void)
 }
 
 extern uint32_t stdio_refresh_rate; // USE HERE SYSCALL
+extern void stdio_refresh(address_t* args);
 
 void scan(void)
 {
@@ -124,29 +87,13 @@ void scan(void)
         argc++;
     }
 
-    // terminal_t* app_terminal = terminal_create();
-    // terminal_set(kernel_terminal, app_terminal);
-    
-    // for(int i = 0; i < VGA_SCREEN_RESOLUTION; i++)
-    //     app_terminal->buffer[i] = 0x0;
-
-    if(bstrcmp(argv[0], "\0"))
-    {
-        if(!is_logo_color_blocked)
-        {
-            logo_front_color++;
-            if(logo_front_color == 16)
-                logo_front_color = 1;
-        }
-    }
-
+    if(bstrcmp(argv[0], "nicho")) {}
     XANIN_ADD_APP_ENTRY0("stdio_apply", stdio_apply)
     XANIN_ADD_APP_ENTRY1("ssaver", screen_saver)
     XANIN_ADD_APP_ENTRY1("bmp_info", bmp_info)
     XANIN_ADD_APP_ENTRY1("dev_tools", dev_tools)
     XANIN_ADD_APP_ENTRY0("netplan_apply", netplan_apply)
     XANIN_ADD_APP_ENTRY0("xgl_mode_set", xgl_mode_set)
-    XANIN_ADD_APP_ENTRY0("ttest", terminal_test)
     XANIN_ADD_APP_ENTRY0("buffers", buffers_view)
     XANIN_ADD_APP_ENTRY1("netapi_check", netapi_check)
     XANIN_ADD_APP_ENTRY0("usb_info", usb_controller_info)
@@ -182,30 +129,10 @@ void scan(void)
     XANIN_ADD_APP_ENTRY3("disk_load", disk_load)
     XANIN_ADD_APP_ENTRY3("disk_write", disk_write_data)
     XANIN_ADD_APP_ENTRY1("execute_addr", execute_addr)
-    XANIN_ADD_APP_ENTRY0("key-test", keyboard_test)
     XANIN_ADD_APP_ENTRY0("pong", pong)
     XANIN_ADD_APP_ENTRY1("loadch", loadch)
 
-    else if(bstrcmp(argv[0], "reboot"))
-    {
-
-            
-        static uint16_t idt_16[3] = {0x0, 0x0, 0x0};
-
-        free(kernel_terminal);
-        screen_clear();
-
-        disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x12, 5, (uint16_t*)(0x800));
-        disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x1a, 20, (uint16_t*)(0x1800));
-        interrupt_enable();
-
-        asm("lidt %0" :: "m"(idt_16));
-        
-        uint8_t s = 12;
-        s = s / 0;
-
-
-    }
+    XANIN_ADD_APP_ENTRY0("reboot", reboot)
     XANIN_ADD_APP_ENTRY1("create", xin_create_file_app)
     XANIN_ADD_APP_ENTRY1("mkdir", xin_create_folder_app)
     XANIN_ADD_APP_ENTRY0("shutdown", shutdown)
@@ -213,11 +140,7 @@ void scan(void)
     XANIN_ADD_APP_ENTRY1("rd", xin_folder_remove_app)
     XANIN_ADD_APP_ENTRY1("cd", xin_folder_change_app)
 
-    else if(bstrcmp(argv[0],"pwd"))
-    {
-        xprintf("%s\n", xin_current_directory);
-        while(inputg().scan_code != ENTER);
-    }
+    XANIN_ADD_APP_ENTRY1("pwd", pwd)
 
     XANIN_ADD_APP_ENTRY2("move", xin_move_entry_app)
     XANIN_ADD_APP_ENTRY2("mv", xin_move_entry_app)

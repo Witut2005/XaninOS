@@ -16,7 +16,7 @@ int epilepsy(void)
 
     while(true)
     {
-        if((uint32_t)color_picker >= VGA_TEXT_MEMORY + (80 * 28 * 2))
+        if((uint32_t)color_picker >= (uint32_t)(VGA_TEXT_MEMORY + (80 * 28 * 2)))
             color_picker = (uint16_t*)VGA_TEXT_MEMORY;
 
         color = rand() % 16;    

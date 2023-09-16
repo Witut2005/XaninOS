@@ -35,6 +35,8 @@
 #include <lib/libc/xanin_state.h>
 #include <lib/libc/system.h>
 #include <sys/interrupts/handlers/entries/handler_entries.h>
+#include <sys/call/xanin_sys/calls/pmmngr/alloc.h>
+#include <sys/terminal/backend/backend.h>
 #include <sys/terminal/frontend/frontend.h>
 #include <lib/cpu/headers/cpu_state_info.h>
 #include <sys/macros.h>
@@ -84,8 +86,6 @@ void stdio_refresh(address_t* args)
 
 void kernel_loop(void)
 {
-
-
     while(1)
     {
 
@@ -114,28 +114,21 @@ void kernel_loop(void)
 
         xin_close_all_files();
 
-        while(1)
-        {
-
-            if(app_exited)
-            {
-                app_exited = false;
-                break;
-            }
+        if(app_exited)
+            app_exited = false;
 
 
-            char scanf_str[] = "%s %s %s %s %s";
+        char scanf_str[] = "%s %s %s %s %s";
 
-            for(int i = 0; i < 5; i++)
-                memset(argv[i], 0, XANIN_PMMNGR_BLOCK_SIZE * 2);
+        for(int i = 0; i < 5; i++)
+            memset(argv[i], 0, XANIN_PMMNGR_BLOCK_SIZE * 2);
 
-            xscanf(scanf_str,argv[0], argv[1], argv[2], argv[3], argv[4]);
+        xscanf(scanf_str,argv[0], argv[1], argv[2], argv[3], argv[4]);
 
-            for(int i = 0; i < 5; i++)
-                erase_spaces(argv[i]);
-            
-            scan();
-        }   
+        for(int i = 0; i < 5; i++)
+            erase_spaces(argv[i]);
+        
+        scan();
     }
 }
 

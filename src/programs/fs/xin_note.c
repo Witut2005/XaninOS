@@ -1,11 +1,13 @@
 
 
-#include <lib/libc/stdiox.h>
+#include <lib/libc/canvas.h>
 #include <fs/xin.h>
 #include <lib/libc/memory.h>
 #include <sys/terminal/interpreter/interpreter.h>
 #include <lib/libc/string.h>
 #include <sys/input/input.h>
+#include <sys/terminal/vty/vty.h>
+#include <sys/devices/hda/disk.h>
 
 //CANVAS_APP
 

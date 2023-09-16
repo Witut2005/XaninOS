@@ -1,5 +1,6 @@
 
 #include <lib/bmp/bmp.h>
+#include <sys/flow/exit_codes.h>
 #include <lib/libc/file.h>
 #include <lib/libc/stdiox.h>
 
