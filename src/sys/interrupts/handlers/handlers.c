@@ -27,8 +27,9 @@ void exception_print(const char* message)
 
     Screen.x = 0;
     xprintf("%zERROR: %s\n", stderr, message);
+    __xtb_flush(__vty_get());
     interrupt_enable();
-    while(inputg().scan_code != ENTER);
+    while(__inputg().scan_code != ENTER);
 }
 
 void invalid_opcode_exception_handler(void)

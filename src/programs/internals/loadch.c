@@ -28,6 +28,6 @@ int loadch(char* address_string)
         canvas_putchar(data_pointer[i]);
     }
 
-	while(inputg().scan_code != ENTER);
+	while(getxchar().scan_code != ENTER);
     return XANIN_OK;
 }

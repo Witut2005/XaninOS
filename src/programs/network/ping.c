@@ -16,7 +16,7 @@ int ping(char* ip_addr_str)
     if(!network_device_available_check())
     {
         xprintf("%zCANT EXECUTE PING COMMAND: NO NETWORK CARD\n", stderr);
-        while(inputg().scan_code != ENTER);
+        while(getxchar().scan_code != ENTER);
         return XANIN_ERROR;
     }
 
@@ -28,7 +28,7 @@ int ping(char* ip_addr_str)
     if(check_string_errors(IPV4_ERRNO))
     {
         xprintf("IP error (invalid ip given)\n");
-        while(inputg().scan_code != ENTER); 
+        while(getxchar().scan_code != ENTER); 
         return XANIN_OK;
     }
 

@@ -19,7 +19,7 @@ int run(char* file_name)
     {
         xprintf("%zNO SUCH FILE %s\n",OUTPUT_COLOR_SET(red,white),argv[1]);
 
-        while(inputg().scan_code == ENTER);
+        while(getxchar().scan_code == ENTER);
         return XANIN_ERROR;
     }
         
@@ -30,7 +30,7 @@ int run(char* file_name)
         {
             xprintf("%zYOU CANT RUN DIRECTORY\n",OUTPUT_COLOR_SET(red,white));
             xprintf("%zuse F4 key to exit\n",OUTPUT_COLOR_SET(red,white));
-            while(inputg().scan_code != ENTER);
+            while(getxchar().scan_code != ENTER);
             return XANIN_ERROR;
         }
     

@@ -20,7 +20,7 @@ int run16(char* file_name)
     {
         xprintf("%zNO SUCH FILE %s\n",OUTPUT_COLOR_SET(red,white),argv[1]);
 
-        while(inputg().scan_code == ENTER);
+        while(getxchar().scan_code == ENTER);
         return XANIN_ERROR;
             
     
@@ -33,7 +33,7 @@ int run16(char* file_name)
         {
             xprintf("%zYOU CANT RUN DIRECTORY\n",OUTPUT_COLOR_SET(red,white));
             xprintf("%zuse F4 key to exit\n",OUTPUT_COLOR_SET(red,white));
-            while(inputg().scan_code != ENTER);
+            while(getxchar().scan_code != ENTER);
             return XANIN_ERROR;
         }
     
@@ -43,7 +43,7 @@ int run16(char* file_name)
         disk_read(ATA_FIRST_BUS, ATA_MASTER, xin_file->first_sector, 1, (uint16_t*)dest);
 
         // xprintf("nicho");
-        // while(inputg().scan_code == ENTER);
+        // while(getxchar().scan_code == ENTER);
 
         real_mode_enter_no_return(0x1000, 0x0); // <-- tmp.bin address in memory
 

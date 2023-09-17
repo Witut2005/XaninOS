@@ -23,9 +23,7 @@ extern int screenshot(void);
 #define KEYBOARD_ENCODER 0x60
 #define ONBOARD_KEY_CONTROLLER 0x64
 #define KEYBOARD_STATUS_REG 0x64
-
 #define KEYBOARD_DATA_REG 0x60
-
 
 void keyboard_driver_shift_remap_keys(void)
 {
@@ -55,7 +53,6 @@ void keyboard_driver_shift_remap_keys(void)
         KEYBOARD_DRIVER_KEY_REMAP(0x5C, '|');
         KEYBOARD_DRIVER_KEY_REMAP(0x27, 0x22);
     }
-
 }
 
 void keyboard_driver(void)
@@ -149,10 +146,7 @@ void keyboard_driver(void)
     }
 
     if(KeyInfo.scan_code == PRINT_SCREEN_KEY_RELEASE)
-    {
         screenshot();
-    }
-
 
     keyboard_driver_shift_remap_keys();
 

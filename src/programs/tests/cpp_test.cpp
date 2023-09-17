@@ -56,7 +56,7 @@ void cpp_prog()
     else
         std::cout << "value of the given key: " << *tmptmp << std::endl;
 
-    while(inputg().scan_code != ENTER);
+    while(getxchar().scan_code != ENTER);
     screen_clear();
 
 
@@ -148,7 +148,7 @@ void cpp_prog()
 
     // lista.
 
-    while(inputg().scan_code != ENTER);
+    while(getxchar().scan_code != ENTER);
 
     int* p;
     
@@ -273,7 +273,7 @@ void cpp_prog()
         
     wekk.print();
 
-    while(inputg().scan_code != ENTER);
+    while(getxchar().scan_code != ENTER);
 
     std::cout << std::clear;
     
@@ -323,7 +323,7 @@ void cpp_prog()
     // nicho.push_back("ugabuga");
 
 
-    while(inputg().scan_code != ENTER);
+    while(getxchar().scan_code != ENTER);
 
     free(buf);
 

@@ -23,7 +23,7 @@ int calc(char* options)
         screen_clear();
         xprintf("xaninOS developer tools\n");
         xprintf("Simple calculator :))\n");
-    	while(inputg().scan_code != ENTER);
+    	while(getxchar().scan_code != ENTER);
         return XANIN_OK;
     }
 

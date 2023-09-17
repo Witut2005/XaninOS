@@ -1,14 +1,4 @@
 
-%ifidn __OUTPUT_FORMAT__, elf32 
-  %define PTR_SIZE 4
-%elifidn __OUTPUT_FORMAT__, elf64 
- %define PTR_SIZE 8
-%endif
-
-%macro ESP_GET_NTH_ARGUMENT 2
-    mov %1, [esp + (%2 * PTR_SIZE)]
-%endmacro
-
 %define XANIN_VTY_SET 2002
 %define XANIN_VTY_GET 2003
 %define XANIN_XTB_GET 2004

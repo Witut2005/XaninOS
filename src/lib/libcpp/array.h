@@ -11,9 +11,6 @@ namespace std
 template<class Arr>
 class ArrayIterator
 {
-
-
-
     public: 
     
         using Type = typename Arr::Type;
@@ -83,33 +80,35 @@ class ArrayIterator
 };
 
 
-template <class T, int X>
+template <class T, int SIZE>
 class array
 {
 
     private:
-    T arr[X];
+    T arr[SIZE];
 
     public:
 
     using Type = T;
-    using iterator = ArrayIterator< array<T, X> >;
+    using iterator = ArrayIterator< array<T, SIZE> >;
 
-    array(array& arr)
+    array()
     {
-        for(int i = 0; i < X; i++)
+
+    }
+
+    array(const array& arr)
+    {
+        for(int i = 0; i < SIZE; i++)
             this->arr[i] = arr[i];  
     }
 
     array(std::initializer_list<T> a)
     {
-        
         auto it = a.begin();
 
-        for(int i = 0; i < X;i++) 
-        {
+        for(int i = 0; i < SIZE;i++) 
             arr[i] = it[i];
-        }
     }
 
     T* begin()
@@ -119,18 +118,35 @@ class array
 
     T* end()
     {
-        return &arr[X];
+        return &arr[SIZE];
     }
 
     T& operator[](int32_t index)
     {
         if(index < 0)
-            return arr[X + index];
+            return arr[SIZE + index];
         return arr[index];
     }
 
+    int find(T key)
+    {
+        for(int i = 0; i < SIZE; i++)
+        {
+            if(arr[i] == key) 
+                return i;
+        }
+        return -1;
+    }
 
-
+    int find_other_than(T key)
+    {
+        for(int i = 0; i < SIZE; i++)
+        {
+            if(arr[i] != key) 
+                return i;
+        }
+        return -1;
+    }
 
 };
 

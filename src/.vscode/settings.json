@@ -39,7 +39,8 @@
         "input.h": "c",
         "response.h": "c",
         "time.h": "c",
-        "data_structures.h": "c"
+        "data_structures.h": "c",
+        "key_info.h": "c"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }

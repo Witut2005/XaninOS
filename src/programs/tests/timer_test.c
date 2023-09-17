@@ -23,7 +23,7 @@ int timer_test(void)
     canvas_screen_clear();
 
     canvas_xprintf("Press 'a' to start...");
-    while(inputc() != 'a');
+    while(getchar() != 'a');
 
     while(!app_exited)
     {
