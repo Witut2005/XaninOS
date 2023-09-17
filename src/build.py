@@ -51,13 +51,15 @@ def terminate_if_error(exit_code: int):
 
 def create_kernel_c_library(objpath, libpath, libraries, added=[]):
 
-    os.system('./compiler/scripts/gcc_get_files.py')
+    os.system('python3 ./compiler/scripts/gcc_get_files.py')
 
     crtbegin_path = './compiler/files/crtbegin.o'
     crtend_path = './compiler/files/crtend.o'
 
     print('GCC PATHS', crtbegin_path)
     print('GCC PATHS', crtend_path)
+
+    sys.exit(1)
 
     final_string = ''
     for lib in libraries:
@@ -67,22 +69,16 @@ def create_kernel_c_library(objpath, libpath, libraries, added=[]):
     
     final_string = final_string + ' ' + crtbegin_path + '' + crtend_path
 
-    commands = [
-        args.linker + ' -r' + final_string + ' -o ' + objpath,
-        args.archive + ' rsc ' + libpath + ' ' + objpath + ' ./lib/libc/crt0.o' + crtbegin_path + ' ' + crtend_path 
-    ]
+    # commands = [
+    #     args.linker + ' -r' + final_string + ' -o ' + objpath,
+    #     args.archive + ' rsc ' + libpath + ' ' + objpath + ' ./lib/libc/crt0.o' + crtbegin_path + ' ' + crtend_path 
+    # ]
 
-    for command in commands:
-        terminate_if_error(os.system(command))
+    # for command in commands:
+    #     terminate_if_error(os.system(command))
 
 
 def create_c_library(objpath, libpath, libraries, added=[]):
-
-    crtbegin_path = subprocess.check_output('i386-elf-gcc $CFLAGS -print-file-name=crtbegin.o', shell=True, text=True)
-    crtend_path = subprocess.check_output('i386-elf-gcc $CFLAGS -print-file-name=crtend.o', shell=True, text=True)
-
-    print('GCC PATHS', crtbegin_path)
-    print('GCC PATHS', crtend_path)
 
     final_string = ''
     for lib in libraries:
@@ -438,6 +434,10 @@ objects_to_compile = {
     ]
 
 }
+
+
+os.system('export XANIN_SOURCE=' +  os.path.dirname(os.path.abspath(__file__)))
+os.environ['XANIN_SOURCE'] = os.path.dirname(os.path.abspath(__file__))
 
 for os_module, objects in objects_to_compile.items():
     print(colored('\ncompling {} module'.format(os_module).upper(), 'green'))
