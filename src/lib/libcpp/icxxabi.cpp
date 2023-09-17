@@ -7,7 +7,7 @@
 atexit_func_entry_t __atexit_funcs[ATEXIT_MAX_FUNCS];
 uarch_t __atexit_func_count = 0;
  
-void *__dso_handle = 0; //Attention! Optimally, you should remove the '= 0' part and define this in your asm script.
+// void *__dso_handle = 0; //Attention! Optimally, you should remove the '= 0' part and define this in your asm script.
  
 int __cxa_atexit(void (*f)(void *), void *objptr, void *dso)
 {

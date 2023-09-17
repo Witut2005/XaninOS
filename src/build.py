@@ -65,11 +65,11 @@ def create_kernel_c_library(objpath, libpath, libraries, added=[]):
     for lib in added:
         final_string = final_string + ' ' + lib
     
-    final_string = final_string + ' ' + crtbegin_path + ' ' + crtend_path
+    # final_string = final_string + ' ' + crtbegin_path + ' ' + crtend_path
 
     commands = [
         args.linker + ' -r' + final_string + ' -o ' + objpath,
-        args.archive + ' rsc ' + libpath + ' ' + objpath + ' ./lib/libc/crt0.o' + ' ' + crtbegin_path + ' ' + crtend_path 
+        args.archive + ' rsc ' + libpath + ' ' + objpath + ' ./lib/libc/crt0.o' #+ ' ' + crtbegin_path + ' ' + crtend_path 
     ]
 
     for command in commands:
@@ -113,6 +113,9 @@ def compile_kernel(*kargs):
                 continue
 
             final_string = final_string + ' ' + object.output_name
+    
+    # final_string = ' $XANIN_HOME/src/compiler/files/crti.o $XANIN_HOME/src/compiler/files/crtbegin.o ' + final_string + ' $XANIN_HOME/src/compiler/files/crtend.o' #$XANIN_HOME/src/compiler/files/crtn.o '
+    # final_string = ' $XANIN_HOME/src/compiler/files/crtbegin.o ' + final_string + ' $XANIN_HOME/src/compiler/files/crtend.o $XANIN_HOME/src/compiler/files/crtn.o '
 
     commands = [
         builders['c'] + ' ' + builder_options['c']['kernel'] + ' ./sys/kernel.c' + final_string + ' -o ' + './kernel.bin',
@@ -126,8 +129,9 @@ def compile_kernel(*kargs):
     ]
 
     if(args.preinstall == 'yes'):
-        commands.append('make -C ./external_apps')
-        commands.append('python3 ./utils/app_preinstall.py -files external_apps/ etc/ -image ../bin/xanin.img')
+        # commands.append('make -C ./external_apps')
+        # commands.append('python3 ./utils/app_preinstall.py -files external_apps/ etc/ -image ../bin/xanin.img')
+        commands.append('python3 ./utils/app_preinstall.py -files etc/ -image ../bin/xanin.img')
     
     for command in commands:
         terminate_if_error(os.system(command))
@@ -170,10 +174,9 @@ builder_options = {
     },
 
     'cc':{
-        'default': '-O0 -fno-exceptions -lstdc++ -masm=intel -std=c++17 -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Wno-write-strings -fno-rtti -fconcepts-ts -I ./ -c'
+        'default': '-O0 -fno-exceptions -masm=intel -std=c++17 -Wno-builtin-declaration-mismatch -nostdlib -Wno-unused-function -Wno-write-strings -fno-rtti -fconcepts-ts -I ./ -c'
     }
 }
-
 
 objects_to_compile = {
     
@@ -287,6 +290,12 @@ objects_to_compile = {
         CompileObject('./sys/call/xanin_sys/calls/pmmngr/alloc.c', builders['c'], builder_options['c']['default'], OBJECT),
     ],
 
+    'compiler': [
+        CompileObject('./compiler/files/crt0.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
+        CompileObject('./compiler/files/crti.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
+        CompileObject('./compiler/files/crtn.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
+    ],
+
     'libc':[
         # CompileObject('./lib/libc/real_mode_fswitch.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
         CompileObject('./lib/libc/file.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
@@ -313,7 +322,7 @@ objects_to_compile = {
     'libcpp': [
         CompileObject('./lib/libcpp/algorithm.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./lib/libcpp/command_parser.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
-        CompileObject('./lib/libcpp/icxxabi.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
+        # CompileObject('./lib/libcpp/icxxabi.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./lib/libcpp/regex.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         # CompileObject('./lib/libcpp/bytes.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./lib/libcpp/endian.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
@@ -449,17 +458,7 @@ for os_module, objects in objects_to_compile.items():
     
 print(colored('\nXANIN OS MODULES BUILDED\n', 'green'))
     
-create_c_library('./lib/libc/libc.o', './lib/libc/libc.a', objects_to_compile['libc'], [
-        './sys/log/syslog.o', './fs/xin_syscalls.o', 
-        './lib/screen/screen.o', 
-        './sys/devices/hda/disk.o', 
-        './fs/xin.o', './sys/call/xanin_sys/calls/devices/disk.o', './sys/call/xanin_sys/calls/stdio/stdio.o', 
-        './sys/call/xanin_sys/calls/terminal/terminal.o', 
-        './sys/call/xanin_sys/calls/vga/vga.o', 
-        './sys/call/xanin_sys/calls/input/input.o', 
-                ])
-
-# create_kernel_c_library('./lib/libc/libc.o', './lib/libc/libc.a', objects_to_compile['libc'], [
+# create_c_library('./lib/libc/libc.o', './lib/libc/libc.a', objects_to_compile['libc'], [
 #         './sys/log/syslog.o', './fs/xin_syscalls.o', 
 #         './lib/screen/screen.o', 
 #         './sys/devices/hda/disk.o', 
@@ -467,7 +466,18 @@ create_c_library('./lib/libc/libc.o', './lib/libc/libc.a', objects_to_compile['l
 #         './sys/call/xanin_sys/calls/terminal/terminal.o', 
 #         './sys/call/xanin_sys/calls/vga/vga.o', 
 #         './sys/call/xanin_sys/calls/input/input.o', 
-#     ])
+#                 ])
+
+create_kernel_c_library('./lib/libc/libc.o', './lib/libc/libc.a', objects_to_compile['libc'], [
+        './sys/log/syslog.o',
+        './fs/xin_syscalls.o', 
+        './lib/screen/screen.o', 
+        './sys/devices/hda/disk.o', 
+        './fs/xin.o', './sys/call/xanin_sys/calls/devices/disk.o', './sys/call/xanin_sys/calls/stdio/stdio.o', 
+        './sys/call/xanin_sys/calls/terminal/terminal.o', 
+        './sys/call/xanin_sys/calls/vga/vga.o', 
+        './sys/call/xanin_sys/calls/input/input.o', 
+    ])
 
 # print(objects_to_compile['kmodules'] + objects_to_compile['interrupt'])
 # compile_kernel(objects_to_compile['kmodules'] + objects_to_compile['interrupt'] + objects_to_compile['drivers'] + objects_to_compile['xanin_graphics(legacy)'] + objects_to_compile['graphics_libraries'] + 
