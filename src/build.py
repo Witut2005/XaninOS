@@ -3,6 +3,7 @@
 import os
 import argparse
 import sys
+import subprocess
 from colorama import init
 from termcolor import colored
 
@@ -48,7 +49,41 @@ def terminate_if_error(exit_code: int):
         sys.exit(1)
     return
 
+def create_kernel_c_library(objpath, libpath, libraries, added=[]):
+
+    os.system('./compiler/scripts/gcc_get_files.py')
+
+    crtbegin_path = './compiler/files/crtbegin.o'
+    crtend_path = './compiler/files/crtend.o'
+
+    print('GCC PATHS', crtbegin_path)
+    print('GCC PATHS', crtend_path)
+
+    final_string = ''
+    for lib in libraries:
+        final_string = final_string + ' ' + lib.output_name
+    for lib in added:
+        final_string = final_string + ' ' + lib
+    
+    final_string = final_string + ' ' + crtbegin_path + '' + crtend_path
+
+    commands = [
+        args.linker + ' -r' + final_string + ' -o ' + objpath,
+        args.archive + ' rsc ' + libpath + ' ' + objpath + ' ./lib/libc/crt0.o' + crtbegin_path + ' ' + crtend_path 
+    ]
+
+    for command in commands:
+        terminate_if_error(os.system(command))
+
+
 def create_c_library(objpath, libpath, libraries, added=[]):
+
+    crtbegin_path = subprocess.check_output('i386-elf-gcc $CFLAGS -print-file-name=crtbegin.o', shell=True, text=True)
+    crtend_path = subprocess.check_output('i386-elf-gcc $CFLAGS -print-file-name=crtend.o', shell=True, text=True)
+
+    print('GCC PATHS', crtbegin_path)
+    print('GCC PATHS', crtend_path)
+
     final_string = ''
     for lib in libraries:
         final_string = final_string + ' ' + lib.output_name
@@ -196,6 +231,7 @@ objects_to_compile = {
         CompileObject('./sys/call/xanin_sys/calls/stdio/stdio.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
         CompileObject('./sys/call/xanin_sys/calls/terminal/terminal.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
         CompileObject('./sys/call/xanin_sys/calls/vga/vga.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
+        CompileObject('./sys/call/xanin_sys/calls/input/input.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
         # CompileObject('./sys/call/xanin_sys/calls/xanin_calls.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
         CompileObject('./sys/call/xanin_sys/handler/xanin_sys.c', builders['c'], builder_options['c']['default'], OBJECT),
     ],
@@ -249,7 +285,7 @@ objects_to_compile = {
 
     'kmodules': [
         CompileObject('./sys/pmmngr/alloc.c', builders['c'], builder_options['c']['default'], OBJECT),
-        CompileObject('./sys/input/input.c', builders['c'], builder_options['c']['default'], OBJECT),
+        CompileObject('./sys/input/input.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./sys/log/syslog.c', builders['c'], builder_options['c']['default'], OBJECT),
     ],
 
@@ -423,12 +459,21 @@ create_c_library('./lib/libc/libc.o', './lib/libc/libc.a', objects_to_compile['l
         './sys/log/syslog.o', './fs/xin_syscalls.o', 
         './lib/screen/screen.o', 
         './sys/devices/hda/disk.o', 
-        # './sys/terminal/backend/backend.o', 
-        # './sys/terminal/frontend/frontend.o',
         './fs/xin.o', './sys/call/xanin_sys/calls/devices/disk.o', './sys/call/xanin_sys/calls/stdio/stdio.o', 
         './sys/call/xanin_sys/calls/terminal/terminal.o', 
         './sys/call/xanin_sys/calls/vga/vga.o', 
+        './sys/call/xanin_sys/calls/input/input.o', 
                 ])
+
+create_kernel_c_library('./lib/libc/libc.o', './lib/libc/libc.a', objects_to_compile['libc'], [
+        './sys/log/syslog.o', './fs/xin_syscalls.o', 
+        './lib/screen/screen.o', 
+        './sys/devices/hda/disk.o', 
+        './fs/xin.o', './sys/call/xanin_sys/calls/devices/disk.o', './sys/call/xanin_sys/calls/stdio/stdio.o', 
+        './sys/call/xanin_sys/calls/terminal/terminal.o', 
+        './sys/call/xanin_sys/calls/vga/vga.o', 
+        './sys/call/xanin_sys/calls/input/input.o', 
+    ])
 
 # print(objects_to_compile['kmodules'] + objects_to_compile['interrupt'])
 # compile_kernel(objects_to_compile['kmodules'] + objects_to_compile['interrupt'] + objects_to_compile['drivers'] + objects_to_compile['xanin_graphics(legacy)'] + objects_to_compile['graphics_libraries'] + 

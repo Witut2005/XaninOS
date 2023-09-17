@@ -1,6 +1,13 @@
+C = i386-elf-gcc
 
 build:
 	python3 build.py
+
+gcc_obj:
+	CRTBEGIN_PATH := $(shell i386-elf-gcc -print-file-name=crtbegin.o)
+	CRTEND_PATH := $(shell $C -print-file-name=crtend.o)
+
+	echo CRTBEGIN_PATH CRTEND_PATH
 
 burun:
 	python3 build.py
