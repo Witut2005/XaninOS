@@ -53,13 +53,11 @@ def create_kernel_c_library(objpath, libpath, libraries, added=[]):
 
     os.system('python3 ./compiler/scripts/gcc_get_files.py')
 
-    crtbegin_path = './compiler/files/crtbegin.o'
-    crtend_path = './compiler/files/crtend.o'
+    crtbegin_path = '$XANIN_HOME/src/compiler/files/crtbegin.o'
+    crtend_path = '$XANIN_HOME/src/compiler/files/crtend.o'
 
     print('GCC PATHS', crtbegin_path)
     print('GCC PATHS', crtend_path)
-
-    sys.exit(1)
 
     final_string = ''
     for lib in libraries:
@@ -67,15 +65,15 @@ def create_kernel_c_library(objpath, libpath, libraries, added=[]):
     for lib in added:
         final_string = final_string + ' ' + lib
     
-    final_string = final_string + ' ' + crtbegin_path + '' + crtend_path
+    final_string = final_string + ' ' + crtbegin_path + ' ' + crtend_path
 
-    # commands = [
-    #     args.linker + ' -r' + final_string + ' -o ' + objpath,
-    #     args.archive + ' rsc ' + libpath + ' ' + objpath + ' ./lib/libc/crt0.o' + crtbegin_path + ' ' + crtend_path 
-    # ]
+    commands = [
+        args.linker + ' -r' + final_string + ' -o ' + objpath,
+        args.archive + ' rsc ' + libpath + ' ' + objpath + ' ./lib/libc/crt0.o' + ' ' + crtbegin_path + ' ' + crtend_path 
+    ]
 
-    # for command in commands:
-    #     terminate_if_error(os.system(command))
+    for command in commands:
+        terminate_if_error(os.system(command))
 
 
 def create_c_library(objpath, libpath, libraries, added=[]):
@@ -435,10 +433,6 @@ objects_to_compile = {
 
 }
 
-
-os.system('export XANIN_SOURCE=' +  os.path.dirname(os.path.abspath(__file__)))
-os.environ['XANIN_SOURCE'] = os.path.dirname(os.path.abspath(__file__))
-
 for os_module, objects in objects_to_compile.items():
     print(colored('\ncompling {} module'.format(os_module).upper(), 'green'))
     for object in objects:
@@ -465,15 +459,15 @@ create_c_library('./lib/libc/libc.o', './lib/libc/libc.a', objects_to_compile['l
         './sys/call/xanin_sys/calls/input/input.o', 
                 ])
 
-create_kernel_c_library('./lib/libc/libc.o', './lib/libc/libc.a', objects_to_compile['libc'], [
-        './sys/log/syslog.o', './fs/xin_syscalls.o', 
-        './lib/screen/screen.o', 
-        './sys/devices/hda/disk.o', 
-        './fs/xin.o', './sys/call/xanin_sys/calls/devices/disk.o', './sys/call/xanin_sys/calls/stdio/stdio.o', 
-        './sys/call/xanin_sys/calls/terminal/terminal.o', 
-        './sys/call/xanin_sys/calls/vga/vga.o', 
-        './sys/call/xanin_sys/calls/input/input.o', 
-    ])
+# create_kernel_c_library('./lib/libc/libc.o', './lib/libc/libc.a', objects_to_compile['libc'], [
+#         './sys/log/syslog.o', './fs/xin_syscalls.o', 
+#         './lib/screen/screen.o', 
+#         './sys/devices/hda/disk.o', 
+#         './fs/xin.o', './sys/call/xanin_sys/calls/devices/disk.o', './sys/call/xanin_sys/calls/stdio/stdio.o', 
+#         './sys/call/xanin_sys/calls/terminal/terminal.o', 
+#         './sys/call/xanin_sys/calls/vga/vga.o', 
+#         './sys/call/xanin_sys/calls/input/input.o', 
+#     ])
 
 # print(objects_to_compile['kmodules'] + objects_to_compile['interrupt'])
 # compile_kernel(objects_to_compile['kmodules'] + objects_to_compile['interrupt'] + objects_to_compile['drivers'] + objects_to_compile['xanin_graphics(legacy)'] + objects_to_compile['graphics_libraries'] + 

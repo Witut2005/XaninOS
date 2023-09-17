@@ -46,7 +46,7 @@ char __inputc(void)
 
 void __keyinfo_clear(void)
 {
-    memset((uint8_t*)&KeyInfo, 0, sizeof(KeyInfo));
+    // memset((uint8_t*)&KeyInfo, 0, sizeof(KeyInfo));
 }
 
 key_info_t __keyinfo_get(void)
@@ -59,10 +59,10 @@ xchar __inputg(void)
 
     key_info_t InputgKeyInfo;
 
-    InputgKeyInfo.scan_code = 0;
-    __keyinfo_clear();
+    InputgKeyInfo.scan_code = KeyInfo.scan_code = 0;
+    // __keyinfo_clear();
 
-    while(!InputgKeyInfo.scan_code) InputgKeyInfo = __keyinfo_get(); // break codes doesnt count
+    while((InputgKeyInfo.scan_code == 0) || (InputgKeyInfo.scan_code >= 0x80)) InputgKeyInfo = __keyinfo_get(); // break codes doesnt count
     
     xchar x;
     x.character = InputgKeyInfo.character;

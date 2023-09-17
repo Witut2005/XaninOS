@@ -3,7 +3,12 @@ import os
 import sys
 
 def main(argv):
-    if argv[1].split('/')[-1] != 'xaninOS' or argv[2].split('/')[-1] != 'bin':
+
+    if len(argv) != 3:
+        print('ERROR invalid number of arguments')
+        sys.exit(1)
+
+    elif argv[1].split('/')[-1] != 'xaninOS' or argv[2].split('/')[-1] != 'bin':
         print('ERROR: invalid arguments')
         sys.exit(1)
 
