@@ -436,8 +436,6 @@ void _start(void)
     stdio_refresh(NULL);
     // xprintf("dupa: %d\n", strtoi("1", 10));
 
-    
-    
     while(getxchar().scan_code != ENTER);
     screen_clear();
 
