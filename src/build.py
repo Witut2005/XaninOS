@@ -118,7 +118,7 @@ def compile_kernel(*kargs):
     # final_string = ' $XANIN_HOME/src/compiler/files/crtbegin.o ' + final_string + ' $XANIN_HOME/src/compiler/files/crtend.o $XANIN_HOME/src/compiler/files/crtn.o '
 
     commands = [
-        builders['c'] + ' ' + builder_options['c']['kernel'] + ' ./sys/kernel.c' + final_string + ' -o ' + './kernel.bin',
+        builders['c'] + ' ' + builder_options['c']['kernel'] + (' -g ' if args.dwarf else '') + ' ./sys/kernel.c' + final_string + ' -o ' + './kernel.bin',
         'cat ./programs/power/shutdown.bin ./lib/libc/real_mode_fswitch_asm ./lib/libc/fast_return_to_32_mode > ./programs/xanin_external_apps',
         'dd if=./programs/xanin_external_apps of=./programs/xanin_apps_space bs=512 count=16 conv=notrunc',
         'cat ./boot/boot ./lib/libc/enter_real_mode ./programs/xanin_apps_space ./programs/blank_sector ./fs/xin_pointers ./fs/entries_table ./boot/kernelLoader ./boot/disk_freestanding_driver kernel.bin > xanin.bin',
@@ -151,6 +151,7 @@ parser.add_argument('--cbuilder', type=str, default='i386-elf-gcc')
 parser.add_argument('--ccbuilder', type=str, default='i386-elf-g++')
 parser.add_argument('--linker', type=str, default='i386-elf-ld')
 parser.add_argument('--archive', type=str, default='i386-elf-ar')
+parser.add_argument('--dwarf', action='store_true', default=False)
 
 parser.add_argument('--long', action='store_true')
 
@@ -438,6 +439,11 @@ objects_to_compile = {
         CompileObject('./fs/loaders/bin/bit16/run16.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./fs/loaders/elf/elf_loader.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./fs/loaders/elf/elfdump.c', builders['c'], builder_options['c']['default'], OBJECT),
+    ],
+
+    'Xanin initialization': [
+        # CompileObject('./sys/initialization/init.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
+        CompileObject('./sys/initialization/init.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
     ]
 
 }

@@ -7,7 +7,7 @@
 
 key_info_t KeyInfo = {0};
 
-static std::array<key_info_t*, 100> KeyboardModuleObservedObjects;
+std::array<key_info_t*, 100> KeyboardModuleObservedObjects;
 
 extern "C" 
 {

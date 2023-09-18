@@ -2,6 +2,7 @@
 #pragma once
 
 #include <stdarg.h>
+#include <lib/libcpp/ostream.h>
 #include <lib/libcpp/initializer_list.hpp>
 
 namespace std
@@ -94,7 +95,7 @@ class array
 
     array()
     {
-
+        std::cout << "Array" << std::endl;
     }
 
     array(const array& arr)
