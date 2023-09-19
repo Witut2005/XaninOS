@@ -1,5 +1,6 @@
 
 #include <stdint.h>
+#include <lib/elf/elf.h>
 
 #define SECTOR_SIZE 0x200
 
@@ -32,8 +33,6 @@ enum ATA_REGISTERS
 
 };
 
-
-
 enum ATA_COMMANDS
 {
 
@@ -49,7 +48,6 @@ enum ATA_COMMANDS
 uint16_t* print_ptr = (uint16_t*)0xb8000;
 uint32_t y = 0;
 uint32_t x = 0;
-
 
 void print(const char* aha)
 {
@@ -250,8 +248,20 @@ void disk_read(uint16_t base, uint8_t master, uint32_t sector_number,
 
 }
 
+uint8_t* elf_section_header_string_table_address_get(ElfAutoHeader* Header)
+{
+    ElfSectionHeaderAuto* SectionHeaders = (ElfSectionHeaderAuto*)(Header->e_shoff + Header);
+    return (uint8_t*)(SectionHeaders[Header->e_shstrndx].sh_offset + Header);
+}
 
+void elf_sections_load(ElfAutoHeader* Header)
+{
 
+    uint8_t* address_base = (uint8_t*)Header;
+
+    ElfSectionHeaderAuto* SectionHeaders = (ElfSectionHeaderAuto*)(Header->e_shoff + address_base);
+
+}
 
 void elf_load(void)
 {
@@ -314,6 +324,8 @@ void elf_load(void)
     
     print("kernel loaded");
 
+    // elf_sections_load((ElfAutoHeader*)(0x20200 + (15 * SECTOR_SIZE)));
+
     void(*kernel)(void) = (void(*)(void))entry_point;
 
     kernel();
@@ -330,3 +342,9 @@ void _start(void)
 
     elf_load();
 }
+
+
+
+//znajdz w elfie sekcje 
+//znajdz .init_array
+//zaladuj

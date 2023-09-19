@@ -99,6 +99,16 @@ def create_c_library(objpath, libpath, libraries, added=[]):
         terminate_if_error(os.system(command))
 
 
+def compile_boot2():
+
+    commands = [
+        f"{builders['c']} {builder_options['c']['kernel']} -Ttext 0xA00000 ./boot/boot2.c -o ./boot/boot2.elf",
+        'python3 ./utils/align_file.py -f ./boot/boot2.elf -size 7168',
+    ]
+
+    for command in commands:
+        terminate_if_error(os.system(command))
+
 def compile_kernel(*kargs):
     final_string = ''
     modules = kargs[0]
@@ -121,7 +131,7 @@ def compile_kernel(*kargs):
         builders['c'] + ' ' + builder_options['c']['kernel'] + (' -g ' if args.dwarf else '') + ' ./sys/kernel.c' + final_string + ' -o ' + './kernel.bin',
         'cat ./programs/power/shutdown.bin ./lib/libc/real_mode_fswitch_asm ./lib/libc/fast_return_to_32_mode > ./programs/xanin_external_apps',
         'dd if=./programs/xanin_external_apps of=./programs/xanin_apps_space bs=512 count=16 conv=notrunc',
-        'cat ./boot/boot ./lib/libc/enter_real_mode ./programs/xanin_apps_space ./programs/blank_sector ./fs/xin_pointers ./fs/entries_table ./boot/kernelLoader ./boot/disk_freestanding_driver kernel.bin > xanin.bin',
+        'cat ./boot/boot ./lib/libc/enter_real_mode ./programs/xanin_apps_space ./programs/blank_sector ./fs/xin_pointers ./fs/entries_table ./boot/kernelLoader ./boot/boot2.elf kernel.bin > xanin.bin',
         'dd if=xanin.bin of=xanin.img',
         'python3 ./utils/align_file.py -f ./xanin.img -size 600000',
         'mv xanin.img -f ../bin',
@@ -493,6 +503,7 @@ create_kernel_c_library('./lib/libc/libc.o', './lib/libc/libc.a', objects_to_com
 # compile_kernel(objects_to_compile['kmodules'] + objects_to_compile['interrupt'] + objects_to_compile['drivers'] + objects_to_compile['xanin_graphics(legacy)'] + objects_to_compile['graphics_libraries'] + 
 #                 objects_to_compile['built-in programs'] + objects_to_compile['libc'] + objects_to_compile['libcpp'] + objects_to_compile['network'] + objects_to_compile['netapi'] + objects_to_compile[''])
 
+compile_boot2()
 compile_kernel(objects_to_compile)
 
 print(colored('\nXANIN OS IMAGE BUILDED\n', 'green'))

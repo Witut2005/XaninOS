@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <stddef.h>
+#include <stdbool.h>
 
 enum ELF_FIELD
 {
@@ -112,7 +113,7 @@ struct ElfProgramHeader32
 
     uint32_t p_align;
 }__attribute__((packed));
-typedef struct Elf32ProgramHeader Elf32ProgramHeader;
+typedef struct ElfProgramHeader32 ElfProgramHeader32;
 
 struct ElfProgramHeader64
 {
@@ -128,12 +129,12 @@ struct ElfProgramHeader64
 
     uint64_t p_align;
 }__attribute__((packed));
-typedef struct Elf64ProgramHeader Elf64ProgramHeader;
+typedef struct ElfProgramHeader64 ElfProgramHeader64;
 
 #if __x86_64__
-typedef ElfHeader64 ElfProgramHeaderAuto;
+typedef ElfProgramHeader64 ElfProgramHeaderAuto;
 #else
-typedef ElfHeader32 ElfProgramHeaderAuto;
+typedef ElfProgramHeader32 ElfProgramHeaderAuto;
 #endif
 
 ////////////////////////////////////////////////////////////////
@@ -175,9 +176,9 @@ struct ElfSectionHeader64
 typedef struct ElfSectionHeader64 ElfSectionHeader64;
 
 #if __x86_64__
-typedef ElfSectionHeader32 ElfSectionHeader32;
+typedef ElfSectionHeader32 ElfSectionHeaderAuto;
 #else
-typedef ElfSectionHeader64 ElfSectionHeader64;
+typedef ElfSectionHeader64 ElfSectionHeaderAuto;
 #endif
 
 static inline bool elf_header_magic_check(char* magic)
