@@ -11,11 +11,20 @@ enum ELF_FIELD
     PT_LOAD = 0x1
 };
 
-enum ELF_PROPERTIES 
+// enum ELF_PROPERTIES 
+// {
+// };
+
+enum ELF_HEADER_PROPERTIES
 {
+    ELF_HEADER_MAGIC_DWORD = 0x464C457F,
+    ELF_HEADER_32BIT_FORMAT = 1,
+    ELF_HEADER_64BIT_FORMAT = 2,
     EI_MAG_SIZE = 4,
     EI_PAD_SIZE = 7
 };
+
+typedef uint8_t elfh_arch_t;
 
 struct ElfHeader32 
 {
@@ -170,6 +179,26 @@ typedef ElfSectionHeader32 ElfSectionHeader32;
 #else
 typedef ElfSectionHeader64 ElfSectionHeader64;
 #endif
+
+static inline bool elf_header_magic_check(char* magic)
+{
+    return *(uint32_t*)magic == ELF_HEADER_MAGIC_DWORD;
+}
+
+static inline bool elf_header_check_if_32bit_format(uint8_t* ei_class)
+{
+    return *ei_class == ELF_HEADER_32BIT_FORMAT;
+}
+
+static inline bool elf_header_check_if_64bit_format(uint8_t* ei_class)
+{
+    return *ei_class == ELF_HEADER_64BIT_FORMAT;
+}
+
+static inline bool elf_header_if_match_given_architecture(uint8_t* e_machine, elfh_arch_t architecture)
+{
+    return *e_machine == architecture;
+}
 
 // 1B 00 00 00  sh_name
 // 01 00 00 00  sh_type

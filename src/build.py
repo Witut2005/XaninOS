@@ -340,6 +340,10 @@ objects_to_compile = {
         CompileObject('./lib/tui/tui.c', builders['c'], builder_options['c']['default'], OBJECT),
     ],
 
+    'Xanin elf library': [
+        CompileObject('./lib/elf/elf.c', builders['c'], builder_options['c']['default'], OBJECT),
+    ],
+
     'xanin_graphics(legacy)': [
         CompileObject('./lib/xaninGraphics/xaninGraphics.c', builders['c'], builder_options['c']['default'], OBJECT),
     ],

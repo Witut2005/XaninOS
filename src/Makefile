@@ -1,7 +1,7 @@
 C = i386-elf-gcc
 
 build:
-	python3 build.py --preinstall=yes 
+	python3 build.py --preinstall=yes --dwarf
 
 gcc_obj:
 	CRTBEGIN_PATH := $(shell i386-elf-gcc -print-file-name=crtbegin.o)
