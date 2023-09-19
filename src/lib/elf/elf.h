@@ -17,7 +17,7 @@ enum ELF_PROPERTIES
     EI_PAD_SIZE = 7
 };
 
-struct ElfHeader 
+struct ElfHeader32 
 {
 
     char ei_mag[EI_MAG_SIZE];
@@ -30,13 +30,15 @@ struct ElfHeader
 
     uint16_t e_type;
     uint16_t e_machine;
+
     uint32_t e_version;
 
-    size_t e_entry;
-    size_t e_phoff;
-    size_t e_shoff;
+    uint32_t e_entry;
+    uint32_t e_phoff;
+    uint32_t e_shoff;
 
     uint32_t e_flags;
+
     uint16_t e_ehsize;
     uint16_t e_phentsize;
     uint16_t e_phnum;
@@ -45,46 +47,138 @@ struct ElfHeader
     uint16_t e_shstrndx;
 
 }__attribute__((packed));
+typedef struct ElfHeader32 ElfHeader32;
 
-typedef struct Elf32Header Elf32Header;
+struct ElfHeader64 
+{
 
-struct ElfProgramHeader
+    char ei_mag[EI_MAG_SIZE];
+    uint8_t ei_class;
+    uint8_t ei_data;
+    uint8_t ei_version;
+    uint8_t ei_osabi;
+    uint8_t ei_abi_version;
+    uint8_t ei_pad[EI_PAD_SIZE];
+
+    uint16_t e_type;
+    uint16_t e_machine;
+
+    uint32_t e_version;
+
+    uint64_t e_entry;
+    uint64_t e_phoff;
+    uint64_t e_shoff;
+
+    uint32_t e_flags;
+
+    uint16_t e_ehsize;
+    uint16_t e_phentsize;
+    uint16_t e_phnum;
+    uint16_t e_shentsize;
+    uint16_t e_shnum;
+    uint16_t e_shstrndx;
+
+}__attribute__((packed));
+typedef struct Elf64Header Elf64Header;
+
+#if __x86_64__
+typedef ElfHeader64 ElfAutoHeader;
+#else
+typedef ElfHeader32 ElfAutoHeader;
+#endif
+
+////////////////////////////////////////////////////////////////
+
+struct ElfProgramHeader32
 {
     uint32_t p_type;
 
-    #if __x86_64__
+    uint32_t p_offset;
+    uint32_t p_vaddr;
+    uint32_t p_paddr;
+    uint32_t p_filesz;
+    uint32_t p_memsz;
+
     uint32_t p_flags;
-    #endif
 
-    size_t p_offset;
-    size_t p_vaddr;
-    size_t p_paddr;
-    size_t p_filesz;
-    size_t p_memsz;
-
-    #if !defined(__x86_64__)
-    uint32_t p_flags;
-    #endif
-
-    size_t p_align;
+    uint32_t p_align;
 }__attribute__((packed));
+typedef struct Elf32ProgramHeader Elf32ProgramHeader;
 
-typedef struct ElfProgramHeader ElfProgramHeader;
+struct ElfProgramHeader64
+{
+    uint32_t p_type;
 
-struct ElfSectionHeader
+    uint32_t p_flags;
+
+    uint64_t p_offset;
+    uint64_t p_vaddr;
+    uint64_t p_paddr;
+    uint64_t p_filesz;
+    uint64_t p_memsz;
+
+    uint64_t p_align;
+}__attribute__((packed));
+typedef struct Elf64ProgramHeader Elf64ProgramHeader;
+
+#if __x86_64__
+typedef ElfHeader64 ElfProgramHeaderAuto;
+#else
+typedef ElfHeader32 ElfProgramHeaderAuto;
+#endif
+
+////////////////////////////////////////////////////////////////
+
+struct ElfSectionHeader32
 {
     uint32_t sh_name;
     uint32_t sh_type;
 
-    size_t sh_flags;
-    size_t sh_addr;
-    size_t sh_offset;
-    size_t sh_size;
+    uint32_t sh_flags;
+    uint32_t sh_addr;
+    uint32_t sh_offset;
+    uint32_t sh_size;
 
     uint32_t sh_link;
     uint32_t sh_info;
-    size_t sh_addralign;
-    size_t sh_entsize;
-};
 
-typedef struct ElfSectionHeader ElfSectionHeader;
+    uint32_t sh_addralign;
+    uint32_t sh_entsize;
+}__attribute__((packed));
+typedef struct ElfSectionHeader32 ElfSectionHeader32;
+
+struct ElfSectionHeader64
+{
+    uint32_t sh_name;
+    uint32_t sh_type;
+
+    uint64_t sh_flags;
+    uint64_t sh_addr;
+    uint64_t sh_offset;
+    uint64_t sh_size;
+
+    uint32_t sh_link;
+    uint32_t sh_info;
+
+    uint64_t sh_addralign;
+    uint64_t sh_entsize;
+}__attribute__((packed));
+typedef struct ElfSectionHeader64 ElfSectionHeader64;
+
+#if __x86_64__
+typedef ElfSectionHeader32 ElfSectionHeader32;
+#else
+typedef ElfSectionHeader64 ElfSectionHeader64;
+#endif
+
+// 1B 00 00 00  sh_name
+// 01 00 00 00  sh_type
+// 02 00 00 00  sh_flags
+// 74 80 04 08  sh_addr
+// 74 00 00 00  sh_offset
+// 03 00 00 00  sh_size
+// 00 00 00 00  sh_link 
+// 00 00 00 00  sh_info
+// 01 00 00 00  sh_addralign 
+// 00 00 00 00  sh_entsize 
+
