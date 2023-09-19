@@ -49,6 +49,103 @@ uint16_t* print_ptr = (uint16_t*)0xb8000;
 uint32_t y = 0;
 uint32_t x = 0;
 
+uint32_t strlen(const char* a)
+{
+
+    if(a == NULL)
+        return 0;
+
+    uint32_t length = 0;
+
+    for(const char* i = a; *i != '\0' ;i++)
+        length++;
+
+    return length;
+}
+
+
+bool bstrcmp(char* a, const char* b)
+{
+
+    uint32_t lengtha = strlen(a);
+    uint32_t lengthb = strlen(b);
+    
+    if(lengtha != lengthb)
+        return 0;
+
+    for(char* i = a; *i != '\0' ;i++)
+    {
+        if(*a != *b)
+            return 0;
+        a++;
+        b++;
+    }
+
+    
+    return 1;		
+}
+
+char* reverse_string(char* str)
+{
+    char buf;
+    char* end = str + strlen(str) - 1;
+
+    for(char* begin = str; (uint32_t)begin < (uint32_t)end; begin++, end--)
+    {
+        char buf = *begin;
+
+        *begin = *end;
+        *end = buf;
+    }
+    return str;
+}
+
+char* int_to_str(int x, char* buf)
+{
+    int i = 0;
+
+    if(!x)
+    {
+        buf[0] = '0';
+        buf[1] = '\0';
+        return buf;
+    }
+
+    for(i = 0; x != 0; i++)
+    {
+        buf[i] = (x % 10) + '0';
+        x = x / 10;
+    }
+
+    buf[i] = '\0';
+    buf = reverse_string(buf);
+    return buf;
+}
+
+char* int_to_hex_str(uint32_t x, char* buf)
+{
+    char hex_values[16] = {'0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f'};
+
+    int i = 0;
+
+    if(!x)
+    {
+        buf[0] = '0';
+        buf[1] = '0';
+        buf[2] = '\0';
+        return buf;
+    }
+    
+    for(i = 0; x != 0; i++)
+    {
+        buf[i] = hex_values[x % 16]; 
+        x = x / 16;
+    }
+
+    buf = reverse_string(buf);
+    return buf;
+}
+
 void print(const char* aha)
 {
     while(*aha != '\0')
@@ -65,26 +162,17 @@ void print(const char* aha)
 
 void print_decimal(uint32_t value)
 {
-    *print_ptr = value % 10 + '0' + (0xF0 << 8);
+    char buf[20] = {0};
+    print(int_to_str(value, buf));
     x = 0;
     y++;
 }
 
 void print_hex(uint32_t value)
 {
+    char buf[20] = {0};
+    print(int_to_hex_str(value, buf));
 
-    if(!value)
-        print_ptr[x + y * 80] = '0' | (0xF0 << 8);
-
-    while(value)
-    {
-        if(value % 16 <= 9)
-            print_ptr[x + y * 80] = value % 16 + '0' | (0xF0 << 8);
-        else 
-            print_ptr[x + y * 80] = value % 16 - 0xa + 'A' | (0xF0 << 8);
-        x++;
-        value = value / 16;
-    }
     x = 0;
     y++;
 }
@@ -248,19 +336,48 @@ void disk_read(uint16_t base, uint8_t master, uint32_t sector_number,
 
 }
 
-uint8_t* elf_section_header_string_table_address_get(ElfAutoHeader* Header)
+void vga_screen_buffer_clear(void)
 {
-    ElfSectionHeaderAuto* SectionHeaders = (ElfSectionHeaderAuto*)(Header->e_shoff + Header);
-    return (uint8_t*)(SectionHeaders[Header->e_shstrndx].sh_offset + Header);
+    uint16_t* screen_cleaner = (uint16_t*)0xb8000;
+    for(int i = 0; i < (80 * 25); i++)
+    {
+        *screen_cleaner = '\0';
+        screen_cleaner++;
+    }
+    y = x = 0;
 }
 
-void elf_sections_load(ElfAutoHeader* Header)
+char* elf_section_header_string_table_address_get(ElfAutoHeader* Header)
 {
+    ElfSectionHeaderAuto* SectionHeaders = (ElfSectionHeaderAuto*)(Header->e_shoff + (uint32_t)Header);
+    return (char*)(SectionHeaders[Header->e_shstrndx].sh_offset + (uint32_t)Header);
+}
 
-    uint8_t* address_base = (uint8_t*)Header;
+// void elf_sections_load(ElfAutoHeader* Header) // NOT FINISHED
+// {
+//     uint8_t* address_base = (uint8_t*)Header;
+//     ElfSectionHeaderAuto* SectionHeaders = (ElfSectionHeaderAuto*)(Header->e_shoff + address_base);
+// }
 
-    ElfSectionHeaderAuto* SectionHeaders = (ElfSectionHeaderAuto*)(Header->e_shoff + address_base);
+bool elf_load_given_section(ElfAutoHeader* Header, const char* section_name)
+{
+    char* elf_section_names = elf_section_header_string_table_address_get(Header);
+    ElfSectionHeaderAuto* Sections = (ElfSectionHeaderAuto*)(Header->e_shoff + (uint32_t)Header);
 
+    vga_screen_buffer_clear();
+
+    for(int i = 0; i < Header->e_shnum; i++)
+    {
+        if(bstrcmp(section_name, &elf_section_names[Sections[i].sh_name]))
+        {
+            for(int j = 0; j < Sections[i].sh_size; j++)
+                ((uint8_t*)(Sections[i].sh_addr))[j] = ((uint8_t*)(Sections[i].sh_offset + (uint32_t)(Header)))[j];
+
+            return true;
+        }
+
+    }
+    return false;
 }
 
 void elf_load(void)
@@ -324,7 +441,7 @@ void elf_load(void)
     
     print("kernel loaded");
 
-    // elf_sections_load((ElfAutoHeader*)(0x20200 + (15 * SECTOR_SIZE)));
+    elf_load_given_section((ElfAutoHeader*)(0x20200 + (15 * SECTOR_SIZE)), ".init_array");
 
     void(*kernel)(void) = (void(*)(void))entry_point;
 
@@ -338,12 +455,13 @@ void _start(void)
     init_disk(ATA_FIRST_BUS, ATA_MASTER);    
         
     for(int i = 0; i < 1600; i++) // Weird reboot, shutdown bug (probably cpu want to make fun of me (ivt))
-        disk_read(ATA_FIRST_BUS, ATA_MASTER, 0xA9 + i, 1, (uint16_t*)(0x20200 + ((15 + i)* SECTOR_SIZE)));
+        disk_read(ATA_FIRST_BUS, ATA_MASTER, 0xA9 + 14 + i, 1, (uint16_t*)(0x20200 + ((15 + i)* SECTOR_SIZE)));
 
     elf_load();
 }
-
-
+//14
+//
+//28
 
 //znajdz w elfie sekcje 
 //znajdz .init_array

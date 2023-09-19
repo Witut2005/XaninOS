@@ -176,9 +176,9 @@ struct ElfSectionHeader64
 typedef struct ElfSectionHeader64 ElfSectionHeader64;
 
 #if __x86_64__
-typedef ElfSectionHeader32 ElfSectionHeaderAuto;
-#else
 typedef ElfSectionHeader64 ElfSectionHeaderAuto;
+#else
+typedef ElfSectionHeader32 ElfSectionHeaderAuto;
 #endif
 
 static inline bool elf_header_magic_check(char* magic)
@@ -201,14 +201,4 @@ static inline bool elf_header_if_match_given_architecture(uint8_t* e_machine, el
     return *e_machine == architecture;
 }
 
-// 1B 00 00 00  sh_name
-// 01 00 00 00  sh_type
-// 02 00 00 00  sh_flags
-// 74 80 04 08  sh_addr
-// 74 00 00 00  sh_offset
-// 03 00 00 00  sh_size
-// 00 00 00 00  sh_link 
-// 00 00 00 00  sh_info
-// 01 00 00 00  sh_addralign 
-// 00 00 00 00  sh_entsize 
 

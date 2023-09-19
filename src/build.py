@@ -102,7 +102,7 @@ def create_c_library(objpath, libpath, libraries, added=[]):
 def compile_boot2():
 
     commands = [
-        f"{builders['c']} {builder_options['c']['kernel']} -Ttext 0xA00000 ./boot/boot2.c -o ./boot/boot2.elf",
+        f"{builders['c']} -O0 -masm=intel -nostdlib -Ttext 0xA00000 -I ./ ./boot/boot2.c -o ./boot/boot2.elf",
         'python3 ./utils/align_file.py -f ./boot/boot2.elf -size 7168',
     ]
 
