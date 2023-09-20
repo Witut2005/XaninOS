@@ -40,7 +40,8 @@
         "response.h": "c",
         "time.h": "c",
         "data_structures.h": "c",
-        "key_info.h": "c"
+        "key_info.h": "c",
+        "elf.h": "c"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }

@@ -1,6 +1,7 @@
 
 #include <stdint.h>
 #include "./boot_libs/disk.h"
+#include "./boot_libs/elf.h"
 
 void _start(void)
 {

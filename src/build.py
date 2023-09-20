@@ -49,44 +49,20 @@ def terminate_if_error(exit_code: int):
         sys.exit(1)
     return
 
-def create_kernel_c_library(objpath, libpath, libraries, added=[]):
-
-    os.system('python3 ./compiler/scripts/gcc_get_files.py')
-
-    crtbegin_path = '$XANIN_HOME/src/compiler/files/crtbegin.o'
-    crtend_path = '$XANIN_HOME/src/compiler/files/crtend.o'
-
-    print('GCC PATHS', crtbegin_path)
-    print('GCC PATHS', crtend_path)
-
-    final_string = ''
-    for lib in libraries:
-        final_string = final_string + ' ' + lib.output_name
-    for lib in added:
-        final_string = final_string + ' ' + lib
-    
-    # final_string = final_string + ' ' + crtbegin_path + ' ' + crtend_path
-
+def create_kernel_c_library(objpath, libpath, objs=[]):
     commands = [
-        args.linker + ' -r' + final_string + ' -o ' + objpath,
-        args.archive + ' rsc ' + libpath + ' ' + objpath + ' ./lib/libc/crt0.o' #+ ' ' + crtbegin_path + ' ' + crtend_path 
+        f"{args.linker} -r {' '.join(objs)} -o {objpath},"
+        f"{args.archive} rsc {libpath} {objpath}"
     ]
 
     for command in commands:
         terminate_if_error(os.system(command))
 
 
-def create_c_library(objpath, libpath, libraries, added=[]):
-
-    final_string = ''
-    for lib in libraries:
-        final_string = final_string + ' ' + lib.output_name
-    for lib in added:
-        final_string = final_string + ' ' + lib
-
+def create_c_library(objpath, libpath, objs=[]):
     commands = [
-        args.linker + ' -r' + final_string + ' -o ' + objpath,
-        args.archive + ' rsc ' + libpath + ' ' + objpath + ' ./lib/libc/crt0.o', 
+        f"{args.linker} -r {' '.join(objs)} -o {objpath}",
+        f"{args.archive} rsc {libpath} {objpath} ./lib/libc/crt0.o", 
         'cp ./lib/libc/libc.a ./external_apps/libc.a',
         'cp ./lib/libc/libc.o ./external_apps/libc.o',
         'cp ./lib/libc/crt0.o ./external_apps/crt0.o',
@@ -107,8 +83,8 @@ def boot_library_create():
         if filename.endswith(".o"):
             o_files.append(os.path.join(folder_path, filename))
 
-    o_files.remove('./boot/boot_libs/boot_lib.o')
-
+    if './boot/boot_libs/boot_lib.o' in o_files:
+        o_files.remove('./boot/boot_libs/boot_lib.o')
 
     linker_command = f"{args.linker} {' '.join(o_files)} -r -o ./boot/boot_libs/boot_lib.o"
     print(linker_command)
@@ -142,15 +118,12 @@ def compile_kernel(*kargs):
                 continue
 
             final_string = final_string + ' ' + object.output_name
-    
-    # final_string = ' $XANIN_HOME/src/compiler/files/crti.o $XANIN_HOME/src/compiler/files/crtbegin.o ' + final_string + ' $XANIN_HOME/src/compiler/files/crtend.o' #$XANIN_HOME/src/compiler/files/crtn.o '
-    # final_string = ' $XANIN_HOME/src/compiler/files/crtbegin.o ' + final_string + ' $XANIN_HOME/src/compiler/files/crtend.o $XANIN_HOME/src/compiler/files/crtn.o '
 
     commands = [
-        builders['c'] + ' ' + builder_options['c']['kernel'] + (' -g ' if args.dwarf else '') + ' ./sys/kernel.c' + final_string + ' -o ' + './kernel.bin',
+        f"{builders['c']} {builder_options['c']['kernel']} {(' -g ' if args.dwarf else '')} ./sys/kernel.c {final_string} -o ./kernel.bin",
         'cat ./programs/power/shutdown.bin ./lib/libc/real_mode_fswitch_asm ./lib/libc/fast_return_to_32_mode > ./programs/xanin_external_apps',
         'dd if=./programs/xanin_external_apps of=./programs/xanin_apps_space bs=512 count=16 conv=notrunc',
-        'cat ./boot/boot ./lib/libc/enter_real_mode ./programs/xanin_apps_space ./programs/blank_sector ./fs/xin_pointers ./fs/entries_table ./boot/kernelLoader ./boot/boot2.elf kernel.bin > xanin.bin',
+        'cat ./boot/boot ./lib/libc/enter_real_mode ./programs/xanin_apps_space ./programs/blank_sector ./fs/xin_pointers ./fs/entries_table ./boot/kernel_loader.bin ./boot/boot2.elf kernel.bin > xanin.bin',
         'dd if=xanin.bin of=xanin.img',
         'python3 ./utils/align_file.py -f ./xanin.img -size 600000',
         'mv xanin.img -f ../bin',
@@ -212,7 +185,11 @@ objects_to_compile = {
     
     'boot': [
         CompileObject('./boot/boot.asm', builders['asm'], builder_options['asm']['bin'], BINARY),
-        CompileObject('./boot/kernelLoader.asm', builders['asm'], builder_options['asm']['bin'], BINARY),
+        CompileObject('./boot/kernel_loader.asm', builders['asm'], builder_options['asm']['bin'], BINARY),
+        CompileObject('./boot/boot_libs/bootio.c', builders['c'], builder_options['c']['default'], OBJECT),
+        CompileObject('./boot/boot_libs/disk.c', builders['c'], builder_options['c']['default'], OBJECT),
+        CompileObject('./boot/boot_libs/elf.c', builders['c'], builder_options['c']['default'], OBJECT),
+        CompileObject('./boot/boot_libs/string.c', builders['c'], builder_options['c']['default'], OBJECT),
     ],
 
     'filesystem': [
@@ -478,14 +455,6 @@ objects_to_compile = {
         # CompileObject('./sys/initialization/init.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./sys/initialization/init.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
     ],
-
-    'XaninBoot2 libs': [
-        CompileObject('./boot/boot_libs/bootio.c', builders['c'], builder_options['c']['default'], OBJECT),
-        CompileObject('./boot/boot_libs/disk.c', builders['c'], builder_options['c']['default'], OBJECT),
-        CompileObject('./boot/boot_libs/elf.c', builders['c'], builder_options['c']['default'], OBJECT),
-        CompileObject('./boot/boot_libs/string.c', builders['c'], builder_options['c']['default'], OBJECT),
-    ]
-
 }
 
 for os_module, objects in objects_to_compile.items():
@@ -504,30 +473,26 @@ for os_module, objects in objects_to_compile.items():
     
 print(colored('\nXANIN OS MODULES BUILDED\n', 'green'))
     
-# create_c_library('./lib/libc/libc.o', './lib/libc/libc.a', objects_to_compile['libc'], [
-#         './sys/log/syslog.o', './fs/xin_syscalls.o', 
-#         './lib/screen/screen.o', 
-#         './sys/devices/hda/disk.o', 
-#         './fs/xin.o', './sys/call/xanin_sys/calls/devices/disk.o', './sys/call/xanin_sys/calls/stdio/stdio.o', 
-#         './sys/call/xanin_sys/calls/terminal/terminal.o', 
-#         './sys/call/xanin_sys/calls/vga/vga.o', 
-#         './sys/call/xanin_sys/calls/input/input.o', 
-#                 ])
-
-create_kernel_c_library('./lib/libc/libc.o', './lib/libc/libc.a', objects_to_compile['libc'], [
-        './sys/log/syslog.o',
-        './fs/xin_syscalls.o', 
+create_c_library('./lib/libc/libc.o', './lib/libc/libc.a', [obj.output_name for obj in objects_to_compile['libc']] + [
+        './sys/log/syslog.o', './fs/xin_syscalls.o', 
         './lib/screen/screen.o', 
         './sys/devices/hda/disk.o', 
         './fs/xin.o', './sys/call/xanin_sys/calls/devices/disk.o', './sys/call/xanin_sys/calls/stdio/stdio.o', 
         './sys/call/xanin_sys/calls/terminal/terminal.o', 
         './sys/call/xanin_sys/calls/vga/vga.o', 
         './sys/call/xanin_sys/calls/input/input.o', 
-    ])
+                ])
 
-# print(objects_to_compile['kmodules'] + objects_to_compile['interrupt'])
-# compile_kernel(objects_to_compile['kmodules'] + objects_to_compile['interrupt'] + objects_to_compile['drivers'] + objects_to_compile['xanin_graphics(legacy)'] + objects_to_compile['graphics_libraries'] + 
-#                 objects_to_compile['built-in programs'] + objects_to_compile['libc'] + objects_to_compile['libcpp'] + objects_to_compile['network'] + objects_to_compile['netapi'] + objects_to_compile[''])
+# create_kernel_c_library('./lib/libc/kernel_libc.o', './lib/libc/kernel_libc.a', [obj.output_name for obj in objects_to_compile['libc']] + [
+#         './sys/log/syslog.o',
+#         './fs/xin_syscalls.o', 
+#         './lib/screen/screen.o', 
+#         './sys/devices/hda/disk.o', 
+#         './fs/xin.o', './sys/call/xanin_sys/calls/devices/disk.o', './sys/call/xanin_sys/calls/stdio/stdio.o', 
+#         './sys/call/xanin_sys/calls/terminal/terminal.o', 
+#         './sys/call/xanin_sys/calls/vga/vga.o', 
+#         './sys/call/xanin_sys/calls/input/input.o', 
+#     ])
 
 compile_boot2()
 compile_kernel(objects_to_compile)
