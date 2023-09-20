@@ -98,11 +98,30 @@ def create_c_library(objpath, libpath, libraries, added=[]):
     for command in commands:
         terminate_if_error(os.system(command))
 
+def boot_library_create():
+
+    folder_path = './boot/boot_libs'
+    o_files = []
+
+    for filename in os.listdir(folder_path):
+        if filename.endswith(".o"):
+            o_files.append(os.path.join(folder_path, filename))
+
+    o_files.remove('./boot/boot_libs/boot_lib.o')
+
+
+    linker_command = f"{args.linker} {' '.join(o_files)} -r -o ./boot/boot_libs/boot_lib.o"
+    print(linker_command)
+
+    terminate_if_error(os.system(linker_command))
+
 
 def compile_boot2():
 
+    boot_library_create()
+
     commands = [
-        f"{builders['c']} -O0 -masm=intel -nostdlib -Ttext 0xA00000 -I ./ ./boot/boot2.c -o ./boot/boot2.elf",
+        f"{builders['c']} -O0 -masm=intel -nostdlib -Ttext 0xA00000 -I ./ ./boot/boot2.c ./boot/boot_libs/boot_lib.o -o ./boot/boot2.elf",
         'python3 ./utils/align_file.py -f ./boot/boot2.elf -size 7168',
     ]
 
@@ -458,6 +477,13 @@ objects_to_compile = {
     'Xanin initialization': [
         # CompileObject('./sys/initialization/init.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./sys/initialization/init.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
+    ],
+
+    'XaninBoot2 libs': [
+        CompileObject('./boot/boot_libs/bootio.c', builders['c'], builder_options['c']['default'], OBJECT),
+        CompileObject('./boot/boot_libs/disk.c', builders['c'], builder_options['c']['default'], OBJECT),
+        CompileObject('./boot/boot_libs/elf.c', builders['c'], builder_options['c']['default'], OBJECT),
+        CompileObject('./boot/boot_libs/string.c', builders['c'], builder_options['c']['default'], OBJECT),
     ]
 
 }
