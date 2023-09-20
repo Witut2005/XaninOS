@@ -7,6 +7,7 @@
 #include <lib/xaninGraphics/xaninGraphics.h>
 #include <sys/input/input.h>
 #include <lib/screen/screen.h>
+#include <lib/libc/canvas.h>
 
 //CANVAS_APP
 

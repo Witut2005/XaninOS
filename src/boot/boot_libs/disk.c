@@ -1,6 +1,7 @@
 
 #include "./disk.h"
 #include "./hal.h"
+#include "./bootio.h"
 
 void init_disk(uint16_t base, uint8_t master)
 {
@@ -16,8 +17,9 @@ void init_disk(uint16_t base, uint8_t master)
 
     if(disk_status == 0xFF)
     {
-        print("NO DISK\n");
+        print("NO DISK\n", OUTPUT_COLOR_SET(red, white));
         return;
+        while(1);
     }
 
     outbIO(base + ATA_DRIVE_REGISTER, master == ATA_MASTER ? 0xA0 : 0xB0);

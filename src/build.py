@@ -97,7 +97,7 @@ def compile_boot2():
     boot_library_create()
 
     commands = [
-        f"{builders['c']} -O0 -masm=intel -nostdlib -Ttext 0xA00000 -I ./ ./boot/boot2.c ./boot/boot_libs/boot_lib.o -o ./boot/boot2.elf",
+        f"{builders['c']} -O0 -masm=intel -Werror -Wimplicit-function-declaration -nostdlib -Ttext 0xA00000 -I ./ ./boot/boot2.c ./boot/boot_libs/boot_lib.o -o ./boot/boot2.elf",
         'python3 ./utils/align_file.py -f ./boot/boot2.elf -size 7168',
     ]
 
@@ -172,7 +172,7 @@ builder_options = {
     },
 
     'c':{
-        'default': '-O0 -Wall -Wno-unused-but-set-variable -Wno-unused-variable -Wno-discarded-qualifiers -Wno-parentheses -Wno-comment -Wno-address-of-packed-member -Wno-maybe-uninitialized -Wno-pointer-sign -Wno-div-by-zero -Wno-duplicate-decl-specifier -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Werror=return-type -I ./ -c',
+        'default': '-O0 -Werror -Wall -Wno-deprecated-declarations -Wno-unused-but-set-variable -Wno-unused-variable -Wno-discarded-qualifiers -Wno-parentheses -Wno-comment -Wno-address-of-packed-member -Wno-maybe-uninitialized -Wno-pointer-sign -Wno-div-by-zero -Wno-duplicate-decl-specifier -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Werror=return-type -I ./ -c',
         'kernel': '-O0 -Wall -Wno-discarded-qualifiers -Wno-parentheses -Wno-comment -Wno-address-of-packed-member -Wno-maybe-uninitialized -Wno-pointer-sign -Wno-div-by-zero -Wno-duplicate-decl-specifier -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding  -Wno-unused-function -Wno-div-by-zero -I ./'
     },
 

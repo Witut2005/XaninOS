@@ -1,47 +1,50 @@
 
 #include "./bootio.h"
+#include "./string.h"
 
-uint16_t* print_ptr = (uint16_t*)0xb8000;
-uint32_t y = 0;
-uint32_t x = 0;
+#define VGA_HEIGHT 25
+#define VGA_WIDTH 80
 
-void print(const char* str)
+vga_cell_t* print_ptr = (uint16_t*)0xb8000;
+uint32_t bootio_offset = 0;
+
+void putchar(char c, color_t color)
+{
+    if(c == '\n')
+        bootio_offset = bootio_offset + (VGA_WIDTH - (bootio_offset % 80));
+
+    else
+        print_ptr[bootio_offset++] = c | VGA_COLOR(color);
+}
+
+void print(const char* str, color_t color)
 {
     while(*str != '\0')
     {
-        print_ptr[y * 80 + x] = *str | (0x0F << 8);
-        x++;
+        putchar(*str, color);
         str++;
     }
-
-    x = 0;
-    y++;
 }
 
-void print_decimal(uint32_t value)
+void print_decimal(uint32_t value, color_t color)
 {
     char buf[20] = {0};
-    print(int_to_str(value, buf));
-    x = 0;
-    y++;
+    print(int_to_str(value, buf), color);
 }
 
-void print_hex(uint32_t value)
+void print_hex(uint32_t value, color_t color)
 {
     char buf[20] = {0};
-    print(int_to_hex_str(value, buf));
-
-    x = 0;
-    y++;
+    print(int_to_hex_str(value, buf), color);
 }
 
 void vga_screen_buffer_clear(void)
 {
-    uint16_t* screen_cleaner = (uint16_t*)0xb8000;
-    for(int i = 0; i < (80 * 25); i++)
+    vga_cell_t* screen_cleaner = (uint16_t*)0xb8000;
+    for(int i = 0; i < (VGA_HEIGHT * VGA_WIDTH); i++)
     {
         *screen_cleaner = '\0';
         screen_cleaner++;
     }
-    y = x = 0;
+    bootio_offset = 0;
 }
