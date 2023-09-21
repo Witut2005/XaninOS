@@ -3,27 +3,25 @@
 #include "./bootio.h"
 #include "./disk.h"
 #include "./string.h"
+#include "./memory.h"
 
-char* elf_section_header_string_table_address_get(ElfAutoHeader* Header)
+char* elf_section_header_string_table_address_get(ElfHeaderAuto* Header)
 {
-    ElfSectionHeaderAuto* SectionHeaders = (ElfSectionHeaderAuto*)(Header->e_shoff + (uint32_t)Header);
-    return (char*)(SectionHeaders[Header->e_shstrndx].sh_offset + (uint32_t)Header);
+    ElfSectionHeaderAuto* KernelSectionHeaders = (ElfSectionHeaderAuto*)(Header->e_shoff + XANIN_OS_KERNEL_MEMORY_LOCATION);
+    return (char*)(KernelSectionHeaders[Header->e_shstrndx].sh_offset + XANIN_OS_KERNEL_MEMORY_LOCATION);
 }
 
-bool elf_load_given_section(ElfAutoHeader* Header, const char* section_name)
+bool elf_load_given_section(ElfHeaderAuto* KernelHeader, const char* section_name)
 {
-    char* elf_section_names = elf_section_header_string_table_address_get(Header);
-    ElfSectionHeaderAuto* Sections = (ElfSectionHeaderAuto*)(Header->e_shoff + (uint32_t)Header);
+    char* elf_section_names = elf_section_header_string_table_address_get(KernelHeader);
+    ElfSectionHeaderAuto* KernelSectionsHeaders = (ElfSectionHeaderAuto*)(KernelHeader->e_shoff + XANIN_OS_KERNEL_MEMORY_LOCATION);
 
-    vga_screen_buffer_clear();
-
-    for(int i = 0; i < Header->e_shnum; i++)
+    for(int i = 0; i < KernelHeader->e_shnum; i++)
     {
-        if(bstrcmp(section_name, &elf_section_names[Sections[i].sh_name]))
+    if(bstrcmp(section_name, &elf_section_names[KernelSectionsHeaders[i].sh_name]))
         {
-            for(int j = 0; j < Sections[i].sh_size; j++)
-                ((uint8_t*)(Sections[i].sh_addr))[j] = ((uint8_t*)(Sections[i].sh_offset + (uint32_t)(Header)))[j];
-
+            memcpy((uint8_t*)KernelSectionsHeaders[i].sh_addr, 
+                (uint8_t*)(KernelSectionsHeaders[i].sh_offset + XANIN_OS_KERNEL_MEMORY_LOCATION), KernelSectionsHeaders[i].sh_size);
             return true;
         }
 
@@ -33,58 +31,25 @@ bool elf_load_given_section(ElfAutoHeader* Header, const char* section_name)
 
 void elf_load(void)
 {
-    uint8_t* data = (uint8_t*)(0x20200 + (15 * SECTOR_SIZE));
-    
-    uint8_t* write_to_memory;
-    uint8_t* read_from_file;
-    uint32_t begin_of_code = (uint32_t)data;
+    ElfHeaderAuto* KernelHeader = (ElfHeaderAuto*)XANIN_OS_KERNEL_MEMORY_LOCATION;
+    ElfProgramHeaderAuto* KernelProgramHeaders = (ElfProgramHeaderAuto*)(XANIN_OS_KERNEL_MEMORY_LOCATION + sizeof(ElfHeaderAuto));
 
-    uint16_t phnum = *(uint16_t*)((uint8_t*)data + 0x2C);
+    print("elf magic: %s\n", KernelHeader->ei_mag);
+    print("phnum: %d\n", KernelHeader->e_phnum);
 
-    uint32_t p_offset;      //offset in file image
-    uint32_t p_vaddr;       //virtual address of the segment in memory
-    uint32_t p_filesz;      //size in bytes of segment in file image
-    uint32_t entry_point = *(uint32_t*)((uint8_t*)data + 0x18);
-
-    data += 0x34;
-
-    print_decimal(phnum, OUTPUT_COLOR_SET(black, white));
-
-    while(phnum)
+    for(int i = 0; i < KernelHeader->e_phnum; i++)
     {
-
-        if(*(uint32_t*)data == PT_LOAD)
+        if(KernelProgramHeaders[i].p_type == PT_LOAD)
         {
-            print("PT LOAD FINDED", OUTPUT_COLOR_SET(black, white));
-            putchar('\n', BOOTIO_NO_COLOR);
-
-            p_offset = *(uint32_t*)(data + 0x4);
-            p_offset = p_offset + begin_of_code;
-            p_vaddr  = *(uint32_t*)(data + 0x8);
-            p_filesz = *(uint32_t*)(data + 0x10);
-
-            print_hex(p_offset, OUTPUT_COLOR_SET(black, white));
-            putchar('\n', BOOTIO_NO_COLOR);
-            print_hex(p_vaddr, OUTPUT_COLOR_SET(black, white));
-            putchar('\n', BOOTIO_NO_COLOR);
-
-            read_from_file = (uint8_t*)p_offset;
-            write_to_memory = (uint8_t*)p_vaddr;
-
-            for(int i = 0; i < p_filesz; i++, write_to_memory++, read_from_file++)
-                *write_to_memory = *read_from_file;
-            
+            memcpy((uint8_t*)KernelProgramHeaders[i].p_vaddr, 
+                (uint8_t*)(KernelProgramHeaders[i].p_offset + XANIN_OS_KERNEL_MEMORY_LOCATION), KernelProgramHeaders[i].p_filesz);
         }
-
-        data += 0x20;
-        phnum--;
     }
     
-    print("kernel loaded", OUTPUT_COLOR_SET(black, white));
-    putchar('\n', BOOTIO_NO_COLOR);
+    print("%hkernel loaded ^^\n", OUTPUT_COLOR_SET(black, green));
 
-    elf_load_given_section((ElfAutoHeader*)(0x20200 + (15 * SECTOR_SIZE)), ".init_array");
+    elf_load_given_section((ElfHeaderAuto*)(XANIN_OS_KERNEL_MEMORY_LOCATION),".init_array");
 
-    void(*kernel)(void) = (void(*)(void))entry_point;
+    void(*kernel)(void) = (void(*)(void))KernelHeader->e_entry;
     kernel();
 }

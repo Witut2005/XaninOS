@@ -92,9 +92,9 @@ struct ElfHeader64
 typedef struct Elf64Header Elf64Header;
 
 #if __x86_64__
-typedef ElfHeader64 ElfAutoHeader;
+typedef ElfHeader64 ElfHeaderAuto;
 #else
-typedef ElfHeader32 ElfAutoHeader;
+typedef ElfHeader32 ElfHeaderAuto;
 #endif
 
 ////////////////////////////////////////////////////////////////
