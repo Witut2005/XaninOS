@@ -186,6 +186,8 @@ objects_to_compile = {
     'boot': [
         CompileObject('./boot/boot.asm', builders['asm'], builder_options['asm']['bin'], BINARY),
         CompileObject('./boot/kernel_loader.asm', builders['asm'], builder_options['asm']['bin'], BINARY),
+
+        CompileObject('./boot/boot_libs/elf.asm', builders['asm'], builder_options['asm']['elf32'], './boot/boot_libs/elf_asm.o'),
         CompileObject('./boot/boot_libs/bootio.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./boot/boot_libs/disk.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./boot/boot_libs/elf.c', builders['c'], builder_options['c']['default'], OBJECT),
