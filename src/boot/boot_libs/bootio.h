@@ -17,7 +17,7 @@ extern uint32_t y;
 extern uint32_t x;
 
 void putchar(char c, color_t color);
-void print(const char* str, color_t color);
+void print(const char* format, ...);
 void print_decimal(uint32_t value, color_t color);
 void print_hex(uint32_t value, color_t color);
 void vga_screen_buffer_clear(void);

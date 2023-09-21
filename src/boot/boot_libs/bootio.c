@@ -1,4 +1,5 @@
 
+#include <stdarg.h>
 #include "./bootio.h"
 #include "./string.h"
 
@@ -17,12 +18,61 @@ void putchar(char c, color_t color)
         print_ptr[bootio_offset++] = c | VGA_COLOR(color);
 }
 
-void print(const char* str, color_t color)
+void print(const char* format, ...)
 {
-    while(*str != '\0')
+
+    color_t color = 0x0F;
+    va_list args;
+    va_start(args, format);
+
+    while(*format != '\0')
     {
-        putchar(*str, color);
-        str++;
+
+        if(*format == '%')
+        {
+           format++;
+            switch (*format)
+            {
+
+                case 'h':
+                {
+                    color = (color_t)va_arg(args, int);
+                    break;
+                }
+
+                case 's':
+                {
+                    char* str = (char*)va_arg(args, int);
+
+                    while(*str != '\0')
+                    {
+                        putchar(*str, color);
+                        str++;
+                    }
+                    break;
+                }
+
+                case 'd': 
+                {
+                    print_decimal((uint32_t)va_arg(args, int), color);
+                    break;
+                }
+
+                case 'x':
+                {
+                    print_hex((uint32_t)va_arg(args, int), color);
+                    break;
+                }
+                
+                default:
+                    break;
+            }
+        }
+    
+        else
+            putchar(*format, color);
+
+        format++;
     }
 }
 
