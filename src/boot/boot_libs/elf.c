@@ -11,20 +11,19 @@ char* elf_section_header_string_table_address_get(ElfHeaderAuto* Header)
     return (char*)(KernelSectionHeaders[Header->e_shstrndx].sh_offset + XANIN_OS_KERNEL_MEMORY_LOCATION);
 }
 
-address_t elf_load_given_section(ElfHeaderAuto* KernelHeader, const char* section_name)
+ElfSectionHeaderAuto* elf_load_given_section(ElfHeaderAuto* KernelHeader, const char* section_name)
 {
     char* elf_section_names = elf_section_header_string_table_address_get(KernelHeader);
     ElfSectionHeaderAuto* KernelSectionsHeaders = (ElfSectionHeaderAuto*)(KernelHeader->e_shoff + XANIN_OS_KERNEL_MEMORY_LOCATION);
 
     for(int i = 0; i < KernelHeader->e_shnum; i++)
     {
-    if(bstrcmp(section_name, &elf_section_names[KernelSectionsHeaders[i].sh_name]))
+        if(bstrcmp(section_name, &elf_section_names[KernelSectionsHeaders[i].sh_name]))
         {
             memcpy((uint8_t*)KernelSectionsHeaders[i].sh_addr, 
                 (uint8_t*)(KernelSectionsHeaders[i].sh_offset + XANIN_OS_KERNEL_MEMORY_LOCATION), KernelSectionsHeaders[i].sh_size);
-            return (address_t)KernelSectionsHeaders[i].sh_addr;
+            return &KernelSectionsHeaders[i];
         }
-
     }
     return NULL;
 }

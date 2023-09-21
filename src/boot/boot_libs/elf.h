@@ -9,6 +9,6 @@
 typedef uint8_t* address_t;
 
 char* elf_section_header_string_table_address_get(ElfHeaderAuto* Header);
-address_t elf_load_given_section(ElfHeaderAuto* KernelHeader, const char* section_name);
+ElfSectionHeaderAuto* elf_load_given_section(ElfHeaderAuto* KernelHeader, const char* section_name);
 void elf_load(ElfHeaderAuto* KernelHeader);
-void elf_jump_to_entry_point(uint32_t entry_point, uint32_t init_array_address);
+void elf_jump_to_entry_point(uint32_t entry_point, uint32_t init_array_address, uint32_t size_of_init_array_section, uint32_t size_of_init_array_entry);

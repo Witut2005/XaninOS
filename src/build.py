@@ -194,6 +194,10 @@ objects_to_compile = {
         CompileObject('./boot/boot_libs/string.c', builders['c'], builder_options['c']['default'], OBJECT),
     ],
 
+    'XaninOS initialization': [
+        CompileObject('./sys/kernel_start.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
+    ],
+
     'filesystem': [
         CompileObject('./fs/xin_pointers.asm', builders['asm'], builder_options['asm']['bin'], BINARY),
         CompileObject('./fs/entries_table.asm', builders['asm'], builder_options['asm']['bin'], BINARY),

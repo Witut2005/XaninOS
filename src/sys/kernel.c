@@ -132,9 +132,16 @@ void kernel_loop(void)
 
 uint8_t kernel_mmngr_mmap[PMMNGR_MEMORY_BLOCKS];
 
-Xtf* VtyFront;
+struct ElfInitArraySectionInfo
+{
+    uint32_t address;
+    uint32_t size_of_section; 
+    uint32_t size_of_section_entry;
+};
+typedef struct ElfInitArraySectionInfo ElfInitArraySectionInfo;
+ElfInitArraySectionInfo XaninInitArrayInfo;
 
-void _start(void)
+void kernel_start(void)
 {
 
     syslog_disable();
@@ -433,9 +440,11 @@ void _start(void)
 
     ////////////////////////////////
 
-    stdio_refresh(NULL);
-    // xprintf("dupa: %d\n", strtoi("1", 10));
+    xprintf("init array section address 0x%x\n", XaninInitArrayInfo.address);
+    xprintf("init array section size 0x%x\n", XaninInitArrayInfo.size_of_section);
+    xprintf("init array section entry size 0x%x\n", XaninInitArrayInfo.size_of_section_entry);
 
+    stdio_refresh(NULL);
     while(getxchar().scan_code != ENTER);
     screen_clear();
 

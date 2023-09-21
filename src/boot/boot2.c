@@ -12,7 +12,6 @@ void _start(void)
 
     elf_load((ElfHeaderAuto*)XANIN_OS_KERNEL_MEMORY_LOCATION);
 
-    elf_jump_to_entry_point(((ElfHeaderAuto*)XANIN_OS_KERNEL_MEMORY_LOCATION)->e_entry, 
-        (uint32_t)elf_load_given_section((ElfHeaderAuto*)XANIN_OS_KERNEL_MEMORY_LOCATION, ".init_array"));
-
+    ElfSectionHeaderAuto* KernelInitArraySection = elf_load_given_section((ElfHeaderAuto*)XANIN_OS_KERNEL_MEMORY_LOCATION, ".init_array");
+    elf_jump_to_entry_point(((ElfHeaderAuto*)XANIN_OS_KERNEL_MEMORY_LOCATION)->e_entry, KernelInitArraySection->sh_addr, KernelInitArraySection->sh_size, KernelInitArraySection->sh_entsize);
 }
