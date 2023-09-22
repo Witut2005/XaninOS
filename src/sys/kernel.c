@@ -345,8 +345,6 @@ void kernel_init(void)
     __sys_xin_folder_create("/config/");
 
     arp_table_add_entry(LOOPBACK_IP_ADDRESS, null_memory_region);
-    arp_module_init();
-    icmp_module_init();
     
     interrupt_enable();
 

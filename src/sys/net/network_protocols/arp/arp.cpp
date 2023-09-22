@@ -19,16 +19,6 @@ std::UnorderedMap<uint32_t, NetworkResponse*> ArpModule::PacketsInfo;
 
 #define send_arp send_arp_request
 
-extern "C" void arp_module_init(void)
-{
-    ArpModule::PacketsInfo.init();
-}
-
-extern "C" bool arp_module_status(void)
-{
-    return ArpModule::PacketsInfo.is_initialized();
-}
-
 extern "C"
 {
 

@@ -33,8 +33,6 @@ void IcmpModule::ping(uint32_t ip_dest, NetworkResponse* Response)
 
     ipv4_packet_send(ip_dest, xanin_ip_get(), INTERNET_CONTROL_MESSAGE_PROTOCOL, 64, (uint8_t*)RequestPacket, SIZE_OF(IcmpPacket), Response);
     free(RequestPacket);
-
-
 }
 
 
@@ -83,11 +81,6 @@ void IcmpModule::receive(IcmpPacket* IcmpPacketReceived, uint32_t ip_src)
 
 extern "C"
 {
-
-void icmp_module_init(void)
-{
-    IcmpModule::PacketsInfo.init();
-}
 
 void icmp_ping(uint32_t ip_dest, NetworkResponse* Response)
 {

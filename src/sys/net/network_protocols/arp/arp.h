@@ -76,8 +76,6 @@ extern "C" {
     uint8_t mac_get_from_ip(uint32_t ip);
     ArpTableEntry last_arp_reply_get(void);
     bool arp_table_add_entry(uint32_t ip, uint8_t* mac);
-    void arp_module_init(void);
-    bool arp_module_status(void);
 
 #ifdef __cplusplus
 }
