@@ -40,6 +40,8 @@
 #include <lib/cpu/headers/cpu_state_info.h>
 #include <sys/macros.h>
 #include <lib/libc/stdiox_legacy.h>
+#include <fs/xin_syscalls.h>
+#include <sys/init/kernel_init.h>
 
 extern void v86_mode_enter(void);
 extern void mouse_enable(void);
@@ -75,6 +77,7 @@ uint8_t* const zeros;
 
 uint32_t stdio_refresh_rate;
 interval_id stdio_refresh_interval_id;
+ElfInitArraySectionInfo XaninInitArrayInfo;
 
 void stdio_refresh(address_t* args)
 {
@@ -132,22 +135,8 @@ void kernel_loop(void)
 
 uint8_t kernel_mmngr_mmap[PMMNGR_MEMORY_BLOCKS];
 
-struct ElfInitArraySectionInfo
+void kernel_init(void)
 {
-    uint32_t address;
-    uint32_t size_of_section; 
-    uint32_t size_of_section_entry;
-};
-typedef struct ElfInitArraySectionInfo ElfInitArraySectionInfo;
-ElfInitArraySectionInfo XaninInitArrayInfo;
-
-void kernel_start(void)
-{
-
-    syslog_disable();
-    
-    interrupt_disable();
-
     INTERRUPT_REGISTER(0, divide_by_zero_exception_entry);
     INTERRUPT_REGISTER(1, debug_exception_entry);
     INTERRUPT_REGISTER(2, nmi_interrupt_exception_entry);
@@ -181,17 +170,11 @@ void kernel_start(void)
     INTERRUPT_REGISTER(31, general_protection_exception_entry);
     INTERRUPT_REGISTER(32, general_protection_exception_entry);
 
-
-    interrupt_enable();
-    
     keyboard_init(0x21);
     set_pit(0x20);
-    // idt_examine();
 
-    disable_cursor();
+    vga_disable_cursor();
     mmngr_init(kernel_mmngr_mmap, (uint8_t*)0x100000, PMMNGR_MEMORY_BLOCKS);
-
-    // SCREEN MANAGER USES CALLOC
 
     vga_text_mode_height = 25;
     vga_text_mode_width = 80;
@@ -206,12 +189,6 @@ void kernel_start(void)
     time_get(&SystemTime);
 
     null_memory_region = (uint8_t*)kcalloc(VGA_SCREEN_RESOLUTION);
-    // xprintf("Memory Block Size Allocated: 0x%x\n", null_memory_region);
-    // free(null_memory_region);
-    // null_memory_region = (uint8_t*)calloc(VGA_SCREEN_RESOLUTION);
-    // kernel_terminal = terminal_create();
-    // terminal_set((terminal_t*)null_memory_region, kernel_terminal);
-
     xprintf("%z----------------------------\n", OUTPUT_COLOR_SET(black, green));
 
     puts("CHECKSUM CHECK RSDP: ");
@@ -335,11 +312,6 @@ void kernel_start(void)
                 
     interrupt_disable();
 
-    // ioapic_ioredtbl_configure((APIC_IRQ_BASE + 0xC)
-    //                                   << APIC_VECTOR |
-    //                               0x0 << APIC_DELIVERY_MODE | 0x0 << APIC_DESTINATION_MODE | 0x0 << APIC_INT_PIN_POLARITY | 0x0 << APIC_INT_MASK,
-    //                           ioapic_id_get());
-
     xprintf("\n%z----------------------------\n", OUTPUT_COLOR_SET(black, green));
     xprintf("NIC interrupt line: 0x%x", (apic_nic_redirect != NULL ? apic_nic_redirect->global_system_int_table + APIC_IRQ_BASE : PIC_NIC_VECTOR));
 
@@ -347,16 +319,6 @@ void kernel_start(void)
     xprintf("Com port status: 0x%x\n", com_status());
 
     puts("Press ENTER to continue...\n");
-
-    // static int number_of_cores;
-
-    // for (int i = 0; i < 10; i++)
-    // {
-    //     if (AcpiMADT0Pointers[i] != NULL)
-    //         number_of_cores++;
-    // }
-
-    // xprintf("Number of CPU cores: %d\n", number_of_cores);
 
     srand(SystemTime.seconds);
 
@@ -369,17 +331,11 @@ void kernel_start(void)
     argv[3] = (char*)calloc(XANIN_PMMNGR_BLOCK_SIZE * 2); 
     argv[4] = (char*)calloc(XANIN_PMMNGR_BLOCK_SIZE * 2); 
 
-    // LOAD XIN TABLES
-    // disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x12, 8, (uint16_t *)XIN_ENTRY_POINTERS);
-    // disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x1a, 10, (uint16_t *)XIN_ENTRY_TABLE);
     xin_init_fs();
-
     disk_write(ATA_FIRST_BUS, ATA_MASTER, xin_find_entry("/ivt")->first_sector, 2, 0x0); // load ivt to /ivt file
 
-    // xin_init_fs();
     xin_folder_change("/");
     FileDescriptorTable = (XinFileDescriptor*)kcalloc(SIZE_OF(XinFileDescriptor) * 200); // 200 = number o entries
-    
 
     memset((uint8_t *)ArpTable, 0xFF, SIZE_OF(ArpTable[0]));
 
@@ -392,32 +348,7 @@ void kernel_start(void)
     arp_module_init();
     icmp_module_init();
     
-    // uint8_t* zeros = (uint8_t*)kcalloc(SECTOR_SIZE);
-
     interrupt_enable();
-
-    // screen_clear();
-    // vga_mode_set(VGA_GRAPHICS_320x200x256);
-    // vga_mode_set(VGA_TEXT_80x25);
-
-    // screen_clear();
-    // Registers Regs;
-    // xprintf("0x%x\n", &Regs);
-    // __asm_registers_values_get(&Regs);
-
-    // for(uint32_t i = 0; i < 9; i++)
-    // {
-    //     xprintf("0x%x\n", *((uint32_t*)(&Regs) + i));
-    // }
-
-    // uint16_t* seg_regs = (uint16_t*)((uint32_t*)(&Regs) + 9);
-
-    // for(uint32_t i = 0; i < 4; i++)
-    // {
-    //     xprintf("0x%x\n", seg_regs[i]);
-    // }
-
-    // INIT AUTOMATIC STDIO FLUSH
 
     char* buffer = (char*)kcalloc(100 * SIZE_OF(char));
 
@@ -426,23 +357,23 @@ void kernel_start(void)
     fread(StdioRefreshRateConfig, buffer, 99);
 
     stdio_refresh_rate = strtoi(buffer, 10);
-
-    if(stdio_refresh_rate <= 100)
-        xprintf("Stdio new refresh rate: %d\n", stdio_refresh_rate);
-
-    else
-    {
-        puts_error("Stdio refresh rate cannot be more than 100ms\n");
-        stdio_refresh_rate = 100;
-    }
+    stdio_refresh_rate = stdio_refresh_rate <= 100 ? stdio_refresh_rate : 100;
 
     kfree(buffer);
 
-    ////////////////////////////////
 
-    xprintf("init array section address 0x%x\n", XaninInitArrayInfo.address);
-    xprintf("init array section size 0x%x\n", XaninInitArrayInfo.size_of_section);
-    xprintf("init array section entry size 0x%x\n", XaninInitArrayInfo.size_of_section_entry);
+}
+
+void kernel_start(void)
+{
+
+    syslog_disable();
+    interrupt_disable();
+
+    kernel_init();
+    kernel_execute_init_array_section(&XaninInitArrayInfo);
+
+    interrupt_enable();
 
     stdio_refresh(NULL);
     while(getxchar().scan_code != ENTER);

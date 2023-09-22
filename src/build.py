@@ -173,7 +173,7 @@ builder_options = {
 
     'c':{
         'default': '-O0 -Werror -Wall -Wno-deprecated-declarations -Wno-unused-but-set-variable -Wno-unused-variable -Wno-discarded-qualifiers -Wno-parentheses -Wno-comment -Wno-address-of-packed-member -Wno-maybe-uninitialized -Wno-pointer-sign -Wno-div-by-zero -Wno-duplicate-decl-specifier -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Werror=return-type -I ./ -c',
-        'kernel': '-O0 -Wall -Wno-discarded-qualifiers -Wno-parentheses -Wno-comment -Wno-address-of-packed-member -Wno-maybe-uninitialized -Wno-pointer-sign -Wno-div-by-zero -Wno-duplicate-decl-specifier -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding  -Wno-unused-function -Wno-div-by-zero -I ./'
+        'kernel': '-O0 -Wall -Werror -Wno-discarded-qualifiers -Wno-parentheses -Wno-comment -Wno-address-of-packed-member -Wno-maybe-uninitialized -Wno-pointer-sign -Wno-div-by-zero -Wno-duplicate-decl-specifier -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding  -Wno-unused-function -Wno-div-by-zero -I ./'
     },
 
     'cc':{
@@ -196,6 +196,7 @@ objects_to_compile = {
 
     'XaninOS initialization': [
         CompileObject('./sys/kernel_start.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
+        CompileObject('./sys/init/kernel_init.c', builders['c'], builder_options['c']['default'], OBJECT),
     ],
 
     'filesystem': [

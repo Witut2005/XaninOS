@@ -932,7 +932,7 @@ void vga_mode_set(xgm_t mode)
 
     }
 
-	disable_cursor();
+	vga_disable_cursor();
 
 }
 
@@ -949,4 +949,20 @@ uint8_t* vga_get_buffer_segment(void)
         case 3: return (uint8_t*)0xB8000;
     }
 	return (uint8_t*)0xB8000;
+}
+
+//https://wiki.osdev.org/Text_Mode_Cursor
+void vga_enable_cursor(uint8_t cursor_start, uint8_t cursor_end)
+{
+	outbIO(0x3D4, 0x0A);
+	outbIO(0x3D5, (inbIO(0x3D5) & 0xC0) | cursor_start);
+ 
+	outbIO(0x3D4, 0x0B);
+	outbIO(0x3D5, (inbIO(0x3D5) & 0xE0) | cursor_end);
+}
+
+void vga_disable_cursor(void)
+{
+    outbIO(0x3D4, 0x0A);
+	outbIO(0x3D5, 0x20);
 }
