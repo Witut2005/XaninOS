@@ -69,6 +69,10 @@ void setFontVGA(const unsigned char * buffer, int h);
 void vga_mode_set(uint8_t vga_mode);
 uint8_t* vga_get_buffer_segment(void);
 
+//https://wiki.osdev.org/Text_Mode_Cursor
+void vga_enable_cursor(uint8_t cursor_start, uint8_t cursor_end);
+void vga_disable_cursor(void);
+
 
 #ifdef __cplusplus
 }

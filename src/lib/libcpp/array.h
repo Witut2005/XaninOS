@@ -47,13 +47,6 @@ class ArrayIterator
             return tmp;
         }
 
-
-        // Type operator [](uint32_t index)
-        // {
-        //     return i_ptr[index];
-        // }
-
-
         uint32_t* operator &()
         {
             return (uint32_t*)this;
@@ -93,10 +86,7 @@ class array
     using Type = T;
     using iterator = ArrayIterator< array<T, SIZE> >;
 
-    array()
-    {
-        std::cout << "Array" << std::endl;
-    }
+    array(){}
 
     array(const array& arr)
     {

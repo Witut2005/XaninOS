@@ -46,7 +46,6 @@ typedef struct IcmpPacket IcmpPacket;
 extern "C"{
 #endif
 
-void icmp_module_init(void);
 void icmp_ping(uint32_t ip_dest, NetworkResponse* Response);
 void icmp_ping_reply(IcmpPacket* packet, uint32_t ip_dest);
 void icmp_packet_receive(IcmpPacket* Packet, uint32_t ip_src);
@@ -66,6 +65,7 @@ class IcmpModule
     static uint32_t echo_seq_global;
 
     public:
+    IcmpModule(const IcmpModule&) = delete;
     static void ping(uint32_t ip_dest, NetworkResponse* Response);
     static void ping_reply(IcmpPacket* PacketReceived, uint32_t ip_dest);
     static void receive(IcmpPacket* IcmpPacketReceived, uint32_t ip_src);

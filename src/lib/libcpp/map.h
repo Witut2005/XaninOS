@@ -91,7 +91,6 @@ namespace std
         };
 
     private:
-        bool initialized;
         ListElement *Head;
         ListElement *Tail;
         size_t size;
@@ -122,11 +121,6 @@ namespace std
             this->Head->previous = nullptr;
         }
 
-        bool is_initialized() const
-        {
-            return this->initialized;
-        }
-
         UnorderedMap()
         {
             this->Head = (ListElement *)malloc(SIZE_OF(ListElement));
@@ -135,18 +129,6 @@ namespace std
             this->Head->previous = nullptr;
             this->size = 0;
             this->Head->next = this->Tail;
-            this->initialized = true;
-        }
-
-        void init()
-        {
-            this->Head = (ListElement *)malloc(SIZE_OF(ListElement));
-            this->Tail = (ListElement *)malloc(SIZE_OF(ListElement));
-            this->Head->next = nullptr;
-            this->Head->previous = nullptr;
-            this->size = 0;
-            this->Head->next = this->Tail;
-            this->initialized = true;
         }
 
         ListElement *goto_last_element()
