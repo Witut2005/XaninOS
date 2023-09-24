@@ -29,27 +29,15 @@ class CommandParser
 
     public:
 
+    CommandParser(const CommandParser& parser) = default;
     CommandParser(char** args) : nullstr("\0"), argv(args), argument_counter(0), required_argument_not_given("required argument not given: "), errno(0){}
 
-    void argument_add(const char* name, bool required=false)//, const char * type)
-    {
-        ValueMap.insert(name, std::pair(nullstr, required));
-    }
+    void argument_add(const char* name, bool required=false);//, const char * type)
+    uint32_t errno_get(void);
+    void errno_clear(void);
 
-    uint32_t errno_get(void) 
-    {
-        return this->errno;
-    }
-
-    void errno_clear(void)
-    {
-        this->errno = (uint32_t)NULL;
-    }
-
-    // template <class T>
     template <typename K>
     static K parse_arg(CommandParser& parser, const char* index);
-
 
 };
 

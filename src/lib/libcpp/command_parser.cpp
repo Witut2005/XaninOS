@@ -1,27 +1,17 @@
 
-// #include <lib/libcpp/list.h>
-// #include <lib/libcpp/map.h>
+#include "./command_parser.h"
 
-// namespace std
-// {
+void std::CommandParser::argument_add(const char* name, bool required)
+{
+    ValueMap.insert(name, std::pair(nullstr, required));
+}
 
-// CommandParser::UnorderedMap<const char*, std::pair<const char*, const char*>> ValueMap;
-// CommandParser::CommandParser(int argc, char** argv)
-// {
+uint32_t std::CommandParser::errno_get(void) 
+{
+    return this->errno;
+}
 
-// }
-
-// void CommandParser::add_option(const char *name, const char *value, const char * type)
-// {
-//     this->ValueMap.insert(name, std::pair<const char*, const char*>(value, type));
-
-// }
-
-// std::pair<const char*, T> CommandParser::parse_arg(const char* index)
-// {
-//     return ValueMap[index]; 
-// }
-
-
-
-// }
+void std::CommandParser::errno_clear(void)
+{
+    this->errno = (uint32_t)NULL;
+}

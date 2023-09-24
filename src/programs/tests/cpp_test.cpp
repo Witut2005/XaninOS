@@ -14,7 +14,6 @@
 #include <lib/libcpp/array.h>
 #include <lib/libcpp/initializer_list.hpp>
 #include <lib/libcpp/new.hpp>
-#include <lib/libcpp/box.h>
 #include <lib/libcpp/bytes.h>
 #include <lib/libcpp/list.h>
 #include <lib/libcpp/map.h>
@@ -206,9 +205,6 @@ void cpp_prog()
 
     std::string str("123");
     std::cout << "STRING SIZE:"<< str.size() << std::endl;
-
-    delete &str;
-
 
     std::cout << std::endl;
 

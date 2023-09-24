@@ -9,76 +9,29 @@
 namespace std
 {
 
-    namespace chrono
-    {
-    
-        class system_clock
-        {
-    
-            public:
-                
-            system_clock(const system_clock&) = delete;   //copy constructor
+namespace chrono
+{
 
-            static CmosTime now();
-            static bcd year();
-            static system_clock& get_instance();
-            static time_t to_time_t(time_t);
+class system_clock
+{
+    private:
+    system_clock(){};
+    system_clock(const system_clock&) = delete;   //copy constructor
 
+    static CmosTime time;
+    static system_clock instance;
 
-            private:
-            
-            system_clock(){}
+    public:
 
-            static CmosTime time;
-            static system_clock instance;
+    static CmosTime now();
+    static bcd year();
+    static time_t to_time_t(time_t);
+    static inline system_clock& get_instance() { return instance; }
+};
 
-        };
+std::string time_to_string(CmosTime x);
 
-    inline system_clock system_clock::instance;
-    inline CmosTime system_clock::time;
-
-    inline CmosTime system_clock::now()
-    {
-        time_get(&system_clock::time);       
-        return system_clock::time;
-    }
-
-    inline bcd system_clock::year()
-    {
-        time_get(&system_clock::time);
-        bcd x = {uint32_t(time.century * 0x100 + time.year)};
-        return x;
-    }
-
-
-    inline system_clock& system_clock::get_instance()
-    {
-        return system_clock::instance;
-    }
-
-
-    static inline std::string time_to_string(CmosTime x)
-    {
-        char str[50];
-        memset((uint8_t*)str, 0, SIZE_OF(str));
-
-        str[0] = x.hour / 0x10 + '0';
-        str[1] = x.hour % 0x10 + '0';
-
-        str[2] = ':';
-
-        str[3] = x.minutes / 0x10 + '0';
-        str[4] = x.minutes % 0x10 + '0';
-
-        str[5] = ':';
-
-        str[6] = x.seconds / 0x10 + '0';
-        str[7] = x.seconds % 0x10 + '0';
-    
-        return std::string(str);
-
-    }
-    }
+}
 
 }
 

@@ -334,10 +334,13 @@ objects_to_compile = {
     ],
 
     'libcpp': [
-        CompileObject('./lib/libcpp/algorithm.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./lib/libcpp/command_parser.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         # CompileObject('./lib/libcpp/icxxabi.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./lib/libcpp/regex.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
+        CompileObject('./lib/libcpp/istream.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
+        CompileObject('./lib/libcpp/ostream.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
+        CompileObject('./lib/libcpp/string.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
+        CompileObject('./lib/libcpp/time.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         # CompileObject('./lib/libcpp/bytes.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./lib/libcpp/endian.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
     ],

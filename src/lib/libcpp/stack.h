@@ -8,52 +8,50 @@
 namespace std
 {
 
-    template<class T>
-    class stack
+template<class T>
+class stack
+{
+    private:
+
+    T* stack_pointer;
+    uint32_t size;
+
+    public:
+
+    stack()
     {
-        private:
+        stack_pointer = (T*)malloc(SIZE_OF(T));       
+        size = 0;
+    }
 
-        T* stack_pointer;
-        uint32_t size;
+    ~stack()
+    {
+        free(stack_pointer);
+    }
 
-        public:
+    void push(T val)
+    {
+        stack_pointer = (T*)realloc(stack_pointer, ++size);
+        *(stack_pointer + size - 1) = val; 
+    }
 
-        stack()
-        {
-            stack_pointer = (T*)malloc(SIZE_OF(T));       
-            size = 0;
-        }
+    void pop()
+    {
+        stack_pointer =(T*)realloc(stack_pointer, --size);
+    }
 
-        ~stack()
-        {
-            free(stack_pointer);
-        }
+    T top()
+    {
+        return *(stack_pointer + size - 1);
+    }
 
+    constexpr bool empty()
+    {
+        return size == 0;
+    }
+    
 
-
-        void push(T val)
-        {
-            stack_pointer = (T*)realloc(stack_pointer, ++size);
-            *(stack_pointer + size - 1) = val; 
-        }
-
-        void pop()
-        {
-            stack_pointer =(T*)realloc(stack_pointer, --size);
-        }
-
-        T top()
-        {
-            return *(stack_pointer + size - 1);
-        }
-
-        constexpr bool empty()
-        {
-            return size == 0;
-        }
-        
-
-    };
+};
 
 
 }

@@ -4,11 +4,9 @@
 #include <stdint.h>
 #include <lib/libc/time.h>
 #include <lib/libcpp/string.h>
-#include <lib/libc/stdiox.h>
 
 namespace std
 {
-
 
 struct ostream_options
 {
@@ -27,6 +25,7 @@ enum OstreamOptions
 
 };
 
+typedef uint8_t* ostream_address_t;
 
 class ostream 
 {
@@ -35,236 +34,25 @@ class ostream
 
     public:
 
-    ostream& operator<<(OstreamOptions x)
-    {
-       
-        if (x == endl)
-            xprintf("\n");
-        
-        else if(x == hex)
-            current_format_option = 'h';
-        
-        else if(x == dec)
-            current_format_option = 'd';
-
-        else if(x == oct)
-            current_format_option = 'o';
-
-        else if(x == bin)
-            current_format_option = 'b';
-        
-        else if(x == clear)
-            screen_clear();
-        
-        else if(x == end_of_text)
-        {
-            current_format_option = 'd';
-        }
-        
-        else 
-            current_format_option = 'd';
-
-        return (ostream&)*this;
-
-    }
-
-
-    ostream& operator<<(uint32_t x)
-    {
-
-        switch(current_format_option)
-        {
-
-            case 'h':
-                xprintf("%x", x);
-                break;
-            case 'o':
-                xprintf("%o", x);
-                break;
-            case 'b':
-                xprintf("%b", x);
-                break;
-
-            case 'd':
-                xprintf("%d", x);
-                break;
-                
-        }
-        return (ostream&)*this;
-    }
-
-    ostream& operator<<(uint32_t* x)
-    {
-
-        switch(current_format_option)
-        {
-
-            case 'h':
-                xprintf("%x", x);
-                break;
-            case 'o':
-                xprintf("%o", x);
-                break;
-            case 'b':
-                xprintf("%b", x);
-                break;
-
-            case 'd':
-                xprintf("%d", x);
-                break;
-                
-        }
-        return (ostream&)*this;
-    }
-
-
-    ostream& operator<<(int x)
-    {
-        switch(current_format_option)
-        {
-
-            case 'h':
-                xprintf("%x", x);
-                break;
-            case 'o':
-                xprintf("%o", x);
-                break;
-            case 'b':
-                xprintf("%b", x);
-                break;
-            case 'd':
-                xprintf("%d", x);
-                break;
-        }
-        return (ostream&)*this;
-    }
-
-    ostream& operator<<(int* x)
-    {
-        switch(current_format_option)
-        {
-
-            case 'h':
-                xprintf("%x", x);
-                break;
-            case 'o':
-                xprintf("%o", x);
-                break;
-            case 'b':
-                xprintf("%b", x);
-                break;
-            case 'd':
-                xprintf("%d", x);
-                break;
-        }
-        return (ostream&)*this;
-    }
-
-
-    ostream& operator<<(char x)
-    {
-        if(x == '\n')
-        {
-            xprintf("\n");
-            return (ostream&)*this;
-        }
-
-        xprintf("%c",x);
-        return (ostream&)*this;
-
-    }
-
-    ostream& operator<<(uint8_t x)
-    {
-        xprintf("%c",x);
-        return (ostream&)*this;
-    }
-
-    ostream& operator<<(uint16_t x)
-    {
-        switch(current_format_option)
-        {
-
-            case 'h':
-                xprintf("%x", x);
-                break;    
-            case 'o':
-                xprintf("%o", x);
-                break;
-            case 'b':
-                xprintf("%b", x);
-                break;
-            case 'd':
-                xprintf("%d", x);
-                break;
-        }
-        return (ostream&)*this;
-    }
-
-    ostream& operator<<(const char* x)
-    {
-        xprintf("%s", x);
-        return (ostream&)*this;
-    }
-
-    ostream& operator<<(const std::string& x)
-    {
-        xprintf("%s", x.c_str());
-        return (ostream&)*this;
-    }
-
-    ostream& operator<<(char* x)
-    {
-        xprintf("%s", x);
-        return (ostream&)*this;
-    }
-
-
-    ostream& operator<<(int16_t x)
-    {
-        switch(current_format_option)
-        {
-
-            case 'h':
-                xprintf("%x", x);
-                break;
-            case 'o':
-                xprintf("%o", x);
-                break;
-            case 'b':
-                xprintf("%b", x);
-                break;
-            case 'd':
-                xprintf("%d", x);
-                break;
-        }
-        return (ostream&)*this;
-
-    }
-
-    ostream& operator<< (CmosTime time)
-    {
-        xprintf("%i:%i:%i", time.hour, time.minutes, time.seconds);
-        return *this;
-    }
-
-    ostream& operator<< (bcd year)
-    {
-        xprintf("%x", year.bcd_num);
-        return *this;
-    }
-
-    void put(char x)
-    {
-        xprintf("%c", x);
-    }
-
-
+    ostream& operator<<(OstreamOptions x);
+    ostream& operator<<(char x);
+    ostream& operator<<(uint8_t x);
+    ostream& operator<<(uint16_t x);
+    ostream& operator<<(int16_t x);
+    ostream& operator<<(int x);
+    ostream& operator<<(uint32_t x);
+    ostream& operator<<(ostream_address_t x);
+    ostream& operator<<(int* x);
+    ostream& operator<<(const char* x);
+    ostream& operator<<(const std::string& x);
+    ostream& operator<<(char* x);
+    ostream& operator<< (const CmosTime& time);
+    ostream& operator<< (const bcd& year);
+    void put(char x);
 
 };
 
-inline ostream cout;
-
+extern ostream cout;
 
 template <class X>
 void print(X&& arg)

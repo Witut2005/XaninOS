@@ -22,6 +22,9 @@ namespace std
 
 
         public:
+
+            fstream(const fstream&) = default;
+
             fstream(char* file_name = NULL, char* flags = NULL)
             {
                 if(file_name != NULL && flags != NULL) 
