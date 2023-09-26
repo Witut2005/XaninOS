@@ -4,72 +4,72 @@
 #include <stdarg.h>
 #include <lib/libcpp/ostream.h>
 #include <lib/libcpp/initializer_list.hpp>
+#include "./iterator.hpp"
 
 namespace std
 {
 
-
 template<class Arr>
-class ArrayIterator
+class ForwardArrayIterator : std::ForwardIterator<Arr>
 {
     public: 
-    
-        using Type = typename Arr::Type;
-
-        ArrayIterator(Type* ptr) : i_ptr(ptr){}
-
-        ArrayIterator& operator ++ ()   //prefix operator
-        {
-            i_ptr++;
-            return *this;
-        }
-
-        ArrayIterator operator ++ (int) //postfix operator
-        {
-            ArrayIterator tmp = *this;
-            ++(this->i_ptr); //++(*this);
-
-            return tmp;
-        }
-
-
-        ArrayIterator& operator -- ()   //prefix operator
-        {
-            i_ptr--;
-            return *this;
-        }
-
-        ArrayIterator operator -- (int) //postfix operator
-        {
-            ArrayIterator tmp = *this;
-            --(this->i_ptr);
-
-            return tmp;
-        }
-
-        uint32_t* operator &()
-        {
-            return (uint32_t*)this;
-        }
-
-        Type& operator *()
-        {
-            return *i_ptr;
-        }
-
-        bool operator == (const ArrayIterator x)
-        {
-            return i_ptr == x.i_ptr;
-        }
-
-        bool operator != (const ArrayIterator x)
-        {
-            return i_ptr != x.i_ptr;
-        }
+    using Type = typename Arr::Type;
 
     private:
-        Type* i_ptr;
+    Type* i_ptr;
 
+    public: 
+
+    ForwardArrayIterator(Type* ptr) : ForwardIterator<Arr>(ptr){this->i_ptr = ptr;}
+
+    ForwardIterator<Arr>& operator ++ (void) override //prefix operator
+    {
+        asm("int 0");
+        i_ptr++;
+        return *this;
+    }
+
+    ForwardIterator<Arr> operator ++ (int) override //postfix operator
+    {
+        ForwardArrayIterator tmp = *this;
+        ++(this->i_ptr); //++(*this);
+
+        return tmp;
+    }
+
+    ForwardIterator<Arr>& operator -- (void) override //prefix operator
+    {
+        i_ptr--;
+        return *this;
+    }
+
+    ForwardIterator<Arr> operator -- (int) override //postfix operator
+    {
+        ForwardArrayIterator tmp = *this;
+        --(this->i_ptr);
+
+        return tmp;
+    }
+
+    Type& operator* (void)
+    {
+        return *i_ptr;
+    }
+
+    bool operator == (const ForwardArrayIterator<Arr>& x)
+    {
+        return i_ptr == x.i_ptr;
+    }
+
+    bool operator != (const ForwardArrayIterator<Arr>& x)
+    {
+        return i_ptr != x.i_ptr;
+    }
+
+    operator bool(void)
+    {
+        return i_ptr != NULL;
+    }
 
 };
 
@@ -84,13 +84,13 @@ class array
     public:
 
     using Type = T;
-    using iterator = ArrayIterator< array<T, SIZE> >;
+    using iterator = ForwardArrayIterator< array<T, SIZE> >;
 
     array(){}
     array(const array& arr) = default;
     array(std::initializer_list<T> a);
-    T* begin();
-    T* end();
+    ForwardArrayIterator<array<T, SIZE>> begin();
+    ForwardArrayIterator<array<T, SIZE>> end();
     T& operator[](int32_t index);
     int find(T key);
     int find_other_than(T key);
@@ -107,13 +107,13 @@ array<T, SIZE>::array(std::initializer_list<T> a)
 }
 
 template <class T, int SIZE>
-T* array<T, SIZE>::begin()
+ForwardArrayIterator<array<T, SIZE>> array<T, SIZE>::begin()
 {
     return &arr[0];
 }
 
 template <class T, int SIZE>
-T* array<T, SIZE>::end()
+ForwardArrayIterator<array<T, SIZE>> array<T, SIZE>::end()
 {
     return &arr[SIZE];
 }

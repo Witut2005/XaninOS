@@ -1,4 +1,3 @@
-
 // #include <sys/devices/nic/ne2000.hpp>
 #include <lib/libcpp/stack.h>
 #include <lib/libcpp/utility.h>
@@ -26,6 +25,7 @@
 #include <lib/screen/screen.h>
 #include <sys/terminal/interpreter/interpreter.h>
 #include <sys/input/input.h>
+#include <lib/libcpp/iterator.hpp>
 
 //TERMINAL_APP
 
@@ -38,6 +38,18 @@ class Test
 
 void cpp_prog()
 {
+
+    // test(ForwardIterator<std::array<int, 10>>(NULL));
+
+    std::array<int, 5> nichini = {1,2,3,4,5};
+
+    for(auto it = nichini.begin(); it != nichini.end(); it++)
+    {
+        getchar();
+        std::cout << *it << std::endl;
+    }
+
+    return;
 
     std::UnorderedMap<char, int> Mapa;
     Mapa.insert('a', 10);
