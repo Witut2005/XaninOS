@@ -7,13 +7,11 @@ namespace std
 template<class Cont>
 class ForwardIterator
 {
-    private:
-    
-    using Type = typename Cont::Type;
-
-    Type* i_ptr;
+    protected:
+    typename Cont::Type* i_ptr;
 
     public:
+    using Type = typename Cont::Type;
 
     ForwardIterator(Type* ptr) {this->i_ptr = ptr;};
     ForwardIterator(const ForwardIterator& other) = default;

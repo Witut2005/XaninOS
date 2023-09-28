@@ -12,20 +12,15 @@ namespace std
 template<class Arr>
 class ForwardArrayIterator : std::ForwardIterator<Arr>
 {
+
     public: 
     using Type = typename Arr::Type;
 
-    private:
-    Type* i_ptr;
-
-    public: 
-
-    ForwardArrayIterator(Type* ptr) : ForwardIterator<Arr>(ptr){this->i_ptr = ptr;}
+    ForwardArrayIterator(Type* ptr) : ForwardIterator<Arr>(ptr){}
 
     ForwardIterator<Arr>& operator ++ (void) override //prefix operator
     {
-        asm("int 0");
-        i_ptr++;
+        this->i_ptr++;
         return *this;
     }
 
@@ -39,7 +34,7 @@ class ForwardArrayIterator : std::ForwardIterator<Arr>
 
     ForwardIterator<Arr>& operator -- (void) override //prefix operator
     {
-        i_ptr--;
+        this->i_ptr--;
         return *this;
     }
 
@@ -53,22 +48,22 @@ class ForwardArrayIterator : std::ForwardIterator<Arr>
 
     Type& operator* (void)
     {
-        return *i_ptr;
+        return *this->i_ptr;
     }
 
     bool operator == (const ForwardArrayIterator<Arr>& x)
     {
-        return i_ptr == x.i_ptr;
+        return this->i_ptr == x.i_ptr;
     }
 
     bool operator != (const ForwardArrayIterator<Arr>& x)
     {
-        return i_ptr != x.i_ptr;
+        return this->i_ptr != x.i_ptr;
     }
 
     operator bool(void)
     {
-        return i_ptr != NULL;
+        return this->i_ptr != NULL;
     }
 
 };
