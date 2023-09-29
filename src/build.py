@@ -177,7 +177,7 @@ builder_options = {
     },
 
     'cc':{
-        'default': '-O0 -fno-exceptions -masm=intel -std=c++17 -Wno-builtin-declaration-mismatch -nostdlib -Wno-unused-function -Wno-write-strings -fno-rtti -fconcepts-ts -I ./ -c'
+        'default': '-O0 -fno-exceptions -masm=intel -std=c++17 -Wno-return-type -Wno-builtin-declaration-mismatch -nostdlib -Wno-unused-function -Wno-write-strings -fno-rtti -fconcepts-ts -I ./ -c'
     }
 }
 

@@ -39,14 +39,15 @@ class Test
 void cpp_prog()
 {
 
-    // test(ForwardIterator<std::array<int, 10>>(NULL));
-
     std::array<int, 5> nichini = {1,2,3,4,5};
 
-    for(auto it = nichini.begin(); it != nichini.end(); it++)
+    std::ForwardIterator&& ite = nichini.begin();
+
+    auto yhy = nichini.slice<std::array<int, 5>, 5>(&ite);
+
+    for(auto a : yhy)
     {
-        getchar();
-        std::cout << *it << std::endl;
+        std::cout << a << std::endl;
     }
 
     return;
