@@ -8,18 +8,23 @@ template<class Cont>
 class ForwardIterator
 {
     protected:
-    typename Cont::Type* i_ptr;
+    typename Cont::value_type* i_ptr;
 
     public:
-    using Type = typename Cont::Type;
+    using value_type = typename Cont::value_type;
 
-    ForwardIterator(Type* ptr) {this->i_ptr = ptr;};
+    ForwardIterator(value_type* ptr) {this->i_ptr = ptr;};
     ForwardIterator(const ForwardIterator& other) = default;
+    
     virtual ForwardIterator<Cont>& operator ++ (void){};
-    virtual ForwardIterator<Cont> operator ++ (int){};
+    virtual ForwardIterator<Cont>&& operator ++ (int){};
     virtual ForwardIterator<Cont>& operator -- (void){};
-    virtual ForwardIterator<Cont> operator -- (int){};
-    virtual Type& operator * (void){};
+    virtual ForwardIterator<Cont>&& operator -- (int){};
+
+    virtual ForwardIterator<Cont>&& operator + (int){};
+    virtual ForwardIterator<Cont>&& operator - (int){};
+
+    virtual value_type& operator * (void){};
     virtual bool operator == (const ForwardIterator<Cont>&){};
     virtual bool operator != (const ForwardIterator<Cont>&){};
     virtual operator bool(void){};
@@ -30,18 +35,18 @@ template<class Cont>
 class ReversedIterator
 {
     protected:
-    typename Cont::Type* i_ptr;
+    typename Cont::value_type* i_ptr;
 
     public:
-    using Type = typename Cont::Type;
+    using value_type = typename Cont::value_type;
 
-    ReversedIterator(Type* ptr) {this->i_ptr = ptr;};
+    ReversedIterator(value_type* ptr) {this->i_ptr = ptr;};
     ReversedIterator(const ReversedIterator& other) = default;
     virtual ReversedIterator<Cont>& operator ++ (void){};
-    virtual ReversedIterator<Cont> operator ++ (int){};
+    virtual ReversedIterator<Cont>&& operator ++ (int){};
     virtual ReversedIterator<Cont>& operator -- (void){};
-    virtual ReversedIterator<Cont> operator -- (int){};
-    virtual Type& operator * (void){};
+    virtual ReversedIterator<Cont>&& operator -- (int){};
+    virtual value_type& operator * (void){};
     virtual bool operator == (const ReversedIterator<Cont>&){};
     virtual bool operator != (const ReversedIterator<Cont>&){};
     virtual operator bool(void){};

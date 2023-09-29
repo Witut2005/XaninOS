@@ -41,14 +41,10 @@ void cpp_prog()
 
     std::array<int, 5> nichini = {1,2,3,4,5};
 
-    std::ForwardIterator&& ite = nichini.begin();
-
-    auto yhy = nichini.slice<std::array<int, 5>, 5>(&ite);
+    auto yhy = nichini.slice<nichini.size() - 4>(nichini.begin() + 2);
 
     for(auto a : yhy)
-    {
         std::cout << a << std::endl;
-    }
 
     return;
 
