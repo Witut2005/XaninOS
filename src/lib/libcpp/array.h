@@ -207,7 +207,8 @@ class array
     using const_lreference_type = const T&;
     using const_rreference_type = const T&&;
 
-    using iterator = ForwardArrayIterator< array<T, SIZE> >;
+    using forward_iterator = ForwardArrayIterator<array<T, SIZE>>;
+    using reversed_iterator = ReversedArrayIterator<array<T, SIZE>>;
 
     array() = default;
     array(const array& arr) = default;
@@ -222,12 +223,27 @@ class array
     std::array<T, SIZE>& operator = (const std::array<T, SIZE>& other) = default;
     lreference_type operator[](int32_t index);
 
+    T get_copy(int32_t index) const;
     int find(T key);
     int find_other_than(T key);
 
     constexpr int size(void) const
     {
         return SIZE;
+    }
+
+    template<int OTHER_SIZE>
+    auto concat(const std::array<T, OTHER_SIZE>& other) 
+    {
+        std::array<T, SIZE + OTHER_SIZE> tmp;
+
+        for(int i = 0; i < SIZE; i++)
+            tmp[i] = other.get_copy(i);
+
+        for(int i = SIZE; i < SIZE + OTHER_SIZE; i++)
+            tmp[i] = other.get_copy(i - SIZE);
+        
+        return tmp;
     }
 
     template<int TO_SIZE>
@@ -295,6 +311,12 @@ T& array<T, SIZE>::operator[](int32_t index)
     if(index < 0)
         return arr[SIZE + index];
     return arr[index];
+}
+
+template <class T, int SIZE>
+T array<T, SIZE>::get_copy(int32_t index) const
+{
+    return this->arr[index];
 }
 
 template <class T, int SIZE>

@@ -19,9 +19,6 @@ class ForwardIterator
     using const_lreference_type = typename Cont::const_lreference_type;
     using const_rreference_type = typename Cont::const_rreference_type;
 
-    // ForwardIterator(value_type* ptr) {this->i_ptr = ptr;};
-    // ForwardIterator(const ForwardIterator& other) = default;
-    
     virtual ForwardIterator<Cont>& operator ++ (void) = 0;
     virtual ForwardIterator<Cont>&& operator ++ (int) = 0;
     virtual ForwardIterator<Cont>& operator -- (void) = 0;
@@ -64,6 +61,9 @@ class ReversedIterator
     virtual ReversedIterator<Cont>&& operator - (int) = 0;
 
     virtual value_type& operator * (void) = 0;
+    
+    // virtual ForwardIterator<Cont>& operator = (ForwardIterator<Cont>&&) = 0;
+
     virtual bool operator == (const ReversedIterator<Cont>&) = 0;
     virtual bool operator != (const ReversedIterator<Cont>&) = 0;
     virtual operator bool(void) = 0;

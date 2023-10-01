@@ -41,12 +41,7 @@ void cpp_prog()
 
     std::array<int, 5> nichini = {1,2,3,4,5};
 
-    auto it = nichini.begin();
-    it = it + 2;
-
-    std::cout << *it << std::endl;
-    auto yhy = nichini.slice<2>(it);
-
+    auto yhy = nichini.concat(nichini);
     
     for(auto a : yhy)
         std::cout << a << std::endl;
