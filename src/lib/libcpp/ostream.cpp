@@ -66,7 +66,6 @@ ostream& ostream::operator<<(int x)
 {
     switch(current_format_option)
     {
-
         case 'h':
             xprintf("%x", x);
             break;

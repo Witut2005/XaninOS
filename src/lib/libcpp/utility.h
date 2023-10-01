@@ -14,7 +14,11 @@ template<class T> struct remove_reference<T&&> { typedef T type; };
 //Typedef doesn't support templates. Use "using" keyword
 template<class T> using remove_reference_t = typename remove_reference<T>::type;
       
+template<class T> struct remove_const { typedef T type; };
+template<class T> struct remove_const<const T> { typedef T type; };
 
+template< class T >
+using remove_const_t = typename remove_const<T>::type;
     
 template<class T>
 constexpr std::remove_reference_t<T>&& move(T&& obj) noexcept

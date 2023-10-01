@@ -23,8 +23,10 @@ class ForwardArrayIterator : public std::ForwardIterator<Arr>
     using const_lreference_type = typename Arr::const_lreference_type;
     using const_rreference_type = typename Arr::const_rreference_type;
 
-    ForwardArrayIterator<Arr>(value_type* ptr) : ForwardIterator<Arr>(ptr){}
-    ForwardArrayIterator<Arr>(const ForwardArrayIterator<Arr>& other) = default;
+    ForwardArrayIterator<Arr>(value_type* ptr){this->i_ptr = ptr;}
+    ForwardArrayIterator<Arr>(const ForwardIterator<Arr>& other) {this->i_ptr = other.i_ptr;}
+    ForwardArrayIterator<Arr>(const ForwardArrayIterator<Arr>& other) {this->i_ptr = other.i_ptr;}
+    // ForwardArrayIterator<Arr>(ForwardIterator<Arr>&& other) 
 
     ForwardIterator<Arr>& operator ++ (void) override //prefix operator
     {
@@ -74,22 +76,27 @@ class ForwardArrayIterator : public std::ForwardIterator<Arr>
         return std::move(tmp);
     }
 
-    lreference_type operator* (void)
+    lreference_type operator* (void) override
     {
         return *this->i_ptr;
     }
 
-    bool operator == (const ForwardArrayIterator<Arr>& x)
+    ForwardIterator<Arr>& operator = (ForwardIterator<Arr>&& other) override 
+    {
+        this->i_ptr = other.i_ptr;
+    }
+
+    bool operator == (const ForwardIterator<Arr>& x) override
     {
         return this->i_ptr == x.i_ptr;
     }
 
-    bool operator != (const ForwardArrayIterator<Arr>& x)
+    bool operator != (const ForwardIterator<Arr>& x) override
     {
         return this->i_ptr != x.i_ptr;
     }
 
-    operator bool(void)
+    operator bool(void) override
     {
         return this->i_ptr != NULL;
     }
@@ -123,7 +130,7 @@ class ReversedArrayIterator : public std::ReversedIterator<Arr>
         --(this->i_ptr); 
         ReversedArrayIterator tmp = *this;
 
-        return tmp;
+        return std::move(tmp);
     }
 
     ReversedIterator<Arr>& operator -- (void) override //prefix operator
@@ -137,25 +144,45 @@ class ReversedArrayIterator : public std::ReversedIterator<Arr>
         ++(this->i_ptr);
         ReversedArrayIterator<Arr> tmp = *this;
 
-        return tmp;
+        return std::move(tmp);
     }
 
-    lreference_type operator* (void)
+    ReversedIterator<Arr>&& operator + (int offset) override 
+    {
+        ReversedArrayIterator tmp = *this;
+
+        for(int i = 0; i < offset; i++)
+            tmp.i_ptr++;
+
+        return std::move(tmp);
+    }
+
+    ReversedIterator<Arr>&& operator - (int offset) override 
+    {
+        ReversedArrayIterator tmp = *this;
+        
+        for(int i = 0; i < offset; i++)
+            tmp.i_ptr--;
+
+        return std::move(tmp);
+    }
+
+    lreference_type operator* (void) override
     {
         return *this->i_ptr;
     }
 
-    bool operator == (const ReversedArrayIterator<Arr>& x)
+    bool operator == (const ReversedIterator<Arr>& x) override
     {
         return this->i_ptr == x.i_ptr;
     }
 
-    bool operator != (const ReversedArrayIterator<Arr>& x)
+    bool operator != (const ReversedIterator<Arr>& x) override
     {
         return this->i_ptr != x.i_ptr;
     }
 
-    operator bool(void)
+    operator bool(void) override
     {
         return this->i_ptr != NULL;
     }
@@ -204,12 +231,13 @@ class array
     }
 
     template<int TO_SIZE>
-    std::array<T, TO_SIZE> slice(ForwardIterator<std::array<T, SIZE>>&& begin) 
+    std::array<T, TO_SIZE> slice(const ForwardIterator<std::array<T, SIZE>>& begin) 
     {
         std::array<T, TO_SIZE> tmp;
+        ForwardArrayIterator<std::array<T, SIZE>> it(begin);
 
-        for(int i = 0; i < TO_SIZE; i++, begin++)
-            tmp[i] = *begin;
+        for(int i = 0; i < TO_SIZE; i++, it++)
+            tmp[i] = *it;
 
         return tmp;
     }
@@ -225,7 +253,6 @@ class array
 
         return tmp;
     }
-
 
 };
 
@@ -290,6 +317,15 @@ int array<T, SIZE>::find_other_than(T key)
             return i;
     }
     return -1;
+}
+
+template<typename T, int SIZE>
+std::array<T, SIZE> to_array(T* ptr)
+{
+    std::array<T, SIZE> arr;
+
+    for(int i = 0; i < SIZE; i++)
+        arr[i] = ptr[i];
 }
 
 }
