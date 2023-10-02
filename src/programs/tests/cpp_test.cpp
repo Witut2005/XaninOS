@@ -43,8 +43,17 @@ void cpp_prog()
 
     auto yhy = nichini.concat(nichini);
     
-    for(auto a : yhy)
-        std::cout << a << std::endl;
+    // for(auto a : yhy)
+    //     std::cout << a << std::endl;
+
+    std::vector<int> vec = {1,2,3};
+    std::vector<int> vec2;
+
+
+    std::cout << vec.pointer_get() << std::endl;
+    vec = std::move(vec);
+    std::cout << vec.pointer_get() << std::endl;
+    std::cout << vec2.pointer_get() << std::endl;
 
     return;
 
