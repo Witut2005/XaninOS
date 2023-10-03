@@ -1,5 +1,6 @@
 
 #include <lib/libc/stdiox.h>
+#include <lib/libc/math.h>
 #include "./ostream.h"
 
 namespace std 
@@ -64,6 +65,12 @@ ostream& ostream::operator<<(uint32_t x)
 
 ostream& ostream::operator<<(int x)
 {
+    if(x < 0)
+    {
+        putchar('-');
+        x = abs(x);
+    }
+
     switch(current_format_option)
     {
         case 'h':

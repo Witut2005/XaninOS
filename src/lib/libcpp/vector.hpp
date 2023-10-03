@@ -1,6 +1,7 @@
 
 #include <stdint.h>
 #include <lib/libc/stdlibx.h>
+#include <lib/libc/math.h>
 #include <lib/libcpp/initializer_list.hpp>
 #include <lib/libcpp/algorithm.h>
 #include <lib/libcpp/utility.h>
@@ -58,9 +59,7 @@ class ForwardVectorIterator : public std::ForwardIterator<Vec>
     ForwardIterator<Vec>&& operator + (int offset) override 
     {
         ForwardArrayIterator tmp = *this;
-
-        for(int i = 0; i < offset; i++)
-            tmp.i_ptr++;
+        tmp.i_ptr = tmp.i_ptr + offset;
 
         return std::move(tmp);
     }
@@ -68,9 +67,7 @@ class ForwardVectorIterator : public std::ForwardIterator<Vec>
     ForwardIterator<Vec>&& operator - (int offset) override 
     {
         ForwardArrayIterator tmp = *this;
-        
-        for(int i = 0; i < offset; i++)
-            tmp.i_ptr--;
+        tmp.i_ptr = tmp.i_ptr - offset;
 
         return std::move(tmp);
     }
@@ -149,9 +146,7 @@ class ReversedVectorIterator : public std::ReversedIterator<Vec>
     ReversedIterator<Vec>&& operator + (int offset) override 
     {
         ReversedVectorIterator tmp = *this;
-
-        for(int i = 0; i < offset; i++)
-            tmp.i_ptr++;
+        tmp.i_ptr = tmp.i_ptr + offset;
 
         return std::move(tmp);
     }
@@ -159,10 +154,8 @@ class ReversedVectorIterator : public std::ReversedIterator<Vec>
     ReversedIterator<Vec>&& operator - (int offset) override 
     {
         ReversedVectorIterator tmp = *this;
+        tmp.i_ptr = tmp.i_ptr - offset;
         
-        for(int i = 0; i < offset; i++)
-            tmp.i_ptr--;
-
         return std::move(tmp);
     }
 
@@ -212,13 +205,13 @@ public:
     using reversed_iterator = ReversedArrayIterator<vector<T>>;
 
     vector();
-    vector(const vector<T>& other) =  default;
-    vector(vector<T>&& other);
-    vector (std::initializer_list<T> items);
-    ~vector();
+    vector(const vector<T>& other) =  default; // copy constructor
+    vector(vector<T>&& other); // move constructor
+    vector (std::initializer_list<T> items); 
+    ~vector(); 
 
-    std::vector<T>& operator = (const vector<T>& other) = default;
-    std::vector<T>& operator = (vector<T>&& other);
+    std::vector<T>& operator = (const vector<T>& other) = default; // copy assigment operator
+    std::vector<T>& operator = (vector<T>&& other); // move assigment operator
 
     T* pointer_get(void) override;
 
@@ -232,7 +225,7 @@ public:
 
     T& front(void) override;
     T& back(void) override;
-    T& operator [](int32_t index) override;
+    T& operator [](int index) override;
 
     int size(void) override;
     // void print(void) override;
@@ -343,9 +336,20 @@ T& vector<T>::back(void)
 }
 
 template<typename T>
-T& vector<T>::operator [](int32_t index)
+T& vector<T>::operator [](int index)
 {
-    if(index > (this->v_size - 1))
+
+
+    if(index < 0)
+    {
+        if(abs(index) > this->v_size) 
+            return *ptr;
+        std::cout << index << std::endl;
+        // while(1);
+        return *(this->rbegin() + abs(index + 1));
+    }
+
+    else if(index > (this->v_size - 1))
         return *this->end();
     
     return *(this->ptr+index);

@@ -224,7 +224,7 @@ class array : Container<T>
     T* pointer_get(void) override;
 
     std::array<T, SIZE>& operator = (const std::array<T, SIZE>& other) = default;
-    lreference operator[](int32_t index);
+    lreference operator[](int index);
 
     T get_copy(int32_t index) const;
     int find(T key);
@@ -313,7 +313,7 @@ constexpr ReversedArrayIterator<array<T, SIZE>> array<T, SIZE>::rend()
 }
 
 template <class T, int SIZE>
-T& array<T, SIZE>::operator[](int32_t index)
+T& array<T, SIZE>::operator[](int index)
 {
     if(index < 0)
         return arr[SIZE + index];
