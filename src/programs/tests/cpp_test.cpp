@@ -46,7 +46,7 @@ void cpp_prog()
     // for(auto a : yhy)
     //     std::cout << a << std::endl;
 
-    std::vector<int> vec = {};
+    std::vector<int> vec;
 
     for(int i = 0; i < 10; i++)
         vec.push_back(i);

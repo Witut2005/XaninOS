@@ -5,6 +5,7 @@
 #include <lib/libcpp/ostream.h>
 #include <lib/libcpp/utility.h>
 #include <lib/libcpp/initializer_list.hpp>
+#include <lib/libcpp/container.hpp>
 #include "./iterator.hpp"
 
 namespace std
@@ -17,11 +18,11 @@ class ForwardArrayIterator : public std::ForwardIterator<Arr>
     public: 
     using value_type = typename Arr::value_type;
 
-    using lreference_type = typename Arr::lreference_type;
-    using rreference_type = typename Arr::rreference_type;
+    using lreference = typename Arr::lreference;
+    using rreference = typename Arr::rreference;
 
-    using const_lreference_type = typename Arr::const_lreference_type;
-    using const_rreference_type = typename Arr::const_rreference_type;
+    using const_lreference = typename Arr::const_lreference;
+    using const_rreference = typename Arr::const_rreference;
 
     ForwardArrayIterator<Arr>(value_type* ptr){this->i_ptr = ptr;}
     ForwardArrayIterator<Arr>(const ForwardIterator<Arr>& other) {this->i_ptr = other.i_ptr;}
@@ -76,7 +77,7 @@ class ForwardArrayIterator : public std::ForwardIterator<Arr>
         return std::move(tmp);
     }
 
-    lreference_type operator* (void) override
+    lreference operator* (void) override
     {
         return *this->i_ptr;
     }
@@ -110,11 +111,11 @@ class ReversedArrayIterator : public std::ReversedIterator<Arr>
     public: 
     using value_type = typename Arr::value_type;
 
-    using lreference_type = typename Arr::lreference_type;
-    using rreference_type = typename Arr::rreference_type;
+    using lreference = typename Arr::lreference;
+    using rreference = typename Arr::rreference;
 
-    using const_lreference_type = typename Arr::const_lreference_type;
-    using const_rreference_type = typename Arr::const_rreference_type;
+    using const_lreference = typename Arr::const_lreference;
+    using const_rreference = typename Arr::const_rreference;
 
     ReversedArrayIterator(value_type* ptr) : ReversedIterator<Arr>(ptr){}
     ReversedArrayIterator(const ReversedArrayIterator<Arr>& other) : ReversedIterator<Arr>(other){}
@@ -167,7 +168,7 @@ class ReversedArrayIterator : public std::ReversedIterator<Arr>
         return std::move(tmp);
     }
 
-    lreference_type operator* (void) override
+    lreference operator* (void) override
     {
         return *this->i_ptr;
     }
@@ -191,7 +192,7 @@ class ReversedArrayIterator : public std::ReversedIterator<Arr>
 
 
 template <class T, int SIZE>
-class array
+class array : Container<T>
 {
 
     private:
@@ -201,11 +202,11 @@ class array
 
     using value_type = T;
 
-    using lreference_type = T&;
-    using rreference_type = T&&;
+    using lreference = T&;
+    using rreference = T&&;
 
-    using const_lreference_type = const T&;
-    using const_rreference_type = const T&&;
+    using const_lreference = const T&;
+    using const_rreference = const T&&;
 
     using forward_iterator = ForwardArrayIterator<array<T, SIZE>>;
     using reversed_iterator = ReversedArrayIterator<array<T, SIZE>>;
@@ -220,14 +221,19 @@ class array
     constexpr reversed_iterator rbegin();
     constexpr reversed_iterator rend();
 
+    T* pointer_get(void) override;
+
     std::array<T, SIZE>& operator = (const std::array<T, SIZE>& other) = default;
-    lreference_type operator[](int32_t index);
+    lreference operator[](int32_t index);
 
     T get_copy(int32_t index) const;
     int find(T key);
     int find_other_than(T key);
 
-    constexpr int size(void) const
+    T& front(void) override;
+    T& back(void) override;
+
+    constexpr int size(void) override
     {
         return SIZE;
     }
@@ -270,7 +276,7 @@ class array
         return tmp;
     }
 
-    void print(void);
+    // void print(void);
 };
 
 template <class T, int SIZE>
@@ -343,32 +349,51 @@ int array<T, SIZE>::find_other_than(T key)
 }
 
 template<typename T, int SIZE>
+T* array<T, SIZE>::pointer_get(void) 
+{
+    return this->arr;
+}
+
+template<typename T, int SIZE>
+T& array<T, SIZE>::front(void) 
+{
+    return this->arr[0];
+}
+
+template<typename T, int SIZE>
+T& array<T, SIZE>::back(void) 
+{
+    return this->arr[SIZE - 1];
+}
+
+// template<typename T, int SIZE>
+// void array<T, SIZE>::print(void)
+// {
+
+//     if(!this->size())
+//     {
+//         std::cout << "[]" << std::endl;
+//         return;
+//     }
+
+//     std::cout << "[";
+//     auto it = this->begin();
+
+//     for(; it != this->end()-2; it++)
+//         std::cout << *it << ", ";
+    
+//     std::cout << *(it + 1);
+//     std::cout << "]";
+// }
+
+//global scope functions
+template<typename T, int SIZE>
 std::array<T, SIZE> to_array(T* ptr)
 {
     std::array<T, SIZE> arr;
 
     for(int i = 0; i < SIZE; i++)
         arr[i] = ptr[i];
-}
-
-template<typename T, int SIZE>
-void array<T, SIZE>::print(void)
-{
-
-    if(!this->size)
-    {
-        std::cout << "[]" << std::endl;
-        return;
-    }
-
-    std::cout << "[";
-    auto it = this->begin();
-
-    for(; it != this->end()-2; it++)
-        std::cout << *it << ", ";
-    
-    std::cout << *(it + 1);
-    std::cout << "]";
 }
 
 }

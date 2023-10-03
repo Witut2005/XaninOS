@@ -13,11 +13,11 @@ class ForwardIterator
     public:
     using value_type = typename Cont::value_type;
 
-    using lreference_type = typename Cont::lreference_type;
-    using rreference_type = typename Cont::rreference_type;
+    using lreference = typename Cont::lreference;
+    using rreference = typename Cont::rreference;
 
-    using const_lreference_type = typename Cont::const_lreference_type;
-    using const_rreference_type = typename Cont::const_rreference_type;
+    using const_lreference = typename Cont::const_lreference;
+    using const_rreference = typename Cont::const_rreference;
 
     virtual ForwardIterator<Cont>& operator ++ (void) = 0;
     virtual ForwardIterator<Cont>&& operator ++ (int) = 0;
