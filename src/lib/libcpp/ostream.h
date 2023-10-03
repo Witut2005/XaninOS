@@ -22,7 +22,6 @@ enum OstreamOptions
     oct = 'o',
     bin = 'b',
     clear ='c'
-
 };
 
 typedef uint8_t* ostream_address_t;

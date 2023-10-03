@@ -196,10 +196,9 @@ class vector
     
 private:
     T* ptr;
-    uint32_t size;
+    uint32_t size = 0;
     
 public:
-    
     using value_type = T;
 
     using lreference_type = T&;
@@ -211,108 +210,159 @@ public:
     using forward_iterator = ForwardArrayIterator<vector<T>>;
     using reversed_iterator = ReversedArrayIterator<vector<T>>;
 
-    vector()
-    {
-        this->ptr = (T*)calloc(SIZE_OF(T));
-        this->size = 0;
-    }
-
+    vector();
     vector(const vector<T>& other) =  default;
+    vector(vector<T>&& other);
+    vector (std::initializer_list<T> items);
+    ~vector();
 
-    vector(vector<T>&& other) 
-    {
-        this->ptr = other.ptr;
-        other.ptr = NULL;
-        other.size = 0;
-    }
+    std::vector<T>& operator = (const vector<T>& other) = default;
+    std::vector<T>& operator = (vector<T>&& other);
 
-    vector (std::initializer_list<T> items)
-    {
-        this->ptr = (T*)calloc(SIZE_OF(T) * items.size());
-        int index = 0;
-        for(auto it = items.begin(); it != items.end(); it++, index++)
-            this->ptr[index] = *it;
+    T* pointer_get(void);
+    forward_iterator begin(void);
+    forward_iterator end(void);
+    reversed_iterator rbegin(void);
+    reversed_iterator rend(void);
 
-        this->size = items.size();
-    }
-    
-    ~vector()
-    {
-        free(this->ptr);
-    }
-
-    std::vector<T>& operator = (const std::vector<T>& other) = default;
-    std::vector<T>& operator = (std::vector<T>&& other)
-    {
-        this->ptr = other.ptr;
-        other.ptr = NULL;
-        other.size = 0;
-    }
-
-    T* pointer_get(void)
-    {
-        return this->ptr;
-    }
-    
-    T* begin(void)
-    {
-        return ptr;
-    }
-    
-    T* end(void)
-    {
-        return ptr + this->size;
-    }
-    
-    void push(T item)
-    {
-        ptr = (T*)realloc(ptr, SIZE_OF(T) * this->size);
-        ptr[size++] = item;
-    }
-
-    void pop(void)
-    {
-        if(!this->size)
-            return;
-        
-        T tmp = *(ptr + this->size - 1);
-        *(ptr + this->size - 1) = (T)NULL;
-        ptr = (T*)realloc(ptr, SIZE_OF(T) * (--this->size));
-    }
-
-    T& front(void)
-    {
-        return this->ptr[0];
-    }
-
-    T& back(void)
-    {
-        return this->ptr[this->size - 1];
-    }
-    
-    T& operator [](uint32_t index)
-    {
-        if(index > (this->size - 1))
-            return *this->end();
-        
-        return *(ptr+index);
-    }
-    
-    
-    void print(void)
-    {
-        std::cout << "[";
-        T* it;
-        for(it = this->begin(); it != this->end()-1; it++)
-        {
-            std::cout << *it << ", ";
-        }
-        
-        std::cout << *it;
-        std::cout << "]";
-    }
-    
-    
+    void push_back(T item);
+    void pop_back(void);
+    T& front(void);
+    T& back(void);
+    T& operator [](uint32_t index);
+    void print(void);
 };
+
+template<typename T>
+vector<T>::vector()
+{
+    this->ptr = (T*)calloc(SIZE_OF(T));
+}
+
+template<typename T>
+vector<T>::vector(vector<T>&& other) 
+{
+    *this = (const vector<T>&)other;
+
+    other.ptr = NULL;
+    other.size = 0;
+}
+
+template<typename T>
+vector<T>::vector (std::initializer_list<T> items)
+{
+    this->ptr = (T*)calloc(SIZE_OF(T) * items.size());
+    int index = 0;
+    for(auto it = items.begin(); it != items.end(); it++, index++)
+        this->ptr[index] = *it;
+
+    this->size = items.size();
+}
+
+template<typename T>
+vector<T>::~vector()
+{
+    free(this->ptr);
+}
+
+template<typename T>
+vector<T>& vector<T>::operator = (std::vector<T>&& other)
+{
+    if(this == &other)
+        return *this;
+
+    *this = (const vector<T>&)other;
+
+    other.ptr = NULL;
+    other.size = 0;
+}
+
+template<typename T>
+T* vector<T>::pointer_get(void)
+{
+    return this->ptr;
+}
+
+template<typename T>
+typename vector<T>::forward_iterator vector<T>::begin(void)
+{
+    return this->ptr;
+}
+
+template<typename T>
+typename vector<T>::forward_iterator vector<T>::end(void)
+{
+    return this->ptr + this->size;
+}
+
+template<typename T>
+typename vector<T>::reversed_iterator vector<T>::rbegin(void)
+{
+    return this->ptr + this->size - 1;
+}
+
+template<typename T>
+typename vector<T>::reversed_iterator vector<T>::rend(void)
+{
+    return this->ptr - 1;
+}
+
+template<typename T>
+void vector<T>::push_back(T item)
+{
+    this->ptr = (T*)realloc(this->ptr, SIZE_OF(T) * this->size);
+    ptr[this->size++] = item;
+}
+
+template<typename T>
+void vector<T>::pop_back(void)
+{
+    if(!this->size)
+        return;
+    
+    T tmp = *(this->ptr + this->size - 1);
+    *(this->ptr + this->size - 1) = (T)NULL;
+    this->ptr = (T*)realloc(this->ptr, SIZE_OF(T) * (--this->size));
+}
+
+template<typename T>
+T& vector<T>::front(void)
+{
+    return this->ptr[0];
+}
+
+template<typename T>
+T& vector<T>::back(void)
+{
+    return this->ptr[this->size - 1];
+}
+
+template<typename T>
+T& vector<T>::operator [](uint32_t index)
+{
+    if(index > (this->size - 1))
+        return *this->end();
+    
+    return *(this->ptr+index);
+}
+
+template<typename T>
+void vector<T>::print(void)
+{
+    if(!this->size)
+    {
+        std::cout << "[]" << std::endl;
+        return;
+    }
+
+    std::cout << "[";
+
+    auto it = this->begin();
+    for(; it != this->end()-1; it++)
+        std::cout << *it << ", ";
+    
+    std::cout << *it;
+    std::cout << "]";
+}
 
 }

@@ -214,11 +214,11 @@ class array
     array(const array& arr) = default;
     array(std::initializer_list<T> a);
 
-    constexpr ForwardArrayIterator<array<T, SIZE>> begin();
-    constexpr ForwardArrayIterator<array<T, SIZE>> end();
+    constexpr forward_iterator begin();
+    constexpr forward_iterator end();
 
-    constexpr ReversedArrayIterator<array<T, SIZE>> rbegin();
-    constexpr ReversedArrayIterator<array<T, SIZE>> rend();
+    constexpr reversed_iterator rbegin();
+    constexpr reversed_iterator rend();
 
     std::array<T, SIZE>& operator = (const std::array<T, SIZE>& other) = default;
     lreference_type operator[](int32_t index);
@@ -270,6 +270,7 @@ class array
         return tmp;
     }
 
+    void print(void);
 };
 
 template <class T, int SIZE>
@@ -348,6 +349,26 @@ std::array<T, SIZE> to_array(T* ptr)
 
     for(int i = 0; i < SIZE; i++)
         arr[i] = ptr[i];
+}
+
+template<typename T, int SIZE>
+void array<T, SIZE>::print(void)
+{
+
+    if(!this->size)
+    {
+        std::cout << "[]" << std::endl;
+        return;
+    }
+
+    std::cout << "[";
+    auto it = this->begin();
+
+    for(; it != this->end()-2; it++)
+        std::cout << *it << ", ";
+    
+    std::cout << *(it + 1);
+    std::cout << "]";
 }
 
 }

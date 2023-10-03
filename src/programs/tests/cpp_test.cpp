@@ -46,14 +46,15 @@ void cpp_prog()
     // for(auto a : yhy)
     //     std::cout << a << std::endl;
 
-    std::vector<int> vec = {1,2,3};
-    std::vector<int> vec2;
+    std::vector<int> vec = {};
 
+    for(int i = 0; i < 10; i++)
+        vec.push_back(i);
 
-    std::cout << vec.pointer_get() << std::endl;
-    vec = std::move(vec);
-    std::cout << vec.pointer_get() << std::endl;
-    std::cout << vec2.pointer_get() << std::endl;
+    for(int i = 0; i < 9; i++)
+        vec.pop_back();
+
+    std::cout << vec.back() << std::endl;
 
     return;
 
