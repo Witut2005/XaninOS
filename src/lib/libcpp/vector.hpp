@@ -28,6 +28,11 @@ class ForwardVectorIterator : public std::ForwardIterator<Vec>
     ForwardVectorIterator<Vec>(const ForwardArrayIterator<Vec>& other) {this->i_ptr = other.i_ptr;}
     // ForwardArrayIterator<Arr>(ForwardIterator<Arr>&& other) 
 
+    constexpr const char* type_info(void)
+    {
+        return "ForwardVectorIterator";
+    }
+
     ForwardIterator<Vec>& operator ++ (void) override //prefix operator
     {
         this->i_ptr++;
@@ -112,6 +117,11 @@ class ReversedVectorIterator : public std::ReversedIterator<Vec>
     using const_lreference = typename Vec::const_lreference;
     using const_rreference = typename Vec::const_rreference;
 
+    constexpr const char* type_info(void)
+    {
+        return "ReversedVectorIterator";
+    }
+
     ReversedVectorIterator(value_type* ptr) : ReversedIterator<Vec>(ptr){}
     ReversedVectorIterator(const ReversedArrayIterator<Vec>& other) : ReversedIterator<Vec>(other){}
 
@@ -124,7 +134,7 @@ class ReversedVectorIterator : public std::ReversedIterator<Vec>
     ReversedIterator<Vec>&& operator ++ (int) override //postfix operator
     {
         --(this->i_ptr); 
-        ReversedArrayIterator tmp = *this;
+        ReversedVectorIterator tmp = *this;
 
         return std::move(tmp);
     }
@@ -201,8 +211,8 @@ public:
     using const_lreference = const T&;
     using const_rreference = const T&&;
 
-    using forward_iterator = ForwardArrayIterator<vector<T>>;
-    using reversed_iterator = ReversedArrayIterator<vector<T>>;
+    using forward_iterator = ForwardVectorIterator<vector<T>>;
+    using reversed_iterator = ReversedVectorIterator<vector<T>>;
 
     vector();
     vector(const vector<T>& other) =  default; // copy constructor
@@ -284,25 +294,25 @@ T* vector<T>::pointer_get(void)
 template<typename T>
 typename vector<T>::forward_iterator vector<T>::begin(void)
 {
-    return this->ptr;
+    return vector<T>::forward_iterator(this->ptr);
 }
 
 template<typename T>
 typename vector<T>::forward_iterator vector<T>::end(void)
 {
-    return this->ptr + this->v_size;
+    return vector<T>::forward_iterator(this->ptr + this->v_size);
 }
 
 template<typename T>
 typename vector<T>::reversed_iterator vector<T>::rbegin(void)
 {
-    return this->ptr + this->v_size - 1;
+    return vector<T>::reversed_iterator(this->ptr + this->v_size - 1);
 }
 
 template<typename T>
 typename vector<T>::reversed_iterator vector<T>::rend(void)
 {
-    return this->ptr - 1;
+    return vector<T>::reversed_iterator(this->ptr - 1);
 }
 
 template<typename T>
@@ -339,17 +349,15 @@ template<typename T>
 T& vector<T>::operator [](int index)
 {
 
-
     if(index < 0)
     {
         if(abs(index) > this->v_size) 
             return *ptr;
-        std::cout << index << std::endl;
-        // while(1);
-        return *(this->rbegin() + abs(index + 1));
+
+        return *(this->end() + index);
     }
 
-    else if(index > (this->v_size - 1))
+    else if(index >= this->v_size)
         return *this->end();
     
     return *(this->ptr+index);

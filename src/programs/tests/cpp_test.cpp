@@ -51,7 +51,9 @@ void cpp_prog()
     for(int i = 0; i < 10; i++)
         vec.push_back(i);
 
-    std::cout << vec[-3] << std::endl;
+    std::cout << vec[-10] << std::endl;
+    std::cout << vec[0] << std::endl;
+    std::cout << *(vec.end() + (-10)) << std::endl;
 
     return;
 

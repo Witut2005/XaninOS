@@ -38,6 +38,9 @@ class ForwardIterator
     template <class Arr>
     friend class ForwardArrayIterator;
 
+    template <class Vec>
+    friend class ForwardVectorIterator;
+
 };
 
 template<class Cont>
@@ -70,6 +73,9 @@ class ReversedIterator
 
     template <class Arr>
     friend class ReversedArrayIterator;
+
+    template <class Vec>
+    friend class ReversedVectorIterator;
 
 };
 
