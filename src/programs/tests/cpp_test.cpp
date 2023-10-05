@@ -26,6 +26,7 @@
 #include <sys/terminal/interpreter/interpreter.h>
 #include <sys/input/input.h>
 #include <lib/libcpp/iterator.hpp>
+#include <lib/libcpp/list_copy.h>
 
 //TERMINAL_APP
 
