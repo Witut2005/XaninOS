@@ -41,6 +41,9 @@ class ForwardIterator
     template <class Vec>
     friend class ForwardVectorIterator;
 
+    template <class Li>
+    friend class ForwardListIterator;
+
 };
 
 template<class Cont>

@@ -2,7 +2,6 @@
 #pragma once
 
 #include <lib/libc/stdlibx.h>
-#include <lib/libcpp/iostream.h>
 #include <lib/libcpp/initializer_list.hpp>
 #include <lib/libcpp/type_traits.h>
 #include <lib/libcpp/iterator.hpp>
@@ -18,7 +17,9 @@ class ForwardListIterator : public ForwardIterator<Li>
     
         using Type = typename Li::value_type;
 
-        ForwardListIterator(Type* ptr) {this->i_ptr = ptr;}
+        ForwardListIterator<Li>(Type* ptr) {this->i_ptr = ptr;}
+        ForwardListIterator<Li>(const ForwardIterator<Li>& other) {this->i_ptr = other.i_ptr;} 
+        ForwardListIterator<Li>(const ForwardListIterator<Li>& other) {this->i_ptr = other.i_ptr;}
 
         ForwardListIterator<Li>& operator ++ () override
         {
@@ -26,41 +27,63 @@ class ForwardListIterator : public ForwardIterator<Li>
             return *this;
         }
 
-        ForwardListIterator<Li>&& operator ++ (int) override
+        ForwardIterator<Li>&& operator ++ (int) override
         {
-            ListIterator tmp = *this;
+            ForwardListIterator<Li> tmp = *this;
             this->i_ptr = this->i_ptr->next; 
 
-            return tmp;
+            return std::move(tmp);
         }
 
-        ForwardListIterator<Li>& operator -- () override 
+        ForwardIterator<Li>& operator -- () override 
         {
             this->i_ptr = this->i_ptr->previous;
             return *this;
         }
 
-        ForwardListIterator<Li>&& operator -- (int) override
+        ForwardIterator<Li>&& operator -- (int) override
         {
-            ListIterator tmp = *this;
+            ForwardListIterator tmp = *this;
             this->i_ptr = this->i_ptr->previous; 
 
-            return tmp;
+            return std::move(tmp);
         }
 
-        bool operator == (const ForwardListIterator<Li>& other) override
+        ForwardIterator<Li>&& operator + (int) 
         {
-            return ((uint32_t)this->i_ptr == (uint32_t)other.i_ptr);
+            ForwardListIterator<Li>tmp(nullptr);
+            return std::move(tmp);
+        }
+        ForwardIterator<Li>&& operator - (int) 
+        {
+            ForwardListIterator<Li>tmp(nullptr);
+            return std::move(tmp);
         }
 
-        bool operator != (const ForwardListIterator<Li>& other) override
+        ForwardIterator<Li>& operator = (ForwardIterator<Li>&&) 
         {
-            return ((uint32_t)this->i_ptr != (uint32_t)other.i_ptr);
+            return *this;
+            // return ForwardListIterator<Li>(nullptr);
+        }
+
+        bool operator == (const ForwardIterator<Li>& other) override
+        {
+            return this->i_ptr == other.i_ptr;
+        }
+
+        bool operator != (const ForwardIterator<Li>& other) override
+        {
+            return this->i_ptr != other.i_ptr;
+        }
+
+        operator bool(void)
+        {
+            return this->i_ptr != NULL;
         }
 
         Type& operator * () override
         {
-            return this->i_ptr->value;
+            return *this->i_ptr;
         }
 };
 
@@ -135,12 +158,12 @@ class ListC
 
     using ListNode = ListElement<T>;
 
-    ListNode  Head;
+    ListNode*  Head;
     uint32_t li_size;
     ListNode* goto_last_element(void);
 
     public:
-    using value_type = ListElement<T>*;
+    using value_type = ListElement<T>;
     using this_type = ListC<T>;
 
     using lreference = T&;
@@ -192,7 +215,7 @@ ListC<T>::ListC()
 template<typename T>
 ListC<T>::ListC(std::initializer_list<T> items)
 {
-    this->size = 0;
+    this->li_size = 0;
     this->Head = (ListNode*)malloc(SIZE_OF(ListNode));
     this->Head->next = NULL;
     this->Head->previous = NULL;
@@ -215,13 +238,13 @@ typename ListC<T>::ListNode* ListC<T>::goto_last_element(void)
 template<typename T>
 ForwardListIterator<ListC<T>> ListC<T>::begin()
 {
-    return ForwardListIterator<ListC<T>>(this->Head);
+    return this->Head;
 }
 
 template<typename T>
 ForwardListIterator<ListC<T>> ListC<T>::end()
 {
-    return ForwardListIterator<ListC<T>>(nullptr);
+    return nullptr;
 }
 
 
@@ -236,17 +259,25 @@ template<typename T>
 void ListC<T>::push_back(T value)
 {
 
-    ListNode* Tail = this->goto_last_element();
+    ListNode* Tail;
+    ListNode* ElementCreated;;
+    
+    auto lam = (this->li_size == 0) ? [&](){
+        Tail = NULL;
+        // ElementCreated = Tail = this->Head;
+    } : [&](){
+        Tail = NULL;
+        // Tail = this->goto_last_element();
+        // Tail->next = (ListNode*)calloc(SIZE_OF(ListNode));
 
-    this->Tail->next = (ListNode*)calloc(SIZE_OF(ListNode));
-    auto ElementCreated = this->Tail->next;
+        // ElementCreated = Tail->next;
+    };
 
+    // ElementCreated->next already set to NULL
     ElementCreated->value = value;
     ElementCreated->previous = Tail;
-    ElementCreated->next = NULL;
 
     this->li_size++;
-    this->Tail = this->Tail->next;
 }
 
 template<typename T>
@@ -275,25 +306,25 @@ void ListC<T>::pop_back(void)
     free(Tmp);
 }
 
-template<typename T>
-void ListC<T>::print(void)
-{
+// template<typename T>
+// void ListC<T>::print(void)
+// {
 
-    if(!this->li_size)
-    {
-        std::cout << "[]";
-        return;
-    }
+//     if(!this->li_size)
+//     {
+//         std::cout << "[]";
+//         return;
+//     }
 
-    ListElement<T>* tmp = this->Head;
-    std::cout << '[';
-    while(tmp->next != NULL)
-    {
-        std::cout << tmp->value << ',';
-        tmp = tmp->next;
-    }
-    std::cout << tmp->value << ']';
-    std::cout << std::endl;
-}
+//     ListElement<T>* tmp = this->Head;
+//     std::cout << '[';
+//     while(tmp->next != NULL)
+//     {
+//         std::cout << tmp->value << ',';
+//         tmp = tmp->next;
+//     }
+//     std::cout << tmp->value << ']';
+//     std::cout << std::endl;
+// }
 
 }

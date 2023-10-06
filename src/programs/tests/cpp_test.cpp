@@ -37,9 +37,8 @@ class Test
     void print(int x, int y) { std::cout << std::dec << "CLASS: " << (int)x << ", " << (int)y << std::endl; }
 };
 
-void cpp_prog()
+static inline void vec_test(void)
 {
-
     std::array<int, 5> nichini = {1,2,3,4,5};
 
     auto yhy = nichini.concat(nichini);
@@ -57,6 +56,28 @@ void cpp_prog()
     std::cout << *(vec.end() + (-10)) << std::endl;
 
     return;
+}
+
+static inline void list_test(void)
+{
+    std::ListC<int> li;// = {1,2,3};
+
+    li.push_back(1);
+    li.push_back(2);
+
+    auto it = li.begin();
+    it++;
+    std::cout << (*it).value << std::endl;
+    std::cout << li.size() << std::endl;
+
+}
+
+void cpp_prog()
+{
+
+    //vec_test();
+    list_test();
+
 
     // std::UnorderedMap<char, int> Mapa;
     // Mapa.insert('a', 10);
