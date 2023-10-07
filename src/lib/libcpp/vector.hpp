@@ -82,9 +82,17 @@ class ForwardVectorIterator : public std::ForwardIterator<Vec>
         return *this->i_ptr;
     }
 
+    ForwardIterator<Vec>& operator = (const ForwardIterator<Vec>& other) override 
+    {
+        *this = other;
+        return *this;
+    }
+
     ForwardIterator<Vec>& operator = (ForwardIterator<Vec>&& other) override 
     {
-        this->i_ptr = other.i_ptr;
+        *this = other;
+        other.i_ptr = NULL;
+        return *this;
     }
 
     bool operator == (const ForwardIterator<Vec>& x) override

@@ -60,20 +60,14 @@ static inline void vec_test(void)
 
 static inline void list_test(void)
 {
-    std::ListC<int> li;// = {1,2,3};
+    std::ListC<int> li = {1,2,3};
 
-    li.push_back(1);
-    li.push_back(2);
-    li.push_front(3); // [3, 1, 2]
 
-    li.print();
+    for(auto a : li)
+    {
+        std::cout << a.value << std::endl;
+    }
 
-    li.pop_front();
-    li.pop_back();
-
-    auto it = li.begin();
-    std::cout << (*it).value << std::endl;
-    std::cout << li.size() << std::endl;
 
 }
 

@@ -29,6 +29,7 @@ class ForwardIterator
 
     virtual value_type& operator * (void) = 0;
 
+    virtual ForwardIterator<Cont>& operator = (const ForwardIterator<Cont>& other) = 0;
     virtual ForwardIterator<Cont>& operator = (ForwardIterator<Cont>&&) = 0;
 
     virtual bool operator == (const ForwardIterator<Cont>&) = 0;

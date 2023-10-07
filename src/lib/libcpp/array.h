@@ -82,9 +82,17 @@ class ForwardArrayIterator : public std::ForwardIterator<Arr>
         return *this->i_ptr;
     }
 
+    ForwardIterator<Arr>& operator = (const ForwardIterator<Arr>& other) override 
+    {
+        *this = other;
+        return *this;
+    }
+
     ForwardIterator<Arr>& operator = (ForwardIterator<Arr>&& other) override 
     {
-        this->i_ptr = other.i_ptr;
+        *this = other;
+        other.i_ptr = NULL;
+        return *this;
     }
 
     bool operator == (const ForwardIterator<Arr>& x) override

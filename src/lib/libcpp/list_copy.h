@@ -18,11 +18,11 @@ class ForwardListIterator : public ForwardIterator<Li>
     
         using Type = typename Li::value_type;
 
-        ForwardListIterator<Li>(Type* ptr) {this->i_ptr = ptr;}
-        ForwardListIterator<Li>(const ForwardIterator<Li>& other) {this->i_ptr = other.i_ptr;} 
-        ForwardListIterator<Li>(const ForwardListIterator<Li>& other) {this->i_ptr = other.i_ptr;}
+        ForwardListIterator(Type* ptr) {this->i_ptr = ptr;}
+        ForwardListIterator(const ForwardIterator<Li>& other) {this->i_ptr = other.i_ptr;} 
+        ForwardListIterator(const ForwardListIterator<Li>& other) {this->i_ptr = other.i_ptr;}
 
-        ForwardListIterator<Li>& operator ++ () override
+        ForwardIterator<Li>& operator ++ () override
         {
             this->i_ptr = this->i_ptr->next;
             return *this;
@@ -50,21 +50,28 @@ class ForwardListIterator : public ForwardIterator<Li>
             return std::move(tmp);
         }
 
-        ForwardIterator<Li>&& operator + (int) 
+        ForwardIterator<Li>&& operator + (int) override
         {
             ForwardListIterator<Li>tmp(nullptr);
             return std::move(tmp);
         }
-        ForwardIterator<Li>&& operator - (int) 
+        ForwardIterator<Li>&& operator - (int) override
         {
             ForwardListIterator<Li>tmp(nullptr);
             return std::move(tmp);
         }
 
-        ForwardIterator<Li>& operator = (ForwardIterator<Li>&&) 
+        ForwardIterator<Li>& operator = (const ForwardIterator<Li>& other)  override 
         {
+            *this = other;
             return *this;
-            // return ForwardListIterator<Li>(nullptr);
+        }
+
+        ForwardIterator<Li>& operator = (ForwardIterator<Li>&& other)  override 
+        {
+            *this = other;
+            other.i_ptr = NULL;
+            return *this;
         }
 
         bool operator == (const ForwardIterator<Li>& other) override
@@ -77,7 +84,7 @@ class ForwardListIterator : public ForwardIterator<Li>
             return this->i_ptr != other.i_ptr;
         }
 
-        operator bool(void)
+        operator bool(void) override
         {
             return this->i_ptr != NULL;
         }
@@ -310,6 +317,7 @@ void ListC<T>::pop_back(void)
     ListNode* tmp = goto_last_element();
     tmp->previous->next = NULL;
 
+    this->li_size--;
     free(tmp); //realase resources from destroyed node
 }
 
@@ -322,6 +330,7 @@ void ListC<T>::pop_front(void)
 
     this->Head = this->Head->next;
 
+    this->li_size--;
     free(tmp); //realase resources from destroyed node
 }
 
