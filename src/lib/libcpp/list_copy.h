@@ -5,6 +5,7 @@
 #include <lib/libcpp/initializer_list.hpp>
 #include <lib/libcpp/type_traits.h>
 #include <lib/libcpp/iterator.hpp>
+#include <lib/libcpp/function.hpp>
 
 namespace std
 {
@@ -261,19 +262,19 @@ void ListC<T>::push_back(T value)
 
     ListNode* Tail;
     ListNode* ElementCreated;;
-    
-    auto lam = (this->li_size == 0) ? [&](){
-        Tail = NULL;
-        // ElementCreated = Tail = this->Head;
-    } : [&](){
-        Tail = NULL;
-        // Tail = this->goto_last_element();
-        // Tail->next = (ListNode*)calloc(SIZE_OF(ListNode));
 
-        // ElementCreated = Tail->next;
-    };
+    this->li_size ? [&](){
+        Tail = NULL;
+        Tail = this->goto_last_element();
+        Tail->next = (ListNode*)calloc(SIZE_OF(ListNode));
 
-    // ElementCreated->next already set to NULL
+        ElementCreated = Tail->next;
+
+    }() : [&](){
+        Tail = NULL;
+        ElementCreated = Tail = this->Head;
+    }();
+
     ElementCreated->value = value;
     ElementCreated->previous = Tail;
 
@@ -284,10 +285,18 @@ template<typename T>
 void ListC<T>::push_front(T value)
 {
 
-    auto NewHead = (ListElement<T>*)calloc(SIZE_OF(ListElement<T>));
+    ListNode* NewHead;
 
-    //Newthis->Head already set to NULL
-    NewHead->next = this->Head;
+    this->li_size ? [&](){
+
+        NewHead = (ListNode*)calloc(SIZE_OF(ListNode));
+        //NewHead->previous already set to NULL
+        NewHead->next = this->Head;
+
+    }() : [&](){
+        NewHead = Head;
+    }();
+
     NewHead->value = value;
 
     this->Head = NewHead;
@@ -298,33 +307,42 @@ void ListC<T>::push_front(T value)
 template<typename T>
 void ListC<T>::pop_back(void)
 {
-    ListElement<T>* Tmp = goto_last_element();
+    ListNode* tmp = goto_last_element();
+    tmp->previous->next = NULL;
 
-    T ret = Tmp->value;
-    Tmp->previous->next = NULL;
-
-    free(Tmp);
+    free(tmp); //realase resources from destroyed node
 }
 
-// template<typename T>
-// void ListC<T>::print(void)
-// {
 
-//     if(!this->li_size)
-//     {
-//         std::cout << "[]";
-//         return;
-//     }
+template<typename T>
+void ListC<T>::pop_front(void)
+{
+    ListNode* tmp = this->Head;
+    tmp->next->previous = NULL;
 
-//     ListElement<T>* tmp = this->Head;
-//     std::cout << '[';
-//     while(tmp->next != NULL)
-//     {
-//         std::cout << tmp->value << ',';
-//         tmp = tmp->next;
-//     }
-//     std::cout << tmp->value << ']';
-//     std::cout << std::endl;
-// }
+    this->Head = this->Head->next;
+
+    free(tmp); //realase resources from destroyed node
+}
+
+template<typename T>
+void ListC<T>::print(void)
+{
+
+    if(!this->li_size)
+    {
+        std::cout << "[]";
+        return;
+    }
+
+    ListElement<T>* tmp = this->Head;
+    std::cout << '[';
+    while(tmp->next != NULL)
+    {
+        std::cout << tmp->value << ',';
+        tmp = tmp->next;
+    }
+    std::cout << tmp->value << ']';
+}
 
 }
