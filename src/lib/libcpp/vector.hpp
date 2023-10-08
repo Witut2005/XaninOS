@@ -26,8 +26,7 @@ class ForwardVectorIterator : public std::ForwardIterator<Vec>
     using const_rreference = typename Vec::const_rreference;
 
     ForwardVectorIterator<Vec>(iterable_type* ptr){this->i_ptr = ptr;}
-    ForwardVectorIterator<Vec>(const ForwardIterator<Vec>& other) {this->i_ptr = other.i_ptr;}
-    ForwardVectorIterator<Vec>(const ForwardArrayIterator<Vec>& other) {this->i_ptr = other.i_ptr;}
+    ForwardVectorIterator<Vec>(const ForwardVectorIterator<Vec>& other) {this->i_ptr = other.i_ptr;}
     // ForwardArrayIterator<Arr>(ForwardIterator<Arr>&& other) 
 
     constexpr const char* type_info(void)
@@ -133,8 +132,8 @@ class ReversedVectorIterator : public std::ReversedIterator<Vec>
         return "ReversedVectorIterator";
     }
 
-    ReversedVectorIterator(iterable_type* ptr) {this->i_ptr = ptr;}
-    ReversedVectorIterator(const ReversedArrayIterator<Vec>& other) : ReversedIterator<Vec>(other){}
+    ReversedVectorIterator<Vec>(iterable_type* ptr) {this->i_ptr = ptr;}
+    ReversedVectorIterator<Vec>(const ReversedVectorIterator<Vec>& other) {this->i_ptr = other.i_ptr;}
 
     ReversedIterator<Vec>& operator ++ (void) override //prefix operator
     {
@@ -183,6 +182,19 @@ class ReversedVectorIterator : public std::ReversedIterator<Vec>
     lreference operator* (void) override
     {
         return *this->i_ptr;
+    }
+
+    ReversedIterator<Vec>& operator = (const ReversedIterator<Vec>& other) override 
+    {
+        *this = other;
+        return *this;
+    }
+
+    ReversedIterator<Vec>& operator = (ReversedIterator<Vec>&& other) override 
+    {
+        *this = other;
+        other.i_ptr = NULL;
+        return *this;
     }
 
     bool operator == (const ReversedIterator<Vec>& x) override

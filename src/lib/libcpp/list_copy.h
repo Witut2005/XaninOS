@@ -255,17 +255,13 @@ ListC<T>::ListC()
 {
     this->li_size = 0;
     this->Head = (ListNode*)calloc(SIZE_OF(ListNode));
-    this->Head->next = NULL;
-    this->Head->previous = NULL;
 }
 
 template<typename T>
 ListC<T>::ListC(std::initializer_list<T> items)
 {
     this->li_size = 0;
-    this->Head = (ListNode*)malloc(SIZE_OF(ListNode));
-    this->Head->next = NULL;
-    this->Head->previous = NULL;
+    this->Head = (ListNode*)calloc(SIZE_OF(ListNode));
 
     for(auto a : items)
         this->push_back(a);
@@ -350,9 +346,9 @@ void ListC<T>::push_front(T value)
         NewHead = (ListNode*)calloc(SIZE_OF(ListNode));
         //NewHead->previous already set to NULL
         NewHead->next = this->Head;
-
+        this->Head->previous = NewHead; // set previous pointer to node
     }() : [&](){
-        NewHead = Head;
+        NewHead = this->Head;
     }();
 
     NewHead->value = value;

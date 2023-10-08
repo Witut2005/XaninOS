@@ -39,41 +39,55 @@ class Test
 
 static inline void vec_test(void)
 {
-    std::array<int, 5> nichini = {1,2,3,4,5};
 
-    auto yhy = nichini.concat(nichini);
-    
-    // for(auto a : yhy)
-    //     std::cout << a << std::endl;
+    std::cout << "VEC TEST" << std::endl;
 
     std::vector<int> vec;
 
     for(int i = 0; i < 10; i++)
         vec.push_back(i);
 
-    std::cout << vec[-10] << std::endl;
-    std::cout << vec[0] << std::endl;
-    std::cout << *(vec.end() + (-10)) << std::endl;
+    std::cout << "[ ";
+    for(auto it = vec.begin(); it != vec.end(); it++)
+        std::cout << *it << ",";
+    std::cout << " ]\n";
+
+    std::cout << "[ ";
+    for(auto it = vec.rbegin(); it != vec.rend(); it++)
+        std::cout << *it << ",";
+    std::cout << " ]\n";
+
+    std::cout << "----------------" << std::endl;
 
     return;
 }
 
 static inline void list_test(void)
 {
-    std::ListC<int> li = {1,2,3};
+    std::cout << "LIST TEST" << std::endl;
 
-    // for(auto it = li.rbegin(); it != li.rend(); it++)
-    //     std::cout << (*it).value << std::endl;
+    std::ListC<int> li;
 
+    for(int i = 0; i < 10; i++)
+        li.push_front(i);
+
+    std::cout << "[ ";
     for(auto it = li.begin(); it != li.end(); it++)
-        std::cout << *it << std::endl;
+        std::cout << *it << ",";
+    std::cout << " ]\n";
 
+    std::cout << "[ ";
+    for(auto it = li.rbegin(); it != li.rend(); it++)
+        std::cout << *it << ",";
+    std::cout << " ]\n";
+
+    std::cout << "----------------" << std::endl;
 }
 
 void cpp_prog()
 {
 
-    //vec_test();
+    vec_test();
     list_test();
 
 
