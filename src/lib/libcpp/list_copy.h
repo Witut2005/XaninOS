@@ -327,14 +327,14 @@ void ListC<T>::push_back(T value)
         Tail->next = (ListNode*)calloc(SIZE_OF(ListNode));
 
         ElementCreated = Tail->next;
+        //ElementCreated->next already NULL
+        ElementCreated->previous = Tail;
 
     }() : [&](){
-        Tail = NULL;
-        ElementCreated = Tail = this->Head;
+        ElementCreated = this->Head;
     }();
 
     ElementCreated->value = value;
-    ElementCreated->previous = Tail;
 
     this->li_size++;
 }
