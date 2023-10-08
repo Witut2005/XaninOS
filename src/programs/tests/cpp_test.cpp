@@ -62,12 +62,11 @@ static inline void list_test(void)
 {
     std::ListC<int> li = {1,2,3};
 
+    // for(auto it = li.rbegin(); it != li.rend(); it++)
+    //     std::cout << (*it).value << std::endl;
 
-    for(auto a : li)
-    {
-        std::cout << a.value << std::endl;
-    }
-
+    for(auto it = li.rbegin(); it != li.rend(); it++)
+        std::cout << *it << std::endl;
 
 }
 

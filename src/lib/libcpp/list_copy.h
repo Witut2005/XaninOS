@@ -6,6 +6,7 @@
 #include <lib/libcpp/type_traits.h>
 #include <lib/libcpp/iterator.hpp>
 #include <lib/libcpp/function.hpp>
+#include <sys/macros.h>
 
 namespace std
 {
@@ -17,10 +18,10 @@ class ForwardListIterator : public ForwardIterator<Li>
     public: 
     
         using Type = typename Li::value_type;
+        using iterable_type = typename Li::iterable_type;
 
-        ForwardListIterator(Type* ptr) {this->i_ptr = ptr;}
-        ForwardListIterator(const ForwardIterator<Li>& other) {this->i_ptr = other.i_ptr;} 
-        ForwardListIterator(const ForwardListIterator<Li>& other) {this->i_ptr = other.i_ptr;}
+        ForwardListIterator<Li>(iterable_type* ptr) {this->i_ptr = ptr;}
+        ForwardListIterator<Li>(const ForwardListIterator<Li>& other) {this->i_ptr = other.i_ptr;}
 
         ForwardIterator<Li>& operator ++ () override
         {
@@ -53,12 +54,12 @@ class ForwardListIterator : public ForwardIterator<Li>
         ForwardIterator<Li>&& operator + (int) override
         {
             ForwardListIterator<Li>tmp(nullptr);
-            return std::move(tmp);
+            XANIN_DEBUG_RETURN(std::move(tmp));
         }
         ForwardIterator<Li>&& operator - (int) override
         {
             ForwardListIterator<Li>tmp(nullptr);
-            return std::move(tmp);
+            XANIN_DEBUG_RETURN(std::move(tmp));
         }
 
         ForwardIterator<Li>& operator = (const ForwardIterator<Li>& other)  override 
@@ -72,6 +73,11 @@ class ForwardListIterator : public ForwardIterator<Li>
             *this = other;
             other.i_ptr = NULL;
             return *this;
+        }
+
+        Type& operator * () override
+        {
+            return *this->i_ptr;
         }
 
         bool operator == (const ForwardIterator<Li>& other) override
@@ -89,70 +95,100 @@ class ForwardListIterator : public ForwardIterator<Li>
             return this->i_ptr != NULL;
         }
 
-        Type& operator * () override
-        {
-            return *this->i_ptr;
-        }
 };
 
 
 template<class Li>
-class ReversedListIterator : ReversedIterator<Li>
+class ReversedListIterator : public ReversedIterator<Li>
 {
 
     public: 
     
         using Type = typename Li::value_type;
+        using iterable_type = typename Li::iterable_type;
 
-        ReversedListIterator(Type* ptr) {this->i_ptr = ptr;}
+        ReversedListIterator<Li>(iterable_type* ptr) {this->i_ptr = ptr;}
+        ReversedListIterator<Li>(const ReversedListIterator<Li>& other) {this->i_ptr = other.i_ptr;}
 
-        ReversedListIterator<Li>& operator ++ () override 
-        {
-            this->i_ptr = this->i_ptr->next;
-            return *this;
-        }
-
-        ReversedListIterator<Li> operator ++ (int) override
-        {
-            ReversedListIterator tmp = *this;
-            this->i_ptr = this->i_ptr->next; 
-
-            return tmp;
-        }
-
-        ReversedListIterator<Li>& operator -- () override
+        ReversedIterator<Li>& operator ++ () override 
         {
             this->i_ptr = this->i_ptr->previous;
             return *this;
         }
 
-        ReversedListIterator<Li>&& operator -- (int)
+        ReversedIterator<Li>&& operator ++ (int) override
         {
             ReversedListIterator tmp = *this;
             this->i_ptr = this->i_ptr->previous; 
 
-            return tmp;
+            return std::move(tmp);
         }
 
-        bool operator == (const ReversedListIterator<Li>& other)
+        ReversedIterator<Li>& operator -- () override
         {
-            return this->i_ptr == other.i_ptr;
+            this->i_ptr = this->i_ptr->next;
+            return *this;
         }
 
-        bool operator != (const ReversedListIterator<Li>& other)
+        ReversedIterator<Li>&& operator -- (int)
         {
-            return this->i_ptr != other.i_ptr;
+            ReversedListIterator tmp = *this;
+            this->i_ptr = this->i_ptr->next; 
+
+            return std::move(tmp);
+        }
+
+        ReversedIterator<Li>&& operator + (int) override
+        {
+            ReversedListIterator<Li>tmp(NULL);
+            XANIN_DEBUG_RETURN(std::move(tmp));
+        }
+
+        ReversedIterator<Li>&& operator - (int) override
+        {
+            ReversedListIterator<Li>tmp(NULL);
+            XANIN_DEBUG_RETURN(std::move(tmp));
+        }
+
+        ReversedIterator<Li>& operator = (const ReversedIterator<Li>& other)  override 
+        {
+            *this = other;
+            return *this;
+        }
+
+        ReversedIterator<Li>& operator = (ReversedIterator<Li>&& other)  override 
+        {
+            *this = other;
+            other.i_ptr = NULL;
+            return *this;
         }
 
         Type& operator * ()
         {
             return this->i_ptr->value;
         }
+
+        bool operator == (const ReversedIterator<Li>& other) override
+        {
+            return this->i_ptr == other.i_ptr;
+        }
+
+        bool operator != (const ReversedIterator<Li>& other) override
+        {
+            return this->i_ptr != other.i_ptr;
+        }
+
+        operator bool (void)
+        {
+            return this->i_ptr != NULL;
+        }
+
 };
 
 template<typename T>
 struct ListElement
 {
+    using value_type = T;
     T value;
     ListElement* next;
     ListElement* previous;
@@ -163,22 +199,25 @@ class ListC
 {
 
     private:
-
-    using ListNode = ListElement<T>;
-
-    ListNode*  Head;
+    ListElement<T>*  Head;
     uint32_t li_size;
-    ListNode* goto_last_element(void);
+    ListElement<T>* goto_last_element(void);
 
     public:
-    using value_type = ListElement<T>;
+    using ListNode = ListElement<T>;
+
+    using iterable_type = ListElement<T>;
+    using value_type = T;
+
     using this_type = ListC<T>;
 
+    //BRUH
     using lreference = T&;
     using rreference = T&&;
 
     using const_lreference = const T&;
     using const_rreference = const T&&;
+    //BRUH
 
     using forward_iterator = ForwardListIterator<this_type>;
     using reversed_iterator = ReversedListIterator<this_type>;
@@ -255,6 +294,18 @@ ForwardListIterator<ListC<T>> ListC<T>::end()
     return nullptr;
 }
 
+
+template<typename T>
+ReversedListIterator<ListC<T>> ListC<T>::rbegin()
+{
+    return ReversedListIterator<ListC<T>>(this->goto_last_element());
+}
+
+template<typename T>
+ReversedListIterator<ListC<T>> ListC<T>::rend()
+{
+    return ReversedListIterator<ListC<T>>(nullptr);
+}
 
 template<typename T>
 uint32_t ListC<T>::size(void)

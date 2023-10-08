@@ -8,9 +8,11 @@ template<class Cont>
 class ForwardIterator
 {
     protected:
-    typename Cont::value_type* i_ptr;
+    typename Cont::iterable_type* i_ptr;
 
     public:
+    
+    using iterable_type = typename Cont::iterable_type;
     using value_type = typename Cont::value_type;
 
     using lreference = typename Cont::lreference;
@@ -51,13 +53,12 @@ template<class Cont>
 class ReversedIterator
 {
     protected:
-    typename Cont::value_type* i_ptr;
+    typename Cont::iterable_type* i_ptr;
 
     public:
-    using value_type = typename Cont::value_type;
 
-    ReversedIterator(value_type* ptr) {this->i_ptr = ptr;};
-    ReversedIterator(const ReversedIterator& other) = default;
+    using iterable_type = typename Cont::iterable_type;
+    using value_type = typename Cont::value_type;
 
     virtual ReversedIterator<Cont>& operator ++ (void) = 0;
     virtual ReversedIterator<Cont>&& operator ++ (int) = 0;
@@ -68,8 +69,9 @@ class ReversedIterator
     virtual ReversedIterator<Cont>&& operator - (int) = 0;
 
     virtual value_type& operator * (void) = 0;
-    
-    // virtual ForwardIterator<Cont>& operator = (ForwardIterator<Cont>&&) = 0;
+
+    virtual ReversedIterator<Cont>& operator = (const ReversedIterator<Cont>& other) = 0;
+    virtual ReversedIterator<Cont>& operator = (ReversedIterator<Cont>&&) = 0;
 
     virtual bool operator == (const ReversedIterator<Cont>&) = 0;
     virtual bool operator != (const ReversedIterator<Cont>&) = 0;
@@ -80,6 +82,9 @@ class ReversedIterator
 
     template <class Vec>
     friend class ReversedVectorIterator;
+
+    template <class Li>
+    friend class ReversedListIterator;
 
 };
 

@@ -15,6 +15,8 @@ class ForwardVectorIterator : public std::ForwardIterator<Vec>
 {
 
     public: 
+
+    using iterable_type = typename Vec::iterable_type;
     using value_type = typename Vec::value_type;
 
     using lreference = typename Vec::lreference;
@@ -23,7 +25,7 @@ class ForwardVectorIterator : public std::ForwardIterator<Vec>
     using const_lreference = typename Vec::const_lreference;
     using const_rreference = typename Vec::const_rreference;
 
-    ForwardVectorIterator<Vec>(value_type* ptr){this->i_ptr = ptr;}
+    ForwardVectorIterator<Vec>(iterable_type* ptr){this->i_ptr = ptr;}
     ForwardVectorIterator<Vec>(const ForwardIterator<Vec>& other) {this->i_ptr = other.i_ptr;}
     ForwardVectorIterator<Vec>(const ForwardArrayIterator<Vec>& other) {this->i_ptr = other.i_ptr;}
     // ForwardArrayIterator<Arr>(ForwardIterator<Arr>&& other) 
@@ -117,6 +119,7 @@ class ReversedVectorIterator : public std::ReversedIterator<Vec>
 {
 
     public: 
+    using iterable_type = typename Vec::iterable_type;
     using value_type = typename Vec::value_type;
 
     using lreference = typename Vec::lreference;
@@ -130,7 +133,7 @@ class ReversedVectorIterator : public std::ReversedIterator<Vec>
         return "ReversedVectorIterator";
     }
 
-    ReversedVectorIterator(value_type* ptr) : ReversedIterator<Vec>(ptr){}
+    ReversedVectorIterator(iterable_type* ptr) {this->i_ptr = ptr;}
     ReversedVectorIterator(const ReversedArrayIterator<Vec>& other) : ReversedIterator<Vec>(other){}
 
     ReversedIterator<Vec>& operator ++ (void) override //prefix operator
@@ -211,6 +214,7 @@ private:
     uint32_t v_size = 0;
     
 public:
+    using iterable_type = T;
     using value_type = T;
 
     using lreference = T&;
