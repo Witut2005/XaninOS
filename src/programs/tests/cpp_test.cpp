@@ -65,7 +65,7 @@ static inline void list_test(void)
     // for(auto it = li.rbegin(); it != li.rend(); it++)
     //     std::cout << (*it).value << std::endl;
 
-    for(auto it = li.rbegin(); it != li.rend(); it++)
+    for(auto it = li.begin(); it != li.end(); it++)
         std::cout << *it << std::endl;
 
 }

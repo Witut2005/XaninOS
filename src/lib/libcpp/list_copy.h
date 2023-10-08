@@ -77,7 +77,7 @@ class ForwardListIterator : public ForwardIterator<Li>
 
         Type& operator * () override
         {
-            return *this->i_ptr;
+            return this->i_ptr->value;
         }
 
         bool operator == (const ForwardIterator<Li>& other) override
