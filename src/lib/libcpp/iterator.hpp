@@ -8,7 +8,7 @@ template<class Cont>
 class ForwardIterator
 {
     protected:
-    typename Cont::iterable_type* i_ptr;
+    typename Cont::iterable_type i_ptr;
 
     public:
     
@@ -20,20 +20,20 @@ class ForwardIterator
     // virtual constexpr const char* type_info(void);
 
     virtual iterator_type& operator ++ (void) = 0;
-    virtual iterator_type&& operator ++ (int) = 0;
+    virtual iterator_type operator ++ (int) = 0;
     virtual iterator_type& operator -- (void) = 0;
-    virtual iterator_type&& operator -- (int) = 0;
+    virtual iterator_type operator -- (int) = 0;
 
-    virtual iterator_type&& operator + (int) = 0;
-    virtual iterator_type&& operator - (int) = 0;
+    virtual iterator_type operator + (int) = 0;
+    virtual iterator_type operator - (int) = 0;
 
     virtual value_type& operator * (void) = 0;
 
-    virtual iterator_type& operator = (const ForwardIterator<Cont>& other) = 0;
-    virtual iterator_type& operator = (ForwardIterator<Cont>&&) = 0;
+    virtual iterator_type& operator = (const iterator_type& other) = 0;
+    virtual iterator_type& operator = (iterator_type&&) = 0;
 
-    virtual bool operator == (const ForwardIterator<Cont>&) = 0;
-    virtual bool operator != (const ForwardIterator<Cont>&) = 0;
+    virtual bool operator == (const iterator_type&) = 0;
+    virtual bool operator != (const iterator_type&) = 0;
     virtual operator bool(void) = 0;
 
     template <class Arr>
@@ -51,7 +51,7 @@ template<class Cont>
 class ReversedIterator
 {
     protected:
-    typename Cont::iterable_type* i_ptr;
+    typename Cont::iterable_type i_ptr;
 
     public:
 
@@ -62,21 +62,21 @@ class ReversedIterator
 
     // virtual constexpr const char* type_info(void);
 
-    virtual ReversedIterator<Cont>& operator ++ (void) = 0;
-    virtual ReversedIterator<Cont>&& operator ++ (int) = 0;
-    virtual ReversedIterator<Cont>& operator -- (void) = 0;
-    virtual ReversedIterator<Cont>&& operator -- (int) = 0;
+    virtual iterator_type& operator ++ (void) = 0;
+    virtual iterator_type operator ++ (int) = 0;
+    virtual iterator_type& operator -- (void) = 0;
+    virtual iterator_type operator -- (int) = 0;
 
-    virtual ReversedIterator<Cont>&& operator + (int) = 0;
-    virtual ReversedIterator<Cont>&& operator - (int) = 0;
+    virtual iterator_type operator + (int) = 0;
+    virtual iterator_type operator - (int) = 0;
 
     virtual value_type& operator * (void) = 0;
 
-    virtual ReversedIterator<Cont>& operator = (const ReversedIterator<Cont>& other) = 0;
-    virtual ReversedIterator<Cont>& operator = (ReversedIterator<Cont>&&) = 0;
+    virtual iterator_type& operator = (const iterator_type& other) = 0;
+    virtual iterator_type& operator = (iterator_type&&) = 0;
 
-    virtual bool operator == (const ReversedIterator<Cont>&) = 0;
-    virtual bool operator != (const ReversedIterator<Cont>&) = 0;
+    virtual bool operator == (const iterator_type&) = 0;
+    virtual bool operator != (const iterator_type&) = 0;
     virtual operator bool(void) = 0;
 
     template <class Arr>

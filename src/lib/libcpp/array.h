@@ -16,26 +16,23 @@ class ForwardArrayIterator : public std::ForwardIterator<Arr>
 {
 
     public: 
+
     using value_type = typename Arr::value_type;
+    using iterable_type = typename Arr::iterable_type;
 
     using lreference = typename Arr::lreference;
-    using rreference = typename Arr::rreference;
+    using iterator_type = typename Arr::forward_iterator;
 
-    using const_lreference = typename Arr::const_lreference;
-    using const_rreference = typename Arr::const_rreference;
-
-    ForwardArrayIterator<Arr>(value_type* ptr){this->i_ptr = ptr;}
-    ForwardArrayIterator<Arr>(const ForwardIterator<Arr>& other) {this->i_ptr = other.i_ptr;}
+    ForwardArrayIterator<Arr>(iterable_type ptr) {this->i_ptr = ptr;}
     ForwardArrayIterator<Arr>(const ForwardArrayIterator<Arr>& other) {this->i_ptr = other.i_ptr;}
-    // ForwardArrayIterator<Arr>(ForwardIterator<Arr>&& other) 
 
-    ForwardIterator<Arr>& operator ++ (void) override //prefix operator
+    iterator_type& operator ++ (void) override //prefix operator
     {
         this->i_ptr++;
         return *this;
     }
 
-    ForwardIterator<Arr>&& operator ++ (int) override //postfix operator
+    iterator_type operator ++ (int) override //postfix operator
     {
         ++(this->i_ptr); 
         ForwardArrayIterator tmp = *this;
@@ -43,13 +40,13 @@ class ForwardArrayIterator : public std::ForwardIterator<Arr>
         return std::move(tmp);
     }
 
-    ForwardIterator<Arr>& operator -- (void) override //prefix operator
+    iterator_type& operator -- (void) override //prefix operator
     {
         this->i_ptr--;
         return *this;
     }
 
-    ForwardIterator<Arr>&& operator -- (int) override //postfix operator
+    iterator_type operator -- (int) override //postfix operator
     {
         --(this->i_ptr);
         ForwardArrayIterator tmp = *this;
@@ -57,7 +54,7 @@ class ForwardArrayIterator : public std::ForwardIterator<Arr>
         return std::move(tmp);
     }
 
-    ForwardIterator<Arr>&& operator + (int offset) override 
+    iterator_type operator + (int offset) override 
     {
         ForwardArrayIterator tmp = *this;
 
@@ -67,7 +64,7 @@ class ForwardArrayIterator : public std::ForwardIterator<Arr>
         return std::move(tmp);
     }
 
-    ForwardIterator<Arr>&& operator - (int offset) override 
+    iterator_type operator - (int offset) override 
     {
         ForwardArrayIterator tmp = *this;
         
@@ -82,27 +79,27 @@ class ForwardArrayIterator : public std::ForwardIterator<Arr>
         return *this->i_ptr;
     }
 
-    ForwardIterator<Arr>& operator = (const ForwardIterator<Arr>& other) override 
+    iterator_type& operator = (const iterator_type& other) override 
     {
         *this = other;
         return *this;
     }
 
-    ForwardIterator<Arr>& operator = (ForwardIterator<Arr>&& other) override 
+    iterator_type& operator = (iterator_type&& other) override 
     {
         *this = other;
         other.i_ptr = NULL;
         return *this;
     }
 
-    bool operator == (const ForwardIterator<Arr>& x) override
+    bool operator == (const iterator_type& other) override
     {
-        return this->i_ptr == x.i_ptr;
+        return this->i_ptr == other.i_ptr;
     }
 
-    bool operator != (const ForwardIterator<Arr>& x) override
+    bool operator != (const iterator_type& other) override
     {
-        return this->i_ptr != x.i_ptr;
+        return this->i_ptr != other.i_ptr;
     }
 
     operator bool(void) override
@@ -118,62 +115,59 @@ class ReversedArrayIterator : public std::ReversedIterator<Arr>
 
     public: 
     using value_type = typename Arr::value_type;
-
     using lreference = typename Arr::lreference;
-    using rreference = typename Arr::rreference;
+    using iterable_type = typename Arr::iterable_type;
+    using iterator_type = typename Arr::reversed_iterator;
 
-    using const_lreference = typename Arr::const_lreference;
-    using const_rreference = typename Arr::const_rreference;
+    ReversedArrayIterator(iterable_type ptr) {this->i_ptr = ptr;}
+    ReversedArrayIterator(const ReversedArrayIterator<Arr>& other) {this->i_ptr = other.i_ptr;}
 
-    ReversedArrayIterator(value_type* ptr) : ReversedIterator<Arr>(ptr){}
-    ReversedArrayIterator(const ReversedArrayIterator<Arr>& other) : ReversedIterator<Arr>(other){}
-
-    ReversedIterator<Arr>& operator ++ (void) override //prefix operator
+    iterator_type& operator ++ (void) override //prefix operator
     {
         this->i_ptr--;
         return *this;
     }
 
-    ReversedIterator<Arr>&& operator ++ (int) override //postfix operator
+    iterator_type operator ++ (int) override //postfix operator
     {
         --(this->i_ptr); 
         ReversedArrayIterator tmp = *this;
 
-        return std::move(tmp);
+        return tmp;
     }
 
-    ReversedIterator<Arr>& operator -- (void) override //prefix operator
+    iterator_type& operator -- (void) override //prefix operator
     {
         this->i_ptr++;
         return *this;
     }
 
-    ReversedIterator<Arr>&& operator -- (int) override //postfix operator
+    iterator_type operator -- (int) override //postfix operator
     {
         ++(this->i_ptr);
         ReversedArrayIterator<Arr> tmp = *this;
 
-        return std::move(tmp);
+        return tmp;
     }
 
-    ReversedIterator<Arr>&& operator + (int offset) override 
+    iterator_type operator + (int offset) override 
     {
         ReversedArrayIterator tmp = *this;
 
         for(int i = 0; i < offset; i++)
             tmp.i_ptr++;
 
-        return std::move(tmp);
+        return tmp;
     }
 
-    ReversedIterator<Arr>&& operator - (int offset) override 
+    iterator_type operator - (int offset) override 
     {
         ReversedArrayIterator tmp = *this;
         
         for(int i = 0; i < offset; i++)
             tmp.i_ptr--;
 
-        return std::move(tmp);
+        return tmp;
     }
 
     lreference operator* (void) override
@@ -181,14 +175,27 @@ class ReversedArrayIterator : public std::ReversedIterator<Arr>
         return *this->i_ptr;
     }
 
-    bool operator == (const ReversedIterator<Arr>& x) override
+    iterator_type& operator = (const iterator_type& other) override 
     {
-        return this->i_ptr == x.i_ptr;
+        *this = other;
+        return *this;
     }
 
-    bool operator != (const ReversedIterator<Arr>& x) override
+    iterator_type& operator = (iterator_type&& other) override 
     {
-        return this->i_ptr != x.i_ptr;
+        *this = other;
+        other.i_ptr = NULL;
+        return *this;
+    }
+
+    bool operator == (const iterator_type& other) override
+    {
+        return this->i_ptr == other.i_ptr;
+    }
+
+    bool operator != (const iterator_type& other) override
+    {
+        return this->i_ptr != other.i_ptr;
     }
 
     operator bool(void) override
@@ -208,6 +215,7 @@ class array : Container<T>
 
     public:
 
+    using iterable_type = T*;
     using value_type = T;
 
     using lreference = T&;
@@ -222,6 +230,8 @@ class array : Container<T>
     array() = default;
     array(const array& arr) = default;
     array(std::initializer_list<T> a);
+    // vector(forward_iterator)
+    // vector(reversed_iterator)
 
     constexpr forward_iterator begin();
     constexpr forward_iterator end();

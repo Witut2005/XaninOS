@@ -37,27 +37,49 @@ class Test
     void print(int x, int y) { std::cout << std::dec << "CLASS: " << (int)x << ", " << (int)y << std::endl; }
 };
 
+template<class Cont>
+static inline void printcont(std::ForwardIterator<Cont>&& beg, std::ForwardIterator<Cont>&& end) 
+{
+    for(; beg != end; beg++)
+    {
+        std::cout << *beg << std::endl;
+    }
+}
+
+
+static inline void arr_test(void)
+{
+    std::cout << "ARRAY TEST" << std::endl;
+
+    std::array<int, 10> arr = {0,1,2,3,4,5,6,7,8,9};
+
+    for(auto a : arr)
+        std::cout << a << ", ";
+    std::cout << std::endl;
+}
+
 static inline void vec_test(void)
 {
 
     std::cout << "VEC TEST" << std::endl;
 
-    std::vector<int> vec;
+    std::vector<int> vtmp = {0,1,2,3,4,5,6,7,8,9};
 
-    for(int i = 0; i < 10; i++)
-        vec.push_back(i);
+    std::vector<int> vec(vtmp.begin(), vtmp.end());
 
     std::cout << "[ ";
     for(auto it = vec.begin(); it != vec.end(); it++)
         std::cout << *it << ",";
     std::cout << " ]\n";
 
-    std::cout << "[ ";
-    for(auto it = vec.rbegin(); it != vec.rend(); it++)
-        std::cout << *it << ",";
-    std::cout << " ]\n";
+    // std::cout << "[ ";
+    // for(auto it = vec.rbegin() + 4; it != vec.rend(); it++)
+    //     std::cout << *it << ",";
+    // std::cout << " ]\n";
 
-    std::cout << "----------------" << std::endl;
+    // std::cout << "[] operator " << vec[-2] << " " << vec[8] << std::endl;
+
+    // std::cout << "----------------" << std::endl;
 
     return;
 }
@@ -88,9 +110,9 @@ static inline void list_test(void)
 void cpp_prog()
 {
 
+    // arr_test();
     vec_test();
-    list_test();
-
+    // list_test();
 
     // std::UnorderedMap<char, int> Mapa;
     // Mapa.insert('a', 10);
