@@ -18,6 +18,7 @@ class ForwardVectorIterator : public std::ForwardIterator<Vec>
 
     using iterable_type = typename Vec::iterable_type;
     using value_type = typename Vec::value_type;
+    using iterator_type = typename Vec::forward_iterator; 
 
     using lreference = typename Vec::lreference;
     using rreference = typename Vec::rreference;
@@ -27,20 +28,19 @@ class ForwardVectorIterator : public std::ForwardIterator<Vec>
 
     ForwardVectorIterator<Vec>(iterable_type* ptr){this->i_ptr = ptr;}
     ForwardVectorIterator<Vec>(const ForwardVectorIterator<Vec>& other) {this->i_ptr = other.i_ptr;}
-    // ForwardArrayIterator<Arr>(ForwardIterator<Arr>&& other) 
 
     constexpr const char* type_info(void)
     {
         return "ForwardVectorIterator";
     }
 
-    ForwardIterator<Vec>& operator ++ (void) override //prefix operator
+    iterator_type& operator ++ (void) override //prefix operator
     {
         this->i_ptr++;
         return *this;
     }
 
-    ForwardIterator<Vec>&& operator ++ (int) override //postfix operator
+    iterator_type&& operator ++ (int) override //postfix operator
     {
         ++(this->i_ptr); 
         ForwardArrayIterator tmp = *this;
@@ -48,13 +48,13 @@ class ForwardVectorIterator : public std::ForwardIterator<Vec>
         return std::move(tmp);
     }
 
-    ForwardIterator<Vec>& operator -- (void) override //prefix operator
+    iterator_type& operator -- (void) override //prefix operator
     {
         this->i_ptr--;
         return *this;
     }
 
-    ForwardIterator<Vec>&& operator -- (int) override //postfix operator
+    iterator_type&& operator -- (int) override //postfix operator
     {
         --(this->i_ptr);
         ForwardArrayIterator tmp = *this;
@@ -62,7 +62,7 @@ class ForwardVectorIterator : public std::ForwardIterator<Vec>
         return std::move(tmp);
     }
 
-    ForwardIterator<Vec>&& operator + (int offset) override 
+    iterator_type&& operator + (int offset) override 
     {
         ForwardArrayIterator tmp = *this;
         tmp.i_ptr = tmp.i_ptr + offset;
@@ -70,9 +70,9 @@ class ForwardVectorIterator : public std::ForwardIterator<Vec>
         return std::move(tmp);
     }
 
-    ForwardIterator<Vec>&& operator - (int offset) override 
+    iterator_type&& operator - (int offset) override 
     {
-        ForwardArrayIterator tmp = *this;
+        ForwardVectorIterator tmp = *this;
         tmp.i_ptr = tmp.i_ptr - offset;
 
         return std::move(tmp);
@@ -83,13 +83,13 @@ class ForwardVectorIterator : public std::ForwardIterator<Vec>
         return *this->i_ptr;
     }
 
-    ForwardIterator<Vec>& operator = (const ForwardIterator<Vec>& other) override 
+    iterator_type& operator = (const ForwardIterator<Vec>& other) override 
     {
         *this = other;
         return *this;
     }
 
-    ForwardIterator<Vec>& operator = (ForwardIterator<Vec>&& other) override 
+    iterator_type& operator = (ForwardIterator<Vec>&& other) override 
     {
         *this = other;
         other.i_ptr = NULL;
@@ -120,6 +120,7 @@ class ReversedVectorIterator : public std::ReversedIterator<Vec>
     public: 
     using iterable_type = typename Vec::iterable_type;
     using value_type = typename Vec::value_type;
+    using iterator_type = typename Vec::reversed_iterator; 
 
     using lreference = typename Vec::lreference;
     using rreference = typename Vec::rreference;

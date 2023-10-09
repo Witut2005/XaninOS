@@ -26,7 +26,7 @@
 #include <sys/terminal/interpreter/interpreter.h>
 #include <sys/input/input.h>
 #include <lib/libcpp/iterator.hpp>
-#include <lib/libcpp/list_copy.h>
+// #include <lib/libcpp/list_copy.h>
 
 //TERMINAL_APP
 
@@ -64,24 +64,25 @@ static inline void vec_test(void)
 
 static inline void list_test(void)
 {
-    std::cout << "LIST TEST" << std::endl;
+    // std::cout << "LIST TEST" << std::endl;
 
-    std::ListC<int> li;
+    // std::ListC<int> li;
 
-    for(int i = 0; i < 10; i++)
-        li.push_front(i);
+    // for(int i = 0; i < 10; i++)
+    //     li.push_front(i);
 
-    std::cout << "[ ";
-    for(auto it = li.begin(); it != li.end(); it++)
-        std::cout << *it << ",";
-    std::cout << " ]\n";
+    // std::cout << "[ ";
+    // for(auto it = li.begin(); it != li.end(); it++)
+    //     std::cout << *it << ",";
+    // std::cout << " ]\n";
 
-    std::cout << "[ ";
-    for(auto it = li.rbegin(); it != li.rend(); it++)
-        std::cout << *it << ",";
-    std::cout << " ]\n";
+    // std::cout << "[ ";
 
-    std::cout << "----------------" << std::endl;
+    // for(; it != li.rend(); it++)
+    //     std::cout << *it << ",";
+    // std::cout << " ]\n";
+
+    // std::cout << "----------------" << std::endl;
 }
 
 void cpp_prog()

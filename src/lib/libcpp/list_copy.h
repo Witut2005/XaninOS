@@ -19,9 +19,15 @@ class ForwardListIterator : public ForwardIterator<Li>
     
         using Type = typename Li::value_type;
         using iterable_type = typename Li::iterable_type;
+        using this_type = ForwardListIterator;
 
         ForwardListIterator<Li>(iterable_type* ptr) {this->i_ptr = ptr;}
         ForwardListIterator<Li>(const ForwardListIterator<Li>& other) {this->i_ptr = other.i_ptr;}
+
+        constexpr const char* type_info(void) 
+        {
+            return "ForwardListIterator";
+        }
 
         ForwardIterator<Li>& operator ++ () override
         {
@@ -51,15 +57,62 @@ class ForwardListIterator : public ForwardIterator<Li>
             return std::move(tmp);
         }
 
-        ForwardIterator<Li>&& operator + (int) override
-        {
-            ForwardListIterator<Li>tmp(nullptr);
-            XANIN_DEBUG_RETURN(std::move(tmp));
+        ForwardIterator<Li>&& operator + (int offset) override
+        {            
+            ForwardListIterator<Li>tmp = *this;
+
+            if(std::is_positive(offset)) 
+            {
+                for(int i = 0; i < offset; i++)
+                {
+                    tmp.i_ptr = tmp.i_ptr->next;
+
+                    if(!tmp.i_ptr->next)
+                        break;
+                }
+            }
+
+            else 
+            {
+                for(int i = 0; i < offset; i++)
+                {
+                    tmp.i_ptr = tmp.i_ptr->previous;
+
+                    if(!tmp.i_ptr->next)
+                        break;
+                }
+            }
+
+            return std::move(tmp);
         }
-        ForwardIterator<Li>&& operator - (int) override
+
+        ForwardIterator<Li>&& operator - (int offset) override
         {
-            ForwardListIterator<Li>tmp(nullptr);
-            XANIN_DEBUG_RETURN(std::move(tmp));
+            ForwardListIterator<Li>tmp = *this;
+
+            if(std::is_negative(offset)) 
+            {
+                for(int i = 0; i < offset; i++)
+                {
+                    tmp.i_ptr = tmp.i_ptr->next;
+
+                    if(!tmp.i_ptr->next)
+                        break;
+                }
+            }
+
+            else 
+            {
+                for(int i = 0; i < offset; i++)
+                {
+                    tmp.i_ptr = tmp.i_ptr->previous;
+
+                    if(!tmp.i_ptr->next)
+                        break;
+                }
+            }
+
+            return std::move(tmp);
         }
 
         ForwardIterator<Li>& operator = (const ForwardIterator<Li>& other)  override 
@@ -109,6 +162,11 @@ class ReversedListIterator : public ReversedIterator<Li>
 
         ReversedListIterator<Li>(iterable_type* ptr) {this->i_ptr = ptr;}
         ReversedListIterator<Li>(const ReversedListIterator<Li>& other) {this->i_ptr = other.i_ptr;}
+        
+        constexpr const char* type_info(void) 
+        {
+            return "ForwardListIterator";
+        }
 
         ReversedIterator<Li>& operator ++ () override 
         {

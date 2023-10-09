@@ -79,5 +79,17 @@ constexpr pair<T, X> make_pair(T x, X y)
     return tmp;
 }
 
+template<typename T>
+constexpr bool is_positive(T value)
+{
+    return value > 0;
+}
+template<typename T>
+
+constexpr bool is_negative(T value)
+{
+    return value < 0;
+}
+
 }
 

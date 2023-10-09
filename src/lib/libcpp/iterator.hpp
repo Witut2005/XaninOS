@@ -15,24 +15,22 @@ class ForwardIterator
     using iterable_type = typename Cont::iterable_type;
     using value_type = typename Cont::value_type;
 
-    using lreference = typename Cont::lreference;
-    using rreference = typename Cont::rreference;
+    using iterator_type = typename Cont::forward_iterator;
 
-    using const_lreference = typename Cont::const_lreference;
-    using const_rreference = typename Cont::const_rreference;
+    // virtual constexpr const char* type_info(void);
 
-    virtual ForwardIterator<Cont>& operator ++ (void) = 0;
-    virtual ForwardIterator<Cont>&& operator ++ (int) = 0;
-    virtual ForwardIterator<Cont>& operator -- (void) = 0;
-    virtual ForwardIterator<Cont>&& operator -- (int) = 0;
+    virtual iterator_type& operator ++ (void) = 0;
+    virtual iterator_type&& operator ++ (int) = 0;
+    virtual iterator_type& operator -- (void) = 0;
+    virtual iterator_type&& operator -- (int) = 0;
 
-    virtual ForwardIterator<Cont>&& operator + (int) = 0;
-    virtual ForwardIterator<Cont>&& operator - (int) = 0;
+    virtual iterator_type&& operator + (int) = 0;
+    virtual iterator_type&& operator - (int) = 0;
 
     virtual value_type& operator * (void) = 0;
 
-    virtual ForwardIterator<Cont>& operator = (const ForwardIterator<Cont>& other) = 0;
-    virtual ForwardIterator<Cont>& operator = (ForwardIterator<Cont>&&) = 0;
+    virtual iterator_type& operator = (const ForwardIterator<Cont>& other) = 0;
+    virtual iterator_type& operator = (ForwardIterator<Cont>&&) = 0;
 
     virtual bool operator == (const ForwardIterator<Cont>&) = 0;
     virtual bool operator != (const ForwardIterator<Cont>&) = 0;
@@ -59,6 +57,10 @@ class ReversedIterator
 
     using iterable_type = typename Cont::iterable_type;
     using value_type = typename Cont::value_type;
+
+    using iterator_type = typename Cont::reversed_iterator;
+
+    // virtual constexpr const char* type_info(void);
 
     virtual ReversedIterator<Cont>& operator ++ (void) = 0;
     virtual ReversedIterator<Cont>&& operator ++ (int) = 0;
