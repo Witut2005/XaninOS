@@ -51,11 +51,11 @@ static inline void arr_test(void)
 {
     std::cout << "ARRAY TEST" << std::endl;
 
-    std::array<int, 10> arr = {0,1,2,3,4,5,6,7,8,9};
+    // std::array<int, 10> arr = {0,1,2,3,4,5,6,7,8,9};
 
-    for(auto a : arr)
-        std::cout << a << ", ";
-    std::cout << std::endl;
+    // for(auto a : arr)
+    //     std::cout << a << ", ";
+    // std::cout << std::endl;
 }
 
 static inline void vec_test(void)
@@ -65,12 +65,36 @@ static inline void vec_test(void)
 
     std::vector<int> vtmp = {0,1,2,3,4,5,6,7,8,9};
 
-    std::vector<int> vec(vtmp.begin(), vtmp.end());
+    std::vector<int> vec(vtmp.rbegin() + 1, vtmp.rend());
 
-    std::cout << "[ ";
-    for(auto it = vec.begin(); it != vec.end(); it++)
-        std::cout << *it << ",";
-    std::cout << " ]\n";
+    for(auto a : vec)
+        std::cout << a << ", ";
+    std::cout << std::endl;
+
+    auto it = vtmp.begin();
+    std::cout << *it << std::endl;
+    it--;
+
+    if(it)
+        std::cout << "not null" << std::endl;
+    else
+        std::cout << "null" << std::endl;
+
+
+    // for(auto a : vec)
+    //     std::cout << a << ", ";
+
+    // std::cout << std::endl;
+
+    // auto it = vec.begin();
+    // std::cout << "is same: " << (it != vec.end()) << std::endl;
+
+    // // for(auto a : vec)
+    // //     std::cout << a << ", ";
+    // // std::cout << "[ ";
+    // for(auto it = vec.begin(); it != vec.end(); it++)
+    //     std::cout << *it << ",";
+    // std::cout << " ]\n";
 
     // std::cout << "[ ";
     // for(auto it = vec.rbegin() + 4; it != vec.rend(); it++)

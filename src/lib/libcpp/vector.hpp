@@ -14,6 +14,14 @@ template<class Vec>
 class ForwardVectorIterator : public std::ForwardIterator<Vec>
 {
 
+    private:
+    void perform_operation_with_bounds_check(auto operation) {
+        operation();
+
+        if((this->i_ptr < this->begin) || (this->i_ptr > this->end))
+            this->i_ptr = NULL;
+    }
+
     public: 
 
     using iterable_type = typename Vec::iterable_type;
@@ -26,8 +34,14 @@ class ForwardVectorIterator : public std::ForwardIterator<Vec>
     using const_lreference = typename Vec::const_lreference;
     using const_rreference = typename Vec::const_rreference;
 
-    ForwardVectorIterator<Vec>(iterable_type ptr){this->i_ptr = ptr;}
-    ForwardVectorIterator<Vec>(const ForwardVectorIterator<Vec>& other) {this->i_ptr = other.i_ptr;}
+    ForwardVectorIterator<Vec>(iterable_type ptr, Vec& vec) {
+        // std::cout << "DEFAULT" << std::endl;
+        this->i_ptr = ptr; 
+        
+        this->begin = vec.ptr;
+        this->end = vec.ptr + vec.v_size;
+    }
+    ForwardVectorIterator<Vec>(const ForwardVectorIterator<Vec>& other) = default;
 
     constexpr const char* type_info(void)
     {
@@ -36,28 +50,29 @@ class ForwardVectorIterator : public std::ForwardIterator<Vec>
 
     iterator_type& operator ++ (void) override //prefix operator
     {
-        this->i_ptr++;
+        // (this->i_ptr + 1) >= this->end ? this->i_ptr = NULL : this->i_ptr++;
+        this->perform_operation_with_bounds_check([this](){this->i_ptr++;});
         return *this;
     }
 
     iterator_type operator ++ (int) override //postfix operator
     {
-        ++(this->i_ptr); 
         ForwardVectorIterator tmp = *this;
+        this->perform_operation_with_bounds_check([this](){this->i_ptr++;});
 
         return tmp;
     }
 
     iterator_type& operator -- (void) override //prefix operator
     {
-        this->i_ptr--;
+        this->perform_operation_with_bounds_check([this](){this->i_ptr--;});
         return *this;
     }
 
     iterator_type operator -- (int) override //postfix operator
     {
-        --(this->i_ptr);
         ForwardVectorIterator tmp = *this;
+        this->perform_operation_with_bounds_check([this](){this->i_ptr--;});
 
         return tmp;
     }
@@ -65,7 +80,7 @@ class ForwardVectorIterator : public std::ForwardIterator<Vec>
     iterator_type operator + (int offset) override 
     {
         ForwardVectorIterator tmp = *this;
-        tmp.i_ptr = tmp.i_ptr + offset;
+        this->perform_operation_with_bounds_check([&](){tmp.i_ptr = tmp.i_ptr + offset;});
 
         return tmp;
     }
@@ -73,7 +88,7 @@ class ForwardVectorIterator : public std::ForwardIterator<Vec>
     iterator_type operator - (int offset) override 
     {
         ForwardVectorIterator tmp = *this;
-        tmp.i_ptr = tmp.i_ptr - offset;
+        this->perform_operation_with_bounds_check([&](){tmp.i_ptr = tmp.i_ptr - offset;});
 
         return tmp;
     }
@@ -96,26 +111,24 @@ class ForwardVectorIterator : public std::ForwardIterator<Vec>
         return *this;
     }
 
-    bool operator == (const iterator_type& x) override
+    explicit operator bool(void) override
     {
-        return this->i_ptr == x.i_ptr;
+        return (this->i_ptr != NULL) & (this->i_ptr != this->end);
     }
 
-    bool operator != (const iterator_type& x) override
-    {
-        return this->i_ptr != x.i_ptr;
-    }
-
-    operator bool(void) override
-    {
-        return this->i_ptr != NULL;
-    }
 
 };
 
 template<class Vec>
 class ReversedVectorIterator : public std::ReversedIterator<Vec>
 {
+    private:
+    void perform_operation_with_bounds_check(auto operation) {
+        operation();
+
+        if((this->i_ptr < this->rend) || (this->i_ptr > this->rbegin))
+            this->i_ptr = NULL;
+    }
 
     public: 
     using value_type = typename Vec::value_type;
@@ -123,39 +136,43 @@ class ReversedVectorIterator : public std::ReversedIterator<Vec>
     using iterator_type = typename Vec::reversed_iterator; 
     using iterable_type = typename Vec::iterable_type;
 
-
     constexpr const char* type_info(void)
     {
         return "ReversedVectorIterator";
     }
 
-    ReversedVectorIterator<Vec>(iterable_type ptr) {this->i_ptr = ptr;}
-    ReversedVectorIterator<Vec>(const ReversedVectorIterator<Vec>& other) {this->i_ptr = other.i_ptr;}
+    ReversedVectorIterator<Vec>(iterable_type ptr, Vec& vec) {
+        this->i_ptr = ptr;
+    
+        this->rbegin = vec.ptr + vec.v_size - 1;
+        this->rend = vec.ptr - 1;
+    }
+    ReversedVectorIterator<Vec>(const ReversedVectorIterator<Vec>& other) = default;
 
     iterator_type& operator ++ (void) override //prefix operator
     {
-        this->i_ptr--;
+        this->perform_operation_with_bounds_check([this](){this->i_ptr--;});
         return *this;
     }
 
     iterator_type operator ++ (int) override //postfix operator
     {
-        --(this->i_ptr); 
         ReversedVectorIterator tmp = *this;
+        this->perform_operation_with_bounds_check([this](){this->i_ptr--;});
 
         return tmp;
     }
 
     iterator_type& operator -- (void) override //prefix operator
     {
-        this->i_ptr++;
+        this->perform_operation_with_bounds_check([this](){this->i_ptr++;});
         return *this;
     }
 
     iterator_type operator -- (int) override //postfix operator
     {
-        this->i_ptr++;
         ReversedVectorIterator<Vec> tmp = *this;
+        this->perform_operation_with_bounds_check([this](){this->i_ptr++;});
 
         return tmp;
     }
@@ -163,7 +180,7 @@ class ReversedVectorIterator : public std::ReversedIterator<Vec>
     iterator_type operator + (int offset) override 
     {
         ReversedVectorIterator tmp = *this;
-        tmp.i_ptr = tmp.i_ptr - offset;
+        this->perform_operation_with_bounds_check([&](){tmp.i_ptr = tmp.i_ptr - offset;});
 
         return tmp;
     }
@@ -171,7 +188,7 @@ class ReversedVectorIterator : public std::ReversedIterator<Vec>
     iterator_type operator - (int offset) override 
     {
         ReversedVectorIterator tmp = *this;
-        tmp.i_ptr = tmp.i_ptr + offset;
+        this->perform_operation_with_bounds_check([&](){tmp.i_ptr = tmp.i_ptr + offset;});
         
         return tmp;
     }
@@ -194,25 +211,12 @@ class ReversedVectorIterator : public std::ReversedIterator<Vec>
         return *this;
     }
 
-    bool operator == (const iterator_type& other) override
-    {
-        return this->i_ptr == other.i_ptr;
-    }
-
-    bool operator != (const iterator_type& other) override
-    {
-        return this->i_ptr != other.i_ptr;
-    }
-
     operator bool(void) override
     {
-        return this->i_ptr != NULL;
+        return (this->i_ptr != NULL) & (this->i_ptr != this->rend);
     }
 
 };
-
-
-
     
 template <typename T>
 class vector : Container<T>
@@ -240,19 +244,19 @@ public:
     vector(vector<T>&& other); // move constructor
     vector (std::initializer_list<T> items); 
 
+    //WRONG LVALUES
     template<typename Cont>
     vector(std::ForwardIterator<Cont>&& beg, std::ForwardIterator<Cont>&& end) : vector()
     {
-        this->ptr = (T*)calloc(SIZE_OF(T));
         for(; beg != end; beg++)
             this->push_back(*beg);
     }
 
+    //WRONG LVALUES
     template<typename Cont>
     vector(std::ReversedIterator<Cont>&& beg, std::ReversedIterator<Cont>&& end) : vector()
     {
-        this->ptr = (T*)calloc(SIZE_OF(T));
-        for(; beg != end; beg++)
+        for(; beg != end; beg++) 
             this->push_back(*beg);
     }
 
@@ -276,6 +280,13 @@ public:
     T& operator [](int index) override;
 
     int size(void) override;
+
+    template<typename Cont>
+    friend class ForwardVectorIterator;
+    
+    template<typename Cont>
+    friend class ReversedVectorIterator;
+
     // void print(void) override;
 };
 
@@ -295,9 +306,8 @@ vector<T>::vector(vector<T>&& other)
 }
 
 template<typename T>
-vector<T>::vector (std::initializer_list<T> items)
+vector<T>::vector (std::initializer_list<T> items) : vector()
 {
-    this->ptr = (T*)calloc(SIZE_OF(T) * items.size());
     int index = 0;
     for(auto it = items.begin(); it != items.end(); it++, index++)
         this->ptr[index] = *it;
@@ -332,25 +342,25 @@ T* vector<T>::pointer_get(void)
 template<typename T>
 typename vector<T>::forward_iterator vector<T>::begin(void)
 {
-    return vector<T>::forward_iterator(this->ptr);
+    return vector<T>::forward_iterator(this->ptr, *this);
 }
 
 template<typename T>
 typename vector<T>::forward_iterator vector<T>::end(void)
 {
-    return vector<T>::forward_iterator(this->ptr + this->v_size);
+    return vector<T>::forward_iterator(this->ptr + this->v_size, *this);
 }
 
 template<typename T>
 typename vector<T>::reversed_iterator vector<T>::rbegin(void)
 {
-    return vector<T>::reversed_iterator(this->ptr + this->v_size - 1);
+    return vector<T>::reversed_iterator(this->ptr + this->v_size - 1, *this);
 }
 
 template<typename T>
 typename vector<T>::reversed_iterator vector<T>::rend(void)
 {
-    return vector<T>::reversed_iterator(this->ptr - 1);
+    return vector<T>::reversed_iterator(this->ptr - 1, *this);
 }
 
 template<typename T>

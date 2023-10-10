@@ -5,10 +5,36 @@ namespace std
 {
 
 template<class Cont>
-class ForwardIterator
+class Iterator
 {
     protected:
     typename Cont::iterable_type i_ptr;
+
+    public:
+
+    typename Cont::iterable_type pointer(void)
+    {
+        return this->i_ptr;
+    }
+
+    template<typename T, typename R>
+    friend bool operator == (T&& lhs, R&& rhs){
+        return lhs.i_ptr == rhs.i_ptr;
+    }
+
+    template<typename T, typename R>
+    friend bool operator != (T&& lhs, R&& rhs){
+        return lhs.i_ptr != rhs.i_ptr;
+    }
+};
+
+template<class Cont>
+class ForwardIterator : public Iterator<Cont>
+{
+
+    protected:
+    typename Cont::iterable_type begin;
+    typename Cont::iterable_type end;
 
     public:
     
@@ -32,9 +58,7 @@ class ForwardIterator
     virtual iterator_type& operator = (const iterator_type& other) = 0;
     virtual iterator_type& operator = (iterator_type&&) = 0;
 
-    virtual bool operator == (const iterator_type&) = 0;
-    virtual bool operator != (const iterator_type&) = 0;
-    virtual operator bool(void) = 0;
+    virtual explicit operator bool(void) = 0;
 
     template <class Arr>
     friend class ForwardArrayIterator;
@@ -48,10 +72,11 @@ class ForwardIterator
 };
 
 template<class Cont>
-class ReversedIterator
+class ReversedIterator : public Iterator<Cont>
 {
     protected:
-    typename Cont::iterable_type i_ptr;
+    typename Cont::iterable_type rbegin;
+    typename Cont::iterable_type rend;
 
     public:
 
@@ -75,8 +100,6 @@ class ReversedIterator
     virtual iterator_type& operator = (const iterator_type& other) = 0;
     virtual iterator_type& operator = (iterator_type&&) = 0;
 
-    virtual bool operator == (const iterator_type&) = 0;
-    virtual bool operator != (const iterator_type&) = 0;
     virtual operator bool(void) = 0;
 
     template <class Arr>
