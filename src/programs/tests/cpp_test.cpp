@@ -51,10 +51,16 @@ static inline void arr_test(void)
 {
     std::cout << "ARRAY TEST" << std::endl;
 
-    std::array<int, 10> arr = {0,1,2,3,4,5,6,7,8,9};
+    std::vector<int> vec = {1,2,3,4,5};
+    std::array<int, 10> arr(vec.begin() + 2, vec.end(), 10);
 
     for(auto a : arr)
         std::cout << a << ", ";
+    std::cout << std::endl;
+
+    for(auto it = arr.rbegin(); it != arr.rend(); it++) {
+        std::cout << *it << ", ";
+    }
     std::cout << std::endl;
 }
 

@@ -107,7 +107,7 @@ class ReversedIterator : public Iterator<Cont>
     virtual iterator_type& operator = (const iterator_type& other) = 0;
     virtual iterator_type& operator = (iterator_type&&) = 0;
 
-    virtual operator bool(void) const = 0;
+    virtual explicit operator bool(void) const = 0;
     virtual bool valid(void) const = 0;
 
     template <class Arr>

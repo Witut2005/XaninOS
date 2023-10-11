@@ -14,6 +14,14 @@ namespace std
 template<class Arr>
 class ForwardArrayIterator : public std::ForwardIterator<Arr>
 {
+    private:
+    ForwardArrayIterator<Arr>& perform_operation_with_bounds_check(auto operation, ForwardArrayIterator<Arr>* IteratorToBeChecked) {
+        operation();
+
+        if(!((IteratorToBeChecked->i_ptr >= IteratorToBeChecked->begin) && (IteratorToBeChecked->i_ptr <= IteratorToBeChecked->end)))
+            IteratorToBeChecked->i_ptr = NULL;
+        return *IteratorToBeChecked;
+    }
 
     public: 
 
@@ -28,54 +36,45 @@ class ForwardArrayIterator : public std::ForwardIterator<Arr>
         this->begin = arr.ptr;
         this->end = arr.ptr + arr.size();
     }
+
     ForwardArrayIterator<Arr>(const ForwardArrayIterator<Arr>& other) {this->i_ptr = other.i_ptr;}
 
     iterator_type& operator ++ (void) override //prefix operator
     {
-        this->i_ptr++;
-        return *this;
+        return this->perform_operation_with_bounds_check([this](){this->i_ptr++;}, this);
     }
 
     iterator_type operator ++ (int) override //postfix operator
     {
         ForwardArrayIterator tmp = *this;
-        this->i_ptr++;
+        this->perform_operation_with_bounds_check([this](){this->i_ptr++;}, this);
 
-        return std::move(tmp);
+        return tmp;
     }
 
     iterator_type& operator -- (void) override //prefix operator
     {
-        this->i_ptr--;
-        return *this;
+        return this->perform_operation_with_bounds_check([this](){this->i_ptr--;}, this);
     }
 
     iterator_type operator -- (int) override //postfix operator
     {
         ForwardArrayIterator tmp = *this;
-        this->i_ptr--;
+        this->perform_operation_with_bounds_check([this](){this->i_ptr--;}, this);
 
-        return std::move(tmp);
+        return tmp;
     }
 
     iterator_type operator + (int offset) override 
     {
         ForwardArrayIterator tmp = *this;
-
-        for(int i = 0; i < offset; i++)
-            tmp.i_ptr++;
-
-        return std::move(tmp);
+        return this->perform_operation_with_bounds_check([&tmp, offset](){tmp = tmp + offset;}, &tmp);
     }
 
     iterator_type operator - (int offset) override 
     {
         ForwardArrayIterator tmp = *this;
-        
-        for(int i = 0; i < offset; i++)
-            tmp.i_ptr--;
-
-        return std::move(tmp);
+        return this->perform_operation_with_bounds_check([&tmp, offset](){tmp = tmp - offset;}, &tmp);
     }
 
     lreference operator* (void) const override
@@ -111,40 +110,55 @@ class ForwardArrayIterator : public std::ForwardIterator<Arr>
 template<class Arr>
 class ReversedArrayIterator : public std::ReversedIterator<Arr>
 {
+    private:
+
+    ReversedArrayIterator<Arr>& perform_operation_with_bounds_check(auto operation, ReversedArrayIterator<Arr>* IteratorToBeChecked) {
+        operation();
+
+        if(!((IteratorToBeChecked->i_ptr <= IteratorToBeChecked->rbegin) && (IteratorToBeChecked->i_ptr >= IteratorToBeChecked->rend)))
+            IteratorToBeChecked->i_ptr = NULL;
+
+        return *IteratorToBeChecked;
+    }
 
     public: 
     using value_type = typename Arr::value_type;
-    using lreference = typename Arr::lreference;
     using iterable_type = typename Arr::iterable_type;
+
+    using lreference = typename Arr::lreference;
     using iterator_type = typename Arr::reversed_iterator;
 
-    ReversedArrayIterator(iterable_type ptr) {this->i_ptr = ptr;}
-    ReversedArrayIterator(const ReversedArrayIterator<Arr>& other) {this->i_ptr = other.i_ptr;}
+
+    ReversedArrayIterator<Arr>(iterable_type ptr, Arr& arr) {
+        this->i_ptr = ptr; 
+        this->rbegin = arr.ptr + arr.size() - 1;
+        this->rend = arr.ptr - 1;
+    }
+
+    ReversedArrayIterator<Arr>(const ReversedArrayIterator<Arr>& other) {this->i_ptr = other.i_ptr;}
 
     iterator_type& operator ++ (void) override //prefix operator
     {
-        this->i_ptr--;
-        return *this;
+        return this->perform_operation_with_bounds_check([this](){this->i_ptr--;}, this);
     }
 
     iterator_type operator ++ (int) override //postfix operator
     {
-        --(this->i_ptr); 
         ReversedArrayIterator tmp = *this;
+        this->perform_operation_with_bounds_check([this](){this->i_ptr--;}, this);
 
         return tmp;
     }
 
     iterator_type& operator -- (void) override //prefix operator
     {
-        this->i_ptr++;
-        return *this;
+        return this->perform_operation_with_bounds_check([this](){this->i_ptr++;}, this);
     }
 
     iterator_type operator -- (int) override //postfix operator
     {
-        ++(this->i_ptr);
         ReversedArrayIterator<Arr> tmp = *this;
+        this->perform_operation_with_bounds_check([this](){this->i_ptr++;}, this);
 
         return tmp;
     }
@@ -152,24 +166,16 @@ class ReversedArrayIterator : public std::ReversedIterator<Arr>
     iterator_type operator + (int offset) override 
     {
         ReversedArrayIterator tmp = *this;
-
-        for(int i = 0; i < offset; i++)
-            tmp.i_ptr++;
-
-        return tmp;
+        return this->perform_operation_with_bounds_check([&tmp, offset](){tmp = tmp - offset;}, &tmp);
     }
 
     iterator_type operator - (int offset) override 
     {
         ReversedArrayIterator tmp = *this;
-        
-        for(int i = 0; i < offset; i++)
-            tmp.i_ptr--;
-
-        return tmp;
+        return this->perform_operation_with_bounds_check([&tmp, offset](){tmp = tmp + offset;}, &tmp);
     }
 
-    lreference operator* (void) override
+    lreference operator* (void) const override
     {
         return *this->i_ptr;
     }
@@ -187,9 +193,14 @@ class ReversedArrayIterator : public std::ReversedIterator<Arr>
         return *this;
     }
 
-    operator bool(void) override
+    explicit operator bool(void) const override
     {
-        return this->i_ptr != NULL;
+        return this->valid();
+    }
+
+    bool valid() const
+    {
+        return (this->i_ptr != NULL) & (this->i_ptr <= this->rbegin) & (this->i_ptr > this->rend); 
     }
 
 };
@@ -221,15 +232,16 @@ class array : Container<T>
     array(std::initializer_list<T> a);
 
     template<typename InputIt>
-    array(InputIt beg, InputIt end) {
-        for(int i = 0; (beg != end) & (i < SIZE); beg++; i++){
+    array(InputIt beg, InputIt end, T default_value) {
+        int i = 0;
+        
+        for(; (beg != end) & (i < SIZE); beg++, i++)
             this->ptr[i] = *beg;
-        }
+
+        for(; i < SIZE; i++)
+            this->ptr[i] = default_value;
         
     }
-
-    // vector(forward_iterator)
-    // vector(reversed_iterator)
 
     constexpr forward_iterator begin();
     constexpr forward_iterator end();
@@ -325,13 +337,13 @@ constexpr ForwardArrayIterator<array<T, SIZE>> array<T, SIZE>::end()
 template <class T, int SIZE>
 constexpr ReversedArrayIterator<array<T, SIZE>> array<T, SIZE>::rbegin() 
 {
-    return &ptr[SIZE - 1];
+    return ReversedArrayIterator<array<T, SIZE>>(&ptr[SIZE - 1], *this);
 }
 
 template <class T, int SIZE>
 constexpr ReversedArrayIterator<array<T, SIZE>> array<T, SIZE>::rend() 
 {
-    return &ptr[0] - 1;
+    return ReversedArrayIterator<array<T, SIZE>>(ptr - 1, *this);
 }
 
 template <class T, int SIZE>
