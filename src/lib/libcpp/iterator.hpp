@@ -17,16 +17,22 @@ class Iterator
         return this->i_ptr;
     }
 
-    template<typename T, typename R>
-    friend bool operator == (T&& lhs, R&& rhs){
-        return lhs.i_ptr == rhs.i_ptr;
-    }
+    template<typename InputIt>
+    friend bool operator == (InputIt lhs, InputIt rhs);
 
-    template<typename T, typename R>
-    friend bool operator != (T&& lhs, R&& rhs){
-        return lhs.i_ptr != rhs.i_ptr;
-    }
+    template<typename InputIt>
+    friend bool operator != (InputIt lhs, InputIt rhs);
 };
+
+template<typename InputIt>
+bool operator == (InputIt lhs, InputIt rhs){
+    return lhs.i_ptr == rhs.i_ptr;
+}
+
+template<typename InputIt>
+bool operator != (InputIt lhs, InputIt rhs){
+    return lhs.i_ptr != rhs.i_ptr;
+}
 
 template<class Cont>
 class ForwardIterator : public Iterator<Cont>

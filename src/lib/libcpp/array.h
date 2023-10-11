@@ -23,7 +23,11 @@ class ForwardArrayIterator : public std::ForwardIterator<Arr>
     using lreference = typename Arr::lreference;
     using iterator_type = typename Arr::forward_iterator;
 
-    ForwardArrayIterator<Arr>(iterable_type ptr) {this->i_ptr = ptr;}
+    ForwardArrayIterator<Arr>(iterable_type ptr, Arr& arr) {
+        this->i_ptr = ptr; 
+        this->begin = arr.ptr;
+        this->end = arr.ptr + arr.size();
+    }
     ForwardArrayIterator<Arr>(const ForwardArrayIterator<Arr>& other) {this->i_ptr = other.i_ptr;}
 
     iterator_type& operator ++ (void) override //prefix operator
@@ -34,8 +38,8 @@ class ForwardArrayIterator : public std::ForwardIterator<Arr>
 
     iterator_type operator ++ (int) override //postfix operator
     {
-        ++(this->i_ptr); 
         ForwardArrayIterator tmp = *this;
+        this->i_ptr++;
 
         return std::move(tmp);
     }
@@ -48,8 +52,8 @@ class ForwardArrayIterator : public std::ForwardIterator<Arr>
 
     iterator_type operator -- (int) override //postfix operator
     {
-        --(this->i_ptr);
         ForwardArrayIterator tmp = *this;
+        this->i_ptr--;
 
         return std::move(tmp);
     }
@@ -74,7 +78,7 @@ class ForwardArrayIterator : public std::ForwardIterator<Arr>
         return std::move(tmp);
     }
 
-    lreference operator* (void) override
+    lreference operator* (void) const override
     {
         return *this->i_ptr;
     }
@@ -92,19 +96,14 @@ class ForwardArrayIterator : public std::ForwardIterator<Arr>
         return *this;
     }
 
-    bool operator == (const iterator_type& other) override
+    explicit operator bool(void) const override
     {
-        return this->i_ptr == other.i_ptr;
+        return this->valid();
     }
 
-    bool operator != (const iterator_type& other) override
+    bool valid(void) const override
     {
-        return this->i_ptr != other.i_ptr;
-    }
-
-    operator bool(void) override
-    {
-        return this->i_ptr != NULL;
+        return (this->i_ptr != NULL) & (this->i_ptr >= this->begin) & (this->i_ptr < this->end);
     }
 
 };
@@ -188,16 +187,6 @@ class ReversedArrayIterator : public std::ReversedIterator<Arr>
         return *this;
     }
 
-    bool operator == (const iterator_type& other) override
-    {
-        return this->i_ptr == other.i_ptr;
-    }
-
-    bool operator != (const iterator_type& other) override
-    {
-        return this->i_ptr != other.i_ptr;
-    }
-
     operator bool(void) override
     {
         return this->i_ptr != NULL;
@@ -211,7 +200,7 @@ class array : Container<T>
 {
 
     private:
-    T arr[SIZE];
+    T ptr[SIZE];
 
     public:
 
@@ -294,6 +283,12 @@ class array : Container<T>
         return tmp;
     }
 
+    template<typename Arr>
+    friend class ForwardArrayIterator;
+
+    template<typename Arr>
+    friend class ReversedArrayIterator;
+
     // void print(void);
 };
 
@@ -303,45 +298,45 @@ array<T, SIZE>::array(std::initializer_list<T> a)
     auto it = a.begin();
 
     for(int i = 0; i < SIZE;i++) 
-        this->arr[i] = it[i];
+        this->ptr[i] = it[i];
 }
 
 template <class T, int SIZE>
 constexpr ForwardArrayIterator<array<T, SIZE>> array<T, SIZE>::begin()
 {
-    return &this->arr[0];
+    return ForwardArrayIterator<array<T, SIZE>>(&this->ptr[0], *this);
 }
 
 template <class T, int SIZE>
 constexpr ForwardArrayIterator<array<T, SIZE>> array<T, SIZE>::end()
 {
-    return &this->arr[SIZE];
+    return ForwardArrayIterator<array<T, SIZE>>(&this->ptr[SIZE], *this);
 }
 
 template <class T, int SIZE>
 constexpr ReversedArrayIterator<array<T, SIZE>> array<T, SIZE>::rbegin() 
 {
-    return &arr[SIZE - 1];
+    return &ptr[SIZE - 1];
 }
 
 template <class T, int SIZE>
 constexpr ReversedArrayIterator<array<T, SIZE>> array<T, SIZE>::rend() 
 {
-    return &arr[0] - 1;
+    return &ptr[0] - 1;
 }
 
 template <class T, int SIZE>
 T& array<T, SIZE>::operator[](int index)
 {
     if(index < 0)
-        return arr[SIZE + index];
-    return arr[index];
+        return ptr[SIZE + index];
+    return ptr[index];
 }
 
 template <class T, int SIZE>
 T array<T, SIZE>::get_copy(int32_t index) const
 {
-    return this->arr[index];
+    return this->ptr[index];
 }
 
 template <class T, int SIZE>
@@ -349,7 +344,7 @@ int array<T, SIZE>::find(T key)
 {
     for(int i = 0; i < SIZE; i++)
     {
-        if(arr[i] == key) 
+        if(ptr[i] == key) 
             return i;
     }
     return -1;
@@ -360,7 +355,7 @@ int array<T, SIZE>::find_other_than(T key)
 {
     for(int i = 0; i < SIZE; i++)
     {
-        if(arr[i] != key) 
+        if(ptr[i] != key) 
             return i;
     }
     return -1;
@@ -369,19 +364,19 @@ int array<T, SIZE>::find_other_than(T key)
 template<typename T, int SIZE>
 T* array<T, SIZE>::pointer_get(void) 
 {
-    return this->arr;
+    return this->ptr;
 }
 
 template<typename T, int SIZE>
 T& array<T, SIZE>::front(void) 
 {
-    return this->arr[0];
+    return this->ptr[0];
 }
 
 template<typename T, int SIZE>
 T& array<T, SIZE>::back(void) 
 {
-    return this->arr[SIZE - 1];
+    return this->ptr[SIZE - 1];
 }
 
 // template<typename T, int SIZE>
