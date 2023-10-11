@@ -219,6 +219,15 @@ class array : Container<T>
     array() = default;
     array(const array& arr) = default;
     array(std::initializer_list<T> a);
+
+    template<typename InputIt>
+    array(InputIt beg, InputIt end) {
+        for(int i = 0; (beg != end) & (i < SIZE); beg++; i++){
+            this->ptr[i] = *beg;
+        }
+        
+    }
+
     // vector(forward_iterator)
     // vector(reversed_iterator)
 
