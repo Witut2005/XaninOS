@@ -15,11 +15,11 @@ class ForwardVectorIterator : public std::ForwardIterator<Vec>
 {
 
     private:
-    void perform_operation_with_bounds_check(auto operation) {
+    void perform_operation_with_bounds_check(auto operation, ForwardVectorIterator<Vec>* IteratorToBeChecked) {
         operation();
 
-        if((this->i_ptr < this->begin) || (this->i_ptr > this->end))
-            this->i_ptr = NULL;
+        if(!((IteratorToBeChecked->i_ptr >= IteratorToBeChecked->begin) && (IteratorToBeChecked->i_ptr <= IteratorToBeChecked->end)))
+            IteratorToBeChecked->i_ptr = NULL;
     }
 
     public: 
@@ -50,29 +50,28 @@ class ForwardVectorIterator : public std::ForwardIterator<Vec>
 
     iterator_type& operator ++ (void) override //prefix operator
     {
-        // (this->i_ptr + 1) >= this->end ? this->i_ptr = NULL : this->i_ptr++;
-        this->perform_operation_with_bounds_check([this](){this->i_ptr++;});
+        this->perform_operation_with_bounds_check([this](){this->i_ptr++;}, this);
         return *this;
     }
 
     iterator_type operator ++ (int) override //postfix operator
     {
         ForwardVectorIterator tmp = *this;
-        this->perform_operation_with_bounds_check([this](){this->i_ptr++;});
+        this->perform_operation_with_bounds_check([this](){this->i_ptr++;}, this);
 
         return tmp;
     }
 
     iterator_type& operator -- (void) override //prefix operator
     {
-        this->perform_operation_with_bounds_check([this](){this->i_ptr--;});
+        this->perform_operation_with_bounds_check([this](){this->i_ptr--;}, this);
         return *this;
     }
 
     iterator_type operator -- (int) override //postfix operator
     {
         ForwardVectorIterator tmp = *this;
-        this->perform_operation_with_bounds_check([this](){this->i_ptr--;});
+        this->perform_operation_with_bounds_check([this](){this->i_ptr--;}, this);
 
         return tmp;
     }
@@ -80,7 +79,7 @@ class ForwardVectorIterator : public std::ForwardIterator<Vec>
     iterator_type operator + (int offset) override 
     {
         ForwardVectorIterator tmp = *this;
-        this->perform_operation_with_bounds_check([&](){tmp.i_ptr = tmp.i_ptr + offset;});
+        this->perform_operation_with_bounds_check([&tmp, offset](){tmp.i_ptr = tmp.i_ptr + offset;}, &tmp);
 
         return tmp;
     }
@@ -88,12 +87,12 @@ class ForwardVectorIterator : public std::ForwardIterator<Vec>
     iterator_type operator - (int offset) override 
     {
         ForwardVectorIterator tmp = *this;
-        this->perform_operation_with_bounds_check([&](){tmp.i_ptr = tmp.i_ptr - offset;});
+        this->perform_operation_with_bounds_check([&tmp, offset](){tmp.i_ptr = tmp.i_ptr - offset;}, &tmp);
 
         return tmp;
     }
 
-    lreference operator* (void) override
+    lreference operator* (void) const override
     {
         return *this->i_ptr;
     }
@@ -111,11 +110,15 @@ class ForwardVectorIterator : public std::ForwardIterator<Vec>
         return *this;
     }
 
-    explicit operator bool(void) override
+    explicit operator bool(void) const override
     {
-        return (this->i_ptr != NULL) & (this->i_ptr != this->end);
+        return this->valid();
     }
 
+    bool valid(void) const override
+    {
+        return (this->i_ptr != NULL) & (this->i_ptr >= this->begin) & (this->i_ptr < this->end);
+    }
 
 };
 
@@ -123,11 +126,11 @@ template<class Vec>
 class ReversedVectorIterator : public std::ReversedIterator<Vec>
 {
     private:
-    void perform_operation_with_bounds_check(auto operation) {
+    void perform_operation_with_bounds_check(auto operation, ReversedVectorIterator<Vec>* IteratorToBeChecked) {
         operation();
 
-        if((this->i_ptr < this->rend) || (this->i_ptr > this->rbegin))
-            this->i_ptr = NULL;
+        if(!((IteratorToBeChecked->i_ptr <= IteratorToBeChecked->rbegin) && (IteratorToBeChecked->i_ptr >= IteratorToBeChecked->rend)))
+            IteratorToBeChecked->i_ptr = NULL;
     }
 
     public: 
@@ -147,32 +150,37 @@ class ReversedVectorIterator : public std::ReversedIterator<Vec>
         this->rbegin = vec.ptr + vec.v_size - 1;
         this->rend = vec.ptr - 1;
     }
+
     ReversedVectorIterator<Vec>(const ReversedVectorIterator<Vec>& other) = default;
+    ReversedVectorIterator<Vec>(ReversedVectorIterator<Vec>&& other) {
+        *this = other;
+        other.i_ptr = NULL;
+    }
 
     iterator_type& operator ++ (void) override //prefix operator
     {
-        this->perform_operation_with_bounds_check([this](){this->i_ptr--;});
+        this->perform_operation_with_bounds_check([this](){this->i_ptr--;}, this);
         return *this;
     }
 
     iterator_type operator ++ (int) override //postfix operator
     {
         ReversedVectorIterator tmp = *this;
-        this->perform_operation_with_bounds_check([this](){this->i_ptr--;});
+        this->perform_operation_with_bounds_check([this](){this->i_ptr--;}, this);
 
         return tmp;
     }
 
     iterator_type& operator -- (void) override //prefix operator
     {
-        this->perform_operation_with_bounds_check([this](){this->i_ptr++;});
+        this->perform_operation_with_bounds_check([this](){this->i_ptr++;}, this);
         return *this;
     }
 
     iterator_type operator -- (int) override //postfix operator
     {
         ReversedVectorIterator<Vec> tmp = *this;
-        this->perform_operation_with_bounds_check([this](){this->i_ptr++;});
+        this->perform_operation_with_bounds_check([this](){this->i_ptr++;}, this);
 
         return tmp;
     }
@@ -180,7 +188,7 @@ class ReversedVectorIterator : public std::ReversedIterator<Vec>
     iterator_type operator + (int offset) override 
     {
         ReversedVectorIterator tmp = *this;
-        this->perform_operation_with_bounds_check([&](){tmp.i_ptr = tmp.i_ptr - offset;});
+        this->perform_operation_with_bounds_check([&tmp, offset](){tmp.i_ptr = tmp.i_ptr - offset;}, &tmp);
 
         return tmp;
     }
@@ -188,12 +196,12 @@ class ReversedVectorIterator : public std::ReversedIterator<Vec>
     iterator_type operator - (int offset) override 
     {
         ReversedVectorIterator tmp = *this;
-        this->perform_operation_with_bounds_check([&](){tmp.i_ptr = tmp.i_ptr + offset;});
+        this->perform_operation_with_bounds_check([&tmp, offset](){tmp.i_ptr = tmp.i_ptr + offset;}, &tmp);
         
         return tmp;
     }
 
-    lreference operator* (void) override
+    lreference operator* (void) const override
     {
         return *this->i_ptr;
     }
@@ -211,9 +219,14 @@ class ReversedVectorIterator : public std::ReversedIterator<Vec>
         return *this;
     }
 
-    operator bool(void) override
+    operator bool(void) const override
     {
-        return (this->i_ptr != NULL) & (this->i_ptr != this->rend);
+        return this->valid();
+    }
+
+    bool valid() const
+    {
+        return (this->i_ptr != NULL) & (this->i_ptr <= this->rbegin) & (this->i_ptr > this->rend); 
     }
 
 };
@@ -244,17 +257,8 @@ public:
     vector(vector<T>&& other); // move constructor
     vector (std::initializer_list<T> items); 
 
-    //WRONG LVALUES
-    template<typename Cont>
-    vector(std::ForwardIterator<Cont>&& beg, std::ForwardIterator<Cont>&& end) : vector()
-    {
-        for(; beg != end; beg++)
-            this->push_back(*beg);
-    }
-
-    //WRONG LVALUES
-    template<typename Cont>
-    vector(std::ReversedIterator<Cont>&& beg, std::ReversedIterator<Cont>&& end) : vector()
+    template<typename InputIt>
+    vector(InputIt beg, InputIt end) : vector()
     {
         for(; beg != end; beg++) 
             this->push_back(*beg);

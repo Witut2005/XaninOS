@@ -65,17 +65,20 @@ static inline void vec_test(void)
 
     std::vector<int> vtmp = {0,1,2,3,4,5,6,7,8,9};
 
-    std::vector<int> vec(vtmp.rbegin() + 1, vtmp.rend());
+    auto it = vtmp.end();
+    auto rit = vtmp.rend();
+    std::vector<int> vec(rit, vtmp.rend());
 
     for(auto a : vec)
         std::cout << a << ", ";
     std::cout << std::endl;
 
-    auto it = vtmp.begin();
-    std::cout << *it << std::endl;
-    it--;
+    // auto it = vtmp.begin();
+    // std::cout << *it << std::endl;
+    // it--;
 
-    if(it)
+    // rit++;
+    if(it.valid())
         std::cout << "not null" << std::endl;
     else
         std::cout << "null" << std::endl;

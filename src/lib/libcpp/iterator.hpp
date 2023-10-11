@@ -53,12 +53,13 @@ class ForwardIterator : public Iterator<Cont>
     virtual iterator_type operator + (int) = 0;
     virtual iterator_type operator - (int) = 0;
 
-    virtual value_type& operator * (void) = 0;
+    virtual value_type& operator * (void) const = 0;
 
     virtual iterator_type& operator = (const iterator_type& other) = 0;
     virtual iterator_type& operator = (iterator_type&&) = 0;
 
-    virtual explicit operator bool(void) = 0;
+    virtual explicit operator bool(void) const = 0;
+    virtual bool valid(void) const = 0;
 
     template <class Arr>
     friend class ForwardArrayIterator;
@@ -95,12 +96,13 @@ class ReversedIterator : public Iterator<Cont>
     virtual iterator_type operator + (int) = 0;
     virtual iterator_type operator - (int) = 0;
 
-    virtual value_type& operator * (void) = 0;
+    virtual value_type& operator * (void) const = 0;
 
     virtual iterator_type& operator = (const iterator_type& other) = 0;
     virtual iterator_type& operator = (iterator_type&&) = 0;
 
-    virtual operator bool(void) = 0;
+    virtual operator bool(void) const = 0;
+    virtual bool valid(void) const = 0;
 
     template <class Arr>
     friend class ReversedArrayIterator;
