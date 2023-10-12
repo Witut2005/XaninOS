@@ -6,6 +6,7 @@
 #include <lib/libcpp/utility.h>
 #include <lib/libcpp/initializer_list.hpp>
 #include <lib/libcpp/container.hpp>
+#include <lib/libcpp/type_traits.h>
 #include "./iterator.hpp"
 
 namespace std
@@ -30,6 +31,7 @@ class ForwardArrayIterator : public std::ForwardIterator<Arr>
 
     using lreference = typename Arr::lreference;
     using iterator_type = typename Arr::forward_iterator;
+    static constexpr Types type = Types::ForwardArrayIterator;
 
     ForwardArrayIterator<Arr>(iterable_type ptr, Arr& arr) {
         this->i_ptr = ptr; 
@@ -37,7 +39,7 @@ class ForwardArrayIterator : public std::ForwardIterator<Arr>
         this->end = arr.ptr + arr.size();
     }
 
-    ForwardArrayIterator<Arr>(const ForwardArrayIterator<Arr>& other) {this->i_ptr = other.i_ptr;}
+    ForwardArrayIterator<Arr>(const ForwardArrayIterator<Arr>& other) = default;
 
     iterator_type& operator ++ (void) override //prefix operator
     {
@@ -68,13 +70,13 @@ class ForwardArrayIterator : public std::ForwardIterator<Arr>
     iterator_type operator + (int offset) override 
     {
         ForwardArrayIterator tmp = *this;
-        return this->perform_operation_with_bounds_check([&tmp, offset](){tmp = tmp + offset;}, &tmp);
+        return this->perform_operation_with_bounds_check([&tmp, offset](){tmp.i_ptr = tmp.i_ptr + offset;}, &tmp);
     }
 
     iterator_type operator - (int offset) override 
     {
         ForwardArrayIterator tmp = *this;
-        return this->perform_operation_with_bounds_check([&tmp, offset](){tmp = tmp - offset;}, &tmp);
+        return this->perform_operation_with_bounds_check([&tmp, offset](){tmp.i_ptr = tmp.i_ptr - offset;}, &tmp);
     }
 
     lreference operator* (void) const override
@@ -127,7 +129,7 @@ class ReversedArrayIterator : public std::ReversedIterator<Arr>
 
     using lreference = typename Arr::lreference;
     using iterator_type = typename Arr::reversed_iterator;
-
+    static constexpr Types type = Types::ForwardArrayIterator;
 
     ReversedArrayIterator<Arr>(iterable_type ptr, Arr& arr) {
         this->i_ptr = ptr; 
@@ -135,7 +137,7 @@ class ReversedArrayIterator : public std::ReversedIterator<Arr>
         this->rend = arr.ptr - 1;
     }
 
-    ReversedArrayIterator<Arr>(const ReversedArrayIterator<Arr>& other) {this->i_ptr = other.i_ptr;}
+    ReversedArrayIterator<Arr>(const ReversedArrayIterator<Arr>& other) = default;
 
     iterator_type& operator ++ (void) override //prefix operator
     {
@@ -249,19 +251,21 @@ class array : Container<T>
     constexpr reversed_iterator rbegin();
     constexpr reversed_iterator rend();
 
-    T* pointer_get(void) override;
+    T* pointer(void);  //override;
 
     std::array<T, SIZE>& operator = (const std::array<T, SIZE>& other) = default;
-    lreference operator[](int index);
+    constexpr lreference operator[](const int index);
+
+    constexpr bool valid_element(T& element) const;
 
     T get_copy(int32_t index) const;
     int find(T key);
     int find_other_than(T key);
 
-    T& front(void) override;
-    T& back(void) override;
+    T& front(void); //override;
+    T& back(void);  //override;
 
-    constexpr int size(void) override
+    constexpr int size(void)// override
     {
         return SIZE;
     }
@@ -280,26 +284,20 @@ class array : Container<T>
         return tmp;
     }
 
-    template<int TO_SIZE>
-    std::array<T, TO_SIZE> slice(const ForwardIterator<std::array<T, SIZE>>& begin) 
+    template<int TO_SIZE, typename InputIt>
+    std::array<T, TO_SIZE> slice(InputIt&& begin)
     {
-        std::array<T, TO_SIZE> tmp;
-        ForwardArrayIterator<std::array<T, SIZE>> it(begin);
 
-        for(int i = 0; i < TO_SIZE; i++, it++)
-            tmp[i] = *it;
+        static_assert((begin.type == Types::ReversedArrayIterator) || (begin.type == Types::ForwardArrayIterator), 
+            "You need to use ArrayIterator object");
 
-        return tmp;
-    }
-
-
-    template<int TO_SIZE>
-    std::array<T, TO_SIZE> slice(ReversedIterator<std::array<T, SIZE>>&& rbegin)
-    {
         std::array<T, TO_SIZE> tmp;
 
-        for(int i = 0; i < TO_SIZE; i++, rbegin++)
-            tmp[i] = *rbegin;
+        for(int i = 0; i < TO_SIZE; i++, begin++) {
+            if(!begin.valid())
+                break;
+            tmp[i] = *begin;
+        }
 
         return tmp;
     }
@@ -329,7 +327,7 @@ constexpr ForwardArrayIterator<array<T, SIZE>> array<T, SIZE>::begin()
 }
 
 template <class T, int SIZE>
-constexpr ForwardArrayIterator<array<T, SIZE>> array<T, SIZE>::end()
+constexpr ForwardArrayIterator<array<T, SIZE>> array<T, SIZE>::end() 
 {
     return ForwardArrayIterator<array<T, SIZE>>(&this->ptr[SIZE], *this);
 }
@@ -347,11 +345,27 @@ constexpr ReversedArrayIterator<array<T, SIZE>> array<T, SIZE>::rend()
 }
 
 template <class T, int SIZE>
-T& array<T, SIZE>::operator[](int index)
+constexpr T& array<T, SIZE>::operator[](const int index) 
 {
-    if(index < 0)
-        return ptr[SIZE + index];
-    return ptr[index];
+
+    if (index < 0)
+    {
+        if(index < SIZE * (-1))
+            return *(T*)NULL;
+
+        return this->ptr[SIZE + index];
+    }
+
+    else if(index > SIZE)
+        return *(T*)NULL;
+
+    return this->ptr[index];
+}
+
+template <class T, int SIZE>
+constexpr bool array<T, SIZE>::valid_element(T& element) const
+{
+    return ((uint32_t)&element >= (uint32_t)this->ptr) & ((uint32_t)&element < (uint32_t)&this->ptr[SIZE]);
 }
 
 template <class T, int SIZE>
@@ -383,7 +397,7 @@ int array<T, SIZE>::find_other_than(T key)
 }
 
 template<typename T, int SIZE>
-T* array<T, SIZE>::pointer_get(void) 
+T* array<T, SIZE>::pointer(void) 
 {
     return this->ptr;
 }

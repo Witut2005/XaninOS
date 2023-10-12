@@ -56,7 +56,17 @@ enum class Types
     int16_t, 
     uint32_t,
     integer,
-    string
+    string,
+
+    ForwardArrayIterator,
+    ReversedArrayIterator,
+
+    ForwardVectorIterator,
+    ReversedVectorIterator,
+
+    ForwardListIterator,
+    ReversedListIterator
+
 };
 
 constexpr Types type(const uint8_t x)

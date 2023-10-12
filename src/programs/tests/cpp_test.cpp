@@ -54,13 +54,33 @@ static inline void arr_test(void)
     std::vector<int> vec = {1,2,3,4,5};
     std::array<int, 10> arr(vec.begin() + 2, vec.end(), 10);
 
+    // auto it = arr.begin();
+
+    // auto tarr = arr.slice<4>(arr.begin() + 1);
+
+    // // auto con = tarr.concat(tarr);
+
+    auto& value =  arr[-11];
+
+    xprintf("value: 0x%x 0x%x\n", &value, &arr[0]);
+
+    std::cout << "is valid element: " << arr.valid_element(value) << std::endl;
+
+    if(arr.valid_element(value))
+        std::cout << "value of element: " << value << std::endl;
+
     for(auto a : arr)
         std::cout << a << ", ";
     std::cout << std::endl;
 
-    for(auto it = arr.rbegin(); it != arr.rend(); it++) {
-        std::cout << *it << ", ";
-    }
+    for(int i = 0; i < arr.size(); i++)
+        std::cout << arr[i] << ", ";
+    std::cout << std::endl;
+
+
+    // for(auto a : tarr)
+    //     std::cout << a << ", ";
+
     std::cout << std::endl;
 }
 

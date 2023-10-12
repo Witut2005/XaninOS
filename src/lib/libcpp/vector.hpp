@@ -7,6 +7,7 @@
 #include <lib/libcpp/utility.h>
 #include <lib/libcpp/ostream.h>
 #include <lib/libcpp/container.hpp>
+#include <lib/libcpp/type_traits.h>
 
 namespace std {
 
@@ -33,6 +34,8 @@ class ForwardVectorIterator : public std::ForwardIterator<Vec>
 
     using const_lreference = typename Vec::const_lreference;
     using const_rreference = typename Vec::const_rreference;
+
+    static constexpr Types type = Types::ForwardVectorIterator;
 
     ForwardVectorIterator<Vec>(iterable_type ptr, Vec& vec) {
         // std::cout << "DEFAULT" << std::endl;
@@ -138,6 +141,7 @@ class ReversedVectorIterator : public std::ReversedIterator<Vec>
     using lreference = typename Vec::lreference;
     using iterator_type = typename Vec::reversed_iterator; 
     using iterable_type = typename Vec::iterable_type;
+    static constexpr Types type = Types::ReversedVectorIterator;
 
     constexpr const char* type_info(void)
     {
@@ -269,7 +273,7 @@ public:
     std::vector<T>& operator = (const vector<T>& other) = default; // copy assigment operator
     std::vector<T>& operator = (vector<T>&& other); // move assigment operator
 
-    T* pointer_get(void) override;
+    T* pointer(void); // override;
 
     forward_iterator begin(void);
     forward_iterator end(void);
@@ -279,11 +283,11 @@ public:
     void push_back(T item);
     void pop_back(void);
 
-    T& front(void) override;
-    T& back(void) override;
-    T& operator [](int index) override;
+    T& front(void); // override;
+    T& back(void); // override;
+    T& operator [](int index); // override;
 
-    int size(void) override;
+    int size(void);// override;
 
     template<typename Cont>
     friend class ForwardVectorIterator;
@@ -338,7 +342,7 @@ vector<T>& vector<T>::operator = (std::vector<T>&& other)
 }
 
 template<typename T>
-T* vector<T>::pointer_get(void)
+T* vector<T>::pointer(void)
 {
     return this->ptr;
 }
