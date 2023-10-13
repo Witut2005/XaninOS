@@ -76,3 +76,23 @@ Example:
 ```c
 void __sys_xtb_init(uint32_t vga_width, uint32_t vga_height, uint16_t* vram);
 ```
+Example:
+
+## XaninOS Iterators 
+
+Iterators should declare macros: 
+
+- this_type 
+- value_type
+- iterable_type 
+- lreference
+
+Declarations of this macros should be ordered as above
+
+---
+
+Iterators must also declare 
+```cpp
+static constexpr Types type
+```
+variable to get iterator type when needed

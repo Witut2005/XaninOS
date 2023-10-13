@@ -15,8 +15,18 @@ namespace std
 template<class Arr>
 class ForwardArrayIterator : public std::ForwardIterator<Arr>
 {
+    public: 
+
+    using this_type = ForwardArrayIterator<Arr>;
+
+    using value_type = typename Arr::value_type;
+    using iterable_type = typename Arr::iterable_type;
+    using lreference = typename Arr::lreference;
+
+    static constexpr Types type = Types::ForwardArrayIterator;
+
     private:
-    ForwardArrayIterator<Arr>& perform_operation_with_bounds_check(auto operation, ForwardArrayIterator<Arr>* IteratorToBeChecked) {
+    this_type& perform_operation_with_bounds_check(auto operation, ForwardArrayIterator<Arr>* IteratorToBeChecked) {
         operation();
 
         if(!((IteratorToBeChecked->i_ptr >= IteratorToBeChecked->begin) && (IteratorToBeChecked->i_ptr <= IteratorToBeChecked->end)))
@@ -24,15 +34,7 @@ class ForwardArrayIterator : public std::ForwardIterator<Arr>
         return *IteratorToBeChecked;
     }
 
-    public: 
-
-    using value_type = typename Arr::value_type;
-    using iterable_type = typename Arr::iterable_type;
-
-    using lreference = typename Arr::lreference;
-    using iterator_type = typename Arr::forward_iterator;
-    static constexpr Types type = Types::ForwardArrayIterator;
-
+    public:
     ForwardArrayIterator<Arr>(iterable_type ptr, Arr& arr) {
         this->i_ptr = ptr; 
         this->begin = arr.ptr;
@@ -41,12 +43,12 @@ class ForwardArrayIterator : public std::ForwardIterator<Arr>
 
     ForwardArrayIterator<Arr>(const ForwardArrayIterator<Arr>& other) = default;
 
-    iterator_type& operator ++ (void) override //prefix operator
+    this_type& operator ++ (void) override //prefix operator
     {
         return this->perform_operation_with_bounds_check([this](){this->i_ptr++;}, this);
     }
 
-    iterator_type operator ++ (int) override //postfix operator
+    this_type operator ++ (int) override //postfix operator
     {
         ForwardArrayIterator tmp = *this;
         this->perform_operation_with_bounds_check([this](){this->i_ptr++;}, this);
@@ -54,12 +56,12 @@ class ForwardArrayIterator : public std::ForwardIterator<Arr>
         return tmp;
     }
 
-    iterator_type& operator -- (void) override //prefix operator
+    this_type& operator -- (void) override //prefix operator
     {
         return this->perform_operation_with_bounds_check([this](){this->i_ptr--;}, this);
     }
 
-    iterator_type operator -- (int) override //postfix operator
+    this_type operator -- (int) override //postfix operator
     {
         ForwardArrayIterator tmp = *this;
         this->perform_operation_with_bounds_check([this](){this->i_ptr--;}, this);
@@ -67,13 +69,13 @@ class ForwardArrayIterator : public std::ForwardIterator<Arr>
         return tmp;
     }
 
-    iterator_type operator + (int offset) override 
+    this_type operator + (int offset) override 
     {
         ForwardArrayIterator tmp = *this;
         return this->perform_operation_with_bounds_check([&tmp, offset](){tmp.i_ptr = tmp.i_ptr + offset;}, &tmp);
     }
 
-    iterator_type operator - (int offset) override 
+    this_type operator - (int offset) override 
     {
         ForwardArrayIterator tmp = *this;
         return this->perform_operation_with_bounds_check([&tmp, offset](){tmp.i_ptr = tmp.i_ptr - offset;}, &tmp);
@@ -84,13 +86,13 @@ class ForwardArrayIterator : public std::ForwardIterator<Arr>
         return *this->i_ptr;
     }
 
-    iterator_type& operator = (const iterator_type& other) override 
+    this_type& operator = (const this_type& other) override 
     {
         *this = other;
         return *this;
     }
 
-    iterator_type& operator = (iterator_type&& other) override 
+    this_type& operator = (this_type&& other) override 
     {
         *this = other;
         other.i_ptr = NULL;
@@ -112,8 +114,16 @@ class ForwardArrayIterator : public std::ForwardIterator<Arr>
 template<class Arr>
 class ReversedArrayIterator : public std::ReversedIterator<Arr>
 {
-    private:
+    public: 
+    using this_type = typename Arr::reversed_iterator;
 
+    using value_type = typename Arr::value_type;
+    using iterable_type = typename Arr::iterable_type;
+    using lreference = typename Arr::lreference;
+
+    static constexpr Types type = Types::ForwardArrayIterator;
+
+    private:
     ReversedArrayIterator<Arr>& perform_operation_with_bounds_check(auto operation, ReversedArrayIterator<Arr>* IteratorToBeChecked) {
         operation();
 
@@ -123,14 +133,7 @@ class ReversedArrayIterator : public std::ReversedIterator<Arr>
         return *IteratorToBeChecked;
     }
 
-    public: 
-    using value_type = typename Arr::value_type;
-    using iterable_type = typename Arr::iterable_type;
-
-    using lreference = typename Arr::lreference;
-    using iterator_type = typename Arr::reversed_iterator;
-    static constexpr Types type = Types::ForwardArrayIterator;
-
+    public:
     ReversedArrayIterator<Arr>(iterable_type ptr, Arr& arr) {
         this->i_ptr = ptr; 
         this->rbegin = arr.ptr + arr.size() - 1;
@@ -139,12 +142,12 @@ class ReversedArrayIterator : public std::ReversedIterator<Arr>
 
     ReversedArrayIterator<Arr>(const ReversedArrayIterator<Arr>& other) = default;
 
-    iterator_type& operator ++ (void) override //prefix operator
+    this_type& operator ++ (void) override //prefix operator
     {
         return this->perform_operation_with_bounds_check([this](){this->i_ptr--;}, this);
     }
 
-    iterator_type operator ++ (int) override //postfix operator
+    this_type operator ++ (int) override //postfix operator
     {
         ReversedArrayIterator tmp = *this;
         this->perform_operation_with_bounds_check([this](){this->i_ptr--;}, this);
@@ -152,12 +155,12 @@ class ReversedArrayIterator : public std::ReversedIterator<Arr>
         return tmp;
     }
 
-    iterator_type& operator -- (void) override //prefix operator
+    this_type& operator -- (void) override //prefix operator
     {
         return this->perform_operation_with_bounds_check([this](){this->i_ptr++;}, this);
     }
 
-    iterator_type operator -- (int) override //postfix operator
+    this_type operator -- (int) override //postfix operator
     {
         ReversedArrayIterator<Arr> tmp = *this;
         this->perform_operation_with_bounds_check([this](){this->i_ptr++;}, this);
@@ -165,13 +168,13 @@ class ReversedArrayIterator : public std::ReversedIterator<Arr>
         return tmp;
     }
 
-    iterator_type operator + (int offset) override 
+    this_type operator + (int offset) override 
     {
         ReversedArrayIterator tmp = *this;
         return this->perform_operation_with_bounds_check([&tmp, offset](){tmp = tmp - offset;}, &tmp);
     }
 
-    iterator_type operator - (int offset) override 
+    this_type operator - (int offset) override 
     {
         ReversedArrayIterator tmp = *this;
         return this->perform_operation_with_bounds_check([&tmp, offset](){tmp = tmp + offset;}, &tmp);
@@ -182,13 +185,13 @@ class ReversedArrayIterator : public std::ReversedIterator<Arr>
         return *this->i_ptr;
     }
 
-    iterator_type& operator = (const iterator_type& other) override 
+    this_type& operator = (const this_type& other) override 
     {
         *this = other;
         return *this;
     }
 
-    iterator_type& operator = (iterator_type&& other) override 
+    this_type& operator = (this_type&& other) override 
     {
         *this = other;
         other.i_ptr = NULL;
@@ -217,8 +220,10 @@ class array : Container<T>
 
     public:
 
-    using iterable_type = T*;
+    using this_type = array<T, SIZE>;
+
     using value_type = T;
+    using iterable_type = T*;
 
     using lreference = T&;
     using rreference = T&&;
@@ -226,8 +231,9 @@ class array : Container<T>
     using const_lreference = const T&;
     using const_rreference = const T&&;
 
-    using forward_iterator = ForwardArrayIterator<array<T, SIZE>>;
-    using reversed_iterator = ReversedArrayIterator<array<T, SIZE>>;
+    using forward_iterator = ForwardArrayIterator<this_type>;
+    using reversed_iterator = ReversedArrayIterator<this_type>;
+
 
     array() = default;
     array(const array& arr) = default;
