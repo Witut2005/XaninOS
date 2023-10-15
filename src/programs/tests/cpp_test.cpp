@@ -10,7 +10,7 @@
 #include <lib/libcpp/string.h>
 #include <lib/libcpp/istream.h>
 #include <sys/devices/keyboard/scan_codes.h>
-#include <lib/libcpp/array.h>
+#include <lib/libcpp/container/array/array.hpp>
 #include <lib/libcpp/initializer_list.hpp>
 #include <lib/libcpp/new.hpp>
 #include <lib/libcpp/bytes.h>
@@ -52,17 +52,31 @@ static inline void arr_test(void)
     std::cout << "ARRAY TEST" << std::endl;
 
     std::vector<int> vec = {1,2,3,4,5};
-    std::array<int, 10> arr(vec.begin() + 2, vec.end(), 10);
+    std::array<int, 10> arr(vec.begin(), vec.end(), 10);
 
     auto it = arr.begin();
 
     auto tarr = arr.slice<4>(arr.begin() + 1);
 
     // auto con = tarr.concat(tarr);
-    auto cit = arr.cbegin();
-    n(cit);
-    // *cit = 6;
-    std::cout << "const it: " << *cit << std::endl;
+    
+
+    // CONST ITERATORS TEST
+    {
+    auto cbit = arr.cbegin();
+    auto ceit = arr.cend();
+
+    auto crbit = arr.crbegin();
+    auto creit = arr.crend();
+    // UNCOMMENT TO CHECK IF READ-ONLY
+    // *crbit = 6;
+    // *creit = 6;
+    }
+
+    for(auto crbit = arr.crbegin(); crbit != arr.crend(); crbit++) {
+        std::cout << *crbit << std::endl;
+    }
+    // std::cout << "const it: " << *cit << std::endl;
 
     return;
 

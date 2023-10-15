@@ -1,7 +1,7 @@
 
 #include <lib/libc/hal.h>
 #include <lib/libc/memory.h>
-#include <lib/libcpp/array.h>
+#include <lib/libcpp/container/array/array.hpp>
 #include <lib/libcpp/vector.hpp>
 #include <sys/input/input.h>
 
