@@ -59,6 +59,11 @@ static inline void arr_test(void)
     // auto tarr = arr.slice<4>(arr.begin() + 1);
 
     // // auto con = tarr.concat(tarr);
+    auto cit = arr.cbegin();
+    *cit = 1;
+    std::cout << "const it: " << *cit << std::endl;
+
+    return;
 
     auto& value =  arr[-11];
 

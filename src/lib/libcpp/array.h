@@ -19,8 +19,8 @@ class ForwardArrayIterator : public std::ForwardIterator<Arr>
 
     using this_type = ForwardArrayIterator<Arr>;
 
-    using value_type = typename Arr::value_type;
-    using iterable_type = typename Arr::iterable_type;
+    using value_type = typename ConditionalConst<typename Arr::value_type, false>::type;
+    using iterable_type = typename ConditionalConst<typename Arr::iterable_type, false>::type;
     using lreference = typename Arr::lreference;
 
     static constexpr Types type = Types::ForwardArrayIterator;
@@ -107,6 +107,36 @@ class ForwardArrayIterator : public std::ForwardIterator<Arr>
     bool valid(void) const override
     {
         return (this->i_ptr != NULL) & (this->i_ptr >= this->begin) & (this->i_ptr < this->end);
+    }
+
+};
+
+template<class Arr>
+class ConstForwardArrayIterator : public ForwardArrayIterator<Arr>
+{
+
+    public: 
+    using this_type = ConstForwardArrayIterator<Arr>;
+
+    using value_type = typename ConditionalConst<typename Arr::value_type, true>::type;
+    using iterable_type = typename ConditionalConst<typename Arr::iterable_type, true>::type;
+    using lreference = const value_type;
+
+    static constexpr Types type = Types::ForwardArrayIterator;
+
+    ConstForwardArrayIterator<Arr>(iterable_type ptr, Arr& arr) : ForwardArrayIterator<Arr>(ptr, arr) {
+        std::cout<< "nicho" << std::endl;
+        while(1);
+    }// = default;
+
+    ConstForwardArrayIterator<Arr>(const ConstForwardArrayIterator<Arr>& other) {
+        std::cout<< "nicho" << std::endl;
+        while(1);
+    }// = default;
+
+    lreference operator* (void) const 
+    {
+        return *this->i_ptr;
     }
 
 };
@@ -233,7 +263,8 @@ class array : Container<T>
 
     using forward_iterator = ForwardArrayIterator<this_type>;
     using reversed_iterator = ReversedArrayIterator<this_type>;
-
+    using const_forward_iterator = ConstForwardArrayIterator<this_type>;
+    // using const_reversed_iterator = ConstReversedArrayIterator<this_type>;
 
     array() = default;
     array(const array& arr) = default;
@@ -253,9 +284,10 @@ class array : Container<T>
 
     constexpr forward_iterator begin();
     constexpr forward_iterator end();
-
     constexpr reversed_iterator rbegin();
     constexpr reversed_iterator rend();
+
+    constexpr const_forward_iterator cbegin();
 
     T* pointer(void);  //override;
 
@@ -348,6 +380,12 @@ template <class T, int SIZE>
 constexpr ReversedArrayIterator<array<T, SIZE>> array<T, SIZE>::rend() 
 {
     return ReversedArrayIterator<array<T, SIZE>>(ptr - 1, *this);
+}
+
+template <class T, int SIZE>
+constexpr ConstForwardArrayIterator<array<T, SIZE>> array<T, SIZE>::cbegin()
+{
+    return ConstForwardArrayIterator<array<T, SIZE>>(&this->ptr[0], *this);
 }
 
 template <class T, int SIZE>

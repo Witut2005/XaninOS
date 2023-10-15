@@ -46,6 +46,17 @@ struct is_pointer<T* const volatile> : std::true_type {};
 #define is_short(T) (SIZE_OF(T) == SIZE_OF(short))
 #define is_char(T) (SIZE_OF(T) == SIZE_OF(char))
 
+
+template <typename T, bool const_add = false>
+struct ConditionalConst {
+    using type = T;
+};
+
+template <typename T>
+struct ConditionalConst<T, true> {
+    using type = const T;
+};
+
 // static const char* const nullptr;
 
 enum class Types
