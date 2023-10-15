@@ -112,31 +112,100 @@ class ForwardArrayIterator : public std::ForwardIterator<Arr>
 };
 
 template<class Arr>
-class ConstForwardArrayIterator : public ForwardArrayIterator<Arr>
+class ConstForwardArrayIterator : public ConstForwardIterator<Arr>
 {
-
     public: 
     using this_type = ConstForwardArrayIterator<Arr>;
 
-    using value_type = typename ConditionalConst<typename Arr::value_type, true>::type;
-    using iterable_type = typename ConditionalConst<typename Arr::iterable_type, true>::type;
-    using lreference = const value_type;
+    using value_type = typename ConditionalConst<typename Arr::value_type, false>::type;
+    using iterable_type = typename ConditionalConst<typename Arr::iterable_type, false>::type;
+    using const_lreference = typename Arr::const_lreference;
 
     static constexpr Types type = Types::ForwardArrayIterator;
 
-    ConstForwardArrayIterator<Arr>(iterable_type ptr, Arr& arr) : ForwardArrayIterator<Arr>(ptr, arr) {
-        std::cout<< "nicho" << std::endl;
-        while(1);
-    }// = default;
+    private:
+    this_type& perform_operation_with_bounds_check(auto operation, this_type* IteratorToBeChecked) {
+        operation();
 
-    ConstForwardArrayIterator<Arr>(const ConstForwardArrayIterator<Arr>& other) {
-        std::cout<< "nicho" << std::endl;
-        while(1);
-    }// = default;
+        if(!((IteratorToBeChecked->i_ptr >= IteratorToBeChecked->begin) && (IteratorToBeChecked->i_ptr <= IteratorToBeChecked->end)))
+            IteratorToBeChecked->i_ptr = NULL;
+        return *IteratorToBeChecked;
+    }
 
-    lreference operator* (void) const 
+    public:
+    ConstForwardArrayIterator<Arr>(iterable_type ptr, Arr& arr) {
+        this->i_ptr = ptr; 
+        this->begin = arr.ptr;
+        this->end = arr.ptr + arr.size();
+    }
+
+    ConstForwardArrayIterator<Arr>(const ConstForwardArrayIterator<Arr>& other) = default;
+
+
+    this_type& operator ++ (void) override //prefix operator
+    {
+        return this->perform_operation_with_bounds_check([this](){this->i_ptr++;}, this);
+    }
+
+    this_type operator ++ (int) override //postfix operator
+    {
+        this_type tmp = *this;
+        this->perform_operation_with_bounds_check([this](){this->i_ptr++;}, this);
+
+        return tmp;
+    }
+
+    this_type& operator -- (void) override //prefix operator
+    {
+        return this->perform_operation_with_bounds_check([this](){this->i_ptr--;}, this);
+    }
+
+    this_type operator -- (int) override //postfix operator
+    {
+        this_type tmp = *this;
+        this->perform_operation_with_bounds_check([this](){this->i_ptr--;}, this);
+
+        return tmp;
+    }
+
+    this_type operator + (int offset) override 
+    {
+        this_type tmp = *this;
+        return this->perform_operation_with_bounds_check([&tmp, offset](){tmp.i_ptr = tmp.i_ptr + offset;}, &tmp);
+    }
+
+    this_type operator - (int offset) override 
+    {
+        this_type tmp = *this;
+        return this->perform_operation_with_bounds_check([&tmp, offset](){tmp.i_ptr = tmp.i_ptr - offset;}, &tmp);
+    }
+
+    const_lreference operator* (void) override
     {
         return *this->i_ptr;
+    }
+
+    this_type& operator = (const this_type& other) override 
+    {
+        *this = other;
+        return *this;
+    }
+
+    this_type& operator = (this_type&& other) override 
+    {
+        *this = other;
+        other.i_ptr = NULL;
+        return *this;
+    }
+
+    explicit operator bool(void) const override
+    {
+        return this->valid();
+    }
+
+    bool valid(void) const override
+    {
+        return (this->i_ptr != NULL) & (this->i_ptr >= this->begin) & (this->i_ptr < this->end);
     }
 
 };
@@ -342,6 +411,9 @@ class array : Container<T>
 
     template<typename Arr>
     friend class ForwardArrayIterator;
+
+    template<typename Arr>
+    friend class ConstForwardArrayIterator;
 
     template<typename Arr>
     friend class ReversedArrayIterator;

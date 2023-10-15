@@ -54,13 +54,14 @@ static inline void arr_test(void)
     std::vector<int> vec = {1,2,3,4,5};
     std::array<int, 10> arr(vec.begin() + 2, vec.end(), 10);
 
-    // auto it = arr.begin();
+    auto it = arr.begin();
 
-    // auto tarr = arr.slice<4>(arr.begin() + 1);
+    auto tarr = arr.slice<4>(arr.begin() + 1);
 
-    // // auto con = tarr.concat(tarr);
+    // auto con = tarr.concat(tarr);
     auto cit = arr.cbegin();
-    *cit = 1;
+    n(cit);
+    // *cit = 6;
     std::cout << "const it: " << *cit << std::endl;
 
     return;
@@ -82,7 +83,6 @@ static inline void arr_test(void)
         std::cout << arr[i] << ", ";
     std::cout << std::endl;
 
-
     // for(auto a : tarr)
     //     std::cout << a << ", ";
 
@@ -98,21 +98,22 @@ static inline void vec_test(void)
 
     auto it = vtmp.end();
     auto rit = vtmp.rend();
-    std::vector<int> vec(rit, vtmp.rend());
+    // auto rit = vtmp.rend();
+    // std::vector<int> vec(rit, vtmp.rend());
 
-    for(auto a : vec)
-        std::cout << a << ", ";
-    std::cout << std::endl;
+    // for(auto a : vec)
+    //     std::cout << a << ", ";
+    // std::cout << std::endl;
 
-    // auto it = vtmp.begin();
-    // std::cout << *it << std::endl;
-    // it--;
+    // // auto it = vtmp.begin();
+    // // std::cout << *it << std::endl;
+    // // it--;
 
-    // rit++;
-    if(it.valid())
-        std::cout << "not null" << std::endl;
-    else
-        std::cout << "null" << std::endl;
+    // // rit++;
+    // if(it.valid())
+    //     std::cout << "not null" << std::endl;
+    // else
+    //     std::cout << "null" << std::endl;
 
     return;
 }

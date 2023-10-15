@@ -92,6 +92,69 @@ class ReversedIterator : public Iterator<Cont>
 
     using iterator_type = typename Cont::reversed_iterator;
 
+    virtual iterator_type& operator ++ (void) = 0;
+    virtual iterator_type operator ++ (int) = 0;
+    virtual iterator_type& operator -- (void) = 0;
+    virtual iterator_type operator -- (int) = 0;
+
+    virtual iterator_type operator + (int) = 0;
+    virtual iterator_type operator - (int) = 0;
+
+    virtual value_type& operator * (void) const = 0;
+
+    virtual iterator_type& operator = (const iterator_type& other) = 0;
+    virtual iterator_type& operator = (iterator_type&&) = 0;
+
+    virtual explicit operator bool(void) const = 0;
+    virtual bool valid(void) const = 0;
+
+    template <class Arr>
+    friend class ReversedArrayIterator;
+
+    template <class Vec>
+    friend class ReversedVectorIterator;
+
+    template <class Li>
+    friend class ReversedListIterator;
+
+};
+
+
+template<class Cont>
+class ConstIterator
+{
+    protected:
+    typename Cont::iterable_type i_ptr;
+
+    public:
+
+    const typename Cont::iterable_type pointer(void)
+    {
+        return this->i_ptr;
+    }
+
+    template<typename InputIt>
+    friend bool operator == (InputIt lhs, InputIt rhs);
+
+    template<typename InputIt>
+    friend bool operator != (InputIt lhs, InputIt rhs);
+};
+
+template<class Cont>
+class ConstForwardIterator : public ConstIterator<Cont>
+{
+
+    protected:
+    typename Cont::iterable_type begin;
+    typename Cont::iterable_type end;
+
+    public:
+    using iterator_type = typename Cont::const_forward_iterator;
+    
+    using iterable_type = typename Cont::iterable_type;
+    using value_type = typename Cont::value_type;
+    using const_lreference = typename Cont::const_lreference;
+
     // virtual constexpr const char* type_info(void);
 
     virtual iterator_type& operator ++ (void) = 0;
@@ -102,7 +165,40 @@ class ReversedIterator : public Iterator<Cont>
     virtual iterator_type operator + (int) = 0;
     virtual iterator_type operator - (int) = 0;
 
-    virtual value_type& operator * (void) const = 0;
+    virtual const_lreference operator * (void) = 0;
+
+    virtual iterator_type& operator = (const iterator_type& other) = 0;
+    virtual iterator_type& operator = (iterator_type&&) = 0;
+
+    virtual explicit operator bool(void) const = 0;
+    virtual bool valid(void) const = 0;
+
+};
+
+template<class Cont>
+class ConstReversedIterator : public ConstIterator<Cont>
+{
+    protected:
+    typename Cont::iterable_type rbegin;
+    typename Cont::iterable_type rend;
+
+    public:
+    using iterator_type = typename Cont::reversed_iterator;
+
+    using iterable_type = typename Cont::iterable_type;
+    using value_type = typename Cont::value_type;
+    using lreference = typename Cont::lreference;
+
+
+    virtual iterator_type& operator ++ (void) = 0;
+    virtual iterator_type operator ++ (int) = 0;
+    virtual iterator_type& operator -- (void) = 0;
+    virtual iterator_type operator -- (int) = 0;
+
+    virtual iterator_type operator + (int) = 0;
+    virtual iterator_type operator - (int) = 0;
+
+    virtual const lreference operator * (void) const = 0;
 
     virtual iterator_type& operator = (const iterator_type& other) = 0;
     virtual iterator_type& operator = (iterator_type&&) = 0;
