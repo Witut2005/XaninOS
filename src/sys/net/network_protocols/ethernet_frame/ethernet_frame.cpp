@@ -1,13 +1,14 @@
 
-#include <sys/net/network_protocols/ethernet_frame/ethernet_frame.hpp>
 #include <lib/libc/stdlibx.h>
 #include <lib/libcpp/endian.h>
 #include <lib/libc/stdiox.h>
+#include <lib/libc/time.h>
+
 #include <sys/devices/nic/8254x.hpp>
 #include <sys/net/network_protocols/arp/arp.h>
-#include <lib/libc/time.h>
 #include <sys/net/network_protocols/ethernet_type.h>
 #include <sys/net/network_protocols/internet_protocol/ipv4/ip.h>
+#include <sys/net/network_protocols/ethernet_frame/ethernet_frame.hpp>
 
 extern std::UnorderedMap<net::MacAddress, NetworkResponse*> ArpPacketsInfo;
 

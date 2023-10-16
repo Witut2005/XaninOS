@@ -5,7 +5,6 @@
 #include <lib/libcpp/ostream.h>
 #include <lib/libcpp/utility.h>
 #include <lib/libcpp/initializer_list.hpp>
-#include <lib/libcpp/container.hpp>
 #include <lib/libcpp/type_traits.h>
 #include "./iterator.hpp"
 
@@ -13,7 +12,7 @@ namespace std
 {
 
 template <class T, int SIZE>
-class array : Container<T>
+class array 
 {
 
     private:

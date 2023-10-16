@@ -1,4 +1,6 @@
 
+#pragma once
+
 #include <lib/libcpp/list.h>
 #include <lib/libcpp/initializer_list.hpp>
 

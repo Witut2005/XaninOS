@@ -1,5 +1,4 @@
 // #include <sys/devices/nic/ne2000.hpp>
-#include <lib/libcpp/stack.h>
 #include <lib/libcpp/utility.h>
 #include <lib/libcpp/time.hpp>
 #include <lib/libcpp/algorithm.h>
@@ -10,14 +9,10 @@
 #include <lib/libcpp/string.h>
 #include <lib/libcpp/istream.h>
 #include <sys/devices/keyboard/scan_codes.h>
-#include <lib/libcpp/container/array/array.hpp>
 #include <lib/libcpp/initializer_list.hpp>
 #include <lib/libcpp/new.hpp>
 #include <lib/libcpp/bytes.h>
 #include <lib/libcpp/list.h>
-#include <lib/libcpp/map.h>
-#include <lib/libcpp/vector.hpp>
-#include <lib/libcpp/set.h>
 #include <lib/libcpp/fstream.h>
 #include <lib/libcpp/regex.h>
 #include <lib/libcpp/memory.h>
@@ -25,7 +20,8 @@
 #include <lib/screen/screen.h>
 #include <sys/terminal/interpreter/interpreter.h>
 #include <sys/input/input.h>
-#include <lib/libcpp/iterator.hpp>
+
+#include <lib/libcpp/container/xanin_containers.hpp>
 // #include <lib/libcpp/list_copy.h>
 
 //TERMINAL_APP

@@ -1,10 +1,10 @@
 
 #include <stdint.h>
+#include <lib/libcpp/container/map.hpp>
 #include <sys/net/netapi/network_device.h>
-#include <sys/net/network_protocols/ethernet_frame/ethernet_frame.h>
-#include <lib/libcpp/map.h>
 #include <sys/net/netapi/objects/mac.hpp>
 #include <sys/net/netapi/objects/response.h>
+#include <sys/net/network_protocols/ethernet_frame/ethernet_frame.h>
 
 class EthernetFrameInterface
 {

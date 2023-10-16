@@ -54,8 +54,7 @@ extern bool is_loopback_packet(void);
 #endif
 
 #ifdef __cplusplus
-#include <lib/libcpp/map.h>
-#include <lib/libcpp/list.h>
+#include <lib/libcpp/container/map.hpp>
 
 class InternetProtocolInterface
 {

@@ -22,7 +22,7 @@ enum ARP_ENUM
 
 #ifdef __cplusplus
 
-#include <lib/libcpp/map.h>
+#include <lib/libcpp/container/map.hpp>
 
 class ArpModule
 {
