@@ -35,6 +35,9 @@ public:
     using forward_iterator = ForwardVectorIterator<vector<T>>;
     using reversed_iterator = ReversedVectorIterator<vector<T>>;
 
+    using const_forward_iterator = ConstForwardVectorIterator<vector<T>>;
+    using const_reversed_iterator = ConstReversedVectorIterator<vector<T>>;
+
     vector();
     vector(const vector<T>& other) =  default; // copy constructor
     vector(vector<T>&& other); // move constructor
@@ -59,6 +62,11 @@ public:
     reversed_iterator rbegin(void);
     reversed_iterator rend(void);
 
+    const_forward_iterator cbegin(void);
+    const_forward_iterator cend(void);
+    const_reversed_iterator crbegin(void);
+    const_reversed_iterator crend(void);
+
     void push_back(T item);
     void pop_back(void);
 
@@ -73,6 +81,12 @@ public:
     
     template<typename Cont>
     friend class ReversedVectorIterator;
+
+    template<typename Cont>
+    friend class ConstForwardVectorIterator;
+    
+    template<typename Cont>
+    friend class ConstReversedVectorIterator;
 
     // void print(void) override;
 };
@@ -149,6 +163,31 @@ typename vector<T>::reversed_iterator vector<T>::rend(void)
 {
     return vector<T>::reversed_iterator(this->ptr - 1, *this);
 }
+
+template<typename T>
+typename vector<T>::const_forward_iterator vector<T>::cbegin(void)
+{
+    return vector<T>::const_forward_iterator(this->ptr, *this);
+}
+
+template<typename T>
+typename vector<T>::const_forward_iterator vector<T>::cend(void)
+{
+    return vector<T>::const_forward_iterator(this->ptr + this->v_size, *this);
+}
+
+template<typename T>
+typename vector<T>::const_reversed_iterator vector<T>::crbegin(void)
+{
+    return vector<T>::const_reversed_iterator(this->ptr + this->v_size - 1, *this);
+}
+
+template<typename T>
+typename vector<T>::const_reversed_iterator vector<T>::crend(void)
+{
+    return vector<T>::const_reversed_iterator(this->ptr - 1, *this);
+}
+
 
 template<typename T>
 void vector<T>::push_back(T item)

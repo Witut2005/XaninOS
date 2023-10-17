@@ -108,6 +108,15 @@ static inline void vec_test(void)
 
     auto it = vtmp.end();
     auto rit = vtmp.rend();
+
+    auto cit = vtmp.cbegin();
+    auto crit = vtmp.crend();
+
+    for(auto f = vtmp.cbegin(); f != vtmp.cend(); f++)
+        std::cout << *f << std::endl;
+    
+    return;
+
     // auto rit = vtmp.rend();
     // std::vector<int> vec(rit, vtmp.rend());
 
@@ -154,8 +163,8 @@ static inline void list_test(void)
 void cpp_prog()
 {
 
-    arr_test();
-    // vec_test();
+    // arr_test();
+    vec_test();
     // list_test();
 
     // std::UnorderedMap<char, int> Mapa;
