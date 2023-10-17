@@ -138,51 +138,51 @@ array<T, SIZE>::array(std::initializer_list<T> a)
 }
 
 template <class T, int SIZE>
-constexpr ForwardArrayIterator<array<T, SIZE>> array<T, SIZE>::begin()
+constexpr typename array<T, SIZE>::forward_iterator array<T, SIZE>::begin()
 {
-    return ForwardArrayIterator<array<T, SIZE>>(&this->ptr[0], *this);
+    return array<T, SIZE>::forward_iterator(&this->ptr[0], *this);
 }
 
 template <class T, int SIZE>
-constexpr ForwardArrayIterator<array<T, SIZE>> array<T, SIZE>::end() 
+constexpr typename array<T, SIZE>::forward_iterator array<T, SIZE>::end() 
 {
-    return ForwardArrayIterator<array<T, SIZE>>(&this->ptr[SIZE], *this);
+    return array<T, SIZE>::forward_iterator(&this->ptr[SIZE], *this);
 }
 
 template <class T, int SIZE>
-constexpr ReversedArrayIterator<array<T, SIZE>> array<T, SIZE>::rbegin() 
+constexpr typename array<T, SIZE>::reversed_iterator array<T, SIZE>::rbegin() 
 {
-    return ReversedArrayIterator<array<T, SIZE>>(&ptr[SIZE - 1], *this);
+    return array<T, SIZE>::reversed_iterator(&ptr[SIZE - 1], *this);
 }
 
 template <class T, int SIZE>
-constexpr ReversedArrayIterator<array<T, SIZE>> array<T, SIZE>::rend() 
+constexpr typename array<T, SIZE>::reversed_iterator array<T, SIZE>::rend() 
 {
-    return ReversedArrayIterator<array<T, SIZE>>(ptr - 1, *this);
+    return array<T, SIZE>::reversed_iterator(ptr - 1, *this);
 }
 
 template <class T, int SIZE>
-constexpr ConstForwardArrayIterator<array<T, SIZE>> array<T, SIZE>::cbegin()
+constexpr typename array<T, SIZE>::const_forward_iterator array<T, SIZE>::cbegin()
 {
-    return ConstForwardArrayIterator<array<T, SIZE>>(&this->ptr[0], *this);
+    return array<T, SIZE>::const_forward_iterator(&this->ptr[0], *this);
 }
 
 template <class T, int SIZE>
-constexpr ConstForwardArrayIterator<array<T, SIZE>> array<T, SIZE>::cend() 
+constexpr typename array<T, SIZE>::const_forward_iterator array<T, SIZE>::cend() 
 {
-    return ConstForwardArrayIterator<array<T, SIZE>>(&this->ptr[SIZE], *this);
+    return array<T, SIZE>::const_forward_iterator(&this->ptr[SIZE], *this);
 }
 
 template <class T, int SIZE>
-constexpr ConstReversedArrayIterator<array<T, SIZE>> array<T, SIZE>::crbegin() 
+constexpr typename array<T, SIZE>::const_reversed_iterator array<T, SIZE>::crbegin() 
 {
-    return ConstReversedArrayIterator<array<T, SIZE>>(&ptr[SIZE - 1], *this);
+    return array<T, SIZE>::const_reversed_iterator(&ptr[SIZE - 1], *this);
 }
 
 template <class T, int SIZE>
-constexpr ConstReversedArrayIterator<array<T, SIZE>> array<T, SIZE>::crend() 
+constexpr typename array<T, SIZE>::const_reversed_iterator array<T, SIZE>::crend() 
 {
-    return ConstReversedArrayIterator<array<T, SIZE>>(ptr - 1, *this);
+    return array<T, SIZE>::const_reversed_iterator(ptr - 1, *this);
 }
 
 
