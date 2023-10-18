@@ -106,14 +106,9 @@ static inline void vec_test(void)
 
     std::vector<int> vtmp = {0,1,2,3,4,5,6,7,8,9};
 
-    auto it = vtmp.end();
-    auto rit = vtmp.rend();
+    vtmp.push_back(1);
 
-    auto cit = vtmp.cbegin();
-    auto crit = vtmp.crend();
-
-    for(auto f = vtmp.cbegin(); f != vtmp.cend(); f++)
-        std::cout << *f << std::endl;
+    std::cout << "last element of vector: " << vtmp.valid_element(vtmp[-12]) << std::endl;
     
     return;
 

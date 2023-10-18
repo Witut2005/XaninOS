@@ -76,6 +76,8 @@ public:
 
     int size(void);// override;
 
+    bool valid_element(T& element) const;
+
     template<typename Cont>
     friend class ForwardVectorIterator;
     
@@ -241,6 +243,13 @@ template<typename T>
 int vector<T>::size(void)
 {
     return this->v_size;
+}
+
+//DOESNT WORK + CONSTS
+template<typename T>
+bool vector<T>::valid_element(T& element) const
+{
+    return ((uint32_t)&element >= (uint32_t)this->ptr) & ((uint32_t)&element < (uint32_t)&this->ptr[this->v_size]);
 }
 
 // template<typename T>
