@@ -43,11 +43,12 @@ class ForwardIterator : public Iterator<Cont>
     typename Cont::iterable_type end;
 
     public:
+    using iterator_type = typename Cont::forward_iterator;
     
     using iterable_type = typename Cont::iterable_type;
     using value_type = typename Cont::value_type;
+    using lreference = typename Cont::lreference;
 
-    using iterator_type = typename Cont::forward_iterator;
 
     // virtual constexpr const char* type_info(void);
 
@@ -59,7 +60,7 @@ class ForwardIterator : public Iterator<Cont>
     virtual iterator_type operator + (int) = 0;
     virtual iterator_type operator - (int) = 0;
 
-    virtual value_type& operator * (void) const = 0;
+    virtual lreference operator * (void) const = 0;
 
     virtual iterator_type& operator = (const iterator_type& other) = 0;
     virtual iterator_type& operator = (iterator_type&&) = 0;
@@ -86,11 +87,11 @@ class ReversedIterator : public Iterator<Cont>
     typename Cont::iterable_type rend;
 
     public:
+    using iterator_type = typename Cont::reversed_iterator;
 
     using iterable_type = typename Cont::iterable_type;
     using value_type = typename Cont::value_type;
-
-    using iterator_type = typename Cont::reversed_iterator;
+    using lreference = typename Cont::lreference;
 
     virtual iterator_type& operator ++ (void) = 0;
     virtual iterator_type operator ++ (int) = 0;
@@ -100,7 +101,7 @@ class ReversedIterator : public Iterator<Cont>
     virtual iterator_type operator + (int) = 0;
     virtual iterator_type operator - (int) = 0;
 
-    virtual value_type& operator * (void) const = 0;
+    virtual lreference operator * (void) const = 0;
 
     virtual iterator_type& operator = (const iterator_type& other) = 0;
     virtual iterator_type& operator = (iterator_type&&) = 0;

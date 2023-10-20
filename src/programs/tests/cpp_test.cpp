@@ -134,33 +134,33 @@ static inline void vec_test(void)
 
 static inline void list_test(void)
 {
-    // std::cout << "LIST TEST" << std::endl;
+    std::cout << "LIST TEST" << std::endl;
 
-    // std::ListC<int> li;
+    std::ListC<int> li = {1,2,3,4,5};
 
-    // for(int i = 0; i < 10; i++)
-    //     li.push_front(i);
+    for(int i = 0; i < 10; i++)
+        li.push_back(i);
 
-    // std::cout << "[ ";
-    // for(auto it = li.begin(); it != li.end(); it++)
-    //     std::cout << *it << ",";
-    // std::cout << " ]\n";
+    std::cout << "[ ";
+    for(auto it = li.crbegin(); it != li.crend(); it++)
+    {
+        std::cout << *it << ",";
+    }
+    std::cout << " ]\n";
 
-    // std::cout << "[ ";
+    auto it = li.end() - 1;
+    it++;
 
-    // for(; it != li.rend(); it++)
-    //     std::cout << *it << ",";
-    // std::cout << " ]\n";
+    std::cout << "IS VALID: " << it.valid() << std::endl;
 
-    // std::cout << "----------------" << std::endl;
 }
 
 void cpp_prog()
 {
 
-    // arr_test();
-    vec_test();
-    // list_test();
+    //arr_test();
+    //vec_test();
+    list_test();
 
     // std::UnorderedMap<char, int> Mapa;
     // Mapa.insert('a', 10);

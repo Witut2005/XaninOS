@@ -33,8 +33,8 @@ class ListC
     public:
     using ListNode = ListElement<T>;
 
-    using iterable_type = ListElement<T>;
     using value_type = T;
+    using iterable_type = ListElement<T>*;
 
     using this_type = ListC<T>;
 
@@ -49,6 +49,9 @@ class ListC
     using forward_iterator = ForwardListIterator<this_type>;
     using reversed_iterator = ReversedListIterator<this_type>;
 
+    using const_forward_iterator = ConstForwardListIterator<this_type>;
+    using const_reversed_iterator = ConstReversedListIterator<this_type>;
+
     ListC();
     ListC(const ListC& other) = default;
     // List(List&& other);
@@ -56,9 +59,13 @@ class ListC
     
     ForwardListIterator<ListC<T>> begin();
     ForwardListIterator<ListC<T>> end();
-
     ReversedListIterator<ListC<T>> rbegin();
     ReversedListIterator<ListC<T>> rend();
+
+    ConstForwardListIterator<ListC<T>> cbegin();
+    ConstForwardListIterator<ListC<T>> cend();
+    ConstReversedListIterator<ListC<T>> crbegin();
+    ConstReversedListIterator<ListC<T>> crend();
 
     uint32_t size(void);
 
@@ -73,7 +80,17 @@ class ListC
 
     void print(void);
 
-    // void print(void);
+    template<class Li>
+    friend class ForwardListIterator;
+
+    template<class Li>
+    friend class ReversedListIterator;
+
+    template<class Li>
+    friend class ConstForwardListIterator;
+
+    template<class Li>
+    friend class ConstReversedListIterator;
 
 };
 
@@ -106,28 +123,53 @@ typename ListC<T>::ListNode* ListC<T>::goto_last_element(void)
 }
 
 template<typename T>
-ForwardListIterator<ListC<T>> ListC<T>::begin()
+typename ListC<T>::forward_iterator ListC<T>::begin()
 {
-    return this->Head;
+    return ListC<T>::forward_iterator(this->Head);
 }
 
 template<typename T>
-ForwardListIterator<ListC<T>> ListC<T>::end()
+typename ListC<T>::forward_iterator ListC<T>::end()
 {
-    return nullptr;
+    return ListC<T>::forward_iterator(NULL);
 }
 
 
 template<typename T>
-ReversedListIterator<ListC<T>> ListC<T>::rbegin()
+typename ListC<T>::reversed_iterator ListC<T>::rbegin()
 {
-    return ReversedListIterator<ListC<T>>(this->goto_last_element());
+    return ListC<T>::reversed_iterator(this->goto_last_element());
 }
 
 template<typename T>
-ReversedListIterator<ListC<T>> ListC<T>::rend()
+typename ListC<T>::reversed_iterator ListC<T>::rend()
 {
-    return ReversedListIterator<ListC<T>>(nullptr);
+    return ListC<T>::reversed_iterator(NULL);
+}
+
+template<typename T>
+typename ListC<T>::const_forward_iterator ListC<T>::cbegin()
+{
+    return ListC<T>::const_forward_iterator(this->Head);
+}
+
+template<typename T>
+typename ListC<T>::const_forward_iterator ListC<T>::cend()
+{
+    return ListC<T>::const_forward_iterator(NULL);
+}
+
+
+template<typename T>
+typename ListC<T>::const_reversed_iterator ListC<T>::crbegin()
+{
+    return ListC<T>::const_reversed_iterator(this->goto_last_element());
+}
+
+template<typename T>
+typename ListC<T>::const_reversed_iterator ListC<T>::crend()
+{
+    return ListC<T>::const_reversed_iterator(NULL);
 }
 
 template<typename T>
