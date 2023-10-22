@@ -12,7 +12,6 @@
 #include <lib/libcpp/initializer_list.hpp>
 #include <lib/libcpp/new.hpp>
 #include <lib/libcpp/bytes.h>
-#include <lib/libcpp/list.h>
 #include <lib/libcpp/fstream.h>
 #include <lib/libcpp/regex.h>
 #include <lib/libcpp/memory.h>
@@ -138,7 +137,7 @@ static inline void list_test(void)
 {
     std::cout << "LIST TEST" << std::endl;
 
-    std::ListC<int> li = {1,2,3,4,5};
+    std::List<int> li = {1,2,3,4,5};
 
     for(int i = 0; i < 10; i++)
         li.push_back(i);
