@@ -23,6 +23,7 @@
 
 #include <lib/libcpp/container/xanin_containers.hpp>
 #include <lib/libc/hash.h>
+#include <lib/libcpp/hash.hpp>
 // #include <lib/libcpp/list_copy.h>
 
 //TERMINAL_APP
@@ -165,6 +166,10 @@ void cpp_prog()
 
     std::cout << "hash test: " << jhash("nicho") << std::endl;
     std::cout << "hash test: " << jhash("nicholatte") << std::endl;
+    std::cout << "hash test: " << jhash(10) << std::endl;
+
+    std::cout << "test: " << (uint32_t)0xFFFFFFFF << std::endl;
+    std::cout << "test: " << int_to_str(10, "nicho") << std::endl;
     return;
 
     // std::UnorderedMap<char, int> Mapa;

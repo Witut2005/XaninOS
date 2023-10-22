@@ -4,12 +4,11 @@
 
 uint32_t jhash_with_length(const char* key, uint32_t length)
 {
-    uint32_t i = 0;
     uint32_t hash = 0;
 
-    while (i != length) 
+    for(uint32_t i = 0; i < length; i++)
     {
-        hash += key[i++];
+        hash += key[i];
         hash += hash << 10;
         hash ^= hash >> 6;
     }

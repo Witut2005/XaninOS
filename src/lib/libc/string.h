@@ -42,6 +42,7 @@ char* float_to_string(float number, char* str);
 uint32_t strcmp(char* a, const char* b);
 bool bstrcmp(char* a, const char* b);
 bool bstrncmp(char* a, const char* b, size_t string_size);
+char* uint_to_str(uint32_t x, char* buf);
 char* int_to_str(int x, char* buf);
 char* bin_to_str(int x, char* buf);
 char* bcd_to_str(uint8_t x, char* buf);

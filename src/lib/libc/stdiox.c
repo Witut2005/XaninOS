@@ -126,10 +126,10 @@ void xprintf(char* str, ... )
                 {
                     number = va_arg(args,int);
 
-                    int_to_str(number,temporary_pointer);
+                    int_to_str(number, tmp);
 
-                    for(int i = 0; temporary_pointer[i] != '\0'; i++)
-                        __sys_xtf_cell_put(StdioVty, temporary_pointer[i], OUTPUT_COLOR_SET(background_color, font_color));
+                    for(int i = 0; tmp[i] != '\0'; i++)
+                        __sys_xtf_cell_put(StdioVty, tmp[i], OUTPUT_COLOR_SET(background_color, font_color));
 
                     break;
                 }

@@ -142,9 +142,7 @@ bool bstrncmp(char* a, const char* b, size_t string_size)
     return 1;		
 }
 
-
-
-char* int_to_str(int x, char* buf)
+char* uint_to_str(uint32_t x, char* buf)
 {
     int i = 0;
 
@@ -160,6 +158,33 @@ char* int_to_str(int x, char* buf)
         buf[i] = (x % 10) + '0';
         x = x / 10;
     }
+
+    buf[i] = '\0';
+    buf = reverse_string(buf);
+    return buf;
+}
+
+char* int_to_str(int x, char* buf)
+{
+    int i = 0;
+
+    bool is_negative = x < 0 ? true : false;
+    x = abs(x);
+
+    if(!x)
+    {
+        memcpy(buf, "0", 2);
+        return buf;
+    }
+
+
+    for(; x != 0; i++) {
+        buf[i] = (x % 10) + '0';
+        x = x / 10;
+    }
+
+    if(is_negative)
+        buf[i++] = '-';
 
     buf[i] = '\0';
     buf = reverse_string(buf);

@@ -293,7 +293,6 @@ objects_to_compile = {
         CompileObject('./sys/net/netapi/objects/mac.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
     ],
 
-
     'kmodules': [
         CompileObject('./sys/pmmngr/alloc.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./sys/input/input.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
@@ -344,6 +343,7 @@ objects_to_compile = {
         CompileObject('./lib/libcpp/time.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         # CompileObject('./lib/libcpp/bytes.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./lib/libcpp/endian.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
+        CompileObject('./lib/libcpp/hash.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
     ],
 
     'vty': [
