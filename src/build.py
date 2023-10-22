@@ -331,6 +331,7 @@ objects_to_compile = {
         CompileObject('./lib/libc/process.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./lib/libc/stdiox_legacy.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./lib/libc/canvas.c', builders['c'], builder_options['c']['default'], OBJECT),
+        CompileObject('./lib/libc/hash.c', builders['c'], builder_options['c']['default'], OBJECT),
     ],
 
     'libcpp': [
