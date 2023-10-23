@@ -61,6 +61,7 @@ class ForwardIterator : public Iterator<Cont>
     virtual iterator_type operator - (int) = 0;
 
     virtual lreference operator * (void) const = 0;
+    // virtual iterator_type operator-> (void) const = 0;
 
     virtual iterator_type& operator = (const iterator_type& other) = 0;
     virtual iterator_type& operator = (iterator_type&&) = 0;

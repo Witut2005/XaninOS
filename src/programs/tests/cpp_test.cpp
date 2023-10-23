@@ -23,7 +23,7 @@
 #include <lib/libcpp/container/xanin_containers.hpp>
 #include <lib/libc/hash.h>
 #include <lib/libcpp/hash.hpp>
-// #include <lib/libcpp/list_copy.h>
+#include <lib/libcpp/container/map.hpp>
 
 //TERMINAL_APP
 
@@ -153,6 +153,21 @@ static inline void list_test(void)
     it++;
 
     std::cout << "IS VALID: " << it.valid() << std::endl;
+}
+
+static inline void map_test(void)
+{
+    std::cout << "MAP TEST" << std::endl;
+
+    std::UnorderedMapC<int, int> map = {
+        {1, 10},
+        {2, 20}
+    };
+
+    std::UnorderedMapC<int, int> cp = std::move(map);
+
+    for(auto it = map.begin(); it != map.end(); it++)
+        std::cout << (*it).first << " " << (*it).second << std::endl;
 
 }
 
@@ -161,7 +176,9 @@ void cpp_prog()
 
     //arr_test();
     //vec_test();
-    list_test();
+    //list_test();
+    map_test();
+    return;
 
     std::cout << "hash test: " << jhash("nicho") << std::endl;
     std::cout << "hash test: " << jhash("nicholatte") << std::endl;
@@ -169,6 +186,7 @@ void cpp_prog()
 
     std::cout << "test: " << (uint32_t)0xFFFFFFFF << std::endl;
     std::cout << "test: " << int_to_str(10, "nicho") << std::endl;
+
     return;
 
     // std::UnorderedMap<char, int> Mapa;

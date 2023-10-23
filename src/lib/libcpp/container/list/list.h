@@ -31,20 +31,17 @@ class List
     ListElement<T>* goto_last_element(void);
 
     public:
+    using this_type = List<T>;
     using ListNode = ListElement<T>;
 
     using value_type = T;
     using iterable_type = ListElement<T>*;
 
-    using this_type = List<T>;
-
-    //BRUH
     using lreference = T&;
     using rreference = T&&;
 
     using const_lreference = const T&;
     using const_rreference = const T&&;
-    //BRUH
 
     using forward_iterator = ForwardListIterator<this_type>;
     using reversed_iterator = ReversedListIterator<this_type>;
