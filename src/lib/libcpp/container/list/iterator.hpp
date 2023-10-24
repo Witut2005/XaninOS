@@ -17,6 +17,8 @@ class ForwardListIterator : public ForwardIterator<Li>
     using iterable_type = typename Li::iterable_type;
     using lreference = typename Li::lreference;
 
+    constexpr static Types type = Types::ForwardListIterator;
+
     ForwardListIterator<Li>(iterable_type ptr) {this->i_ptr = ptr;}
 
     ForwardListIterator<Li>(const this_type& other) = default;
@@ -145,6 +147,8 @@ class ForwardListIterator : public ForwardIterator<Li>
         return this->i_ptr != NULL;
     }
 
+    template<typename T>
+    friend class List;
 };
 
 template<class Li>
@@ -157,6 +161,8 @@ class ReversedListIterator : public ReversedIterator<Li>
     using value_type = typename Li::value_type;
     using iterable_type = typename Li::iterable_type;
     using lreference = typename Li::lreference;
+
+    constexpr static Types type = Types::ReversedListIterator;
 
     ReversedListIterator<Li>(iterable_type ptr) {this->i_ptr = ptr;}
 
@@ -286,6 +292,8 @@ class ReversedListIterator : public ReversedIterator<Li>
         return this->i_ptr != NULL;
     }
 
+    template<typename T>
+    friend class List;
 };
 
 template<class Li>
@@ -298,6 +306,8 @@ class ConstForwardListIterator : public ConstForwardIterator<Li>
     using value_type = typename Li::value_type;
     using iterable_type = typename Li::iterable_type;
     using const_lreference = typename Li::const_lreference;
+
+    constexpr static Types type = Types::ForwardListIterator;
 
     ConstForwardListIterator<Li>(iterable_type ptr) {this->i_ptr = ptr;}
 
@@ -427,6 +437,8 @@ class ConstForwardListIterator : public ConstForwardIterator<Li>
         return this->i_ptr != NULL;
     }
 
+    template<typename T>
+    friend class List;
 };
 
 template<class Li>
@@ -439,6 +451,8 @@ class ConstReversedListIterator : public ConstReversedIterator<Li>
     using value_type = typename Li::value_type;
     using iterable_type = typename Li::iterable_type;
     using const_lreference = typename Li::const_lreference;
+
+    constexpr static Types type = Types::ReversedListIterator;
 
     ConstReversedListIterator<Li>(iterable_type ptr) {this->i_ptr = ptr;}
 
@@ -568,6 +582,8 @@ class ConstReversedListIterator : public ConstReversedIterator<Li>
         return this->i_ptr != NULL;
     }
 
+    template<typename T>
+    friend class List;
 };
 
 }

@@ -76,8 +76,10 @@ enum class Types
     ReversedVectorIterator,
 
     ForwardListIterator,
-    ReversedListIterator
+    ReversedListIterator,
 
+    ForwardUnorderedIterator,
+    ReversedUnorderedIterator
 };
 
 constexpr Types type(const uint8_t x)

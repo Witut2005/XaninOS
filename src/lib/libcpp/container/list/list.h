@@ -27,7 +27,9 @@ class List
 
     private:
     ListElement<T>*  Head;
+    ListElement<T>* Tail;
     uint32_t li_size;
+    void new_head_set(ListElement<T>* head);
     ListElement<T>* goto_last_element(void);
 
     public:
@@ -53,6 +55,7 @@ class List
     List(const List& other) = default;
     // List(List&& other);
     List(std::initializer_list<T> items);
+    ~List();
     
     forward_iterator begin();
     forward_iterator end();
@@ -65,6 +68,40 @@ class List
     const_reversed_iterator crend();
 
     uint32_t size(void);
+
+    void clear(void);
+    void remove(value_type value);
+
+    template <typename InputIt>
+    void erase(InputIt beg, InputIt end) {
+        static_assert((beg.type == Types::ForwardListIterator) || (beg.type == Types::ReversedListIterator));
+        static_assert((end.type == Types::ForwardListIterator) || (end.type == Types::ReversedListIterator));
+
+        if(!(beg.valid() & end.valid()))
+            return;
+
+        int i = 0;
+
+        xprintf("nicho 0x%x\n", end.i_ptr);
+        while(1);
+
+        if(beg.i_ptr == this->Head) {
+            while(beg.i_ptr != end.i_ptr) {
+                this->new_head_set(this->Head->next);
+                beg++;
+                std::cout << i++ << std::endl;
+            }
+        }
+
+        else
+        {
+            while(beg != end) {
+                beg.i_ptr->previous->next = beg.i_ptr->next;
+                beg++;
+            }
+        }
+
+    }
 
     void push_back(T value);
     void push_front(T value);
@@ -89,6 +126,9 @@ class List
     template<class Li>
     friend class ConstReversedListIterator;
 
+    template<typename K, typename V>
+    friend class UnorderedMapC;
+
 };
 
 template<typename T>
@@ -109,6 +149,12 @@ List<T>::List(std::initializer_list<T> items)
 }
 
 template<typename T>
+List<T>::~List()
+{
+    this->clear();
+}
+
+template<typename T>
 typename List<T>::ListNode* List<T>::goto_last_element(void)
 {
     ListNode* tmp = this->Head;
@@ -117,6 +163,13 @@ typename List<T>::ListNode* List<T>::goto_last_element(void)
         tmp = tmp->next;
 
     return tmp;
+}
+
+template<typename T>
+void List<T>::new_head_set(ListElement<T>* head)
+{
+    this->Head = head;
+    this->Head->previous = NULL;
 }
 
 template<typename T>
@@ -175,6 +228,28 @@ uint32_t List<T>::size(void)
     return this->li_size;
 }
 
+template<typename T>
+void List<T>::clear(void)
+{
+    while(this->Head != NULL) {
+        auto tmp = this->Head->next;
+        free(this->Head);
+        this->Head = tmp;
+    }
+}
+
+template<typename T>
+void List<T>::remove(List<T>::value_type value)
+{
+    for(auto tmp = this->Head; tmp != NULL; tmp = tmp->next) 
+    {
+        if(tmp == this->Head)
+            this->new_head_set(tmp->next);
+        else
+            tmp->previous->next = tmp->next;
+        free(tmp);
+    }
+}
 
 template<typename T>
 void List<T>::push_back(T value)

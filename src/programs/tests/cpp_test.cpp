@@ -137,22 +137,23 @@ static inline void list_test(void)
 {
     std::cout << "LIST TEST" << std::endl;
 
-    std::List<int> li = {1,2,3,4,5};
+    std::List<int> li;
 
     for(int i = 0; i < 10; i++)
         li.push_back(i);
 
+    li.erase(li.begin(), li.end()-1);
+
     std::cout << "[ ";
-    for(auto it = li.crbegin(); it != li.crend(); it++)
-    {
+    for(auto it = li.cbegin(); it != li.cend(); it++)
         std::cout << *it << ",";
-    }
+
     std::cout << " ]\n";
 
-    auto it = li.end() - 1;
-    it++;
+    // auto it = li.end() - 1;
+    // it++;
 
-    std::cout << "IS VALID: " << it.valid() << std::endl;
+    // std::cout << "IS VALID: " << it.valid() << std::endl;
 }
 
 static inline void map_test(void)
@@ -164,7 +165,7 @@ static inline void map_test(void)
         {2, 20}
     };
 
-    std::UnorderedMapC<int, int> cp = std::move(map);
+    map.remove(1);
 
     for(auto it = map.begin(); it != map.end(); it++)
         std::cout << (*it).first << " " << (*it).second << std::endl;
@@ -176,8 +177,8 @@ void cpp_prog()
 
     //arr_test();
     //vec_test();
-    //list_test();
-    map_test();
+    list_test();
+    // map_test();
     return;
 
     std::cout << "hash test: " << jhash("nicho") << std::endl;
