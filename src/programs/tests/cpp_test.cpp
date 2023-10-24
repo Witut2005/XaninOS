@@ -139,21 +139,32 @@ static inline void list_test(void)
 
     std::List<int> li;
 
-    for(int i = 0; i < 10; i++)
+    for(int i = 5; i < 10; i++)
         li.push_back(i);
 
-    li.erase(li.begin(), li.end()-1);
+    for(int i = 4; i > 0; i--)
+        li.push_front(i);
+
+    // li.erase(li.begin(), li.end()-1);
+
+    // std::cout << std::hex << (uint8_t*)li.goto_last_element()->previous << std::endl;
+    // xprintf("nicho 0x%x\n", li.goto_last_element()-)
 
     std::cout << "[ ";
-    for(auto it = li.cbegin(); it != li.cend(); it++)
+    for(auto it = li.begin(); it != li.end(); it++) {
         std::cout << *it << ",";
-
+    }
     std::cout << " ]\n";
 
-    // auto it = li.end() - 1;
-    // it++;
+    std::cout << "[ ";
+    for(auto it = li.rbegin(); it != li.rend(); it++) {
+        std::cout << *it << ",";
+    }
+    std::cout << " ]\n";
 
-    // std::cout << "IS VALID: " << it.valid() << std::endl;
+    auto it = li.end();
+    it++;
+    std::cout << "IS VALID: " << it.valid() << std::endl;
 }
 
 static inline void map_test(void)

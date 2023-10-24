@@ -26,11 +26,14 @@ class List
 {
 
     private:
+    ListElement<T>* HeadTail;
     ListElement<T>*  Head;
     ListElement<T>* Tail;
+
     uint32_t li_size;
-    void new_head_set(ListElement<T>* head);
     ListElement<T>* goto_last_element(void);
+    void new_head_set(ListElement<T>* head);
+    void new_tail_set(ListElement<T>* tail);
 
     public:
     using this_type = List<T>;
@@ -135,15 +138,21 @@ template<typename T>
 List<T>::List()
 {
     this->li_size = 0;
+
+    this->HeadTail = (ListNode*)calloc(SIZE_OF(ListNode));
     this->Head = (ListNode*)calloc(SIZE_OF(ListNode));
+    this->Tail = (ListNode*)calloc(SIZE_OF(ListNode));
+
+    this->HeadTail->next = this->Head;
+    this->Head->previous= this->HeadTail;
+
+    this->Head->next = this->Tail;
+    this->Tail->previous = this->Head;
 }
 
 template<typename T>
-List<T>::List(std::initializer_list<T> items)
+List<T>::List(std::initializer_list<T> items) : List<T> ()
 {
-    this->li_size = 0;
-    this->Head = (ListNode*)calloc(SIZE_OF(ListNode));
-
     for(auto a : items)
         this->push_back(a);
 }
@@ -159,7 +168,7 @@ typename List<T>::ListNode* List<T>::goto_last_element(void)
 {
     ListNode* tmp = this->Head;
 
-    while(tmp->next != NULL)
+    while(tmp->next != this->end().i_ptr) 
         tmp = tmp->next;
 
     return tmp;
@@ -169,7 +178,7 @@ template<typename T>
 void List<T>::new_head_set(ListElement<T>* head)
 {
     this->Head = head;
-    this->Head->previous = NULL;
+    this->Head->previous = this->HeadTail;
 }
 
 template<typename T>
@@ -181,7 +190,7 @@ typename List<T>::forward_iterator List<T>::begin()
 template<typename T>
 typename List<T>::forward_iterator List<T>::end()
 {
-    return List<T>::forward_iterator(NULL);
+    return List<T>::forward_iterator(this->Tail);
 }
 
 
@@ -194,7 +203,7 @@ typename List<T>::reversed_iterator List<T>::rbegin()
 template<typename T>
 typename List<T>::reversed_iterator List<T>::rend()
 {
-    return List<T>::reversed_iterator(NULL);
+    return List<T>::reversed_iterator(this->HeadTail);
 }
 
 template<typename T>
@@ -206,7 +215,7 @@ typename List<T>::const_forward_iterator List<T>::cbegin()
 template<typename T>
 typename List<T>::const_forward_iterator List<T>::cend()
 {
-    return List<T>::const_forward_iterator(NULL);
+    return List<T>::const_forward_iterator(this->Tail);
 }
 
 
@@ -219,7 +228,7 @@ typename List<T>::const_reversed_iterator List<T>::crbegin()
 template<typename T>
 typename List<T>::const_reversed_iterator List<T>::crend()
 {
-    return List<T>::const_reversed_iterator(NULL);
+    return List<T>::const_reversed_iterator(this->HeadTail);
 }
 
 template<typename T>
@@ -231,7 +240,7 @@ uint32_t List<T>::size(void)
 template<typename T>
 void List<T>::clear(void)
 {
-    while(this->Head != NULL) {
+    while(this->Head != this->end().i_ptr) {
         auto tmp = this->Head->next;
         free(this->Head);
         this->Head = tmp;
@@ -241,7 +250,7 @@ void List<T>::clear(void)
 template<typename T>
 void List<T>::remove(List<T>::value_type value)
 {
-    for(auto tmp = this->Head; tmp != NULL; tmp = tmp->next) 
+    for(auto tmp = this->Head; tmp != this->end().i_ptr; tmp = tmp->next) 
     {
         if(tmp == this->Head)
             this->new_head_set(tmp->next);
@@ -255,17 +264,18 @@ template<typename T>
 void List<T>::push_back(T value)
 {
 
-    ListNode* Tail;
-    ListNode* ElementCreated;;
+    ListNode* tmp = this->goto_last_element();
+    ListNode* ElementCreated;
 
     this->li_size ? [&](){
-        Tail = NULL;
-        Tail = this->goto_last_element();
-        Tail->next = (ListNode*)calloc(SIZE_OF(ListNode));
+        ElementCreated = (ListNode*)calloc(SIZE_OF(ListNode));
+        // Tail->next = (ListNode*)calloc(SIZE_OF(ListNode));
 
-        ElementCreated = Tail->next;
-        //ElementCreated->next already NULL
-        ElementCreated->previous = Tail;
+        tmp->next = ElementCreated;
+        ElementCreated->previous = tmp;
+
+        ElementCreated->next = this->Tail;
+        this->Tail->previous = ElementCreated;
 
     }() : [&](){
         ElementCreated = this->Head;
@@ -294,7 +304,7 @@ void List<T>::push_front(T value)
 
     NewHead->value = value;
 
-    this->Head = NewHead;
+    this->new_head_set(NewHead);
     this->li_size++;
 }
 
@@ -303,7 +313,7 @@ template<typename T>
 void List<T>::pop_back(void)
 {
     ListNode* tmp = goto_last_element();
-    tmp->previous->next = NULL;
+    tmp->previous->next = this->end().i_ptr;
 
     this->li_size--;
     free(tmp); //realase resources from destroyed node
