@@ -145,6 +145,9 @@ static inline void list_test(void)
     for(int i = 4; i > 0; i--)
         li.push_front(i);
 
+    li.pop_back();
+    li.pop_front();
+
     for(auto it = li.rbegin(); it != li.rend(); it++)
         std::cout << *it << std::endl;
 

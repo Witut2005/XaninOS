@@ -286,6 +286,7 @@ void List<T>::clear(void)
         free(this->Head);
         this->Head = tmp;
     }
+    this->li_size = 0;
 }
 
 template<typename T>
@@ -298,6 +299,8 @@ void List<T>::remove(List<T>::value_type value)
         else
             tmp->previous->next = tmp->next;
         free(tmp);
+
+        this->li_size--;
     }
 }
 
@@ -339,7 +342,7 @@ template<typename T>
 void List<T>::pop_back(void)
 {
     ListNode* tmp = goto_last_element();
-    tmp->previous->next = this->end().i_ptr;
+    this->new_tail_set(tmp->previous);
 
     this->li_size--;
     free(tmp); //realase resources from destroyed node
@@ -350,10 +353,8 @@ template<typename T>
 void List<T>::pop_front(void)
 {
     ListNode* tmp = this->Head;
-    tmp->next->previous = NULL;
 
-    this->Head = this->Head->next;
-
+    this->new_head_set(this->Head->next);
     this->li_size--;
     free(tmp); //realase resources from destroyed node
 }
