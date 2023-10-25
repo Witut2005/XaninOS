@@ -26,12 +26,14 @@ class List
 {
 
     private:
-    ListElement<T>* HeadTail;
     ListElement<T>*  Head;
-    ListElement<T>* Tail;
+
+    ListElement<T>* ListLowerBoundary;
+    ListElement<T>* ListUpperBoundary;
 
     uint32_t li_size;
     ListElement<T>* goto_last_element(void);
+    bool empty_list_initializer(T value);
     void new_head_set(ListElement<T>* head);
     void new_tail_set(ListElement<T>* tail);
 
@@ -85,14 +87,11 @@ class List
 
         int i = 0;
 
-        xprintf("nicho 0x%x\n", end.i_ptr);
-        while(1);
-
         if(beg.i_ptr == this->Head) {
             while(beg.i_ptr != end.i_ptr) {
                 this->new_head_set(this->Head->next);
+                this->li_size--;
                 beg++;
-                std::cout << i++ << std::endl;
             }
         }
 
@@ -103,7 +102,6 @@ class List
                 beg++;
             }
         }
-
     }
 
     void push_back(T value);
@@ -139,15 +137,37 @@ List<T>::List()
 {
     this->li_size = 0;
 
-    this->HeadTail = (ListNode*)calloc(SIZE_OF(ListNode));
+    this->ListLowerBoundary = (ListNode*)calloc(SIZE_OF(ListNode));
+    this->ListUpperBoundary = (ListNode*)calloc(SIZE_OF(ListNode));
+    // this->Head = (ListNode*)calloc(SIZE_OF(ListNode));
+    // this->Tail = (ListNode*)calloc(SIZE_OF(ListNode));
+
+    // this->ListLowerBoundary->next = this->Head;
+    // this->Head->previous= this->ListLowerBoundary;
+
+    // this->Head->next = this->Tail;
+    // this->Tail->previous = this->Head;
+
+    this->Head = this->ListUpperBoundary;
+    this->ListLowerBoundary->previous = this->ListLowerBoundary;
+
+    this->ListLowerBoundary->next = this->ListUpperBoundary;
+}
+
+template<typename T>
+bool List<T>::empty_list_initializer(T value) {
+
+    if(this->li_size)
+        return false;
+
     this->Head = (ListNode*)calloc(SIZE_OF(ListNode));
-    this->Tail = (ListNode*)calloc(SIZE_OF(ListNode));
 
-    this->HeadTail->next = this->Head;
-    this->Head->previous= this->HeadTail;
+    this->Head->previous = this->ListLowerBoundary;
+    this->Head->next = this->ListUpperBoundary;
+    this->Head->value = value;
 
-    this->Head->next = this->Tail;
-    this->Tail->previous = this->Head;
+    this->li_size = 1;
+    return true;
 }
 
 template<typename T>
@@ -166,6 +186,10 @@ List<T>::~List()
 template<typename T>
 typename List<T>::ListNode* List<T>::goto_last_element(void)
 {
+
+    if(!this->li_size)
+        return NULL;
+
     ListNode* tmp = this->Head;
 
     while(tmp->next != this->end().i_ptr) 
@@ -177,8 +201,25 @@ typename List<T>::ListNode* List<T>::goto_last_element(void)
 template<typename T>
 void List<T>::new_head_set(ListElement<T>* head)
 {
+
+    //NewHead->previous already set to NULL
+    head->next = this->Head;
+    this->Head->previous = head; // set previous pointer to node
+    head->previous = this->ListLowerBoundary;
+
     this->Head = head;
-    this->Head->previous = this->HeadTail;
+}
+
+template<typename T>
+void List<T>::new_tail_set(ListElement<T>* tail)
+{
+    ListNode* tmp = this->goto_last_element();
+
+    tmp->next = tail;
+    tail->previous = tmp;
+
+    tail->next = this->ListUpperBoundary;
+    this->ListUpperBoundary->previous = tail;
 }
 
 template<typename T>
@@ -190,7 +231,7 @@ typename List<T>::forward_iterator List<T>::begin()
 template<typename T>
 typename List<T>::forward_iterator List<T>::end()
 {
-    return List<T>::forward_iterator(this->Tail);
+    return List<T>::forward_iterator(this->ListUpperBoundary);
 }
 
 
@@ -203,7 +244,7 @@ typename List<T>::reversed_iterator List<T>::rbegin()
 template<typename T>
 typename List<T>::reversed_iterator List<T>::rend()
 {
-    return List<T>::reversed_iterator(this->HeadTail);
+    return List<T>::reversed_iterator(this->ListLowerBoundary);
 }
 
 template<typename T>
@@ -215,7 +256,7 @@ typename List<T>::const_forward_iterator List<T>::cbegin()
 template<typename T>
 typename List<T>::const_forward_iterator List<T>::cend()
 {
-    return List<T>::const_forward_iterator(this->Tail);
+    return List<T>::const_forward_iterator(this->ListUpperBoundary);
 }
 
 
@@ -228,7 +269,7 @@ typename List<T>::const_reversed_iterator List<T>::crbegin()
 template<typename T>
 typename List<T>::const_reversed_iterator List<T>::crend()
 {
-    return List<T>::const_reversed_iterator(this->HeadTail);
+    return List<T>::const_reversed_iterator(this->ListLowerBoundary);
 }
 
 template<typename T>
@@ -264,23 +305,12 @@ template<typename T>
 void List<T>::push_back(T value)
 {
 
-    ListNode* tmp = this->goto_last_element();
-    ListNode* ElementCreated;
+    if(this->empty_list_initializer(value))
+        return;
 
-    this->li_size ? [&](){
-        ElementCreated = (ListNode*)calloc(SIZE_OF(ListNode));
-        // Tail->next = (ListNode*)calloc(SIZE_OF(ListNode));
+    ListNode* ElementCreated = (ListNode*)calloc(SIZE_OF(ListNode));
 
-        tmp->next = ElementCreated;
-        ElementCreated->previous = tmp;
-
-        ElementCreated->next = this->Tail;
-        this->Tail->previous = ElementCreated;
-
-    }() : [&](){
-        ElementCreated = this->Head;
-    }();
-
+    this->new_tail_set(ElementCreated);
     ElementCreated->value = value;
 
     this->li_size++;
@@ -289,22 +319,18 @@ void List<T>::push_back(T value)
 template<typename T>
 void List<T>::push_front(T value)
 {
+    if(this->empty_list_initializer(value))
+        return;
 
-    ListNode* NewHead;
+    ListNode* NewHead = (ListNode*)calloc(SIZE_OF(ListNode));
 
-    this->li_size ? [&](){
-
-        NewHead = (ListNode*)calloc(SIZE_OF(ListNode));
-        //NewHead->previous already set to NULL
-        NewHead->next = this->Head;
-        this->Head->previous = NewHead; // set previous pointer to node
-    }() : [&](){
-        NewHead = this->Head;
-    }();
-
-    NewHead->value = value;
+    //NewHead->previous already set to NULL
+    NewHead->next = this->Head;
+    this->Head->previous = NewHead; // set previous pointer to node
 
     this->new_head_set(NewHead);
+    NewHead->value = value;
+
     this->li_size++;
 }
 
