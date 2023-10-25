@@ -113,7 +113,7 @@ void UnorderedMapC<K, V>::remove(K key)
         if(tmp->value.first == key)
         {
             if(tmp == this->elements.Head)
-               this->elements.new_head_set(tmp->next);
+               this->elements.new_head_push(tmp->next);
             else
                 tmp->previous->next = tmp->next;
             free(tmp);

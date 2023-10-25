@@ -34,8 +34,11 @@ class List
     uint32_t li_size;
     ListElement<T>* goto_last_element(void);
     bool empty_list_initializer(T value);
-    void new_head_set(ListElement<T>* head);
-    void new_tail_set(ListElement<T>* tail);
+
+    void new_head_push(ListElement<T>* head);
+    void new_tail_push(ListElement<T>* tail);
+    void head_replace(ListElement<T>* head);
+    void tail_replace(ListElement<T>* tail);
 
     public:
     using this_type = List<T>;
@@ -89,7 +92,7 @@ class List
 
         if(beg.i_ptr == this->Head) {
             while(beg.i_ptr != end.i_ptr) {
-                this->new_head_set(this->Head->next);
+                this->new_head_push(this->Head->next);
                 this->li_size--;
                 beg++;
             }
@@ -199,19 +202,21 @@ typename List<T>::ListNode* List<T>::goto_last_element(void)
 }
 
 template<typename T>
-void List<T>::new_head_set(ListElement<T>* head)
+void List<T>::new_head_push(ListElement<T>* head)
 {
 
     //NewHead->previous already set to NULL
     head->next = this->Head;
     this->Head->previous = head; // set previous pointer to node
+
     head->previous = this->ListLowerBoundary;
+    this->ListLowerBoundary->next = head;
 
     this->Head = head;
 }
 
 template<typename T>
-void List<T>::new_tail_set(ListElement<T>* tail)
+void List<T>::new_tail_push(ListElement<T>* tail)
 {
     ListNode* tmp = this->goto_last_element();
 
@@ -221,6 +226,23 @@ void List<T>::new_tail_set(ListElement<T>* tail)
     tail->next = this->ListUpperBoundary;
     this->ListUpperBoundary->previous = tail;
 }
+
+template<typename T>
+void List<T>::head_replace(ListElement<T>* head)
+{
+    head->previous = this->ListLowerBoundary;
+    this->Head = head;
+    this->ListLowerBoundary->next = head;
+}
+
+template<typename T>
+void List<T>::tail_replace(ListElement<T>* tail)
+{
+    ListNode* tmp = this->goto_last_element();
+    tail->next = this->ListUpperBoundary;
+    this->ListUpperBoundary->previous = tmp;
+}
+
 
 template<typename T>
 typename List<T>::forward_iterator List<T>::begin()
@@ -292,15 +314,40 @@ void List<T>::clear(void)
 template<typename T>
 void List<T>::remove(List<T>::value_type value)
 {
-    for(auto tmp = this->Head; tmp != this->end().i_ptr; tmp = tmp->next) 
+    for(auto tmp = this->Head; tmp != this->end().i_ptr; tmp = tmp->next)
     {
-        if(tmp == this->Head)
-            this->new_head_set(tmp->next);
-        else
-            tmp->previous->next = tmp->next;
-        free(tmp);
+        if(tmp->value == value)
+        {
+            if(tmp == this->Head)
+            {
+                std::cout << "late" << std::endl;
+                this->head_replace(tmp->next);
+            }
 
-        this->li_size--;
+            else if(tmp == this->goto_last_element()) {
+
+                std::cout << "VALUE: " << goto_last_element()->previous->value << std::endl;
+                tmp->previous->next = this->ListUpperBoundary; 
+                this->ListUpperBoundary->previous = tmp->previous;
+            }
+
+            else {
+                tmp->previous->next = tmp->next;
+                tmp->next->previous = tmp->previous;
+
+                // if(tmp->next == this->goto_last_element()) {
+                //     std::cout << "ADDr: " << (int*)tmp->previous << std::endl;
+                //     std::cout << "VALUE: " << tmp->previous->value << std::endl;
+                //     std::cout << "NXT: " << (int*)tmp->previous->next << std::endl;
+                //     std::cout << "2VALUE: " << (int*)goto_last_element()->previous << std::endl;
+                //     std::cout << "2NXT: " << goto_last_element()->previous->value << std::endl;
+                // }
+
+            }
+
+            this->li_size--;
+            //FREE
+        }
     }
 }
 
@@ -313,7 +360,7 @@ void List<T>::push_back(T value)
 
     ListNode* ElementCreated = (ListNode*)calloc(SIZE_OF(ListNode));
 
-    this->new_tail_set(ElementCreated);
+    this->new_tail_push(ElementCreated);
     ElementCreated->value = value;
 
     this->li_size++;
@@ -331,30 +378,32 @@ void List<T>::push_front(T value)
     NewHead->next = this->Head;
     this->Head->previous = NewHead; // set previous pointer to node
 
-    this->new_head_set(NewHead);
+    this->new_head_push(NewHead);
     NewHead->value = value;
 
     this->li_size++;
 }
 
 
+// CO JESLI LAST
 template<typename T>
 void List<T>::pop_back(void)
 {
     ListNode* tmp = goto_last_element();
-    this->new_tail_set(tmp->previous);
 
+    this->tail_replace(tmp->previous);
     this->li_size--;
     free(tmp); //realase resources from destroyed node
 }
 
 
+// CO JESLI LAST
 template<typename T>
 void List<T>::pop_front(void)
 {
     ListNode* tmp = this->Head;
 
-    this->new_head_set(this->Head->next);
+    this->head_replace(this->Head->next);
     this->li_size--;
     free(tmp); //realase resources from destroyed node
 }

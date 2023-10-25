@@ -143,13 +143,24 @@ static inline void list_test(void)
         li.push_back(i);
 
     for(int i = 4; i > 0; i--)
-        li.push_front(i);
+        li.push_back(i);
 
-    li.pop_back();
-    li.pop_front();
+    for(int i = 0; i < 5; i++)
+        li.push_back(100);
+    
+    // li.pop_back();
+    // li.pop_front();
 
-    for(auto it = li.rbegin(); it != li.rend(); it++)
-        std::cout << *it << std::endl;
+    for(auto it = li.begin(); it != li.end(); it++) {
+        std::cout << *it << ", ";
+    }
+    std::cout << std::endl;
+    li.remove(100);
+
+    for(auto it = li.begin(); it != li.end(); it++) {
+        std::cout << *it << ", ";
+    }
+    std::cout << std::endl;
 
     // for(int i = 5; i < 10; i++)
     //     li.push_back(i);
