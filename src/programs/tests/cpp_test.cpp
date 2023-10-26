@@ -217,7 +217,7 @@ static inline void map_test(void)
         {2, 20}
     };
 
-    map.remove(1);
+    map.erase(map.begin(), map.end() - 1);
 
     for(auto it = map.begin(); it != map.end(); it++)
         std::cout << (*it).first << " " << (*it).second << std::endl;
@@ -229,8 +229,8 @@ void cpp_prog()
 
     //arr_test();
     //vec_test();
-    list_test();
-    // map_test();
+    //list_test();
+    map_test();
     return;
 
     std::cout << "hash test: " << jhash("nicho") << std::endl;

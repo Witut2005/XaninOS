@@ -61,8 +61,8 @@ class UnorderedMapC
     void remove(K key);
     
     template<typename InputIt>
-    bool erase(InputIt it) {
-
+    void erase(InputIt beg, InputIt end) {
+        this->elements.erase(beg, end);
     }
 
     bool exists(K key);
@@ -111,13 +111,7 @@ void UnorderedMapC<K, V>::remove(K key)
     for(auto tmp = this->elements.Head; tmp != NULL; tmp = tmp->next) 
     {
         if(tmp->value.first == key)
-        {
-            if(tmp == this->elements.Head)
-               this->elements.new_head_push(tmp->next);
-            else
-                tmp->previous->next = tmp->next;
-            free(tmp);
-        }
+            this->elements.erase(ForwardListIterator<decltype(this->elements)>(tmp), ForwardListIterator<decltype(this->elements)>(tmp->next));
     }
 }
 
