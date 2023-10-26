@@ -139,10 +139,7 @@ static inline void list_test(void)
 
     std::List<int> li;
 
-    for(int i = 5; i < 10; i++)
-        li.push_back(i);
-
-    for(int i = 4; i > 0; i--)
+    for(int i = 1; i < 10; i++)
         li.push_back(i);
 
     for(int i = 0; i < 5; i++)
@@ -160,6 +157,16 @@ static inline void list_test(void)
     for(auto it = li.begin(); it != li.end(); it++) {
         std::cout << *it << ", ";
     }
+    std::cout << std::endl;
+
+    li.erase(li.rbegin(), li.rbegin() + 1);
+
+    std::cout << "[ ";
+    for(auto it = li.begin(); it != li.end(); it++) {
+        std::cout << *it << ", ";
+    }
+    std::cout << "] ";
+
     std::cout << std::endl;
 
     // for(int i = 5; i < 10; i++)

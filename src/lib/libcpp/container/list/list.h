@@ -82,17 +82,16 @@ class List
 
     template <typename InputIt>
     void erase(InputIt beg, InputIt end) {
+
         static_assert((beg.type == Types::ForwardListIterator) || (beg.type == Types::ReversedListIterator));
         static_assert((end.type == Types::ForwardListIterator) || (end.type == Types::ReversedListIterator));
 
         if(!(beg.valid() & end.valid()))
             return;
 
-        int i = 0;
-
         if(beg.i_ptr == this->Head) {
             while(beg.i_ptr != end.i_ptr) {
-                this->new_head_push(this->Head->next);
+                this->head_replace(this->Head->next);
                 this->li_size--;
                 beg++;
             }
@@ -102,6 +101,7 @@ class List
         {
             while(beg != end) {
                 beg.i_ptr->previous->next = beg.i_ptr->next;
+                this->li_size--;
                 beg++;
             }
         }
@@ -314,8 +314,10 @@ void List<T>::clear(void)
 template<typename T>
 void List<T>::remove(List<T>::value_type value)
 {
-    for(auto tmp = this->Head; tmp != this->end().i_ptr; tmp = tmp->next)
+    ListNode* next_tmp;
+    for(auto tmp = this->Head; tmp != this->end().i_ptr; tmp = next_tmp)
     {
+        next_tmp = tmp->next;
         if(tmp->value == value)
         {
             if(tmp == this->Head)
@@ -334,19 +336,10 @@ void List<T>::remove(List<T>::value_type value)
             else {
                 tmp->previous->next = tmp->next;
                 tmp->next->previous = tmp->previous;
-
-                // if(tmp->next == this->goto_last_element()) {
-                //     std::cout << "ADDr: " << (int*)tmp->previous << std::endl;
-                //     std::cout << "VALUE: " << tmp->previous->value << std::endl;
-                //     std::cout << "NXT: " << (int*)tmp->previous->next << std::endl;
-                //     std::cout << "2VALUE: " << (int*)goto_last_element()->previous << std::endl;
-                //     std::cout << "2NXT: " << goto_last_element()->previous->value << std::endl;
-                // }
-
             }
 
             this->li_size--;
-            //FREE
+            free(tmp);
         }
     }
 }
