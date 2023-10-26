@@ -39,6 +39,8 @@ class List
     void new_tail_push(ListElement<T>* tail);
     void head_replace(ListElement<T>* head);
     void tail_replace(ListElement<T>* tail);
+    void head_replace(ListElement<T>* head, ListElement<T>* next);
+    void tail_replace(ListElement<T>*, ListElement<T>* previous);
 
     public:
     using this_type = List<T>;
@@ -86,12 +88,23 @@ class List
         static_assert((beg.type == Types::ForwardListIterator) || (beg.type == Types::ReversedListIterator));
         static_assert((end.type == Types::ForwardListIterator) || (end.type == Types::ReversedListIterator));
 
+        ListNode* Tail = goto_last_element();
+
         if(!(beg.valid() & end.valid()))
             return;
 
         if(beg.i_ptr == this->Head) {
             while(beg.i_ptr != end.i_ptr) {
                 this->head_replace(this->Head->next);
+                this->li_size--;
+                beg++;
+            }
+        }
+
+        else if(beg.i_ptr == Tail) {
+            while(beg.i_ptr != end.i_ptr) {
+                // this->tail_replace(this->Head->next);
+                this->tail_replace(goto_last_element()->previous);
                 this->li_size--;
                 beg++;
             }
@@ -153,7 +166,6 @@ List<T>::List()
 
     this->Head = this->ListUpperBoundary;
     this->ListLowerBoundary->previous = this->ListLowerBoundary;
-
     this->ListLowerBoundary->next = this->ListUpperBoundary;
 }
 
@@ -238,10 +250,38 @@ void List<T>::head_replace(ListElement<T>* head)
 template<typename T>
 void List<T>::tail_replace(ListElement<T>* tail)
 {
+
+    if(tail == this->ListLowerBoundary) {
+        this->Head = this->ListUpperBoundary;
+        this->ListLowerBoundary->previous = this->ListLowerBoundary;
+        this->ListLowerBoundary->next = this->ListUpperBoundary;
+    }
+
+    else {
+        ListNode* tmp = this->goto_last_element();
+        tail->next = this->ListUpperBoundary;
+        this->ListUpperBoundary->previous = tmp;
+    }
+}
+
+template<typename T>
+void List<T>::head_replace(ListElement<T>* head, ListNode* next)
+{
+    head->previous = this->ListLowerBoundary;
+    this->Head = head;
+    head->next = next;
+    this->ListLowerBoundary->next = head;
+}
+
+template<typename T>
+void List<T>::tail_replace(ListElement<T>* tail, ListNode* previous)
+{
     ListNode* tmp = this->goto_last_element();
     tail->next = this->ListUpperBoundary;
+    tail->previous = previous;
     this->ListUpperBoundary->previous = tmp;
 }
+
 
 
 template<typename T>

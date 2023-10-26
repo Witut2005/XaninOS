@@ -159,14 +159,25 @@ static inline void list_test(void)
     }
     std::cout << std::endl;
 
-    li.erase(li.rbegin(), li.rbegin() + 1);
+    li.erase(li.rbegin(), li.rend());
 
     std::cout << "[ ";
     for(auto it = li.begin(); it != li.end(); it++) {
         std::cout << *it << ", ";
     }
     std::cout << "] ";
+    std::cout << std::endl;
 
+    std::cout << "li size: " << li.size() << std::endl;
+
+    for(int i = 100; i < 110; i++)
+        li.push_front(i);
+
+    std::cout << "[ ";
+    for(auto it = li.rbegin(); it != li.rend(); it++) {
+        std::cout << *it << ", ";
+    }
+    std::cout << "] ";
     std::cout << std::endl;
 
     // for(int i = 5; i < 10; i++)
