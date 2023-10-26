@@ -159,7 +159,7 @@ static inline void list_test(void)
     }
     std::cout << std::endl;
 
-    li.erase(li.rbegin(), li.rend());
+    li.erase(li.begin(), li.end());
 
     std::cout << "[ ";
     for(auto it = li.begin(); it != li.end(); it++) {

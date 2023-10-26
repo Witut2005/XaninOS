@@ -90,23 +90,26 @@ class List
 
         ListNode* Tail = goto_last_element();
 
+        auto erase_base_handler = [&](){
+            this->li_size--;
+            auto resource_to_free = beg++;
+            free(resource_to_free.i_ptr);
+        };
+
         if(!(beg.valid() & end.valid()))
             return;
 
         if(beg.i_ptr == this->Head) {
             while(beg.i_ptr != end.i_ptr) {
                 this->head_replace(this->Head->next);
-                this->li_size--;
-                beg++;
+                erase_base_handler();
             }
         }
 
         else if(beg.i_ptr == Tail) {
             while(beg.i_ptr != end.i_ptr) {
-                // this->tail_replace(this->Head->next);
                 this->tail_replace(goto_last_element()->previous);
-                this->li_size--;
-                beg++;
+                erase_base_handler();
             }
         }
 
@@ -114,8 +117,7 @@ class List
         {
             while(beg != end) {
                 beg.i_ptr->previous->next = beg.i_ptr->next;
-                this->li_size--;
-                beg++;
+                erase_base_handler();
             }
         }
     }
@@ -155,14 +157,6 @@ List<T>::List()
 
     this->ListLowerBoundary = (ListNode*)calloc(SIZE_OF(ListNode));
     this->ListUpperBoundary = (ListNode*)calloc(SIZE_OF(ListNode));
-    // this->Head = (ListNode*)calloc(SIZE_OF(ListNode));
-    // this->Tail = (ListNode*)calloc(SIZE_OF(ListNode));
-
-    // this->ListLowerBoundary->next = this->Head;
-    // this->Head->previous= this->ListLowerBoundary;
-
-    // this->Head->next = this->Tail;
-    // this->Tail->previous = this->Head;
 
     this->Head = this->ListUpperBoundary;
     this->ListLowerBoundary->previous = this->ListLowerBoundary;
@@ -258,9 +252,8 @@ void List<T>::tail_replace(ListElement<T>* tail)
     }
 
     else {
-        ListNode* tmp = this->goto_last_element();
         tail->next = this->ListUpperBoundary;
-        this->ListUpperBoundary->previous = tmp;
+        this->ListUpperBoundary->previous = tail;
     }
 }
 
@@ -281,8 +274,6 @@ void List<T>::tail_replace(ListElement<T>* tail, ListNode* previous)
     tail->previous = previous;
     this->ListUpperBoundary->previous = tmp;
 }
-
-
 
 template<typename T>
 typename List<T>::forward_iterator List<T>::begin()
@@ -362,15 +353,11 @@ void List<T>::remove(List<T>::value_type value)
         {
             if(tmp == this->Head)
             {
-                std::cout << "late" << std::endl;
                 this->head_replace(tmp->next);
             }
 
             else if(tmp == this->goto_last_element()) {
-
-                std::cout << "VALUE: " << goto_last_element()->previous->value << std::endl;
-                tmp->previous->next = this->ListUpperBoundary; 
-                this->ListUpperBoundary->previous = tmp->previous;
+                this->tail_replace(tmp->previous);
             }
 
             else {
