@@ -147,25 +147,19 @@ static inline void list_test(void)
     
     // li.pop_back();
     // li.pop_front();
+    std::cout << "LAST VAL: " <<*(li.end() - 1) << std::endl;
 
-    for(auto it = li.begin(); it != li.end(); it++) {
-        std::cout << *it << ", ";
-    }
+    li.print();
     std::cout << std::endl;
     li.remove(100);
+    std::cout << "LAST VAL: " <<*(li.end() - 1) << std::endl;
 
-    for(auto it = li.begin(); it != li.end(); it++) {
-        std::cout << *it << ", ";
-    }
+    li.print();
     std::cout << std::endl;
 
     li.erase(li.begin(), li.end());
 
-    std::cout << "[ ";
-    for(auto it = li.begin(); it != li.end(); it++) {
-        std::cout << *it << ", ";
-    }
-    std::cout << "] ";
+    li.print();
     std::cout << std::endl;
 
     std::cout << "li size: " << li.size() << std::endl;
@@ -173,13 +167,19 @@ static inline void list_test(void)
     for(int i = 100; i < 110; i++)
         li.push_front(i);
 
-    std::cout << "[ ";
-    for(auto it = li.rbegin(); it != li.rend(); it++) {
-        std::cout << *it << ", ";
-    }
-    std::cout << "] ";
+    li.print();
+    std::cout << std::endl;
+    
+    li.print();
     std::cout << std::endl;
 
+    // xprintf("lup: 0x%x 0x%x\n", li.ListUpperBoundary, li.ListUpperBoundary->previous->next);
+    li.erase(li.end() - 1);
+    std::cout << "LAST VAL: " <<*(li.end() - 1) << std::endl;
+    // xprintf("lup: 0x%x 0x%x\n", li.ListUpperBoundary, li.ListUpperBoundary->previous->next);
+
+    li.print();
+    std::cout << std::endl;
     // for(int i = 5; i < 10; i++)
     //     li.push_back(i);
 
@@ -229,8 +229,8 @@ void cpp_prog()
 
     //arr_test();
     //vec_test();
-    //list_test();
-    map_test();
+    list_test();
+    //map_test();
     return;
 
     std::cout << "hash test: " << jhash("nicho") << std::endl;

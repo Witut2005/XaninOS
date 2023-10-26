@@ -26,6 +26,7 @@ class List
 {
 
     private:
+    public:
     ListElement<T>*  Head;
 
     ListElement<T>* ListLowerBoundary;
@@ -83,6 +84,43 @@ class List
     void remove(value_type value);
 
     template <typename InputIt>
+    void erase(InputIt it) {
+    
+        static_assert((it.type == Types::ForwardListIterator) || (it.type == Types::ReversedListIterator));
+
+        if(!(it.valid()))
+            return;
+
+        auto Tail = goto_last_element();
+        
+        auto erase_base_handler = [&](){
+            this->li_size--;
+            free(it.i_ptr);
+        };
+
+        if(it.i_ptr == this->Head) {
+            // std::cout << "head" << std::endl;
+            this->head_replace(this->Head->next);
+            erase_base_handler();
+        }
+
+        else if(it.i_ptr == Tail) {
+            // std::cout << "LAST el" << std::endl;
+            this->tail_replace(Tail->previous);
+            erase_base_handler();
+        }
+
+        else
+        {
+            // std::cout << "nLAST el" << std::endl;
+            if((it.i_ptr != this->ListLowerBoundary) && (it.i_ptr != this->ListUpperBoundary)) {
+                it.i_ptr->previous->next = it.i_ptr->next;
+                erase_base_handler();
+            }
+        }
+    }
+
+    template <typename InputIt>
     void erase(InputIt beg, InputIt end) {
 
         static_assert((beg.type == Types::ForwardListIterator) || (beg.type == Types::ReversedListIterator));
@@ -116,8 +154,10 @@ class List
         else
         {
             while(beg != end) {
-                beg.i_ptr->previous->next = beg.i_ptr->next;
-                erase_base_handler();
+                if((beg.i_ptr != this->ListLowerBoundary) && (beg.i_ptr != this->ListUpperBoundary)) {
+                    beg.i_ptr->previous->next = beg.i_ptr->next;
+                    erase_base_handler();
+                }
             }
         }
     }
@@ -173,6 +213,10 @@ bool List<T>::empty_list_initializer(T value) {
 
     this->Head->previous = this->ListLowerBoundary;
     this->Head->next = this->ListUpperBoundary;
+
+    this->ListUpperBoundary->previous = this->Head;
+    this->ListLowerBoundary->next = this->Head;
+
     this->Head->value = value;
 
     this->li_size = 1;
@@ -439,8 +483,9 @@ void List<T>::print(void)
     }
 
     ListElement<T>* tmp = this->Head;
+    ListElement<T>* end = this->end().i_ptr;
     std::cout << '[';
-    while(tmp->next != NULL)
+    while(tmp->next != end)
     {
         std::cout << tmp->value << ',';
         tmp = tmp->next;
