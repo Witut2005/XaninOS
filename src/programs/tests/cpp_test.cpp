@@ -24,6 +24,7 @@
 #include <lib/libc/hash.h>
 #include <lib/libcpp/hash.hpp>
 #include <lib/libcpp/container/map.hpp>
+#include <lib/libcpp/container/list.hpp>
 
 //TERMINAL_APP
 
@@ -180,6 +181,8 @@ static inline void list_test(void)
 
     li.print();
     std::cout << std::endl;
+
+
     // for(int i = 5; i < 10; i++)
     //     li.push_back(i);
 
@@ -222,6 +225,8 @@ static inline void map_test(void)
     for(auto it = map.begin(); it != map.end(); it++)
         std::cout << (*it).first << " " << (*it).second << std::endl;
 
+    xprintf("find: %x\n", map.find<decltype(map)::forward_iterator>(2).valid());
+
 }
 
 void cpp_prog()
@@ -229,8 +234,8 @@ void cpp_prog()
 
     //arr_test();
     //vec_test();
-    list_test();
-    //map_test();
+    //list_test();
+    map_test();
     return;
 
     std::cout << "hash test: " << jhash("nicho") << std::endl;

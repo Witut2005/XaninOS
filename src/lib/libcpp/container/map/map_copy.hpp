@@ -56,9 +56,28 @@ class UnorderedMapC
     forward_iterator begin(void);
     forward_iterator end(void);
 
-    this_type find(K key);
+    template <class OutIt>
+    OutIt find(K key) 
+    {
+
+        static_assert(OutIt::type == Types::ForwardListIterator, "Use UnorderedMap iterators"); 
+
+        auto Tail = this->elements.goto_last_element();
+
+        for(auto it = this->elements.Head; it != Tail->next; it = it->next) {
+            if(it->value.first == key)
+                return OutIt(it);
+        }
+
+        return OutIt(NULL);
+    }
 
     void remove(K key);
+
+    template<typename InputIt>
+    void erase(InputIt it) {
+        this->elements.erase(it);
+    }
     
     template<typename InputIt>
     void erase(InputIt beg, InputIt end) {
@@ -102,7 +121,8 @@ typename UnorderedMapC<K, V>::forward_iterator UnorderedMapC<K, V>::end(void) {
 template <class K, class V>
 V& UnorderedMapC<K, V>::operator[](K key) 
 {
-
+    // if(this->exists(key))
+    //     return 
 }
 
 template <class K, class V>
@@ -126,7 +146,5 @@ bool UnorderedMapC<K, V>::exists(K key)
     return false;
 }
 
+
 }
-
-
-
