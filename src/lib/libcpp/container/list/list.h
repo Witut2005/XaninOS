@@ -26,15 +26,16 @@ class List
 {
 
     private:
+    uint32_t li_size;
+    ListElement<T>* goto_last_element(void);
+    bool empty_list_initializer(T value);
+
     public:
     ListElement<T>*  Head;
 
     ListElement<T>* ListLowerBoundary;
     ListElement<T>* ListUpperBoundary;
 
-    uint32_t li_size;
-    ListElement<T>* goto_last_element(void);
-    bool empty_list_initializer(T value);
 
     void new_head_push(ListElement<T>* head);
     void new_tail_push(ListElement<T>* tail);

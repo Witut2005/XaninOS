@@ -220,12 +220,14 @@ static inline void map_test(void)
         {2, 20}
     };
 
-    map.erase(map.begin(), map.end() - 1);
+    // map.erase(map.begin(), map.end() - 1);
 
     for(auto it = map.begin(); it != map.end(); it++)
         std::cout << (*it).first << " " << (*it).second << std::endl;
 
-    xprintf("find: %x\n", map.find<decltype(map)::forward_iterator>(2).valid());
+    std::cout << "found: " << map[3] << std::endl;
+    map[3] = 1234;
+    std::cout << "found: " << map[3] << std::endl;
 
 }
 

@@ -59,14 +59,14 @@ class UnorderedMapC
     template <class OutIt>
     OutIt find(K key) 
     {
-
         static_assert(OutIt::type == Types::ForwardListIterator, "Use UnorderedMap iterators"); 
 
         auto Tail = this->elements.goto_last_element();
 
         for(auto it = this->elements.Head; it != Tail->next; it = it->next) {
-            if(it->value.first == key)
+            if(it->value.first == key) {
                 return OutIt(it);
+            }
         }
 
         return OutIt(NULL);
@@ -121,8 +121,13 @@ typename UnorderedMapC<K, V>::forward_iterator UnorderedMapC<K, V>::end(void) {
 template <class K, class V>
 V& UnorderedMapC<K, V>::operator[](K key) 
 {
-    // if(this->exists(key))
-    //     return 
+    if(this->exists(key)) {
+        return (*this->find<UnorderedMapC<K, V>::forward_iterator>(key)).second;
+    }
+    else {
+        this->elements.push_back(std::pair<K, V>(key, this->elements.Head->value.second));
+        return this->elements.goto_last_element()->value.second;
+    }
 }
 
 template <class K, class V>
