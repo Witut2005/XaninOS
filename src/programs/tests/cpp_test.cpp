@@ -225,11 +225,15 @@ static inline void map_test(void)
     std::cout << "found: " << map[3] << std::endl;
 
     map.insert(4, 40);
-    map.insert_or_assign(5, 50);
+    map.insert_or_assign(4, 50);
 
     for(auto it = map.begin(); it != map.end(); it++)
-        std::cout << (*it).first << " " << (*it).second << std::endl;
+        std::cout << '[' << (*it).first << " " << (*it).second << ']' << ", ";
+    std::cout << std::endl;
 
+    for(auto it = map.rbegin(); it != map.rend(); it++)
+        std::cout << '[' << (*it).first << " " << (*it).second << ']' << ", ";
+    std::cout << std::endl;
 }
 
 void cpp_prog()
