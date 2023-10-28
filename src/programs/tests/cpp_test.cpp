@@ -234,7 +234,7 @@ static inline void map_test(void)
     auto it = map.begin();
     *it =std::move(std::pair(1,1));
 
-    for(auto it = map.rbegin(); it != map.rend(); it++)
+    for(auto it = map.crbegin(); it != map.crend(); it++)
         std::cout << '[' << (*it).first << " " << (*it).second << ']' << ", ";
     std::cout << std::endl;
 
