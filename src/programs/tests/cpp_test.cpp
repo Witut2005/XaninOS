@@ -220,14 +220,15 @@ static inline void map_test(void)
         {2, 20}
     };
 
-    // map.erase(map.begin(), map.end() - 1);
-
-    for(auto it = map.begin(); it != map.end(); it++)
-        std::cout << (*it).first << " " << (*it).second << std::endl;
-
     std::cout << "found: " << map[3] << std::endl;
     map[3] = 1234;
     std::cout << "found: " << map[3] << std::endl;
+
+    map.insert(4, 40);
+    map.insert_or_assign(5, 50);
+
+    for(auto it = map.begin(); it != map.end(); it++)
+        std::cout << (*it).first << " " << (*it).second << std::endl;
 
 }
 

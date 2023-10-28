@@ -56,7 +56,7 @@ class UnorderedMapC
     forward_iterator begin(void);
     forward_iterator end(void);
 
-    template <class OutIt>
+    template <class OutIt = ForwardListIterator<decltype(elements)>>
     OutIt find(K key) 
     {
         static_assert(OutIt::type == Types::ForwardListIterator, "Use UnorderedMap iterators"); 
@@ -151,5 +151,21 @@ bool UnorderedMapC<K, V>::exists(K key)
     return false;
 }
 
+template <class K, class V>
+void UnorderedMapC<K, V>::insert(K key, V value)  
+{
+    if(!this->exists(key))
+        this->elements.push_back(std::pair(key, value));
+}
+
+template <class K, class V>
+void UnorderedMapC<K, V>::insert_or_assign(K key, V value)  
+{
+    if(!this->exists(key))
+        this->elements.push_back(std::pair(key, value));
+    else {
+        *this->find(key) = std::pair(key, value);
+    }
+}
 
 }
