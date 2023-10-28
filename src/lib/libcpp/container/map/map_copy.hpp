@@ -19,6 +19,9 @@ template <class T>
 using ForwardUnorderedMapIterator = ForwardListIterator<T>;
 
 template <class T>
+using ConstForwardUnorderedMapIterator = ConstForwardListIterator<T>;
+
+template <class T>
 using ReversedUnorderedMapIterator = ReversedListIterator<T>;
 
 template <class K, class V>
@@ -44,6 +47,7 @@ class UnorderedMapC
     using const_rreference = const std::pair<K, V>&&;
 
     using forward_iterator = ForwardUnorderedMapIterator<backend_type>;
+    using const_forward_iterator = ConstForwardUnorderedMapIterator<backend_type>;
     using reversed_iterator = ReversedUnorderedMapIterator<backend_type>;
 
     UnorderedMapC() = default;
@@ -58,6 +62,8 @@ class UnorderedMapC
 
     forward_iterator begin(void);
     forward_iterator end(void);
+    const_forward_iterator cbegin(void);
+    const_forward_iterator cend(void);
 
     reversed_iterator rbegin(void);
     reversed_iterator rend(void);
@@ -122,6 +128,16 @@ typename UnorderedMapC<K, V>::forward_iterator UnorderedMapC<K, V>::begin(void) 
 template <class K, class V>
 typename UnorderedMapC<K, V>::forward_iterator UnorderedMapC<K, V>::end(void) {
     return this->elements.end();
+}
+
+template <class K, class V>
+typename UnorderedMapC<K, V>::const_forward_iterator UnorderedMapC<K, V>::cbegin(void) {
+    return this->elements.cbegin();
+}
+
+template <class K, class V>
+typename UnorderedMapC<K, V>::const_forward_iterator UnorderedMapC<K, V>::cend(void) {
+    return this->elements.cend();
 }
 
 template <class K, class V>

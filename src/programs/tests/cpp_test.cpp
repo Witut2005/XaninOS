@@ -231,9 +231,13 @@ static inline void map_test(void)
         std::cout << '[' << (*it).first << " " << (*it).second << ']' << ", ";
     std::cout << std::endl;
 
+    auto it = map.begin();
+    *it =std::move(std::pair(1,1));
+
     for(auto it = map.rbegin(); it != map.rend(); it++)
         std::cout << '[' << (*it).first << " " << (*it).second << ']' << ", ";
     std::cout << std::endl;
+
 }
 
 void cpp_prog()

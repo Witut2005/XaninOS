@@ -181,8 +181,9 @@ void UnorderedMap<K, V>::insert_or_assign(K key, V value)
 
     if (!size)
     {
-        this->Head->item.first = key;
-        this->Head->item.second = value;
+        // this->Head->item.first = key;
+        // this->Head->item.second = value;
+        this->Head->item = std::move(std::pair(key, value));
         this->size++;
         return;
     }
@@ -193,8 +194,7 @@ void UnorderedMap<K, V>::insert_or_assign(K key, V value)
 
     ItemInserted->next->previous = ItemInserted;
     ItemInserted = ItemInserted->next;
-    ItemInserted->item.first = key;
-    ItemInserted->item.second = value;
+    ItemInserted->item = std::move(std::pair(key, value));
     ItemInserted->next = this->Tail;
 
     this->size++;

@@ -47,11 +47,19 @@ struct pair
 
     pair<T, X>(T x, X y) : first(x), second(y) {}
 
-    pair<T, X>(const pair<T, X>& copy) 
-    {
+    pair<T, X>(const pair<T, X>& copy) = default;
+    pair<T, X>(pair<T, X>&& copy) {
         this->first = copy.first;
         this->second = copy.second;
     }
+    pair<T, X>& operator=(const pair<T, X>& copy) = default;
+
+    pair<T, X>& operator=(pair<T, X>&& copy) {
+        this->first = copy.first;
+        this->second = copy.second;
+    }
+
+    // pair<T, X>& operator = (pair<T, X>& copy) = default;
 
     bool operator == (const pair<T, X>& other)
     {
@@ -73,10 +81,9 @@ struct pair
 
 
 template<class T, class X>
-constexpr pair<T, X> make_pair(T x, X y)
+pair<T, X> make_pair(T x, X y)
 {
-    pair<T, X> tmp = {x,y};
-    return tmp;
+    return {x, y};
 }
 
 template<typename T>
