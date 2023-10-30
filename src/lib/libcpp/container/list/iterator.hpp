@@ -6,584 +6,588 @@
 namespace std
 {
 
-template<class Li>
-class ForwardListIterator : public ForwardIterator<Li>
-{
-
-    public: 
-    using this_type = ForwardListIterator;
-
-    using value_type = typename Li::value_type;
-    using iterable_type = typename Li::iterable_type;
-    using lreference = typename Li::lreference;
-
-    constexpr static Types type = Types::ForwardListIterator;
-
-    ForwardListIterator<Li>(iterable_type ptr) {this->i_ptr = ptr;}
-
-    ForwardListIterator<Li>(const this_type& other) = default;
-    ForwardListIterator<Li>(this_type&& other) {
-        this->i_ptr = other.i_ptr;
-        other.i_ptr = NULL;
-    }
-
-    this_type& operator ++ () override
+    template <class Li>
+    class ForwardListIterator : public ForwardIterator<Li>
     {
-        if(this->i_ptr)
-            this->i_ptr = this->i_ptr->next;
-        return *this;
-    }
 
-    this_type operator ++ (int) override
-    {
-        this_type tmp = *this;
+    public:
+        using this_type = ForwardListIterator;
 
-        if(this->i_ptr)
-            this->i_ptr = this->i_ptr->next; 
+        using value_type = typename Li::value_type;
+        using iterable_type = typename Li::iterable_type;
+        using lreference = typename Li::lreference;
 
-        return tmp;
-    }
+        constexpr static Types type = Types::ForwardListIterator;
 
-    this_type& operator -- () override 
-    {
-        if(this->i_ptr)
-            this->i_ptr = this->i_ptr->previous;
-        return *this;
-    }
+        ForwardListIterator<Li>(iterable_type ptr) { this->i_ptr = ptr; }
 
-    this_type operator -- (int) override
-    {
-        this_type tmp = *this;
-
-        if(this->i_ptr)
-            this->i_ptr = this->i_ptr->previous; 
-
-        return tmp;
-    }
-
-    this_type operator + (int offset) override
-    {            
-        this_type tmp = *this;
-
-        if(std::is_positive(offset)) 
+        ForwardListIterator<Li>(const this_type &other) = default;
+        ForwardListIterator<Li>(this_type &&other)
         {
-            for(int i = 0; i < offset; i++)
-            {
-                tmp.i_ptr = tmp.i_ptr->next;
-
-                if(!tmp.i_ptr)
-                    break;
-            }
+            this->i_ptr = other.i_ptr;
+            other.i_ptr = NULL;
         }
 
-        else 
+        this_type &operator++() override
         {
-            for(int i = 0; i < offset; i++)
-            {
-                tmp.i_ptr = tmp.i_ptr->previous;
-
-                if(!tmp.i_ptr)
-                    break;
-            }
+            if (this->i_ptr)
+                this->i_ptr = this->i_ptr->next;
+            return *this;
         }
 
-        return tmp;
-    }
-
-    this_type operator - (int offset) override
-    {
-        this_type tmp = *this;
-
-        if(std::is_negative(offset)) 
+        this_type operator++(int) override
         {
-            for(int i = 0; i < offset; i++)
-            {
-                tmp.i_ptr = tmp.i_ptr->next;
+            this_type tmp = *this;
 
-                if(!tmp.i_ptr)
-                    break;
-            }
+            if (this->i_ptr)
+                this->i_ptr = this->i_ptr->next;
+
+            return tmp;
         }
 
-        else 
+        this_type &operator--() override
         {
-            for(int i = 0; i < offset; i++)
-            {
-                tmp.i_ptr = tmp.i_ptr->previous;
-
-                if(!tmp.i_ptr)
-                    break;
-            }
+            if (this->i_ptr)
+                this->i_ptr = this->i_ptr->previous;
+            return *this;
         }
 
-        return tmp;
-    }
-
-    this_type& operator = (const this_type& other) override 
-    {
-        *this = other;
-        return *this;
-    }
-
-    this_type& operator = (this_type&& other)  override 
-    {
-        *this = other;
-        other.i_ptr = NULL;
-        return *this;
-    }
-
-    lreference operator * (void) const override
-    {
-        return this->i_ptr->value;
-    }
-
-    operator bool(void) const override
-    {
-        return this->valid();
-    }
-
-    bool valid(void) const override
-    {
-        return this->i_ptr != NULL;
-    }
-
-    template<typename T>
-    friend class List;
-};
-
-template<class Li>
-class ReversedListIterator : public ReversedIterator<Li>
-{
-
-    public: 
-    using this_type = ReversedListIterator;
-
-    using value_type = typename Li::value_type;
-    using iterable_type = typename Li::iterable_type;
-    using lreference = typename Li::lreference;
-
-    constexpr static Types type = Types::ReversedListIterator;
-
-    ReversedListIterator<Li>(iterable_type ptr) {this->i_ptr = ptr;}
-
-    ReversedListIterator<Li>(const this_type& other) = default;
-    ReversedListIterator<Li>(this_type&& other) {
-        this->i_ptr = other.i_ptr;
-        other.i_ptr = NULL;
-    }
-
-    this_type& operator ++ () override 
-    {
-        if(this->i_ptr)
-            this->i_ptr = this->i_ptr->previous;
-        return *this;
-    }
-
-    this_type operator ++ (int) override
-    {
-        this_type tmp = *this;
-
-        if(this->i_ptr)
-            this->i_ptr = this->i_ptr->previous; 
-
-        return tmp;
-    }
-
-    this_type& operator -- () override
-    {
-        if(this->i_ptr)
-            this->i_ptr = this->i_ptr->next;
-        return *this;
-    }
-
-    this_type operator -- (int)
-    {
-        this_type tmp = *this;
-
-        if(this->i_ptr)
-            this->i_ptr = this->i_ptr->next; 
-
-        return tmp;
-    }
-
-    this_type operator + (int offset) override
-    {
-        this_type tmp = *this;
-
-        if(std::is_negative(offset)) 
+        this_type operator--(int) override
         {
-            for(int i = 0; i < offset; i++)
-            {
-                tmp.i_ptr = tmp.i_ptr->next;
+            this_type tmp = *this;
 
-                if(!tmp.i_ptr)
-                    break;
-            }
+            if (this->i_ptr)
+                this->i_ptr = this->i_ptr->previous;
+
+            return tmp;
         }
 
-        else 
+        this_type operator+(int offset) override
         {
-            for(int i = 0; i < offset; i++)
-            {
-                tmp.i_ptr = tmp.i_ptr->previous;
+            this_type tmp = *this;
 
-                if(!tmp.i_ptr)
-                    break;
+            if (std::is_positive(offset))
+            {
+                for (int i = 0; i < offset; i++)
+                {
+                    tmp.i_ptr = tmp.i_ptr->next;
+
+                    if (!tmp.i_ptr)
+                        break;
+                }
             }
+
+            else
+            {
+                for (int i = 0; i < offset; i++)
+                {
+                    tmp.i_ptr = tmp.i_ptr->previous;
+
+                    if (!tmp.i_ptr)
+                        break;
+                }
+            }
+
+            return tmp;
         }
 
-        return tmp;
-    }
-
-    this_type operator - (int offset) override
-    {
-        this_type tmp = *this;
-
-        if(std::is_positive(offset)) 
+        this_type operator-(int offset) override
         {
-            for(int i = 0; i < offset; i++)
-            {
-                tmp.i_ptr = tmp.i_ptr->next;
+            this_type tmp = *this;
 
-                if(!tmp.i_ptr)
-                    break;
+            if (std::is_negative(offset))
+            {
+                for (int i = 0; i < offset; i++)
+                {
+                    tmp.i_ptr = tmp.i_ptr->next;
+
+                    if (!tmp.i_ptr)
+                        break;
+                }
             }
+
+            else
+            {
+                for (int i = 0; i < offset; i++)
+                {
+                    tmp.i_ptr = tmp.i_ptr->previous;
+
+                    if (!tmp.i_ptr)
+                        break;
+                }
+            }
+
+            return tmp;
         }
 
-        else 
+        this_type &operator=(const this_type &other) override
         {
-            for(int i = 0; i < offset; i++)
-            {
-                tmp.i_ptr = tmp.i_ptr->previous;
-
-                if(!tmp.i_ptr)
-                    break;
-            }
+            *this = other;
+            return *this;
         }
 
-        return tmp;
-    }
-
-    this_type& operator = (const this_type& other)  override 
-    {
-        *this = other;
-        return *this;
-    }
-
-    this_type& operator = (this_type&& other)  override 
-    {
-        *this = other;
-        other.i_ptr = NULL;
-        return *this;
-    }
-
-    value_type& operator * () const override
-    {
-        return this->i_ptr->value;
-    }
-
-    operator bool (void) const override
-    {
-        this->valid();
-    }
-
-    bool valid(void) const override
-    {
-        return this->i_ptr != NULL;
-    }
-
-    template<typename T>
-    friend class List;
-};
-
-template<class Li>
-class ConstForwardListIterator : public ConstForwardIterator<Li>
-{
-
-    public: 
-    using this_type = ConstForwardListIterator;
-
-    using value_type = typename Li::value_type;
-    using iterable_type = typename Li::iterable_type;
-    using const_lreference = typename Li::const_lreference;
-
-    constexpr static Types type = Types::ForwardListIterator;
-
-    ConstForwardListIterator<Li>(iterable_type ptr) {this->i_ptr = ptr;}
-
-    ConstForwardListIterator<Li>(const this_type& other) = default;
-    ConstForwardListIterator<Li>(this_type&& other) {
-        this->i_ptr = other.i_ptr;
-        other.i_ptr = NULL;
-    }
-
-    this_type& operator ++ () override
-    {
-        if(this->i_ptr)
-            this->i_ptr = this->i_ptr->next;
-        return *this;
-    }
-
-    this_type operator ++ (int) override
-    {
-        this_type tmp = *this;
-
-        if(this->i_ptr)
-            this->i_ptr = this->i_ptr->next; 
-
-        return std::move(tmp);
-    }
-
-    this_type& operator -- () override 
-    {
-        if(this->i_ptr)
-            this->i_ptr = this->i_ptr->previous;
-        return *this;
-    }
-
-    this_type operator -- (int) override
-    {
-        this_type tmp = *this;
-
-        if(this->i_ptr)
-            this->i_ptr = this->i_ptr->previous; 
-
-        return tmp;
-    }
-
-    this_type operator + (int offset) override
-    {            
-        this_type tmp = *this;
-
-        if(std::is_positive(offset)) 
+        this_type &operator=(this_type &&other) override
         {
-            for(int i = 0; i < offset; i++)
-            {
-                tmp.i_ptr = tmp.i_ptr->next;
-
-                if(!tmp.i_ptr)
-                    break;
-            }
+            *this = other;
+            other.i_ptr = NULL;
+            return *this;
         }
 
-        else 
+        lreference operator*(void) const override
         {
-            for(int i = 0; i < offset; i++)
-            {
-                tmp.i_ptr = tmp.i_ptr->previous;
-
-                if(!tmp.i_ptr)
-                    break;
-            }
+            return this->i_ptr->value;
         }
 
-        return tmp;
-    }
-
-    this_type operator - (int offset) override
-    {
-        this_type tmp = *this;
-
-        if(std::is_negative(offset)) 
+        operator bool(void) const override
         {
-            for(int i = 0; i < offset; i++)
-            {
-                tmp.i_ptr = tmp.i_ptr->next;
-
-                if(!tmp.i_ptr)
-                    break;
-            }
+            return this->valid();
         }
 
-        else 
+        bool valid(void) const override
         {
-            for(int i = 0; i < offset; i++)
-            {
-                tmp.i_ptr = tmp.i_ptr->previous;
-
-                if(!tmp.i_ptr)
-                    break;
-            }
+            return this->i_ptr != NULL;
         }
 
-        return tmp;
-    }
+        template <typename T>
+        friend class List;
+    };
 
-    this_type& operator = (const this_type& other) override 
+    template <class Li>
+    class ReversedListIterator : public ReversedIterator<Li>
     {
-        *this = other;
-        return *this;
-    }
 
-    this_type& operator = (this_type&& other)  override 
-    {
-        *this = other;
-        other.i_ptr = NULL;
-        return *this;
-    }
+    public:
+        using this_type = ReversedListIterator;
 
-    const_lreference operator * () const override
-    {
-        return this->i_ptr->value;
-    }
+        using value_type = typename Li::value_type;
+        using iterable_type = typename Li::iterable_type;
+        using lreference = typename Li::lreference;
 
-    operator bool(void) const override
-    {
-        return this->valid();
-    }
+        constexpr static Types type = Types::ReversedListIterator;
 
-    bool valid(void) const override
-    {
-        return this->i_ptr != NULL;
-    }
+        ReversedListIterator<Li>(iterable_type ptr) { this->i_ptr = ptr; }
 
-    template<typename T>
-    friend class List;
-};
-
-template<class Li>
-class ConstReversedListIterator : public ConstReversedIterator<Li>
-{
-
-    public: 
-    using this_type = ConstReversedListIterator;
-
-    using value_type = typename Li::value_type;
-    using iterable_type = typename Li::iterable_type;
-    using const_lreference = typename Li::const_lreference;
-
-    constexpr static Types type = Types::ReversedListIterator;
-
-    ConstReversedListIterator<Li>(iterable_type ptr) {this->i_ptr = ptr;}
-
-    ConstReversedListIterator<Li>(const this_type& other) = default;
-    ConstReversedListIterator<Li>(this_type&& other) {
-        this->i_ptr = other.i_ptr;
-        other.i_ptr = NULL;
-    }
-
-    this_type& operator ++ () override 
-    {
-        if(this->i_ptr)
-            this->i_ptr = this->i_ptr->previous;
-        return *this;
-    }
-
-    this_type operator ++ (int) override
-    {
-        this_type tmp = *this;
-
-        if(this->i_ptr)
-            this->i_ptr = this->i_ptr->previous; 
-
-        return tmp;
-    }
-
-    this_type& operator -- () override
-    {
-        if(this->i_ptr)
-            this->i_ptr = this->i_ptr->next;
-        return *this;
-    }
-
-    this_type operator -- (int)
-    {
-        this_type tmp = *this;
-
-        if(this->i_ptr)
-            this->i_ptr = this->i_ptr->next; 
-
-        return tmp;
-    }
-
-    this_type operator + (int offset) override
-    {
-        this_type tmp = *this;
-
-        if(std::is_negative(offset)) 
+        ReversedListIterator<Li>(const this_type &other) = default;
+        ReversedListIterator<Li>(this_type &&other)
         {
-            for(int i = 0; i < offset; i++)
-            {
-                tmp.i_ptr = tmp.i_ptr->next;
-
-                if(!tmp.i_ptr)
-                    break;
-            }
+            this->i_ptr = other.i_ptr;
+            other.i_ptr = NULL;
         }
 
-        else 
+        this_type &operator++() override
         {
-            for(int i = 0; i < offset; i++)
-            {
-                tmp.i_ptr = tmp.i_ptr->previous;
-
-                if(!tmp.i_ptr)
-                    break;
-            }
+            if (this->i_ptr)
+                this->i_ptr = this->i_ptr->previous;
+            return *this;
         }
 
-        return tmp;
-    }
-
-    this_type operator - (int offset) override
-    {
-        this_type tmp = *this;
-
-        if(std::is_positive(offset)) 
+        this_type operator++(int) override
         {
-            for(int i = 0; i < offset; i++)
-            {
-                tmp.i_ptr = tmp.i_ptr->next;
+            this_type tmp = *this;
 
-                if(!tmp.i_ptr)
-                    break;
-            }
+            if (this->i_ptr)
+                this->i_ptr = this->i_ptr->previous;
+
+            return tmp;
         }
 
-        else 
+        this_type &operator--() override
         {
-            for(int i = 0; i < offset; i++)
-            {
-                tmp.i_ptr = tmp.i_ptr->previous;
-
-                if(!tmp.i_ptr)
-                    break;
-            }
+            if (this->i_ptr)
+                this->i_ptr = this->i_ptr->next;
+            return *this;
         }
 
-        return tmp;
-    }
+        this_type operator--(int)
+        {
+            this_type tmp = *this;
 
-    this_type& operator = (const this_type& other)  override 
+            if (this->i_ptr)
+                this->i_ptr = this->i_ptr->next;
+
+            return tmp;
+        }
+
+        this_type operator+(int offset) override
+        {
+            this_type tmp = *this;
+
+            if (std::is_negative(offset))
+            {
+                for (int i = 0; i < offset; i++)
+                {
+                    tmp.i_ptr = tmp.i_ptr->next;
+
+                    if (!tmp.i_ptr)
+                        break;
+                }
+            }
+
+            else
+            {
+                for (int i = 0; i < offset; i++)
+                {
+                    tmp.i_ptr = tmp.i_ptr->previous;
+
+                    if (!tmp.i_ptr)
+                        break;
+                }
+            }
+
+            return tmp;
+        }
+
+        this_type operator-(int offset) override
+        {
+            this_type tmp = *this;
+
+            if (std::is_positive(offset))
+            {
+                for (int i = 0; i < offset; i++)
+                {
+                    tmp.i_ptr = tmp.i_ptr->next;
+
+                    if (!tmp.i_ptr)
+                        break;
+                }
+            }
+
+            else
+            {
+                for (int i = 0; i < offset; i++)
+                {
+                    tmp.i_ptr = tmp.i_ptr->previous;
+
+                    if (!tmp.i_ptr)
+                        break;
+                }
+            }
+
+            return tmp;
+        }
+
+        this_type &operator=(const this_type &other) override
+        {
+            *this = other;
+            return *this;
+        }
+
+        this_type &operator=(this_type &&other) override
+        {
+            *this = other;
+            other.i_ptr = NULL;
+            return *this;
+        }
+
+        value_type &operator*() const override
+        {
+            return this->i_ptr->value;
+        }
+
+        operator bool(void) const override
+        {
+            this->valid();
+        }
+
+        bool valid(void) const override
+        {
+            return this->i_ptr != NULL;
+        }
+
+        template <typename T>
+        friend class List;
+    };
+
+    template <class Li>
+    class ConstForwardListIterator : public ConstForwardIterator<Li>
     {
-        *this = other;
-        return *this;
-    }
 
-    this_type& operator = (this_type&& other)  override 
+    public:
+        using this_type = ConstForwardListIterator;
+
+        using value_type = typename Li::value_type;
+        using iterable_type = typename Li::iterable_type;
+        using const_lreference = typename Li::const_lreference;
+
+        constexpr static Types type = Types::ForwardListIterator;
+
+        ConstForwardListIterator<Li>(iterable_type ptr) { this->i_ptr = ptr; }
+
+        ConstForwardListIterator<Li>(const this_type &other) = default;
+        ConstForwardListIterator<Li>(this_type &&other)
+        {
+            this->i_ptr = other.i_ptr;
+            other.i_ptr = NULL;
+        }
+
+        this_type &operator++() override
+        {
+            if (this->i_ptr)
+                this->i_ptr = this->i_ptr->next;
+            return *this;
+        }
+
+        this_type operator++(int) override
+        {
+            this_type tmp = *this;
+
+            if (this->i_ptr)
+                this->i_ptr = this->i_ptr->next;
+
+            return std::move(tmp);
+        }
+
+        this_type &operator--() override
+        {
+            if (this->i_ptr)
+                this->i_ptr = this->i_ptr->previous;
+            return *this;
+        }
+
+        this_type operator--(int) override
+        {
+            this_type tmp = *this;
+
+            if (this->i_ptr)
+                this->i_ptr = this->i_ptr->previous;
+
+            return tmp;
+        }
+
+        this_type operator+(int offset) override
+        {
+            this_type tmp = *this;
+
+            if (std::is_positive(offset))
+            {
+                for (int i = 0; i < offset; i++)
+                {
+                    tmp.i_ptr = tmp.i_ptr->next;
+
+                    if (!tmp.i_ptr)
+                        break;
+                }
+            }
+
+            else
+            {
+                for (int i = 0; i < offset; i++)
+                {
+                    tmp.i_ptr = tmp.i_ptr->previous;
+
+                    if (!tmp.i_ptr)
+                        break;
+                }
+            }
+
+            return tmp;
+        }
+
+        this_type operator-(int offset) override
+        {
+            this_type tmp = *this;
+
+            if (std::is_negative(offset))
+            {
+                for (int i = 0; i < offset; i++)
+                {
+                    tmp.i_ptr = tmp.i_ptr->next;
+
+                    if (!tmp.i_ptr)
+                        break;
+                }
+            }
+
+            else
+            {
+                for (int i = 0; i < offset; i++)
+                {
+                    tmp.i_ptr = tmp.i_ptr->previous;
+
+                    if (!tmp.i_ptr)
+                        break;
+                }
+            }
+
+            return tmp;
+        }
+
+        this_type &operator=(const this_type &other) override
+        {
+            *this = other;
+            return *this;
+        }
+
+        this_type &operator=(this_type &&other) override
+        {
+            *this = other;
+            other.i_ptr = NULL;
+            return *this;
+        }
+
+        const_lreference operator*() const override
+        {
+            return this->i_ptr->value;
+        }
+
+        operator bool(void) const override
+        {
+            return this->valid();
+        }
+
+        bool valid(void) const override
+        {
+            return this->i_ptr != NULL;
+        }
+
+        template <typename T>
+        friend class List;
+    };
+
+    template <class Li>
+    class ConstReversedListIterator : public ConstReversedIterator<Li>
     {
-        *this = other;
-        other.i_ptr = NULL;
-        return *this;
-    }
 
-    const_lreference operator * () const override
-    {
-        return this->i_ptr->value;
-    }
+    public:
+        using this_type = ConstReversedListIterator;
 
-    operator bool (void) const override
-    {
-        this->valid();
-    }
+        using value_type = typename Li::value_type;
+        using iterable_type = typename Li::iterable_type;
+        using const_lreference = typename Li::const_lreference;
 
-    bool valid(void) const override
-    {
-        return this->i_ptr != NULL;
-    }
+        constexpr static Types type = Types::ReversedListIterator;
 
-    template<typename T>
-    friend class List;
-};
+        ConstReversedListIterator<Li>(iterable_type ptr) { this->i_ptr = ptr; }
+
+        ConstReversedListIterator<Li>(const this_type &other) = default;
+        ConstReversedListIterator<Li>(this_type &&other)
+        {
+            this->i_ptr = other.i_ptr;
+            other.i_ptr = NULL;
+        }
+
+        this_type &operator++() override
+        {
+            if (this->i_ptr)
+                this->i_ptr = this->i_ptr->previous;
+            return *this;
+        }
+
+        this_type operator++(int) override
+        {
+            this_type tmp = *this;
+
+            if (this->i_ptr)
+                this->i_ptr = this->i_ptr->previous;
+
+            return tmp;
+        }
+
+        this_type &operator--() override
+        {
+            if (this->i_ptr)
+                this->i_ptr = this->i_ptr->next;
+            return *this;
+        }
+
+        this_type operator--(int)
+        {
+            this_type tmp = *this;
+
+            if (this->i_ptr)
+                this->i_ptr = this->i_ptr->next;
+
+            return tmp;
+        }
+
+        this_type operator+(int offset) override
+        {
+            this_type tmp = *this;
+
+            if (std::is_negative(offset))
+            {
+                for (int i = 0; i < offset; i++)
+                {
+                    tmp.i_ptr = tmp.i_ptr->next;
+
+                    if (!tmp.i_ptr)
+                        break;
+                }
+            }
+
+            else
+            {
+                for (int i = 0; i < offset; i++)
+                {
+                    tmp.i_ptr = tmp.i_ptr->previous;
+
+                    if (!tmp.i_ptr)
+                        break;
+                }
+            }
+
+            return tmp;
+        }
+
+        this_type operator-(int offset) override
+        {
+            this_type tmp = *this;
+
+            if (std::is_positive(offset))
+            {
+                for (int i = 0; i < offset; i++)
+                {
+                    tmp.i_ptr = tmp.i_ptr->next;
+
+                    if (!tmp.i_ptr)
+                        break;
+                }
+            }
+
+            else
+            {
+                for (int i = 0; i < offset; i++)
+                {
+                    tmp.i_ptr = tmp.i_ptr->previous;
+
+                    if (!tmp.i_ptr)
+                        break;
+                }
+            }
+
+            return tmp;
+        }
+
+        this_type &operator=(const this_type &other) override
+        {
+            *this = other;
+            return *this;
+        }
+
+        this_type &operator=(this_type &&other) override
+        {
+            *this = other;
+            other.i_ptr = NULL;
+            return *this;
+        }
+
+        const_lreference operator*() const override
+        {
+            return this->i_ptr->value;
+        }
+
+        operator bool(void) const override
+        {
+            this->valid();
+        }
+
+        bool valid(void) const override
+        {
+            return this->i_ptr != NULL;
+        }
+
+        template <typename T>
+        friend class List;
+    };
 
 }

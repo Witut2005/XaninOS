@@ -1,10 +1,10 @@
-
 #pragma once
 
 #include <lib/libc/stdlibx.h>
 #include <lib/libcpp/algorithm.h>
 #include <lib/libcpp/utility.h>
 #include <lib/libcpp/ostream.h>
+#include "../list.hpp"
 
 #include "./iterator.hpp"
 
@@ -13,292 +13,232 @@
 namespace std
 {
 
+    template <class T>
+    using ForwardUnorderedMapIterator = ForwardListIterator<T>;
 
-template <class K, class V>
-class UnorderedMap
-{
+    template <class T>
+    using ConstForwardUnorderedMapIterator = ConstForwardListIterator<T>;
 
+    template <class T>
+    using ReversedUnorderedMapIterator = ReversedListIterator<T>;
 
-    public:
-    struct ListElement
+    template <class T>
+    using ConstReversedUnorderedMapIterator = ConstReversedListIterator<T>;
+
+    template <class K, class V>
+    class UnorderedMap
     {
-        pair<K, V> item;
-        ListElement *next;
-        ListElement *previous;
-    };
 
     private:
-    ListElement *Head;
-    ListElement *Tail;
-    size_t size;
+        List<std::pair<K, V>> elements;
+        size_t size;
 
     public:
-    UnorderedMap();
-    UnorderedMap(const UnorderedMap<K, V> &other) = default;
-    UnorderedMap(initializer_list<pair<K,V>> ListOfElements);
-    ListElement* operator++(int);
-    ListElement* operator++(void);
-    V& operator[](K key);
-    UnorderedMapIterator<K, V, UnorderedMap> begin(void);
-    UnorderedMapIterator<K, V, UnorderedMap> end(void);
-    ListElement* goto_last_element();
-    UnorderedMapIterator<K, V, UnorderedMap> find(K key);
-    bool erase(K key);
-    bool exists(K key);
-    void insert(K key, V value);
-    void insert_or_assign(K key, V value);
-    V pop_end(void);
-    V pop_front(void);
-    void push_front(K key, V value);
-    void print(void);
+        using this_type = UnorderedMap<K, V>;
 
-};
+        using value_type = std::pair<K, V>;
+        using iterable_type = ListElement<value_type> *;
+        using backend_type = decltype(elements);
 
-template <class K, class V>
-UnorderedMap<K, V>::UnorderedMap()
-{
-    this->Head = (ListElement *)malloc(SIZE_OF(ListElement));
-    this->Tail = (ListElement *)malloc(SIZE_OF(ListElement));
-    this->Head->next = nullptr;
-    this->Head->previous = nullptr;
-    this->size = 0;
-    this->Head->next = this->Tail;
-}
+        using lreference = std::pair<K, V> &;
+        using rreference = std::pair<K, V> &&;
 
-template <class K, class V>
-UnorderedMap<K, V>::UnorderedMap(initializer_list<pair<K,V>> ListOfElements)
-{
-    this->Head = (ListElement *)malloc(SIZE_OF(ListElement));
+        using const_lreference = const std::pair<K, V> &;
+        using const_rreference = const std::pair<K, V> &&;
 
-    this->Head->item.first = (*ListOfElements.begin()).first;
-    this->Head->item.second = (*ListOfElements.begin()).second;
+        using forward_iterator = ForwardUnorderedMapIterator<backend_type>;
+        using const_forward_iterator = ConstForwardUnorderedMapIterator<backend_type>;
 
-    ListElement* Tmp = this->Head;
+        using reversed_iterator = ReversedUnorderedMapIterator<backend_type>;
+        using const_reversed_iterator = ConstReversedUnorderedMapIterator<backend_type>;
 
-    for(auto a : ListOfElements)
+        UnorderedMap() = default;
+        UnorderedMap(const this_type &other) = default;
+        UnorderedMap(initializer_list<pair<K, V>> ListOfElements);
+        ~UnorderedMap();
+
+        this_type &operator=(const this_type &other) = default;
+        this_type &operator=(this_type &&other);
+
+        V &operator[](K key);
+
+        forward_iterator begin(void);
+        forward_iterator end(void);
+        const_forward_iterator cbegin(void);
+        const_forward_iterator cend(void);
+
+        reversed_iterator rbegin(void);
+        reversed_iterator rend(void);
+        const_reversed_iterator crbegin(void);
+        const_reversed_iterator crend(void);
+
+        template <class OutIt = ForwardListIterator<decltype(elements)>>
+        OutIt find(K key)
+        {
+            static_assert(OutIt::type == Types::ForwardListIterator, "Use UnorderedMap iterators");
+
+            auto Tail = this->elements.goto_last_element();
+
+            for (auto it = this->elements.Head; it != Tail->next; it = it->next)
+            {
+                if (it->value.first == key)
+                {
+                    return OutIt(it);
+                }
+            }
+
+            return OutIt(NULL);
+        }
+
+        void remove(K key);
+
+        template <typename InputIt>
+        void erase(InputIt it)
+        {
+            this->elements.erase(it);
+        }
+
+        template <typename InputIt>
+        void erase(InputIt beg, InputIt end)
+        {
+            this->elements.erase(beg, end);
+        }
+
+        bool exists(K key);
+        void insert(K key, V value);
+        void insert_or_assign(K key, V value);
+
+        void pop_back(void);
+        void pop_front(void);
+
+        // void push_front(K key, V value);
+        void print(void);
+    };
+
+    template <class K, class V>
+    UnorderedMap<K, V>::UnorderedMap(std::initializer_list<pair<K, V>> items)
     {
-        Tmp->next = (ListElement *)malloc(SIZE_OF(ListElement));
-        Tmp = Tmp->next;
-        Tmp->item.first = a.first;
-        Tmp->item.second = a.second;
+        for (auto a : items)
+            this->elements.push_back(a);
     }
-    Tmp->next = nullptr;
-    this->Tail = Tmp;
 
-    this->Head->next->previous = this->Head;
-    this->Head = this->Head->next;
-    free(this->Head->previous);
-    this->Head->previous = nullptr;
-}
-
-template<typename K, typename V>
-typename UnorderedMap<K, V>::ListElement* UnorderedMap<K, V>::goto_last_element()
-{
-    ListElement *Tmp = Head;
-    while (Tmp->next != this->Tail)
+    template <class K, class V>
+    UnorderedMap<K, V>::~UnorderedMap()
     {
-        Tmp = Tmp->next;
+        this->elements.clear();
     }
-    return Tmp;
-}
 
-template<typename K, typename V>
-UnorderedMapIterator<K, V, UnorderedMap> UnorderedMap<K, V>::find(K key)
-{
-    ListElement *Tmp = Head;
-    while (Tmp != Tail)
+    template <class K, class V>
+    typename UnorderedMap<K, V>::forward_iterator UnorderedMap<K, V>::begin(void)
     {
-        if (Tmp->item.first == key)
-            return UnorderedMapIterator<K, V, UnorderedMap>(Tmp);
-        Tmp = Tmp->next;
+        return this->elements.begin();
     }
-    return UnorderedMapIterator<K, V, UnorderedMap>(Tail);
-}
 
-template<typename K, typename V>
-bool UnorderedMap<K, V>::erase(K key)
-{
-    auto IteratorToErase = find(key);
+    template <class K, class V>
+    typename UnorderedMap<K, V>::forward_iterator UnorderedMap<K, V>::end(void)
+    {
+        return this->elements.end();
+    }
 
-    if(IteratorToErase == Tail)
+    template <class K, class V>
+    typename UnorderedMap<K, V>::const_forward_iterator UnorderedMap<K, V>::cbegin(void)
+    {
+        return this->elements.cbegin();
+    }
+
+    template <class K, class V>
+    typename UnorderedMap<K, V>::const_forward_iterator UnorderedMap<K, V>::cend(void)
+    {
+        return this->elements.cend();
+    }
+
+    template <class K, class V>
+    typename UnorderedMap<K, V>::reversed_iterator UnorderedMap<K, V>::rbegin(void)
+    {
+        return this->elements.rbegin();
+    }
+
+    template <class K, class V>
+    typename UnorderedMap<K, V>::reversed_iterator UnorderedMap<K, V>::rend(void)
+    {
+        return this->elements.rend();
+    }
+
+    template <class K, class V>
+    typename UnorderedMap<K, V>::const_reversed_iterator UnorderedMap<K, V>::crbegin(void)
+    {
+        return this->elements.crbegin();
+    }
+
+    template <class K, class V>
+    typename UnorderedMap<K, V>::const_reversed_iterator UnorderedMap<K, V>::crend(void)
+    {
+        return this->elements.crend();
+    }
+
+    template <class K, class V>
+    V &UnorderedMap<K, V>::operator[](K key)
+    {
+        if (this->exists(key))
+        {
+            return (*this->find<UnorderedMap<K, V>::forward_iterator>(key)).second;
+        }
+        else
+        {
+            this->elements.push_back(std::pair<K, V>(key, this->elements.Head->value.second));
+            return this->elements.goto_last_element()->value.second;
+        }
+    }
+
+    template <class K, class V>
+    void UnorderedMap<K, V>::remove(K key)
+    {
+        for (auto tmp = this->elements.Head; tmp != NULL; tmp = tmp->next)
+        {
+            if (tmp->value.first == key)
+                this->elements.erase(ForwardListIterator<decltype(this->elements)>(tmp), ForwardListIterator<decltype(this->elements)>(tmp->next));
+        }
+    }
+
+    template <class K, class V>
+    bool UnorderedMap<K, V>::exists(K key)
+    {
+        for (auto it = this->elements.begin(); it != this->elements.end(); it++)
+        {
+            if ((*it).first == key)
+                return true;
+        }
         return false;
-    
-    auto Previous = IteratorToErase->previous();
-    auto Next = IteratorToErase->next();
-
-    Previous.i_ptr->next = Previous.i_ptr;
-
-    return true;
-}
-
-template<typename K, typename V>
-bool UnorderedMap<K, V>::exists(K key)
-{
-    if(this->find(key) == this->Tail)
-        return false;
-
-    return true;
-}
-
-template<typename K, typename V>
-void UnorderedMap<K, V>::insert(K key, V value)
-{
-
-    if(this->exists(key))
-        return;
-
-    if (!size)
-    {
-        this->Head->item.first = key;
-        this->Head->item.second = value;
-        this->size++;
-        return;
     }
 
-    ListElement *ItemInserted = goto_last_element();
-
-    ItemInserted->next = (ListElement *)(malloc(SIZE_OF(ListElement)));
-
-    ItemInserted->next->previous = ItemInserted;
-    ItemInserted = ItemInserted->next;
-    ItemInserted->item.first = key;
-    ItemInserted->item.second = value;
-    ItemInserted->next = this->Tail;
-
-    this->size++;
-}
-
-template<typename K, typename V>
-void UnorderedMap<K, V>::insert_or_assign(K key, V value)
-{
-    
-    if(this->exists(key))
+    template <class K, class V>
+    void UnorderedMap<K, V>::insert(K key, V value)
     {
-        auto Iterator = this->find(key);
-        *Iterator = value;
-        return;
+        if (!this->exists(key))
+            this->elements.push_back(std::pair(key, value));
     }
 
-    if (!size)
+    template <class K, class V>
+    void UnorderedMap<K, V>::insert_or_assign(K key, V value)
     {
-        // this->Head->item.first = key;
-        // this->Head->item.second = value;
-        this->Head->item = std::move(std::pair(key, value));
-        this->size++;
-        return;
+        if (!this->exists(key))
+            this->elements.push_back(std::pair(key, value));
+        else
+        {
+            *this->find(key) = std::pair(key, value);
+        }
     }
 
-    ListElement *ItemInserted = goto_last_element();
-
-    ItemInserted->next = (ListElement *)(malloc(SIZE_OF(ListElement)));
-
-    ItemInserted->next->previous = ItemInserted;
-    ItemInserted = ItemInserted->next;
-    ItemInserted->item = std::move(std::pair(key, value));
-    ItemInserted->next = this->Tail;
-
-    this->size++;
-
-}
-
-template<typename K, typename V>
-typename UnorderedMap<K, V>::ListElement* UnorderedMap<K, V>::operator++(int)
-{
-    ListElement *Tmp = this->Head;
-    this->Head = this->Head->next;
-
-    return Tmp;
-}
-
-template<typename K, typename V>
-typename UnorderedMap<K, V>::ListElement* UnorderedMap<K, V>::operator++(void)
-{
-    Head = Head->next;
-    return Head;
-}
-
-template<typename K, typename V>
-V UnorderedMap<K, V>::pop_end(void)
-{
-    ListElement *LastItem = goto_last_element();
-    auto tmp = LastItem->value;
-    free(LastItem);
-    return tmp;
-}
-
-template<typename K, typename V>
-V UnorderedMap<K, V>::pop_front(void)
-{
-    V ret = this->Head->item.second;
-    auto tmp = this->Head;
-    this->Head = this->Head->next;
-    free(tmp);
-
-    return ret;
-}
-
-template<typename K, typename V>
-void UnorderedMap<K, V>::push_front(K key, V value)
-{
-    if (!size)
+    template <class K, class V>
+    void UnorderedMap<K, V>::pop_back(void)
     {
-        this->Head->item.first = key;
-        this->Head->item.second = value;
-        this->size++;
-        return;
+        this->elements.pop_back();
     }
 
-    this->size++;
-    ListElement *NewItem = (ListElement *)malloc(SIZE_OF(ListElement));
-    NewItem->next = this->Head;
-    NewItem->previous = nullptr;
-    NewItem->item.first = key;
-    NewItem->item.second = value;
-    Head = NewItem;
-}
-
-template<typename K, typename V>
-void UnorderedMap<K, V>::print(void)
-{
-    ListElement *HeadTmp = this->Head;
-
-    std::cout << '[';
-
-    while (HeadTmp->next != nullptr)
+    template <class K, class V>
+    void UnorderedMap<K, V>::pop_front(void)
     {
-        std::cout << '[' << HeadTmp->item.first << ',' << HeadTmp->item.second << "], ";
-        HeadTmp = HeadTmp->next;
+        this->elements.pop_front();
     }
 
-    std::cout << '[' << HeadTmp->item.first << ',' << HeadTmp->item.second << "]]" << std::endl;
 }
-
-template<typename K, typename V>
-V& UnorderedMap<K, V>::operator[](K key)
-{
-    auto ret = this->find(key);
-
-    if (ret == this->Tail)
-    {
-        this->insert(key, *this->end());
-        return *this->find(key);
-    }
-
-    else
-        return *ret;
-}        
-
-template<typename K, typename V>
-UnorderedMapIterator<K, V, UnorderedMap> UnorderedMap<K, V>::begin(void) {
-    return UnorderedMapIterator<K, V, UnorderedMap>(this->Head);
-}
-
-template<typename K, typename V>
-UnorderedMapIterator<K, V, UnorderedMap> UnorderedMap<K, V>::end(void) {
-    return UnorderedMapIterator<K, V, UnorderedMap>(this->Tail);
-}
-
-}
-
-
-

@@ -26,30 +26,29 @@
 #include <lib/libcpp/container/map.hpp>
 #include <lib/libcpp/container/list.hpp>
 
-//TERMINAL_APP
+// TERMINAL_APP
 
 class Test
 {
-    public:
+public:
     Test(int x, int y) { std::cout << std::dec << "CLASS: " << (int)x << ", " << (int)y << std::endl; }
     void print(int x, int y) { std::cout << std::dec << "CLASS: " << (int)x << ", " << (int)y << std::endl; }
 };
 
-template<class Cont>
-static inline void printcont(std::ForwardIterator<Cont>&& beg, std::ForwardIterator<Cont>&& end) 
+template <class Cont>
+static inline void printcont(std::ForwardIterator<Cont> &&beg, std::ForwardIterator<Cont> &&end)
 {
-    for(; beg != end; beg++)
+    for (; beg != end; beg++)
     {
         std::cout << *beg << std::endl;
     }
 }
 
-
 static inline void arr_test(void)
 {
     std::cout << "ARRAY TEST" << std::endl;
 
-    std::vector<int> vec = {1,2,3,4,5};
+    std::vector<int> vec = {1, 2, 3, 4, 5};
     std::array<int, 10> arr(vec.begin(), vec.end(), 10);
 
     auto it = arr.begin();
@@ -57,41 +56,41 @@ static inline void arr_test(void)
     auto tarr = arr.slice<4>(arr.begin() + 1);
 
     // auto con = tarr.concat(tarr);
-    
 
     // CONST ITERATORS TEST
     {
-    auto cbit = arr.cbegin();
-    auto ceit = arr.cend();
+        auto cbit = arr.cbegin();
+        auto ceit = arr.cend();
 
-    auto crbit = arr.crbegin();
-    auto creit = arr.crend();
-    // UNCOMMENT TO CHECK IF READ-ONLY
-    // *crbit = 6;
-    // *creit = 6;
+        auto crbit = arr.crbegin();
+        auto creit = arr.crend();
+        // UNCOMMENT TO CHECK IF READ-ONLY
+        // *crbit = 6;
+        // *creit = 6;
     }
 
-    for(auto crbit = arr.crbegin(); crbit != arr.crend(); crbit++) {
+    for (auto crbit = arr.crbegin(); crbit != arr.crend(); crbit++)
+    {
         std::cout << *crbit << std::endl;
     }
     // std::cout << "const it: " << *cit << std::endl;
 
     return;
 
-    auto& value =  arr[-11];
+    auto &value = arr[-11];
 
     xprintf("value: 0x%x 0x%x\n", &value, &arr[0]);
 
     std::cout << "is valid element: " << arr.valid_element(value) << std::endl;
 
-    if(arr.valid_element(value))
+    if (arr.valid_element(value))
         std::cout << "value of element: " << value << std::endl;
 
-    for(auto a : arr)
+    for (auto a : arr)
         std::cout << a << ", ";
     std::cout << std::endl;
 
-    for(int i = 0; i < arr.size(); i++)
+    for (int i = 0; i < arr.size(); i++)
         std::cout << arr[i] << ", ";
     std::cout << std::endl;
 
@@ -106,12 +105,12 @@ static inline void vec_test(void)
 
     std::cout << "VEC TEST" << std::endl;
 
-    std::vector<int> vtmp = {0,1,2,3,4,5,6,7,8,9};
+    std::vector<int> vtmp = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 
     vtmp.push_back(1);
 
     std::cout << "last element of vector: " << vtmp.valid_element(vtmp[-12]) << std::endl;
-    
+
     return;
 
     // auto rit = vtmp.rend();
@@ -140,20 +139,20 @@ static inline void list_test(void)
 
     std::List<int> li;
 
-    for(int i = 1; i < 10; i++)
+    for (int i = 1; i < 10; i++)
         li.push_back(i);
 
-    for(int i = 0; i < 5; i++)
+    for (int i = 0; i < 5; i++)
         li.push_back(100);
-    
+
     // li.pop_back();
     // li.pop_front();
-    std::cout << "LAST VAL: " <<*(li.end() - 1) << std::endl;
+    std::cout << "LAST VAL: " << *(li.end() - 1) << std::endl;
 
     li.print();
     std::cout << std::endl;
     li.remove(100);
-    std::cout << "LAST VAL: " <<*(li.end() - 1) << std::endl;
+    std::cout << "LAST VAL: " << *(li.end() - 1) << std::endl;
 
     li.print();
     std::cout << std::endl;
@@ -165,23 +164,22 @@ static inline void list_test(void)
 
     std::cout << "li size: " << li.size() << std::endl;
 
-    for(int i = 100; i < 110; i++)
+    for (int i = 100; i < 110; i++)
         li.push_front(i);
 
     li.print();
     std::cout << std::endl;
-    
+
     li.print();
     std::cout << std::endl;
 
     // xprintf("lup: 0x%x 0x%x\n", li.ListUpperBoundary, li.ListUpperBoundary->previous->next);
     li.erase(li.end() - 1);
-    std::cout << "LAST VAL: " <<*(li.end() - 1) << std::endl;
+    std::cout << "LAST VAL: " << *(li.end() - 1) << std::endl;
     // xprintf("lup: 0x%x 0x%x\n", li.ListUpperBoundary, li.ListUpperBoundary->previous->next);
 
     li.print();
     std::cout << std::endl;
-
 
     // for(int i = 5; i < 10; i++)
     //     li.push_back(i);
@@ -215,10 +213,9 @@ static inline void map_test(void)
 {
     std::cout << "MAP TEST" << std::endl;
 
-    std::UnorderedMapC<int, int> map = {
+    std::UnorderedMap<int, int> map = {
         {1, 10},
-        {2, 20}
-    };
+        {2, 20}};
 
     std::cout << "found: " << map[3] << std::endl;
     map[3] = 1234;
@@ -227,25 +224,24 @@ static inline void map_test(void)
     map.insert(4, 40);
     map.insert_or_assign(4, 50);
 
-    for(auto it = map.begin(); it != map.end(); it++)
+    for (auto it = map.begin(); it != map.end(); it++)
         std::cout << '[' << (*it).first << " " << (*it).second << ']' << ", ";
     std::cout << std::endl;
 
     auto it = map.begin();
-    *it =std::move(std::pair(1,1));
+    *it = std::move(std::pair(1, 1));
 
-    for(auto it = map.crbegin(); it != map.crend(); it++)
+    for (auto it = map.crbegin(); it != map.crend(); it++)
         std::cout << '[' << (*it).first << " " << (*it).second << ']' << ", ";
     std::cout << std::endl;
-
 }
 
 void cpp_prog()
 {
 
-    //arr_test();
-    //vec_test();
-    //list_test();
+    // arr_test();
+    // vec_test();
+    // list_test();
     map_test();
     return;
 
@@ -277,13 +273,11 @@ void cpp_prog()
     // while(getxchar().scan_code != ENTER);
     // screen_clear();
 
-
     // std::string strr("nicho");
     // // std::string strr2(strr.rbegin(), strr.rend());
     // std::string strr2(strr.rbegin(), strr.rend());
-    
-    // std::cout << strr2 << std::endl;
 
+    // std::cout << strr2 << std::endl;
 
     // std::array<const char*, 3> arr = {"nicho", "morbius", "lerczok"};
 
@@ -300,7 +294,7 @@ void cpp_prog()
 
     // std::cout << "list: " << std::endl;
     // std::List<int> li(0);
-    
+
     // for(int i = 1; i < 10; i++)
     //     li.push(i);
 
@@ -312,7 +306,7 @@ void cpp_prog()
 
     // std::cout << "map: " << std::endl;
     // std::UnorderedMap<int, const char*> mapp = {{1, "100"}, {2, "200"}, {3, "300"}};
-        
+
     // std::UnorderedMap<std::pair<int, int>, uint32_t> nii;
     // nii.insert(std::make_pair(1,1), 100);
 
@@ -322,9 +316,8 @@ void cpp_prog()
     // else
     //     std::cout << "bruh" << std::endl;
 
-        
     // // while(1);
-        
+
     // std::CommandParser parser(argv);
     // parser.argument_add("--piwka", true);
 
@@ -345,8 +338,6 @@ void cpp_prog()
     //     std::cout << "czegos mi tu brakuje, hmmm" << std::endl;
     // }
 
-
-
     // // std::UnorderedMap<const char*, const char* > MojaMapa;
     // // MojaMapa.insert("nicho", "wojciech");
     // // MojaMapa.insert("agata", "lerczok");
@@ -356,20 +347,19 @@ void cpp_prog()
 
     // // std::List<const char*> lista("nicho");
     // // lista.push("123");
-    
+
     // // lista.print();
     // // if(lista["123"] != nullptr)
     // //     std::cout << "istnieje" << std::endl;
     // // else
     // //     std::cout << "nie istnieje" << std::endl;
 
-
     // // lista.
 
     // while(getxchar().scan_code != ENTER);
 
     // int* p;
-    
+
     // p = (int*)malloc(SIZE_OF(int));
     // std::cout << std::hex << p <<std::endl;
     // p = new int{32};
@@ -385,20 +375,18 @@ void cpp_prog()
     // //std::cout << std::hex << (unsigned int)(p) <<std::endl;
     // //std::cout << *p <<std::endl;
 
-
     // std::array<int, 10> test_array  = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
     // std::array<int, 10> test_array2 = {9, 8, 7, 6, 5, 4, 3, 2, 1, 0};
 
     // std::cout << "the smallest element: " << *std::min_element(test_array.begin(), test_array.end()) << std::endl;
 
     // std::cout << "the largest element: " << *std::max_element(test_array.begin(), test_array.end()) << std::endl;
-    
+
     // std::swap<int>(*test_array.begin(), *test_array.end());
     // std::min(*test_array.begin(), *test_array.end());
-    
+
     // std::string str_tmp = "hm";
     // std::cout << str_tmp << std::endl;
-    
 
     // //std::cout << *p << std::endl;
 
@@ -427,7 +415,7 @@ void cpp_prog()
 
     // std::cout << std::endl;
 
-    // std::pair<char, int> para = std::make_pair('a', 512); 
+    // std::pair<char, int> para = std::make_pair('a', 512);
     // std::pair<char, int>& ref_pair = para;
 
     // std::cout << para.first << " " << para.second << std::endl;
@@ -455,7 +443,7 @@ void cpp_prog()
     // std::cout << "string test" << std::endl;
     // std::string str1 = "jeden";
     // std::string& omg = str1;
-    
+
     // std::print("ugabuga: {}{}", omg, 10);
 
     // char* buf = (char*)calloc(50);
@@ -464,12 +452,10 @@ void cpp_prog()
 
     // screen_clear();
 
-
     // std::UnorderedMap<int, int> Ahha = {
     //     {1,5},
     //     {6,9}
     // };
-
 
     // Ahha.print();
     // std::cout << "ARRR: " << test_array[-1] << std::endl;
@@ -482,18 +468,17 @@ void cpp_prog()
     // wekk.pop();
     // wekk.pop();
     // wekk.push(1234);
-    
+
     // wekk[0] = 1000;
     // wekk[0]++;
-        
+
     // wekk.print();
 
     // while(getxchar().scan_code != ENTER);
 
     // std::cout << std::clear;
-    
+
     // std::cout << "ABATAKAM" << std::endl;
-    
 
     // /*
     //     for(int i = 0; i < jmm.size_get(); i++)
@@ -520,30 +505,24 @@ void cpp_prog()
 
     // weak = shr1;
 
-
     // if(weak.lock() == NULL)
     //     std::cout << "no shared mordo :))" << std::endl;
     // else
     //     std::cout << "weak ptr value: " << *weak.lock()->get() << std::endl;
     // }
 
-    
     // if(weak.lock() == NULL)
     //     std::cout << "no shared mordo :))" << std::endl;
     // else
     //     std::cout << "weak ptr value: " << *weak.lock()->get() << std::endl;
 
-
     // // std::List<char*> nicho;
     // // nicho.push_back("ugabuga");
-
 
     // while(getxchar().scan_code != ENTER);
 
     // free(buf);
-
 }
-
 
 extern "C"
 {
@@ -553,6 +532,4 @@ extern "C"
         cpp_prog();
         return 0;
     }
-    
-
 }
