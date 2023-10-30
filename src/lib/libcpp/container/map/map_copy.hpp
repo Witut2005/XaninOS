@@ -1,5 +1,3 @@
-
-
 #pragma once
 
 #include <lib/libc/stdlibx.h>
@@ -107,9 +105,10 @@ class UnorderedMapC
     void insert(K key, V value);
     void insert_or_assign(K key, V value);
 
-    V pop_end(void);
-    V pop_front(void);
-    void push_front(K key, V value);
+    void pop_back(void);
+    void pop_front(void);
+
+    // void push_front(K key, V value);
     void print(void);
 
 };
@@ -215,6 +214,18 @@ void UnorderedMapC<K, V>::insert_or_assign(K key, V value)
     else {
         *this->find(key) = std::pair(key, value);
     }
+}
+
+template <class K, class V>
+void UnorderedMapC<K, V>::pop_back(void)
+{
+    this->elements.pop_back();
+}
+
+template <class K, class V>
+void UnorderedMapC<K, V>::pop_front(void)
+{
+    this->elements.pop_front();
 }
 
 }
