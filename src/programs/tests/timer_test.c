@@ -4,28 +4,24 @@
 #include <lib/libc/stdlibx.h>
 #include <sys/input/input.h>
 
-//CANVAS_APP
-
-void timer_input(void)
-{
-    if(getscan() == ENTER)
-        app_exited = true;
-}
-
+// CANVAS_APP
 int timer_test(void)
 {
 
     stdio_mode_set(STDIO_MODE_CANVAS);
-    keyboard_handle = timer_input;
 
     uint32_t current_time = 0;
 
     canvas_screen_clear();
+    key_info_t k;
+
+    __input_module_add_object_to_observe(&k);
 
     canvas_xprintf("Press 'a' to start...");
-    while(getchar() != 'a');
+    while (getchar() != 'a')
+        ;
 
-    while(!app_exited)
+    while (!(k.character == 'a'))
     {
         canvas_screen_clear();
         canvas_xprintf("%d", current_time);
@@ -33,6 +29,7 @@ int timer_test(void)
         msleep(1000);
     }
 
-    return XANIN_OK;
+    __input_module_remove_object_from_observe(&k);
 
+    return XANIN_OK;
 }

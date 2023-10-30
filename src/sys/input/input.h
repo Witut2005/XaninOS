@@ -3,14 +3,16 @@
 #include <sys/input/key_info.h>
 
 #ifdef __cplusplus
-extern "C"{
+extern "C"
+{
 #endif
 
-int __input_module_add_object_to_observe(key_info_t* KeyInfoToObserve);
-int __input_module_remove_object_from_observe(key_info_t* KeyInfoToRemove);
-key_info_t __keyinfo_get(void);
-char __inputc(void);
-xchar __inputg(void);
+    void __input_module_handle_observed_objects(key_info_t *KeyboardDriverKeyInfo);
+    int __input_module_add_object_to_observe(key_info_t *KeyInfoToObserve);
+    int __input_module_remove_object_from_observe(key_info_t *KeyInfoToRemove);
+    key_info_t __keyinfo_get(void);
+    char __inputc(void);
+    xchar __inputg(void);
 
 #ifdef __cplusplus
 }

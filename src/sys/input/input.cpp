@@ -7,68 +7,77 @@
 
 key_info_t KeyInfo = {0};
 
-std::array<key_info_t*, 100> KeyboardModuleObservedObjects;
+std::array<key_info_t *, 100> KeyboardModuleObservedObjects;
 
-extern "C" 
+extern "C"
 {
 
-void __input_module_init(void)
-{
-    memset((uint8_t*)&KeyboardModuleObservedObjects, 0, sizeof(KeyboardModuleObservedObjects));
-}
+    void __input_module_handle_observed_objects(key_info_t *KeyboardDriverKeyInfo)
+    {
+        for (auto &a : KeyboardModuleObservedObjects)
+        {
+            if (a)
+                memcpy((uint8_t *)&a, (uint8_t *)KeyboardDriverKeyInfo, sizeof(key_info_t));
+        }
+    }
 
-int __input_module_add_object_to_observe(key_info_t* KeyInfoToObserve)
-{
-    int index = KeyboardModuleObservedObjects.find_other_than(NULL);
+    void __input_module_init(void)
+    {
+        memset((uint8_t *)&KeyboardModuleObservedObjects, 0, sizeof(KeyboardModuleObservedObjects));
+    }
 
-    if(index == -1)
-        return -1;
+    int __input_module_add_object_to_observe(key_info_t *KeyInfoToObserve)
+    {
+        int index = KeyboardModuleObservedObjects.find_other_than(NULL);
 
-    KeyboardModuleObservedObjects[index] = KeyInfoToObserve;
-    return 0;
-}
+        if (index == -1)
+            return -1;
 
-int __input_module_remove_object_from_observe(key_info_t* KeyInfoToRemove)
-{
-    int index = KeyboardModuleObservedObjects.find(KeyInfoToRemove);
+        KeyboardModuleObservedObjects[index] = KeyInfoToObserve;
+        return 0;
+    }
 
-    if(index == -1)
-        return -1;
+    int __input_module_remove_object_from_observe(key_info_t *KeyInfoToRemove)
+    {
+        int index = KeyboardModuleObservedObjects.find(KeyInfoToRemove);
 
-    KeyboardModuleObservedObjects[index] = NULL;
-    return 0;
-}
+        if (index == -1)
+            return -1;
 
-char __inputc(void)
-{
-    return __inputg().character;
-}
+        KeyboardModuleObservedObjects[index] = NULL;
+        return 0;
+    }
 
-void __keyinfo_clear(void)
-{
-    // memset((uint8_t*)&KeyInfo, 0, sizeof(KeyInfo));
-}
+    char __inputc(void)
+    {
+        return __inputg().character;
+    }
 
-key_info_t __keyinfo_get(void)
-{
-    return KeyInfo;
-}
+    void __keyinfo_clear(void)
+    {
+        // memset((uint8_t*)&KeyInfo, 0, sizeof(KeyInfo));
+    }
 
-xchar __inputg(void)
-{
+    key_info_t __keyinfo_get(void)
+    {
+        return KeyInfo;
+    }
 
-    key_info_t InputgKeyInfo;
+    xchar __inputg(void)
+    {
 
-    InputgKeyInfo.scan_code = KeyInfo.scan_code = 0;
-    // __keyinfo_clear();
+        key_info_t InputgKeyInfo;
 
-    while((InputgKeyInfo.scan_code == 0) || (InputgKeyInfo.scan_code >= 0x80)) InputgKeyInfo = __keyinfo_get(); // break codes doesnt count
-    
-    xchar x;
-    x.character = InputgKeyInfo.character;
-    x.scan_code = InputgKeyInfo.scan_code;
+        InputgKeyInfo.scan_code = KeyInfo.scan_code = 0;
+        // __keyinfo_clear();
 
-    return x;
-}
+        while ((InputgKeyInfo.scan_code == 0) || (InputgKeyInfo.scan_code >= 0x80))
+            InputgKeyInfo = __keyinfo_get(); // break codes doesnt count
 
+        xchar x;
+        x.character = InputgKeyInfo.character;
+        x.scan_code = InputgKeyInfo.scan_code;
+
+        return x;
+    }
 }
