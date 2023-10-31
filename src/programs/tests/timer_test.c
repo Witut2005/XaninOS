@@ -15,16 +15,18 @@ int timer_test(void)
     canvas_screen_clear();
     key_info_t k;
 
-    __input_module_add_object_to_observe(&k);
+    KeyboardModuleObservedObjectOptions Options = {true};
+    __input_module_add_object_to_observe(&k, Options);
 
     canvas_xprintf("Press 'a' to start...");
     while (getchar() != 'a')
         ;
 
-    while (!(k.character == 'a'))
+    while (!(k.scan_code == ENTER))
     {
         canvas_screen_clear();
         canvas_xprintf("%d", current_time);
+        canvas_xprintf(" 0x%x", k.scan_code);
         current_time++;
         msleep(1000);
     }

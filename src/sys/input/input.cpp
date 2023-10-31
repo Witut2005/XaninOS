@@ -1,4 +1,5 @@
 
+#include <lib/libc/canvas.h>
 #include <lib/libc/hal.h>
 #include <lib/libc/memory.h>
 #include <lib/libcpp/container/array/array.hpp>
@@ -7,17 +8,20 @@
 
 key_info_t KeyInfo = {0};
 
-std::array<key_info_t *, 100> KeyboardModuleObservedObjects;
+std::array<KeyboardModuleObservedObject, 100> KeyboardModuleObservedObjects;
 
 extern "C"
 {
 
     void __input_module_handle_observed_objects(key_info_t *KeyboardDriverKeyInfo)
     {
-        for (auto &a : KeyboardModuleObservedObjects)
+        for (int i = 0; i < KeyboardModuleObservedObjects.size(); i++)
         {
-            if (a)
-                memcpy((uint8_t *)&a, (uint8_t *)KeyboardDriverKeyInfo, sizeof(key_info_t));
+            if (KeyboardModuleObservedObjects[i].KeyInfo != NULL)
+            {
+                if (!(KeyboardModuleObservedObjects[i].Options.ignore_break_codes & is_break_code(KeyboardDriverKeyInfo->scan_code)))
+                    memcpy((uint8_t *)KeyboardModuleObservedObjects[i].KeyInfo, (uint8_t *)KeyboardDriverKeyInfo, SIZE_OF(KeyboardModuleObservedObject));
+            }
         }
     }
 
@@ -26,25 +30,38 @@ extern "C"
         memset((uint8_t *)&KeyboardModuleObservedObjects, 0, sizeof(KeyboardModuleObservedObjects));
     }
 
-    int __input_module_add_object_to_observe(key_info_t *KeyInfoToObserve)
+    int __input_module_add_object_to_observe(key_info_t *KeyInfoToObserve, KeyboardModuleObservedObjectOptions Options)
     {
-        int index = KeyboardModuleObservedObjects.find_other_than(NULL);
+        int index = -1;
+
+        for (int i = 0; i < KeyboardModuleObservedObjects.size(); i++)
+        {
+            if (KeyboardModuleObservedObjects[i].KeyInfo == NULL)
+                index = i;
+        }
 
         if (index == -1)
             return -1;
 
-        KeyboardModuleObservedObjects[index] = KeyInfoToObserve;
+        KeyboardModuleObservedObject obj = {KeyInfoToObserve, Options};
+        KeyboardModuleObservedObjects[index] = obj;
         return 0;
     }
 
     int __input_module_remove_object_from_observe(key_info_t *KeyInfoToRemove)
     {
-        int index = KeyboardModuleObservedObjects.find(KeyInfoToRemove);
+        int index = -1;
+
+        for (int i = 0; i < KeyboardModuleObservedObjects.size(); i++)
+        {
+            if (KeyboardModuleObservedObjects[i].KeyInfo == KeyInfoToRemove)
+                index = i;
+        }
 
         if (index == -1)
             return -1;
 
-        KeyboardModuleObservedObjects[index] = NULL;
+        KeyboardModuleObservedObjects[index].KeyInfo = NULL;
         return 0;
     }
 
