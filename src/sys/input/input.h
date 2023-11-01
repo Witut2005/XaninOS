@@ -15,6 +15,14 @@ struct KeyboardModuleObservedObject
 };
 typedef struct KeyboardModuleObservedObject KeyboardModuleObservedObject;
 
+struct InputModuleHandler
+{
+    bool (*handler)(uint8_t **);
+    uint8_t **args;
+};
+
+typedef struct InputModuleHandler InputModuleHandler;
+
 static inline bool is_break_code(uint8_t scan_code)
 {
     return scan_code >= 0x80;

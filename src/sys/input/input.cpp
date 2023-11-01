@@ -9,6 +9,7 @@
 key_info_t KeyInfo = {0};
 
 std::array<KeyboardModuleObservedObject, 100> KeyboardModuleObservedObjects;
+std::array<InputModuleHandler, 100> InputModuleHandlers;
 
 extern "C"
 {
@@ -62,6 +63,24 @@ extern "C"
             return -1;
 
         KeyboardModuleObservedObjects[index].KeyInfo = NULL;
+        return 0;
+    }
+
+    bool __input_module_add_handler(InputModuleHandler Handler)
+    {
+
+        int index = -1;
+
+        for (int i = 0; i < InputModuleHandlers.size(); i++)
+        {
+            if (InputModuleHandlers[i].handler == NULL)
+                index = i;
+        }
+
+        if (index == -1)
+            return -1;
+
+        InputModuleHandlers[index] = Handler;
         return 0;
     }
 
