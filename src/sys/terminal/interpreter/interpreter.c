@@ -7,38 +7,54 @@
 #include <lib/libc/file.h>
 
 int argc;
-char* argv[5];
+char *argv[5];
 int last_command_exit_status;
 
-#define XANIN_ADD_APP_ENTRY0(app_name, exec_name) else if(bstrcmp(argv[0], app_name)) {last_command_exit_status = exec_name();}
-#define XANIN_ADD_APP_ENTRY1(app_name, exec_name) else if(bstrcmp(argv[0], app_name)) {last_command_exit_status = exec_name(argv[1]);}
-#define XANIN_ADD_APP_ENTRY2(app_name, exec_name) else if(bstrcmp(argv[0], app_name)) {last_command_exit_status = exec_name(argv[1], argv[2]);}
-#define XANIN_ADD_APP_ENTRY3(app_name, exec_name) else if(bstrcmp(argv[0], app_name)) {last_command_exit_status = exec_name(argv[1], argv[2], argv[3]);}
+#define XANIN_ADD_APP_ENTRY0(app_name, exec_name) \
+    else if (bstrcmp(argv[0], app_name))          \
+    {                                             \
+        last_command_exit_status = exec_name();   \
+    }
+#define XANIN_ADD_APP_ENTRY1(app_name, exec_name)      \
+    else if (bstrcmp(argv[0], app_name))               \
+    {                                                  \
+        last_command_exit_status = exec_name(argv[1]); \
+    }
+#define XANIN_ADD_APP_ENTRY2(app_name, exec_name)               \
+    else if (bstrcmp(argv[0], app_name))                        \
+    {                                                           \
+        last_command_exit_status = exec_name(argv[1], argv[2]); \
+    }
+#define XANIN_ADD_APP_ENTRY3(app_name, exec_name)                        \
+    else if (bstrcmp(argv[0], app_name))                                 \
+    {                                                                    \
+        last_command_exit_status = exec_name(argv[1], argv[2], argv[3]); \
+    }
 
 extern bool gyn_cl_on;
 bool is_external_app = false;
 
 void check_external_apps(void)
 {
-    char* external_apps_folder = (char*)calloc(ARRAY_LENGTH("/external_apps/"));
+    char *external_apps_folder = (char *)calloc(ARRAY_LENGTH("/external_apps/"));
     memcpy(external_apps_folder, "/external_apps/", ARRAY_LENGTH("/external_apps/"));
 
-    char* app = (char*)calloc(512);
+    char *app = (char *)calloc(512);
     memcpy(app, external_apps_folder, strlen(external_apps_folder));
 
-    for(int i = 0; argv[0][i] != '\0'; i++)
+    for (int i = 0; argv[0][i] != '\0'; i++)
         app[ARRAY_LENGTH("/external_apps/") + i - 1] = argv[0][i];
 
-    if(strlen(app) > XIN_MAX_PATH_LENGTH)
+    if (strlen(app) > XIN_MAX_PATH_LENGTH)
     {
         free(external_apps_folder);
         free(app);
         return;
     }
 
-    XinEntry* file = fopen(app, "r");
+    XinEntry *file = fopen(app, "r");
 
-    if(file != NULL && file->size != 0)
+    if (file != NULL && file->size != 0)
     {
         elfreader(app);
         is_external_app = true;
@@ -48,45 +64,46 @@ void check_external_apps(void)
 }
 
 extern uint32_t stdio_refresh_rate; // USE HERE SYSCALL
-extern void stdio_refresh(address_t* args);
+extern void stdio_refresh(address_t *args);
 
 void scan(void)
 {
 
-    all_intervals_clear(); // clear kernel intervals
+    all_intervals_clear();                                 // clear kernel intervals
     interval_set(stdio_refresh, stdio_refresh_rate, NULL); // refresh interval
 
     last_command_exit_status = XANIN_OK;
 
     bool stdio_mode_overriden = false;
 
-    if(KeyInfo.is_ctrl)
+    if (KeyInfo.is_ctrl)
     {
         puts_warning("Stdio mode override: l(legacy)/t(terminal)\n");
         char stdio_selected_option = getchar();
 
-        if(stdio_selected_option == 'l')
+        if (stdio_selected_option == 'l')
         {
             stdio_mode_set(STDIO_MODE_CANVAS);
             screen_clear();
         }
         stdio_mode_overriden = true;
     }
-    
-    
-    //legacy reasons
+
+    // legacy reasons
     KeyInfo.scan_code = 0;
     KeyInfo.character = 0;
     argc = 0;
-    
-    for(int i = 0; i < 5; i++)
+
+    for (int i = 0; i < 5; i++)
     {
-        if(!strlen(argv[i]))
+        if (!strlen(argv[i]))
             break;
         argc++;
     }
 
-    if(bstrcmp(argv[0], "nicho")) {}
+    if (bstrcmp(argv[0], "nicho"))
+    {
+    }
     XANIN_ADD_APP_ENTRY0("stdio_apply", stdio_apply)
     XANIN_ADD_APP_ENTRY1("ssaver", screen_saver)
     XANIN_ADD_APP_ENTRY1("bmp_info", bmp_info)
@@ -150,7 +167,7 @@ void scan(void)
     XANIN_ADD_APP_ENTRY1("xin_info", xin_info)
     XANIN_ADD_APP_ENTRY0("cls", screen_clear)
     XANIN_ADD_APP_ENTRY0("clear", screen_clear)
-    else if(bstrcmp(argv[0], "ls"))
+    else if (bstrcmp(argv[0], "ls"))
     {
         xin_list_files_app(argv);
     }
@@ -188,8 +205,8 @@ void scan(void)
     {
 
         check_external_apps();
-        
-        if(!is_external_app)
+
+        if (!is_external_app)
         {
             xprintf("%zunknown command: %s\n", stderr, argv[0]);
             last_command_exit_status = XANIN_ERROR;
@@ -208,13 +225,11 @@ void scan(void)
     //     msleep(800);
     // }
 
-
     keyboard_handle = NULL;
     app_exited = true;
 
-    if(stdio_mode_overriden) // i want to be careful
+    if (stdio_mode_overriden) // i want to be careful
         __xtf_buffer_clear(__vty_get());
 
     // terminal_destroy(app_terminal, kernel_terminal);
-
 }

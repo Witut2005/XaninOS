@@ -16,7 +16,7 @@ jne normal
 popa
 popfd
 
-mov eax, kernel_loop
+; mov eax, kernel_loop
 mov dword [esp], kernel_loop
 iret
 

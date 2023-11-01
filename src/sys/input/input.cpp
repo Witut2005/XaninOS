@@ -66,7 +66,7 @@ extern "C"
         return 0;
     }
 
-    bool __input_module_add_handler(InputModuleHandler Handler)
+    int __input_module_add_handler(InputModuleHandler Handler)
     {
 
         int index = -1;
@@ -82,6 +82,16 @@ extern "C"
 
         InputModuleHandlers[index] = Handler;
         return 0;
+    }
+
+    void __input_module_call_handlers(key_info_t KeyboardDriverKeyInfo)
+    {
+
+        for (int i = 0; i < InputModuleHandlers.size(); i++)
+        {
+            if (InputModuleHandlers[i].handler != NULL)
+                InputModuleHandlers[i].handler(KeyboardDriverKeyInfo, InputModuleHandlers[i].args);
+        }
     }
 
     char __inputc(void)

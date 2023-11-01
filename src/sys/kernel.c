@@ -55,7 +55,7 @@ extern bool com_status(void);
 /--------------------------------------*/
 
 /*----------------------------------------------/
-|No i pierwszy rok na mną. Kto by się           | 
+|No i pierwszy rok na mną. Kto by się           |
 |spodziewał! Babciu byłabyś ze mnie dumna       |
 |gdybyś mogła to wszystko zobaczyć              |
 |To wszystko w końcu przez Ciebie hah <3        |
@@ -73,21 +73,21 @@ extern bool com_status(void);
 |Ja, rok 2022, 31 grudzień, 17:00:45    |
 /--------------------------------------*/
 
-uint8_t* const zeros;
+uint8_t *const zeros;
 
 uint32_t stdio_refresh_rate;
 interval_id stdio_refresh_interval_id;
 ElfInitArraySectionInfo XaninInitArrayInfo;
 
-void stdio_refresh(address_t* args)
+void stdio_refresh(address_t *args)
 {
-    if((stdio_mode_get() == STDIO_MODE_TERMINAL) && (__xtb_get()->is_flushable))
+    if ((stdio_mode_get() == STDIO_MODE_TERMINAL) && (__xtb_get()->is_flushable))
         __sys_xtb_flush(__sys_vty_get());
 }
 
 void kernel_loop(void)
 {
-    while(1)
+    while (1)
     {
 
         xtb_enable_flushing();
@@ -97,7 +97,7 @@ void kernel_loop(void)
         all_intervals_clear(); // clear all intervals added by apps during execution
 
         interval_set(stdio_refresh, stdio_refresh_rate, NULL); // refresh interval
-        
+
         memset(null_memory_region, 0, SECTOR_SIZE);
         __xtf_scrolling_on(__vty_get());
 
@@ -106,7 +106,7 @@ void kernel_loop(void)
 
         puts("\n");
 
-        for(int i = 0; xin_current_directory[i + 1] != '\0'; i++)
+        for (int i = 0; xin_current_directory[i + 1] != '\0'; i++)
             xprintf("%z%c", OUTPUT_COLOR_SET(black, lblue), xin_current_directory[i]);
 
         puts(">");
@@ -115,20 +115,24 @@ void kernel_loop(void)
 
         xin_close_all_files();
 
-        if(app_exited)
+        if (app_exited)
             app_exited = false;
 
-
-        char scanf_str[] = "%s %s %s %s %s";
-
-        for(int i = 0; i < 5; i++)
+        for (int i = 0; i < 5; i++)
             memset(argv[i], 0, XANIN_PMMNGR_BLOCK_SIZE * 2);
 
-        xscanf(scanf_str,argv[0], argv[1], argv[2], argv[3], argv[4]);
+        xprintf("ug");
+        xscanf("%s %s %s %s %s", argv[0], argv[1], argv[2], argv[3], argv[4]);
+        xprintf("czup");
 
-        for(int i = 0; i < 5; i++)
+        for (int i = 0; i < 5; i++)
             erase_spaces(argv[i]);
-        
+
+        for (int i = 0; i < 5; i++)
+            xprintf("0x%x ", &argv[i]);
+
+        putchar('\n');
+
         scan();
     }
 }
@@ -157,11 +161,11 @@ void kernel_init(void)
     INTERRUPT_REGISTER(18, machine_check_exception_entry);
     INTERRUPT_REGISTER(19, simd_floating_point_exception_entry);
     INTERRUPT_REGISTER(20, virtualization_exception_entry);
-    INTERRUPT_REGISTER(21, general_protection_exception_entry); 
-    INTERRUPT_REGISTER(22, general_protection_exception_entry); 
-    INTERRUPT_REGISTER(23, general_protection_exception_entry); 
-    INTERRUPT_REGISTER(24, general_protection_exception_entry); 
-    INTERRUPT_REGISTER(25, general_protection_exception_entry); 
+    INTERRUPT_REGISTER(21, general_protection_exception_entry);
+    INTERRUPT_REGISTER(22, general_protection_exception_entry);
+    INTERRUPT_REGISTER(23, general_protection_exception_entry);
+    INTERRUPT_REGISTER(24, general_protection_exception_entry);
+    INTERRUPT_REGISTER(25, general_protection_exception_entry);
     INTERRUPT_REGISTER(26, general_protection_exception_entry);
     INTERRUPT_REGISTER(27, general_protection_exception_entry);
     INTERRUPT_REGISTER(28, general_protection_exception_entry);
@@ -174,7 +178,7 @@ void kernel_init(void)
     set_pit(0x20);
 
     vga_disable_cursor();
-    mmngr_init(kernel_mmngr_mmap, (uint8_t*)0x100000, PMMNGR_MEMORY_BLOCKS);
+    mmngr_init(kernel_mmngr_mmap, (uint8_t *)0x100000, PMMNGR_MEMORY_BLOCKS);
 
     vga_text_mode_height = 25;
     vga_text_mode_width = 80;
@@ -182,44 +186,44 @@ void kernel_init(void)
     screen_init(); // init screen management system
     screen_clear();
 
-    __xtb_init(__vga_text_mode_width_get(), __vga_text_mode_height_get(), (uint16_t*)__vga_buffer_segment_get());
+    __xtb_init(__vga_text_mode_width_get(), __vga_text_mode_height_get(), (uint16_t *)__vga_buffer_segment_get());
     __vty_set(xtf_init(100));
     stdio_mode_set(STDIO_MODE_TERMINAL);
 
     time_get(&SystemTime);
 
-    null_memory_region = (uint8_t*)kcalloc(VGA_SCREEN_RESOLUTION);
+    null_memory_region = (uint8_t *)kcalloc(VGA_SCREEN_RESOLUTION);
     xprintf("%z----------------------------\n", OUTPUT_COLOR_SET(black, green));
 
     puts("CHECKSUM CHECK RSDP: ");
 
-    SystemAcpiRSDP* rsdp = acpi_rsdp_find();
+    SystemAcpiRSDP *rsdp = acpi_rsdp_find();
 
     1 == acpi_rsdp_checksum_check(rsdp) ? xprintf("%zVALID", OUTPUT_COLOR_SET(green, white)) : xprintf("%zINVALID", OUTPUT_COLOR_SET(red, white));
     xprintf("\nRSDP address: 0x%x\n", rsdp);
 
-    acpi_rsdt_set((SystemAcpiRSDT*)rsdp->rsdt_address);
+    acpi_rsdt_set((SystemAcpiRSDT *)rsdp->rsdt_address);
 
     xprintf("%z----------------------------\n", OUTPUT_COLOR_SET(black, green));
 
     puts("CHECKSUM CHECK RSDT: ");
-    const SystemAcpiRSDT* const rsdt = acpi_rsdt_get();
+    const SystemAcpiRSDT *const rsdt = acpi_rsdt_get();
     1 == acpi_rsdt_checksum_check(rsdt) ? xprintf("%zVALID", OUTPUT_COLOR_SET(green, white)) : xprintf("%zINVALID", OUTPUT_COLOR_SET(red, white));
     xprintf("\nRSDT address: 0x%x\n", rsdt);
 
-    SystemAcpiSDT* AcpiApicSDT = apic_sdt_find();
+    SystemAcpiSDT *AcpiApicSDT = apic_sdt_find();
 
     xprintf("%z----------------------------\n", OUTPUT_COLOR_SET(black, green));
 
-    SystemAcpiFADT* AcpiFADT = acpi_fadt_find();
+    SystemAcpiFADT *AcpiFADT = acpi_fadt_find();
 
     puts("FADT address: ");
-    xprintf("%z0x%x\n", OUTPUT_COLOR_SET(black, acpi_sdt_checksum_check((uint8_t*)AcpiFADT, AcpiFADT->length) == true ? green : red), AcpiFADT);
-    
-    puts("MADT address: ");
-    xprintf("%z0x%x\n", OUTPUT_COLOR_SET(black, acpi_sdt_checksum_check((uint8_t*)AcpiApicSDT, AcpiApicSDT->length) == true ? green : red), AcpiApicSDT);
+    xprintf("%z0x%x\n", OUTPUT_COLOR_SET(black, acpi_sdt_checksum_check((uint8_t *)AcpiFADT, AcpiFADT->length) == true ? green : red), AcpiFADT);
 
-    xprintf("MADT entries: 0x%x\n", (uint8_t*)AcpiApicSDT + 0x28);
+    puts("MADT address: ");
+    xprintf("%z0x%x\n", OUTPUT_COLOR_SET(black, acpi_sdt_checksum_check((uint8_t *)AcpiApicSDT, AcpiApicSDT->length) == true ? green : red), AcpiApicSDT);
+
+    xprintf("MADT entries: 0x%x\n", (uint8_t *)AcpiApicSDT + 0x28);
 
     pic_disable();
     pic_mode_disable();
@@ -249,21 +253,21 @@ void kernel_init(void)
     static uint32_t ioapic_iso_couter; // iso = interrupt source override
     uint8_t used_irqs[32] = {0xFF};
     uint8_t used_irqs_counter = 0;
-    
+
     for (int i = 0; (*AcpiMADT2Pointers[i]).entry_type == 2; i++)
     {
         bool is_already_used = false;
 
-        for(int j = 0; j < 32; j++)
+        for (int j = 0; j < 32; j++)
         {
-            if(used_irqs[j] == (*AcpiMADT2Pointers[i]).irq_source)
+            if (used_irqs[j] == (*AcpiMADT2Pointers[i]).irq_source)
             {
                 is_already_used = true;
                 break;
             }
         }
 
-        if(!is_already_used)
+        if (!is_already_used)
         {
             xprintf(" %d %d |", (*AcpiMADT2Pointers[i]).irq_source, (*AcpiMADT2Pointers[i]).global_system_int_table);
             ioapic_iso_couter++;
@@ -286,7 +290,6 @@ void kernel_init(void)
 
         else if ((*AcpiMADT2Pointers[i]).irq_source == 0xB)
             apic_nic_redirect = AcpiMADT2Pointers[i];
-        
     }
 
     interrupt_disable();
@@ -305,11 +308,11 @@ void kernel_init(void)
                                       << APIC_VECTOR |
                                   0x0 << APIC_DELIVERY_MODE | 0x0 << APIC_DESTINATION_MODE | 0x0 << APIC_INT_PIN_POLARITY | 0x0 << APIC_INT_MASK,
                               ioapic_id_get());
-                        
+
     set_pit(apic_pit_redirect != NULL ? apic_pit_redirect->global_system_int_table + APIC_IRQ_BASE : PIC_PIT_VECTOR);
     keyboard_init(apic_keyboard_redirect != NULL ? apic_keyboard_redirect->global_system_int_table + APIC_IRQ_BASE : PIC_KEYBOARD_VECTOR);
     i8254x_init(apic_nic_redirect != NULL ? apic_nic_redirect->global_system_int_table + APIC_IRQ_BASE : PIC_NIC_VECTOR);
-                
+
     interrupt_disable();
 
     xprintf("\n%z----------------------------\n", OUTPUT_COLOR_SET(black, green));
@@ -325,17 +328,17 @@ void kernel_init(void)
     disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x1, 0x1, (uint16_t *)0x600);
     disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x2, 0x1, (uint16_t *)0x400);
 
-    argv[0] = (char*)calloc(XANIN_PMMNGR_BLOCK_SIZE * 2); 
-    argv[1] = (char*)calloc(XANIN_PMMNGR_BLOCK_SIZE * 2); 
-    argv[2] = (char*)calloc(XANIN_PMMNGR_BLOCK_SIZE * 2); 
-    argv[3] = (char*)calloc(XANIN_PMMNGR_BLOCK_SIZE * 2); 
-    argv[4] = (char*)calloc(XANIN_PMMNGR_BLOCK_SIZE * 2); 
+    argv[0] = (char *)calloc(XANIN_PMMNGR_BLOCK_SIZE * 2);
+    argv[1] = (char *)calloc(XANIN_PMMNGR_BLOCK_SIZE * 2);
+    argv[2] = (char *)calloc(XANIN_PMMNGR_BLOCK_SIZE * 2);
+    argv[3] = (char *)calloc(XANIN_PMMNGR_BLOCK_SIZE * 2);
+    argv[4] = (char *)calloc(XANIN_PMMNGR_BLOCK_SIZE * 2);
 
     xin_init_fs();
     disk_write(ATA_FIRST_BUS, ATA_MASTER, xin_find_entry("/ivt")->first_sector, 2, 0x0); // load ivt to /ivt file
 
     xin_folder_change("/");
-    FileDescriptorTable = (XinFileDescriptor*)kcalloc(SIZE_OF(XinFileDescriptor) * 200); // 200 = number o entries
+    FileDescriptorTable = (XinFileDescriptor *)kcalloc(SIZE_OF(XinFileDescriptor) * 200); // 200 = number o entries
 
     memset((uint8_t *)ArpTable, 0xFF, SIZE_OF(ArpTable[0]));
 
@@ -345,12 +348,12 @@ void kernel_init(void)
     __sys_xin_folder_create("/config/");
 
     arp_table_add_entry(LOOPBACK_IP_ADDRESS, null_memory_region);
-    
+
     interrupt_enable();
 
-    char* buffer = (char*)kcalloc(100 * SIZE_OF(char));
+    char *buffer = (char *)kcalloc(100 * SIZE_OF(char));
 
-    XinEntry* StdioRefreshRateConfig = fopen("/etc/stdio/refresh_rate.conf", "r");
+    XinEntry *StdioRefreshRateConfig = fopen("/etc/stdio/refresh_rate.conf", "r");
     fseek(StdioRefreshRateConfig, ARRAY_LENGTH("STDIO_REFRESH_RATE: ") - 1);
     fread(StdioRefreshRateConfig, buffer, 99);
 
@@ -358,8 +361,6 @@ void kernel_init(void)
     stdio_refresh_rate = stdio_refresh_rate <= 100 ? stdio_refresh_rate : 100;
 
     kfree(buffer);
-
-
 }
 
 void kernel_start(void)
@@ -374,34 +375,33 @@ void kernel_start(void)
     interrupt_enable();
 
     stdio_refresh(NULL);
-    while(getxchar().scan_code != ENTER);
+    while (getxchar().scan_code != ENTER)
+        ;
     screen_clear();
 
-    if(vga_text_mode_width == 80)
+    if (vga_text_mode_width == 80)
     {
         xprintf("%z    _/      _/                      _/              _/_/      _/_/_/       \n", OUTPUT_COLOR_SET(logo_back_color, logo_front_color));
         xprintf("%z     _/  _/      _/_/_/  _/_/_/        _/_/_/    _/    _/  _/              \n", OUTPUT_COLOR_SET(logo_back_color, logo_front_color));
         xprintf("%z      _/      _/    _/  _/    _/  _/  _/    _/  _/    _/    _/_/           \n", OUTPUT_COLOR_SET(logo_back_color, logo_front_color));
-        xprintf("%z   _/  _/    _/    _/  _/    _/  _/  _/    _/  _/    _/        _/%z   version 1.9v", OUTPUT_COLOR_SET(logo_back_color, logo_front_color), OUTPUT_COLOR_SET(black,white));
-        xprintf("%z_/      _/    _/_/_/  _/    _/  _/  _/    _/    _/_/    _/_/_/     %z%s: %i:%i:%i\n", OUTPUT_COLOR_SET(logo_back_color, logo_front_color), OUTPUT_COLOR_SET(black,white), daysLUT[SystemTime.weekday], SystemTime.hour, SystemTime.minutes, SystemTime.seconds);                                       
+        xprintf("%z   _/  _/    _/    _/  _/    _/  _/  _/    _/  _/    _/        _/%z   version 1.9v", OUTPUT_COLOR_SET(logo_back_color, logo_front_color), OUTPUT_COLOR_SET(black, white));
+        xprintf("%z_/      _/    _/_/_/  _/    _/  _/  _/    _/    _/_/    _/_/_/     %z%s: %i:%i:%i\n", OUTPUT_COLOR_SET(logo_back_color, logo_front_color), OUTPUT_COLOR_SET(black, white), daysLUT[SystemTime.weekday], SystemTime.hour, SystemTime.minutes, SystemTime.seconds);
     }
 
     char stdio_legacy_config_buf[6] = {0};
-    XinEntry* StdioLegacyConfig = fopen("/etc/help/stdio_legacy.conf", "rw");
+    XinEntry *StdioLegacyConfig = fopen("/etc/help/stdio_legacy.conf", "rw");
     fseek(StdioLegacyConfig, ARRAY_LENGTH("PRINT_LEGACY_STDIO_INFO: ") - 1);
     fread(StdioLegacyConfig, stdio_legacy_config_buf, 5);
 
-    if(bstrncmp(stdio_legacy_config_buf, "TRUE", 4))
+    if (bstrncmp(stdio_legacy_config_buf, "TRUE", 4))
     {
         fseek(StdioLegacyConfig, 25);
         fwrite(StdioLegacyConfig, "FALSE", 6);
 
         puts_warning("SINCE V1.8, XANIN USES TWO DIFFERENT GRAPHIC MODES. IF YOU WANT\nTO RUN THE PROGRAM IN A GIVEN MODE, HOLD CTRL WHILE SUBMITTING A COMMAND\n");
-
     }
 
     fclose(&StdioLegacyConfig);
 
     kernel_loop();
-
 }

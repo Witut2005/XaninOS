@@ -4,6 +4,13 @@
 #include <lib/libc/stdlibx.h>
 #include <sys/input/input.h>
 
+static bool timer_handler(key_info_t ki, uint8_t **a)
+{
+    if ((ki.scan_code == ENTER) && (!app_exited))
+        exit();
+    return true;
+}
+
 // CANVAS_APP
 int timer_test(void)
 {
@@ -17,12 +24,13 @@ int timer_test(void)
 
     KeyboardModuleObservedObjectOptions Options = {true};
     __input_module_add_object_to_observe(&k, Options);
+    __input_module_add_handler(input_module_handler_create(timer_handler, NULL));
 
     canvas_xprintf("Press 'a' to start...");
     while (getchar() != 'a')
         ;
 
-    while (!(k.scan_code == ENTER))
+    while (1)
     {
         canvas_screen_clear();
         canvas_xprintf("%d", current_time);

@@ -244,8 +244,11 @@ void keyboard_driver(void)
 
     __input_module_handle_observed_objects(&KeyInfo);
 
+    // we need to set interrupts
+    eoi_send();
+
+    __input_module_call_handlers(KeyInfo);
+
     if (KeyInfo.is_ctrl && KeyInfo.character == 'c')
         exit();
-
-    eoi_send();
 }
