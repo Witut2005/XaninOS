@@ -121,17 +121,13 @@ void kernel_loop(void)
         for (int i = 0; i < 5; i++)
             memset(argv[i], 0, XANIN_PMMNGR_BLOCK_SIZE * 2);
 
-        xprintf("ug");
         xscanf("%s %s %s %s %s", argv[0], argv[1], argv[2], argv[3], argv[4]);
-        xprintf("czup");
 
         for (int i = 0; i < 5; i++)
             erase_spaces(argv[i]);
 
-        for (int i = 0; i < 5; i++)
-            xprintf("0x%x ", &argv[i]);
-
-        putchar('\n');
+        // for (int i = 0; i < 5; i++)
+        //     xprintf("0x%x ", &argv[i]);
 
         scan();
     }

@@ -49,7 +49,12 @@ static inline void arr_test(void)
     std::cout << "ARRAY TEST" << std::endl;
 
     std::vector<int> vec = {1, 2, 3, 4, 5};
+
     std::array<int, 10> arr(vec.begin(), vec.end(), 10);
+    
+    std::cout << "find: " << arr.find(arr.find_default_handler);
+
+    return;
 
     auto it = arr.begin();
 
