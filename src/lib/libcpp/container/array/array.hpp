@@ -36,6 +36,28 @@ namespace std
         using const_forward_iterator = ConstForwardArrayIterator<this_type>;
         using const_reversed_iterator = ConstReversedArrayIterator<this_type>;
 
+        template <class FT, int FSIZE>
+        static int find_other_than_default_handler(std::array<FT, FSIZE> arr, FT arg) {
+            for(int i = 0; i < SIZE; i++)
+            {
+                if(arr[i] != arg)
+                    return i;
+            }
+            return -1;
+        }
+
+        template <class T, int SIZE>
+        static int array<T, SIZE>::find_other_than(T key)
+        {
+            for (int i = 0; i < SIZE; i++)
+            {
+                if (ptr[i] != key)
+                    return i;
+            }
+            return -1;
+        }
+
+
         array();
         array(const array &arr) = default;
         array(std::initializer_list<T> a);
@@ -70,7 +92,9 @@ namespace std
         constexpr bool valid_element(T &element) const;
 
         T get_copy(int32_t index) const;
-        int find(T key);
+        int find_default_handler(T arg) const ;
+        int find_other_than_default_handler(T arg) const;
+        int find(auto finder);
         int find_other_than(T key);
 
         T &front(void); // override;
@@ -222,23 +246,23 @@ namespace std
     }
 
     template <class T, int SIZE>
-    int array<T, SIZE>::find(T key)
-    {
-        for (int i = 0; i < SIZE; i++)
+    int std::array<T, SIZE>::find_default_handler(T arg) const {
+        for(int i = 0; i < SIZE; i++)
         {
-            if (ptr[i] == key)
+            if(this->ptr[i] == arg)
                 return i;
         }
         return -1;
     }
 
     template <class T, int SIZE>
-    int array<T, SIZE>::find_other_than(T key)
+    int array<T, SIZE>::find(auto finder)
     {
         for (int i = 0; i < SIZE; i++)
         {
-            if (ptr[i] != key)
-                return i;
+            int index = finder();
+            if(index != (-1))
+                return index;
         }
         return -1;
     }

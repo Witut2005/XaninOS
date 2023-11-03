@@ -127,7 +127,8 @@ void kernel_loop(void)
         for (int i = 0; i < 5; i++)
             erase_spaces(argv[i]);
 
-        putchar('\n');
+        // for (int i = 0; i < 5; i++)
+        //     xprintf("0x%x ", &argv[i]);
 
         scan();
     }
