@@ -6,7 +6,7 @@
 
 static bool timer_handler(key_info_t ki, uint8_t **a)
 {
-    if ((ki.scan_code == ENTER) && (!app_exited))
+    if (ki.scan_code == ENTER)
         exit();
     return true;
 }
@@ -23,8 +23,8 @@ int timer_test(void)
     key_info_t k;
 
     KeyboardModuleObservedObjectOptions Options = {true};
-    __input_module_add_object_to_observe(&k, Options);
-    __input_module_add_handler(input_module_handler_create(timer_handler, NULL));
+    __input_add_object_to_observe(&k, Options);
+    __input_add_handler(__input_handler_create(timer_handler, __input_handler_options_create(NULL, USER_INPUT_HANDLER)));
 
     canvas_xprintf("Press 'a' to start...");
     while (getchar() != 'a')
@@ -39,7 +39,7 @@ int timer_test(void)
         msleep(1000);
     }
 
-    __input_module_remove_object_from_observe(&k);
+    __input_remove_object_from_observe(&k);
 
     return XANIN_OK;
 }

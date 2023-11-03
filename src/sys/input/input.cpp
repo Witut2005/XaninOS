@@ -9,12 +9,12 @@
 key_info_t KeyInfo = {0};
 
 std::array<KeyboardModuleObservedObject, 100> KeyboardModuleObservedObjects;
-std::array<InputModuleHandler, 100> InputModuleHandlers;
+std::array<InputHandler, 100> InputModuleHandlers;
 
 extern "C"
 {
 
-    void __input_module_handle_observed_objects(key_info_t *KeyboardDriverKeyInfo)
+    void __input_handle_observed_objects(key_info_t *KeyboardDriverKeyInfo)
     {
         for (int i = 0; i < KeyboardModuleObservedObjects.size(); i++)
         {
@@ -26,12 +26,12 @@ extern "C"
         }
     }
 
-    void __input_module_init(void)
+    void __input_init(void)
     {
         memset((uint8_t *)&KeyboardModuleObservedObjects, 0, sizeof(KeyboardModuleObservedObjects));
     }
 
-    int __input_module_add_object_to_observe(key_info_t *KeyInfoToObserve, KeyboardModuleObservedObjectOptions Options)
+    int __input_add_object_to_observe(key_info_t *KeyInfoToObserve, KeyboardModuleObservedObjectOptions Options)
     {
         int index = -1;
 
@@ -49,7 +49,7 @@ extern "C"
         return 0;
     }
 
-    int __input_module_remove_object_from_observe(key_info_t *KeyInfoToRemove)
+    int __input_remove_object_from_observe(key_info_t *KeyInfoToRemove)
     {
         int index = -1;
 
@@ -66,7 +66,7 @@ extern "C"
         return 0;
     }
 
-    int __input_module_add_handler(InputModuleHandler Handler)
+    int __input_add_handler(InputHandler Handler)
     {
 
         int index = -1;
@@ -84,13 +84,21 @@ extern "C"
         return 0;
     }
 
-    void __input_module_call_handlers(key_info_t KeyboardDriverKeyInfo)
+    void __input_call_handlers(key_info_t KeyboardDriverKeyInfo)
     {
-
         for (int i = 0; i < InputModuleHandlers.size(); i++)
         {
             if (InputModuleHandlers[i].handler != NULL)
-                InputModuleHandlers[i].handler(KeyboardDriverKeyInfo, InputModuleHandlers[i].args);
+                InputModuleHandlers[i].handler(KeyboardDriverKeyInfo, InputModuleHandlers[i].options.args);
+        }
+    }
+
+    void __input_remove_user_handlers(void)
+    {
+        for (int i = 0; i < InputModuleHandlers.size(); i++)
+        {
+            if (InputModuleHandlers[i].options.type == USER_INPUT_HANDLER)
+                InputModuleHandlers[i].handler = NULL;
         }
     }
 

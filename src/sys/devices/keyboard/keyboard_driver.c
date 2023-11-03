@@ -242,12 +242,12 @@ void keyboard_driver(void)
     if (keyboard_handle != NULL)
         keyboard_handle();
 
-    __input_module_handle_observed_objects(&KeyInfo);
+    __input_handle_observed_objects(&KeyInfo);
 
     // we need to set interrupts
     eoi_send();
 
-    __input_module_call_handlers(KeyInfo);
+    __input_call_handlers(KeyInfo);
 
     if (KeyInfo.is_ctrl && KeyInfo.character == 'c')
         exit();
