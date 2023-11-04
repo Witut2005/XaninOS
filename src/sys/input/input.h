@@ -58,11 +58,12 @@ extern "C"
 {
 #endif
 
-    void __input_handle_observed_objects(key_info_t *KeyboardDriverKeyInfo);
-    int __input_add_object_to_observe(key_info_t *KeyInfoToObserve, KeyboardModuleObservedObjectOptions Options);
-    int __input_remove_object_from_observe(key_info_t *KeyInfoToRemove);
+    void __input_handle_observed_objects(const key_info_t *const KeyboardDriverKeyInfo);
+    int __input_add_object_to_observe(const key_info_t *const KeyInfoToObserve, KeyboardModuleObservedObjectOptions Options);
+    int __input_remove_object_from_observe(const key_info_t *const KeyInfoToRemove);
     int __input_add_handler(InputHandler Handler);
     void __input_call_handlers(key_info_t KeyboardDriverKeyInfo);
+    void __input_remove_handler(const input_handler_t Handler);
     void __input_remove_user_handlers(void);
     key_info_t __keyinfo_get(void);
     char __inputc(void);

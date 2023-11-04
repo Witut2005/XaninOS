@@ -37,26 +37,25 @@ namespace std
         using const_reversed_iterator = ConstReversedArrayIterator<this_type>;
 
         template <class FT, int FSIZE>
-        static int find_other_than_default_handler(std::array<FT, FSIZE> arr, FT arg) {
-            for(int i = 0; i < SIZE; i++)
-            {
-                if(arr[i] != arg)
-                    return i;
-            }
-            return -1;
-        }
-
-        template <class T, int SIZE>
-        static int array<T, SIZE>::find_other_than(T key)
+        static int find_other_than_default_handler(std::array<FT, FSIZE> arr, FT arg)
         {
             for (int i = 0; i < SIZE; i++)
             {
-                if (ptr[i] != key)
+                if (arr[i] != arg)
                     return i;
             }
             return -1;
         }
 
+        // static int array<T, SIZE>::find_other_than(T key)
+        // {
+        //     for (int i = 0; i < SIZE; i++)
+        //     {
+        //         if (ptr[i] != key)
+        //             return i;
+        //     }
+        //     return -1;
+        // }
 
         array();
         array(const array &arr) = default;
@@ -92,7 +91,7 @@ namespace std
         constexpr bool valid_element(T &element) const;
 
         T get_copy(int32_t index) const;
-        int find_default_handler(T arg) const ;
+        int find_default_handler(T arg) const;
         int find_other_than_default_handler(T arg) const;
         int find(auto finder);
         int find_other_than(T key);
@@ -246,10 +245,11 @@ namespace std
     }
 
     template <class T, int SIZE>
-    int std::array<T, SIZE>::find_default_handler(T arg) const {
-        for(int i = 0; i < SIZE; i++)
+    int std::array<T, SIZE>::find_default_handler(T arg) const
+    {
+        for (int i = 0; i < SIZE; i++)
         {
-            if(this->ptr[i] == arg)
+            if (this->ptr[i] == arg)
                 return i;
         }
         return -1;
@@ -261,7 +261,7 @@ namespace std
         for (int i = 0; i < SIZE; i++)
         {
             int index = finder();
-            if(index != (-1))
+            if (index != (-1))
                 return index;
         }
         return -1;

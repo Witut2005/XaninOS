@@ -14,7 +14,7 @@ std::array<InputHandler, 100> InputModuleHandlers;
 extern "C"
 {
 
-    void __input_handle_observed_objects(key_info_t *KeyboardDriverKeyInfo)
+    void __input_handle_observed_objects(const key_info_t *const KeyboardDriverKeyInfo)
     {
         for (int i = 0; i < KeyboardModuleObservedObjects.size(); i++)
         {
@@ -31,7 +31,7 @@ extern "C"
         memset((uint8_t *)&KeyboardModuleObservedObjects, 0, sizeof(KeyboardModuleObservedObjects));
     }
 
-    int __input_add_object_to_observe(key_info_t *KeyInfoToObserve, KeyboardModuleObservedObjectOptions Options)
+    int __input_add_object_to_observe(const key_info_t *const KeyInfoToObserve, KeyboardModuleObservedObjectOptions Options)
     {
         int index = -1;
 
@@ -44,12 +44,13 @@ extern "C"
         if (index == -1)
             return -1;
 
-        KeyboardModuleObservedObject obj = {KeyInfoToObserve, Options};
+        KeyboardModuleObservedObject obj = {(key_info_t *)(KeyInfoToObserve), Options};
         KeyboardModuleObservedObjects[index] = obj;
+
         return 0;
     }
 
-    int __input_remove_object_from_observe(key_info_t *KeyInfoToRemove)
+    int __input_remove_object_from_observe(const key_info_t *const KeyInfoToRemove)
     {
         int index = -1;
 
@@ -90,6 +91,15 @@ extern "C"
         {
             if (InputModuleHandlers[i].handler != NULL)
                 InputModuleHandlers[i].handler(KeyboardDriverKeyInfo, InputModuleHandlers[i].options.args);
+        }
+    }
+
+    void __input_remove_handler(const input_handler_t Handler)
+    {
+        for (int i = 0; i < InputModuleHandlers.size(); i++)
+        {
+            if (InputModuleHandlers[i].handler == Handler)
+                InputModuleHandlers[i].handler = NULL;
         }
     }
 
