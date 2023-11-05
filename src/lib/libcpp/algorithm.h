@@ -80,7 +80,7 @@ namespace std
         for (; beg != end; beg++)
         {
             // if (!beg.valid())
-            //     return InputIt(NULL, beg.);
+            //     return InputIt(NULL, beg.container);
             // if (finder(value, *beg))
             //     results.push_back(beg);
         }

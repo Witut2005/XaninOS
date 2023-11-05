@@ -9,11 +9,10 @@ namespace std
     {
     protected:
         using iterable_type = typename Cont::iterable_type;
-
         iterable_type i_ptr;
-        const Cont &container;
 
     public:
+        const Cont &container;
         Iterator<Cont>(iterable_type i_ptr, const Cont &container) : i_ptr(i_ptr), container(container) {}
 
         template <typename InputIt>
@@ -129,9 +128,9 @@ namespace std
     protected:
         using iterable_type = typename Cont::iterable_type;
         iterable_type i_ptr;
-        const Cont &container;
 
     public:
+        const Cont &container;
         ConstIterator<Cont>(iterable_type i_ptr, const Cont &container) : i_ptr(i_ptr), container(container) {}
 
         template <typename InputIt>
