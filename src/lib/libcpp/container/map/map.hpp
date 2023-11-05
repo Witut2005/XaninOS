@@ -83,11 +83,11 @@ namespace std
             {
                 if (it->value.first == key)
                 {
-                    return OutIt(it);
+                    return OutIt(it, this->elements);
                 }
             }
 
-            return OutIt(NULL);
+            return OutIt(NULL, this->elements);
         }
 
         void remove(K key);

@@ -6,6 +6,7 @@
 #include <lib/libcpp/utility.h>
 #include <lib/libcpp/initializer_list.hpp>
 #include <lib/libcpp/type_traits.h>
+#include <lib/libcpp/container/vector/vector.hpp>
 #include "./iterator.hpp"
 
 namespace std
@@ -93,8 +94,9 @@ namespace std
         T get_copy(int32_t index) const;
         int find_default_handler(T arg) const;
         int find_other_than_default_handler(T arg) const;
-        int find(auto finder);
-        int find_other_than(T key);
+        // int find(T value, auto finder);
+
+        int find_other_than(T value, auto finder);
 
         T &front(void); // override;
         T &back(void);  // override;
@@ -251,18 +253,6 @@ namespace std
         {
             if (this->ptr[i] == arg)
                 return i;
-        }
-        return -1;
-    }
-
-    template <class T, int SIZE>
-    int array<T, SIZE>::find(auto finder)
-    {
-        for (int i = 0; i < SIZE; i++)
-        {
-            int index = finder();
-            if (index != (-1))
-                return index;
         }
         return -1;
     }

@@ -336,25 +336,25 @@ namespace std
     template <typename T>
     typename List<T>::forward_iterator List<T>::begin()
     {
-        return List<T>::forward_iterator(this->Head);
+        return List<T>::forward_iterator(this->Head, *this);
     }
 
     template <typename T>
     typename List<T>::forward_iterator List<T>::end()
     {
-        return List<T>::forward_iterator(this->ListUpperBoundary);
+        return List<T>::forward_iterator(this->ListUpperBoundary, *this);
     }
 
     template <typename T>
     typename List<T>::reversed_iterator List<T>::rbegin()
     {
-        return List<T>::reversed_iterator(this->goto_last_element());
+        return List<T>::reversed_iterator(this->goto_last_element(), *this);
     }
 
     template <typename T>
     typename List<T>::reversed_iterator List<T>::rend()
     {
-        return List<T>::reversed_iterator(this->ListLowerBoundary);
+        return List<T>::reversed_iterator(this->ListLowerBoundary, *this);
     }
 
     template <typename T>

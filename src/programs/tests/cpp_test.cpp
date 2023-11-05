@@ -25,7 +25,7 @@
 #include <lib/libcpp/hash.hpp>
 #include <lib/libcpp/container/map.hpp>
 #include <lib/libcpp/container/list.hpp>
-
+#include <lib/libcpp/container/vector/vector.hpp>
 // TERMINAL_APP
 
 class Test
@@ -241,13 +241,21 @@ static inline void map_test(void)
     std::cout << std::endl;
 }
 
+static inline void cont_test(void)
+{
+    std::array<int, 5> arr = {1, 2, 3, 4, 5};
+    std::find(arr.begin(), arr.end(), 3, [=](auto a, auto b)
+              { return a == b; });
+}
+
 void cpp_prog()
 {
 
     // arr_test();
     // vec_test();
     // list_test();
-    map_test();
+    // map_test();
+    cont_test();
     return;
 
     std::cout << "hash test: " << jhash("nicho") << std::endl;

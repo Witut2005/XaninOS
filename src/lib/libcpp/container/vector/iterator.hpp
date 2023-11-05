@@ -1,450 +1,502 @@
 
 #pragma once
 
-namespace std 
+#include <lib/libcpp/container/iterator.hpp>
+
+namespace std
 {
 
-template<class Vec>
-class ForwardVectorIterator : public std::ForwardIterator<Vec>
-{
+    template <class Vec>
+    class ForwardVectorIterator : public std::ForwardIterator<Vec>
+    {
 
-    public: 
-    using this_type = ForwardVectorIterator<Vec>;
+    public:
+        using this_type = ForwardVectorIterator<Vec>;
 
-    using value_type = typename Vec::value_type;
-    using iterable_type = typename Vec::iterable_type;
-    using lreference = typename Vec::lreference;
+        using value_type = typename Vec::value_type;
+        using iterable_type = typename Vec::iterable_type;
+        using lreference = typename Vec::lreference;
 
-    static constexpr Types type = Types::ForwardVectorIterator;
+        static constexpr Types type = Types::ForwardVectorIterator;
 
     private:
-    this_type& perform_operation_with_bounds_check(auto operation, this_type* IteratorToBeChecked) {
-        operation();
+        this_type &perform_operation_with_bounds_check(auto operation, this_type *IteratorToBeChecked)
+        {
+            operation();
 
-        if(!((IteratorToBeChecked->i_ptr >= IteratorToBeChecked->begin) && (IteratorToBeChecked->i_ptr <= IteratorToBeChecked->end)))
-            IteratorToBeChecked->i_ptr = NULL;
-        return *IteratorToBeChecked;
-    }
-
-    public:
-
-    ForwardVectorIterator<Vec>(iterable_type ptr, Vec& vec) {
-        // std::cout << "DEFAULT" << std::endl;
-        this->i_ptr = ptr; 
-        
-        this->begin = vec.ptr;
-        this->end = vec.ptr + vec.v_size;
-    }
-
-    ForwardVectorIterator<Vec>(const this_type& other) = default;
-
-    ForwardVectorIterator<Vec>(this_type&& other) {
-        *this = other;
-        other.i_ptr = NULL;
-    }
-
-    constexpr const char* type_info(void)
-    {
-        return "ForwardVectorIterator";
-    }
-
-    this_type& operator ++ (void) override
-    {
-        return this->perform_operation_with_bounds_check([this](){this->i_ptr++;}, this);
-    }
-
-    this_type operator ++ (int) override 
-    {
-        this_type tmp = *this;
-        this->perform_operation_with_bounds_check([this](){this->i_ptr++;}, this);
-
-        return tmp;
-    }
-
-    this_type& operator -- (void) override 
-    {
-        return this->perform_operation_with_bounds_check([this](){this->i_ptr--;}, this);
-    }
-
-    this_type operator -- (int) override 
-    {
-        this_type tmp = *this;
-        this->perform_operation_with_bounds_check([this](){this->i_ptr--;}, this);
-
-        return tmp;
-    }
-
-    this_type operator + (int offset) override 
-    {
-        this_type tmp = *this;
-        return this->perform_operation_with_bounds_check([&tmp, offset](){tmp.i_ptr = tmp.i_ptr + offset;}, &tmp);
-    }
-
-    this_type operator - (int offset) override 
-    {
-        this_type tmp = *this;
-        return this->perform_operation_with_bounds_check([&tmp, offset](){tmp.i_ptr = tmp.i_ptr - offset;}, &tmp);
-    }
-
-    lreference operator* (void) const override
-    {
-        return *this->i_ptr;
-    }
-
-    this_type& operator = (const this_type& other) override 
-    {
-        *this = other;
-        return *this;
-    }
-
-    this_type& operator = (this_type&& other) override 
-    {
-        *this = other;
-        other.i_ptr = NULL;
-        return *this;
-    }
-
-    explicit operator bool(void) const override
-    {
-        return this->valid();
-    }
-
-    bool valid(void) const override
-    {
-        return (this->i_ptr != NULL) & (this->i_ptr >= this->begin) & (this->i_ptr < this->end);
-    }
-
-};
-
-template<class Vec>
-class ConstForwardVectorIterator : public ConstForwardIterator<Vec>
-{
-    public: 
-    using this_type = ConstForwardVectorIterator<Vec>;
-
-    using iterable_type = typename Vec::iterable_type;
-    using value_type = typename Vec::value_type;
-    using const_lreference = typename Vec::const_lreference;
-
-    static constexpr Types type = Types::ForwardArrayIterator;
-
-       private:
-    this_type& perform_operation_with_bounds_check(auto operation, this_type* IteratorToBeChecked) {
-        operation();
-
-        if(!((IteratorToBeChecked->i_ptr >= IteratorToBeChecked->begin) && (IteratorToBeChecked->i_ptr <= IteratorToBeChecked->end)))
-            IteratorToBeChecked->i_ptr = NULL;
-        return *IteratorToBeChecked;
-    }
+            if (!((IteratorToBeChecked->i_ptr >= IteratorToBeChecked->begin) && (IteratorToBeChecked->i_ptr <= IteratorToBeChecked->end)))
+                IteratorToBeChecked->i_ptr = NULL;
+            return *IteratorToBeChecked;
+        }
 
     public:
+        ForwardVectorIterator<Vec>(iterable_type i_ptr, Vec &vec) : ForwardIterator<Vec>(i_ptr, vec)
+        {
+            this->begin = &vec.ptr[0];
+            this->end = &vec.ptr[vec.size() - 1];
+        }
 
-    ConstForwardVectorIterator<Vec>(iterable_type ptr, Vec& vec) {
-        // std::cout << "DEFAULT" << std::endl;
-        this->i_ptr = ptr; 
-        
-        this->begin = vec.ptr;
-        this->end = vec.ptr + vec.v_size;
-    }
-    
-    ConstForwardVectorIterator<Vec>(const this_type& other) = default;
+        ForwardVectorIterator<Vec>(const this_type &other) = default;
 
-    ConstForwardVectorIterator<Vec>(this_type&& other) {
-        *this = other;
-        other.i_ptr = NULL;
-    }
+        ForwardVectorIterator<Vec>(this_type &&other)
+        {
+            *this = other;
+            other.i_ptr = NULL;
+        }
 
-    constexpr const char* type_info(void)
+        constexpr const char *type_info(void)
+        {
+            return "ForwardVectorIterator";
+        }
+
+        this_type &operator++(void) override
+        {
+            return this->perform_operation_with_bounds_check([this]()
+                                                             { this->i_ptr++; },
+                                                             this);
+        }
+
+        this_type operator++(int) override
+        {
+            this_type tmp = *this;
+            this->perform_operation_with_bounds_check([this]()
+                                                      { this->i_ptr++; },
+                                                      this);
+
+            return tmp;
+        }
+
+        this_type &operator--(void) override
+        {
+            return this->perform_operation_with_bounds_check([this]()
+                                                             { this->i_ptr--; },
+                                                             this);
+        }
+
+        this_type operator--(int) override
+        {
+            this_type tmp = *this;
+            this->perform_operation_with_bounds_check([this]()
+                                                      { this->i_ptr--; },
+                                                      this);
+
+            return tmp;
+        }
+
+        this_type operator+(int offset) override
+        {
+            this_type tmp = *this;
+            return this->perform_operation_with_bounds_check([&tmp, offset]()
+                                                             { tmp.i_ptr = tmp.i_ptr + offset; },
+                                                             &tmp);
+        }
+
+        this_type operator-(int offset) override
+        {
+            this_type tmp = *this;
+            return this->perform_operation_with_bounds_check([&tmp, offset]()
+                                                             { tmp.i_ptr = tmp.i_ptr - offset; },
+                                                             &tmp);
+        }
+
+        lreference operator*(void) const override
+        {
+            return *this->i_ptr;
+        }
+
+        this_type &operator=(const this_type &other) override
+        {
+            *this = other;
+            return *this;
+        }
+
+        this_type &operator=(this_type &&other) override
+        {
+            *this = other;
+            other.i_ptr = NULL;
+            return *this;
+        }
+
+        explicit operator bool(void) const override
+        {
+            return this->valid();
+        }
+
+        bool valid(void) const override
+        {
+            return (this->i_ptr != NULL) & (this->i_ptr >= this->begin) & (this->i_ptr < this->end);
+        }
+    };
+
+    template <class Vec>
+    class ConstForwardVectorIterator : public ConstForwardIterator<Vec>
     {
-        return "ForwardVectorIterator";
-    }
+    public:
+        using this_type = ConstForwardVectorIterator<Vec>;
 
-    this_type& operator ++ (void) override
-    {
-        return this->perform_operation_with_bounds_check([this](){this->i_ptr++;}, this);
-    }
+        using iterable_type = typename Vec::iterable_type;
+        using value_type = typename Vec::value_type;
+        using const_lreference = typename Vec::const_lreference;
 
-    this_type operator ++ (int) override 
-    {
-        this_type tmp = *this;
-        this->perform_operation_with_bounds_check([this](){this->i_ptr++;}, this);
-
-        return tmp;
-    }
-
-    this_type& operator -- (void) override 
-    {
-        return this->perform_operation_with_bounds_check([this](){this->i_ptr--;}, this);
-    }
-
-    this_type operator -- (int) override 
-    {
-        this_type tmp = *this;
-        this->perform_operation_with_bounds_check([this](){this->i_ptr--;}, this);
-
-        return tmp;
-    }
-
-    this_type operator + (int offset) override 
-    {
-        this_type tmp = *this;
-        return this->perform_operation_with_bounds_check([&tmp, offset](){tmp.i_ptr = tmp.i_ptr + offset;}, &tmp);
-    }
-
-    this_type operator - (int offset) override 
-    {
-        this_type tmp = *this;
-        return this->perform_operation_with_bounds_check([&tmp, offset](){tmp.i_ptr = tmp.i_ptr - offset;}, &tmp);
-    }
-
-    const_lreference operator* (void) const override
-    {
-        return *this->i_ptr;
-    }
-
-    this_type& operator = (const this_type& other) override 
-    {
-        *this = other;
-        return *this;
-    }
-
-    this_type& operator = (this_type&& other) override 
-    {
-        *this = other;
-        other.i_ptr = NULL;
-        return *this;
-    }
-
-    explicit operator bool(void) const override
-    {
-        return this->valid();
-    }
-
-    bool valid(void) const override
-    {
-        return (this->i_ptr != NULL) & (this->i_ptr >= this->begin) & (this->i_ptr < this->end);
-    }
-};
-
-template<class Vec>
-class ReversedVectorIterator : public std::ReversedIterator<Vec>
-{
-
-    public: 
-    using this_type = ReversedVectorIterator<Vec>;
-
-    using value_type = typename Vec::value_type;
-    using iterable_type = typename Vec::iterable_type;
-    using lreference = typename Vec::lreference;
-
-    static constexpr Types type = Types::ReversedVectorIterator;
+        static constexpr Types type = Types::ForwardArrayIterator;
 
     private:
-    void perform_operation_with_bounds_check(auto operation, this_type* IteratorToBeChecked) {
-        operation();
+        this_type &perform_operation_with_bounds_check(auto operation, this_type *IteratorToBeChecked)
+        {
+            operation();
 
-        if(!((IteratorToBeChecked->i_ptr <= IteratorToBeChecked->rbegin) && (IteratorToBeChecked->i_ptr >= IteratorToBeChecked->rend)))
-            IteratorToBeChecked->i_ptr = NULL;
-    }
+            if (!((IteratorToBeChecked->i_ptr >= IteratorToBeChecked->begin) && (IteratorToBeChecked->i_ptr <= IteratorToBeChecked->end)))
+                IteratorToBeChecked->i_ptr = NULL;
+            return *IteratorToBeChecked;
+        }
 
     public:
-    ReversedVectorIterator<Vec>(iterable_type ptr, Vec& vec) {
-        this->i_ptr = ptr;
-    
-        this->rbegin = vec.ptr + vec.v_size - 1;
-        this->rend = vec.ptr - 1;
-    }
+        ConstForwardVectorIterator<Vec>(iterable_type ptr, Vec &vec)
+        {
+            // std::cout << "DEFAULT" << std::endl;
+            this->i_ptr = ptr;
 
-    ReversedVectorIterator<Vec>(const this_type& other) = default;
-    
-    ReversedVectorIterator<Vec>(this_type&& other) {
-        *this = other;
-        other.i_ptr = NULL;
-    }
+            this->begin = vec.ptr;
+            this->end = vec.ptr + vec.v_size;
+        }
 
-    this_type& operator ++ (void) override //prefix operator
+        ConstForwardVectorIterator<Vec>(const this_type &other) = default;
+
+        ConstForwardVectorIterator<Vec>(this_type &&other)
+        {
+            *this = other;
+            other.i_ptr = NULL;
+        }
+
+        constexpr const char *type_info(void)
+        {
+            return "ForwardVectorIterator";
+        }
+
+        this_type &operator++(void) override
+        {
+            return this->perform_operation_with_bounds_check([this]()
+                                                             { this->i_ptr++; },
+                                                             this);
+        }
+
+        this_type operator++(int) override
+        {
+            this_type tmp = *this;
+            this->perform_operation_with_bounds_check([this]()
+                                                      { this->i_ptr++; },
+                                                      this);
+
+            return tmp;
+        }
+
+        this_type &operator--(void) override
+        {
+            return this->perform_operation_with_bounds_check([this]()
+                                                             { this->i_ptr--; },
+                                                             this);
+        }
+
+        this_type operator--(int) override
+        {
+            this_type tmp = *this;
+            this->perform_operation_with_bounds_check([this]()
+                                                      { this->i_ptr--; },
+                                                      this);
+
+            return tmp;
+        }
+
+        this_type operator+(int offset) override
+        {
+            this_type tmp = *this;
+            return this->perform_operation_with_bounds_check([&tmp, offset]()
+                                                             { tmp.i_ptr = tmp.i_ptr + offset; },
+                                                             &tmp);
+        }
+
+        this_type operator-(int offset) override
+        {
+            this_type tmp = *this;
+            return this->perform_operation_with_bounds_check([&tmp, offset]()
+                                                             { tmp.i_ptr = tmp.i_ptr - offset; },
+                                                             &tmp);
+        }
+
+        const_lreference operator*(void) const override
+        {
+            return *this->i_ptr;
+        }
+
+        this_type &operator=(const this_type &other) override
+        {
+            *this = other;
+            return *this;
+        }
+
+        this_type &operator=(this_type &&other) override
+        {
+            *this = other;
+            other.i_ptr = NULL;
+            return *this;
+        }
+
+        explicit operator bool(void) const override
+        {
+            return this->valid();
+        }
+
+        bool valid(void) const override
+        {
+            return (this->i_ptr != NULL) & (this->i_ptr >= this->begin) & (this->i_ptr < this->end);
+        }
+    };
+
+    template <class Vec>
+    class ReversedVectorIterator : public std::ReversedIterator<Vec>
     {
-        this->perform_operation_with_bounds_check([this](){this->i_ptr--;}, this);
-        return *this;
-    }
 
-    this_type operator ++ (int) override //postfix operator
-    {
-        this_type tmp = *this;
-        this->perform_operation_with_bounds_check([this](){this->i_ptr--;}, this);
+    public:
+        using this_type = ReversedVectorIterator<Vec>;
 
-        return tmp;
-    }
+        using value_type = typename Vec::value_type;
+        using iterable_type = typename Vec::iterable_type;
+        using lreference = typename Vec::lreference;
 
-    this_type& operator -- (void) override //prefix operator
-    {
-        this->perform_operation_with_bounds_check([this](){this->i_ptr++;}, this);
-        return *this;
-    }
-
-    this_type operator -- (int) override //postfix operator
-    {
-        this_type tmp = *this;
-        this->perform_operation_with_bounds_check([this](){this->i_ptr++;}, this);
-
-        return tmp;
-    }
-
-    this_type operator + (int offset) override 
-    {
-        this_type tmp = *this;
-        this->perform_operation_with_bounds_check([&tmp, offset](){tmp.i_ptr = tmp.i_ptr - offset;}, &tmp);
-
-        return tmp;
-    }
-
-    this_type operator - (int offset) override 
-    {
-        this_type tmp = *this;
-        this->perform_operation_with_bounds_check([&tmp, offset](){tmp.i_ptr = tmp.i_ptr + offset;}, &tmp);
-        
-        return tmp;
-    }
-
-    lreference operator* (void) const override
-    {
-        return *this->i_ptr;
-    }
-
-    this_type& operator = (const this_type& other) override 
-    {
-        *this = other;
-        return *this;
-    }
-
-    this_type& operator = (this_type&& other) override 
-    {
-        *this = other;
-        other.i_ptr = NULL;
-        return *this;
-    }
-
-    operator bool(void) const override
-    {
-        return this->valid();
-    }
-
-    bool valid() const
-    {
-        return (this->i_ptr != NULL) & (this->i_ptr <= this->rbegin) & (this->i_ptr > this->rend); 
-    }
-
-};
-
-
-template<class Vec>
-class ConstReversedVectorIterator : public std::ConstReversedIterator<Vec>
-{
-    public: 
-    using this_type = ConstReversedVectorIterator<Vec>;
-
-    using value_type = typename Vec::value_type;
-    using iterable_type = typename Vec::iterable_type;
-    using const_lreference = typename Vec::const_lreference;
-
-    static constexpr Types type = Types::ReversedVectorIterator;
+        static constexpr Types type = Types::ReversedVectorIterator;
 
     private:
-    void perform_operation_with_bounds_check(auto operation, this_type* IteratorToBeChecked) {
-        operation();
+        void perform_operation_with_bounds_check(auto operation, this_type *IteratorToBeChecked)
+        {
+            operation();
 
-        if(!((IteratorToBeChecked->i_ptr <= IteratorToBeChecked->rbegin) && (IteratorToBeChecked->i_ptr >= IteratorToBeChecked->rend)))
-            IteratorToBeChecked->i_ptr = NULL;
-    }
+            if (!((IteratorToBeChecked->i_ptr <= IteratorToBeChecked->rbegin) && (IteratorToBeChecked->i_ptr >= IteratorToBeChecked->rend)))
+                IteratorToBeChecked->i_ptr = NULL;
+        }
 
     public:
+        ReversedVectorIterator<Vec>(iterable_type ptr, Vec &vec)
+        {
+            this->i_ptr = ptr;
 
-    ConstReversedVectorIterator<Vec>(iterable_type ptr, Vec& vec) {
-        this->i_ptr = ptr;
-    
-        this->rbegin = vec.ptr + vec.v_size - 1;
-        this->rend = vec.ptr - 1;
-    }
+            this->rbegin = vec.ptr + vec.v_size - 1;
+            this->rend = vec.ptr - 1;
+        }
 
-    ConstReversedVectorIterator<Vec>(const this_type& other) = default;
+        ReversedVectorIterator<Vec>(const this_type &other) = default;
 
-    ConstReversedVectorIterator<Vec>(this_type&& other) {
-        *this = other;
-        other.i_ptr = NULL;
-    }
+        ReversedVectorIterator<Vec>(this_type &&other)
+        {
+            *this = other;
+            other.i_ptr = NULL;
+        }
 
-    this_type& operator ++ (void) override //prefix operator
+        this_type &operator++(void) override // prefix operator
+        {
+            this->perform_operation_with_bounds_check([this]()
+                                                      { this->i_ptr--; },
+                                                      this);
+            return *this;
+        }
+
+        this_type operator++(int) override // postfix operator
+        {
+            this_type tmp = *this;
+            this->perform_operation_with_bounds_check([this]()
+                                                      { this->i_ptr--; },
+                                                      this);
+
+            return tmp;
+        }
+
+        this_type &operator--(void) override // prefix operator
+        {
+            this->perform_operation_with_bounds_check([this]()
+                                                      { this->i_ptr++; },
+                                                      this);
+            return *this;
+        }
+
+        this_type operator--(int) override // postfix operator
+        {
+            this_type tmp = *this;
+            this->perform_operation_with_bounds_check([this]()
+                                                      { this->i_ptr++; },
+                                                      this);
+
+            return tmp;
+        }
+
+        this_type operator+(int offset) override
+        {
+            this_type tmp = *this;
+            this->perform_operation_with_bounds_check([&tmp, offset]()
+                                                      { tmp.i_ptr = tmp.i_ptr - offset; },
+                                                      &tmp);
+
+            return tmp;
+        }
+
+        this_type operator-(int offset) override
+        {
+            this_type tmp = *this;
+            this->perform_operation_with_bounds_check([&tmp, offset]()
+                                                      { tmp.i_ptr = tmp.i_ptr + offset; },
+                                                      &tmp);
+
+            return tmp;
+        }
+
+        lreference operator*(void) const override
+        {
+            return *this->i_ptr;
+        }
+
+        this_type &operator=(const this_type &other) override
+        {
+            *this = other;
+            return *this;
+        }
+
+        this_type &operator=(this_type &&other) override
+        {
+            *this = other;
+            other.i_ptr = NULL;
+            return *this;
+        }
+
+        operator bool(void) const override
+        {
+            return this->valid();
+        }
+
+        bool valid() const
+        {
+            return (this->i_ptr != NULL) & (this->i_ptr <= this->rbegin) & (this->i_ptr > this->rend);
+        }
+    };
+
+    template <class Vec>
+    class ConstReversedVectorIterator : public std::ConstReversedIterator<Vec>
     {
-        this->perform_operation_with_bounds_check([this](){this->i_ptr--;}, this);
-        return *this;
-    }
+    public:
+        using this_type = ConstReversedVectorIterator<Vec>;
 
-    this_type operator ++ (int) override //postfix operator
-    {
-        this_type tmp = *this;
-        this->perform_operation_with_bounds_check([this](){this->i_ptr--;}, this);
+        using value_type = typename Vec::value_type;
+        using iterable_type = typename Vec::iterable_type;
+        using const_lreference = typename Vec::const_lreference;
 
-        return tmp;
-    }
+        static constexpr Types type = Types::ReversedVectorIterator;
 
-    this_type& operator -- (void) override //prefix operator
-    {
-        this->perform_operation_with_bounds_check([this](){this->i_ptr++;}, this);
-        return *this;
-    }
+    private:
+        void perform_operation_with_bounds_check(auto operation, this_type *IteratorToBeChecked)
+        {
+            operation();
 
-    this_type operator -- (int) override //postfix operator
-    {
-        this_type tmp = *this;
-        this->perform_operation_with_bounds_check([this](){this->i_ptr++;}, this);
+            if (!((IteratorToBeChecked->i_ptr <= IteratorToBeChecked->rbegin) && (IteratorToBeChecked->i_ptr >= IteratorToBeChecked->rend)))
+                IteratorToBeChecked->i_ptr = NULL;
+        }
 
-        return tmp;
-    }
+    public:
+        ConstReversedVectorIterator<Vec>(iterable_type ptr, Vec &vec)
+        {
+            this->i_ptr = ptr;
 
-    this_type operator + (int offset) override 
-    {
-        this_type tmp = *this;
-        this->perform_operation_with_bounds_check([&tmp, offset](){tmp.i_ptr = tmp.i_ptr - offset;}, &tmp);
+            this->rbegin = vec.ptr + vec.v_size - 1;
+            this->rend = vec.ptr - 1;
+        }
 
-        return tmp;
-    }
+        ConstReversedVectorIterator<Vec>(const this_type &other) = default;
 
-    this_type operator - (int offset) override 
-    {
-        this_type tmp = *this;
-        this->perform_operation_with_bounds_check([&tmp, offset](){tmp.i_ptr = tmp.i_ptr + offset;}, &tmp);
-        
-        return tmp;
-    }
+        ConstReversedVectorIterator<Vec>(this_type &&other)
+        {
+            *this = other;
+            other.i_ptr = NULL;
+        }
 
-    const_lreference operator* (void) const override
-    {
-        return *this->i_ptr;
-    }
+        this_type &operator++(void) override // prefix operator
+        {
+            this->perform_operation_with_bounds_check([this]()
+                                                      { this->i_ptr--; },
+                                                      this);
+            return *this;
+        }
 
-    this_type& operator = (const this_type& other) override 
-    {
-        *this = other;
-        return *this;
-    }
+        this_type operator++(int) override // postfix operator
+        {
+            this_type tmp = *this;
+            this->perform_operation_with_bounds_check([this]()
+                                                      { this->i_ptr--; },
+                                                      this);
 
-    this_type& operator = (this_type&& other) override 
-    {
-        *this = other;
-        other.i_ptr = NULL;
-        return *this;
-    }
+            return tmp;
+        }
 
-    operator bool(void) const override
-    {
-        return this->valid();
-    }
+        this_type &operator--(void) override // prefix operator
+        {
+            this->perform_operation_with_bounds_check([this]()
+                                                      { this->i_ptr++; },
+                                                      this);
+            return *this;
+        }
 
-    bool valid() const
-    {
-        return (this->i_ptr != NULL) & (this->i_ptr <= this->rbegin) & (this->i_ptr > this->rend); 
-    }
+        this_type operator--(int) override // postfix operator
+        {
+            this_type tmp = *this;
+            this->perform_operation_with_bounds_check([this]()
+                                                      { this->i_ptr++; },
+                                                      this);
 
-};
+            return tmp;
+        }
+
+        this_type operator+(int offset) override
+        {
+            this_type tmp = *this;
+            this->perform_operation_with_bounds_check([&tmp, offset]()
+                                                      { tmp.i_ptr = tmp.i_ptr - offset; },
+                                                      &tmp);
+
+            return tmp;
+        }
+
+        this_type operator-(int offset) override
+        {
+            this_type tmp = *this;
+            this->perform_operation_with_bounds_check([&tmp, offset]()
+                                                      { tmp.i_ptr = tmp.i_ptr + offset; },
+                                                      &tmp);
+
+            return tmp;
+        }
+
+        const_lreference operator*(void) const override
+        {
+            return *this->i_ptr;
+        }
+
+        this_type &operator=(const this_type &other) override
+        {
+            *this = other;
+            return *this;
+        }
+
+        this_type &operator=(this_type &&other) override
+        {
+            *this = other;
+            other.i_ptr = NULL;
+            return *this;
+        }
+
+        operator bool(void) const override
+        {
+            return this->valid();
+        }
+
+        bool valid() const
+        {
+            return (this->i_ptr != NULL) & (this->i_ptr <= this->rbegin) & (this->i_ptr > this->rend);
+        }
+    };
 
 }
