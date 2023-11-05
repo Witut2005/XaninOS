@@ -18,11 +18,6 @@ namespace std
     public:
         Iterator<Cont>(iterable_type i_ptr, const Cont &container) : i_ptr(i_ptr), container(container) {}
 
-        typename Cont::iterable_type pointer(void)
-        {
-            return this->i_ptr;
-        }
-
         template <typename InputIt>
         friend bool operator==(InputIt lhs, InputIt rhs);
 
@@ -98,6 +93,8 @@ namespace std
         using value_type = typename Cont::value_type;
         using lreference = typename Cont::lreference;
 
+        ReversedIterator<Cont>(iterable_type i_ptr, const Cont &container) : Iterator<Cont>(i_ptr, container) {}
+
         virtual iterator_type &operator++(void) = 0;
         virtual iterator_type operator++(int) = 0;
         virtual iterator_type &operator--(void) = 0;
@@ -128,13 +125,14 @@ namespace std
     class ConstIterator
     {
     protected:
-        typename Cont::iterable_type i_ptr;
+        using iterable_type = typename Cont::iterable_type;
+        iterable_type i_ptr;
+        const Cont &container;
+        iterable_type begin;
+        iterable_type end;
 
     public:
-        typename Cont::iterable_type pointer(void)
-        {
-            return this->i_ptr;
-        }
+        ConstIterator<Cont>(iterable_type i_ptr, const Cont &container) : i_ptr(i_ptr), container(container) {}
 
         template <typename InputIt>
         friend bool operator==(InputIt lhs, InputIt rhs);
@@ -147,10 +145,6 @@ namespace std
     class ConstForwardIterator : public ConstIterator<Cont>
     {
 
-    protected:
-        typename Cont::iterable_type begin;
-        typename Cont::iterable_type end;
-
     public:
         using iterator_type = typename Cont::const_forward_iterator;
 
@@ -158,7 +152,7 @@ namespace std
         using value_type = typename Cont::value_type;
         using const_lreference = typename Cont::const_lreference;
 
-        // virtual constexpr const char* type_info(void);
+        ConstForwardIterator<Cont>(iterable_type i_ptr, const Cont &container) : ConstIterator<Cont>(i_ptr, container) {}
 
         virtual iterator_type &operator++(void) = 0;
         virtual iterator_type operator++(int) = 0;
@@ -189,9 +183,6 @@ namespace std
     template <class Cont>
     class ConstReversedIterator : public ConstIterator<Cont>
     {
-    protected:
-        typename Cont::iterable_type rbegin;
-        typename Cont::iterable_type rend;
 
     public:
         using iterator_type = typename Cont::const_reversed_iterator;
@@ -199,6 +190,8 @@ namespace std
         using iterable_type = typename Cont::iterable_type;
         using value_type = typename Cont::value_type;
         using const_lreference = typename Cont::const_lreference;
+
+        ConstReversedIterator<Cont>(iterable_type i_ptr, const Cont &container) : ConstIterator<Cont>(i_ptr, container) {}
 
         virtual iterator_type &operator++(void) = 0;
         virtual iterator_type operator++(int) = 0;
