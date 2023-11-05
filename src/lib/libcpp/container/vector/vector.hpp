@@ -57,6 +57,40 @@ namespace std
 
         T *pointer(void); // override;
 
+        inline constexpr T *begin_ptr()
+        {
+            return ptr;
+        }
+        inline constexpr T *end_ptr()
+        {
+            return ptr + this->v_size;
+        }
+        inline constexpr T *rbegin_ptr()
+        {
+            return ptr + this->v_size - 1;
+        }
+        inline constexpr T *rend_ptr()
+        {
+            return ptr - 1;
+        }
+
+        inline constexpr const T *cbegin_ptr()
+        {
+            return ptr;
+        }
+        inline constexpr const T *cend_ptr()
+        {
+            return ptr + this->v_size;
+        }
+        inline constexpr const T *crbegin_ptr()
+        {
+            return ptr + this->v_size - 1;
+        }
+        inline constexpr const T *crend_ptr()
+        {
+            return ptr - 1;
+        }
+
         forward_iterator begin(void);
         forward_iterator end(void);
         reversed_iterator rbegin(void);
