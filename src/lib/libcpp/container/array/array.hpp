@@ -74,36 +74,36 @@ namespace std
                 this->ptr[i] = default_value;
         }
 
-        inline constexpr T *begin_ptr()
+        inline constexpr iterable_type begin_ptr()
         {
             return ptr;
         }
-        inline constexpr T *end_ptr()
+        inline constexpr iterable_type end_ptr()
         {
             return ptr + SIZE;
         }
-        inline constexpr T *rbegin_ptr()
+        inline constexpr iterable_type rbegin_ptr()
         {
             return ptr + SIZE - 1;
         }
-        inline constexpr T *rend_ptr()
+        inline constexpr iterable_type rend_ptr()
         {
             return ptr - 1;
         }
 
-        inline constexpr const T *cbegin_ptr()
+        inline constexpr const iterable_type cbegin_ptr()
         {
             return ptr;
         }
-        inline constexpr const T *cend_ptr()
+        inline constexpr const iterable_type cend_ptr()
         {
             return ptr + SIZE;
         }
-        inline constexpr const T *crbegin_ptr()
+        inline constexpr const iterable_type crbegin_ptr()
         {
             return ptr + SIZE - 1;
         }
-        inline constexpr const T *crend_ptr()
+        inline constexpr const iterable_type crend_ptr()
         {
             return ptr - 1;
         }

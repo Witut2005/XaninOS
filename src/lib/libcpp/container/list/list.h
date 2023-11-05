@@ -67,6 +67,40 @@ namespace std
         List(std::initializer_list<T> items);
         ~List();
 
+        inline iterable_type begin_ptr()
+        {
+            return this->Head;
+        }
+        inline iterable_type end_ptr()
+        {
+            return this->ListUpperBoundary;
+        }
+        inline iterable_type rbegin_ptr()
+        {
+            return this->goto_last_element();
+        }
+        inline iterable_type rend_ptr()
+        {
+            return this->ListLowerBoundary;
+        }
+
+        inline const iterable_type cbegin_ptr()
+        {
+            return this->Head;
+        }
+        inline const iterable_type cend_ptr()
+        {
+            return this->ListUpperBoundary;
+        }
+        inline const iterable_type crbegin_ptr()
+        {
+            return this->goto_last_element();
+        }
+        inline const iterable_type crend_ptr()
+        {
+            return this->ListLowerBoundary;
+        }
+
         forward_iterator begin();
         forward_iterator end();
         reversed_iterator rbegin();
