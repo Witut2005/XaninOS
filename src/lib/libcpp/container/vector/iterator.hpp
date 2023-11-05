@@ -32,17 +32,17 @@ namespace std
     public:
         ForwardVectorIterator<Vec>(iterable_type i_ptr, Vec &vec) : ForwardIterator<Vec>(i_ptr, vec)
         {
-            this->begin = &vec.ptr[0];
-            this->end = &vec.ptr[vec.size() - 1];
+            this->begin = vec.ptr;
+            this->end = vec.ptr + vec.size();
         }
 
         ForwardVectorIterator<Vec>(const this_type &other) = default;
 
-        ForwardVectorIterator<Vec>(this_type &&other)
-        {
-            *this = other;
-            other.i_ptr = NULL;
-        }
+        // ForwardVectorIterator<Vec>(this_type &&other)
+        // {
+        //     *this = other;
+        //     other.i_ptr = NULL;
+        // }
 
         constexpr const char *type_info(void)
         {

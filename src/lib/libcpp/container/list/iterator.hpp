@@ -19,7 +19,11 @@ namespace std
 
         constexpr static Types type = Types::ForwardListIterator;
 
-        ForwardListIterator<Li>(iterable_type i_ptr, const Li &list) : ForwardIterator<Li>(i_ptr, list) {}
+        ForwardListIterator<Li>(iterable_type i_ptr, const Li &list) : ForwardIterator<Li>(i_ptr, list)
+        {
+            this->begin = this->container.Head;
+            this->end = this->container.ListUpperBoundary;
+        }
 
         ForwardListIterator<Li>(const this_type &other) = default;
         // ForwardListIterator<Li>(this_type &&other)

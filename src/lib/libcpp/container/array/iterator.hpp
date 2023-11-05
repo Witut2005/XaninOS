@@ -29,10 +29,8 @@ namespace std
         }
 
     public:
-        ForwardArrayIterator<Arr>(iterable_type ptr, Arr &arr)
+        ForwardArrayIterator<Arr>(iterable_type i_ptr, Arr &arr) : ForwardIterator<Arr>(i_ptr, arr)
         {
-            this->i_ptr = ptr;
-            // this->container = arr;
             this->begin = arr.ptr;
             this->end = arr.ptr + arr.size();
         }
