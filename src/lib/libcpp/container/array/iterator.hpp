@@ -139,9 +139,8 @@ namespace std
         }
 
     public:
-        ConstForwardArrayIterator<Arr>(iterable_type ptr, Arr &arr)
+        ConstForwardArrayIterator<Arr>(iterable_type i_ptr, Arr &arr) : ConstForwardIterator<Arr>(i_ptr, arr)
         {
-            this->i_ptr = ptr;
             this->begin = arr.ptr;
             this->end = arr.ptr + arr.size();
         }
@@ -253,9 +252,8 @@ namespace std
         }
 
     public:
-        ReversedArrayIterator<Arr>(iterable_type ptr, Arr &arr)
+        ReversedArrayIterator<Arr>(iterable_type i_ptr, Arr &arr) : ReversedIterator<Arr>(i_ptr, arr)
         {
-            this->i_ptr = ptr;
             this->rbegin = arr.ptr + arr.size() - 1;
             this->rend = arr.ptr - 1;
         }
@@ -365,9 +363,8 @@ namespace std
         }
 
     public:
-        ConstReversedArrayIterator<Arr>(iterable_type ptr, Arr &arr)
+        ConstReversedArrayIterator<Arr>(iterable_type i_ptr, Arr &arr) : ConstReversedIterator<Arr>(i_ptr, arr)
         {
-            this->i_ptr = ptr;
             this->rbegin = arr.ptr + arr.size() - 1;
             this->rend = arr.ptr - 1;
         }

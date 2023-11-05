@@ -360,25 +360,25 @@ namespace std
     template <typename T>
     typename List<T>::const_forward_iterator List<T>::cbegin()
     {
-        return List<T>::const_forward_iterator(this->Head);
+        return List<T>::const_forward_iterator(this->Head, *this);
     }
 
     template <typename T>
     typename List<T>::const_forward_iterator List<T>::cend()
     {
-        return List<T>::const_forward_iterator(this->ListUpperBoundary);
+        return List<T>::const_forward_iterator(this->ListUpperBoundary, *this);
     }
 
     template <typename T>
     typename List<T>::const_reversed_iterator List<T>::crbegin()
     {
-        return List<T>::const_reversed_iterator(this->goto_last_element());
+        return List<T>::const_reversed_iterator(this->goto_last_element(), *this);
     }
 
     template <typename T>
     typename List<T>::const_reversed_iterator List<T>::crend()
     {
-        return List<T>::const_reversed_iterator(this->ListLowerBoundary);
+        return List<T>::const_reversed_iterator(this->ListLowerBoundary, *this);
     }
 
     template <typename T>

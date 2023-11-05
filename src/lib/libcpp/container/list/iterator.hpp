@@ -461,14 +461,16 @@ namespace std
 
         constexpr static Types type = Types::ReversedListIterator;
 
-        ConstReversedListIterator<Li>(iterable_type ptr) { this->i_ptr = ptr; }
+        ConstReversedListIterator<Li>(iterable_type i_ptr, const Li &list) : ConstReversedIterator<Li>(i_ptr, list)
+        {
+        }
 
         ConstReversedListIterator<Li>(const this_type &other) = default;
-        ConstReversedListIterator<Li>(this_type &&other)
-        {
-            this->i_ptr = other.i_ptr;
-            other.i_ptr = NULL;
-        }
+        // ConstReversedListIterator<Li>(this_type &&other)
+        // {
+        //     this->i_ptr = other.i_ptr;
+        //     other.i_ptr = NULL;
+        // }
 
         this_type &operator++() override
         {

@@ -12,8 +12,6 @@ namespace std
 
         iterable_type i_ptr;
         const Cont &container;
-        iterable_type begin;
-        iterable_type end;
 
     public:
         Iterator<Cont>(iterable_type i_ptr, const Cont &container) : i_ptr(i_ptr), container(container) {}
@@ -40,6 +38,10 @@ namespace std
     template <class Cont>
     class ForwardIterator : public Iterator<Cont>
     {
+
+    protected:
+        typename Cont::iterable_type begin;
+        typename Cont::iterable_type end;
 
     public:
         using iterator_type = typename Cont::forward_iterator;
@@ -128,8 +130,6 @@ namespace std
         using iterable_type = typename Cont::iterable_type;
         iterable_type i_ptr;
         const Cont &container;
-        iterable_type begin;
-        iterable_type end;
 
     public:
         ConstIterator<Cont>(iterable_type i_ptr, const Cont &container) : i_ptr(i_ptr), container(container) {}
@@ -144,6 +144,9 @@ namespace std
     template <class Cont>
     class ConstForwardIterator : public ConstIterator<Cont>
     {
+    protected:
+        typename Cont::iterable_type begin;
+        typename Cont::iterable_type end;
 
     public:
         using iterator_type = typename Cont::const_forward_iterator;
@@ -183,6 +186,9 @@ namespace std
     template <class Cont>
     class ConstReversedIterator : public ConstIterator<Cont>
     {
+    protected:
+        typename Cont::iterable_type rbegin;
+        typename Cont::iterable_type rend;
 
     public:
         using iterator_type = typename Cont::const_reversed_iterator;
