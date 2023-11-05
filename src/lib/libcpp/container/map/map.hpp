@@ -62,6 +62,40 @@ namespace std
 
         V &operator[](K key);
 
+        inline iterable_type begin_ptr()
+        {
+            return this->elements.Head;
+        }
+        inline iterable_type end_ptr()
+        {
+            return this->elements.ListUpperBoundary;
+        }
+        inline iterable_type rbegin_ptr()
+        {
+            return this->elements.goto_last_element();
+        }
+        inline iterable_type rend_ptr()
+        {
+            return this->elements.ListLowerBoundary;
+        }
+
+        inline const iterable_type cbegin_ptr()
+        {
+            return this->elements.Head;
+        }
+        inline const iterable_type cend_ptr()
+        {
+            return this->elements.ListUpperBoundary;
+        }
+        inline const iterable_type crbegin_ptr()
+        {
+            return this->elements.goto_last_element();
+        }
+        inline const iterable_type crend_ptr()
+        {
+            return this->elements.ListLowerBoundary;
+        }
+
         forward_iterator begin(void);
         forward_iterator end(void);
         const_forward_iterator cbegin(void);
