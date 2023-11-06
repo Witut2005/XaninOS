@@ -12,8 +12,9 @@ namespace std
         iterable_type i_ptr;
 
     public:
-        const Cont &container;
-        Iterator<Cont>(iterable_type i_ptr, const Cont &container) : i_ptr(i_ptr), container(container) {}
+        Cont &container;
+
+        Iterator<Cont>(iterable_type i_ptr, Cont &container) : i_ptr(i_ptr), container(container) {}
 
         template <typename InputIt>
         friend bool operator==(InputIt lhs, InputIt rhs);
@@ -131,7 +132,8 @@ namespace std
         iterable_type i_ptr;
 
     public:
-        const Cont &container;
+        Cont &container;
+
         ConstIterator<Cont>(iterable_type i_ptr, Cont &container) : i_ptr(i_ptr), container(container) {}
 
         template <typename InputIt>

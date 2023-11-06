@@ -151,22 +151,14 @@ namespace std
         }
 
     public:
-        ConstForwardVectorIterator<Vec>(iterable_type ptr, Vec &vec)
-        {
-            // std::cout << "DEFAULT" << std::endl;
-            this->i_ptr = ptr;
-
-            this->begin = vec.ptr;
-            this->end = vec.ptr + vec.v_size;
-        }
-
+        ConstForwardVectorIterator<Vec>(iterable_type i_ptr, Vec &vec) : ConstForwardIterator<Vec>(i_ptr, vec) {}
         ConstForwardVectorIterator<Vec>(const this_type &other) = default;
 
-        ConstForwardVectorIterator<Vec>(this_type &&other)
-        {
-            *this = other;
-            other.i_ptr = NULL;
-        }
+        // ConstForwardVectorIterator<Vec>(this_type &&other)
+        // {
+        //     *this = other;
+        //     other.i_ptr = NULL;
+        // }
 
         constexpr const char *type_info(void)
         {
@@ -275,21 +267,15 @@ namespace std
         }
 
     public:
-        ReversedVectorIterator<Vec>(iterable_type ptr, Vec &vec)
-        {
-            this->i_ptr = ptr;
-
-            this->rbegin = vec.ptr + vec.v_size - 1;
-            this->rend = vec.ptr - 1;
-        }
+        ReversedVectorIterator<Vec>(iterable_type i_ptr, Vec &vec) : ReversedIterator<Vec>(i_ptr, vec) {}
 
         ReversedVectorIterator<Vec>(const this_type &other) = default;
 
-        ReversedVectorIterator<Vec>(this_type &&other)
-        {
-            *this = other;
-            other.i_ptr = NULL;
-        }
+        // ReversedVectorIterator<Vec>(this_type &&other)
+        // {
+        //     *this = other;
+        //     other.i_ptr = NULL;
+        // }
 
         this_type &operator++(void) override // prefix operator
         {
@@ -398,21 +384,15 @@ namespace std
         }
 
     public:
-        ConstReversedVectorIterator<Vec>(iterable_type ptr, Vec &vec)
-        {
-            this->i_ptr = ptr;
-
-            this->rbegin = vec.ptr + vec.v_size - 1;
-            this->rend = vec.ptr - 1;
-        }
+        ConstReversedVectorIterator<Vec>(iterable_type i_ptr, Vec &vec) : ConstReversedIterator<Vec>(i_ptr, vec) {}
 
         ConstReversedVectorIterator<Vec>(const this_type &other) = default;
 
-        ConstReversedVectorIterator<Vec>(this_type &&other)
-        {
-            *this = other;
-            other.i_ptr = NULL;
-        }
+        // ConstReversedVectorIterator<Vec>(this_type &&other)
+        // {
+        //     *this = other;
+        //     other.i_ptr = NULL;
+        // }
 
         this_type &operator++(void) override // prefix operator
         {

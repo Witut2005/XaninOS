@@ -285,10 +285,10 @@ namespace std
         return ((uint32_t)&element >= (uint32_t)this->ptr) & ((uint32_t)&element < (uint32_t) & this->ptr[this->v_size]);
     }
 
-    // template<typename T>
+    // template <typename T>
     // void vector<T>::print(void)
     // {
-    //     if(!this->v_size)
+    //     if (!this->v_size)
     //     {
     //         std::cout << "[]" << std::endl;
     //         return;
@@ -296,9 +296,11 @@ namespace std
 
     //     std::cout << "[";
 
-    //     auto it = this->begin();
-    //     for(; it != this->end()-1; it++)
-    //         std::cout << *it << ", ";
+    //     auto it = this->cbegin();
+    //     for (; it != this->cend() - 1; it++)
+    //     {
+    //         auto tmp = *it;
+    //     }
 
     //     std::cout << *it;
     //     std::cout << "]";

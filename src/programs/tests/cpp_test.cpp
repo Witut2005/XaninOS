@@ -244,8 +244,13 @@ static inline void map_test(void)
 static inline void cont_test(void)
 {
     std::array<int, 5> arr = {1, 2, 3, 4, 5};
-    std::find(arr.begin(), arr.end(), 3, [=](auto a, auto b)
-              { return a == b; });
+    auto result = std::find(arr.begin(), arr.end(), 3, [=](auto a, auto b) -> bool
+                            { return a == b; });
+
+    // for (auto &a : result)
+    // {
+    //     std::cout << *a << std::endl;
+    // }
 }
 
 void cpp_prog()

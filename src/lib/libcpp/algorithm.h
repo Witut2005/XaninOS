@@ -76,13 +76,16 @@ namespace std
 
         std::vector<InputIt> results;
         // CHECK IF ARRAY ITERATORS
-
+        int i = 0;
         for (; beg != end; beg++)
         {
             // if (!beg.valid())
-            //     return InputIt(NULL, beg.container);
-            // if (finder(value, *beg))
-            //     results.push_back(beg);
+            //     break;
+            if (finder(value, *beg))
+            {
+                results.push_back(beg);
+                std::cout << i++ << std::endl;
+            }
         }
         return results;
     }
