@@ -19,11 +19,7 @@ namespace std
 
         constexpr static Types type = Types::ForwardListIterator;
 
-        ForwardListIterator<Li>(iterable_type i_ptr, const Li &list) : ForwardIterator<Li>(i_ptr, list)
-        {
-            this->begin = this->container.Head;
-            this->end = this->container.ListUpperBoundary;
-        }
+        ForwardListIterator<Li>(iterable_type i_ptr, Li &list) : ForwardIterator<Li>(i_ptr, list) {}
 
         ForwardListIterator<Li>(const this_type &other) = default;
         // ForwardListIterator<Li>(this_type &&other)
@@ -169,14 +165,9 @@ namespace std
 
         constexpr static Types type = Types::ReversedListIterator;
 
-        ReversedListIterator<Li>(iterable_type ptr) { this->i_ptr = ptr; }
+        ReversedListIterator<Li>(iterable_type i_ptr, Li &list) : ReversedIterator<Li>(i_ptr, list) {}
 
         ReversedListIterator<Li>(const this_type &other) = default;
-        ReversedListIterator<Li>(this_type &&other)
-        {
-            this->i_ptr = other.i_ptr;
-            other.i_ptr = NULL;
-        }
 
         this_type &operator++() override
         {
@@ -461,9 +452,7 @@ namespace std
 
         constexpr static Types type = Types::ReversedListIterator;
 
-        ConstReversedListIterator<Li>(iterable_type i_ptr, const Li &list) : ConstReversedIterator<Li>(i_ptr, list)
-        {
-        }
+        ConstReversedListIterator<Li>(iterable_type i_ptr, Li &list) : ConstReversedIterator<Li>(i_ptr, list) {}
 
         ConstReversedListIterator<Li>(const this_type &other) = default;
         // ConstReversedListIterator<Li>(this_type &&other)

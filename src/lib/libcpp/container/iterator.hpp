@@ -49,7 +49,8 @@ namespace std
         using value_type = typename Cont::value_type;
         using lreference = typename Cont::lreference;
 
-        ForwardIterator<Cont>(iterable_type i_ptr, const Cont &container) : Iterator<Cont>(i_ptr, container) {}
+        ForwardIterator<Cont>(iterable_type i_ptr, Cont &container) : Iterator<Cont>(i_ptr, container),
+                                                                      begin(container.begin_ptr()), end(container.end_ptr()) {}
 
         // virtual constexpr const char* type_info(void);
 
@@ -94,8 +95,8 @@ namespace std
         using value_type = typename Cont::value_type;
         using lreference = typename Cont::lreference;
 
-        ReversedIterator<Cont>(iterable_type i_ptr, const Cont &container) : Iterator<Cont>(i_ptr, container) {}
-
+        ReversedIterator<Cont>(iterable_type i_ptr, Cont &container) : Iterator<Cont>(i_ptr, container),
+                                                                       rbegin(container.rbegin_ptr()), rend(container.rend_ptr()) {}
         virtual iterator_type &operator++(void) = 0;
         virtual iterator_type operator++(int) = 0;
         virtual iterator_type &operator--(void) = 0;
@@ -131,7 +132,7 @@ namespace std
 
     public:
         const Cont &container;
-        ConstIterator<Cont>(iterable_type i_ptr, const Cont &container) : i_ptr(i_ptr), container(container) {}
+        ConstIterator<Cont>(iterable_type i_ptr, Cont &container) : i_ptr(i_ptr), container(container) {}
 
         template <typename InputIt>
         friend bool operator==(InputIt lhs, InputIt rhs);
@@ -154,7 +155,9 @@ namespace std
         using value_type = typename Cont::value_type;
         using const_lreference = typename Cont::const_lreference;
 
-        ConstForwardIterator<Cont>(iterable_type i_ptr, const Cont &container) : ConstIterator<Cont>(i_ptr, container) {}
+        ConstForwardIterator<Cont>(iterable_type i_ptr, Cont &container) : ConstIterator<Cont>(i_ptr, container),
+                                                                           begin(container.begin_ptr()),
+                                                                           end(container.end_ptr()) {}
 
         virtual iterator_type &operator++(void) = 0;
         virtual iterator_type operator++(int) = 0;
@@ -196,8 +199,9 @@ namespace std
         using value_type = typename Cont::value_type;
         using const_lreference = typename Cont::const_lreference;
 
-        ConstReversedIterator<Cont>(iterable_type i_ptr, const Cont &container) : ConstIterator<Cont>(i_ptr, container) {}
-
+        ConstReversedIterator<Cont>(iterable_type i_ptr, Cont &container) : ConstIterator<Cont>(i_ptr, container),
+                                                                            rbegin(container.rbegin_ptr()),
+                                                                            rend(container.rend_ptr()) {}
         virtual iterator_type &operator++(void) = 0;
         virtual iterator_type operator++(int) = 0;
         virtual iterator_type &operator--(void) = 0;
