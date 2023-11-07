@@ -70,8 +70,8 @@ namespace std
     }
 
     // IN ITERATOR MAKE PTR TO CONTAINER OBJECT
-    template <typename InputIt, typename T>
-    std::vector<InputIt> find(InputIt beg, InputIt end, T value, auto finder)
+    template <typename InputIt>
+    std::vector<InputIt> find(InputIt beg, InputIt end, auto finder)
     {
 
         std::vector<InputIt> results;
@@ -79,13 +79,10 @@ namespace std
         int i = 0;
         for (; beg != end; beg++)
         {
-            // if (!beg.valid())
-            //     break;
-            if (finder(value, *beg))
-            {
+            if (!beg.valid())
+                break;
+            if (finder(*beg))
                 results.push_back(beg);
-                std::cout << i++ << std::endl;
-            }
         }
         return results;
     }

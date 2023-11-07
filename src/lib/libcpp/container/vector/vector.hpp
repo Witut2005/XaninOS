@@ -228,7 +228,8 @@ namespace std
     void vector<T>::push_back(T item)
     {
         this->ptr = (T *)realloc(this->ptr, SIZE_OF(T) * (this->v_size + 1));
-        ptr[this->v_size++] = item;
+        // YOU MUST USE MEMCPY (= operator can be overloaded)
+        memcpy((uint8_t *)&ptr[this->v_size++], (uint8_t *)&item, sizeof(T));
     }
 
     template <typename T>
