@@ -251,7 +251,7 @@ static inline void cont_test(void)
     //     *a = 1;
 
     // decltype(**result.begin()) x = 123;
-    // std::array<decltype(result)::forward_iterator, 3> arr(result.begin(), result.end());
+    std::array<decltype(result)::forward_iterator, 3> arr(result.begin(), result.end());
 
     // for (auto &a : arr)
     //     std::cout << **a << ", ";
