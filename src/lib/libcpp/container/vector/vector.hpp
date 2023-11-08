@@ -147,7 +147,7 @@ namespace std
     {
         int index = 0;
         for (auto it = items.begin(); it != items.end(); it++, index++)
-            this->ptr[index] = *it;
+            memcpy((uint8_t *)&this->ptr[index], (uint8_t *)it, SIZE_OF(T));
 
         this->v_size = items.size();
     }
@@ -238,8 +238,6 @@ namespace std
         if (!this->v_size)
             return;
 
-        T tmp = *(this->ptr + this->v_size - 1);
-        *(this->ptr + this->v_size - 1) = (T)NULL;
         this->ptr = (T *)realloc(this->ptr, SIZE_OF(T) * (--this->v_size));
     }
 

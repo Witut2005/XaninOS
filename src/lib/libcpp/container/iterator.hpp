@@ -13,6 +13,10 @@ namespace std
 
     public:
         Cont &container;
+        iterable_type pointer()
+        {
+            return this->i_ptr;
+        }
 
         Iterator<Cont>(iterable_type i_ptr, Cont &container) : i_ptr(i_ptr), container(container) {}
 

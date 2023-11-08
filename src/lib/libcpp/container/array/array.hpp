@@ -6,7 +6,6 @@
 #include <lib/libcpp/utility.h>
 #include <lib/libcpp/initializer_list.hpp>
 #include <lib/libcpp/type_traits.h>
-#include <lib/libcpp/container/vector/vector.hpp>
 #include "./iterator.hpp"
 
 namespace std
@@ -37,44 +36,24 @@ namespace std
         using const_forward_iterator = ConstForwardArrayIterator<this_type>;
         using const_reversed_iterator = ConstReversedArrayIterator<this_type>;
 
-        template <class FT, int FSIZE>
-        static int find_other_than_default_handler(std::array<FT, FSIZE> arr, FT arg)
-        {
-            for (int i = 0; i < SIZE; i++)
-            {
-                if (arr[i] != arg)
-                    return i;
-            }
-            return -1;
-        }
-
-        // static int array<T, SIZE>::find_other_than(T key)
-        // {
-        //     for (int i = 0; i < SIZE; i++)
-        //     {
-        //         if (ptr[i] != key)
-        //             return i;
-        //     }
-        //     return -1;
-        // }
-
         array();
         array(const array &arr) = default;
         array(std::initializer_list<T> a);
 
         template <typename InputIt>
-        array(InputIt beg, InputIt end, T default_value)
+        array(InputIt beg, InputIt end)
         {
             int i = 0;
 
             for (; (beg != end) & (i < SIZE); beg++, i++)
-                this->ptr[i] = *beg;
-
-            for (; i < SIZE; i++)
-                this->ptr[i] = default_value;
+            {
+                // this->ptr[i] = *beg;
+                // memcpy((uint8_t *)&this->ptr[i], (uint8_t *)&beg.pointer()[i], SIZE_OF(T));
+            }
         }
 
-        inline constexpr iterable_type begin_ptr()
+        inline constexpr iterable_type
+        begin_ptr()
         {
             return ptr;
         }
@@ -199,7 +178,7 @@ namespace std
         auto it = a.begin();
 
         for (int i = 0; i < SIZE; i++)
-            this->ptr[i] = it[i];
+            memcpy((uint8_t *)this->ptr[i], &it[i], SIZE_OF(T));
     }
 
     template <class T, int SIZE>
@@ -338,5 +317,4 @@ namespace std
         for (int i = 0; i < SIZE; i++)
             arr[i] = ptr[i];
     }
-
 }

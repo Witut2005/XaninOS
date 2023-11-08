@@ -50,7 +50,7 @@ static inline void arr_test(void)
 
     std::vector<int> vec = {1, 2, 3, 4, 5};
 
-    std::array<int, 10> arr(vec.begin(), vec.end(), 10);
+    std::array<int, 10> arr(vec.begin(), vec.end());
 
     // std::cout << "find: " << arr.find(arr.find_default_handler);
 
@@ -247,12 +247,15 @@ static inline void cont_test(void)
     auto result = std::find(vec.begin(), vec.end(), [=](auto cur) -> bool
                             { return cur <= 3; });
 
-    for (auto &a : result)
-        *a = 1;
+    // for (auto &a : result)
+    //     *a = 1;
 
-    for (auto &a : vec)
-        std::cout << a << ", ";
-    std::cout << std::endl;
+    // decltype(**result.begin()) x = 123;
+    // std::array<decltype(result)::forward_iterator, 3> arr(result.begin(), result.end());
+
+    // for (auto &a : arr)
+    //     std::cout << **a << ", ";
+    // std::cout << std::endl;
 }
 
 void cpp_prog()
