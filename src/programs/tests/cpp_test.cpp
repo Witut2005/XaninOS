@@ -253,9 +253,14 @@ static inline void cont_test(void)
     // decltype(**result.begin()) x = 123;
     std::array<decltype(result)::forward_iterator, 3> arr(result.begin(), result.end());
 
-    // for (auto &a : arr)
-    //     std::cout << **a << ", ";
-    // std::cout << std::endl;
+    for (auto it = arr.begin(); it != arr.end(); it++)
+    {
+        std::cout << *(*(*it)) << std::endl;
+    }
+
+    //     for (auto &a : arr)
+    //         std::cout << **a << ", ";
+    //     std::cout << std::endl;
 }
 
 void cpp_prog()

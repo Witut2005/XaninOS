@@ -47,7 +47,7 @@ namespace std
 
             for (; (beg != end) & (i < SIZE); beg++, i++)
             {
-                memcpy((uint8_t *)&this->ptr[i], (uint8_t *)&(beg.pointer()[i]), SIZE_OF(T));
+                memcpy((uint8_t *)&this->ptr[i], (uint8_t *)beg.pointer(), SIZE_OF(T));
             }
         }
 
