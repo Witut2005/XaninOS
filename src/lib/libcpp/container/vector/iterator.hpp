@@ -30,10 +30,10 @@ namespace std
         }
 
     public:
+        ForwardVectorIterator<Vec>() : ForwardIterator<Vec>() {}
+
         ForwardVectorIterator<Vec>(iterable_type i_ptr, Vec &vec) : ForwardIterator<Vec>(i_ptr, vec)
         {
-            this->begin = vec.ptr;
-            this->end = vec.ptr + vec.size();
         }
 
         ForwardVectorIterator<Vec>(const this_type &other) = default;

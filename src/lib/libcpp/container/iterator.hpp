@@ -1,6 +1,8 @@
 
 #pragma once
 
+#include <limits.h>
+
 namespace std
 {
 
@@ -13,12 +15,21 @@ namespace std
 
     public:
         Cont &container;
+
+        Iterator<Cont>()
+        {
+            this->i_ptr = NULL;
+            this->container = NULL;
+            this->begin = (iterable_type)INT_MAX;
+            this->end = (iterable_type)INT_MAX;
+        }
+
+        Iterator<Cont>(iterable_type i_ptr, Cont &container) : i_ptr(i_ptr), container(container) {}
+
         iterable_type pointer()
         {
             return this->i_ptr;
         }
-
-        Iterator<Cont>(iterable_type i_ptr, Cont &container) : i_ptr(i_ptr), container(container) {}
 
         template <typename InputIt>
         friend bool operator==(InputIt lhs, InputIt rhs);
@@ -53,6 +64,8 @@ namespace std
         using iterable_type = typename Cont::iterable_type;
         using value_type = typename Cont::value_type;
         using lreference = typename Cont::lreference;
+
+        ForwardIterator<Cont>() : Iterator<Cont>() {}
 
         ForwardIterator<Cont>(iterable_type i_ptr, Cont &container) : Iterator<Cont>(i_ptr, container),
                                                                       begin(container.begin_ptr()), end(container.end_ptr()) {}
@@ -100,6 +113,8 @@ namespace std
         using value_type = typename Cont::value_type;
         using lreference = typename Cont::lreference;
 
+        ReversedIterator<Cont>() : Iterator<Cont>() {}
+
         ReversedIterator<Cont>(iterable_type i_ptr, Cont &container) : Iterator<Cont>(i_ptr, container),
                                                                        rbegin(container.rbegin_ptr()), rend(container.rend_ptr()) {}
         virtual iterator_type &operator++(void) = 0;
@@ -138,6 +153,14 @@ namespace std
     public:
         Cont &container;
 
+        ConstIterator<Cont>()
+        {
+            this->i_ptr = NULL;
+            this->container = NULL;
+            this->begin = (iterable_type)INT_MAX;
+            this->end = (iterable_type)INT_MAX;
+        }
+
         ConstIterator<Cont>(iterable_type i_ptr, Cont &container) : i_ptr(i_ptr), container(container) {}
 
         template <typename InputIt>
@@ -160,6 +183,8 @@ namespace std
         using iterable_type = typename Cont::iterable_type;
         using value_type = typename Cont::value_type;
         using const_lreference = typename Cont::const_lreference;
+
+        ConstForwardIterator<Cont>() : ConstIterator<Cont>() {}
 
         ConstForwardIterator<Cont>(iterable_type i_ptr, Cont &container) : ConstIterator<Cont>(i_ptr, container),
                                                                            begin(container.begin_ptr()),
@@ -204,6 +229,8 @@ namespace std
         using iterable_type = typename Cont::iterable_type;
         using value_type = typename Cont::value_type;
         using const_lreference = typename Cont::const_lreference;
+
+        ConstReversedIterator<Cont>() : ConstIterator<Cont>() {}
 
         ConstReversedIterator<Cont>(iterable_type i_ptr, Cont &container) : ConstIterator<Cont>(i_ptr, container),
                                                                             rbegin(container.rbegin_ptr()),
