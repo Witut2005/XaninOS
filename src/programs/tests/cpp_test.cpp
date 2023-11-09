@@ -50,9 +50,13 @@ static inline void arr_test(void)
 
     std::vector<int> vec = {1, 2, 3, 4, 5};
 
-    std::array<int, 10> arr(vec.begin(), vec.end());
+    std::array<int, 5> arr(vec.begin(), vec.end());
 
     // std::cout << "find: " << arr.find(arr.find_default_handler);
+
+    for (auto a : arr)
+        std::cout << a << ", ";
+    std::cout << std::endl;
 
     return;
 
@@ -244,6 +248,8 @@ static inline void map_test(void)
 static inline void cont_test(void)
 {
     std::vector<int> vec = {1, 2, 3, 4, 5, 3};
+
+    // vector of iterators
     auto result = std::find(vec.begin(), vec.end(), [=](auto cur) -> bool
                             { return cur <= 3; });
 
@@ -251,12 +257,20 @@ static inline void cont_test(void)
     //     *a = 1;
 
     // decltype(**result.begin()) x = 123;
-    std::array<decltype(result)::forward_iterator, 3> arr(result.begin(), result.end());
+    std::array<decltype(std::remove_reference_t<decltype(*result.begin())>(*result.begin())), 3>
+        arr(result.begin(), result.end());
 
-    for (auto it = arr.begin(); it != arr.end(); it++)
-    {
-        std::cout << *(*(*it)) << std::endl;
-    }
+    xprintf("%d\n", **(result.begin()));
+    xprintf("%d\n", **(arr.begin())); // get value pointed by iterator copy
+
+    // decltype(*(arr.begin()));
+
+    // xprintf("val: %d\n", result[0].pointer());
+
+    // for (auto it = arr.begin(); it != arr.end(); it++)
+    // {
+    //     std::cout << *(*(*it)) << std::endl;
+    // }
 
     //     for (auto &a : arr)
     //         std::cout << **a << ", ";
