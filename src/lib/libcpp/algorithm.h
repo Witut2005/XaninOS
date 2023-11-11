@@ -73,7 +73,6 @@ namespace std
     template <typename InputIt>
     std::vector<InputIt> find(InputIt beg, InputIt end, auto finder)
     {
-
         std::vector<InputIt> results;
         // CHECK IF ARRAY ITERATORS
         int i = 0;
@@ -81,11 +80,28 @@ namespace std
         {
             if (!beg.valid())
                 break;
-            if (finder(*beg))
+            if (finder(beg))
                 results.push_back(beg);
         }
         return results;
     }
+
+
+    template <typename InputIt>
+    InputIt find_first(InputIt beg, InputIt end, auto finder)
+    {
+        std::vector<InputIt> results;
+        // CHECK IF ARRAY ITERATORS
+        int i = 0;
+        for (; beg != end; beg++)
+        {
+            if (!beg.valid())
+                break;
+            return beg;
+        }
+        return InputIt(NULL, beg.container);
+    }
+
 
     template <class T>
     constexpr std::pair<T &&, T &&> minmax(T &&a, T &&b)

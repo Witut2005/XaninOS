@@ -251,7 +251,7 @@ static inline void cont_test(void)
 
     // vector of iterators
     auto result = std::find(vec.begin(), vec.end(), [=](auto cur) -> bool
-                            { return cur <= 3; });
+                            { return *cur <= 3; });
 
     // for (auto &a : result)
     //     *a = 1;
@@ -260,8 +260,6 @@ static inline void cont_test(void)
     std::array<decltype(std::remove_reference_t<decltype(*result.begin())>(*result.begin())), 3>
         arr(result.begin(), result.end());
 
-    xprintf("%d\n", **(result.begin()));
-    xprintf("%d\n", **(arr.begin())); // get value pointed by iterator copy
 
     // decltype(*(arr.begin()));
 

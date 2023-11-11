@@ -5,6 +5,8 @@
 #include <lib/libcpp/container/array/array.hpp>
 #include <lib/libcpp/container/vector/vector.hpp>
 #include <sys/input/input.h>
+#include <lib/libcpp/algorithm.h>
+#include <lib/libc/stdiox.h>
 
 key_info_t KeyInfo = {0};
 
@@ -16,14 +18,12 @@ extern "C"
 
     void __input_handle_observed_objects(const key_info_t *const KeyboardDriverKeyInfo)
     {
-        for (int i = 0; i < KeyboardModuleObservedObjects.size(); i++)
-        {
-            if (KeyboardModuleObservedObjects[i].KeyInfo != NULL)
-            {
-                if (!(KeyboardModuleObservedObjects[i].Options.ignore_break_codes & is_break_code(KeyboardDriverKeyInfo->scan_code)))
-                    memcpy((uint8_t *)KeyboardModuleObservedObjects[i].KeyInfo, (uint8_t *)KeyboardDriverKeyInfo, SIZE_OF(KeyboardModuleObservedObject));
-            }
-        }
+        auto ObjectsToHandle = std::find(KeyboardModuleObservedObjects.begin(), KeyboardModuleObservedObjects.end(), 
+                                            [](const auto& a){return a.valid();});
+
+        for(auto& it : ObjectsToHandle)
+            if (!((*it).Options.ignore_break_codes & is_break_code(KeyboardDriverKeyInfo->scan_code)))
+                memcpy((uint8_t *)it.pointer()->KeyInfo, (uint8_t *)KeyboardDriverKeyInfo, SIZE_OF(KeyboardModuleObservedObject));
     }
 
     void __input_init(void)
@@ -31,23 +31,18 @@ extern "C"
         memset((uint8_t *)&KeyboardModuleObservedObjects, 0, sizeof(KeyboardModuleObservedObjects));
     }
 
-    int __input_add_object_to_observe(const key_info_t *const KeyInfoToObserve, KeyboardModuleObservedObjectOptions Options)
+    bool __input_add_object_to_observe(const key_info_t *const KeyInfoToObserve, KeyboardModuleObservedObjectOptions Options)
     {
-        int index = -1;
+        auto ObjectInserted = find_first(KeyboardModuleObservedObjects.begin(), KeyboardModuleObservedObjects.end(),
+                                            [](const auto& a){return !a.valid();});
 
-        for (int i = 0; i < KeyboardModuleObservedObjects.size(); i++)
-        {
-            if (KeyboardModuleObservedObjects[i].KeyInfo == NULL)
-                index = i;
-        }
-
-        if (index == -1)
-            return -1;
+        if(!ObjectInserted.valid())
+            return false;
 
         KeyboardModuleObservedObject obj = {(key_info_t *)(KeyInfoToObserve), Options};
-        KeyboardModuleObservedObjects[index] = obj;
+        *ObjectInserted = obj;
 
-        return 0;
+        return true;
     }
 
     int __input_remove_object_from_observe(const key_info_t *const KeyInfoToRemove)
