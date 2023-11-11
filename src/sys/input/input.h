@@ -60,7 +60,7 @@ extern "C"
 
     void __input_handle_observed_objects(const key_info_t *const KeyboardDriverKeyInfo);
     bool __input_add_object_to_observe(const key_info_t *const KeyInfoToObserve, KeyboardModuleObservedObjectOptions Options);
-    int __input_remove_object_from_observe(const key_info_t *const KeyInfoToRemove);
+    bool __input_remove_object_from_observe(const key_info_t *const KeyInfoToRemove);
     int __input_add_handler(InputHandler Handler);
     void __input_call_handlers(key_info_t KeyboardDriverKeyInfo);
     void __input_remove_handler(const input_handler_t Handler);

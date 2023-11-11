@@ -45,21 +45,18 @@ extern "C"
         return true;
     }
 
-    int __input_remove_object_from_observe(const key_info_t *const KeyInfoToRemove)
+    bool __input_remove_object_from_observe(const key_info_t *const KeyInfoToRemove)
     {
-        int index = -1;
+        auto ObjectsToRemove = std::find(KeyboardModuleObservedObjects.begin(), KeyboardModuleObservedObjects.end(), 
+                                            [=](auto a){return a.pointer()->KeyInfo == KeyInfoToRemove;});
 
-        for (int i = 0; i < KeyboardModuleObservedObjects.size(); i++)
-        {
-            if (KeyboardModuleObservedObjects[i].KeyInfo == KeyInfoToRemove)
-                index = i;
-        }
+        if (!ObjectsToRemove.size())
+            return false;
 
-        if (index == -1)
-            return -1;
+        for(auto& it : ObjectsToRemove)
+            memset((uint8_t *)it.pointer()->KeyInfo, (uint8_t)NULL, SIZE_OF(KeyboardModuleObservedObject));
 
-        KeyboardModuleObservedObjects[index].KeyInfo = NULL;
-        return 0;
+        return true;
     }
 
     int __input_add_handler(InputHandler Handler)
