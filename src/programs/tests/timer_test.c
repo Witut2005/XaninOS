@@ -23,8 +23,8 @@ int timer_test(void)
     key_info_t k;
 
     KeyboardModuleObservedObjectOptions Options = {true};
-    __input_add_object_to_observe(&k, Options);
-    __input_add_handler(__input_handler_create(timer_handler, __input_handler_options_create(NULL, USER_INPUT_HANDLER)));
+    __sys_input_add_object_to_observe(&k, Options);
+    __sys_input_add_handler(__input_handler_create(timer_handler, __input_handler_options_create(NULL, USER_INPUT_HANDLER)));
 
     canvas_xprintf("Press 'a' to start...");
     while (getchar() != 'a')
@@ -39,7 +39,7 @@ int timer_test(void)
         msleep(1000);
     }
 
-    __input_remove_object_from_observe(&k);
+    __sys_input_remove_object_from_observe(&k);
 
     return XANIN_OK;
 }

@@ -3,6 +3,8 @@
 %include "./sys/call/xanin_sys/calls/input/ids.inc"
 
 global __sys_getchar, __sys_getscan, __sys_inputg, __sys_getxchar, __sys_keyinfo_get
+global __sys_input_add_object_to_observe, __sys_input_remove_object_from_observe, __sys_input_handle_observed_objects
+global __sys_input_add_handler, __sys_input_remove_handler, __sys_input_remove_user_handlers, __sys_input_call_handlers
 
 __sys_getchar:              ;char getchar(void)
 mov eax, XANIN_GETCHAR                ;getchar syscall id
