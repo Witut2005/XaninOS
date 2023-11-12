@@ -18,10 +18,11 @@ extern "C"
 
     void __input_handle_observed_objects(const key_info_t *const KeyboardDriverKeyInfo)
     {
-        auto ObjectsToHandle = std::find(KeyboardModuleObservedObjects.begin(), KeyboardModuleObservedObjects.end(), 
-                                            [](const auto& a){return a.valid();});
+        auto ObjectsToHandle = std::find(KeyboardModuleObservedObjects.begin(), KeyboardModuleObservedObjects.end(),
+                                         [](const auto &a)
+                                         { return a.valid(); });
 
-        for(auto& it : ObjectsToHandle)
+        for (auto &it : ObjectsToHandle)
             if (!((*it).Options.ignore_break_codes & is_break_code(KeyboardDriverKeyInfo->scan_code)))
                 memcpy((uint8_t *)it.pointer()->KeyInfo, (uint8_t *)KeyboardDriverKeyInfo, SIZE_OF(KeyboardModuleObservedObject));
     }
@@ -34,9 +35,10 @@ extern "C"
     bool __input_add_object_to_observe(const key_info_t *const KeyInfoToObserve, KeyboardModuleObservedObjectOptions Options)
     {
         auto ObjectInserted = find_first(KeyboardModuleObservedObjects.begin(), KeyboardModuleObservedObjects.end(),
-                                            [](const auto& a){return !a.valid();});
+                                         [](const auto &a)
+                                         { return !a.valid(); });
 
-        if(!ObjectInserted.valid())
+        if (!ObjectInserted.valid())
             return false;
 
         KeyboardModuleObservedObject obj = {(key_info_t *)(KeyInfoToObserve), Options};
@@ -47,19 +49,20 @@ extern "C"
 
     bool __input_remove_object_from_observe(const key_info_t *const KeyInfoToRemove)
     {
-        auto ObjectsToRemove = std::find(KeyboardModuleObservedObjects.begin(), KeyboardModuleObservedObjects.end(), 
-                                            [=](auto a){return a.pointer()->KeyInfo == KeyInfoToRemove;});
+        auto ObjectsToRemove = std::find(KeyboardModuleObservedObjects.begin(), KeyboardModuleObservedObjects.end(),
+                                         [=](auto a)
+                                         { return a.pointer()->KeyInfo == KeyInfoToRemove; });
 
         if (!ObjectsToRemove.size())
             return false;
 
-        for(auto& it : ObjectsToRemove)
+        for (auto &it : ObjectsToRemove)
             memset((uint8_t *)it.pointer()->KeyInfo, (uint8_t)NULL, SIZE_OF(KeyboardModuleObservedObject));
 
         return true;
     }
 
-    int __input_add_handler(InputHandler Handler)
+    bool __input_add_handler(InputHandler Handler)
     {
 
         int index = -1;
@@ -86,22 +89,31 @@ extern "C"
         }
     }
 
-    void __input_remove_handler(const input_handler_t Handler)
+    bool __input_remove_handler(const input_handler_t Handler)
     {
-        for (int i = 0; i < InputModuleHandlers.size(); i++)
-        {
-            if (InputModuleHandlers[i].handler == Handler)
-                InputModuleHandlers[i].handler = NULL;
-        }
+        auto HandlersToRemove = std::find(InputModuleHandlers.begin(), InputModuleHandlers.end(), [=](auto &a)
+                                          { return a.pointer()->handler == Handler; });
+
+        if (!HandlersToRemove.size())
+            return false;
+
+        for (auto &a : HandlersToRemove)
+            memset((uint8_t *)a.pointer(), (uint8_t)NULL, SIZE_OF(input_handler_t));
+        return true;
     }
 
-    void __input_remove_user_handlers(void)
+    bool __input_remove_user_handlers(void)
     {
-        for (int i = 0; i < InputModuleHandlers.size(); i++)
-        {
-            if (InputModuleHandlers[i].options.type == USER_INPUT_HANDLER)
-                InputModuleHandlers[i].handler = NULL;
-        }
+        auto HandlersToRemove = std::find(InputModuleHandlers.begin(), InputModuleHandlers.end(), [=](auto &a)
+                                          { return a.pointer()->options.type == USER_INPUT_HANDLER; });
+
+        if (!HandlersToRemove.size())
+            return false;
+
+        for (auto &a : HandlersToRemove)
+            memset((uint8_t *)a.pointer(), (uint8_t)NULL, SIZE_OF(input_handler_t));
+
+        return true;
     }
 
     char __inputc(void)
