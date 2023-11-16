@@ -63,6 +63,8 @@ void keyboard_driver(void)
     KeyInfo.scan_code = inbIO(KEYBOARD_DATA_REG);
     KeyInfo.character = keyboard_map[KeyInfo.scan_code];
 
+    KeyInfo.is_pressed = true;
+
     switch (KeyInfo.scan_code)
     {
     case LSHIFT:
@@ -199,7 +201,10 @@ void keyboard_driver(void)
     }
 
     if (KeyInfo.scan_code >= 128)
+    {
         KeyInfo.character = 0x0;
+        KeyInfo.is_pressed = false;
+    }
 
     if (KeyInfo.is_caps)
     {

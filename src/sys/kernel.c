@@ -111,16 +111,11 @@ void kernel_loop(void)
 
         app_exited = false;
 
-        xprintf("0x%x 0x%x", input_module_handlers_get()[0].options.type);
-
         xin_close_all_files();
         __sys_input_remove_user_handlers();
 
-        putchar_color('|', OUTPUT_COLOR_SET(black, green));
-
-        xprintf("0x%x 0x%x", input_module_handlers_get()[0].options.type);
-
         puts("\n>");
+
         if (app_exited)
             app_exited = false;
 

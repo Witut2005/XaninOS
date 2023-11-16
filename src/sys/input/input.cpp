@@ -26,9 +26,15 @@ extern "C"
         auto ObjectsToHandle = std::find(KeyboardModuleObservedObjects.begin(), KeyboardModuleObservedObjects.end(), [](const auto &a)
                                          { return a.valid(); });
 
+        bool break_code = is_break_code(KeyboardDriverKeyInfo->scan_code);
+
         for (auto &it : ObjectsToHandle)
-            if (!((*it).Options.ignore_break_codes & is_break_code(KeyboardDriverKeyInfo->scan_code)))
-                memcpy((uint8_t *)it.pointer()->KeyInfo, (uint8_t *)KeyboardDriverKeyInfo, SIZE_OF(KeyboardModuleObservedObject));
+        {
+            if (!((*it).Options.ignore_break_codes & break_code))
+            {
+                memcpy((uint8_t *)it.pointer()->KeyInfo, (uint8_t *)KeyboardDriverKeyInfo, SIZE_OF(key_info_t));
+            }
+        }
     }
 
     void __input_init(void)
