@@ -10,7 +10,7 @@ extern "C"
 #endif
 
     InputHandler *input_module_handlers_get();
-    bool __input_add_object_to_observe(const key_info_t *const KeyInfoToObserve, KeyboardModuleObservedObjectOptions Options);
+    bool __input_add_object_to_observe(KeyboardModuleObservedObject Object);
     bool __input_remove_object_from_observe(const key_info_t *const KeyInfoToRemove);
     void __input_handle_observed_objects(const key_info_t *const KeyboardDriverKeyInfo);
 

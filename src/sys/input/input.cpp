@@ -36,7 +36,7 @@ extern "C"
         memset((uint8_t *)&KeyboardModuleObservedObjects, 0, sizeof(KeyboardModuleObservedObjects));
     }
 
-    bool __input_add_object_to_observe(const key_info_t *const KeyInfoToObserve, KeyboardModuleObservedObjectOptions Options)
+    bool __input_add_object_to_observe(KeyboardModuleObservedObject Object)
     {
         auto ObjectInserted = find_first(KeyboardModuleObservedObjects.begin(), KeyboardModuleObservedObjects.end(), [](const auto &a)
                                          { return !a.valid(); });
@@ -44,8 +44,7 @@ extern "C"
         if (!ObjectInserted.valid())
             return false;
 
-        KeyboardModuleObservedObject obj = {(key_info_t *)(KeyInfoToObserve), Options};
-        *ObjectInserted = obj;
+        *ObjectInserted = Object;
 
         return true;
     }

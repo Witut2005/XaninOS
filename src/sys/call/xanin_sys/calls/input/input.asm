@@ -32,7 +32,6 @@ ret
 __sys_input_add_object_to_observe:
 mov eax, XANIN_INPUT_ADD_OBJECT_TO_OBSERVE
 ESP_GET_NTH_ARGUMENT ecx, 1
-ESP_GET_NTH_ARGUMENT edx, 2
 XANIN_INVOKE_SYSTEM_CALL
 ret
 

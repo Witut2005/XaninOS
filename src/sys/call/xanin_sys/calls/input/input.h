@@ -15,19 +15,31 @@ extern "C"
         return scan_code >= 0x80;
     }
 
-    static inline InputHandlerOptions __input_handler_options_create(uint8_t **args, bool type)
+    static inline KeyboardModuleObservedObjectOptions input_observed_object_options_create(bool ignore_break_codes)
+    {
+        KeyboardModuleObservedObjectOptions obj = {ignore_break_codes};
+        return obj;
+    }
+
+    static inline KeyboardModuleObservedObject input_observed_object_create(key_info_t *KeyboardInfo, KeyboardModuleObservedObjectOptions Options)
+    {
+        KeyboardModuleObservedObject obj = {KeyboardInfo, Options};
+        return obj;
+    }
+
+    static inline InputHandlerOptions input_handler_options_create(uint8_t **args, bool type)
     {
         InputHandlerOptions options = {args, type};
         return options;
     }
 
-    static inline InputHandler __input_handler_create(input_handler_t handler, InputHandlerOptions options)
+    static inline InputHandler input_handler_create(input_handler_t handler, InputHandlerOptions options)
     {
         InputHandler obj = {handler, options};
         return obj;
     }
 
-    bool __sys_input_add_object_to_observe(const key_info_t *const KeyInfoToObserve, KeyboardModuleObservedObjectOptions Options);
+    bool __sys_input_add_object_to_observe(KeyboardModuleObservedObject Object);
     bool __sys_input_remove_object_from_observe(const key_info_t *const KeyInfoToRemove);
     void __sys_input_handle_observed_objects(const key_info_t *const KeyboardDriverKeyInfo);
 

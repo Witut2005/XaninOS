@@ -22,10 +22,9 @@ int timer_test(void)
     canvas_screen_clear();
     key_info_t k;
 
-    KeyboardModuleObservedObjectOptions Options = {true};
-    __sys_input_add_object_to_observe(&k, Options);
+    __sys_input_add_object_to_observe(input_observed_object_create(&k, input_observed_object_options_create(true)));
 
-    InputHandler tmp = __input_handler_create(timer_handler, __input_handler_options_create(NULL, USER_INPUT_HANDLER));
+    InputHandler tmp = input_handler_create(timer_handler, input_handler_options_create(NULL, USER_INPUT_HANDLER));
     __sys_input_add_handler(&tmp);
 
     canvas_xprintf("nicho: 0x%x\n", timer_handler);
