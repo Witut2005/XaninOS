@@ -28,7 +28,6 @@ extern int screenshot(void);
 
 void keyboard_driver_shift_remap_keys(void)
 {
-
     if (KeyInfo.is_shift)
     {
         KEYBOARD_DRIVER_KEY_REMAP('-', '_');
@@ -89,70 +88,12 @@ void keyboard_driver(void)
         KeyInfo.is_shift = false;
         break;
     }
-    case BSPC:
-    {
-        KeyInfo.is_bspc = true;
-        break;
-    }
-    case BSPC_RELEASE:
-    {
-        KeyInfo.is_bspc = false;
-        break;
-    }
-
     case CAPS:
     {
         KeyInfo.is_caps = KeyInfo.is_caps ? false : true;
         break;
     }
 
-    case ARROW_UP:
-    {
-        KeyInfo.is_up = true;
-        KeyInfo.character = 0x0;
-        break;
-    }
-    case ARROW_UP_RELEASE:
-    {
-        KeyInfo.is_up = false;
-        break;
-    }
-
-    case ARROW_DOWN:
-    {
-        KeyInfo.is_down = true;
-        KeyInfo.character = 0x0;
-        break;
-    }
-    case ARROW_DOWN_RELEASE:
-    {
-        KeyInfo.is_down = false;
-        break;
-    }
-
-    case ARROW_RIGHT:
-    {
-        KeyInfo.is_right = true;
-        KeyInfo.character = 0x0;
-        break;
-    }
-    case ARROW_RIGHT_RELEASE:
-    {
-        KeyInfo.is_right = false;
-        break;
-    }
-
-    case ARROW_LEFT:
-    {
-        KeyInfo.is_left = true;
-        KeyInfo.character = 0x0;
-        break;
-    }
-    case ARROW_LEFT_RELEASE:
-    {
-        KeyInfo.is_left = false;
-        break;
-    }
     case PRINT_SCREEN_KEY:
     {
         int x_tmp = Screen.x, y_tmp = Screen.y;
