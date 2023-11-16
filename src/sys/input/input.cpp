@@ -10,8 +10,8 @@
 
 key_info_t KeyInfo = {0};
 
-std::array<KeyboardModuleObservedObject, 100> KeyboardModuleObservedObjects;
-std::array<InputHandler, 100> InputModuleHandlers;
+static std::array<KeyboardModuleObservedObject, 100> KeyboardModuleObservedObjects;
+static std::array<InputHandler, 100> InputModuleHandlers;
 
 extern "C"
 {
@@ -49,8 +49,7 @@ extern "C"
 
     bool __input_remove_object_from_observe(const key_info_t *const KeyInfoToRemove)
     {
-        auto ObjectsToRemove = std::find(KeyboardModuleObservedObjects.begin(), KeyboardModuleObservedObjects.end(),
-                                         [=](auto a)
+        auto ObjectsToRemove = std::find(KeyboardModuleObservedObjects.begin(), KeyboardModuleObservedObjects.end(), [=](auto a)
                                          { return a.pointer()->KeyInfo == KeyInfoToRemove; });
 
         if (!ObjectsToRemove.size())
@@ -64,29 +63,23 @@ extern "C"
 
     bool __input_add_handler(InputHandler Handler)
     {
+        auto HandlersToAdd = std::find_first(InputModuleHandlers.begin(), InputModuleHandlers.end(), [](auto &a)
+                                             { return a.pointer()->handler == NULL; });
 
-        int index = -1;
+        if (!HandlersToAdd.valid())
+            return false;
 
-        for (int i = 0; i < InputModuleHandlers.size(); i++)
-        {
-            if (InputModuleHandlers[i].handler == NULL)
-                index = i;
-        }
-
-        if (index == -1)
-            return -1;
-
-        InputModuleHandlers[index] = Handler;
-        return 0;
+        memcpy((uint8_t *)HandlersToAdd.pointer(), (uint8_t *)&Handler, SIZE_OF(InputHandler));
+        return true;
     }
 
     void __input_call_handlers(key_info_t KeyboardDriverKeyInfo)
     {
-        for (int i = 0; i < InputModuleHandlers.size(); i++)
-        {
-            if (InputModuleHandlers[i].handler != NULL)
-                InputModuleHandlers[i].handler(KeyboardDriverKeyInfo, InputModuleHandlers[i].options.args);
-        }
+        auto HandlersToCall = std::find(InputModuleHandlers.begin(), InputModuleHandlers.end(), [](auto &a)
+                                        { return a.pointer()->handler != NULL; });
+
+        for (auto &a : HandlersToCall)
+            a.pointer()->handler(KeyboardDriverKeyInfo, a.pointer()->options.args);
     }
 
     bool __input_remove_handler(const input_handler_t Handler)
@@ -98,20 +91,20 @@ extern "C"
             return false;
 
         for (auto &a : HandlersToRemove)
-            memset((uint8_t *)a.pointer(), (uint8_t)NULL, SIZE_OF(input_handler_t));
+            memset((uint8_t *)a.pointer(), (uint8_t)NULL, SIZE_OF(InputHandler));
         return true;
     }
 
     bool __input_remove_user_handlers(void)
     {
-        auto HandlersToRemove = std::find(InputModuleHandlers.begin(), InputModuleHandlers.end(), [=](auto &a)
+        auto HandlersToRemove = std::find(InputModuleHandlers.begin(), InputModuleHandlers.end(), [](auto &a)
                                           { return a.pointer()->options.type == USER_INPUT_HANDLER; });
 
         if (!HandlersToRemove.size())
             return false;
 
         for (auto &a : HandlersToRemove)
-            memset((uint8_t *)a.pointer(), (uint8_t)NULL, SIZE_OF(input_handler_t));
+            memset((uint8_t *)a.pointer(), (uint8_t)NULL, SIZE_OF(InputHandler));
 
         return true;
     }

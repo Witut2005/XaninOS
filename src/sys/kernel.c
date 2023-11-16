@@ -114,7 +114,7 @@ void kernel_loop(void)
         app_exited = false;
 
         xin_close_all_files();
-        __input_remove_user_handlers();
+        __sys_input_remove_user_handlers();
 
         if (app_exited)
             app_exited = false;

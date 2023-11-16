@@ -3,6 +3,7 @@
 #include <sys/call/xanin_sys/ids/xanin_syscalls.h>
 #include <lib/libc/stdlibx.h>
 #include <lib/libc/stdiox.h>
+#include <lib/libc/canvas.h>
 #include <lib/libc/memory.h>
 
 #include <sys/devices/hda/disk.h>
@@ -158,10 +159,7 @@ uint32_t xanin_sys_handle(void)
 
     case XANIN_INPUT_ADD_OBJECT_TO_OBSERVE:
     {
-        KeyboardModuleObservedObjectOptions Options;
-        memcpy((uint8_t *)&Options, (uint8_t *)&edx, SIZE_OF(KeyboardModuleObservedObjectOptions));
-
-        __input_add_object_to_observe((const key_info_t *const)ecx, Options);
+        __input_add_object_to_observe((const key_info_t *const)ecx, *(KeyboardModuleObservedObjectOptions *)&edx);
         break;
     }
 
@@ -179,19 +177,16 @@ uint32_t xanin_sys_handle(void)
 
     case XANIN_INPUT_ADD_HANDLER:
     {
-        InputHandler Handler;
-        memcpy((uint8_t *)&Handler, (uint8_t *)&edx, SIZE_OF(InputHandler));
+        input_handler_t tmp = *(input_handler_t *)&ecx;
 
-        __input_add_handler(Handler);
+        canvas_xprintf("nicho: 0x%x\n", tmp);
+        __input_add_handler(*(InputHandler *)&ecx);
         break;
     }
 
     case XANIN_INPUT_REMOVE_HANDLER:
     {
-        input_handler_t Handler;
-        memcpy((uint8_t *)&Handler, (uint8_t *)&edx, SIZE_OF(input_handler_t));
-
-        __input_remove_handler(Handler);
+        __input_remove_handler(*(input_handler_t *)&ecx);
         break;
     }
 
@@ -203,10 +198,7 @@ uint32_t xanin_sys_handle(void)
 
     case XANIN_INPUT_CALL_HANDLERS:
     {
-        key_info_t KeyboardDriverKeyInfo;
-        memcpy((uint8_t *)&KeyboardDriverKeyInfo, (uint8_t *)&edx, SIZE_OF(key_info_t));
-
-        __input_call_handlers(KeyboardDriverKeyInfo);
+        __input_call_handlers(*(key_info_t *)&ecx);
         break;
     }
 

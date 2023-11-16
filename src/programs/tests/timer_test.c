@@ -24,9 +24,12 @@ int timer_test(void)
 
     KeyboardModuleObservedObjectOptions Options = {true};
     __sys_input_add_object_to_observe(&k, Options);
+
     __sys_input_add_handler(__input_handler_create(timer_handler, __input_handler_options_create(NULL, USER_INPUT_HANDLER)));
 
+    canvas_xprintf("nicho: 0x%x\n", timer_handler);
     canvas_xprintf("Press 'a' to start...");
+
     while (getchar() != 'a')
         ;
 
