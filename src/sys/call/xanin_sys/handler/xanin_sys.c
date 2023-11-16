@@ -24,7 +24,6 @@ stdio_mode_t stdio_current_mode;
 uint32_t xanin_sys_handle(void)
 {
     uint32_t eax, ecx, edx, ebx; //, esi, edi;
-    interrupt_enable();
 
     asm(
         "mov %0, eax;"
@@ -35,6 +34,7 @@ uint32_t xanin_sys_handle(void)
         :
         : "ecx", "edx", "ebx");
 
+    interrupt_enable();
     // xprintf("eax: %d ", eax);
 
     switch (eax)
@@ -143,14 +143,6 @@ uint32_t xanin_sys_handle(void)
         break;
     }
 
-        // case XANIN_INPUT_GET:
-        // {
-        //     // ECX = KeyInfo Buf
-        //     *(xchar*)ecx = inputg();
-        //     xprintf("ecx 0x%x\n", ecx);
-        //     break;
-        // }
-
     case XANIN_KEYINFO_GET:
     {
         *(key_info_t *)ecx = __keyinfo_get();
@@ -177,16 +169,13 @@ uint32_t xanin_sys_handle(void)
 
     case XANIN_INPUT_ADD_HANDLER:
     {
-        input_handler_t tmp = *(input_handler_t *)&ecx;
-
-        canvas_xprintf("nicho: 0x%x\n", tmp);
-        __input_add_handler(*(InputHandler *)&ecx);
+        __input_add_handler((const InputHandler *const)ecx);
         break;
     }
 
     case XANIN_INPUT_REMOVE_HANDLER:
     {
-        __input_remove_handler(*(input_handler_t *)&ecx);
+        __input_remove_handler(*((input_handler_t *)&ecx));
         break;
     }
 
@@ -198,7 +187,7 @@ uint32_t xanin_sys_handle(void)
 
     case XANIN_INPUT_CALL_HANDLERS:
     {
-        __input_call_handlers(*(key_info_t *)&ecx);
+        __input_call_handlers(*((key_info_t *)&ecx));
         break;
     }
 

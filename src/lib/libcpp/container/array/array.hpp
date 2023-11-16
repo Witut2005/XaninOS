@@ -168,7 +168,7 @@ namespace std
     template <class T, int SIZE>
     array<T, SIZE>::array()
     {
-        memset((uint8_t *)this->ptr, 0, sizeof(T) * this->size());
+        memset((uint8_t *)this->ptr, 0, SIZE_OF(T) * SIZE);
     }
 
     template <class T, int SIZE>

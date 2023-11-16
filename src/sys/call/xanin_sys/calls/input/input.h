@@ -31,7 +31,7 @@ extern "C"
     bool __sys_input_remove_object_from_observe(const key_info_t *const KeyInfoToRemove);
     void __sys_input_handle_observed_objects(const key_info_t *const KeyboardDriverKeyInfo);
 
-    bool __sys_input_add_handler(InputHandler Handler);
+    bool __sys_input_add_handler(const InputHandler *const Handler);
     bool __sys_input_remove_handler(const input_handler_t Handler);
     bool __sys_input_remove_user_handlers(void);
     void __sys_input_call_handlers(key_info_t KeyboardDriverKeyInfo);

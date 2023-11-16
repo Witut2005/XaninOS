@@ -16,10 +16,14 @@ static std::array<InputHandler, 100> InputModuleHandlers;
 extern "C"
 {
 
+    InputHandler *input_module_handlers_get()
+    {
+        return InputModuleHandlers.begin().pointer();
+    }
+
     void __input_handle_observed_objects(const key_info_t *const KeyboardDriverKeyInfo)
     {
-        auto ObjectsToHandle = std::find(KeyboardModuleObservedObjects.begin(), KeyboardModuleObservedObjects.end(),
-                                         [](const auto &a)
+        auto ObjectsToHandle = std::find(KeyboardModuleObservedObjects.begin(), KeyboardModuleObservedObjects.end(), [](const auto &a)
                                          { return a.valid(); });
 
         for (auto &it : ObjectsToHandle)
@@ -34,8 +38,7 @@ extern "C"
 
     bool __input_add_object_to_observe(const key_info_t *const KeyInfoToObserve, KeyboardModuleObservedObjectOptions Options)
     {
-        auto ObjectInserted = find_first(KeyboardModuleObservedObjects.begin(), KeyboardModuleObservedObjects.end(),
-                                         [](const auto &a)
+        auto ObjectInserted = find_first(KeyboardModuleObservedObjects.begin(), KeyboardModuleObservedObjects.end(), [](const auto &a)
                                          { return !a.valid(); });
 
         if (!ObjectInserted.valid())
@@ -61,15 +64,15 @@ extern "C"
         return true;
     }
 
-    bool __input_add_handler(InputHandler Handler)
+    bool __input_add_handler(const InputHandler *const Handler)
     {
-        auto HandlersToAdd = std::find_first(InputModuleHandlers.begin(), InputModuleHandlers.end(), [](auto &a)
-                                             { return a.pointer()->handler == NULL; });
+        auto HandlerToAdd = std::find_first(InputModuleHandlers.begin(), InputModuleHandlers.end(), [](auto &a)
+                                            { return a.pointer()->handler == NULL; });
 
-        if (!HandlersToAdd.valid())
+        if (!HandlerToAdd.valid())
             return false;
 
-        memcpy((uint8_t *)HandlersToAdd.pointer(), (uint8_t *)&Handler, SIZE_OF(InputHandler));
+        memcpy((uint8_t *)HandlerToAdd.pointer(), (uint8_t *)Handler, SIZE_OF(InputHandler));
         return true;
     }
 

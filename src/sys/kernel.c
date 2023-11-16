@@ -109,13 +109,18 @@ void kernel_loop(void)
         for (int i = 0; xin_current_directory[i + 1] != '\0'; i++)
             xprintf("%z%c", OUTPUT_COLOR_SET(black, lblue), xin_current_directory[i]);
 
-        puts(">");
-
         app_exited = false;
+
+        xprintf("0x%x 0x%x", input_module_handlers_get()[0].options.type);
 
         xin_close_all_files();
         __sys_input_remove_user_handlers();
 
+        putchar_color('|', OUTPUT_COLOR_SET(black, green));
+
+        xprintf("0x%x 0x%x", input_module_handlers_get()[0].options.type);
+
+        puts("\n>");
         if (app_exited)
             app_exited = false;
 
