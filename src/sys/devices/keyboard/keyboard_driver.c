@@ -72,7 +72,7 @@ void keyboard_driver(void)
 
     if (!SpecialKeyPressed)
     {
-        if (KeyInfo.scan_code == 0xE0)
+        if (KeyInfo.scan_code == KEYBOARD_SPECIAL_KEYS_PREFIX)
         {
             SpecialKeyPressed = true;
             keyboard_driver_clean_up();
@@ -85,13 +85,20 @@ void keyboard_driver(void)
     // xprintf("%d ", SpecialKeyPressed);
     if (SpecialKeyPressed)
     {
-        KeyInfo.keys_pressed[KeyInfo.scan_code] = true;
+        if (!is_break_code(KeyInfo.scan_code))
+            KeyInfo.special_keys_pressed[KeyInfo.scan_code] = true;
+        else
+            KeyInfo.special_keys_pressed[KeyInfo.scan_code - KEYBOARD_KEYS_BREAK_CODES_OFFSET] = false;
+
         SpecialKeyPressed = false;
     }
 
     else
     {
-        KeyInfo.special_keys_pressed[KeyInfo.scan_code] = true;
+        if (!is_break_code(KeyInfo.scan_code))
+            KeyInfo.keys_pressed[KeyInfo.scan_code] = true;
+        else
+            KeyInfo.keys_pressed[KeyInfo.scan_code - KEYBOARD_KEYS_BREAK_CODES_OFFSET] = false;
     }
 
     KeyInfo.is_pressed = true;

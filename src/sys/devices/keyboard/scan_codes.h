@@ -57,6 +57,7 @@ enum special_keys
 
 };
 
+#define KEYBOARD_KEYS_BREAK_CODES_OFFSET 0x80
 // KBP = keyboard press
 // KBP = keyboard release
 enum KEYBOARD_NORMAL_KEYS_MAKE_CODES
@@ -240,6 +241,7 @@ enum KEYBOARD_NORMAL_KEYS_BRAKE_CODES
 };
 
 // special keys have 0xE0 prefix
+#define KEYBOARD_SPECIAL_KEYS_PREFIX 0xE0
 
 // KBSP = keyboard special press
 // KBSP = keyboard special release
