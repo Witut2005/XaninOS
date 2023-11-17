@@ -23,6 +23,9 @@ struct key_info_t
     bool is_alt;
 
     bool is_pressed;
+
+    bool keys_pressed[0x80];
+    bool special_keys_pressed[0x80];
 };
 
 typedef struct key_info_t key_info_t;

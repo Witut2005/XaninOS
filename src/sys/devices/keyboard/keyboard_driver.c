@@ -55,14 +55,47 @@ void keyboard_driver_shift_remap_keys(void)
     }
 }
 
+static bool SpecialKeyPressed;
+
+static inline void keyboard_driver_clean_up(void)
+{
+    eoi_send();
+    interrupt_enable();
+}
+
 void keyboard_driver(void)
 {
 
     interrupt_disable();
     KeyInfo.scan_code = inbIO(KEYBOARD_DATA_REG);
-    KeyInfo.character = keyboard_map[KeyInfo.scan_code];
+    // xprintf("%x ", KeyInfo.scan_code);
+
+    if (!SpecialKeyPressed)
+    {
+        if (KeyInfo.scan_code == 0xE0)
+        {
+            SpecialKeyPressed = true;
+            keyboard_driver_clean_up();
+            return;
+        }
+        else
+            SpecialKeyPressed = false;
+    }
+
+    // xprintf("%d ", SpecialKeyPressed);
+    if (SpecialKeyPressed)
+    {
+        KeyInfo.keys_pressed[KeyInfo.scan_code] = true;
+        SpecialKeyPressed = false;
+    }
+
+    else
+    {
+        KeyInfo.special_keys_pressed[KeyInfo.scan_code] = true;
+    }
 
     KeyInfo.is_pressed = true;
+    KeyInfo.character = keyboard_map[KeyInfo.scan_code];
 
     switch (KeyInfo.scan_code)
     {
