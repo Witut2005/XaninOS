@@ -88,7 +88,7 @@ void stdio_refresh(address_t *args)
 
 static inline void is_nicho(key_info_t key, uint8_t **args)
 {
-    xprintf("%s", __sys_is_special_key_pressed(KBSP_RIGHT_ALT) ? "true" : "false");
+    xprintf("%s", __sys_is_normal_key_pressed(KBP_0) ? "true" : "false");
 }
 
 void kernel_loop(void)
