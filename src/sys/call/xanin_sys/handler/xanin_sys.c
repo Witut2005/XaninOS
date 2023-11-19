@@ -161,6 +161,18 @@ uint32_t xanin_sys_handle(void)
         break;
     }
 
+    case XANIN_INPUT_CHARACTER_MAPPER_SET:
+    {
+        __input_character_mapper_set((char (*)(uint8_t))ecx);
+        break;
+    }
+
+    case XANIN_INPUT_CHARACTER_MAPPER_CALL:
+    {
+        __input_character_mapper_call(ecx);
+        break;
+    }
+
     case XANIN_INPUT_ADD_OBJECT_TO_OBSERVE:
     {
         __input_add_object_to_observe(*(KeyboardModuleObservedObject *)&ecx);

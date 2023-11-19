@@ -3,6 +3,7 @@
 %include "./sys/call/xanin_sys/calls/input/ids.inc"
 
 global __sys_getchar, __sys_getscan, __sys_inputg, __sys_getxchar, __sys_keyinfo_get
+global __sys_input_character_mapper_set, __sys_input_character_mapper_call
 global __sys_is_normal_key_pressed, __sys_is_special_key_pressed
 global __sys_input_add_object_to_observe, __sys_input_remove_object_from_observe, __sys_input_handle_observed_objects
 global __sys_input_add_handler, __sys_input_remove_handler, __sys_input_remove_user_handlers, __sys_input_call_handlers
@@ -39,6 +40,18 @@ ret
 
 __sys_is_special_key_pressed:;void __sys_keyinfo_get(key_info_t* ptr)
 mov eax, XANIN_IS_SPECIAL_KEY_PRESSED;keyinfo_get syscall id
+ESP_GET_NTH_ARGUMENT ecx, 1
+XANIN_INVOKE_SYSTEM_CALL
+ret
+
+__sys_input_character_mapper_set:
+mov eax, XANIN_INPUT_CHARACTER_MAPPER_SET;keyinfo_get syscall id
+ESP_GET_NTH_ARGUMENT ecx, 1
+XANIN_INVOKE_SYSTEM_CALL
+ret
+
+__sys_input_character_mapper_call:
+mov eax, XANIN_INPUT_CHARACTER_MAPPER_CALL;keyinfo_get syscall id
 ESP_GET_NTH_ARGUMENT ecx, 1
 XANIN_INVOKE_SYSTEM_CALL
 ret

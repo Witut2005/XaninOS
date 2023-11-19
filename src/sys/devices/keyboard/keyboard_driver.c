@@ -138,7 +138,8 @@ void keyboard_driver(void)
     {
         int x_tmp = Screen.x, y_tmp = Screen.y;
         screenshot();
-        eoi_send();
+        keyboard_driver_clean_up();
+
         KeyInfo.character = 0x0;
         Screen.x = x_tmp;
         Screen.y = y_tmp;
@@ -231,7 +232,7 @@ void keyboard_driver(void)
     __input_handle_observed_objects(&KeyInfo);
 
     // we need to set interrupts
-    eoi_send();
+    keyboard_driver_clean_up();
 
     __input_call_handlers(KeyInfo);
 

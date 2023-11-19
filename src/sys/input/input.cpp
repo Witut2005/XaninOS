@@ -13,8 +13,20 @@ key_info_t KeyInfo = {0};
 static std::array<KeyboardModuleObservedObject, 100> KeyboardModuleObservedObjects;
 static std::array<InputHandler, 100> InputModuleHandlers;
 
+static char (*input_character_mapper)(uint8_t scan_code);
+
 extern "C"
 {
+
+    void __input_character_mapper_set(char (*mapper)(uint8_t scan_code))
+    {
+        input_character_mapper = mapper;
+    }
+
+    char __input_character_mapper_call(uint8_t scan_code)
+    {
+        return input_character_mapper(scan_code);
+    }
 
     InputHandler *input_module_handlers_get()
     {

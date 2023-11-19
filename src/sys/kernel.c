@@ -86,18 +86,18 @@ void stdio_refresh(address_t *args)
         __sys_xtb_flush(__sys_vty_get());
 }
 
-static inline void is_nicho(key_info_t key, uint8_t **args)
-{
-    xprintf("%s", __sys_is_normal_key_pressed(KBP_0) ? "true" : "false");
-}
+// static inline void is_nicho(key_info_t key, uint8_t **args)
+// {
+//     xprintf("%s", __sys_is_normal_key_pressed(KBP_0) ? "true" : "false");
+// }
 
 void kernel_loop(void)
 {
     while (1)
     {
 
-        InputHandler TmpHandler = input_handler_create(is_nicho, input_handler_options_create(NULL, KERNEL_INPUT_HANDLER));
-        __input_add_handler(&TmpHandler);
+        // InputHandler TmpHandler = input_handler_create(is_nicho, input_handler_options_create(NULL, KERNEL_INPUT_HANDLER));
+        // __input_add_handler(&TmpHandler);
 
         xtb_enable_flushing();
         stdio_mode_set(STDIO_MODE_TERMINAL);
@@ -113,17 +113,17 @@ void kernel_loop(void)
         // screen_clear();
         time_get(&SystemTime);
 
-        puts("\n");
+        putchar('\n');
 
         for (int i = 0; xin_current_directory[i + 1] != '\0'; i++)
             xprintf("%z%c", OUTPUT_COLOR_SET(black, lblue), xin_current_directory[i]);
+
+        putchar('>');
 
         app_exited = false;
 
         xin_close_all_files();
         __sys_input_remove_user_handlers();
-
-        puts("\n>");
 
         if (app_exited)
             app_exited = false;

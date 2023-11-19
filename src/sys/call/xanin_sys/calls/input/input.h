@@ -47,6 +47,8 @@ extern "C"
     void __sys_keyinfo_get(key_info_t *);
     bool __sys_is_normal_key_pressed(uint8_t scan_code);
     bool __sys_is_special_key_pressed(uint8_t scan_code);
+    char __sys_input_character_mapper_set(char (*mapper)(uint8_t));
+    char __sys_input_character_mapper_call(void);
 
     bool __sys_input_add_object_to_observe(KeyboardModuleObservedObject Object);
     bool __sys_input_remove_object_from_observe(const key_info_t *const KeyInfoToRemove);

@@ -9,6 +9,9 @@ extern "C"
 {
 #endif
 
+    void __input_character_mapper_set(char (*mapper)(uint8_t scan_code));
+    char __input_character_mapper_call(uint8_t scan_code);
+
     InputHandler *input_module_handlers_get();
     bool __input_add_object_to_observe(KeyboardModuleObservedObject Object);
     bool __input_remove_object_from_observe(const key_info_t *const KeyInfoToRemove);
