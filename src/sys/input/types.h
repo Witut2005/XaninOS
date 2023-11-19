@@ -28,7 +28,7 @@ struct InputHandlerOptions
 };
 
 typedef struct InputHandlerOptions InputHandlerOptions;
-typedef bool (*input_handler_t)(key_info_t, uint8_t **);
+typedef void (*input_handler_t)(key_info_t, uint8_t **);
 
 struct InputHandler
 {

@@ -41,6 +41,7 @@
 #include <sys/macros.h>
 #include <lib/libc/stdiox_legacy.h>
 #include <fs/xin_syscalls.h>
+#include <sys/call/xanin_sys/calls/input/input.h>
 #include <sys/init/kernel_init.h>
 
 extern void v86_mode_enter(void);
@@ -85,10 +86,18 @@ void stdio_refresh(address_t *args)
         __sys_xtb_flush(__sys_vty_get());
 }
 
+static inline void is_nicho(key_info_t key, uint8_t **args)
+{
+    xprintf("%s", __sys_is_special_key_pressed(KBSP_RIGHT_ALT) ? "true" : "false");
+}
+
 void kernel_loop(void)
 {
     while (1)
     {
+
+        InputHandler TmpHandler = input_handler_create(is_nicho, input_handler_options_create(NULL, KERNEL_INPUT_HANDLER));
+        __input_add_handler(&TmpHandler);
 
         xtb_enable_flushing();
         stdio_mode_set(STDIO_MODE_TERMINAL);

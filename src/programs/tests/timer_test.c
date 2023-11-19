@@ -4,11 +4,10 @@
 #include <lib/libc/stdlibx.h>
 #include <sys/input/input.h>
 
-static bool timer_handler(key_info_t ki, uint8_t **a)
+static void timer_handler(key_info_t ki, uint8_t **a)
 {
     if (ki.scan_code == ENTER)
         exit();
-    return true;
 }
 
 // CANVAS_APP

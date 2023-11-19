@@ -149,6 +149,18 @@ uint32_t xanin_sys_handle(void)
         break;
     }
 
+    case XANIN_IS_NORMAL_KEY_PRESSED:
+    {
+        eax = KeyInfo.keys_pressed[ecx];
+        break;
+    }
+
+    case XANIN_IS_SPECIAL_KEY_PRESSED:
+    {
+        eax = KeyInfo.special_keys_pressed[ecx];
+        break;
+    }
+
     case XANIN_INPUT_ADD_OBJECT_TO_OBSERVE:
     {
         __input_add_object_to_observe(*(KeyboardModuleObservedObject *)&ecx);
