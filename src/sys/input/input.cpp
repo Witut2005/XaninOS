@@ -43,9 +43,7 @@ extern "C"
         for (auto &it : ObjectsToHandle)
         {
             if (!((*it).Options.ignore_break_codes & break_code))
-            {
                 memcpy((uint8_t *)it.pointer()->KeyInfo, (uint8_t *)KeyboardDriverKeyInfo, SIZE_OF(key_info_t));
-            }
         }
     }
 

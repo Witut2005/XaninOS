@@ -111,7 +111,9 @@ uint32_t xanin_sys_handle(void)
     {
         // ECX = PTR
         // xprintf("0x%x\n", ecx);
+        interrupt_disable();
         mmngr_block_free(USER_HEAP, (void *)ecx);
+        interrupt_enable();
         break;
     }
 
