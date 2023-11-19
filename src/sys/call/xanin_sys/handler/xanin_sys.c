@@ -165,7 +165,7 @@ uint32_t xanin_sys_handle(void)
 
     case XANIN_INPUT_CHARACTER_MAPPER_SET:
     {
-        __input_character_mapper_set((char (*)(uint8_t))ecx);
+        __input_character_mapper_set((void (*)(uint8_t))ecx);
         break;
     }
 
