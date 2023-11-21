@@ -106,7 +106,7 @@ void keyboard_driver(void)
     if (keyboard_handle != NULL)
         keyboard_handle();
 
-    __input_character_mapper_call(KeyInfo.scan_code);
+    __input_scan_code_mapper_call(KeyInfo.scan_code);
 
     __input_handle_observed_objects(&KeyInfo);
 

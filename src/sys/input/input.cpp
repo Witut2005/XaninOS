@@ -173,12 +173,12 @@ extern "C"
             KeyInfo.character = '\0';
     }
 
-    void __input_character_mapper_set(void (*mapper)(uint8_t scan_code))
+    void __input_scan_code_mapper_set(void (*mapper)(uint8_t scan_code))
     {
         input_character_mapper = mapper;
     }
 
-    void __input_character_mapper_call(uint8_t scan_code)
+    void __input_scan_code_mapper_call(uint8_t scan_code)
     {
         return input_character_mapper(scan_code);
     }

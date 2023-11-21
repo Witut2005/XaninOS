@@ -36,3 +36,14 @@ struct InputHandler
     InputHandlerOptions options;
 };
 typedef struct InputHandler InputHandler;
+
+typedef void (*input_scan_code_mapper_handler_t)(void);
+
+struct InputScanCodeMapperHandlers
+{
+    input_scan_code_mapper_handler_t prtsc;
+    // input_scan_code_mapper_handler_t shift;
+    // input_scan_code_mapper_handler_t alt;
+};
+
+typedef struct InputScanCodeMapperHandlers InputScanCodeMapperHandlers;
