@@ -8,6 +8,7 @@ global __sys_is_normal_key_pressed, __sys_is_special_key_pressed
 global __sys_input_add_object_to_observe, __sys_input_remove_object_from_observe, __sys_input_handle_observed_objects
 global __sys_input_add_handler, __sys_input_remove_handler, __sys_input_remove_user_handlers, __sys_input_call_handlers
 
+global __sys_input_prtsc_handler_set
 
 __sys_getchar:              ;char getchar(void)
 mov eax, XANIN_GETCHAR                ;getchar syscall id
@@ -96,5 +97,12 @@ mov eax, XANIN_INPUT_CALL_HANDLERS
 ESP_GET_NTH_ARGUMENT ecx, 1
 XANIN_INVOKE_SYSTEM_CALL
 ret
+
+global __sys_input_prtsc_handler_set
+mov eax, XANIN_INPUT_PRTSC_HANDLER_SET
+ESP_GET_NTH_ARGUMENT ecx, 1
+XANIN_INVOKE_SYSTEM_CALL
+ret
+
 
 

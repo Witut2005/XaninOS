@@ -60,6 +60,8 @@ extern "C"
     bool __sys_input_remove_user_handlers(void);
     void __sys_input_call_handlers(key_info_t KeyboardDriverKeyInfo);
 
+    void __sys_input_prtsc_handler_set(void);
+
 #ifdef __cplusplus
 }
 #endif
