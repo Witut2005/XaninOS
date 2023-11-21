@@ -313,6 +313,8 @@ void kernel_init(void)
                               ioapic_id_get());
 
     __input_scan_code_mapper_set(xanin_default_character_mapper);
+    __input_prtsc_handler_set(__input_default_prtsc_handler);
+
     set_pit(apic_pit_redirect != NULL ? apic_pit_redirect->global_system_int_table + APIC_IRQ_BASE : PIC_PIT_VECTOR);
     keyboard_init(apic_keyboard_redirect != NULL ? apic_keyboard_redirect->global_system_int_table + APIC_IRQ_BASE : PIC_KEYBOARD_VECTOR);
     i8254x_init(apic_nic_redirect != NULL ? apic_nic_redirect->global_system_int_table + APIC_IRQ_BASE : PIC_NIC_VECTOR);

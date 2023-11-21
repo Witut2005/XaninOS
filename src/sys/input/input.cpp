@@ -15,9 +15,28 @@ static std::array<KeyboardModuleObservedObject, 100> KeyboardModuleObservedObjec
 static std::array<InputHandler, 100> InputModuleHandlers;
 
 static void (*input_character_mapper)(uint8_t scan_code);
+static InputScanCodeMapperHandlers XaninScanCodeMapperHandlers;
+
+extern "C" int screenshot(void);
 
 extern "C"
 {
+
+    void __input_default_prtsc_handler(void)
+    {
+        int x_tmp = Screen.x, y_tmp = Screen.y;
+        screenshot();
+
+        KeyInfo.character = 0x0;
+        Screen.x = x_tmp;
+        Screen.y = y_tmp;
+    }
+
+    void __input_prtsc_handler_set(input_scan_code_mapper_handler_t handler)
+    {
+        XaninScanCodeMapperHandlers.prtsc = handler;
+    }
+
 #define KEYBOARD_DRIVER_KEY_REMAP(from, to) \
     if (KeyInfo.character == from)          \
     KeyInfo.character = to
@@ -59,14 +78,7 @@ extern "C"
 
         case PRINT_SCREEN_KEY:
         {
-            // int x_tmp = Screen.x, y_tmp = Screen.y;
-            // screenshot();
-            // keyboard_driver_clean_up();
-
-            // KeyInfo.character = 0x0;
-            // Screen.x = x_tmp;
-            // Screen.y = y_tmp;
-
+            XaninScanCodeMapperHandlers.prtsc();
             break;
         }
 

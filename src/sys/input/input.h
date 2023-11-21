@@ -9,6 +9,8 @@ extern "C"
 {
 #endif
 
+    void __input_default_prtsc_handler(void);
+    void __input_prtsc_handler_set(input_scan_code_mapper_handler_t handler);
     void xanin_default_character_mapper(uint8_t scan_code);
     void __input_scan_code_mapper_set(void (*mapper)(uint8_t scan_code));
     void __input_scan_code_mapper_call(uint8_t scan_code);
