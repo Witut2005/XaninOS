@@ -61,9 +61,8 @@ void edit_input(xchar Input, XinEntry *File, EditInfo *EditState)
     if (int_to_sectors(File->FileInfo->tmp_size) > EditState->number_of_sectors)
     {
         EditState->number_of_sectors++;
-        // EditState->program_buffer = File->FileInfo->buffer = realloc(File->FileInfo->buffer, EditState->number_of_sectors * SECTOR_SIZE);
         // bug should be realloc
-        EditState->program_buffer = krealloc(EditState->program_buffer, EditState->number_of_sectors * SECTOR_SIZE);
+        EditState->program_buffer = File->FileInfo->buffer = realloc(File->FileInfo->buffer, EditState->number_of_sectors * SECTOR_SIZE);
     }
 
     if (KeyInfo.is_ctrl == true)

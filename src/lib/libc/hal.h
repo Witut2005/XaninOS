@@ -3,33 +3,71 @@
 
 #include <stdint.h>
 
+struct EFlags
+{
+    union
+    {
+        uint32_t flags;
+        struct
+        {
+            uint8_t cf : 1;
+            uint8_t resv1 : 1;
+            uint8_t pf : 1;
+            uint8_t resv2 : 1;
+            uint8_t af : 1;
+            uint8_t resv3 : 1;
+            uint8_t zf : 1;
+            uint8_t sf : 1;
+            uint8_t tf : 1;
+            uint8_t intf : 1;
+            uint8_t df : 1;
+            uint8_t of : 1;
+            uint8_t iopl : 2;
+            uint8_t nt : 1;
+            uint8_t md : 1;
+            uint8_t rf : 1;
+            uint8_t vm : 1;
+            uint8_t ac : 1;
+            uint8_t vif : 1;
+            uint8_t vip : 1;
+            uint8_t id : 1;
+            uint8_t resv4 : 8;
+            uint8_t none : 1;
+            uint8_t ai : 1;
+        };
+    };
+} __attribute__((packed));
+
+typedef struct EFlags EFlags;
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
-void outbIO(uint16_t port,uint8_t al);
-void outwIO(uint16_t port,uint16_t ax);
-void outdIO(uint16_t port,uint32_t eax);
-void interrupt_disable(void);
-void interrupt_enable(void);
-uint8_t inbIO(uint16_t port);
-uint16_t inwIO(uint16_t port);
-uint32_t indIO(uint16_t port);
-void enable_cursor(uint8_t cursor_start, uint8_t cursor_end);
-void disable_cursor(void);
-void update_cursor(uint32_t x, uint32_t y);
-uint16_t get_cursor_position(void);
-void eoi_send(void);
-void io_wait(void);
-void real_mode_enter(uint16_t segment, uint16_t offset, uint32_t return_address);
-void real_mode_enter_no_return(uint16_t segment, uint16_t offset);
-void rdmsr(uint32_t msr_id, uint32_t low, uint32_t high);
-void wrmsr(uint32_t msr_id, uint32_t low, uint32_t high);
-void pic_mask_set(uint16_t port, uint8_t value);
-void pic_disable(void);
-void sse_enable(void);
-void pic_mode_disable(void);
+    EFlags eflags_get(void);
+    void outbIO(uint16_t port, uint8_t al);
+    void outwIO(uint16_t port, uint16_t ax);
+    void outdIO(uint16_t port, uint32_t eax);
+    void interrupt_disable(void);
+    void interrupt_enable(void);
+    uint8_t inbIO(uint16_t port);
+    uint16_t inwIO(uint16_t port);
+    uint32_t indIO(uint16_t port);
+    void enable_cursor(uint8_t cursor_start, uint8_t cursor_end);
+    void disable_cursor(void);
+    void update_cursor(uint32_t x, uint32_t y);
+    uint16_t get_cursor_position(void);
+    void eoi_send(void);
+    void io_wait(void);
+    void real_mode_enter(uint16_t segment, uint16_t offset, uint32_t return_address);
+    void real_mode_enter_no_return(uint16_t segment, uint16_t offset);
+    void rdmsr(uint32_t msr_id, uint32_t low, uint32_t high);
+    void wrmsr(uint32_t msr_id, uint32_t low, uint32_t high);
+    void pic_mask_set(uint16_t port, uint8_t value);
+    void pic_disable(void);
+    void sse_enable(void);
+    void pic_mode_disable(void);
 
 #ifdef __cplusplus
 }
@@ -75,4 +113,3 @@ static inline void cpu_halt(void)
     asm("cli");
     asm("hlt");
 }
-
