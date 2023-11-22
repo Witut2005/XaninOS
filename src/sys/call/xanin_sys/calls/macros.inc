@@ -12,4 +12,5 @@
 
 %macro XANIN_INVOKE_SYSTEM_CALL 0
 int 0x81
+sti
 %endmacro

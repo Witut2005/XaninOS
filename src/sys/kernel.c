@@ -312,8 +312,8 @@ void kernel_init(void)
                                   0x0 << APIC_DELIVERY_MODE | 0x0 << APIC_DESTINATION_MODE | 0x0 << APIC_INT_PIN_POLARITY | 0x0 << APIC_INT_MASK,
                               ioapic_id_get());
 
+    // COS NIE DZIALA SYSCALL
     __input_scan_code_mapper_set(xanin_default_character_mapper);
-    __input_prtsc_handler_set(__input_default_prtsc_handler);
 
     set_pit(apic_pit_redirect != NULL ? apic_pit_redirect->global_system_int_table + APIC_IRQ_BASE : PIC_PIT_VECTOR);
     keyboard_init(apic_keyboard_redirect != NULL ? apic_keyboard_redirect->global_system_int_table + APIC_IRQ_BASE : PIC_KEYBOARD_VECTOR);
@@ -377,6 +377,9 @@ void kernel_start(void)
 
     kernel_init();
     kernel_execute_init_array_section(&XaninInitArrayInfo);
+
+    // PUT ALL CPP MODULES AFTER EXECUTING INIT ARRAY
+    __sys_input_prtsc_handler_set(__input_default_prtsc_handler);
 
     interrupt_enable();
 

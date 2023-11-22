@@ -217,6 +217,12 @@ uint32_t xanin_sys_handle(void)
         break;
     }
 
+    case XANIN_INPUT_PRTSC_HANDLER_SET:
+    {
+        __input_prtsc_handler_set((input_scan_code_mapper_handler_t)ecx);
+        break;
+    }
+
     case XANIN_DISK_READ:
     {
         // ECX = sector_id, EDX = how_many, EBX = where to load

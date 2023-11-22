@@ -10,6 +10,12 @@ global __sys_input_add_handler, __sys_input_remove_handler, __sys_input_remove_u
 
 global __sys_input_prtsc_handler_set
 
+__sys_input_prtsc_handler_set:
+mov eax, XANIN_INPUT_PRTSC_HANDLER_SET
+ESP_GET_NTH_ARGUMENT ecx, 1
+XANIN_INVOKE_SYSTEM_CALL
+ret
+
 __sys_getchar:              ;char getchar(void)
 mov eax, XANIN_GETCHAR                ;getchar syscall id
 XANIN_INVOKE_SYSTEM_CALL
@@ -33,26 +39,26 @@ ESP_GET_NTH_ARGUMENT ecx, 1
 XANIN_INVOKE_SYSTEM_CALL
 ret
 
-__sys_is_normal_key_pressed:;void __sys_keyinfo_get(key_info_t* ptr)
-mov eax, XANIN_IS_NORMAL_KEY_PRESSED;keyinfo_get syscall id
+__sys_is_normal_key_pressed:
+mov eax, XANIN_IS_NORMAL_KEY_PRESSED
 ESP_GET_NTH_ARGUMENT ecx, 1
 XANIN_INVOKE_SYSTEM_CALL
 ret
 
-__sys_is_special_key_pressed:;void __sys_keyinfo_get(key_info_t* ptr)
-mov eax, XANIN_IS_SPECIAL_KEY_PRESSED;keyinfo_get syscall id
+__sys_is_special_key_pressed:
+mov eax, XANIN_IS_SPECIAL_KEY_PRESSED
 ESP_GET_NTH_ARGUMENT ecx, 1
 XANIN_INVOKE_SYSTEM_CALL
 ret
 
 __sys_input_character_mapper_set:
-mov eax, XANIN_INPUT_CHARACTER_MAPPER_SET;keyinfo_get syscall id
+mov eax, XANIN_INPUT_CHARACTER_MAPPER_SET
 ESP_GET_NTH_ARGUMENT ecx, 1
 XANIN_INVOKE_SYSTEM_CALL
 ret
 
 __sys_input_character_mapper_call:
-mov eax, XANIN_INPUT_CHARACTER_MAPPER_CALL;keyinfo_get syscall id
+mov eax, XANIN_INPUT_CHARACTER_MAPPER_CALL
 ESP_GET_NTH_ARGUMENT ecx, 1
 XANIN_INVOKE_SYSTEM_CALL
 ret
@@ -97,12 +103,3 @@ mov eax, XANIN_INPUT_CALL_HANDLERS
 ESP_GET_NTH_ARGUMENT ecx, 1
 XANIN_INVOKE_SYSTEM_CALL
 ret
-
-global __sys_input_prtsc_handler_set
-mov eax, XANIN_INPUT_PRTSC_HANDLER_SET
-ESP_GET_NTH_ARGUMENT ecx, 1
-XANIN_INVOKE_SYSTEM_CALL
-ret
-
-
-
