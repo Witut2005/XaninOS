@@ -14,6 +14,8 @@ extern "C"
     void xanin_default_character_mapper(uint8_t scan_code);
     void __input_scan_code_mapper_set(void (*mapper)(uint8_t scan_code));
     void __input_scan_code_mapper_call(uint8_t scan_code);
+    bool __input_is_normal_key_pressed(uint8_t scan_code);
+    bool __input_is_special_key_pressed(uint8_t scan_code);
 
     InputHandler *input_module_handlers_get();
     bool __input_add_object_to_observe(KeyboardModuleObservedObject Object);

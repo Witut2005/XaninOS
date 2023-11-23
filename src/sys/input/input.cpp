@@ -195,6 +195,16 @@ extern "C"
         return input_character_mapper(scan_code);
     }
 
+    bool __input_is_normal_key_pressed(uint8_t scan_code)
+    {
+        return KeyInfo.keys_pressed[scan_code];
+    }
+
+    bool __input_is_special_key_pressed(uint8_t scan_code)
+    {
+        return KeyInfo.special_keys_pressed[scan_code];
+    }
+
     InputHandler *input_module_handlers_get()
     {
         return InputModuleHandlers.begin().pointer();

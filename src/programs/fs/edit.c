@@ -65,7 +65,7 @@ void edit_input(xchar Input, XinEntry *File, EditInfo *EditState)
         EditState->program_buffer = File->FileInfo->buffer = realloc(File->FileInfo->buffer, EditState->number_of_sectors * SECTOR_SIZE);
     }
 
-    if (KeyInfo.is_ctrl == true)
+    if (__input_is_normal_key_pressed(KBP_LEFT_CONTROL) | __input_is_normal_key_pressed(KBSP_RIGHT_CONTROL))
     {
         if (Input.character == '$')
         {
@@ -84,7 +84,7 @@ void edit_input(xchar Input, XinEntry *File, EditInfo *EditState)
         }
     }
 
-    else if (Input.scan_code == ENTER)
+    else if (__input_is_normal_key_pressed(KBP_ENTER))
     {
         char *tmp = (char *)calloc(strlen(EditState->program_buffer)) + 1;
         memcpy(tmp, EditState->program_buffer, strlen(EditState->program_buffer) + 1);
@@ -111,7 +111,7 @@ void edit_input(xchar Input, XinEntry *File, EditInfo *EditState)
         }
     }
 
-    else if (Input.scan_code == TAB_KEY)
+    else if (__input_is_normal_key_pressed(KBP_TAB))
     {
         char *tmp = (char *)calloc(strlen(EditState->program_buffer)) + 3;
         memcpy(tmp, EditState->program_buffer, strlen(EditState->program_buffer) + 3);
@@ -130,7 +130,7 @@ void edit_input(xchar Input, XinEntry *File, EditInfo *EditState)
         EditState->cursor = EditState->cursor + 3;
     }
 
-    else if (Input.scan_code == BSPC)
+    else if (__input_is_normal_key_pressed(KBP_BACKSPACE))
     {
         if (!EditState->file_position)
             return;
@@ -157,7 +157,8 @@ void edit_input(xchar Input, XinEntry *File, EditInfo *EditState)
         EditState->file_position--;
     }
 
-    else if (Input.scan_code == ARROW_LEFT)
+    // else if (Input.scan_code == ARROW_LEFT)
+    else if (__input_is_special_key_pressed(KBSP_ARROW_LEFT))
     {
 
         if (!EditState->file_position)
@@ -179,7 +180,7 @@ void edit_input(xchar Input, XinEntry *File, EditInfo *EditState)
         EditState->file_position--;
     }
 
-    else if (Input.scan_code == ARROW_RIGHT)
+    else if (__input_is_special_key_pressed(KBSP_ARROW_RIGHT))
     {
 
         if (EditState->program_buffer[EditState->file_position] != '\0')
@@ -201,7 +202,7 @@ void edit_input(xchar Input, XinEntry *File, EditInfo *EditState)
         }
     }
 
-    else if (Input.scan_code == ARROW_UP)
+    else if (__input_is_special_key_pressed(KBSP_ARROW_UP))
     {
 
         if (!EditState->current_line)
@@ -223,18 +224,16 @@ void edit_input(xchar Input, XinEntry *File, EditInfo *EditState)
         EditState->current_line--;
     }
 
-    else if (Input.scan_code == ARROW_DOWN)
+    else if (__input_is_special_key_pressed(KBSP_ARROW_DOWN))
     {
 
-        {
-            int i = EditState->file_position;
-            for (; EditState->program_buffer[i] != '\n' && EditState->program_buffer[i] != '\0'; i++)
-                ;
-            if (EditState->program_buffer[i] == '\0')
-                return;
-            if (i >= strlen(EditState->program_buffer))
-                return;
-        }
+        int i = EditState->file_position;
+        for (; EditState->program_buffer[i] != '\n' && EditState->program_buffer[i] != '\0'; i++)
+            ;
+        if (EditState->program_buffer[i] == '\0')
+            return;
+        if (i >= strlen(EditState->program_buffer))
+            return;
 
         EditState->current_line++;
 
@@ -247,9 +246,6 @@ void edit_input(xchar Input, XinEntry *File, EditInfo *EditState)
             EditState->file_position++;
         EditState->file_position++;
     }
-
-    else if (Input.scan_code == F4_KEY || Input.scan_code == F4_KEY_RELEASE || Input.scan_code == ESC)
-        return;
 
     else if (Input.character != '\0')
     {
@@ -312,7 +308,7 @@ int edit(char *file_name)
 
     CURSOR_SELECT_MODE_SET(&EditState);
 
-    while (KeyInfo.scan_code != F4_KEY && KeyInfo.scan_code != F4_KEY_RELEASE && KeyInfo.scan_code != ESC)
+    while (!__input_is_normal_key_pressed(KBP_F4))
     {
         edit_input(getxchar(), file, &EditState);
         EditState.begin_of_current_text = &EditState.program_buffer[edit_get_begin_of_printed_text(&EditState)];
