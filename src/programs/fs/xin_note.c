@@ -14,7 +14,7 @@
 void note_input(xchar x)
 {
 
-    if (KeyInfo.scan_code == F4_KEY || KeyInfo.scan_code == ESC)
+    if (__input_is_normal_key_pressed(KBP_F4) | __input_is_normal_key_pressed(KBP_ESCAPE))
         app_exited = true;
 
     else if (x.scan_code == BSPC)
@@ -138,7 +138,7 @@ int xin_note(char *file_name)
     if (xin_file == NULL)
     {
         canvas_xprintf("Could not open file: %s\n", file_name);
-        while (KeyInfo.scan_code != ENTER)
+        while (!__input_is_normal_key_pressed(KBP_ENTER))
             ;
         return XANIN_ERROR;
     }
