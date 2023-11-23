@@ -30,11 +30,7 @@ void hexeditor_letters_refresh(void)
 
 void hexeditor_input(xchar UserInput)
 {
-
-    if (UserInput.scan_code == F4_KEY || UserInput.scan_code == ESC)
-        exit();
-
-    else if (UserInput.scan_code == ARROW_UP)
+    if (UserInput.scan_code == ARROW_UP)
     {
 
         Screen.cursor[Screen.y][Screen.x] = (uint16_t)((char)(Screen.cursor[Screen.y][Screen.x]) | (((black << 4) | white) << 8));
@@ -145,14 +141,14 @@ void hexeditor_input(xchar UserInput)
             if (Screen.cursor[Screen.y][Screen.x + 1] == (uint16_t)(' ' | (((black << 4) | white) << 8)))
             {
                 data_pointer[data_pointer_position] &= 0xF0;
-                tmp = KeyInfo.character - 'a' + 0xa;
+                tmp = UserInput.character - 'a' + 0xa;
                 data_pointer[data_pointer_position] += tmp;
             }
 
             else
             {
                 data_pointer[data_pointer_position] &= 0x0F;
-                tmp = ((KeyInfo.character - 'a' + 0xa) << 4);
+                tmp = ((UserInput.character - 'a' + 0xa) << 4);
                 data_pointer[data_pointer_position] += tmp;
             }
 
@@ -161,19 +157,18 @@ void hexeditor_input(xchar UserInput)
 
         else if (UserInput.character >= '0' && UserInput.character <= '9')
         {
-            data_pointer[data_pointer_position] = 0x33;
             if (Screen.cursor[Screen.y][Screen.x + 1] == (uint16_t)(' ' | (((black << 4) | white) << 8)))
             {
 
                 data_pointer[data_pointer_position] &= 0xF0;
-                tmp = KeyInfo.character - '0';
+                tmp = UserInput.character - '0';
                 data_pointer[data_pointer_position] = data_pointer[data_pointer_position] + tmp;
             }
 
             else
             {
                 data_pointer[data_pointer_position] &= 0x0F;
-                tmp = ((KeyInfo.character - '0') << 4);
+                tmp = ((UserInput.character - '0') << 4);
                 data_pointer[data_pointer_position] = data_pointer[data_pointer_position] + tmp;
             }
 
@@ -202,6 +197,8 @@ int hexeditor(char *file_name, char *options)
 {
 
     stdio_mode_set(STDIO_MODE_CANVAS);
+    canvas_screen_clear();
+
     data_pointer = (char *)NULL;
     data_pointer_position = 0;
     tmp = 0;
@@ -216,14 +213,13 @@ int hexeditor(char *file_name, char *options)
     if (file == NULL)
     {
         canvas_xprintf("Can't open file %s\n", file_name);
-        while (KeyInfo.scan_code != ENTER)
+        while (__input_is_normal_key_pressed(KBP_ENTER))
             ;
+
         return XANIN_ERROR;
     }
 
     data_pointer = (char *)calloc(VGA_SCREEN_RESOLUTION);
-
-    canvas_screen_clear();
 
     fseek(file, hexeditor_offset);
     fread(file, data_pointer, VGA_SCREEN_RESOLUTION);
@@ -244,7 +240,7 @@ int hexeditor(char *file_name, char *options)
     Screen.x = 0;
     Screen.y = 0;
 
-    while (1)
+    while (!__input_is_normal_key_pressed(KBP_F4))
         hexeditor_input(getxchar());
 
     fseek(file, hexeditor_offset);
