@@ -15,11 +15,11 @@ bool stdio_legacy_canvas_is_buffer_full(void)
     return (Screen.y + (Screen.x / VGA_WIDTH)) >= VGA_HEIGHT;
 }
 
-bool stdio_legacy_cell_put(char character, uint8_t color, uint8_t* y, uint8_t* x)
+bool stdio_legacy_cell_put(char character, uint8_t color, uint8_t y, uint8_t x)
 {
-    if((*x >= VGA_WIDTH) || (*y >= VGA_HEIGHT))
+    if((x >= VGA_WIDTH) || (y >= VGA_HEIGHT))
         return false;
-    Screen.cursor[*y][*x] = character | (color << 8);
+    Screen.cursor[y][x] = character | (color << 8);
 
     return true;
 }
