@@ -1,6 +1,4 @@
 
-
-#include "./pong.h"
 #include <lib/libc/stdlibx.h>
 #include <lib/libc/stdiox.h>
 #include <lib/libc/time.h>
@@ -11,23 +9,38 @@
 
 //CANVAS_APP
 
-void pong_get_input(void)
+#define PONG_SIZE_Y 6
+
+static uint16_t* pong1[6];
+static uint16_t* pong2[6];
+
+static uint8_t pong1_y = 0;
+static uint8_t pong2_y = 0;
+
+static uint16_t* ball;
+
+static int ball_direction = 1;
+static int ball_vector = 1;
+
+static uint8_t player1_input = 0, player2_input = 0;
+static uint8_t player1_points = 0, player2_points = 0;
+
+static inline void pong_get_input(key_info_t KeyboardInfo, uint8_t** args)
 {
-    if(KeyInfo.character == 'w' || KeyInfo.character == 's')
-        player1_input = KeyInfo.character;
+    if((KeyboardInfo.scan_code == KBP_W) | (KeyboardInfo.scan_code == KBP_S))
+        player1_input = KeyboardInfo.scan_code;
 
-    else if(KeyInfo.scan_code == ARROW_UP || KeyInfo.character == 'p')
-        player2_input = 'p';
+    else if((KeyboardInfo.scan_code == KBP_P) | (KeyboardInfo.scan_code == KBSP_ARROW_UP))
+        player2_input = KeyboardInfo.scan_code;
 
-    else if(KeyInfo.scan_code == ARROW_DOWN || KeyInfo.character == 'l')
-        player2_input = 'l';
+    else if((KeyboardInfo.scan_code == KBP_L) | (KeyboardInfo.scan_code == KBSP_ARROW_DOWN))
+        player2_input = KeyboardInfo.scan_code;
         
 }
 
-void player1_get_input(void)
+static inline void player1_position_update(void)
 {
-    
-    if(player1_input == 'w')
+    if(player1_input == KBP_W)
     {
         if(pong1_y == 1)
             return;
@@ -42,10 +55,9 @@ void player1_get_input(void)
             pong1[i] = &Screen.cursor[pong1_y + i][5];
             *pong1[i] = (uint16_t) (' ' + (((lgray << 4) | lgray) << 8));
         }
-
     }
 
-    else if(player1_input == 's')
+    else if(player1_input == KBP_S)
     {
         if(pong1_y == VGA_HEIGHT - PONG_SIZE_Y - 1)
             return;
@@ -63,11 +75,10 @@ void player1_get_input(void)
     }
 }
 
-
-void player2_get_input(void)
+static inline void player2_position_update(void)
 {
 
-    if(player2_input == 'p')
+    if((player2_input == KBP_P) | (player2_input == KBSP_ARROW_UP))
     {
 
         if(pong2_y == 1)
@@ -85,7 +96,7 @@ void player2_get_input(void)
         }
     }
     
-    else if(player2_input == 'l')
+    else if((player2_input == KBP_L) | (player2_input == KBSP_ARROW_DOWN))
     {
         if(pong2_y == VGA_HEIGHT - PONG_SIZE_Y - 1)
             return;
@@ -93,7 +104,6 @@ void player2_get_input(void)
         for(int i = 0; i < 6; i++)
             *pong2[i] = (uint16_t) ('\0');
         
-
         pong2_y++;
 
         for(int i = 0; i < 6; i++)
@@ -105,26 +115,51 @@ void player2_get_input(void)
 
 }
 
-void result_screen(char* str)
+static inline void result_screen(char* str)
 {
-
-    player1_points = 0;
-    player2_points = 0;
-
-    player1_input = 0;
-    player2_input = 0;
+    player1_points = player2_points =  0;
+    player1_input = player2_input = 0;
 
     canvas_screen_clear();
-    Screen.x = 33;
-    Screen.y = 12;
-    xprintf("%s wins", str);
+    stdio_canvas_move_to_x(33);
+    stdio_canvas_move_to_y(12);
+
+    canvas_xprintf("%s wins", str);
     
-    while(KeyInfo.scan_code != ENTER);
+    while(!__input_is_normal_key_pressed(KBP_ENTER));
 }
 
-void ball_update(void)
+static inline void pong_default_state_restore(void)
 {
- 
+    player1_input = player2_input = 0;
+
+    canvas_screen_clear();
+
+    draw_line_x(0,79,0,lgreen);
+    draw_line_x(0,79,VGA_HEIGHT - 1,lgreen);
+
+    draw_line_y(0,VGA_HEIGHT - 1,0,green);
+    draw_line_y(0,VGA_HEIGHT - 1,79,green);
+
+    for(int i = 0; i < 6; i++)
+    {
+        pong1[i] = &Screen.cursor[10 + i][5];
+        *pong1[i] = (uint16_t) (' ' + (((lgray << 4) | lgray) << 8));
+
+        pong2[i] = &Screen.cursor[10 + i][74];
+        *pong2[i] = (uint16_t) (' ' + (((lgray << 4) | lgray) << 8));
+
+    }
+    
+    pong1_y = pong2_y = 10;
+    ball = &Screen.cursor[10][39];
+
+    *ball = (' ' + (((white << 4) | white) << 8));
+}
+
+
+static inline void ball_update(void)
+{
     *ball = '\0';
     ball = ball + ball_direction;     
     ball = ball + (80 * ball_vector);
@@ -144,110 +179,70 @@ void ball_update(void)
     if(!(rand() % 4))
         ball = ball + ball_direction;
 
-
     if(*(ball + 80) == (uint16_t)('\0' + (((lgreen << 4) | lgreen) << 8)))
         ball_vector = ball_vector * - 1;
     
-    if(*(ball - 80) == (uint16_t)('\0' + (((lgreen << 4) | lgreen) << 8)))
+    else if(*(ball - 80) == (uint16_t)('\0' + (((lgreen << 4) | lgreen) << 8)))
         ball_vector = ball_vector * - 1;
 
     *ball = (' ' + (((white << 4) | white) << 8));
-
 
     if(*(ball + 1) == (uint16_t)('\0' + (((green << 4) | green) << 8)))
     {
         player1_points++;
-        pong_init();
+        pong_default_state_restore();
     }
 
-    if(*(ball - 1) == (uint16_t)('\0' + (((green << 4) | green) << 8)))
+    else if(*(ball - 1) == (uint16_t)('\0' + (((green << 4) | green) << 8)))
     {
         player2_points++;
-        pong_init();
+        pong_default_state_restore();
     }
 }
 
-void pong_init(void)
+static inline void players_position_update(void)
 {
-
-
-    player1_input = 0;
-    player2_input = 0;
-
-    canvas_screen_clear();
-
-    draw_line_x(0,79,0,lgreen);
-    draw_line_x(0,79,VGA_HEIGHT - 1,lgreen);
-
-    draw_line_y(0,VGA_HEIGHT - 1,0,green);
-    draw_line_y(0,VGA_HEIGHT - 1,79,green);
-
-    keyboard_handle = pong_get_input;
-
-    for(int i = 0; i < 6; i++)
-    {
-        pong1[i] = &Screen.cursor[10 + i][5];
-        *pong1[i] = (uint16_t) (' ' + (((lgray << 4) | lgray) << 8));
-
-        pong2[i] = &Screen.cursor[10 + i][74];
-        *pong2[i] = (uint16_t) (' ' + (((lgray << 4) | lgray) << 8));
-
-    }
-    
-    pong1_y = 10;
-    pong2_y = 10;
-    ball = &Screen.cursor[10][39];
-
-    *ball = (' ' + (((white << 4) | white) << 8));
-
+    player1_position_update();
+    player2_position_update();
 }
-
-
-
-
 
 void pong_update(void)
 {
-
-    pong_get_input();
-    player1_get_input();
-    player2_get_input();
+    players_position_update();
     ball_update();
 
     msleep(75);
 
-    if(KeyInfo.character == 'r')    
+    if(__input_is_normal_key_pressed(KBP_R))    
     {
         player1_points = 0;
         player2_points = 0;
-        pong_init();
+        pong_default_state_restore();
     }
-        
 }
-
-
 
 int pong(void)
 {
     stdio_mode_set(STDIO_MODE_CANVAS);
-    pong_init();
+    pong_default_state_restore();
 
-    while(KeyInfo.scan_code != ESC && KeyInfo.scan_code != ENTER && KeyInfo.scan_code != F4_KEY && app_exited != true)
+    InputHandler PongHandler = input_handler_create(pong_get_input, input_handler_options_create(NULL, USER_INPUT_HANDLER));
+    __input_add_handler(&PongHandler);
+
+    while(!__input_is_normal_key_pressed(KBP_F4))
     { 
         pong_update();
         if(player1_points == 5)
         {
             result_screen("LEFT PLAYER");
-            pong_init();
+            pong_default_state_restore();
         }
 
         else if(player2_points == 5)
         {
             result_screen("RIGHT PLAYER");
-            pong_init();
-            
+            pong_default_state_restore();
         }
     }
     return XANIN_OK;
-
 }

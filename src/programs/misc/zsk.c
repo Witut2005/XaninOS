@@ -59,7 +59,7 @@ int zsk(char* delay_str)
 
     zsk_init();
 
-    while(KeyInfo.scan_code != ENTER)
+    while(!__input_is_normal_key_pressed(KBP_F4))
         zsk_move(delay);
 
     app_exited = true;
