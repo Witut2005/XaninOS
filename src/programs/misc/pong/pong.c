@@ -19,6 +19,9 @@
 #define PONG_MIN_Y_POSITION 1
 #define PONG_MAX_Y_POSITION (VGA_HEIGHT - PONG_SIZE_Y - 1)
 
+#define PONG_CELL ((uint16_t)(' ' + (((lgray << 4) | lgray) << 8)))
+#define WALL_CELL ((uint16_t)('\0' + (((green << 4) | green) << 8)))
+
 static uint8_t pong1_y = 0;
 static uint8_t pong2_y = 0;
 
@@ -60,14 +63,12 @@ static inline void pong_get_input(key_info_t KeyboardInfo, uint8_t** args)
 static inline void player1_position_update(void)
 {
 
-    for(int i = 0; i < PONG_SIZE_Y; i++)   
-        stdio_canvas_cell_put(BLANK_SCREEN_CELL, 0, pong1_y + i, PONG1_X);
+    uint8_t pong1_y_tmp = pong1_y;
 
     if(player1_input == KBP_W)
     {
         if(pong1_y == PONG_MIN_Y_POSITION)
             return;
-        
         pong1_y--;
     }
 
@@ -75,9 +76,11 @@ static inline void player1_position_update(void)
     {
         if(pong1_y == VGA_HEIGHT - PONG_SIZE_Y - 1)
             return;
-
         pong1_y++;
     }
+
+    for(int i = 0; i < PONG_SIZE_Y; i++)   
+        stdio_canvas_cell_put(BLANK_SCREEN_CELL, 0, pong1_y_tmp + i, PONG1_X);
 
     for(int i = 0; i < PONG_SIZE_Y; i++)
         stdio_canvas_cell_put(' ', OUTPUT_COLOR_SET(lgray, lgray), pong1_y + i, PONG1_X);
@@ -85,15 +88,12 @@ static inline void player1_position_update(void)
 
 static inline void player2_position_update(void)
 {
-
-    for(int i = 0; i < PONG_SIZE_Y; i++)   
-        stdio_canvas_cell_put(BLANK_SCREEN_CELL, 0, pong2_y + i, PONG2_X);
+    uint8_t pong2_y_tmp = pong2_y;
 
     if((player2_input == KBP_P) | (player2_input == KBSP_ARROW_UP))
     {
         if(pong2_y == PONG_MIN_Y_POSITION)
             return;
-        
         pong2_y--;
     }
 
@@ -101,9 +101,11 @@ static inline void player2_position_update(void)
     {
         if(pong2_y == VGA_HEIGHT - PONG_SIZE_Y - 1)
             return;
-
         pong2_y++;
     }
+
+    for(int i = 0; i < PONG_SIZE_Y; i++)   
+        stdio_canvas_cell_put(BLANK_SCREEN_CELL, 0, pong2_y_tmp + i, PONG2_X);
 
     for(int i = 0; i < PONG_SIZE_Y; i++)
         stdio_canvas_cell_put(' ', OUTPUT_COLOR_SET(lgray, lgray), pong2_y + i, PONG2_X);
@@ -151,79 +153,46 @@ static inline void pong_default_state_restore(void)
 
 static inline void ball_update(void)
 {
+    stdio_canvas_cell_put(BLANK_SCREEN_CELL, 0, Ball.y, Ball.x);
 
-}
+    Ball.x += ball_direction;
+    Ball.y += ball_vector;
 
-// static inline void ball_update(void)
-// {
-//     *ball = '\0';
-//     ball = ball + ball_direction;     
-//     ball = ball + (80 * ball_vector);
+    stdio_canvas_cell_put(player1_points + '0', OUTPUT_COLOR_SET(black, white), 3, 25);
+    stdio_canvas_cell_put(player2_points + '0', OUTPUT_COLOR_SET(black, white), 3, 54);
 
-//     stdio_canvas_cell_put('\0', 0, &Ball.y, &Ball.x);
-//     Ball.x += ball_direction;
-//     Ball.y += ball_vector;
+    if(!(rand() % 4))
+        Ball.x += ball_direction;
 
-//     PairUInt8 Player1PointsDisplayPosition = {3, 25};
-//     stdio_canvas_cell_put(player1_points + '0', OUTPUT_COLOR_SET(black, white), &Player1PointsDisplayPosition.first, &Player1PointsDisplayPosition.second);
+    if(stdio_canvas_cell_background_color_compare(Ball.y, Ball.x, lgray) | 
+        stdio_canvas_cell_background_color_compare(Ball.y, Ball.x + ball_direction, lgray))
+    {
+        ball_direction = ball_direction * -1;
+    }
 
-//     PairUInt8 Player2PointsDisplayPosition = {3, 54};
-//     stdio_canvas_cell_put(player1_points + '0', OUTPUT_COLOR_SET(black, white), &Player2PointsDisplayPosition.first, &Player2PointsDisplayPosition.second);
+    if(stdio_canvas_cell_background_color_compare(Ball.y + 1, Ball.x, lgreen) | 
+        stdio_canvas_cell_background_color_compare(Ball.y - 1, Ball.x, lgreen))
+    {
+        ball_vector = ball_vector * -1; 
+    }
 
-//     PairUInt8 NichoX1 = {0, 24};
-//     stdio_canvas_cell_put(Ball.x / 10 + '0', OUTPUT_COLOR_SET(black, white), &NichoX1.first, &NichoX1.second);
+    if(stdio_canvas_cell_background_color_compare(Ball.y, Ball.x, green) | 
+        stdio_canvas_cell_background_color_compare(Ball.y, Ball.x + ball_direction, green))
+    {
+        if(ball_direction == 1)
+            player1_points++;
+        else
+            player2_points++;
+        pong_default_state_restore();
+    }
 
-//     PairUInt8 NichoX = {0, 25};
-//     stdio_canvas_cell_put(Ball.x % 10+ '0', OUTPUT_COLOR_SET(black, white), &NichoX.first, &NichoX.second);
-
-//     PairUInt8 NichoY1 = {0, 54};
-//     stdio_canvas_cell_put(Ball.y / 10 + '0', OUTPUT_COLOR_SET(black, white), &NichoY1.first, &NichoY1.second);
-
-//     PairUInt8 NichoY = {0, 55};
-//     stdio_canvas_cell_put(Ball.y % 10+ '0', OUTPUT_COLOR_SET(black, white), &NichoY.first, &NichoY.second);
-
-//     if(*(ball + ball_direction) == (uint16_t)(' ' + (((lgray << 4) | lgray) << 8)))
-//         ball_direction = ball_direction * -1;
-        
-//     if(*ball == (uint16_t)(' ' + (((lgray << 4) | lgray) << 8)))
-//     {
-//         ball = ball - (1 * ball_direction);      
-//         ball_direction = ball_direction * -1; 
-//     }
-
-//     if(!(rand() % 4))
-//         ball = ball + ball_direction;
-
-//     if(*(ball + 80) == (uint16_t)('\0' + (((lgreen << 4) | lgreen) << 8)))
-//         ball_vector = ball_vector * - 1;
-    
-//     else if(*(ball - 80) == (uint16_t)('\0' + (((lgreen << 4) | lgreen) << 8)))
-//         ball_vector = ball_vector * - 1;
-
-//     *ball = (' ' + (((white << 4) | white) << 8));
-
-//     if(*(ball + 1) == (uint16_t)('\0' + (((green << 4) | green) << 8)))
-//     {
-//         player1_points++;
-//         pong_default_state_restore();
-//     }
-
-//     else if(*(ball - 1) == (uint16_t)('\0' + (((green << 4) | green) << 8)))
-//     {
-//         player2_points++;
-//         pong_default_state_restore();
-//     }
-// }
-
-static inline void players_position_update(void)
-{
-    player1_position_update();
-    player2_position_update();
+    stdio_canvas_cell_put(' ', OUTPUT_COLOR_SET(lgray, lgray), Ball.y, Ball.x);
 }
 
 void pong_update(void)
 {
-    players_position_update();
+    player1_position_update();
+    player2_position_update();
     ball_update();
 
     msleep(75);

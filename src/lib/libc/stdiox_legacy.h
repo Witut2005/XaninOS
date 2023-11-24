@@ -9,6 +9,12 @@
 extern "C" {
 #endif
 
+
+bool stdio_legacy_cell_compare(uint8_t y, uint8_t x, vga_screen_cell_t color);
+bool stdio_legacy_cell_color_compare(uint8_t y, uint8_t x, color_t color);
+bool stdio_legacy_cell_foreground_color_compare(uint8_t y, uint8_t x, color_t fcolor);
+bool stdio_legacy_cell_background_color_compare(uint8_t y, uint8_t x, color_t bcolor);
+
 bool stdio_legacy_canvas_is_buffer_full(void);
 bool stdio_legacy_cell_put(char character, uint8_t color, uint8_t y, uint8_t x); // czy interpretowac
 bool stdio_legacy_cell_put_with_interpretation(char character, uint8_t color, uint8_t* y, uint8_t* x); // czy interpretowac
@@ -27,15 +33,20 @@ static inline uint8_t stdio_legacy_get_last_valid_x(void)
     return VGA_WIDTH - 1;
 }
 
-#define stdio_canvas_is_buffer_full stdio_legacy_canvas_is_buffer_full
-#define stdio_canvas_cell_put stdio_legacy_cell_put
-#define stdio_canvas_cell_put_with_interpretation stdio_legacy_cell_put_with_interpretation
+#define stdio_canvas_cell_compare                   stdio_legacy_cell_compare
+#define stdio_canvas_cell_color_compare             stdio_legacy_cell_color_compare
+#define stdio_canvas_cell_foreground_color_compare  stdio_legacy_cell__foreground_color_compare
+#define stdio_canvas_cell_background_color_compare  stdio_legacy_cell_background_color_compare
+
+#define stdio_canvas_is_buffer_full                 stdio_legacy_canvas_is_buffer_full
+#define stdio_canvas_cell_put                       stdio_legacy_cell_put
+#define stdio_canvas_cell_put_with_interpretation   stdio_legacy_cell_put_with_interpretation
 #define stdio_canvas_screen_object_restore_defaults stdio_legacy_screen_object_restore_defaults
-#define stdio_canvas_vga_position_get stdio_legacy_vga_position_get
-#define stdio_canvas_move_to_y stdio_legacy_move_to_y
-#define stdio_canvas_move_to_x stdio_legacy_move_to_x
-#define stdio_canvas_get_last_valid_y stdio_legacy_get_last_valid_y
-#define stdio_canvas_get_last_valid_x stdio_legacy_get_last_valid_x
+#define stdio_canvas_vga_position_get               stdio_legacy_vga_position_get
+#define stdio_canvas_move_to_y                      stdio_legacy_move_to_y
+#define stdio_canvas_move_to_x                      stdio_legacy_move_to_x
+#define stdio_canvas_get_last_valid_y               stdio_legacy_get_last_valid_y
+#define stdio_canvas_get_last_valid_x               stdio_legacy_get_last_valid_x
 
 #ifdef __cplusplus
 }

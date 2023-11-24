@@ -9,6 +9,25 @@
 #include <lib/libc/stdiox.h>
 #include <sys/terminal/backend/backend.h>
 
+bool stdio_legacy_cell_compare(uint8_t y, uint8_t x, vga_screen_cell_t cell)
+{
+    return Screen.cursor[y][x] == cell;
+}
+
+bool stdio_legacy_cell_color_compare(uint8_t y, uint8_t x, color_t cell)
+{
+    return (Screen.cursor[y][x] >> 8) == cell;
+}
+
+bool stdio_legacy_cell_foreground_color_compare(uint8_t y, uint8_t x, color_t fcolor)
+{
+    return ((Screen.cursor[y][x] >> 8) & 0xF) == fcolor;
+}
+
+bool stdio_legacy_cell_background_color_compare(uint8_t y, uint8_t x, color_t bcolor)
+{
+    return (Screen.cursor[y][x] >> 12) == bcolor;
+}
 
 bool stdio_legacy_canvas_is_buffer_full(void)
 {
