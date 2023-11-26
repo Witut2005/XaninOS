@@ -384,7 +384,9 @@ void kernel_start(void)
     interrupt_enable();
 
     stdio_refresh(NULL);
-    while (getxchar().scan_code != ENTER)
+
+    // while (getxchar().scan_code != ENTER)
+    while (!__input_is_normal_key_pressed(KBP_ENTER))
         ;
     screen_clear();
 

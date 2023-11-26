@@ -27,6 +27,4 @@ namespace std
         istream &operator>>(unsigned char &x);
         istream &operator>>(unsigned short &x);
     };
-
-    extern "C" key_info_t KeyInfo;
 }

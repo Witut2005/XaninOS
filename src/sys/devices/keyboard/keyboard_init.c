@@ -36,7 +36,6 @@ uint8_t keyboard_init(uint8_t vector)
 {
 
     uint8_t keyboard_status = keyboard_self_test();
-    memset((uint8_t *)&KeyInfo, false, SIZE_OF(KeyInfo));
 
     if (keyboard_status == KEYBOARD_TEST_FAILURE)
     {

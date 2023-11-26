@@ -26,35 +26,6 @@ extern int screenshot(void);
 #define KEYBOARD_STATUS_REG 0x64
 #define KEYBOARD_DATA_REG 0x60
 
-void keyboard_driver_shift_remap_keys(void)
-{
-    if (KeyInfo.is_shift)
-    {
-        KEYBOARD_DRIVER_KEY_REMAP('-', '_');
-        KEYBOARD_DRIVER_KEY_REMAP('1', '!');
-        KEYBOARD_DRIVER_KEY_REMAP('2', '@');
-        KEYBOARD_DRIVER_KEY_REMAP('3', '#');
-        KEYBOARD_DRIVER_KEY_REMAP('4', '$');
-        KEYBOARD_DRIVER_KEY_REMAP('5', '%');
-        KEYBOARD_DRIVER_KEY_REMAP('6', '^');
-        KEYBOARD_DRIVER_KEY_REMAP('7', '&');
-        KEYBOARD_DRIVER_KEY_REMAP('8', '*');
-        KEYBOARD_DRIVER_KEY_REMAP('9', '(');
-        KEYBOARD_DRIVER_KEY_REMAP('0', ')');
-        KEYBOARD_DRIVER_KEY_REMAP('=', '+');
-        KEYBOARD_DRIVER_KEY_REMAP('[', '{');
-        KEYBOARD_DRIVER_KEY_REMAP(']', '}');
-        KEYBOARD_DRIVER_KEY_REMAP('/', '?');
-        KEYBOARD_DRIVER_KEY_REMAP(';', ':');
-        KEYBOARD_DRIVER_KEY_REMAP('`', '~');
-        KEYBOARD_DRIVER_KEY_REMAP(',', '<');
-        KEYBOARD_DRIVER_KEY_REMAP('.', '>');
-        KEYBOARD_DRIVER_KEY_REMAP('/', '?');
-        KEYBOARD_DRIVER_KEY_REMAP(0x5C, '|');
-        KEYBOARD_DRIVER_KEY_REMAP(0x27, 0x22);
-    }
-}
-
 static bool SpecialKeyPressed;
 
 static inline void keyboard_driver_clean_up(void)
@@ -67,6 +38,7 @@ void keyboard_driver(void)
 {
 
     interrupt_disable();
+    static key_info_t KeyInfo;
     KeyInfo.scan_code = inbIO(KEYBOARD_DATA_REG);
     // xprintf("%x ", KeyInfo.scan_code);
 
@@ -102,6 +74,7 @@ void keyboard_driver(void)
     }
 
     KeyInfo.is_pressed = true;
+    __input_global_key_info_set(KeyInfo);
 
     if (keyboard_handle != NULL)
         keyboard_handle();

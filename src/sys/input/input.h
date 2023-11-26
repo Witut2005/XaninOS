@@ -9,6 +9,9 @@ extern "C"
 {
 #endif
 
+    key_info_t __input_global_key_info_get(void);
+    void __input_global_key_info_set(key_info_t KeyInfo);
+
     void __input_default_prtsc_handler(void);
     void __input_prtsc_handler_set(input_scan_code_mapper_handler_t handler);
     void xanin_default_character_mapper(uint8_t scan_code);

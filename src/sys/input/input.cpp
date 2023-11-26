@@ -9,7 +9,7 @@
 #include <lib/libc/stdiox.h>
 #include <sys/devices/keyboard/key_map.h>
 
-key_info_t KeyInfo = {0};
+static key_info_t XaninGlobalKeyInfo = {0};
 
 static std::array<KeyboardModuleObservedObject, 100> KeyboardModuleObservedObjects;
 static std::array<InputHandler, 100> InputModuleHandlers;
@@ -22,12 +22,22 @@ extern "C" int screenshot(void);
 extern "C"
 {
 
+    key_info_t __input_global_key_info_get(void)
+    {
+        return XaninGlobalKeyInfo;
+    }
+
+    void __input_global_key_info_set(key_info_t KeyInfo)
+    {
+        XaninGlobalKeyInfo = KeyInfo;
+    }
+
     void __input_default_prtsc_handler(void)
     {
         int x_tmp = Screen.x, y_tmp = Screen.y;
         screenshot();
 
-        KeyInfo.character = 0x0;
+        XaninGlobalKeyInfo.character = 0x0;
         Screen.x = x_tmp;
         Screen.y = y_tmp;
     }
@@ -37,42 +47,42 @@ extern "C"
         XaninScanCodeMapperHandlers.prtsc = handler;
     }
 
-#define KEYBOARD_DRIVER_KEY_REMAP(from, to) \
-    if (KeyInfo.character == from)          \
-    KeyInfo.character = to
+#define KEYBOARD_DRIVER_KEY_REMAP(from, to)   \
+    if (XaninGlobalKeyInfo.character == from) \
+    XaninGlobalKeyInfo.character = to
 
     void xanin_default_character_mapper(uint8_t scan_code)
     {
 
-        KeyInfo.character = keyboard_map[KeyInfo.scan_code];
+        XaninGlobalKeyInfo.character = keyboard_map[scan_code];
 
-        switch (KeyInfo.scan_code)
+        switch (XaninGlobalKeyInfo.scan_code)
         {
         case LSHIFT:
         {
-            KeyInfo.is_shift = true;
-            KeyInfo.character = '\0';
+            XaninGlobalKeyInfo.is_shift = true;
+            XaninGlobalKeyInfo.character = '\0';
             break;
         }
         case LSHIFT_RELEASE:
         {
-            KeyInfo.is_shift = false;
+            XaninGlobalKeyInfo.is_shift = false;
             break;
         }
         case RSHIFT:
         {
-            KeyInfo.is_shift = true;
-            KeyInfo.character = '\0';
+            XaninGlobalKeyInfo.is_shift = true;
+            XaninGlobalKeyInfo.character = '\0';
             break;
         }
         case RSHIFT_RELEASE:
         {
-            KeyInfo.is_shift = false;
+            XaninGlobalKeyInfo.is_shift = false;
             break;
         }
         case CAPS:
         {
-            KeyInfo.is_caps = KeyInfo.is_caps ? false : true;
+            XaninGlobalKeyInfo.is_caps = XaninGlobalKeyInfo.is_caps ? false : true;
             break;
         }
 
@@ -84,75 +94,75 @@ extern "C"
 
         case L_ALT:
         {
-            KeyInfo.is_alt = true;
-            KeyInfo.character = 0x0;
+            XaninGlobalKeyInfo.is_alt = true;
+            XaninGlobalKeyInfo.character = 0x0;
             break;
         }
         case L_ALT_RELEASE:
         {
-            KeyInfo.is_alt = false;
+            XaninGlobalKeyInfo.is_alt = false;
             break;
         }
 
         case L_CTRL:
         {
-            KeyInfo.is_ctrl = true;
-            KeyInfo.character = 0x0;
+            XaninGlobalKeyInfo.is_ctrl = true;
+            XaninGlobalKeyInfo.character = 0x0;
             break;
         }
         case L_CTRL_RELEASE:
         {
-            KeyInfo.is_ctrl = false;
+            XaninGlobalKeyInfo.is_ctrl = false;
             break;
         }
         case F4_KEY:
         {
-            KeyInfo.character = 0x0;
+            XaninGlobalKeyInfo.character = 0x0;
             break;
         }
         case F4_KEY_RELEASE:
         {
-            KeyInfo.character = 0x0;
+            XaninGlobalKeyInfo.character = 0x0;
             break;
         }
         }
 
-        if (KeyInfo.scan_code >= 128)
+        if (XaninGlobalKeyInfo.scan_code >= 128)
         {
-            KeyInfo.character = 0x0;
-            KeyInfo.is_pressed = false;
+            XaninGlobalKeyInfo.character = 0x0;
+            XaninGlobalKeyInfo.is_pressed = false;
         }
 
-        if (KeyInfo.is_caps)
+        if (XaninGlobalKeyInfo.is_caps)
         {
-            if (KeyInfo.character >= 'a' && KeyInfo.character <= 'z')
+            if (XaninGlobalKeyInfo.character >= 'a' && XaninGlobalKeyInfo.character <= 'z')
             {
-                KeyInfo.character -= 32;
+                XaninGlobalKeyInfo.character -= 32;
             }
         }
 
-        if (KeyInfo.is_shift)
+        if (XaninGlobalKeyInfo.is_shift)
         {
-            if (KeyInfo.is_caps)
+            if (XaninGlobalKeyInfo.is_caps)
             {
-                if (KeyInfo.character >= 'A' && KeyInfo.character <= 'Z')
+                if (XaninGlobalKeyInfo.character >= 'A' && XaninGlobalKeyInfo.character <= 'Z')
                 {
-                    KeyInfo.character += 32;
+                    XaninGlobalKeyInfo.character += 32;
                 }
             }
 
             else
             {
-                if (KeyInfo.character >= 'a' && KeyInfo.character <= 'z')
+                if (XaninGlobalKeyInfo.character >= 'a' && XaninGlobalKeyInfo.character <= 'z')
                 {
-                    KeyInfo.character -= 32;
+                    XaninGlobalKeyInfo.character -= 32;
                 }
             }
         }
 
-        // if (KeyInfo.scan_code == PRINT_SCREEN_KEY_RELEASE)
+        // if (XaninGlobalKeyInfo.scan_code == PRINT_SCREEN_KEY_RELEASE)
         //     screenshot();
-        if (KeyInfo.is_shift)
+        if (XaninGlobalKeyInfo.is_shift)
         {
             KEYBOARD_DRIVER_KEY_REMAP('-', '_');
             KEYBOARD_DRIVER_KEY_REMAP('1', '!');
@@ -178,11 +188,11 @@ extern "C"
             KEYBOARD_DRIVER_KEY_REMAP(0x27, 0x22);
         }
 
-        if (KeyInfo.scan_code == LSHIFT || KeyInfo.scan_code == CAPS)
-            KeyInfo.character = '\0';
+        if (XaninGlobalKeyInfo.scan_code == LSHIFT || XaninGlobalKeyInfo.scan_code == CAPS)
+            XaninGlobalKeyInfo.character = '\0';
 
-        if (KeyInfo.scan_code == BSPC)
-            KeyInfo.character = '\0';
+        if (XaninGlobalKeyInfo.scan_code == BSPC)
+            XaninGlobalKeyInfo.character = '\0';
     }
 
     void __input_scan_code_mapper_set(void (*mapper)(uint8_t scan_code))
@@ -197,12 +207,12 @@ extern "C"
 
     bool __input_is_normal_key_pressed(uint8_t scan_code)
     {
-        return KeyInfo.keys_pressed[scan_code];
+        return XaninGlobalKeyInfo.keys_pressed[scan_code];
     }
 
     bool __input_is_special_key_pressed(uint8_t scan_code)
     {
-        return KeyInfo.special_keys_pressed[scan_code];
+        return XaninGlobalKeyInfo.special_keys_pressed[scan_code];
     }
 
     InputHandler *input_module_handlers_get()
@@ -311,12 +321,12 @@ extern "C"
 
     void __keyinfo_clear(void)
     {
-        // memset((uint8_t*)&KeyInfo, 0, sizeof(KeyInfo));
+        // memset((uint8_t*)&XaninGlobalKeyInfo, 0, sizeof(XaninGlobalKeyInfo));
     }
 
     key_info_t __keyinfo_get(void)
     {
-        return KeyInfo;
+        return XaninGlobalKeyInfo;
     }
 
     xchar __inputg(void)
@@ -324,7 +334,7 @@ extern "C"
 
         key_info_t InputgKeyInfo;
 
-        InputgKeyInfo.scan_code = KeyInfo.scan_code = 0;
+        InputgKeyInfo.scan_code = XaninGlobalKeyInfo.scan_code = 0;
         // __keyinfo_clear();
 
         while ((InputgKeyInfo.scan_code == 0) || (InputgKeyInfo.scan_code >= 0x80))
