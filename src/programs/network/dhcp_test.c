@@ -4,11 +4,11 @@
 #include <sys/input/input.h>
 #include <lib/libc/time.h>
 
-//TERMINAL_APP
+// TERMINAL_APP
 
 int dhcp_test(void)
 {
-    while(KeyInfo.scan_code != ENTER) // CANT BE HANDLED ASYNCHRONOUS
+    while (!__input_is_normal_key_pressed(KBP_F4)) // CANT BE HANDLED ASYNCHRONOUS
     {
         dhcp_discover_send();
         sleep(1); // WILL FREEZE LOOP
