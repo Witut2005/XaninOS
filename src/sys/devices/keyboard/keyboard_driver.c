@@ -73,14 +73,8 @@ void keyboard_driver(void)
             KeyInfo.keys_pressed[KeyInfo.scan_code - KEYBOARD_KEYS_BREAK_CODES_OFFSET] = false;
     }
 
-    KeyInfo.is_pressed = true;
     __input_global_key_info_set(KeyInfo);
-
-    if (keyboard_handle != NULL)
-        keyboard_handle();
-
     __input_scan_code_mapper_call(KeyInfo.scan_code);
-
     __input_handle_observed_objects(&KeyInfo);
 
     // we need to set interrupts
@@ -88,6 +82,6 @@ void keyboard_driver(void)
 
     __input_call_handlers(KeyInfo);
 
-    if (KeyInfo.is_ctrl && KeyInfo.character == 'c')
+    if (__input_is_ctrl_pressed() && KeyInfo.keys_pressed[KBP_C])
         exit();
 }

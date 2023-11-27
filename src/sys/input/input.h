@@ -9,6 +9,10 @@ extern "C"
 {
 #endif
 
+    bool __input_is_ctrl_pressed(void);
+    bool __input_is_shift_pressed(void);
+    bool __input_is_alt_pressed(void);
+
     key_info_t __input_global_key_info_get(void);
     void __input_global_key_info_set(key_info_t KeyInfo);
 

@@ -36,7 +36,6 @@ int timer_test(void)
     {
         canvas_screen_clear();
         canvas_xprintf("%d", current_time);
-        canvas_xprintf(" 0x%x 0x%x", k.scan_code, k.is_pressed);
         current_time++;
         msleep(1000);
     }

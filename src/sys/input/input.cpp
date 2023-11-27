@@ -21,6 +21,20 @@ extern "C" int screenshot(void);
 
 extern "C"
 {
+    bool __input_is_ctrl_pressed(void)
+    {
+        return XaninGlobalKeyInfo.keys_pressed[KBP_LEFT_CONTROL] | XaninGlobalKeyInfo.special_keys_pressed[KBSP_RIGHT_CONTROL];
+    }
+
+    bool __input_is_shift_pressed(void)
+    {
+        return XaninGlobalKeyInfo.keys_pressed[KBP_LEFT_SHIFT] | XaninGlobalKeyInfo.keys_pressed[KBP_RIGHT_SHIFT];
+    }
+
+    bool __input_is_alt_pressed(void)
+    {
+        return XaninGlobalKeyInfo.keys_pressed[KBP_LEFT_ALT] | XaninGlobalKeyInfo.keys_pressed[KBSP_RIGHT_ALT];
+    }
 
     key_info_t __input_global_key_info_get(void)
     {
@@ -58,79 +72,16 @@ extern "C"
 
         switch (XaninGlobalKeyInfo.scan_code)
         {
-        case LSHIFT:
-        {
-            XaninGlobalKeyInfo.is_shift = true;
-            XaninGlobalKeyInfo.character = '\0';
-            break;
-        }
-        case LSHIFT_RELEASE:
-        {
-            XaninGlobalKeyInfo.is_shift = false;
-            break;
-        }
-        case RSHIFT:
-        {
-            XaninGlobalKeyInfo.is_shift = true;
-            XaninGlobalKeyInfo.character = '\0';
-            break;
-        }
-        case RSHIFT_RELEASE:
-        {
-            XaninGlobalKeyInfo.is_shift = false;
-            break;
-        }
-        case CAPS:
-        {
-            XaninGlobalKeyInfo.is_caps = XaninGlobalKeyInfo.is_caps ? false : true;
-            break;
-        }
-
         case PRINT_SCREEN_KEY:
         {
             XaninScanCodeMapperHandlers.prtsc();
             break;
         }
-
-        case L_ALT:
+        case KBP_CAPSLOCK:
         {
-            XaninGlobalKeyInfo.is_alt = true;
-            XaninGlobalKeyInfo.character = 0x0;
+            XaninGlobalKeyInfo.is_caps = true; // XaninGlobalKeyInfo.is_caps ? false : true;
             break;
         }
-        case L_ALT_RELEASE:
-        {
-            XaninGlobalKeyInfo.is_alt = false;
-            break;
-        }
-
-        case L_CTRL:
-        {
-            XaninGlobalKeyInfo.is_ctrl = true;
-            XaninGlobalKeyInfo.character = 0x0;
-            break;
-        }
-        case L_CTRL_RELEASE:
-        {
-            XaninGlobalKeyInfo.is_ctrl = false;
-            break;
-        }
-        case F4_KEY:
-        {
-            XaninGlobalKeyInfo.character = 0x0;
-            break;
-        }
-        case F4_KEY_RELEASE:
-        {
-            XaninGlobalKeyInfo.character = 0x0;
-            break;
-        }
-        }
-
-        if (XaninGlobalKeyInfo.scan_code >= 128)
-        {
-            XaninGlobalKeyInfo.character = 0x0;
-            XaninGlobalKeyInfo.is_pressed = false;
         }
 
         if (XaninGlobalKeyInfo.is_caps)
@@ -141,7 +92,7 @@ extern "C"
             }
         }
 
-        if (XaninGlobalKeyInfo.is_shift)
+        if (__input_is_shift_pressed())
         {
             if (XaninGlobalKeyInfo.is_caps)
             {
@@ -160,9 +111,7 @@ extern "C"
             }
         }
 
-        // if (XaninGlobalKeyInfo.scan_code == PRINT_SCREEN_KEY_RELEASE)
-        //     screenshot();
-        if (XaninGlobalKeyInfo.is_shift)
+        if (__input_is_shift_pressed())
         {
             KEYBOARD_DRIVER_KEY_REMAP('-', '_');
             KEYBOARD_DRIVER_KEY_REMAP('1', '!');
@@ -188,11 +137,8 @@ extern "C"
             KEYBOARD_DRIVER_KEY_REMAP(0x27, 0x22);
         }
 
-        if (XaninGlobalKeyInfo.scan_code == LSHIFT || XaninGlobalKeyInfo.scan_code == CAPS)
-            XaninGlobalKeyInfo.character = '\0';
-
-        if (XaninGlobalKeyInfo.scan_code == BSPC)
-            XaninGlobalKeyInfo.character = '\0';
+        if (is_break_code(XaninGlobalKeyInfo.scan_code))
+            XaninGlobalKeyInfo.character = 0x0;
     }
 
     void __input_scan_code_mapper_set(void (*mapper)(uint8_t scan_code))
