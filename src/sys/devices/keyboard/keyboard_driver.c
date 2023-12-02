@@ -73,6 +73,9 @@ void keyboard_driver(void)
             KeyInfo.keys_pressed[KeyInfo.scan_code - KEYBOARD_KEYS_BREAK_CODES_OFFSET] = false;
     }
 
+    if (KeyInfo.scan_code == KBP_CAPSLOCK)
+        KeyInfo.is_caps = ~KeyInfo.is_caps;
+
     __input_global_key_info_set(KeyInfo);
     __input_scan_code_mapper_call(KeyInfo.scan_code);
     __input_handle_observed_objects(&KeyInfo);

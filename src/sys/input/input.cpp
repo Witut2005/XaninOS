@@ -9,7 +9,7 @@
 #include <lib/libc/stdiox.h>
 #include <sys/devices/keyboard/key_map.h>
 
-static key_info_t XaninGlobalKeyInfo = {0};
+static key_info_t XaninGlobalKeyInfo;
 
 static std::array<KeyboardModuleObservedObject, 100> KeyboardModuleObservedObjects;
 static std::array<InputHandler, 100> InputModuleHandlers;
@@ -77,19 +77,12 @@ extern "C"
             XaninScanCodeMapperHandlers.prtsc();
             break;
         }
-        case KBP_CAPSLOCK:
-        {
-            XaninGlobalKeyInfo.is_caps = true; // XaninGlobalKeyInfo.is_caps ? false : true;
-            break;
-        }
         }
 
         if (XaninGlobalKeyInfo.is_caps)
         {
             if (XaninGlobalKeyInfo.character >= 'a' && XaninGlobalKeyInfo.character <= 'z')
-            {
                 XaninGlobalKeyInfo.character -= 32;
-            }
         }
 
         if (__input_is_shift_pressed())

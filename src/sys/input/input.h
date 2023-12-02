@@ -4,6 +4,8 @@
 #include <sys/call/xanin_sys/calls/input/input.h>
 #include "./types.h"
 
+// MAPPER WSKAZNIK DO KEY INFO CONST
+
 #ifdef __cplusplus
 extern "C"
 {
@@ -19,8 +21,8 @@ extern "C"
     void __input_default_prtsc_handler(void);
     void __input_prtsc_handler_set(input_scan_code_mapper_handler_t handler);
     void xanin_default_character_mapper(uint8_t scan_code);
-    void __input_scan_code_mapper_set(void (*mapper)(uint8_t scan_code));
     void __input_scan_code_mapper_call(uint8_t scan_code);
+    void __input_scan_code_mapper_set(void (*mapper)(uint8_t scan_code));
     bool __input_is_normal_key_pressed(uint8_t scan_code);
     bool __input_is_special_key_pressed(uint8_t scan_code);
 
