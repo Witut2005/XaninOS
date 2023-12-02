@@ -178,11 +178,11 @@ void xin_free_temporary_data(XinEntry *File)
 }
 
 // DO POPRAWY
-XinEntry *xin_folder_change(char *new_directory)
+__STATUS xin_folder_change(char *new_directory)
 {
 
     if (strlen(new_directory) > XIN_MAX_PATH_LENGTH)
-        return NULL;
+        return XIN_TO_LONG_PATH;
 
     char *tmp = (char *)calloc(XIN_MAX_PATH_LENGTH);
 
@@ -192,7 +192,7 @@ XinEntry *xin_folder_change(char *new_directory)
     if (bstrcmp(new_directory, ".."))
     {
         if (bstrcmp(xin_current_directory, "/"))
-            return NULL;
+            return XIN_ENTRY_NOT_FOUND;
         else
         {
             xin_current_directory[strlen(xin_current_directory) - 1] = '\0';
@@ -204,7 +204,7 @@ XinEntry *xin_folder_change(char *new_directory)
                 counter--;
             }
         }
-        return xin_find_entry(xin_current_directory);
+        return XANIN_OK;
     }
 
     if (new_directory[strlen(new_directory) - 1] != '/')
@@ -219,19 +219,19 @@ XinEntry *xin_folder_change(char *new_directory)
     if (xin_new_directory == NULL)
     {
         free(new_directory);
-        return NULL;
+        return XIN_ENTRY_NOT_FOUND;
     }
 
     else if (xin_new_directory->type != XIN_DIRECTORY)
     {
         free(new_directory);
-        return NULL;
+        return XIN_NOT_A_FOLDER;
     }
 
     else if (new_directory[strlen(new_directory) - 1] != '/')
     {
         free(new_directory);
-        return NULL;
+        return XIN_BAD_FOLDER_NAME;
     }
 
     for (int i = 0; i < SIZE_OF(xin_current_directory); i++)
@@ -240,7 +240,7 @@ XinEntry *xin_folder_change(char *new_directory)
     strcpy(xin_current_directory, xin_new_directory->path);
 
     free(new_directory);
-    return xin_new_directory;
+    return XANIN_OK;
 }
 
 int xin_folder_create(char *entry_name)
@@ -369,7 +369,7 @@ void xin_init_fs(void)
     }
 }
 
-int xin_file_create(char *entry_name)
+__STATUS xin_file_create(char *entry_name)
 {
 
     bool only_entry_name = true;
@@ -1259,6 +1259,34 @@ __STATUS __xin_link_create(char *file_name, char *link_name)
 
     for (int i = 0; i < XIN_MAX_PATH_LENGTH; i++)
         link->path[i] = link_name[i];
+
+    return XANIN_OK;
+}
+
+__STATUS __xin_copy(char *file_name, char *new_file_name)
+{
+
+    XinEntry *entry = xin_find_entry(file_name);
+
+    if (entry == NULL)
+        return XIN_ENTRY_NOT_FOUND;
+
+    int status = xin_file_create(new_file_name);
+
+    if (status != XANIN_OK)
+        return status;
+
+    XinEntry *file = fopen(file_name, "r");
+    XinEntry *file_created = fopen(new_file_name, "rw");
+
+    char *entry_data = (char *)calloc(file->size);
+
+    fread(file, entry_data, file->size);
+    fwrite(file_created, entry_data, file->size);
+
+    free(entry_data);
+    fclose(&file);
+    fclose(&file_created);
 
     return XANIN_OK;
 }
