@@ -91,7 +91,8 @@ extern "C"
         void lseek(int fd, uint32_t new_position);
         XinEntry *xin_get_file_pf(char *path); // pf = parent folder
         XinEntry *xin_find_entry(char *entry_name);
-        __STATUS remove_directory(char *folder_name);
+        __STATUS __xin_folder_remove(char *folder_name);
+
         void fclose_with_given_size(XinEntry **file, uint32_t new_size);
         char *getline(XinEntry *file, int line_id);
         char *getline_from_ptr(char *data, int line_id);
@@ -107,6 +108,10 @@ extern "C"
         XinEntriesPack *xin_get_hard_links(const XinEntry *const File);
         bool xin_add_files_to_xfo(XinEntry *File);
         void xin_close_all_files(void);
+
+        __STATUS __xin_link_remove(const char *linkname);
+        __STATUS __xin_link_create(char *file_name, char *link_name);
+        __STATUS __xin_copy(char *file_name, char *new_file_name);
 
 #ifdef __cplusplus
     }

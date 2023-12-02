@@ -1040,7 +1040,7 @@ char *getline(XinEntry *file, int line_id)
     return line;
 }
 
-__STATUS remove_directory(char *folder_name)
+__STATUS __xin_folder_remove(char *folder_name)
 {
 
     XinEntry *folder = xin_find_entry(folder_name);

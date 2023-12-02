@@ -3,17 +3,17 @@
 #include <fs/xin_syscalls.h>
 #include <lib/libc/stdiox.h>
 
-//TERMINAL_APP
+// TERMINAL_APP
 
-int xin_create_file_app(char* entry_name)
+int xin_create_file_app(char *entry_name)
 {
-    int status = __sys_xin_file_create(entry_name);
+    int status = xin_file_create(entry_name);
 
-    if(status == XANIN_OK)
+    if (status == XANIN_OK)
         return status;
-    else if(status == XIN_FILE_EXISTS)
+    else if (status == XIN_FILE_EXISTS)
         xprintf("%zFILE ALREADY EXISTS: %s\n", stderr, entry_name);
-    else if(status == XANIN_ERROR)
+    else if (status == XANIN_ERROR)
         xprintf("%zFILE CREATION ERROR: %s\n", stderr, entry_name);
 
     return status;

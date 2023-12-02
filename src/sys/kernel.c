@@ -348,10 +348,10 @@ void kernel_init(void)
 
     memset((uint8_t *)ArpTable, 0xFF, SIZE_OF(ArpTable[0]));
 
-    __sys_xin_file_create("/syslog");
+    xin_file_create("/syslog");
     syslog_enable();
     printk("To wszystko dla Ciebie Babciu <3");
-    __sys_xin_folder_create("/config/");
+    xin_folder_create("/config/");
 
     arp_table_add_entry(LOOPBACK_IP_ADDRESS, null_memory_region);
 
