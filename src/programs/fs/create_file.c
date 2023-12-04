@@ -7,7 +7,7 @@
 
 int xin_create_file_app(char *entry_name)
 {
-    int status = xin_file_create(entry_name);
+    int status = __xin_file_create(entry_name);
 
     if (status == XANIN_OK)
         return status;

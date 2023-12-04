@@ -73,8 +73,8 @@ extern "C"
         void xin_init_fs(void);
         XinEntry *xin_find_free_entry(void);
 
-        __STATUS xin_file_create(char *entry_name);
-        int xin_folder_create(char *entry_name);
+        __STATUS __xin_file_create(char *entry_name);
+        __STATUS __xin_folder_create(char *entry_name);
         __STATUS xin_folder_change(char *new_directory);
 
         XinEntry *__xin_fopen(char *file_path, char *mode);

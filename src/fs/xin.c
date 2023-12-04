@@ -243,7 +243,7 @@ __STATUS xin_folder_change(char *new_directory)
     return XANIN_OK;
 }
 
-int xin_folder_create(char *entry_name)
+int __xin_folder_create(char *entry_name)
 {
 
     bool only_entry_name = true;
@@ -322,7 +322,7 @@ int xin_folder_create(char *entry_name)
     return XANIN_OK;
 }
 
-void xin_file_create_at_given_sector(char *path, uint32_t first_sector, uint8_t size)
+void __xin_file_create_at_given_sector(char *path, uint32_t first_sector, uint8_t size)
 {
     XinEntry *entry_created = xin_find_free_entry();
 
@@ -369,7 +369,7 @@ void xin_init_fs(void)
     }
 }
 
-__STATUS xin_file_create(char *entry_name)
+__STATUS __xin_file_create(char *entry_name)
 {
 
     bool only_entry_name = true;
@@ -830,7 +830,7 @@ XinEntry *__xin_fopen(char *file_path, char *mode)
 
     else if (bstrncmp(mode, "rw", 2) || bstrncmp(mode, "w", 2))
     {
-        int status = xin_file_create(file_path);
+        int status = __xin_file_create(file_path);
 
         if (status == XANIN_OK)
         {
@@ -1122,7 +1122,7 @@ XinChildrenEntries *xin_get_children_entries(char *folder, bool get_hidden)
         {
             if (!bstrcmp(i->path, folder))
             {
-                if (xin_get_entry_name(i->path)[0] != '.' || get_hidden)
+                if (xin_get_entry_name(i->path)[0] != '.' | get_hidden)
                 {
                     Children->children[finded_entries] = i;
                     finded_entries++;
@@ -1271,7 +1271,7 @@ __STATUS __xin_copy(char *file_name, char *new_file_name)
     if (entry == NULL)
         return XIN_ENTRY_NOT_FOUND;
 
-    int status = xin_file_create(new_file_name);
+    __STATUS status = __xin_file_create(new_file_name);
 
     if (status != XANIN_OK)
         return status;

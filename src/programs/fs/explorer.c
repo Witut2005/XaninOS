@@ -93,7 +93,7 @@ void handle_selected_option(char *option, ExplorerInfo *AppInfo)
 
         canvas_xprintf("New file name: ");
         canvas_xscanf("%s", new_name);
-        xin_file_create(new_name);
+        __xin_file_create(new_name);
         canvas_xprintf("new file: %s\n", xin_get_current_path(new_name));
         free(new_name);
     }

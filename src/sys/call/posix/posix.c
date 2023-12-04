@@ -91,7 +91,7 @@ uint32_t syscall_handle(void)
             allocated_additional_memory = true;
         }
 
-        xin_folder_create((char *)folder_name);
+        __xin_folder_create((char *)folder_name);
 
         if (allocated_additional_memory)
             free(folder_name);
@@ -119,7 +119,7 @@ uint32_t syscall_handle(void)
 
     case __NR_creat:
     {
-        eax = xin_file_create((char *)ebx);
+        eax = __xin_file_create((char *)ebx);
         break;
     }
 

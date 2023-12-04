@@ -8,7 +8,7 @@
 
 int xin_create_folder_app(char *entry_name)
 {
-    int status = xin_folder_create(entry_name);
+    int status = __xin_folder_create(entry_name);
 
     if (status == XANIN_OK)
         return status;
