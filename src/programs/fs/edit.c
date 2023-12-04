@@ -2,7 +2,7 @@
 #include <lib/libc/canvas.h>
 #include <sys/devices/keyboard/scan_codes.h>
 #include <lib/screen/screen.h>
-#include <fs/xin.h>
+#include <lib/libc/file.h>
 #include <lib/libc/stdlibx.h>
 #include <lib/libc/string.h>
 #include <lib/libc/memory.h>
@@ -275,7 +275,7 @@ int edit(char *file_name)
     stdio_mode_set(STDIO_MODE_CANVAS);
 
     canvas_screen_clear();
-    XinEntry *file = xin_find_entry(file_name);
+    XinEntry *file = __xin_find_entry(file_name);
 
     if (file == NULL)
     {
@@ -295,7 +295,7 @@ int edit(char *file_name)
 
     fread(file, NULL, file->size);
 
-    EditInfo EditState = {0, (uint16_t *)VGA_TEXT_MEMORY, 0, 0, 0, xin_get_file_size_in_sectors(file),
+    EditInfo EditState = {0, (uint16_t *)VGA_TEXT_MEMORY, 0, 0, 0, __xin_file_size_in_sectors_get(file),
                           file->FileInfo->buffer, file->FileInfo->buffer};
 
     canvas_xprintf("%s", EditState.program_buffer);

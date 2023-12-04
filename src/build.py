@@ -203,7 +203,6 @@ objects_to_compile = {
         CompileObject('./fs/xin_pointers.asm', builders['asm'], builder_options['asm']['bin'], BINARY),
         CompileObject('./fs/entries_table.asm', builders['asm'], builder_options['asm']['bin'], BINARY),
         CompileObject('./fs/xin.c', builders['c'], builder_options['c']['default'], OBJECT),
-        CompileObject('./fs/xin_syscalls.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./fs/xin_extended_table.asm', builders['asm'], builder_options['asm']['bin'], BINARY),
         # CompileObject('./fs/xanin_apps_space.asm', builders['asm'], builder_options['asm']['bin'], BINARY),
     ],
@@ -485,7 +484,7 @@ for os_module, objects in objects_to_compile.items():
 print(colored('\nXANIN OS MODULES BUILDED\n', 'green'))
     
 create_c_library('./lib/libc/libc.o', './lib/libc/libc.a', [obj.output_name for obj in objects_to_compile['libc']] + [
-        './sys/log/syslog.o', './fs/xin_syscalls.o', 
+        './sys/log/syslog.o', 
         './lib/screen/screen.o', 
         './sys/devices/hda/disk.o', 
         './fs/xin.o', './sys/call/xanin_sys/calls/devices/disk.o', './sys/call/xanin_sys/calls/stdio/stdio.o', 
@@ -496,7 +495,6 @@ create_c_library('./lib/libc/libc.o', './lib/libc/libc.a', [obj.output_name for 
 
 # create_kernel_c_library('./lib/libc/kernel_libc.o', './lib/libc/kernel_libc.a', [obj.output_name for obj in objects_to_compile['libc']] + [
 #         './sys/log/syslog.o',
-#         './fs/xin_syscalls.o', 
 #         './lib/screen/screen.o', 
 #         './sys/devices/hda/disk.o', 
 #         './fs/xin.o', './sys/call/xanin_sys/calls/devices/disk.o', './sys/call/xanin_sys/calls/stdio/stdio.o', 

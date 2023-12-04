@@ -1,6 +1,5 @@
 
 #include <fs/xin.h>
-#include <fs/xin_syscalls.h>
 #include <lib/libc/stdiox.h>
 #include <lib/libc/string.h>
 
@@ -24,7 +23,7 @@ int xin_list_files_app(char **argv)
 
     int printed_text = 0;
 
-    if (xin_find_entry(path) == NULL && strlen(path) > 0)
+    if (__xin_find_entry(path) == NULL && strlen(path) > 0)
         return XANIN_ERROR;
 
     while ((uint32_t)i < XIN_ENTRY_TABLE + (SECTOR_SIZE * 50))
@@ -64,7 +63,7 @@ int xin_list_files_app(char **argv)
 
             else
             {
-                if (bstrcmp(xin_get_file_pf(i->path)->path, xin_get_current_path(path)))
+                if (bstrcmp(xin_get_file_pf(i->path)->path, __xin_current_path_get(path)))
                 {
                     xprintf("%z%s", OUTPUT_COLOR_SET(black, i->type + 0x2), i);
                     xprintf("  ");

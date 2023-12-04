@@ -1,14 +1,13 @@
 
 #include <fs/xin.h>
-#include <fs/xin_syscalls.h>
 #include <lib/libc/stdiox.h>
 
-//TERMINAL_APP
+// TERMINAL_APP
 
 int xin_info(char *entry_name)
 {
 
-    XinEntry* file = xin_find_entry(entry_name);
+    XinEntry *file = __xin_find_entry(entry_name);
 
     if (file != NULL)
     {

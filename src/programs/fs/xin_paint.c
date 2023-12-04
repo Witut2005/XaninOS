@@ -2,6 +2,7 @@
 
 #include <lib/libc/stdiox.h>
 #include <fs/xin.h>
+#include <lib/libc/file.h>
 #include <lib/libc/memory.h>
 #include <lib/libc/string.h>
 #include <lib/libc/canvas.h>

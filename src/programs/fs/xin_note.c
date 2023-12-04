@@ -2,6 +2,7 @@
 
 #include <lib/libc/canvas.h>
 #include <fs/xin.h>
+#include <lib/libc/file.h>
 #include <lib/libc/memory.h>
 #include <sys/terminal/interpreter/interpreter.h>
 #include <lib/libc/string.h>
@@ -176,7 +177,7 @@ int xin_note(char *file_name)
 
         xin_file->size = file_data_counter;
 
-        disk_write(ATA_FIRST_BUS, ATA_MASTER, xin_file->first_sector, xin_get_file_size_in_sectors(xin_file), (uint16_t *)(tmp));
+        disk_write(ATA_FIRST_BUS, ATA_MASTER, xin_file->first_sector, __xin_file_size_in_sectors_get(xin_file), (uint16_t *)(tmp));
 
         free(tmp);
     }

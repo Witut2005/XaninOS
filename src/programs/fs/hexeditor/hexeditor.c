@@ -1,5 +1,6 @@
 
 #include "./hexeditor.h"
+#include <lib/libc/file.h>
 #include <lib/libc/string.h>
 #include <lib/libc/canvas.h>
 #include <sys/input/input.h>

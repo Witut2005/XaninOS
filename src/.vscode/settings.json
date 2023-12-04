@@ -2,7 +2,6 @@
     "files.associations": {
         "*.embeddedhtml": "html",
         "xin.h": "c",
-        "xin_entry.h": "c",
         "stdlibx.h": "c",
         "scan_codes.h": "c",
         "vty.h": "c",
@@ -110,7 +109,8 @@
         "typeinfo": "cpp",
         "limits.h": "c",
         "types.h": "c",
-        "screen.h": "c"
+        "screen.h": "c",
+        "macros.h": "c"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }

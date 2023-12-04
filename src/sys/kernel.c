@@ -40,7 +40,6 @@
 #include <lib/cpu/headers/cpu_state_info.h>
 #include <sys/macros.h>
 #include <lib/libc/stdiox_legacy.h>
-#include <fs/xin_syscalls.h>
 #include <sys/call/xanin_sys/calls/input/input.h>
 #include <sys/init/kernel_init.h>
 
@@ -122,7 +121,7 @@ void kernel_loop(void)
 
         app_exited = false;
 
-        xin_close_all_files();
+        __xin_all_files_close();
         __sys_input_remove_user_handlers();
 
         if (app_exited)
@@ -340,10 +339,10 @@ void kernel_init(void)
     argv[3] = (char *)calloc(XANIN_PMMNGR_BLOCK_SIZE * 2);
     argv[4] = (char *)calloc(XANIN_PMMNGR_BLOCK_SIZE * 2);
 
-    xin_init_fs();
-    disk_write(ATA_FIRST_BUS, ATA_MASTER, xin_find_entry("/ivt")->first_sector, 2, 0x0); // load ivt to /ivt file
+    __xin_init_fs();
+    disk_write(ATA_FIRST_BUS, ATA_MASTER, __xin_find_entry("/ivt")->first_sector, 2, 0x0); // load ivt to /ivt file
 
-    xin_folder_change("/");
+    __xin_folder_change("/");
     FileDescriptorTable = (XinFileDescriptor *)kcalloc(SIZE_OF(XinFileDescriptor) * 200); // 200 = number o entries
 
     memset((uint8_t *)ArpTable, 0xFF, SIZE_OF(ArpTable[0]));

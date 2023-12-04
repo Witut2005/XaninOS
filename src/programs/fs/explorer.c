@@ -3,7 +3,7 @@
 #include <lib/tui/tui.h>
 #include <lib/libc/colors.h>
 #include <fs/xin.h>
-#include <fs/xin_syscalls.h>
+#include <lib/libc/file.h>
 #include <lib/libc/process.h>
 #include <lib/libc/data_structures.h>
 #include <sys/input/input.h>
@@ -31,7 +31,7 @@ void handle_selected_option(char *option, ExplorerInfo *AppInfo)
     if (bstrcmp(option, "remove"))
     {
         canvas_xprintf("selected file: %s\n", AppInfo->selected_file);
-        __sys_xin_entry_remove(AppInfo->selected_file);
+        __xin_entry_remove(AppInfo->selected_file);
     }
 
     else if (bstrcmp(option, "rename"))
@@ -41,7 +41,7 @@ void handle_selected_option(char *option, ExplorerInfo *AppInfo)
 
         canvas_xprintf("New file name: ");
         canvas_xscanf("%s", new_name);
-        __sys_xin_entry_move(AppInfo->selected_file, xin_get_current_path(new_name));
+        __xin_entry_move(AppInfo->selected_file, __xin_current_path_get(new_name));
 
         free(new_name);
     }
@@ -58,7 +58,7 @@ void handle_selected_option(char *option, ExplorerInfo *AppInfo)
         // while(1);
 
         if (new_name[0] != '/')
-            __xin_link_create(AppInfo->selected_file, xin_get_current_path(new_name));
+            __xin_link_create(AppInfo->selected_file, __xin_current_path_get(new_name));
         else
             __xin_link_create(AppInfo->selected_file, new_name);
 
@@ -74,7 +74,7 @@ void handle_selected_option(char *option, ExplorerInfo *AppInfo)
         canvas_xscanf("%s", new_name);
 
         canvas_xprintf("selected file: %s\n", AppInfo->selected_file);
-        canvas_xprintf("new file: %s\n", new_name[0] != '/' ? xin_get_current_path(new_name) : new_name);
+        canvas_xprintf("new file: %s\n", new_name[0] != '/' ? __xin_current_path_get(new_name) : new_name);
 
         __xin_copy(AppInfo->selected_file, new_name);
 
@@ -94,7 +94,7 @@ void handle_selected_option(char *option, ExplorerInfo *AppInfo)
         canvas_xprintf("New file name: ");
         canvas_xscanf("%s", new_name);
         __xin_file_create(new_name);
-        canvas_xprintf("new file: %s\n", xin_get_current_path(new_name));
+        canvas_xprintf("new file: %s\n", __xin_current_path_get(new_name));
         free(new_name);
     }
 
@@ -129,12 +129,12 @@ void hfs(char *omg, ExplorerInfo *AppInfo)
 
     else if (bstrcmp(omg, ".."))
     {
-        xin_get_current_directory(AppInfo->current_folder);
-        xin_folder_change(xin_get_file_pf(AppInfo->current_folder)->path);
+        __xin_current_directory_get(AppInfo->current_folder);
+        __xin_folder_change(xin_get_file_pf(AppInfo->current_folder)->path);
         return;
     }
 
-    int status = xin_folder_change(omg);
+    int status = __xin_folder_change(omg);
 
     if (status == XANIN_ERROR)
     {
@@ -169,18 +169,18 @@ int explorer(char *parent_folder)
     app_process_register(explorer_app_deconstructor, 2, AppInfo.current_folder, AppInfo.selected_file);
 
     char *initial_folder = (char *)calloc(XIN_MAX_PATH_LENGTH);
-    xin_get_current_directory(initial_folder);
+    __xin_current_directory_get(initial_folder);
 
     AppInfo.current_folder = (char *)calloc(XIN_MAX_PATH_LENGTH);
 
     if (!strlen(parent_folder)) // no path given
-        xin_get_current_directory(AppInfo.current_folder);
+        __xin_current_directory_get(AppInfo.current_folder);
 
     else if (parent_folder[strlen(parent_folder) - 1] != '/') // no '/' at the end
         parent_folder[strlen(parent_folder)] = '/';
 
-    else if (xin_find_entry(parent_folder) != NULL) // ok
-        strcpy(AppInfo.current_folder, xin_find_entry(parent_folder)->path);
+    else if (__xin_find_entry(parent_folder) != NULL) // ok
+        strcpy(AppInfo.current_folder, __xin_find_entry(parent_folder)->path);
 
     else // no such directory
     {
@@ -191,12 +191,12 @@ int explorer(char *parent_folder)
         return XANIN_ERROR;
     }
 
-    xin_folder_change(AppInfo.current_folder);
+    __xin_folder_change(AppInfo.current_folder);
 
     while (!__input_is_normal_key_pressed(KBP_F4))
     {
         canvas_screen_clear();
-        xin_get_current_directory(AppInfo.current_folder);
+        __xin_current_directory_get(AppInfo.current_folder);
         canvas_xprintf("CURRENT DIRECTORY: %s\n", AppInfo.current_folder);
         XinChildrenEntries *hoho = xin_get_children_entries(AppInfo.current_folder, false);
         AppInfo.MainTable = table_create(0, 1, 10, 80, black, white, TUI_TEST_SITES, NULL);
@@ -243,7 +243,7 @@ int explorer(char *parent_folder)
 
     free(AppInfo.current_folder);
 
-    xin_folder_change(initial_folder);
+    __xin_folder_change(initial_folder);
     free(initial_folder);
 
     return XANIN_OK;

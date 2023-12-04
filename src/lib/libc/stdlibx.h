@@ -6,26 +6,26 @@
 #include <stdbool.h>
 #include <sys/devices/keyboard/scan_codes.h>
 #include <sys/input/key_info.h>
-#include <fs/xin_entry.h>
+#include <fs/xin.h>
 #include <sys/macros.h>
 #include <sys/call/xanin_sys/calls/input/input.h>
 
 #define XANIN_PMMNGR_BLOCK_SIZE 4096
 #define ARRAY_LENGTH(x) (SIZE_OF(x) / SIZE_OF(x[0]))
 
-extern void(*keyboard_handle)(void);
+extern void (*keyboard_handle)(void);
 
 #define KEYBOARD_KEYSTROKE_HANLDER_LOAD(handler) keyboard_handle = handler
-#define KEYBOARD_KEYSTROKE_HANLDER_UNLOAD() keyboard_handle = NULL 
+#define KEYBOARD_KEYSTROKE_HANLDER_UNLOAD() keyboard_handle = NULL
 
-typedef uint8_t* address_t;
-typedef uint8_t* object_t;
+typedef uint8_t *address_t;
+typedef uint8_t *object_t;
 
-extern uint8_t* const zeros;
+extern uint8_t *const zeros;
 
 struct CmosTime
 {
-    uint8_t seconds; 
+    uint8_t seconds;
     uint8_t minutes;
     uint8_t hour;
 
@@ -35,7 +35,7 @@ struct CmosTime
     uint8_t year;
     uint8_t century;
 
-}__attribute__((packed));
+} __attribute__((packed));
 
 typedef struct CmosTime CmosTime;
 extern CmosTime SystemTime;
@@ -43,13 +43,13 @@ extern CmosTime SystemTime;
 #define CMOS_ADDR 0x70
 #define CMOS_DATA 0x71
 
-extern char* daysLUT[7];
+extern char *daysLUT[7];
 
-extern char* keyboard_command;
+extern char *keyboard_command;
 
-extern uint8_t* null_memory_region;
+extern uint8_t *null_memory_region;
 
-struct 
+struct
 {
     uint32_t eax;
     uint32_t ecx;
@@ -60,8 +60,7 @@ struct
     uint32_t esi;
     uint32_t edi;
     uint32_t eip;
-}typedef reg_t;
-
+} typedef reg_t;
 
 struct
 {
@@ -71,67 +70,67 @@ struct
     uint16_t ss;
     uint16_t fs;
     uint16_t gs;
-}typedef seg_t;
+} typedef seg_t;
 
 extern reg_t Register;
 extern seg_t SegmentRegister;
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
-extern float pit_time;
-extern bool key_pressed(void);
-extern char getchar(void);
-extern char getscan(void);
-extern void keyboard_buffer_refresh(uint16_t* screen_buffer);
-extern CmosTime* time_get(CmosTime* Time);
-extern uint8_t floppy_type_get_cmos(void);
-extern void get_cpu_speed(void);
-extern uint32_t randomizer;
-extern void swap_int(int *xp, int *yp);
-extern void swap_char(char* xp, char* yp);
-extern void swap_short(uint16_t* xp, uint16_t* yp);
-extern void srand(uint32_t seed);
-extern uint32_t memory_map_get_cmos(void);
-extern void int_swap(int *xp, int *yp);
-extern void bubble_sort(int* array, int n);  extern void merge(int* array, int first, int middle, int last);
-extern void merge_sort(int array[], int first, int last);
+    extern float pit_time;
+    extern bool key_pressed(void);
+    extern char getchar(void);
+    extern char getscan(void);
+    extern void keyboard_buffer_refresh(uint16_t *screen_buffer);
+    extern CmosTime *time_get(CmosTime *Time);
+    extern uint8_t floppy_type_get_cmos(void);
+    extern void get_cpu_speed(void);
+    extern uint32_t randomizer;
+    extern void swap_int(int *xp, int *yp);
+    extern void swap_char(char *xp, char *yp);
+    extern void swap_short(uint16_t *xp, uint16_t *yp);
+    extern void srand(uint32_t seed);
+    extern uint32_t memory_map_get_cmos(void);
+    extern void int_swap(int *xp, int *yp);
+    extern void bubble_sort(int *array, int n);
+    extern void merge(int *array, int first, int middle, int last);
+    extern void merge_sort(int array[], int first, int last);
 
-int integer(void* value);
-extern void* malloc(uint32_t size) __attribute__((fastcall));
-extern void* calloc(uint32_t size) __attribute__((fastcall));
-extern void  free(void* ptr) __attribute__((fastcall));
-extern void*  realloc(void* ptr, uint32_t size) __attribute__((fastcall));
+    int integer(void *value);
+    extern void *malloc(uint32_t size) __attribute__((fastcall));
+    extern void *calloc(uint32_t size) __attribute__((fastcall));
+    extern void free(void *ptr) __attribute__((fastcall));
+    extern void *realloc(void *ptr, uint32_t size) __attribute__((fastcall));
 
-extern void* kmalloc(uint32_t size);
-extern void* kcalloc(uint32_t size);
-extern void kfree(void* ptr);
-extern void* krealloc(void* ptr, uint32_t size_new);
-void* mmngr_realloc(void* ptr, uint32_t size);
+    extern void *kmalloc(uint32_t size);
+    extern void *kcalloc(uint32_t size);
+    extern void kfree(void *ptr);
+    extern void *krealloc(void *ptr, uint32_t size_new);
+    void *mmngr_realloc(void *ptr, uint32_t size);
 
-extern void exit(void);
-extern uint32_t rand(void);
-extern int reboot(void);
+    extern void exit(void);
+    extern uint32_t rand(void);
+    extern int reboot(void);
 
-uint32_t int_to_sectors(uint32_t num);
+    uint32_t int_to_sectors(uint32_t num);
 
-char getchar(void);
-char getscan(void);
-xchar getxchar(void);
-xchar inputg(void);
-key_info_t keyinfo_get(void);
+    char getchar(void);
+    char getscan(void);
+    xchar getxchar(void);
+    xchar inputg(void);
+    key_info_t keyinfo_get(void);
 
 #ifdef __cplusplus
 }
 #endif
 
-
-
 extern bool app_exited;
 extern uint8_t null_region[20];
 
-typedef uint8_t* address_t;
+typedef uint8_t *address_t;
 
 enum XANIN_RETURN_STATUS
 {
@@ -149,13 +148,13 @@ enum XANIN_INTERVAL
 };
 
 typedef uint32_t interval_id;
-typedef void(*interval_handler)(address_t* args);
+typedef void (*interval_handler)(address_t *args);
 
 struct IntervalEntry
 {
     bool is_in_use;
     interval_handler handler;
-    address_t* arguments;
+    address_t *arguments;
     float timeout;
     float start_time;
 };
@@ -164,13 +163,14 @@ typedef struct IntervalEntry IntervalEntry;
 extern IntervalEntry XaninIntervals[INTERVALS_MAX];
 
 #ifdef __cplusplus
-extern "C"{
+extern "C"
+{
 #endif
 
-interval_id interval_set(interval_handler handler, float ms, address_t* args);
-void interval_clear(interval_id used_interval);
-void do_interval(interval_id interval);
-void all_intervals_clear(void);
+    interval_id interval_set(interval_handler handler, float ms, address_t *args);
+    void interval_clear(interval_id used_interval);
+    void do_interval(interval_id interval);
+    void all_intervals_clear(void);
 
 #ifdef __cplusplus
 }
