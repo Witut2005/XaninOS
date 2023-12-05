@@ -39,7 +39,8 @@ int xin_list_files_app(char **argv)
         {
             if (xin_get_file_pf(i->path) != NULL)
             {
-                if (bstrcmp(xin_get_file_pf(i->path)->path, xin_current_directory))
+                char buf[XIN_MAX_PATH_LENGTH];
+                if (bstrcmp(xin_get_file_pf(i->path)->path, __xin_current_directory_get(buf)))
                 {
                     xprintf("%z%s", OUTPUT_COLOR_SET(black, i->type + 0x2), i);
                     xprintf("   ");
@@ -63,7 +64,7 @@ int xin_list_files_app(char **argv)
 
             else
             {
-                if (bstrcmp(xin_get_file_pf(i->path)->path, __xin_current_path_get(path)))
+                if (bstrcmp(xin_get_file_pf(i->path)->path, __xin_path_get(path)))
                 {
                     xprintf("%z%s", OUTPUT_COLOR_SET(black, i->type + 0x2), i);
                     xprintf("  ");

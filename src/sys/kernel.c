@@ -114,8 +114,9 @@ void kernel_loop(void)
 
         putchar('\n');
 
-        for (int i = 0; xin_current_directory[i + 1] != '\0'; i++)
-            xprintf("%z%c", OUTPUT_COLOR_SET(black, lblue), xin_current_directory[i]);
+        char xin_current_directory_buf[XIN_MAX_PATH_LENGTH];
+        __xin_current_directory_get(xin_current_directory_buf);
+        xprintf("%z%s", OUTPUT_COLOR_SET(black, blue), &xin_current_directory_buf[1]);
 
         putchar('>');
 

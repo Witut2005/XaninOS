@@ -4,6 +4,7 @@
 
 __STATUS pwd(void)
 {
-    xprintf("%s\n", xin_current_directory); // USE FUNCTION HERE
+    char buf[XIN_MAX_PATH_LENGTH];
+    xprintf("%s\n", __xin_current_directory_get(buf)); // USE FUNCTION HERE
     return XANIN_OK;
 }

@@ -41,7 +41,7 @@ void handle_selected_option(char *option, ExplorerInfo *AppInfo)
 
         canvas_xprintf("New file name: ");
         canvas_xscanf("%s", new_name);
-        __xin_entry_move(AppInfo->selected_file, __xin_current_path_get(new_name));
+        __xin_entry_move(AppInfo->selected_file, __xin_path_get(new_name));
 
         free(new_name);
     }
@@ -58,7 +58,7 @@ void handle_selected_option(char *option, ExplorerInfo *AppInfo)
         // while(1);
 
         if (new_name[0] != '/')
-            __xin_link_create(AppInfo->selected_file, __xin_current_path_get(new_name));
+            __xin_link_create(AppInfo->selected_file, __xin_path_get(new_name));
         else
             __xin_link_create(AppInfo->selected_file, new_name);
 
@@ -74,7 +74,7 @@ void handle_selected_option(char *option, ExplorerInfo *AppInfo)
         canvas_xscanf("%s", new_name);
 
         canvas_xprintf("selected file: %s\n", AppInfo->selected_file);
-        canvas_xprintf("new file: %s\n", new_name[0] != '/' ? __xin_current_path_get(new_name) : new_name);
+        canvas_xprintf("new file: %s\n", new_name[0] != '/' ? __xin_path_get(new_name) : new_name);
 
         __xin_copy(AppInfo->selected_file, new_name);
 
@@ -94,7 +94,7 @@ void handle_selected_option(char *option, ExplorerInfo *AppInfo)
         canvas_xprintf("New file name: ");
         canvas_xscanf("%s", new_name);
         __xin_file_create(new_name);
-        canvas_xprintf("new file: %s\n", __xin_current_path_get(new_name));
+        canvas_xprintf("new file: %s\n", __xin_path_get(new_name));
         free(new_name);
     }
 

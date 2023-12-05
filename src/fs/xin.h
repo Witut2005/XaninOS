@@ -96,12 +96,6 @@ typedef struct XinFileDescriptor XinFileDescriptor;
 typedef struct XinChildrenEntries XinChildrenEntries;
 typedef struct XinEntriesPack XinEntriesPack;
 
-// typedef xin_
-
-// extern uint8_t xin_base_state[100];
-extern char xin_current_path[38];
-extern char xin_current_directory[38];
-
 extern XinFileDescriptor *FileDescriptorTable;
 
 #ifdef __cplusplus
@@ -111,9 +105,9 @@ extern "C"
     {
 #endif
 
-        char *__xin_current_directory_set(char *directory);
-        void __xin_current_directory_get(char *buf);
-        char *__xin_current_path_get(char *file_name);
+        bool __xin_current_directory_set(char *directory);
+        char *__xin_current_directory_get(char *buf);
+        char *__xin_path_get(char *file_name);
 
         __STATUS __xin_entry_remove(char *entry_name);
         char *__xin_get_current_path(char *file_name);

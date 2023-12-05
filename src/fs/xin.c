@@ -19,36 +19,53 @@ XinFileDescriptor *FileDescriptorTable;
 static XinEntry *XinFilesOpened[XIN_OPENED_FILES_COUNTER];
 
 int8_t xin_base_state[100];
-char xin_current_path[38] = {'\0'};
-char xin_current_directory[38] = {'\0'};
+static char xin_current_path[XIN_MAX_PATH_LENGTH];
+static char xin_current_directory[XIN_MAX_PATH_LENGTH];
 
-char *__xin_current_directory_set(char *directory)
+bool __xin_check_if_valid_directory(char *directory)
 {
-    memset((uint8_t *)xin_current_directory, 0, XIN_MAX_PATH_LENGTH);
+    XinEntry *Entry = __xin_find_entry(directory);
 
-    for (int i = 0; directory[i] != '\0'; i++)
-        xin_current_directory[i] = directory[i];
-
-    return xin_current_directory;
+    if (Entry == NULL)
+        return false;
+    if (Entry->type != XIN_DIRECTORY)
+        return false;
+    if (Entry->path[0] != '/')
+        return false;
+    return true;
 }
 
-void __xin_current_directory_get(char *buf)
+bool __xin_current_directory_set(char *directory)
+{
+    if (!__xin_check_if_valid_directory(directory))
+        return false;
+    strncpy(xin_current_directory, directory, XIN_MAX_PATH_LENGTH);
+    return true;
+}
+
+char *__xin_current_directory_get(char *buf)
 {
     memcpy((uint8_t *)buf, (uint8_t *)xin_current_directory, XIN_MAX_PATH_LENGTH);
+    return buf;
 }
 
-char *__xin_current_path_get(char *file_name)
+char *__xin_path_get(char *file_name)
 {
-    memset((uint8_t *)xin_current_path, 0, XIN_MAX_PATH_LENGTH);
-    int i = 0;
+    char *buf = kcalloc(XIN_MAX_PATH_LENGTH);
 
-    for (i = 0; xin_current_directory[i] != '\0'; i++)
-        xin_current_path[i] = xin_current_directory[i];
+    strncpy(buf, xin_current_directory, XIN_MAX_PATH_LENGTH);
 
-    for (int pos = 0; file_name[pos] != '\0'; i++, pos++)
-        xin_current_path[i] = file_name[pos];
+    int pos = strlen(buf);
 
-    return xin_current_path;
+    if (pos + strlen(file_name) >= XIN_MAX_PATH_LENGTH)
+    {
+        kfree(buf);
+        return NULL;
+    }
+
+    strncpy(&buf[pos], file_name, XIN_MAX_PATH_LENGTH - pos);
+
+    return buf;
 }
 
 uint8_t *xin_find_free_pointer(void)
@@ -116,7 +133,7 @@ XinEntry *__xin_find_entry(char *entry_name)
             return (XinEntry *)i;
     }
 
-    entry_name = __xin_current_path_get(entry_name);
+    entry_name = __xin_path_get(entry_name);
 
     // if(strlen(entry_name) > 40)
     //     return NULL;
@@ -269,7 +286,7 @@ int __xin_folder_create(char *entry_name)
 
     if (only_entry_name)
     {
-        char *path = __xin_current_path_get(entry_name);
+        char *path = __xin_path_get(entry_name);
 
         if (__xin_find_entry(entry_name) != NULL)
             return XIN_FILE_EXISTS;
@@ -280,7 +297,7 @@ int __xin_folder_create(char *entry_name)
     else if (!only_entry_name && entry_name[0] != '/')
     {
         char full_path[XIN_MAX_PATH_LENGTH];
-        memcpy((uint8_t *)full_path, (uint8_t *)__xin_current_path_get(entry_name), XIN_MAX_PATH_LENGTH);
+        memcpy((uint8_t *)full_path, (uint8_t *)__xin_path_get(entry_name), XIN_MAX_PATH_LENGTH);
 
         XinEntry *path = __xin_find_entry(xin_get_file_pf(full_path)->path);
 
@@ -404,8 +421,8 @@ __STATUS __xin_file_create(char *entry_name)
         for (int j = 0; j <= i; j++)
             tmp[j] = entry_name[j];
 
-        // xprintf("%s\n", __xin_current_path_get(entry_name));
-        strcpy(tmp, __xin_current_path_get(tmp));
+        // xprintf("%s\n", __xin_path_get(entry_name));
+        strcpy(tmp, __xin_path_get(tmp));
         XinEntry *path = __xin_find_entry(tmp);
 
         if (path == NULL)
@@ -414,12 +431,12 @@ __STATUS __xin_file_create(char *entry_name)
             return XANIN_ERROR;
         }
 
-        strcpy(entry->path, __xin_current_path_get(entry_name));
+        strcpy(entry->path, __xin_path_get(entry_name));
     }
 
     else if (only_entry_name)
     {
-        char *path = __xin_current_path_get(entry_name);
+        char *path = __xin_path_get(entry_name);
 
         // xprintf("%s\n", path);
 
@@ -1253,7 +1270,7 @@ __STATUS __xin_link_create(char *file_name, char *link_name)
         link->path[i] = file->path[i];
 
     if (link_name[0] != '/')
-        link_name = __xin_current_path_get(link_name);
+        link_name = __xin_path_get(link_name);
 
     for (int i = 0; i < XIN_MAX_PATH_LENGTH; i++)
         link->path[i] = link_name[i];
@@ -1311,8 +1328,8 @@ __STATUS __xin_entry_move(char *entry_name, char *new_name)
     }
     else
     {
-        for (i = 0; __xin_current_path_get(new_name)[i] != '\0'; i++)
-            entry->path[i] = __xin_current_path_get(new_name)[i];
+        for (i = 0; __xin_path_get(new_name)[i] != '\0'; i++)
+            entry->path[i] = __xin_path_get(new_name)[i];
     }
 
     entry->path[i] = '\0';

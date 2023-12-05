@@ -12,6 +12,10 @@
 #define XANIN_WRITE 16
 #define XANIN_CLOSE 17
 
+#define XANIN_CURRENT_DIRECTORY_SET 30
+#define XANIN_CURRENT_DIRECTORY_GET 31
+// #define XANIN_CURRENT
+
 // Memory Allocation
 
 #define XANIN_ALLOCATE 100
