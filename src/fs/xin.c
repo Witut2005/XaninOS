@@ -1186,8 +1186,12 @@ XinEntriesPack *__xin_hard_links_get(const XinEntry *const File)
     XinEntriesPack *Pack = (XinEntriesPack *)calloc(SIZE_OF(XinEntriesPack));
     Pack->entries = (XinEntry **)calloc(SIZE_OF(XinEntry *));
 
-    if (File->type != XIN_FILE || !File)
-        return Pack;
+    if ((File->type != XIN_FILE) || (File == NULL))
+    {
+        free(Pack->entries);
+        free(Pack);
+        return NULL;
+    }
 
     for (XinEntry *i = (XinEntry *)XIN_ENTRY_TABLE; (uint32_t)i < XIN_ENTRY_TABLE + (SECTOR_SIZE * 50); i++)
     {
