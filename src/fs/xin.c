@@ -1217,7 +1217,7 @@ bool __xin_file_to_xfo_add(XinEntry *File)
 {
     for (int i = 0; i < XIN_OPENED_FILES_COUNTER; i++)
     {
-        if (XinFilesOpened[i] == File)
+        if (XinFilesOpened[i] == File) // already added
             return true;
     }
 
@@ -1235,7 +1235,8 @@ bool __xin_file_to_xfo_add(XinEntry *File)
 
 void __xin_all_files_close(void)
 {
-    interrupt_disable();
+    // EFlags Flags = eflags_get();
+    // interrupt_disable();
 
     for (int i = 0; i < XIN_OPENED_FILES_COUNTER; i++)
     {
@@ -1243,7 +1244,7 @@ void __xin_all_files_close(void)
             fclose(&XinFilesOpened[i]);
     }
 
-    interrupt_enable();
+    // interrupt_enable();
 }
 
 __STATUS __xin_link_remove(const char *linkname)
