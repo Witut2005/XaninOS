@@ -297,6 +297,7 @@ objects_to_compile = {
         CompileObject('./sys/input/input.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./sys/log/syslog.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./sys/lock/lock.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
+        CompileObject('./sys/storage/storage.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
     ],
 
     'xanin_sys': [

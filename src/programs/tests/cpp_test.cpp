@@ -222,6 +222,17 @@ static inline void map_test(void)
 {
     std::cout << "MAP TEST" << std::endl;
 
+    std::UnorderedMap<std::string, uint32_t> l = {{"nicho", 1}};
+
+    // l.insert("fro", 10);
+    // std::cout << l["nicho"] << std::endl;
+    // std::cout << l["fro"] << std::endl;
+
+    for (auto a : l)
+        std::cout << a.first.c_str() << std::endl;
+
+    return;
+
     std::UnorderedMap<int, int> map = {
         {1, 10},
         {2, 20}};
@@ -260,7 +271,6 @@ static inline void cont_test(void)
     std::array<decltype(std::remove_reference_t<decltype(*result.begin())>(*result.begin())), 3>
         arr(result.begin(), result.end());
 
-
     // decltype(*(arr.begin()));
 
     // xprintf("val: %d\n", result[0].pointer());
@@ -281,8 +291,8 @@ void cpp_prog()
     // arr_test();
     // vec_test();
     // list_test();
-    // map_test();
-    cont_test();
+    map_test();
+    // cont_test();
     return;
 
     std::cout << "hash test: " << jhash("nicho") << std::endl;
