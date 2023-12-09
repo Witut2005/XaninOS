@@ -222,14 +222,16 @@ static inline void map_test(void)
 {
     std::cout << "MAP TEST" << std::endl;
 
-    std::UnorderedMap<std::string, uint32_t> l = {{"nicho", 1}};
+    std::UnorderedMap<std::string, uint32_t> l = {{"jeden", 1}};
+    l.insert("dwa", 2);
+    l.insert("trzy", 3);
 
-    // l.insert("fro", 10);
-    // std::cout << l["nicho"] << std::endl;
-    // std::cout << l["fro"] << std::endl;
 
-    for (auto a : l)
-        std::cout << a.first.c_str() << std::endl;
+    std::string a = "abc";
+    std::string b = "def";
+
+    std::cout << a << std::endl;
+    std::cout << b << std::endl;
 
     return;
 

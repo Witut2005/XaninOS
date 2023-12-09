@@ -15,6 +15,12 @@ namespace std
     struct ListElement
     {
         using value_type = T;
+
+        ListElement()
+        {
+            value = T();
+        }
+
         T value;
         ListElement *next;
         ListElement *previous;
@@ -255,7 +261,7 @@ namespace std
         if (this->li_size)
             return false;
 
-        this->Head = (ListNode *)calloc(SIZE_OF(ListNode));
+        this->Head = new ListNode;
 
         this->Head->previous = this->ListLowerBoundary;
         this->Head->next = this->ListUpperBoundary;
@@ -471,10 +477,11 @@ namespace std
         if (this->empty_list_initializer(value))
             return;
 
-        ListNode *ElementCreated = (ListNode *)calloc(SIZE_OF(ListNode));
+        // ListNode *ElementCreated = (ListNode *)calloc(SIZE_OF(ListNode));
+        ListNode *ElementCreated = new ListNode;
+        ElementCreated->value = value;
 
         this->new_tail_push(ElementCreated);
-        ElementCreated->value = value;
 
         this->li_size++;
     }
