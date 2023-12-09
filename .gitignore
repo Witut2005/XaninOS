@@ -54,3 +54,6 @@
 **/*.su
 **/*.idb
 **/*.pdb
+
+xanc/node_modules
+xanc/package-lock.json

@@ -477,7 +477,6 @@ namespace std
         if (this->empty_list_initializer(value))
             return;
 
-        // ListNode *ElementCreated = (ListNode *)calloc(SIZE_OF(ListNode));
         ListNode *ElementCreated = new ListNode;
         ElementCreated->value = value;
 
@@ -492,7 +491,7 @@ namespace std
         if (this->empty_list_initializer(value))
             return;
 
-        ListNode *NewHead = (ListNode *)calloc(SIZE_OF(ListNode));
+        ListNode *NewHead = new ListNode;
 
         // NewHead->previous already set to NULL
         NewHead->next = this->Head;
