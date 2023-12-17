@@ -192,12 +192,12 @@ void __xin_free_temporary_data(XinEntry *File)
     free(File->FileInfo);
 }
 
-// DO POPRAWY
 __STATUS __xin_folder_change(char *new_directory)
 {
 
     if (strlen(new_directory) > XIN_MAX_PATH_LENGTH)
-        return XIN_TO_LONG_PATH;
+        // return NULL;
+        return XANIN_ERROR;
 
     char *tmp = (char *)calloc(XIN_MAX_PATH_LENGTH);
 
@@ -207,7 +207,8 @@ __STATUS __xin_folder_change(char *new_directory)
     if (bstrcmp(new_directory, ".."))
     {
         if (bstrcmp(xin_current_directory, "/"))
-            return XIN_ENTRY_NOT_FOUND;
+            // return NULL;
+            return XANIN_ERROR;
         else
         {
             xin_current_directory[strlen(xin_current_directory) - 1] = '\0';
@@ -219,6 +220,7 @@ __STATUS __xin_folder_change(char *new_directory)
                 counter--;
             }
         }
+        // return xin_find_entry(xin_current_directory);
         return XANIN_OK;
     }
 
@@ -229,24 +231,30 @@ __STATUS __xin_folder_change(char *new_directory)
         new_directory[name_length] = '/';
     }
 
+    if (new_directory[0] != '/')
+        new_directory = strconcat(xin_current_directory, new_directory);
+
     XinEntry *xin_new_directory = __xin_find_entry(new_directory);
 
     if (xin_new_directory == NULL)
     {
         free(new_directory);
-        return XIN_ENTRY_NOT_FOUND;
+        // return NULL;
+        return XANIN_ERROR;
     }
 
     else if (xin_new_directory->type != XIN_DIRECTORY)
     {
         free(new_directory);
-        return XIN_NOT_A_FOLDER;
+        // return NULL;
+        return XANIN_ERROR;
     }
 
     else if (new_directory[strlen(new_directory) - 1] != '/')
     {
         free(new_directory);
-        return XIN_BAD_FOLDER_NAME;
+        // return NULL;
+        return XANIN_ERROR;
     }
 
     for (int i = 0; i < SIZE_OF(xin_current_directory); i++)
@@ -256,6 +264,67 @@ __STATUS __xin_folder_change(char *new_directory)
 
     free(new_directory);
     return XANIN_OK;
+
+    // if (strlen(new_directory) > XIN_MAX_PATH_LENGTH)
+    //     return XIN_TO_LONG_PATH;
+
+    // char *tmp = (char *)calloc(XIN_MAX_PATH_LENGTH);
+
+    // strcpy(tmp, new_directory);
+    // new_directory = tmp;
+
+    // if (bstrcmp(new_directory, ".."))
+    // {
+    //     if (bstrcmp(xin_current_directory, "/"))
+    //         return XIN_ENTRY_NOT_FOUND;
+    //     else
+    //     {
+    //         xin_current_directory[strlen(xin_current_directory) - 1] = '\0';
+    //         int counter = strlen(xin_current_directory) - 1;
+
+    //         while (xin_current_directory[counter] != '/')
+    //         {
+    //             xin_current_directory[counter] = '\0';
+    //             counter--;
+    //         }
+    //     }
+    //     return XANIN_OK;
+    // }
+
+    // if (new_directory[strlen(new_directory) - 1] != '/')
+    // {
+    //     int name_length = strlen(new_directory); // '\0' before any modification
+    //     new_directory[name_length + 1] = '\0';
+    //     new_directory[name_length] = '/';
+    // }
+
+    // XinEntry *xin_new_directory = __xin_find_entry(new_directory);
+
+    // if (xin_new_directory == NULL)
+    // {
+    //     free(new_directory);
+    //     return XIN_ENTRY_NOT_FOUND;
+    // }
+
+    // else if (xin_new_directory->type != XIN_DIRECTORY)
+    // {
+    //     free(new_directory);
+    //     return XIN_NOT_A_FOLDER;
+    // }
+
+    // else if (new_directory[strlen(new_directory) - 1] != '/')
+    // {
+    //     free(new_directory);
+    //     return XIN_BAD_FOLDER_NAME;
+    // }
+
+    // for (int i = 0; i < SIZE_OF(xin_current_directory); i++)
+    //     xin_current_directory[i] = '\0';
+
+    // strcpy(xin_current_directory, xin_new_directory->path);
+
+    // free(new_directory);
+    // return XANIN_OK;
 }
 
 int __xin_folder_create(char *entry_name)
