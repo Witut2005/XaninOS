@@ -114,7 +114,7 @@ extern "C"
 
         void __xin_load_tables(void);
         void __xin_init_fs(void);
-        XinEntry *__xin_find_free_entry(void);
+        XinEntry *____xin_find_free_entry(void);
 
         __STATUS __xin_file_create(char *entry_name);
         __STATUS __xin_folder_create(char *entry_name);
@@ -133,7 +133,7 @@ extern "C"
 
         void fseek(XinEntry *file, uint32_t new_position);
         void lseek(int fd, uint32_t new_position);
-        XinEntry *xin_get_file_pf(char *path); // pf = parent folder
+        XinEntry *__xin_get_file_pf(char *path); // pf = parent folder
         XinEntry *__xin_find_entry(char *entry_name);
         __STATUS __xin_folder_remove(char *folder_name);
 
@@ -146,9 +146,10 @@ extern "C"
         const uint32_t ftell(XinEntry *file);
         const uint32_t lteel(int fd);
         uint8_t *__xin_find_free_pointer(void);
-        uint8_t *__xin_find_free_pointer_with_given_size(uint32_t size);
+        uint8_t *____xin_find_free_pointer_with_given_size(uint32_t size);
+        void __xin_entry_resize(XinEntry *entry, uint32_t new_size);
         int __xin_file_size_in_sectors_get(XinEntry *File);
-        void __xin_free_temporary_data(XinEntry *File);
+        void ____xin_free_temporary_data(XinEntry *File);
         XinEntriesPack *__xin_hard_links_get(const XinEntry *const File);
         bool __xin_file_to_xfo_add(XinEntry *File);
         void __xin_all_files_close(void);
