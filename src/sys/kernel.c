@@ -73,6 +73,20 @@ extern bool com_status(void);
 |Ja, rok 2022, 31 grudzień, 17:00:45    |
 /--------------------------------------*/
 
+/*--------------------------------------/
+|Ale się pozmieniało przez ten rok hoho |
+|Poryczałabyś się ze szczęścia jakbyś   |
+|Mogła to wszystko zobaczyć. Wiem, że   |
+|Gdzieś tam jesteś i mam nadzieję, że   |
+|Pewnego dnia zobaczysz jak wchodzę     |
+|Na najwyższą możliwą górę.             |
+|Będę tym mężczyzną którym zawsze       |
+|Chciałaś żebym był                     |
+|Nie zrezygnuję ze swoich marzeń i      |
+|Pokonam wszelkie przeciwności          |
+|Ja, rok 2023, 31 grudzień, 17:00:45    |
+/--------------------------------------*/
+
 uint8_t *const zeros;
 
 uint32_t stdio_refresh_rate;
@@ -85,19 +99,10 @@ void stdio_refresh(address_t *args)
         __sys_xtb_flush(__sys_vty_get());
 }
 
-// static inline void is_nicho(key_info_t key, uint8_t **args)
-// {
-//     xprintf("%s", __sys_is_normal_key_pressed(KBP_0) ? "true" : "false");
-// }
-
 void kernel_loop(void)
 {
     while (1)
     {
-
-        // InputHandler TmpHandler = input_handler_create(is_nicho, input_handler_options_create(NULL, KERNEL_INPUT_HANDLER));
-        // __input_add_handler(&TmpHandler);
-
         xtb_enable_flushing();
         stdio_mode_set(STDIO_MODE_TERMINAL);
         __xtb_flush_all(__vty_get());
@@ -109,7 +114,6 @@ void kernel_loop(void)
         memset(null_memory_region, 0, SECTOR_SIZE);
         __xtf_scrolling_on(__vty_get());
 
-        // screen_clear();
         time_get(&SystemTime);
 
         putchar('\n');
@@ -395,7 +399,7 @@ void kernel_start(void)
         xprintf("%z    _/      _/                      _/              _/_/      _/_/_/       \n", OUTPUT_COLOR_SET(logo_back_color, logo_front_color));
         xprintf("%z     _/  _/      _/_/_/  _/_/_/        _/_/_/    _/    _/  _/              \n", OUTPUT_COLOR_SET(logo_back_color, logo_front_color));
         xprintf("%z      _/      _/    _/  _/    _/  _/  _/    _/  _/    _/    _/_/           \n", OUTPUT_COLOR_SET(logo_back_color, logo_front_color));
-        xprintf("%z   _/  _/    _/    _/  _/    _/  _/  _/    _/  _/    _/        _/%z   version 1.9v", OUTPUT_COLOR_SET(logo_back_color, logo_front_color), OUTPUT_COLOR_SET(black, white));
+        xprintf("%z   _/  _/    _/    _/  _/    _/  _/  _/    _/  _/    _/        _/%z   version 2.0v", OUTPUT_COLOR_SET(logo_back_color, logo_front_color), OUTPUT_COLOR_SET(black, white));
         xprintf("%z_/      _/    _/_/_/  _/    _/  _/  _/    _/    _/_/    _/_/_/     %z%s: %i:%i:%i\n", OUTPUT_COLOR_SET(logo_back_color, logo_front_color), OUTPUT_COLOR_SET(black, white), daysLUT[SystemTime.weekday], SystemTime.hour, SystemTime.minutes, SystemTime.seconds);
     }
 

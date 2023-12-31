@@ -1,6 +1,6 @@
 C = i386-elf-gcc
 
-build:
+build_kernel:
 	python3 build.py --preinstall=yes --dwarf
 
 gcc_obj:

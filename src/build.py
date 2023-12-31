@@ -98,7 +98,7 @@ def compile_boot2():
 
     commands = [
         f"{builders['c']} -O0 -masm=intel -Werror -Wimplicit-function-declaration -nostdlib -Ttext 0xA00000 -I ./ ./boot/boot2.c ./boot/boot_libs/boot_lib.o -o ./boot/boot2.elf",
-        'python3 ./utils/align_file.py -f ./boot/boot2.elf -size 7168',
+        'python3 ./build/align_file.py -f ./boot/boot2.elf -size 7168',
     ]
 
     for command in commands:
@@ -125,14 +125,14 @@ def compile_kernel(*kargs):
         'dd if=./programs/xanin_external_apps of=./programs/xanin_apps_space bs=512 count=16 conv=notrunc',
         'cat ./boot/boot ./lib/libc/enter_real_mode ./programs/xanin_apps_space ./programs/blank_sector ./fs/xin_pointers ./fs/entries_table ./boot/kernel_loader.bin ./boot/boot2.elf kernel.bin > xanin.bin',
         'dd if=xanin.bin of=xanin.img',
-        'python3 ./utils/align_file.py -f ./xanin.img -size 600000',
+        'python3 ./build/align_file.py -f ./xanin.img -size 600000',
         'mv xanin.img -f ../bin',
         'mv xanin.bin -f ../bin'
     ]
 
     if(args.preinstall == 'yes'):
         # commands.append('make -C ./external_apps')
-        commands.append('python3 ./utils/app_preinstall.py -files external_apps/ etc/ -image ../bin/xanin.img')
+        commands.append('python3 ./build/app_preinstall.py -files external_apps/ etc/ -image ../bin/xanin.img')
         # commands.append('python3 ./utils/app_preinstall.py -files etc/ -image ../bin/xanin.img')
     
     for command in commands:
