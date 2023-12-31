@@ -1,5 +1,4 @@
 
-import numpy as np
 from detect_xin_ext import *
 import argparse
 from colorama import Fore 
