@@ -65,7 +65,7 @@ print("NORMAL: ", datetime.now().strftime('%d%m%Y'))
 # print("BCD", xin_current_time[0])
     
 class XinEntryData: 
-    def __init__(self, path, type, permissions, size=0, first_sector=0):
+    def __init__(self, path, type, permissions=XIN_MAX_PERMISSIONS, size=0, first_sector=0):
         self.path = convert_string_to_aligned_bytes(path, XIN_MAX_ENTRY_PATH_LENGTH)
         self.type = type
         self.creation_date = xin_current_date 
@@ -78,7 +78,15 @@ class XinEntryData:
             self.size = size.to_bytes(4, byteorder='little')
             self.first_sector = size.to_bytes(4, byteorder='little')
 
-    def write(self, file):
+    def write(self, file, xin_pointers_begin=None):
+
+        if self.type != XIN_DIRECTORY:
+            file.seek(xin_pointers_begin + self.first_sector)
+            for i in range(self.sectors_occupied - 1):
+                file.write(XIN_ALLOCATED)
+            file.write(XIN_EOF)
+
+
         file.write(self.path)
         file.write(self.type)
         file.write(self.creation_date)
@@ -95,26 +103,26 @@ def preinstall(file):
 
     xin_pointers_begin = os.path.getsize(file.name)
     xin_entries_begin = xin_pointers_begin + (SECTOR_SIZE * 512)
+
+    # TUTAJ KURSOR DLA klasay XIN_ENTRY_DATA
+    # xin_pointers_cursor = 
+    # xin_entries_cursor = 
+
     xin_preinstalled_objects_cursor = xin_entries_begin + (SECTOR_SIZE * 256) #current preintall objects data file cursor
 
     xin_entries_current_entry_index = 0
     # xin_filesystem_pointers = xin_filesystem_pointers_begin 
 
     xanin_entries_to_preinstall = [
-
-        # XinEntryData('/', XIN_DIRECTORY, XIN_MAX_PERMISSIONS, )
-
-        # PreinstallableObject('/', XIN_DIRECTORY, 0, 0),
-        # PreinstallableObject('/file_system.bin', XIN_DIRECTORY, 0, 0),
-        # PreinstallableObject('/enter_real_mode.bin', XIN_FILE, 0x12, 20),
-        # PreinstallableObject('/boot.bin', XIN_FILE, 1, 1),
-        # PreinstallableObject('/shutdown.bin', XIN_FILE, 1, 2),
-        # PreinstallableObject('/fast_real_mode_enter.bin', XIN_FILE, 5, 1), 
-        # PreinstallableObject('/fast_real_mode_return.bin', XIN_FILE, 6, 1),
-        # PreinstallableObject('/screenshot/', XIN_DIRECTORY, 0, 0),
-        # PreinstallableObject('/ivt', XIN_FILE, 1000, 2),
-
-
+        XinEntryData('/',                           XIN_DIRECTORY),
+        XinEntryData('/file_system.bin',            XIN_DIRECTORY),
+        XinEntryData('/enter_real_mode.bin',        XIN_FILE, 0x12, 20),
+        XinEntryData('/boot.bin',                   XIN_FILE, 1, 1),
+        XinEntryData('/shutdown.bin',               XIN_FILE, 1, 2),
+        XinEntryData('/fast_real_mode_enter.bin',   XIN_FILE, 5, 1), 
+        XinEntryData('/fast_real_mode_return.bin',  XIN_FILE, 6, 1),
+        XinEntryData('/screenshot/',                XIN_DIRECTORY),
+        XinEntryData('/ivt',                        XIN_FILE, 1000, 2)
     ]
 
     file.seek(xin_entries_begin)
