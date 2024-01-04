@@ -19,6 +19,8 @@ args = args.parse_args()
 xin_current_date = decimal_to_bcd(datetime.now().strftime('%d%m%Y'))
 xin_current_time = decimal_to_bcd(datetime.now().strftime('%H%M'))
 
+print(xin_current_date)
+
 class XinEntryData: 
 
     xin_pointers_begin = None
