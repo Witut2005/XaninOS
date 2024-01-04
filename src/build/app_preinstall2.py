@@ -11,7 +11,7 @@ from app_preinstall_functions import *
 
 args = argparse.ArgumentParser()
 args.add_argument('--image', action='store', type=str, required=True)
-# args.add_argument('--files', action='store', type=str, required=True, nargs='+')
+args.add_argument('--files', action='store', type=str, required=True, nargs='+')
 # args.add_argument('--errors', action='store_true')
 
 args = args.parse_args()
@@ -28,7 +28,7 @@ class XinEntryData:
     #tmp data
     xin_entries_index = 0
 
-    def __init__(self, path, type, permissions=XIN_MAX_PERMISSIONS, size=0, first_sector=0):
+    def __init__(self, path, type, permissions=XIN_MAX_PERMISSIONS, size=None, first_sector=None):
         self.path = convert_string_to_aligned_bytes(path, XIN_MAX_ENTRY_PATH_LENGTH)
         self.type = type
         self.creation_date = xin_current_date 
@@ -38,15 +38,17 @@ class XinEntryData:
         self.permissions = permissions
         self.size = size
         self.first_sector = first_sector
-        # self.size = size.to_bytes(4, byteorder='little')
-        # self.first_sector = size.to_bytes(4, byteorder='little')
         
     def xin_data_set(os_image, xin_pointers_begin, xin_entries_begin):
         XinEntryData.os_image = os_image
         XinEntryData.xin_pointers_begin = xin_pointers_begin
         XinEntryData.xin_entries_begin  = xin_entries_begin 
 
-    def write(self):
+    # def xin_data_write(self, data):
+    #     XinEntryData.os_image.seek(self.first_sector * SECTOR_SIZE)
+    #     XinEntryData.os_image.write(data)
+
+    def write(self, data=None):
 
         # if self.type != XIN_DIRECTORY:
         #     XinEntryData.os_image.seek(XinEntryData.xin_pointers_begin + self.first_sector)
@@ -62,18 +64,20 @@ class XinEntryData:
         XinEntryData.os_image.write(self.creation_time)
         XinEntryData.os_image.write(self.modification_date)
         XinEntryData.os_image.write(self.modification_time)
-        XinEntryData.os_image.write(self.size.to_bytes(4, byteorder='little'))
-        XinEntryData.os_image.write(self.first_sector.to_bytes(4, byteorder='little'))
+
+        if(data == None):
+            XinEntryData.os_image.write((0 if self.size == None else self.size).to_bytes(4, byteorder='little'))
+            XinEntryData.os_image.write((0 if self.first_sector == None else self.first_sector).to_bytes(4, byteorder='little'))
+        else:
+            XinEntryData.os_image.write(len(data).to_bytes(4, byteorder='little'))
+            XinEntryData.os_image.write((find_free_sectors_for_given_size(len(data))).to_bytes(4, byteorder='little'))
+
+
         XinEntryData.os_image.write(int(0).to_bytes(4, 'little')) #File Info ptr
 
         XinEntryData.xin_entries_index += 1
 
-
-
 def preinstall(file): 
-
-    # xin_pointers_begin = os.path.getsize(file.name)
-    # xin_entries_begin = xin_pointers_begin + (SECTOR_SIZE * 512)
 
     xin_pointers_begin = os.path.getsize(file.name)
     xin_entries_begin = 0
@@ -95,91 +99,52 @@ def preinstall(file):
     for xin_entry in xin_default_entries_to_preinstall:
         xin_entry.write()
 
-    return
-
-    directories = set() 
+    directory_entires = set() 
+    file_entires = set()
 
     print('\n\n\n--------------------------------')
     print('XIN FILESYSTEM PREINSTALL PHARSE')
 
     for current_file in args.files:
         try: 
-            aha = open(current_file, 'rb')
+            if os.path.isfile(current_file):
+                files.add(current_file)
+            elif os.path.isdir(current_file):
+                print('FOLDER DETECTED') 
+                for path, dirs, files in os.walk(current_file):
+                    #print(path)
+                    if(path[-1] != '/'):
+                        path = path + '/'
+                    directory_entires.add(path)
+                    for f in files:
+                        print(path + f)
+                        file_entires.add(path + f)
+                    for d in dirs:
+                        directory_entires.add(path + d + '/')
+                continue
+
         except FileNotFoundError:
             print(f'{Fore.RED}File not found:{Style.RESET_ALL} {current_file}')
             if args.errors:
                 sys.exit()
             print('Skipping...')
-            continue
-
-        except IsADirectoryError:
-            print('FOLDER DETECTED') 
-            for path, dirs, files in os.walk(current_file):
-                #print(path)
-                if(path[-1] != '/'):
-                    path = path + '/'
-                directories.add(path)
-                for f in files:
-                    print(path + f)
-                    args.files.append(path + f)
-                for d in dirs:
-                    directories.add(path + d + '/')
-            continue
-
-        data = aha.read()
-        
-        file.seek(xin_preinstalled_objects_cursor)
-        x = 0
-        file_lenght = int(len(data) / SECTOR_SIZE)
-        if(len(data) % 512 != 0):
-            file_lenght += 1 
-        
-        print(str(current_file).ljust(40, ' '), file_lenght, 'sectors')
-        if(file_lenght == 0):
-            file_lenght += 1
-
-        while x < file_lenght-1:
-            file.write(XIN_ALLOCATED)
-            x += 1
-
-        file.write(XIN_EOF)
-        
-        file.seek(xin_entries_begin)
-        file.write(bytes('/' + current_file, 'ascii'))
-        file.seek(xin_filesystem_entries + 38) #entry path
-        file.write(bytes(XIN_FILE, 'ascii'))
-        file.write(bytes(13))
-        file.write(len(data).to_bytes(4, 'little')) #entry size
-        file.write((xin_filesystem_pointers - xin_filesystem_pointers_begin).to_bytes(4, 'little')) #first sector 
-        
-        file.seek(SECTOR_SIZE * (xin_filesystem_pointers - xin_filesystem_pointers_begin)) #write data to image
-
-        if(file.tell() == 0):
-            print('ABORT')
-        
-        file.write(data)
-
-        xin_filesystem_entries += XIN_ENTRY_SIZE
-        xin_filesystem_pointers += file_lenght
-
-        aha.close()
-
+            continue 
         
     print('--------------------------------')
-    for d in directories:
-        file.seek(xin_filesystem_entries)
-        file.write(bytes('/' + d, 'ascii'))
-        file.seek(xin_filesystem_entries + 38)
-        file.write(bytes(XIN_DIRECTORY, 'ascii'))
-        file.write(bytes(13))
-        file.write(bytes(4))
-        file.write(bytes(4))
-        xin_filesystem_entries += XIN_ENTRY_SIZE
+    print(file_entires)
+
+    for f in file_entires:
+        entry  = XinEntryData(f[1:], XIN_FILE, XIN_MAX_PERMISSIONS)
+        entry.write(open(f, 'rb').read())
+
+    for d in directory_entires:
+        entry = XinEntryData(d[1:], XIN_DIRECTORY, XIN_MAX_PERMISSIONS)
+        entry.write()
 
 def main(args):
     print(os.path.abspath(args.image))
     args.image = os.path.abspath(args.image)
-    image = open(args.image, 'rb+')
+    image = open(args.image, 'wb+')
     # align_file_to_size(image, 16)
     preinstall(image)
     # print(image.read()[0])

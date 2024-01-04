@@ -33,3 +33,6 @@ def align_file_to_size(file, size):
 
 def size_to_sectors(size):
     return size // 512 + (1 if size % 512 != 0 else 0)
+
+def find_free_sectors_for_given_size(size): 
+    return size_to_sectors(1)
