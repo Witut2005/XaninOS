@@ -4,8 +4,13 @@ import os
 def decimal_to_bcd(number):
     ascii_digits = number.encode('ascii')
     bcd_digits = b''
-    for i in range(len(ascii_digits)):
-        bcd_digits += (ascii_digits[i] - 48).to_bytes(1, byteorder='little')
+
+    index = 0
+
+    #nieparzyste tez moze byc
+    while index < len(ascii_digits):
+        bcd_digits += (((ascii_digits[index] - 48) << 4) | (ascii_digits[index+1]-48)).to_bytes(1, byteorder='little')
+        index += 2
 
     return bcd_digits
 

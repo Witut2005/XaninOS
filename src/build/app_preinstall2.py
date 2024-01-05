@@ -12,7 +12,7 @@ from app_preinstall_functions import *
 args = argparse.ArgumentParser()
 args.add_argument('--image', action='store', type=str, required=True)
 args.add_argument('--files', action='store', type=str, required=True, nargs='+')
-# args.add_argument('--errors', action='store_true')
+args.add_argument('--errors', action='store_true')
 
 args = args.parse_args()
 
@@ -46,10 +46,6 @@ class XinEntryData:
         XinEntryData.xin_pointers_begin = xin_pointers_begin
         XinEntryData.xin_entries_begin  = xin_entries_begin 
 
-    # def xin_data_write(self, data):
-    #     XinEntryData.os_image.seek(self.first_sector * SECTOR_SIZE)
-    #     XinEntryData.os_image.write(data)
-
     def write(self, data=None):
 
         # if self.type != XIN_DIRECTORY:
@@ -66,6 +62,8 @@ class XinEntryData:
         XinEntryData.os_image.write(self.creation_time)
         XinEntryData.os_image.write(self.modification_date)
         XinEntryData.os_image.write(self.modification_time)
+        print(type(self.permissions))
+        XinEntryData.os_image.write(self.permissions)
 
         if(data == None):
             XinEntryData.os_image.write((0 if self.size == None else self.size).to_bytes(4, byteorder='little'))

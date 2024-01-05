@@ -14,7 +14,7 @@ XIN_ALLOCATED = b'\x01'
 XIN_EOF = b'\xff'
 XIN_FILE = b'F'
 XIN_DIRECTORY = b'D'
-XIN_MAX_PERMISSIONS = b'\xFF'
+XIN_MAX_PERMISSIONS = b'\xff'
 FAIL = '\033[91m'
 
 #########################################
