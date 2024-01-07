@@ -19,8 +19,6 @@ args = args.parse_args()
 xin_current_date = decimal_to_bcd(datetime.now().strftime('%d%m%Y'))
 xin_current_time = decimal_to_bcd(datetime.now().strftime('%H%M'))
 
-print(xin_current_date)
-
 class XinEntryData: 
 
     image_size_in_sectors = None
@@ -43,9 +41,13 @@ class XinEntryData:
         self.first_sector = first_sector
 
     def find_free_sectors_for_given_size(self, size): 
+
+        if size >= len(XinEntryData.image_data):
+            XinEntryData.image_data = pad_bytesarray(XinEntryData.image_data, size)
+
         size_in_sectors = size_to_sectors(size)
 
-        for i in range (XinEntryData.xin_pointers_begin ,XinEntryData.xin_entries_begin):
+        for i in range (XinEntryData.xin_pointers_begin, XinEntryData.xin_entries_begin):
             if XinEntryData.image_data[i] == XIN_UNALLOCATED:
                 ok = True
                 for j in range(size_in_sectors):
@@ -54,7 +56,6 @@ class XinEntryData:
                         break
                 
                 if ok:
-                    # print(hex(i))
                     return i
 
         print(f'{Fore.RED}FREE SECTOR NOT FOUND')
@@ -67,21 +68,20 @@ class XinEntryData:
         XinEntryData.xin_entries_begin  = xin_entries_begin 
 
     def insert(self, data, index):
-        if index >= len(XinEntryData.image_data):
-            XinEntryData.image_data = pad_bytesarray(XinEntryData.image_data, align_to(index, SECTOR_SIZE))
-            XinEntryData.image_data = XinEntryData.image_data + pad_bytes(data, SECTOR_SIZE)
-            print(f'adding at the end of XinEntryData: {hex(len(XinEntryData.image_data))}')
-            # print(f'adding at the end of XinEntryData: {len(pad_bytes(data, SECTOR_SIZE))}')
+        if (index + len(data)) >= len(XinEntryData.image_data):
+            XinEntryData.image_data = pad_bytesarray(XinEntryData.image_data, index + len(data))
+            for i in range(len(data)):
+                XinEntryData.image_data[index + i] = data[i]
         else:
-            XinEntryData.image_data = XinEntryData.image_data[:index] + data + XinEntryData.image_data[index:]
-
-    def insert_file_data(self, data):
-        XinEntryData.image_data = pad_bytesarray(XinEntryData.image_data, self.first_sector * SECTOR_SIZE - 0x2C0)
-        XinEntryData.image_data = XinEntryData.image_data + pad_bytes(data, SECTOR_SIZE)
+            for i in range(len(data)):
+                XinEntryData.image_data[index + i] = data[i]
 
     def write(self, data=None):
 
         file_first_sector = 0
+
+        if data != None:
+            self.size = len(data)
 
         if self.type != XIN_DIRECTORY:
             try:
@@ -91,11 +91,11 @@ class XinEntryData:
 
             xin_pointers_cursor = file_first_sector 
 
-            for i in range(0, size_to_sectors(self.size) - 1):
-                XinEntryData.image_data[xin_pointers_cursor] = XIN_ALLOCATED
-                xin_pointers_cursor += 1
+            self.insert(bytes([XIN_ALLOCATED] * (size_to_sectors(self.size) - 1)), xin_pointers_cursor)
+            xin_pointers_cursor += size_to_sectors(self.size) - 1
 
-            XinEntryData.image_data[xin_pointers_cursor] = XIN_EOF
+            self.insert(bytes([XIN_EOF]), xin_pointers_cursor)
+
 
         xin_entries_cursor = XinEntryData.xin_entries_begin + (XinEntryData.xin_entries_index * XIN_ENTRY_SIZE)
 
@@ -112,7 +112,6 @@ class XinEntryData:
             self.insert((0 if self.first_sector == None else self.first_sector).to_bytes(4, byteorder='little'),   xin_entries_cursor + XIN_FIRST_SECTOR_OFFSET)
 
         else:
-            self.size = len(data)
             self.first_sector = file_first_sector
             self.insert(len(data).to_bytes(4, byteorder='little'),                                                 xin_entries_cursor + XIN_SIZE_OFFSET)
             self.insert(file_first_sector.to_bytes(4, byteorder='little'),                                         xin_entries_cursor + XIN_FIRST_SECTOR_OFFSET)
@@ -121,25 +120,16 @@ class XinEntryData:
         self.insert(int(0).to_bytes(4, 'little'), xin_entries_cursor + XIN_FILE_INFO_OFFSET) #File Info ptr
 
         if data != None:
-            print(f'file first sector: {hex(file_first_sector)}')
-            self.insert_file_data(data)
-
-            # self.insert_data(align_bytes(data, SECTOR_SIZE), (file_first_sector - XinEntryData.image_size_in_sectors) * SECTOR_SIZE)
+            self.insert(pad_bytes(data, SECTOR_SIZE), self.first_sector * SECTOR_SIZE)
 
         XinEntryData.xin_entries_index += 1
     
-# def print_bytes_with_offset(byte_array):
-#     for i in range(0, len(byte_array), 16):
-#         row = byte_array[i:i+16]
-#         hex_row = ' '.join(format(byte, '02X') for byte in row)
-#         offset = format(i, '04X')  # Format the offset as a 4-digit hexadecimal number
-#         print(f"{offset}: {hex_row}")
+def preinstall(image_size_in_sectors): 
 
-
-def preinstall(image, image_size_in_sectors): 
-
+    xin_image = open('xinFs.tmp', 'wb+')
     data = bytearray()
-    xin_pointers_begin = len(data)
+
+    xin_pointers_begin = 0
     xin_entries_begin = xin_pointers_begin + (SECTOR_SIZE * 6)
 
     print(f'\nXaninOS image sectors: {image_size_in_sectors}')
@@ -162,7 +152,7 @@ def preinstall(image, image_size_in_sectors):
 
     for xin_entry in xin_default_entries_to_preinstall:
         xin_entry.write()
-
+    
     directory_entires = set() 
     file_entires = set()
 
@@ -194,9 +184,6 @@ def preinstall(image, image_size_in_sectors):
             print('Skipping...')
             continue 
         
-    print('--------------------------------')
-    print(file_entires)
-
     for f in file_entires:
         entry  = XinEntryData(f[1:], XIN_FILE)
         entry.write(open(f, 'rb').read())
@@ -205,27 +192,25 @@ def preinstall(image, image_size_in_sectors):
         entry = XinEntryData(d[1:], XIN_DIRECTORY)
         entry.write()
 
-    # print_bytes_with_offset(XinEntryData.image_data)
-
     # write changes to XaninOS image
-    image.write(XinEntryData.image_data)
-    image.close()
+    xin_image.write(XinEntryData.image_data)
+    xin_image.close()
+
     os.system(f'cat {args.image} xinFs.tmp > xanin.img')
 
 def main(args):
-    os.system(f'dd if=/dev/zero of={os.path.abspath(args.image)} bs=10K count=1')
-    print(f"path: {os.path.abspath(args.image)}")
-
+    # os.system(f'dd if=/dev/zero of={os.path.abspath(args.image)} bs=10K count=1')
+    print(f"\nPath: {os.path.abspath(args.image)}")
 
     args.image = os.path.abspath(args.image)
-    image = open(args.image, 'rb+')
-    align_file_to_size(image, SECTOR_SIZE)
-    image.flush()
+    kernel_image = open(args.image, 'rb+')
 
-    fs = open('xinFs.tmp', 'wb+')
+    align_file_to_size(kernel_image, SECTOR_SIZE)
+    kernel_image.seek(XIN_FS_BOOT_OFFSET)
+    kernel_image.write(os.path.getsize(args.image).to_bytes(4, 'little'))
 
-    preinstall(fs, size_to_sectors(os.path.getsize(os.path.abspath(args.image))))
-    # print(image.read()[0])
+    kernel_image.flush()
+    preinstall(size_to_sectors(os.path.getsize(os.path.abspath(args.image))))
 
 if __name__ == '__main__':
     main(args)

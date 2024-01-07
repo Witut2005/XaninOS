@@ -6,7 +6,7 @@
 jmp _loadSector
 
 ;12 + 2 + 16
- 
+XIN_FS_OFFSET: dd 0 
 BOOT_DISK_NUMBER: db 0x0
 
 DAP:

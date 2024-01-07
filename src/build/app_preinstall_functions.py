@@ -53,6 +53,7 @@ def align_file_to_size(file, size):
         tmp = tmp - size
 
     file.write(bytes([0] * (size - tmp)))
+    file.flush()
     print('padded ', size - tmp, ' bytes')
 
 def size_to_sectors(size):
