@@ -60,3 +60,15 @@ def size_to_sectors(size):
     if size == None:
         return 0
     return size // 512 + (1 if size % 512 != 0 else 0)
+
+def bcd_to_int(bcd_value):
+    result = 0
+    for digit in str(bcd_value):
+        result = result * 10 + int(digit)
+    return result
+
+def convert_xin_date_to_str(date):
+    return f'{format(date[0], "x").rjust(2, "0")}/{format(date[1], "x").rjust(2, "0")}/{format(date[2], "x") + format(date[3], "x")}'
+
+def convert_xin_time_to_str(time):
+    return f'{format(time[0], "x").rjust(2, "0")}:{format(time[1], "x").rjust(2, "0")}'

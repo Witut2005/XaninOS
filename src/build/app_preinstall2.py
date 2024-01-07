@@ -19,6 +19,9 @@ args = args.parse_args()
 xin_current_date = decimal_to_bcd(datetime.now().strftime('%d%m%Y'))
 xin_current_time = decimal_to_bcd(datetime.now().strftime('%H%M'))
 
+ENTRY_PRINT_LJUST_PADDING = 35 + XIN_MAX_ENTRY_PATH_LENGTH
+ENTRY_PRINT_TOP_BOTTOM_PADDING = 97
+
 class XinEntryData: 
 
     image_size_in_sectors = None
@@ -77,10 +80,16 @@ class XinEntryData:
                 XinEntryData.image_data[index + i] = data[i]
     
     def print_entry_info(self):
-        print(f'| Path: {str(self.path).rjust(30, " ")} |')
-        print(f'| Tape: {str(self.type).rjust(30, " ")} |')
-        print(f'| Creation Time: {str(self.creation_time).rjust(30, " ")} |')
-        print(f'| Creation Time: {str(self.creation_time).rjust(30, " ")} |')
+        print('| Path:              ', self.path.replace(b'\x00', b'').decode('ascii').ljust(ENTRY_PRINT_LJUST_PADDING),            '|')
+        print('| Type:              ', self.type.decode('ascii').ljust(ENTRY_PRINT_LJUST_PADDING),                                             '|')
+        print('| Creation Date:     ', convert_xin_date_to_str(self.creation_date).ljust(ENTRY_PRINT_LJUST_PADDING),                '|')
+        print('| Creation Time:     ', convert_xin_time_to_str(self.creation_time).ljust(ENTRY_PRINT_LJUST_PADDING),                '|')
+        print('| Modification Date: ', convert_xin_date_to_str(self.modification_date).ljust(ENTRY_PRINT_LJUST_PADDING),            '|')
+        print('| Modification Time: ', convert_xin_time_to_str(self.modification_time).ljust(ENTRY_PRINT_LJUST_PADDING),            '|')
+        print('| Permissions:       ', str(int.from_bytes(self.permissions, byteorder='little')).ljust(ENTRY_PRINT_LJUST_PADDING),  '|')        
+        print('| Size:              ', str(self.size).ljust(ENTRY_PRINT_LJUST_PADDING),                                             '|')
+        print('| First Sector:      ', str(self.first_sector).ljust(ENTRY_PRINT_LJUST_PADDING),                                     '|')
+        print(''.ljust(ENTRY_PRINT_TOP_BOTTOM_PADDING, '-'))
 
     def write(self, data=None):
 
@@ -158,28 +167,31 @@ def preinstall(image_size_in_sectors):
         XinEntryData('/ivt',                        XIN_FILE,       XIN_MAX_PERMISSIONS, SECTOR_SIZE * 2,   1000)
     ]
 
+    print(f'{Fore.GREEN}\n\nXIN INTERNAL ENTRIES PREINSTALL PHARSE')
+    print(''.ljust(ENTRY_PRINT_TOP_BOTTOM_PADDING, '-'))
+
     for xin_entry in xin_default_entries_to_preinstall:
         xin_entry.write()
     
     directory_entires = set() 
     file_entires = set()
 
-    print('------------------------------------')
-    print(f'|{Fore.GREEN} XIN FILESYSTEM PREINSTALL PHARSE {Fore.RESET}|')
-    print('------------------------------------')
+    print(f'{Fore.GREEN}\n\nXIN EXTERNAL ENTRIES PREINSTALL PHARSE')
+    print(''.ljust(ENTRY_PRINT_TOP_BOTTOM_PADDING, '-'))
+
 
     for current_file in args.files:
         try: 
             if os.path.isfile(current_file):
                 files.add(current_file)
             elif os.path.isdir(current_file):
-                print('FOLDER DETECTED') 
+                # print('FOLDER DETECTED') 
                 for path, dirs, files in os.walk(current_file):
                     if(path[-1] != '/'):
                         path = path + '/'
                     directory_entires.add(path)
                     for f in files:
-                        print(path + f)
+                        # print(path + f)
                         file_entires.add(path + f)
                     for d in dirs:
                         directory_entires.add(path + d + '/')
