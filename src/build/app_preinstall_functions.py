@@ -1,5 +1,6 @@
 
 import os 
+import math
 
 def decimal_to_bcd(number):
     ascii_digits = number.encode('ascii')
@@ -22,11 +23,29 @@ def convert_string_to_aligned_bytes(input_string, alignment_size):
 
     return aligned_bytes
 
+def align_to(value, alignment):
+    return math.ceil(value / alignment) * alignment
+
+def pad_bytesarray(input_bytesarray, target_size):
+    current_size = len(input_bytesarray)
+
+    if current_size >= target_size:
+        return input_bytesarray
+    else:
+        padding_size = target_size - current_size
+        input_bytesarray.extend(bytes([0] * padding_size))
+        return input_bytesarray
+
+
+def pad_bytes(b, alignment_size):
+    padding_size = alignment_size - len(b) % alignment_size
+
+    aligned_bytes = b + b'\0' * padding_size
+
+    return aligned_bytes
 
 def align_file_to_size(file, size):
     file_size = os.path.getsize(file.name)
-    print(f"file name: {file.name}")
-    print(f"file size: {file_size}")
 
     tmp = file_size
 
@@ -37,7 +56,6 @@ def align_file_to_size(file, size):
     print('padded ', size - tmp, ' bytes')
 
 def size_to_sectors(size):
+    if size == None:
+        return 0
     return size // 512 + (1 if size % 512 != 0 else 0)
-
-def find_free_sectors_for_given_size(size): 
-    return size_to_sectors(1)
