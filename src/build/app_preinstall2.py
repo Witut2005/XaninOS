@@ -75,6 +75,12 @@ class XinEntryData:
         else:
             for i in range(len(data)):
                 XinEntryData.image_data[index + i] = data[i]
+    
+    def print_entry_info(self):
+        print(f'| Path: {str(self.path).rjust(30, " ")} |')
+        print(f'| Tape: {str(self.type).rjust(30, " ")} |')
+        print(f'| Creation Time: {str(self.creation_time).rjust(30, " ")} |')
+        print(f'| Creation Time: {str(self.creation_time).rjust(30, " ")} |')
 
     def write(self, data=None):
 
@@ -121,6 +127,8 @@ class XinEntryData:
 
         if data != None:
             self.insert(pad_bytes(data, SECTOR_SIZE), self.first_sector * SECTOR_SIZE)
+        
+        self.print_entry_info()
 
         XinEntryData.xin_entries_index += 1
     
