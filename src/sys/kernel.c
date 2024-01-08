@@ -27,10 +27,8 @@
 #include <sys/devices/nic/8254x.h>
 #include <sys/devices/pcspk/pc_speaker.h>
 #include <sys/devices/acpi/fadt/fadt.h>
-// #include <sys/net/network_protocols/ethernet_frame/ethernet_frame.h>
 #include <sys/net/netapi/network_device.h>
 #include <sys/net/network_protocols/arp/arp.h>
-// #include <sys/net/network_protocols/internet_protocol/ipv4/ip.h>
 #include <lib/libc/xanin_state.h>
 #include <lib/libc/system.h>
 #include <sys/interrupts/handlers/entries/handler_entries.h>

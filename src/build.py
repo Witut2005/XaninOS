@@ -133,6 +133,7 @@ def compile_kernel(*kargs):
     if(args.preinstall == 'yes'):
         # commands.append('make -C ./external_apps')
         commands.append('python3 ./build/app_preinstall.py -files external_apps/ etc/ -image ../bin/xanin.img')
+        # commands.append('python3 ./build/app_preinstall2.py --files external_apps/ etc/ --image ../bin/xanin.img')
         # commands.append('python3 ./utils/app_preinstall.py -files etc/ -image ../bin/xanin.img')
     
     for command in commands:
@@ -313,7 +314,7 @@ objects_to_compile = {
     'libc':[
         # CompileObject('./lib/libc/real_mode_fswitch.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
         CompileObject('./lib/libc/file.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
-        # CompileObject('./lib/libc/crt0.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
+        CompileObject('./lib/libc/crt0.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
         CompileObject('./lib/libc/alloc.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
         CompileObject('./lib/cpu/code/cpu_state_info.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
         # CompileObject('./lib/libc/real_mode_fswitch.c', builders['c'], builder_options['c']['default'], OBJECT),
