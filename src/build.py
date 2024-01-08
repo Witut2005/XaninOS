@@ -132,8 +132,8 @@ def compile_kernel(*kargs):
 
     if(args.preinstall == 'yes'):
         # commands.append('make -C ./external_apps')
-        # commands.append('python3 ./build/app_preinstall.py -files external_apps/ etc/ -image ../bin/xanin.img')
-        commands.append('python3 ./build/app_preinstall2.py --files external_apps/ etc/ --image ../bin/xanin.img')
+        commands.append('python3 ./build/app_preinstall.py -files external_apps/ etc/ -image ../bin/xanin.img')
+        # commands.append('python3 ./build/app_preinstall2.py --files external_apps/ etc/ --image ../bin/xanin.img')
         # commands.append('python3 ./utils/app_preinstall.py -files etc/ -image ../bin/xanin.img')
     
     for command in commands:

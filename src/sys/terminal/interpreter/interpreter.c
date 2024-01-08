@@ -104,6 +104,7 @@ void scan(void)
     if (bstrcmp(argv[0], "nicho"))
     {
     }
+
     XANIN_ADD_APP_ENTRY0("stdio_apply", stdio_apply)
     XANIN_ADD_APP_ENTRY1("ssaver", screen_saver)
     XANIN_ADD_APP_ENTRY1("bmp_info", bmp_info)
