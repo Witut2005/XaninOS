@@ -44,17 +44,18 @@ def pad_bytes(b, alignment_size):
 
     return aligned_bytes
 
-def align_file_to_size(file, size):
-    file_size = os.path.getsize(file.name)
+def align_file_to_size(filename, size):
+    file_size = os.path.getsize(filename)
 
     tmp = file_size
 
     while tmp > size:
         tmp = tmp - size
 
+    file = open(filename, 'ab')
     file.write(bytes([0] * (size - tmp)))
     file.flush()
-    print('padded ', size - tmp, ' bytes')
+    return size - tmp
 
 def size_to_sectors(size):
     if size == None:

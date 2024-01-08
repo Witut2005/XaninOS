@@ -205,31 +205,34 @@ def preinstall(image_size_in_sectors):
             continue 
         
     for f in file_entires:
-        entry  = XinEntryData(f[1:], XIN_FILE)
-        entry.write(open(f, 'rb').read())
+        entry  = XinEntryData(f, XIN_FILE)
+        entry.write(b'/' + open(f, 'rb').read())
 
     for d in directory_entires:
-        entry = XinEntryData(d[1:], XIN_DIRECTORY)
+        entry = XinEntryData('/' + d, XIN_DIRECTORY)
         entry.write()
 
     # write changes to XaninOS image
     xin_image.write(XinEntryData.image_data)
     xin_image.close()
 
-    os.system(f'cat {args.image} xinFs.tmp > xanin.img')
+    os.system(f'cat xinFs.tmp >> {args.image}')
+    os.system('rm xinFs.tmp')
 
 def main(args):
     # os.system(f'dd if=/dev/zero of={os.path.abspath(args.image)} bs=10K count=1')
     print(f"\nPath: {os.path.abspath(args.image)}")
 
     args.image = os.path.abspath(args.image)
+
+    number_of_padded_bytes = align_file_to_size(args.image, SECTOR_SIZE)
+    print(f'Padded bytes: {number_of_padded_bytes}')
+
     kernel_image = open(args.image, 'rb+')
-
-    align_file_to_size(kernel_image, SECTOR_SIZE)
     kernel_image.seek(XIN_FS_BOOT_OFFSET)
-    kernel_image.write(os.path.getsize(args.image).to_bytes(4, 'little'))
+    kernel_image.write(((os.path.getsize(args.image)) // SECTOR_SIZE).to_bytes(4, 'little'))
+    kernel_image.close()
 
-    kernel_image.flush()
     preinstall(size_to_sectors(os.path.getsize(os.path.abspath(args.image))))
 
 if __name__ == '__main__':

@@ -120,20 +120,23 @@ def compile_kernel(*kargs):
             final_string = final_string + ' ' + object.output_name
 
     commands = [
-        f"{builders['c']} {builder_options['c']['kernel']} {(' -g ' if args.dwarf else '')} ./sys/kernel.c {final_string} -o ./kernel.bin",
+        f'{builders["c"]} {builder_options["c"]["kernel"]} {("-g" if args.dwarf else "")} ./sys/kernel.c {final_string} -o ./kernel.bin',
         'cat ./programs/power/shutdown.bin ./lib/libc/real_mode_fswitch_asm ./lib/libc/fast_return_to_32_mode > ./programs/xanin_external_apps',
         'dd if=./programs/xanin_external_apps of=./programs/xanin_apps_space bs=512 count=16 conv=notrunc',
         'cat ./boot/boot ./lib/libc/enter_real_mode ./programs/xanin_apps_space ./programs/blank_sector ./fs/xin_pointers ./fs/entries_table ./boot/kernel_loader.bin ./boot/boot2.elf kernel.bin > xanin.bin',
         'dd if=xanin.bin of=xanin.img',
         'python3 ./build/align_file.py -f ./xanin.img -size 600000',
+
+        f'{("python3 ./build/app_preinstall2.py --files external_apps/ etc/ --image xanin.img" if args.preinstall == "yes" else "")}',
+
         'mv xanin.img -f ../bin',
         'mv xanin.bin -f ../bin'
     ]
 
-    if(args.preinstall == 'yes'):
+    # if(args.preinstall == 'yes'):
         # commands.append('make -C ./external_apps')
-        commands.append('python3 ./build/app_preinstall.py -files external_apps/ etc/ -image ../bin/xanin.img')
-        # commands.append('python3 ./build/app_preinstall2.py --files external_apps/ etc/ --image ../bin/xanin.img')
+        # commands.append('python3 ./build/app_preinstall.py -files external_apps/ etc/ -image ../bin/xanin.img')
+        # commands.insert(6, 'python3 ./build/app_preinstall2.py --files external_apps/ etc/ --image xanin.img')
         # commands.append('python3 ./utils/app_preinstall.py -files etc/ -image ../bin/xanin.img')
     
     for command in commands:
