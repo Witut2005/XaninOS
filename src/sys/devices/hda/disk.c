@@ -91,6 +91,7 @@ void __disk_read_bytes(uint16_t base, uint16_t master, uint32_t sector_number, u
     __disk_single_sector_read(base, master, sector_number, (uint16_t *)func_buf);
 
     memcpy(buf, func_buf + offset, amount);
+    return;
 
     // uint8_t disk_status;
 
@@ -152,15 +153,6 @@ void __disk_sectors_read(uint16_t base, uint8_t master, uint32_t sector_number,
     for (int i = 0; i < how_many_sectors; i++)
         __disk_single_sector_read(base, master, sector_number + i, (uint16_t *)((uint32_t)where + (i * SECTOR_SIZE)));
 }
-
-// void __disk_sectors_read(uint16_t base, uint8_t master, uint32_t sector_number,
-//                                 uint16_t how_many_sectors, uint16_t* where)
-// {
-
-//     for(int i = 0; i < how_many_sectors; i++)
-//         __disk_single_sector_read(base, master, sector_number + i, (uint16_t*)((uint32_t)where + (i * SECTOR_SIZE)));
-
-// }
 
 void __disk_flush(uint16_t base, uint8_t master)
 {
