@@ -82,7 +82,8 @@ void __disk_single_sector_read(uint16_t base, uint16_t master, uint32_t sector_n
     }
 }
 
-void __disk_read_bytes(uint16_t base, uint16_t master, uint32_t sector_number, uint32_t amount, uint8_t *buf)
+// miej to na oku
+void __disk_read_bytes(uint16_t base, uint16_t master, uint32_t sector_number, uint16_t offset, uint32_t amount, uint8_t *buf)
 {
 
     uint8_t disk_status;
@@ -115,15 +116,22 @@ void __disk_read_bytes(uint16_t base, uint16_t master, uint32_t sector_number, u
     for (int i = 0; i < 4; i++)
         io_wait();
 
-    for (int i = 0; i < amount; i += 2)
+    for (int i = 0; i < offset; i += 2)
     {
-        uint16_t readed_data = inwIO(base + ATA_DATA_REGISTER);
+        uint16_t data = inwIO(base + ATA_DATA_REGISTER);
+        if (i + 1 == offset)
+            buf[i] = ((uint8_t *)(&data))[1];
+    }
 
-        buf[i] = ((uint8_t *)(&readed_data))[0];
+    for (int i = offset % 2; i < amount; i += 2)
+    {
+        uint16_t data = inwIO(base + ATA_DATA_REGISTER);
+
+        buf[i] = ((uint8_t *)(&data))[0];
 
         // i think it could be faster
         if (i + 1 < amount)
-            buf[i + 1] = ((uint8_t *)(&readed_data))[1];
+            buf[i + 1] = ((uint8_t *)(&data))[1];
     }
 
     // for (int i = SECTOR_SIZE - (amount % SECTOR_SIZE) - (amount % 2); amount < SECTOR_SIZE; i += 2)
