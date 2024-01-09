@@ -110,7 +110,8 @@
         "limits.h": "c",
         "types.h": "c",
         "screen.h": "c",
-        "macros.h": "c"
+        "macros.h": "c",
+        "built-in-apps.h": "c"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }

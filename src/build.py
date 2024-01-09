@@ -127,7 +127,8 @@ def compile_kernel(*kargs):
         'dd if=xanin.bin of=xanin.img',
         'python3 ./build/align_file.py -f ./xanin.img -size 600000',
 
-        f'{("python3 ./build/app_preinstall2.py --files external_apps/ etc/ --image xanin.img" if args.preinstall == "yes" else "")}',
+        # f'{("python3 ./build/app_preinstall2.py --files external_apps/ etc/ --image xanin.img" if args.preinstall == "yes" else "")}',
+        f'{("python3 ./build/app_preinstall.py -files external_apps/ etc/ -image xanin.img" if args.preinstall == "yes" else "")}',
 
         'mv xanin.img -f ../bin',
         'mv xanin.bin -f ../bin'
@@ -390,6 +391,7 @@ objects_to_compile = {
         CompileObject('./programs/network/netapi_check.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./programs/usb/usb_controller_info.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./programs/tests/memory_allocator_test.c', builders['c'], builder_options['c']['default'], OBJECT),
+        CompileObject('./programs/tests/disk_func.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./programs/misc/grapher/grapher.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./programs/fs/explorer.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./programs/tests/interrupt_test.c', builders['c'], builder_options['c']['default'], OBJECT),

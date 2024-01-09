@@ -7,6 +7,9 @@ jmp _loadSector
 
 ;12 + 2 + 16
 XIN_FS_OFFSET: dd 0 
+XIN_PTRS_SIZE_IN_SECTORS: dd 0
+XIN_ENTRIES_SIZE_IN_SECTORS: dd 0
+
 BOOT_DISK_NUMBER: db 0x0
 
 DAP:

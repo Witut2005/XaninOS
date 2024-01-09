@@ -34,6 +34,15 @@ enum xin_fs_properties
 
 };
 
+struct XinFileSystemData
+{
+    uint32_t xin_fs_first_sector;
+    uint32_t xin_fs_ptrs_size;    // in sectors
+    uint32_t xin_fs_entries_size; // in sectors
+};
+
+typedef struct XinFileSystemData XinFileSystemData;
+
 struct FileInformationBlock
 {
     char file_name[XIN_MAX_PATH_LENGTH];

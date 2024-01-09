@@ -22,6 +22,13 @@ int8_t xin_base_state[100];
 static char xin_current_path[XIN_MAX_PATH_LENGTH];
 static char xin_current_directory[XIN_MAX_PATH_LENGTH];
 
+static XinFileSystemData XinFsData; // XinFS DATA SINGLETONE
+
+void __xin_detect_file_system(void)
+{
+    // __disk_read()
+}
+
 bool __xin_check_if_valid_directory(char *directory)
 {
     XinEntry *Entry = __xin_find_entry(directory);
@@ -1375,6 +1382,7 @@ __STATUS __xin_copy(char *file_name, char *new_file_name)
 
     return XANIN_OK;
 }
+
 __STATUS __xin_entry_move(char *entry_name, char *new_name)
 {
 

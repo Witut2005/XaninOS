@@ -141,13 +141,17 @@ class XinEntryData:
 
         XinEntryData.xin_entries_index += 1
     
+XIN_POINTERS_SIZE_IN_SECTORS = 0x30
+XIN_ENTRIES_SIZE_IN_SECTORS = 0x30
+    
 def preinstall(image_size_in_sectors): 
 
     xin_image = open('xinFs.tmp', 'wb+')
     data = bytearray()
 
     xin_pointers_begin = 0
-    xin_entries_begin = xin_pointers_begin + (SECTOR_SIZE * 6)
+    xin_entries_begin = xin_pointers_begin + (SECTOR_SIZE * XIN_POINTERS_SIZE_IN_SECTORS)
+
 
     print(f'\nXaninOS image sectors: {image_size_in_sectors}')
     print(f'Xin pointers offset: {hex(xin_pointers_begin)}')
@@ -229,8 +233,12 @@ def main(args):
     print(f'Padded bytes: {number_of_padded_bytes}')
 
     kernel_image = open(args.image, 'rb+')
+
     kernel_image.seek(XIN_FS_BOOT_OFFSET)
     kernel_image.write(((os.path.getsize(args.image)) // SECTOR_SIZE).to_bytes(4, 'little'))
+    kernel_image.write((XIN_POINTERS_SIZE_IN_SECTORS).to_bytes(4, 'little'))
+    kernel_image.write((XIN_ENTRIES_SIZE_IN_SECTORS).to_bytes(4, 'little'))
+
     kernel_image.close()
 
     preinstall(size_to_sectors(os.path.getsize(os.path.abspath(args.image))))

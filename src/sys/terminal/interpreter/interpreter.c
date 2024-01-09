@@ -105,6 +105,7 @@ void scan(void)
     {
     }
 
+    XANIN_ADD_APP_ENTRY0("disk", disk_func)
     XANIN_ADD_APP_ENTRY0("stdio_apply", stdio_apply)
     XANIN_ADD_APP_ENTRY1("ssaver", screen_saver)
     XANIN_ADD_APP_ENTRY1("bmp_info", bmp_info)
