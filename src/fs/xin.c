@@ -24,9 +24,14 @@ static char xin_current_directory[XIN_MAX_PATH_LENGTH];
 
 static XinFileSystemData XinFsData; // XinFS DATA SINGLETONE
 
+XinFileSystemData __xin_fs_data_get(void)
+{
+    return XinFsData;
+}
+
 void __xin_detect_file_system(void)
 {
-    // __disk_read()
+    __disk_read_bytes(ATA_FIRST_BUS, ATA_MASTER, 0, 2, 12, (uint8_t *)&XinFsData);
 }
 
 bool __xin_check_if_valid_directory(char *directory)

@@ -114,6 +114,8 @@ extern "C"
     {
 #endif
 
+        XinFileSystemData __xin_fs_data_get(void);
+        void __xin_detect_file_system(void);
         bool __xin_current_directory_set(char *directory);
         char *__xin_current_directory_get(char *buf);
         char *__xin_path_get(char *file_name);

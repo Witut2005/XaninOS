@@ -86,55 +86,62 @@ void __disk_single_sector_read(uint16_t base, uint16_t master, uint32_t sector_n
 void __disk_read_bytes(uint16_t base, uint16_t master, uint32_t sector_number, uint16_t offset, uint32_t amount, uint8_t *buf)
 {
 
-    uint8_t disk_status;
+    uint8_t func_buf[512];
 
-    outbIO(base + ATA_DRIVE_REGISTER, ((master == ATA_MASTER ? 0x40 : 0x50)));
-    outbIO(base + ATA_SECTOR_COUNT_REGISTER, 0 >> 8); // sector count high byte
+    __disk_single_sector_read(base, master, sector_number, (uint16_t *)func_buf);
 
-    /* lba4 - lba6 */
-    outbIO(base + ATA_SECTOR_NUMBER_LOW, 0);
-    outbIO(base + ATA_SECTOR_NUMBER_MID, 0);
-    outbIO(base + ATA_SECTOR_NUMBER_HIGH, 0);
+    memcpy(buf, func_buf + offset, amount);
 
-    outbIO(base + ATA_SECTOR_COUNT_REGISTER, 1); // set sector count to 1
+    // uint8_t disk_status;
 
-    /* lba1 - lba3 */
-    outbIO(base + ATA_SECTOR_NUMBER_LOW, sector_number & 0xFF);
-    outbIO(base + ATA_SECTOR_NUMBER_MID, (sector_number >> 8) & 0xFF);
-    outbIO(base + ATA_SECTOR_NUMBER_HIGH, (sector_number >> 16) & 0xFF);
+    // outbIO(base + ATA_DRIVE_REGISTER, ((master == ATA_MASTER ? 0x40 : 0x50)));
+    // outbIO(base + ATA_SECTOR_COUNT_REGISTER, 0 >> 8); // sector count high byte
 
-    outbIO(base + ATA_COMMAND_REGISTER, ATA_EXTENDED_READ);
+    // /* lba4 - lba6 */
+    // outbIO(base + ATA_SECTOR_NUMBER_LOW, 0);
+    // outbIO(base + ATA_SECTOR_NUMBER_MID, 0);
+    // outbIO(base + ATA_SECTOR_NUMBER_HIGH, 0);
 
-    disk_status = inbIO(base + ATA_STATUS_REGISTER);
+    // outbIO(base + ATA_SECTOR_COUNT_REGISTER, 1); // set sector count to 1
 
-    while ((disk_status & 0x81) == 0x80)
-        disk_status = inbIO(base + ATA_STATUS_REGISTER);
+    // /* lba1 - lba3 */
+    // outbIO(base + ATA_SECTOR_NUMBER_LOW, sector_number & 0xFF);
+    // outbIO(base + ATA_SECTOR_NUMBER_MID, (sector_number >> 8) & 0xFF);
+    // outbIO(base + ATA_SECTOR_NUMBER_HIGH, (sector_number >> 16) & 0xFF);
 
-    for (int i = 0; i < 4; i++)
-        inbIO(base + ATA_STATUS_REGISTER);
+    // outbIO(base + ATA_COMMAND_REGISTER, ATA_EXTENDED_READ);
 
-    for (int i = 0; i < 4; i++)
-        io_wait();
+    // disk_status = inbIO(base + ATA_STATUS_REGISTER);
 
-    for (int i = 0; i < offset; i += 2)
-    {
-        uint16_t data = inwIO(base + ATA_DATA_REGISTER);
-        if (i + 1 == offset)
-            buf[i] = ((uint8_t *)(&data))[1];
-    }
+    // while ((disk_status & 0x81) == 0x80)
+    //     disk_status = inbIO(base + ATA_STATUS_REGISTER);
 
-    for (int i = offset % 2; i < amount; i += 2)
-    {
-        uint16_t data = inwIO(base + ATA_DATA_REGISTER);
+    // for (int i = 0; i < 4; i++)
+    //     inbIO(base + ATA_STATUS_REGISTER);
 
-        buf[i] = ((uint8_t *)(&data))[0];
+    // for (int i = 0; i < 4; i++)
+    //     io_wait();
 
-        // i think it could be faster
-        if (i + 1 < amount)
-            buf[i + 1] = ((uint8_t *)(&data))[1];
-    }
+    // for (int i = 0; i < offset; i += 2)
+    // {
+    //     uint16_t data = inwIO(base + ATA_DATA_REGISTER);
+    //     if (i + 1 == offset)
+    //         buf[i] = ((uint8_t *)(&data))[1];
+    // }
 
-    // for (int i = SECTOR_SIZE - (amount % SECTOR_SIZE) - (amount % 2); amount < SECTOR_SIZE; i += 2)
+    // for (int i = offset % 2; i < amount; i += 2)
+    // {
+    //     uint16_t data = inwIO(base + ATA_DATA_REGISTER);
+
+    //     buf[i] = ((uint8_t *)(&data))[0];
+
+    //     // i think it could be faster
+    //     if (i + 1 < amount)
+    //         buf[i + 1] = ((uint8_t *)(&data))[1];
+    // }
+
+    // // for (int i = SECTOR_SIZE - (amount % SECTOR_SIZE) - (amount % 2); amount < SECTOR_SIZE; i += 2)
+    // for (int i = 0; i < 10; i++)
     //     inwIO(base + ATA_DATA_REGISTER);
 }
 

@@ -329,12 +329,18 @@ void kernel_init(void)
     xprintf("\n%z----------------------------\n", OUTPUT_COLOR_SET(black, green));
     xprintf("Com port status: 0x%x\n", com_status());
 
+    __xin_detect_file_system();
+    XinFileSystemData XinFsData = __xin_fs_data_get();
+    xprintf("XinFs first sector: 0x%x\n", XinFsData.xin_fs_first_sector);
+    xprintf("XinFs ptrs sectors: %d\n", XinFsData.xin_fs_ptrs_size);
+    xprintf("XinFs entries sectors: %d\n", XinFsData.xin_fs_entries_size);
+
     puts("Press ENTER to continue...\n");
 
     srand(SystemTime.seconds);
 
-    __disk_sectors_read(ATA_FIRST_BUS, ATA_MASTER, 0x1, 0x1, (uint16_t *)0x600);
-    __disk_sectors_read(ATA_FIRST_BUS, ATA_MASTER, 0x2, 0x1, (uint16_t *)0x400);
+    // __disk_sectors_read(ATA_FIRST_BUS, ATA_MASTER, 0x1, 0x1, (uint16_t *)0x600);
+    // __disk_sectors_read(ATA_FIRST_BUS, ATA_MASTER, 0x2, 0x1, (uint16_t *)0x400);
 
     argv[0] = (char *)calloc(XANIN_PMMNGR_BLOCK_SIZE * 2);
     argv[1] = (char *)calloc(XANIN_PMMNGR_BLOCK_SIZE * 2);

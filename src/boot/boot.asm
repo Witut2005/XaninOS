@@ -6,9 +6,9 @@
 jmp _loadSector
 
 ;12 + 2 + 16
-XIN_FS_OFFSET: dd 0 
-XIN_PTRS_SIZE_IN_SECTORS: dd 0
-XIN_ENTRIES_SIZE_IN_SECTORS: dd 0
+XIN_FS_OFFSET: dd 0x1234 
+XIN_PTRS_SIZE_IN_SECTORS: dd 0x1234
+XIN_ENTRIES_SIZE_IN_SECTORS: dd 0x1234
 
 BOOT_DISK_NUMBER: db 0x0
 
@@ -127,8 +127,6 @@ int 0x13
 ; mov ah, 0x42
 ; mov dl, [BOOT_DISK_NUMBER]
 ; int 0x13
-
-
 
 read_ok: 
 
