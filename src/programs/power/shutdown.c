@@ -7,8 +7,8 @@
 int shutdown(void)
 {
 
-    // disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x12, 5, (uint16_t*)(0x800));
-    // disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x1a, 10, (uint16_t*)(0x1800));
+    // __disk_sectors_write(ATA_FIRST_BUS, ATA_MASTER, 0x12, 5, (uint16_t*)(0x800));
+    // __disk_sectors_write(ATA_FIRST_BUS, ATA_MASTER, 0x1a, 10, (uint16_t*)(0x1800));
 
     outwIO(0x604, 0x2000);  /* QEMU */
     outwIO(0xB004, 0x2000); /* BOCHS AND OLD QEMU */

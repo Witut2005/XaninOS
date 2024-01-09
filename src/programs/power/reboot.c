@@ -10,8 +10,8 @@ int reboot(void)
     // screen_clear();
     uint16_t idt_16[3] = {0x0, 0x1234, 0x4567};
 
-    // disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x12, 5, (uint16_t*)(0x800));
-    // disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x1a, 20, (uint16_t*)(0x1800));
+    // __disk_sectors_write(ATA_FIRST_BUS, ATA_MASTER, 0x12, 5, (uint16_t*)(0x800));
+    // __disk_sectors_write(ATA_FIRST_BUS, ATA_MASTER, 0x1a, 20, (uint16_t*)(0x1800));
 
     asm("lidt %0" :: "m"(idt_16));
     

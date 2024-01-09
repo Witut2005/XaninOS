@@ -145,7 +145,7 @@ void scan(void)
     XANIN_ADD_APP_ENTRY0("reg_dump", reg_dump)
     XANIN_ADD_APP_ENTRY1("load", load)
     XANIN_ADD_APP_ENTRY3("disk_load", disk_load)
-    XANIN_ADD_APP_ENTRY3("disk_write", disk_write_data)
+    XANIN_ADD_APP_ENTRY3("__disk_sectors_write", disk_write_data)
     XANIN_ADD_APP_ENTRY1("execute_addr", execute_addr)
     XANIN_ADD_APP_ENTRY0("pong", pong)
     XANIN_ADD_APP_ENTRY1("loadch", loadch)
@@ -196,10 +196,10 @@ void scan(void)
     // else if(bstrcmp("real_mode_fswitch", argv[0]))
     // {
     //     XinEntry* real_mode_enter = fopen("/fast_real_mode_enter.bin", "r");
-    //     disk_read(ATA_FIRST_BUS, ATA_MASTER, real_mode_enter->first_sector, 1, (uint16_t*)0x600);
+    //     __disk_sectors_read(ATA_FIRST_BUS, ATA_MASTER, real_mode_enter->first_sector, 1, (uint16_t*)0x600);
 
     //     XinEntry* real_mode_return = fopen("/fast_real_mode_return.bin", "r");
-    //     disk_read(ATA_FIRST_BUS, ATA_MASTER, real_mode_return->first_sector, 1, (uint16_t*)0x400);
+    //     __disk_sectors_read(ATA_FIRST_BUS, ATA_MASTER, real_mode_return->first_sector, 1, (uint16_t*)0x400);
     //     real_mode_fswitch("0x0", "0x0");
     // }
 

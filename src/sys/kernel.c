@@ -333,8 +333,8 @@ void kernel_init(void)
 
     srand(SystemTime.seconds);
 
-    disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x1, 0x1, (uint16_t *)0x600);
-    disk_read(ATA_FIRST_BUS, ATA_MASTER, 0x2, 0x1, (uint16_t *)0x400);
+    __disk_sectors_read(ATA_FIRST_BUS, ATA_MASTER, 0x1, 0x1, (uint16_t *)0x600);
+    __disk_sectors_read(ATA_FIRST_BUS, ATA_MASTER, 0x2, 0x1, (uint16_t *)0x400);
 
     argv[0] = (char *)calloc(XANIN_PMMNGR_BLOCK_SIZE * 2);
     argv[1] = (char *)calloc(XANIN_PMMNGR_BLOCK_SIZE * 2);
@@ -343,7 +343,7 @@ void kernel_init(void)
     argv[4] = (char *)calloc(XANIN_PMMNGR_BLOCK_SIZE * 2);
 
     __xin_init_fs();
-    disk_write(ATA_FIRST_BUS, ATA_MASTER, __xin_find_entry("/ivt")->first_sector, 2, 0x0); // load ivt to /ivt file
+    __disk_sectors_write(ATA_FIRST_BUS, ATA_MASTER, __xin_find_entry("/ivt")->first_sector, 2, 0x0); // load ivt to /ivt file
 
     __xin_folder_change("/");
     FileDescriptorTable = (XinFileDescriptor *)kcalloc(SIZE_OF(XinFileDescriptor) * 200); // 200 = number o entries

@@ -407,8 +407,8 @@ int __xin_folder_create(char *entry_name)
     entry->size = 0x0;
     entry->type = XIN_DIRECTORY;
 
-    disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x12, 5, (uint16_t *)(XIN_ENTRY_POINTERS));
-    disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x1a, 10, (uint16_t *)(XIN_ENTRY_TABLE));
+    __disk_sectors_write(ATA_FIRST_BUS, ATA_MASTER, 0x12, 5, (uint16_t *)(XIN_ENTRY_POINTERS));
+    __disk_sectors_write(ATA_FIRST_BUS, ATA_MASTER, 0x1a, 10, (uint16_t *)(XIN_ENTRY_TABLE));
 
     return XANIN_OK;
 }
@@ -586,12 +586,12 @@ __STATUS __xin_file_create(char *entry_name)
 
     uint8_t *zeros = (uint8_t *)calloc(SECTOR_SIZE);
 
-    disk_write(ATA_FIRST_BUS, ATA_MASTER, entry->first_sector, 2, (uint16_t *)zeros);
+    __disk_sectors_write(ATA_FIRST_BUS, ATA_MASTER, entry->first_sector, 2, (uint16_t *)zeros);
 
     free(zeros);
 
-    disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x12, 8, (uint16_t *)XIN_ENTRY_POINTERS);
-    disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x1a, 40, (uint16_t *)(XIN_ENTRY_TABLE));
+    __disk_sectors_write(ATA_FIRST_BUS, ATA_MASTER, 0x12, 8, (uint16_t *)XIN_ENTRY_POINTERS);
+    __disk_sectors_write(ATA_FIRST_BUS, ATA_MASTER, 0x1a, 40, (uint16_t *)(XIN_ENTRY_TABLE));
 
     return XANIN_OK;
 }
@@ -647,10 +647,10 @@ int __xin_file_reallocate_with_given_size(XinEntry *File, uint32_t size)
 
     File->first_sector = (uint32_t)write_entry - XIN_ENTRY_POINTERS;
 
-    disk_write(ATA_FIRST_BUS, ATA_MASTER, File->first_sector, number_of_sectors_to_allocate, (uint16_t *)buf);
+    __disk_sectors_write(ATA_FIRST_BUS, ATA_MASTER, File->first_sector, number_of_sectors_to_allocate, (uint16_t *)buf);
 
-    disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x12, 8, (uint16_t *)XIN_ENTRY_POINTERS);
-    disk_write(ATA_FIRST_BUS, ATA_MASTER, 0x1a, 40, (uint16_t *)(XIN_ENTRY_TABLE));
+    __disk_sectors_write(ATA_FIRST_BUS, ATA_MASTER, 0x12, 8, (uint16_t *)XIN_ENTRY_POINTERS);
+    __disk_sectors_write(ATA_FIRST_BUS, ATA_MASTER, 0x1a, 40, (uint16_t *)(XIN_ENTRY_TABLE));
 
     free(buf);
 

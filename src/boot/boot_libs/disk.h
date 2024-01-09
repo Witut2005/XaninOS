@@ -46,6 +46,6 @@ enum ATA_COMMANDS
 
 };
 
-void init_disk(uint16_t base, uint8_t master);
-void disk_read(uint16_t base, uint8_t master, uint32_t sector_number, 
+void __disk_init(uint16_t base, uint8_t master);
+void __disk_sectors_read(uint16_t base, uint8_t master, uint32_t sector_number, 
                                 uint16_t how_many_sectors, uint16_t* where);

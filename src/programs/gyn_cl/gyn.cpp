@@ -69,7 +69,7 @@ int gyn_interpreter(char** argv)
         {"reg_dump", reg_dump},
         {"load", load},
         {"disk_load", disk_load},
-        {"disk_write", disk_write_data},
+        {"__disk_sectors_write", disk_write_data},
         {"execute_addr", execute_addr},
         {"pong", pong},
         {"loadch", loadch},

@@ -148,7 +148,7 @@ int xin_note(char *file_name)
     {
 
         for (int i = 0; i < 16; i++)
-            disk_read(ATA_FIRST_BUS, ATA_MASTER, xin_file->first_sector + i, 1, (uint16_t *)((xin_file->first_sector + i) * SECTOR_SIZE));
+            __disk_sectors_read(ATA_FIRST_BUS, ATA_MASTER, xin_file->first_sector + i, 1, (uint16_t *)((xin_file->first_sector + i) * SECTOR_SIZE));
 
         canvas_screen_clear();
 
@@ -177,7 +177,7 @@ int xin_note(char *file_name)
 
         xin_file->size = file_data_counter;
 
-        disk_write(ATA_FIRST_BUS, ATA_MASTER, xin_file->first_sector, __xin_file_size_in_sectors_get(xin_file), (uint16_t *)(tmp));
+        __disk_sectors_write(ATA_FIRST_BUS, ATA_MASTER, xin_file->first_sector, __xin_file_size_in_sectors_get(xin_file), (uint16_t *)(tmp));
 
         free(tmp);
     }
