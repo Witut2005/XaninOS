@@ -331,9 +331,14 @@ void kernel_init(void)
 
     __xin_detect_file_system();
     XinFileSystemData XinFsData = __xin_fs_data_get();
-    xprintf("XinFs first sector: 0x%x\n", XinFsData.xin_fs_first_sector);
-    xprintf("XinFs ptrs sectors: %d\n", XinFsData.xin_fs_ptrs_size);
-    xprintf("XinFs entries sectors: %d\n", XinFsData.xin_fs_entries_size);
+    __xin_fs_tables_set(kcalloc(SECTOR_SIZE * (XinFsData.ptrs_size + XinFsData.entries_size)));
+    __xin_fs_load_tables_from_disk();
+    xprintf("XinFs first sector: 0x%x\n", XinFsData.first_sector);
+    xprintf("XinFs ptrs sectors: %d\n", XinFsData.ptrs_size);
+    xprintf("XinFs entries sectors: %d\n", XinFsData.entries_size);
+    xprintf("XinFs tmp tables: 0x%x\n", __xin_fs_tables_get());
+
+    // 0x306800
 
     puts("Press ENTER to continue...\n");
 

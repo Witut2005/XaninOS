@@ -36,10 +36,11 @@ enum xin_fs_properties
 
 struct XinFileSystemData
 {
-    uint32_t xin_fs_first_sector;
-    uint32_t xin_fs_ptrs_size;    // in sectors
-    uint32_t xin_fs_entries_size; // in sectors
-};
+    uint32_t first_sector;
+    uint32_t ptrs_size;    // in sectors
+    uint32_t entries_size; // in sectors
+    uint8_t *tables;
+} __attribute__((packed));
 
 typedef struct XinFileSystemData XinFileSystemData;
 
@@ -114,6 +115,9 @@ extern "C"
     {
 #endif
 
+        void __xin_fs_tables_set(uint8_t *tables);
+        void __xin_fs_load_tables_from_disk(void); // oj calkiem risky
+        uint8_t *__xin_fs_tables_get(void);
         XinFileSystemData __xin_fs_data_get(void);
         void __xin_detect_file_system(void);
         bool __xin_current_directory_set(char *directory);

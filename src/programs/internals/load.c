@@ -26,10 +26,10 @@ int load(char *address_string)
 
         for (int j = 0; j < 16; j++)
         {
-            // if (data_pointer[(16 * i) + j] < ASCII_SPACE)
-            puts(" ");
-            // else
-            //     xprintf("%c", data_pointer[(16 * i) + j]);
+            if (data_pointer[(16 * i) + j] < ASCII_SPACE)
+                puts(" ");
+            else
+                xprintf("%c", data_pointer[(16 * i) + j]);
         }
         puts("\n");
     }

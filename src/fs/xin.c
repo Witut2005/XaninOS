@@ -29,6 +29,21 @@ XinFileSystemData __xin_fs_data_get(void)
     return XinFsData;
 }
 
+uint8_t *__xin_fs_tables_get(void)
+{
+    return XinFsData.tables;
+}
+
+void __xin_fs_tables_set(uint8_t *tables)
+{
+    XinFsData.tables = tables;
+}
+
+void __xin_fs_load_tables_from_disk(void) // oj calkiem risky
+{
+    __disk_read(XinFsData.first_sector, XinFsData.ptrs_size + XinFsData.entries_size, (uint16_t *)XinFsData.tables);
+}
+
 void __xin_detect_file_system(void)
 {
     __disk_read_bytes(ATA_FIRST_BUS, ATA_MASTER, 0, 2, 12, (uint8_t *)&XinFsData);
