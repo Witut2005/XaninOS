@@ -19,14 +19,15 @@ int xin_list_files_app(char **argv)
             path = argv[i];
     }
 
-    XinEntry *i = (XinEntry *)XIN_ENTRY_TABLE;
-
     int printed_text = 0;
 
     if (__xin_find_entry(path) == NULL && strlen(path) > 0)
         return XANIN_ERROR;
 
-    while ((uint32_t)i < XIN_ENTRY_TABLE + (SECTOR_SIZE * 50))
+    XinFileSystemData XinFsData = __xin_fs_data_get();
+    XinEntry *End = __xin_fs_entries_end_get();
+
+    for (XinEntry *i = __xin_fs_entries_get(); (uint32_t)i < (uint32_t)End; i++)
     {
 
         if ((substr_find(i->path, "/.") && !bstrcmp(options, "-la"))) // || (i->path != NULL))
@@ -71,8 +72,6 @@ int xin_list_files_app(char **argv)
                 }
             }
         }
-
-        i++;
     }
 
     return XANIN_OK;

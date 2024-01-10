@@ -9,6 +9,7 @@ extern "C"
 {
 #endif
 
+    __STATUS xin_check(char *path);
     __STATUS stdio_apply(void);
     __STATUS screen_saver(char *);
     __STATUS bmp_info(char *);

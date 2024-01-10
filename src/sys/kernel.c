@@ -372,12 +372,13 @@ void kernel_init(void)
 
     char *buffer = (char *)kcalloc(100 * SIZE_OF(char));
 
-    XinEntry *StdioRefreshRateConfig = fopen("/etc/stdio/refresh_rate.conf", "r");
-    fseek(StdioRefreshRateConfig, ARRAY_LENGTH("STDIO_REFRESH_RATE: ") - 1);
-    fread(StdioRefreshRateConfig, buffer, 99);
+    stdio_refresh_rate = 50;
+    // XinEntry *StdioRefreshRateConfig = fopen("/etc/stdio/refresh_rate.conf", "r");
+    // fseek(StdioRefreshRateConfig, ARRAY_LENGTH("STDIO_REFRESH_RATE: ") - 1);
+    // fread(StdioRefreshRateConfig, buffer, 99);
 
-    stdio_refresh_rate = strtoi(buffer, 10);
-    stdio_refresh_rate = stdio_refresh_rate <= 100 ? stdio_refresh_rate : 100;
+    // stdio_refresh_rate = strtoi(buffer, 10);
+    // stdio_refresh_rate = stdio_refresh_rate <= 100 ? stdio_refresh_rate : 100;
 
     kfree(buffer);
 }
@@ -412,20 +413,20 @@ void kernel_start(void)
         xprintf("%z_/      _/    _/_/_/  _/    _/  _/  _/    _/    _/_/    _/_/_/     %z%s: %i:%i:%i\n", OUTPUT_COLOR_SET(logo_back_color, logo_front_color), OUTPUT_COLOR_SET(black, white), daysLUT[SystemTime.weekday], SystemTime.hour, SystemTime.minutes, SystemTime.seconds);
     }
 
-    char stdio_legacy_config_buf[6] = {0};
-    XinEntry *StdioLegacyConfig = fopen("/etc/help/stdio_legacy.conf", "rw");
-    fseek(StdioLegacyConfig, ARRAY_LENGTH("PRINT_LEGACY_STDIO_INFO: ") - 1);
-    fread(StdioLegacyConfig, stdio_legacy_config_buf, 5);
+    // char stdio_legacy_config_buf[6] = {0};
+    // XinEntry *StdioLegacyConfig = fopen("/etc/help/stdio_legacy.conf", "rw");
+    // fseek(StdioLegacyConfig, ARRAY_LENGTH("PRINT_LEGACY_STDIO_INFO: ") - 1);
+    // fread(StdioLegacyConfig, stdio_legacy_config_buf, 5);
 
-    if (bstrncmp(stdio_legacy_config_buf, "TRUE", 4))
-    {
-        fseek(StdioLegacyConfig, 25);
-        fwrite(StdioLegacyConfig, "FALSE", 6);
+    // if (bstrncmp(stdio_legacy_config_buf, "TRUE", 4))
+    // {
+    //     fseek(StdioLegacyConfig, 25);
+    //     fwrite(StdioLegacyConfig, "FALSE", 6);
 
-        puts_warning("SINCE V1.8, XANIN USES TWO DIFFERENT GRAPHIC MODES. IF YOU WANT\nTO RUN THE PROGRAM IN A GIVEN MODE, HOLD CTRL WHILE SUBMITTING A COMMAND\n");
-    }
+    //     puts_warning("SINCE V1.8, XANIN USES TWO DIFFERENT GRAPHIC MODES. IF YOU WANT\nTO RUN THE PROGRAM IN A GIVEN MODE, HOLD CTRL WHILE SUBMITTING A COMMAND\n");
+    // }
 
-    fclose(&StdioLegacyConfig);
+    // fclose(&StdioLegacyConfig);
 
     kernel_loop();
 }

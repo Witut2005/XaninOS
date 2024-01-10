@@ -379,6 +379,7 @@ objects_to_compile = {
 
     'built-in programs': [
         CompileObject('./programs/fs/edit.c', builders['c'], builder_options['c']['default'], OBJECT),
+        CompileObject('./programs/fs/xin_check.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./programs/xagames/xagame_test.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./programs/xagames/tetris.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./programs/misc/screenshot.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),

@@ -108,6 +108,8 @@ typedef struct XinEntriesPack XinEntriesPack;
 
 extern XinFileDescriptor *FileDescriptorTable;
 
+typedef uint8_t xin_ptr_t;
+
 #ifdef __cplusplus
 extern "C"
 {
@@ -117,6 +119,11 @@ extern "C"
 
         void __xin_fs_tables_set(uint8_t *tables);
         void __xin_fs_load_tables_from_disk(void); // oj calkiem risky
+        uint8_t *__xin_fs_ptrs_get(void);
+        uint32_t __xin_fs_entries_size_get(void);
+        uint32_t __xin_fs_ptrs_size_get(void);
+        XinEntry *__xin_fs_entries_get(void);
+        XinEntry *__xin_fs_entries_end_get(void);
         uint8_t *__xin_fs_tables_get(void);
         XinFileSystemData __xin_fs_data_get(void);
         void __xin_detect_file_system(void);
