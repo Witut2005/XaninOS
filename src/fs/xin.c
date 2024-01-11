@@ -28,6 +28,7 @@ static XinFileSystemData XinFsData; // XinFS DATA SINGLETONE
 
 #define XIN_FS_PTRS_BEGIN (XinFsData.tables)
 #define XIN_FS_ENTRIES_BEGIN (XinFsData.tables + (SECTOR_SIZE * XinFsData.ptrs_size))
+#define XIN_FS_ENTRIES_END (XinFsData.tables + (SECTOR_SIZE * (XinFsData.ptrs_size + XinFsData.entries_size)))
 
 #define XIN_FS_ENTRIES_SIZE (XinFsData.entries_size)
 #define XIN_FS_PTRS_SIZE (XinFsData.ptrs_size)
@@ -278,11 +279,9 @@ XinEntry *__xin_get_file_pf(char *path) // pf = parent folder
 
 XinEntry *__xin_find_free_entry(void)
 {
-    for (char *i = (char *)XIN_ENTRY_TABLE; (uint32_t)i < XIN_ENTRY_TABLE + (SECTOR_SIZE * 50); i += 64)
-    {
-        if (*(char *)i == '\0')
-            return (XinEntry *)i;
-    }
+    for (XinEntry *i = (XinEntry *)XIN_FS_ENTRIES_BEGIN; i < (XinEntry *)XIN_FS_ENTRIES_END; i++)
+        if (i->path[0] == '\0')
+            return i;
 
     return NULL;
 }
@@ -556,6 +555,12 @@ void __xin_init_fs(void)
     }
 }
 
+void __xin_tables_update(void)
+{
+    __disk_sectors_write(ATA_FIRST_BUS, ATA_MASTER, XinFsData.first_sector, XIN_FS_PTRS_SIZE, (uint16_t *)XIN_FS_ENTRIES_BEGIN);
+    __disk_sectors_write(ATA_FIRST_BUS, ATA_MASTER, XinFsData.first_sector + XIN_FS_PTRS_SIZE, XIN_FS_ENTRIES_SIZE, (uint16_t *)(XIN_FS_ENTRIES_BEGIN));
+}
+
 __STATUS __xin_file_create(char *entry_name)
 {
 
@@ -593,7 +598,6 @@ __STATUS __xin_file_create(char *entry_name)
         for (int j = 0; j <= i; j++)
             tmp[j] = entry_name[j];
 
-        // xprintf("%s\n", __xin_path_get(entry_name));
         strcpy(tmp, __xin_path_get(tmp));
         XinEntry *path = __xin_find_entry(tmp);
 
@@ -610,14 +614,8 @@ __STATUS __xin_file_create(char *entry_name)
     {
         char *path = __xin_path_get(entry_name);
 
-        // xprintf("%s\n", path);
-
         if (__xin_find_entry(entry_name) != NULL)
-        {
-            // xprintf("%zFILE WITH THIS NAME EXISTS\n", stderr);
-            // while(getscan() != ENTER);
             return XIN_FILE_EXISTS;
-        }
 
         strcpy(entry->path, path);
     }
@@ -625,11 +623,7 @@ __STATUS __xin_file_create(char *entry_name)
     else if (entry_name[0] == '/')
     {
         if (__xin_find_entry(entry_name) != NULL)
-        {
-            // xprintf("%zFILE WITH THIS NAME EXISTS\n", stderr);
-            // while(getscan() != ENTER);
             return XIN_FILE_EXISTS;
-        }
 
         strcpy(entry->path, entry_name);
     }
@@ -637,32 +631,18 @@ __STATUS __xin_file_create(char *entry_name)
     else if (__xin_get_file_pf(entry_name) != NULL)
     {
         if (__xin_find_entry(entry_name) != NULL)
-        {
-            // xprintf("%zFILE WITH THIS NAME EXISTS\n", stderr);
-            // while(getscan() != ENTER);
             return XIN_FILE_EXISTS;
-        }
 
         strcpy(entry->path, entry_name);
     }
 
     else
-    {
-
-        // xprintf("%zFILE CREATE FAILURE\n", stderr);
-        // while(getscan() != ENTER);
         return XANIN_ERROR;
-    }
+
     /* write entry to xin entry pointers table */
-    uint8_t *write_entry = __xin_find_free_pointer(); //_with_given_size(2);
+    xin_ptr_t *entry_xin_fs_ptr = __xin_find_free_pointer(); //_with_given_size(2);
 
-    // for (int i = 0; i < 15; i++)
-    //     write_entry[i] = XIN_ALLOCATED;
-
-    write_entry[0] = XIN_EOF;
-    // write_entry[15] = XIN_EOF;
-
-    /* write entry to xin entry date table */
+    entry_xin_fs_ptr[0] = XIN_EOF;
 
     time_get(&SystemTime);
 
@@ -675,19 +655,18 @@ __STATUS __xin_file_create(char *entry_name)
     entry->size = 0;
     entry->type = XIN_FILE;
 
-    entry->first_sector = (uint32_t)write_entry - XIN_ENTRY_POINTERS;
-
-    // for(char* i = (char*)(entry->first_sector * SECTOR_SIZE); (uint32_t)i < entry->first_sector * SECTOR_SIZE + 0x10 * SECTOR_SIZE; i++)
-    //     *i = 0x0;
+    entry->first_sector = entry_xin_fs_ptr - XIN_FS_PTRS_BEGIN;
 
     uint8_t *zeros = (uint8_t *)calloc(SECTOR_SIZE);
 
-    __disk_sectors_write(ATA_FIRST_BUS, ATA_MASTER, entry->first_sector, 2, (uint16_t *)zeros);
+    __disk_sectors_write(ATA_FIRST_BUS, ATA_MASTER, entry->first_sector, 1, (uint16_t *)zeros);
 
     free(zeros);
 
-    __disk_sectors_write(ATA_FIRST_BUS, ATA_MASTER, 0x12, 8, (uint16_t *)XIN_ENTRY_POINTERS);
-    __disk_sectors_write(ATA_FIRST_BUS, ATA_MASTER, 0x1a, 40, (uint16_t *)(XIN_ENTRY_TABLE));
+    __xin_tables_update();
+
+    // __disk_sectors_write(ATA_FIRST_BUS, ATA_MASTER, 0x12, 8, (uint16_t *)XIN_ENTRY_POINTERS);
+    // __disk_sectors_write(ATA_FIRST_BUS, ATA_MASTER, 0x1a, 40, (uint16_t *)(XIN_ENTRY_TABLE));
 
     return XANIN_OK;
 }
