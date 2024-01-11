@@ -27,7 +27,7 @@ int xin_list_files_app(char **argv)
     XinFileSystemData XinFsData = __xin_fs_data_get();
     XinEntry *End = __xin_fs_entries_end_get();
 
-    for (XinEntry *i = __xin_fs_entries_get(); (uint32_t)i < (uint32_t)End; i++)
+    for (XinEntry *i = (XinEntry *)__xin_fs_entries_get(); (uint32_t)i < (uint32_t)End; i++)
     {
 
         if ((substr_find(i->path, "/.") && !bstrcmp(options, "-la"))) // || (i->path != NULL))

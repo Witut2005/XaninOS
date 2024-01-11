@@ -123,7 +123,7 @@ extern "C"
         uint8_t *__xin_fs_ptrs_get(void);
         uint32_t __xin_fs_entries_size_get(void);
         uint32_t __xin_fs_ptrs_size_get(void);
-        XinEntry *__xin_fs_entries_get(void);
+        uint8_t *__xin_fs_entries_get(void);
         XinEntry *__xin_fs_entries_end_get(void);
         uint8_t *__xin_fs_tables_get(void);
         XinFileSystemData __xin_fs_data_get(void);
