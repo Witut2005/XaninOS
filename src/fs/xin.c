@@ -177,7 +177,8 @@ uint8_t *__xin_find_free_pointer_with_given_size(uint32_t size)
 
 void __xin_entry_resize(XinEntry *entry, uint32_t new_size)
 {
-    uint8_t *xin_pointer_table_entry = (uint8_t *)(XIN_ENTRY_POINTERS + entry->first_sector);
+    // uint8_t *xin_pointer_table_entry = (uint8_t *)(XIN_ENTRY_POINTERS + entry->first_sector);
+    uint8_t *xin_pointer_table_entry = (uint8_t *)(XIN_FS_PTRS_BEGIN + entry->first_sector);
     uint32_t sectors = entry->size / SECTOR_SIZE + (entry->size % SECTOR_SIZE != 0 ? 1 : 0);
 
     for (int i = 0; i < sectors; i++)
@@ -502,8 +503,9 @@ int __xin_folder_create(char *entry_name)
     entry->size = 0x0;
     entry->type = XIN_DIRECTORY;
 
-    __disk_sectors_write(ATA_FIRST_BUS, ATA_MASTER, 0x12, 5, (uint16_t *)(XIN_ENTRY_POINTERS));
-    __disk_sectors_write(ATA_FIRST_BUS, ATA_MASTER, 0x1a, 10, (uint16_t *)(XIN_ENTRY_TABLE));
+    // __disk_sectors_write(ATA_FIRST_BUS, ATA_MASTER, 0x12, 5, (uint16_t *)(XIN_ENTRY_POINTERS));
+    // __disk_sectors_write(ATA_FIRST_BUS, ATA_MASTER, 0x1a, 10, (uint16_t *)(XIN_ENTRY_TABLE));
+    __xin_tables_update();
 
     return XANIN_OK;
 }
@@ -524,31 +526,24 @@ void __xin_file_create_at_given_sector(char *path, uint32_t first_sector, uint8_
     entry_created->size = size * SECTOR_SIZE;
     entry_created->first_sector = first_sector;
 
-    uint8_t *write_entry = (uint8_t *)(XIN_ENTRY_POINTERS + first_sector);
+    uint8_t *write_entry = (uint8_t *)(XIN_FS_PTRS_BEGIN + first_sector);
 
     uint8_t tmp = 0;
 
     for (uint8_t *i = write_entry; i < (write_entry + size); i++)
-    {
         *i = XIN_ALLOCATED;
-        tmp++;
-    }
+    tmp++;
 
     *(write_entry + size - 1) = XIN_EOF;
 }
 
-void xin_load_tables(void)
-{
-    __disk_read(0x12, XIN_ENTRY_POINTERS_SECTORS, (uint16_t *)(XIN_ENTRY_POINTERS));
-    __disk_read(0x1a, XIN_ENTRY_TABLE_SECTORS, (uint16_t *)(XIN_ENTRY_TABLE));
-}
-
+// ADD PARAMETER TMP TABLE
 void __xin_init_fs(void)
 {
-    xin_load_tables();
+    // xin_load_tables();
     __xin_folder_change("/");
 
-    for (uint8_t *i = (uint8_t *)XIN_ENTRY_POINTERS; (uint32_t)i < XIN_ENTRY_POINTERS + 0x280; i++)
+    for (xin_ptr_t *i = XIN_FS_PTRS_BEGIN; i < XIN_FS_PTRS_BEGIN + 0x280; i++)
     {
         if (*i == XIN_UNALLOCATED)
             *i = XIN_EOF;
@@ -689,7 +684,8 @@ int __xin_file_reallocate_with_given_size(XinEntry *File, uint32_t size)
     if (!number_of_sectors_to_allocate)
         number_of_sectors_to_allocate++;
 
-    uint8_t *entry_deallocate = (uint8_t *)(File->first_sector + XIN_ENTRY_POINTERS);
+    // uint8_t *entry_deallocate = (uint8_t *)(File->first_sector + XIN_ENTRY_POINTERS);
+    uint8_t *entry_deallocate = (uint8_t *)(File->first_sector + XIN_FS_ENTRIES_BEGIN);
     for (int i = 0; i < number_of_sectors_to_deallocate; i++)
         entry_deallocate[i] = XIN_UNALLOCATED;
 
@@ -716,16 +712,16 @@ int __xin_file_reallocate_with_given_size(XinEntry *File, uint32_t size)
 
     for (int i = 0; i < HardLinks->length; i++)
     {
-        HardLinks->entries[i]->first_sector = (uint32_t)write_entry - XIN_ENTRY_POINTERS;
+        // HardLinks->entries[i]->first_sector = (uint32_t)write_entry - XIN_ENTRY_POINTERS;
+        HardLinks->entries[i]->first_sector = write_entry - XIN_FS_PTRS_BEGIN;
         HardLinks->entries[i]->size = size;
     }
 
-    File->first_sector = (uint32_t)write_entry - XIN_ENTRY_POINTERS;
+    // File->first_sector = write_entry - XIN_ENTRY_POINTERS;
+    File->first_sector = write_entry - XIN_FS_PTRS_BEGIN;
 
     __disk_sectors_write(ATA_FIRST_BUS, ATA_MASTER, File->first_sector, number_of_sectors_to_allocate, (uint16_t *)buf);
-
-    __disk_sectors_write(ATA_FIRST_BUS, ATA_MASTER, 0x12, 8, (uint16_t *)XIN_ENTRY_POINTERS);
-    __disk_sectors_write(ATA_FIRST_BUS, ATA_MASTER, 0x1a, 40, (uint16_t *)(XIN_ENTRY_TABLE));
+    __xin_tables_update();
 
     free(buf);
 
@@ -745,8 +741,8 @@ __STATUS __xin_entry_remove(char *entry_name)
 
     else if (entry_data->type == XIN_FILE)
     {
-        for (char *i = (char *)entry_data->first_sector + XIN_ENTRY_POINTERS;
-             (uint32_t)i < entry_data->first_sector + XIN_ENTRY_POINTERS + sectors_used; i++)
+        for (xin_ptr_t *i = entry_data->first_sector + XIN_FS_PTRS_BEGIN;
+             i < entry_data->first_sector + XIN_FS_PTRS_BEGIN + sectors_used; i++)
             *i = XIN_UNALLOCATED;
 
         char *tmp = (char *)entry_data;
@@ -831,7 +827,8 @@ size_t __xin_read(int fd, void *buf, size_t count)
     if (fd < 0)
         return 0;
 
-    XinEntry *entry = (XinEntry *)(XIN_ENTRY_TABLE + (fd * XIN_ENTRY_SIZE));
+    // XinEntry *entry = (XinEntry *)(XIN_ENTRY_TABLE + (fd * XIN_ENTRY_SIZE));
+    XinEntry *entry = (XinEntry *)(XIN_FS_ENTRIES_BEGIN + (fd * XIN_ENTRY_SIZE));
 
     if ((entry->type != XIN_FILE) && (entry->type != XIN_HARD_LINK))
         return 0;
@@ -913,7 +910,7 @@ size_t __xin_write(int fd, void *buf, size_t count)
     if (!FileDescriptorTable[fd].is_used)
         return 0;
 
-    XinEntry *entry = (XinEntry *)(XIN_ENTRY_TABLE + (fd * XIN_ENTRY_SIZE));
+    XinEntry *entry = (XinEntry *)(XIN_FS_ENTRIES_BEGIN + (fd * XIN_ENTRY_SIZE));
 
     if ((entry->type != XIN_FILE) && (entry->type != XIN_HARD_LINK))
         return 0;
@@ -1098,7 +1095,8 @@ int __xin_open(char *file_path, uint32_t options)
             file->FileInfo = (FileInformationBlock *)calloc(SIZE_OF(FileInformationBlock));
 
         file->FileInfo->position = 0;
-        int fd = (int)((uint32_t)file - XIN_ENTRY_TABLE) / 64;
+        // int fd = (int)((uint32_t)file - XIN_ENTRY_TABLE) / 64;
+        int fd = (int)((uint32_t)file - (uint32_t)XIN_FS_ENTRIES_BEGIN) / SIZE_OF(XinEntry);
         FileDescriptorTable[fd].is_used = true;
         FileDescriptorTable[fd].entry = file;
 
@@ -1217,7 +1215,8 @@ __STATUS __xin_folder_remove(char *folder_name)
     memcpy((uint8_t *)name, (uint8_t *)folder->path, XIN_MAX_PATH_LENGTH);
     name_length = strlen(name) - 1;
 
-    for (XinEntry *i = (XinEntry *)XIN_ENTRY_TABLE; i < (XinEntry *)(XIN_ENTRY_TABLE + SECTOR_SIZE * 4); i++)
+    // for (XinEntry *i = (XinEntry *)1; i < (XinEntry *)(XIN_ENTRY_TABLE + SECTOR_SIZE * 4); i++)
+    for (XinEntry *i = (XinEntry *)1; i < (XinEntry *)(XIN_FS_ENTRIES_BEGIN + SECTOR_SIZE * XIN_FS_ENTRIES_SIZE); i++)
     {
 
         if (bstrncmp(name, i->path, name_length))
@@ -1273,11 +1272,13 @@ XinChildrenEntries *xin_get_children_entries(char *folder, bool get_hidden)
 
     XinChildrenEntries *Children = (XinChildrenEntries *)calloc(SIZE_OF(XinChildrenEntries));
     Children->children = (XinEntry **)calloc(SIZE_OF(XinEntry *));
-    XinEntry *i = (XinEntry *)XIN_ENTRY_TABLE;
+
+    // XinEntry *i = (XinEntry *)XIN_ENTRY_TABLE;
+    XinEntry *i = (XinEntry *)XIN_FS_ENTRIES_BEGIN;
 
     uint32_t finded_entries = 0;
 
-    while ((uint32_t)i < XIN_ENTRY_TABLE + SECTOR_SIZE * 50)
+    while (i < (XinEntry *)(XIN_FS_ENTRIES_BEGIN + SECTOR_SIZE * XIN_FS_ENTRIES_SIZE))
     {
         if (bstrcmp(__xin_get_file_pf(i->path)->path, folder) && i->path[0])
         {
@@ -1305,10 +1306,11 @@ XinChildrenEntries *xin_get_children_entries_type(char *folder, uint8_t type)
 
     XinChildrenEntries *Children = (XinChildrenEntries *)calloc(SIZE_OF(XinChildrenEntries));
     Children->children = (XinEntry **)calloc(SIZE_OF(XinEntry *));
-    XinEntry *i = (XinEntry *)XIN_ENTRY_TABLE;
+    // XinEntry *i = (XinEntry *)XIN_ENTRY_TABLE;
+    XinEntry *i = (XinEntry *)XIN_FS_ENTRIES_BEGIN;
 
     uint32_t finded_entries = 0;
-    while ((uint32_t)i < XIN_ENTRY_TABLE + SECTOR_SIZE * 50)
+    while (i < (XinEntry *)(XIN_FS_ENTRIES_BEGIN + SECTOR_SIZE * XIN_FS_ENTRIES_SIZE))
     {
 
         if (bstrcmp(__xin_get_file_pf(i->path)->path, folder) && i->path[0])
@@ -1339,7 +1341,7 @@ XinEntriesPack *__xin_hard_links_get(const XinEntry *const File)
         return NULL;
     }
 
-    for (XinEntry *i = (XinEntry *)XIN_ENTRY_TABLE; (uint32_t)i < XIN_ENTRY_TABLE + (SECTOR_SIZE * 50); i++)
+    for (XinEntry *i = (XinEntry *)XIN_FS_ENTRIES_BEGIN; i < (XinEntry *)(XIN_FS_ENTRIES_BEGIN + SECTOR_SIZE * XIN_FS_ENTRIES_SIZE); i++)
     {
         if (i->first_sector == File->first_sector)
         {

@@ -14,9 +14,13 @@ int buffers_view(void)
     xprintf("\n\n");
 
     float xin_fs_space_used = 0;
-    float xin_fs_space_total = (SECTOR_SIZE * XIN_ENTRY_POINTERS_SECTORS);
+    // float xin_fs_space_total = (SECTOR_SIZE * XIN_ENTRY_POINTERS_SECTORS);
+    float xin_fs_space_total = (SECTOR_SIZE * (uint32_t)__xin_fs_entries_get());
 
-    for (uint8_t *sector = (uint8_t *)XIN_ENTRY_POINTERS; sector < (uint8_t *)(XIN_ENTRY_POINTERS + (SECTOR_SIZE * XIN_ENTRY_POINTERS_SECTORS)); sector++)
+    uint8_t *xin_ptrs = __xin_fs_ptrs_get();
+    uint32_t xin_ptrs_size_in_bytes = __xin_fs_ptrs_size_get() * SECTOR_SIZE;
+
+    for (xin_ptr_t *sector = __xin_fs_ptrs_get(); sector < (uint8_t *)(xin_ptrs + xin_ptrs_size_in_bytes); sector++)
     {
         if (*sector != XIN_UNALLOCATED)
             xin_fs_space_used++;

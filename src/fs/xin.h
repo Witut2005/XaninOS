@@ -15,10 +15,10 @@
 enum xin_fs_properties
 {
 
-    XIN_ENTRY_POINTERS = 0x800,
-    XIN_ENTRY_TABLE = 0x1800,
-    XIN_ENTRY_POINTERS_SECTORS = 8,
-    XIN_ENTRY_TABLE_SECTORS = 50,
+    // XIN_ENTRY_POINTERS = 0x800,
+    // XIN_ENTRY_TABLE = 0x1800,
+    // XIN_ENTRY_POINTERS_SECTORS = 8,
+    // XIN_ENTRY_TABLE_SECTORS = 50,
 
     XIN_ALLOCATED = 0x1,
     XIN_UNALLOCATED = 0x0,
@@ -117,6 +117,7 @@ extern "C"
     {
 #endif
 
+        void __xin_tables_update(void);
         void __xin_fs_tables_set(uint8_t *tables);
         void __xin_fs_load_tables_from_disk(void); // oj calkiem risky
         uint8_t *__xin_fs_ptrs_get(void);
@@ -134,7 +135,6 @@ extern "C"
         __STATUS __xin_entry_remove(char *entry_name);
         char *__xin_get_current_path(char *file_name);
 
-        void __xin_load_tables(void);
         void __xin_init_fs(void);
         XinEntry *____xin_find_free_entry(void);
 
