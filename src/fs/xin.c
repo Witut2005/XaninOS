@@ -567,6 +567,9 @@ size_t __xin_fread(XinEntry *entry, void *buf, size_t count)
     if (!entry->size)
         return 0;
 
+    if (entry->first_sector == XIN_FIRST_SECTOR_NOT_DEFINED)
+        return 0;
+
     uint32_t initial_position = ftell(entry);
 
     if (initial_position + count > entry->size)
@@ -646,6 +649,9 @@ size_t __xin_fwrite(XinEntry *entry, void *buf, size_t count)
         return 0;
 
     if ((entry->type != XIN_FILE) && (entry->type != XIN_HARD_LINK))
+        return 0;
+
+    if (entry->first_sector == XIN_FIRST_SECTOR_NOT_DEFINED)
         return 0;
 
     //////////////////////////////////////////////////
