@@ -329,16 +329,7 @@ void kernel_init(void)
     xprintf("\n%z----------------------------\n", OUTPUT_COLOR_SET(black, green));
     xprintf("Com port status: 0x%x\n", com_status());
 
-    __xin_detect_file_system();
-    XinFileSystemData XinFsData = __xin_fs_data_get();
-    __xin_fs_tables_set(kcalloc(SECTOR_SIZE * (XinFsData.ptrs_size + XinFsData.entries_size)));
-    __xin_fs_load_tables_from_disk();
-    xprintf("XinFs first sector: 0x%x\n", XinFsData.first_sector);
-    xprintf("XinFs ptrs sectors: %d\n", XinFsData.ptrs_size);
-    xprintf("XinFs entries sectors: %d\n", XinFsData.entries_size);
-    xprintf("XinFs tmp tables: 0x%x\n", __xin_fs_tables_get());
-
-    // 0x306800
+    __xin_init();
 
     puts("Press ENTER to continue...\n");
 
@@ -353,7 +344,6 @@ void kernel_init(void)
     argv[3] = (char *)calloc(XANIN_PMMNGR_BLOCK_SIZE * 2);
     argv[4] = (char *)calloc(XANIN_PMMNGR_BLOCK_SIZE * 2);
 
-    __xin_init_fs();
     __disk_sectors_write(ATA_FIRST_BUS, ATA_MASTER, __xin_find_entry("/ivt")->first_sector, 2, 0x0); // load ivt to /ivt file
 
     __xin_folder_change("/");

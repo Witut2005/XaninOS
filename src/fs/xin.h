@@ -147,7 +147,7 @@ extern "C"
         __STATUS __xin_entry_remove(char *entry_name);
         char *__xin_get_current_path(char *file_name);
 
-        void __xin_init_fs(void);
+        void __xin_init();
         XinEntry *____xin_find_free_entry(void);
 
         __STATUS __xin_file_create(char *entry_name);

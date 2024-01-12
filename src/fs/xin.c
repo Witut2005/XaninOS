@@ -390,9 +390,12 @@ int __xin_folder_create(char *foldername)
 }
 
 // ADD PARAMETER TMP TABLE
-void __xin_init_fs(void)
+void __xin_init()
 {
-    // xin_load_tables();
+    __xin_detect_file_system();
+    __xin_fs_tables_set(kcalloc(SECTOR_SIZE * (XinFsData.ptrs_size + XinFsData.entries_size)));
+    __xin_fs_load_tables_from_disk();
+
     __xin_folder_change("/");
 
     for (xin_ptr_t *i = XIN_FS_PTRS_TABLE_BEGIN; i < XIN_FS_PTRS_TABLE_BEGIN + 0x280; i++)
