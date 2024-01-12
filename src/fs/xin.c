@@ -306,79 +306,41 @@ void __xin_free_temporary_data(XinEntry *File)
     free(File->FileInfo);
 }
 
-__STATUS __xin_folder_change(char *new_directory)
+__STATUS __xin_folder_change(char *foldername)
 {
 
-    if (strlen(new_directory) > XIN_MAX_PATH_LENGTH)
-        // return NULL;
+    if (strlen(foldername) > XIN_MAX_PATH_LENGTH)
         return XANIN_ERROR;
 
     char *tmp = (char *)calloc(XIN_MAX_PATH_LENGTH);
 
-    strcpy(tmp, new_directory);
-    new_directory = tmp;
-
-    if (bstrcmp(new_directory, ".."))
+    if (bstrcmp(foldername, ".."))
     {
         if (bstrcmp(xin_current_directory, "/"))
-            // return NULL;
             return XANIN_ERROR;
         else
         {
-            xin_current_directory[strlen(xin_current_directory) - 1] = '\0';
-            int counter = strlen(xin_current_directory) - 1;
-
-            while (xin_current_directory[counter] != '/')
-            {
-                xin_current_directory[counter] = '\0';
-                counter--;
-            }
+            XinEntry *CurrentFolderParent = __xin_get_file_pf(xin_current_directory);
+            if (CurrentFolderParent != NULL)
+                strncpy(xin_current_directory, CurrentFolderParent->path, XIN_MAX_PATH_LENGTH);
+            else
+                return __xin_folder_change("/");
         }
-        // return xin_find_entry(xin_current_directory);
         return XANIN_OK;
     }
 
-    if (new_directory[strlen(new_directory) - 1] != '/')
-    {
-        int name_length = strlen(new_directory); // '\0' before any modification
-        new_directory[name_length + 1] = '\0';
-        new_directory[name_length] = '/';
-    }
+    char folderpath[XIN_MAX_PATH_LENGTH + 1] = {0};
 
-    if (new_directory[0] != '/')
-        new_directory = strconcat(xin_current_directory, new_directory);
+    __xin_absolute_path_get(foldername, folderpath, XIN_DIRECTORY);
 
-    XinEntry *xin_new_directory = __xin_find_entry(new_directory);
+    XinEntry *NewFolder = __xin_find_entry(folderpath);
 
-    if (xin_new_directory == NULL)
-    {
-        free(new_directory);
-        // while (1)
-        // ;
-        // return NULL;
+    if (NewFolder != NULL)
+        strcpy(xin_current_directory, NewFolder->path);
+
+    else
         return XANIN_ERROR;
-    }
 
-    else if (xin_new_directory->type != XIN_DIRECTORY)
-    {
-        free(new_directory);
-        // return NULL;
-        return XANIN_ERROR;
-    }
-
-    else if (new_directory[strlen(new_directory) - 1] != '/')
-    {
-        free(new_directory);
-        // return NULL;
-        return XANIN_ERROR;
-    }
-
-    for (int i = 0; i < SIZE_OF(xin_current_directory); i++)
-        xin_current_directory[i] = '\0';
-
-    strcpy(xin_current_directory, xin_new_directory->path);
-
-    free(new_directory);
     return XANIN_OK;
 }
 

@@ -346,7 +346,6 @@ void kernel_init(void)
 
     __disk_sectors_write(ATA_FIRST_BUS, ATA_MASTER, __xin_find_entry("/ivt")->first_sector, 2, 0x0); // load ivt to /ivt file
 
-    __xin_folder_change("/");
     FileDescriptorTable = (XinFileDescriptor *)kcalloc(SIZE_OF(XinFileDescriptor) * 200); // 200 = number o entries
 
     memset((uint8_t *)ArpTable, 0xFF, SIZE_OF(ArpTable[0]));
