@@ -380,72 +380,12 @@ __STATUS __xin_folder_change(char *new_directory)
 
     free(new_directory);
     return XANIN_OK;
-
-    // if (strlen(new_directory) > XIN_MAX_PATH_LENGTH)
-    //     return XIN_TO_LONG_PATH;
-
-    // char *tmp = (char *)calloc(XIN_MAX_PATH_LENGTH);
-
-    // strcpy(tmp, new_directory);
-    // new_directory = tmp;
-
-    // if (bstrcmp(new_directory, ".."))
-    // {
-    //     if (bstrcmp(xin_current_directory, "/"))
-    //         return XIN_ENTRY_NOT_FOUND;
-    //     else
-    //     {
-    //         xin_current_directory[strlen(xin_current_directory) - 1] = '\0';
-    //         int counter = strlen(xin_current_directory) - 1;
-
-    //         while (xin_current_directory[counter] != '/')
-    //         {
-    //             xin_current_directory[counter] = '\0';
-    //             counter--;
-    //         }
-    //     }
-    //     return XANIN_OK;
-    // }
-
-    // if (new_directory[strlen(new_directory) - 1] != '/')
-    // {
-    //     int name_length = strlen(new_directory); // '\0' before any modification
-    //     new_directory[name_length + 1] = '\0';
-    //     new_directory[name_length] = '/';
-    // }
-
-    // XinEntry *xin_new_directory = __xin_find_entry(new_directory);
-
-    // if (xin_new_directory == NULL)
-    // {
-    //     free(new_directory);
-    //     return XIN_ENTRY_NOT_FOUND;
-    // }
-
-    // else if (xin_new_directory->type != XIN_DIRECTORY)
-    // {
-    //     free(new_directory);
-    //     return XIN_NOT_A_FOLDER;
-    // }
-
-    // else if (new_directory[strlen(new_directory) - 1] != '/')
-    // {
-    //     free(new_directory);
-    //     return XIN_BAD_FOLDER_NAME;
-    // }
-
-    // for (int i = 0; i < SIZE_OF(xin_current_directory); i++)
-    //     xin_current_directory[i] = '\0';
-
-    // strcpy(xin_current_directory, xin_new_directory->path);
-
-    // free(new_directory);
-    // return XANIN_OK;
 }
 
 int __xin_folder_create(char *foldername)
 {
-    __xin_entry_create(foldername, XIN_DIRECTORY);
+    XinEntryCreateArgs Args = {foldername, NULL};
+    __xin_entry_create(&Args, XIN_DIRECTORY);
     return XANIN_OK;
 }
 
@@ -468,24 +408,22 @@ void __xin_tables_update(void)
     __disk_sectors_write(ATA_FIRST_BUS, ATA_MASTER, XinFsData.first_sector + XIN_FS_PTRS_SIZE, XIN_FS_ENTRIES_SIZE, (uint16_t *)(XIN_FS_ENTRIES_TABLE_BEGIN));
 }
 
-__STATUS __xin_entry_create(char *entryname, XIN_FS_ENTRY_TYPES type)
+__STATUS __xin_entry_create(XinEntryCreateArgs *Args, XIN_FS_ENTRY_TYPES type)
 {
     char entrypath[XIN_MAX_PATH_LENGTH + 1] = {'\0'};
 
     XinEntry *Entry = __xin_find_free_entry();
 
-    __xin_absolute_path_get(entryname, entrypath, type);
+    __xin_absolute_path_get(Args->entryname, entrypath, type);
 
     if (__xin_find_entry(entrypath) != NULL)
         return XIN_FILE_EXISTS;
 
     time_get(&SystemTime);
 
-    strncpy(Entry->path, entrypath, XIN_MAX_PATH_LENGTH);
-    Entry->creation_date = (uint32_t)((SystemTime.day_of_month << 24) | (SystemTime.month << 16) | (SystemTime.century << 8) | (SystemTime.year));
-    Entry->creation_time = (uint16_t)(SystemTime.hour << 8) | (SystemTime.minutes);
-    Entry->modification_date = (uint32_t)((SystemTime.day_of_month << 24) | (SystemTime.month << 16) | (SystemTime.century << 8) | (SystemTime.year));
-    Entry->modification_time = (uint16_t)(SystemTime.hour << 8) | (SystemTime.minutes);
+    memcpy(Entry->path, entrypath, XIN_MAX_PATH_LENGTH);
+    Entry->creation_date = Entry->modification_date = time_extern_date(&SystemTime);
+    Entry->creation_time = Entry->modification_time = time_extern_time(&SystemTime);
     Entry->FileInfo = NULL;
     Entry->permissions = PERMISSION_MAX;
     Entry->size = 0;
@@ -499,7 +437,8 @@ __STATUS __xin_entry_create(char *entryname, XIN_FS_ENTRY_TYPES type)
 
 __STATUS __xin_file_create(char *filename)
 {
-    return __xin_entry_create(filename, XIN_FILE);
+    XinEntryCreateArgs Args = {filename, NULL};
+    return __xin_entry_create(&Args, XIN_FILE);
 }
 
 int __xin_file_reallocate_with_given_size(XinEntry *File, uint32_t size)

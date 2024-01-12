@@ -102,6 +102,13 @@ struct XinEntriesPack
     uint32_t length;
 };
 
+struct XinEntryCreateArgs
+{
+    char *entryname;
+    char *linkname;
+};
+
+typedef struct XinEntryCreateArgs XinEntryCreateArgs;
 typedef struct XinFileDescriptor XinFileDescriptor;
 typedef struct XinChildrenEntries XinChildrenEntries;
 typedef struct XinEntriesPack XinEntriesPack;
@@ -117,7 +124,7 @@ extern "C"
     {
 #endif
 
-        __STATUS __xin_entry_create(char *entryname, XIN_FS_ENTRY_TYPES type);
+        __STATUS __xin_entry_create(XinEntryCreateArgs *Args, XIN_FS_ENTRY_TYPES type);
         char *__xin_absolute_path_get(char *rpath, char *buf, XIN_FS_ENTRY_TYPES type);
         bool __xin_is_relative_path_used(char *path);
 
