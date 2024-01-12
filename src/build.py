@@ -127,31 +127,19 @@ def compile_kernel(*kargs):
         'dd if=xanin.bin of=xanin.img',
         'python3 ./build/align_file.py -f ./xanin.img -size 600000',
 
-        f'{("python3 ./build/app_preinstall.py -files external_apps/ etc/ -image xanin.img" if args.preinstall == "yes" else "")}',
-        f'{("python3 ./build/app_preinstall2.py --files external_apps/ etc/ --image xanin.img" if args.preinstall == "yes" else "")}',
+        f'{("python3 ./build/app_preinstall2.py --files external_apps/ etc/ --image xanin.img")}',
 
         'mv xanin.img -f ../bin',
         'mv xanin.bin -f ../bin'
     ]
 
-    # if(args.preinstall == 'yes'):
-        # commands.append('make -C ./external_apps')
-        # commands.append('python3 ./build/app_preinstall.py -files external_apps/ etc/ -image ../bin/xanin.img')
-        # commands.insert(6, 'python3 ./build/app_preinstall2.py --files external_apps/ etc/ --image xanin.img')
-        # commands.append('python3 ./utils/app_preinstall.py -files etc/ -image ../bin/xanin.img')
-    
     for command in commands:
         terminate_if_error(os.system(command))
-
-    
-# C = 'i386-elf-gcc'
-# CC = 'i386-elf-g++'
 
 parser = argparse.ArgumentParser()
 
 parser.add_argument('--srcpath', type=str)
 parser.add_argument('--binpath', type=str)
-parser.add_argument('--preinstall', type=str, default='yes')
 
 parser.add_argument('--assembler', type=str, default='nasm')
 parser.add_argument('--cbuilder', type=str, default='i386-elf-gcc')
