@@ -21,6 +21,9 @@ extern void (*keyboard_handle)(void);
 typedef uint8_t *address_t;
 typedef uint8_t *object_t;
 
+typedef uint32_t bcd_date_t;
+typedef uint16_t bcd_time_t;
+
 extern uint8_t *const zeros;
 
 struct CmosTime
@@ -81,39 +84,41 @@ extern "C"
 #endif
 
     extern float pit_time;
-    extern bool key_pressed(void);
-    extern char getchar(void);
-    extern char getscan(void);
-    extern void keyboard_buffer_refresh(uint16_t *screen_buffer);
-    extern CmosTime *time_get(CmosTime *Time);
-    extern uint8_t floppy_type_get_cmos(void);
-    extern void get_cpu_speed(void);
-    extern uint32_t randomizer;
-    extern void swap_int(int *xp, int *yp);
-    extern void swap_char(char *xp, char *yp);
-    extern void swap_short(uint16_t *xp, uint16_t *yp);
-    extern void srand(uint32_t seed);
-    extern uint32_t memory_map_get_cmos(void);
-    extern void int_swap(int *xp, int *yp);
-    extern void bubble_sort(int *array, int n);
-    extern void merge(int *array, int first, int middle, int last);
-    extern void merge_sort(int array[], int first, int last);
 
-    int integer(void *value);
-    extern void *malloc(uint32_t size) __attribute__((fastcall));
-    extern void *calloc(uint32_t size) __attribute__((fastcall));
-    extern void free(void *ptr) __attribute__((fastcall));
-    extern void *realloc(void *ptr, uint32_t size) __attribute__((fastcall));
+    bcd_date_t time_extern_date(CmosTime *Time);
+    bcd_time_t time_extern_time(CmosTime *Time);
+    bool key_pressed(void);
+    char getchar(void);
+    char getscan(void);
+    void keyboard_buffer_refresh(uint16_t *screen_buffer);
+    CmosTime *time_get(CmosTime *Time);
+    uint8_t floppy_type_get_cmos(void);
+    void get_cpu_speed(void);
+    uint32_t randomizer;
+    void swap_int(int *xp, int *yp);
+    void swap_char(char *xp, char *yp);
+    void swap_short(uint16_t *xp, uint16_t *yp);
+    void srand(uint32_t seed);
+    uint32_t memory_map_get_cmos(void);
+    void int_swap(int *xp, int *yp);
+    void bubble_sort(int *array, int n);
+    void merge(int *array, int first, int middle, int last);
+    void merge_sort(int array[], int first, int last);
 
-    extern void *kmalloc(uint32_t size);
-    extern void *kcalloc(uint32_t size);
-    extern void kfree(void *ptr);
-    extern void *krealloc(void *ptr, uint32_t size_new);
+    void *malloc(uint32_t size) __attribute__((fastcall));
+    void *calloc(uint32_t size) __attribute__((fastcall));
+    void free(void *ptr) __attribute__((fastcall));
+    void *realloc(void *ptr, uint32_t size) __attribute__((fastcall));
+
+    void *kmalloc(uint32_t size);
+    void *kcalloc(uint32_t size);
+    void kfree(void *ptr);
+    void *krealloc(void *ptr, uint32_t size_new);
     void *mmngr_realloc(void *ptr, uint32_t size);
 
-    extern void exit(void);
-    extern uint32_t rand(void);
-    extern int reboot(void);
+    void exit(void);
+    uint32_t rand(void);
+    int reboot(void);
 
     uint32_t int_to_sectors(uint32_t num);
 

@@ -23,11 +23,6 @@ uint8_t *null_memory_region;
 
 extern void kernel_loop(void);
 
-int integer(void *value)
-{
-    return (int)value;
-}
-
 uint32_t int_to_sectors(uint32_t num)
 {
     uint32_t size = num / SECTOR_SIZE;
@@ -77,6 +72,16 @@ xchar inputg(void)
 // {
 //     return __sys_keyinfo_get();
 // }
+
+bcd_date_t time_extern_date(CmosTime *Time)
+{
+    return (uint32_t)((SystemTime.day_of_month << 24) | (SystemTime.month << 16) | (SystemTime.century << 8) | (SystemTime.year));
+}
+
+bcd_time_t time_extern_time(CmosTime *Time)
+{
+    return (uint16_t)(SystemTime.hour << 8) | (SystemTime.minutes);
+}
 
 CmosTime *time_get(CmosTime *Time)
 {
