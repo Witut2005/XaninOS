@@ -42,7 +42,7 @@ char *strcpy(char *dest, const char *src)
 
 char *strncpy(char *x, const char *y, size_t size)
 {
-    for (; *y != '\0' && size == 0; x++, y++, size--)
+    for (; *y != '\0' && size != 0; x++, y++, size--)
         *x = *y;
 
     *x = *y;

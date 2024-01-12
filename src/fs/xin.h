@@ -21,16 +21,16 @@ enum xin_fs_properties
     XIN_MAX_PATH_LENGTH = 38,
     PERMISSION_MAX = 0xFF,
     SECTOR_SIZE = 512,
-
+    XIN_FIRST_SECTOR_NOT_DEFINED = UINT32_MAX
 };
 
-enum XIN_FS_ENTRY_TYPES
+typedef enum
 {
     XIN_FILE = 'F',
     XIN_DIRECTORY = 'D',
     XIN_LINK = 'L',
     XIN_HARD_LINK = 'H'
-};
+} XIN_FS_ENTRY_TYPES;
 
 typedef uint8_t xin_entry_type_t;
 
@@ -117,7 +117,8 @@ extern "C"
     {
 #endif
 
-        char *__xin_absolute_path_get(char *rpath, char *buf, xin_entry_type_t type);
+        __STATUS __xin_entry_create(char *entryname, XIN_FS_ENTRY_TYPES type);
+        char *__xin_absolute_path_get(char *rpath, char *buf, XIN_FS_ENTRY_TYPES type);
         bool __xin_is_relative_path_used(char *path);
 
         void __xin_tables_update(void);

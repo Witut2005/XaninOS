@@ -34,7 +34,7 @@ static XinFileSystemData XinFsData; // XinFS DATA SINGLETONE
 #define XIN_FS_ENTRIES_SIZE (XinFsData.entries_size)
 #define XIN_FS_PTRS_SIZE (XinFsData.ptrs_size)
 
-char *__xin_absolute_path_get(char *rpath, char *buf, xin_entry_type_t type)
+char *__xin_absolute_path_get(char *rpath, char *buf, XIN_FS_ENTRY_TYPES type)
 {
     strcpy(buf, rpath);
 
@@ -232,43 +232,35 @@ char *__xin_path_get(char *file_name)
 }
 
 /* DIRECTORY AND FILES */
-XinEntry *__xin_find_entry(char *entry_name)
+XinEntry *__xin_find_entry(char *entryname)
 {
-    if (!strlen(entry_name)) // if path is empty
+
+    char entrypath[XIN_MAX_PATH_LENGTH + 1] = {0};
+
+    if (!strlen(entryname)) // if path is empty
         return NULL;
 
-    // for (char *i = (char *)XIN_ENTRY_TABLE; (uint32_t)i < XIN_ENTRY_TABLE + (SECTOR_SIZE * 50); i += XIN_ENTRY_SIZE)
-    // {
-    //     if (bstrcmp(entry_name, i))
-    //         return (XinEntry *)i;
-    // }
+    if (entryname[0] == '/' && entryname[1] == '/')
+        return __xin_find_entry("/");
 
-    // entry_name = __xin_path_get(entry_name);
-
-    // // if(strlen(entry_name) > 40)
-    // //     return NULL;
-
-    // for (char *i = (char *)XIN_ENTRY_TABLE; (uint32_t)i < XIN_ENTRY_TABLE + (SECTOR_SIZE * 50); i += XIN_ENTRY_SIZE)
-    // {
-    //     if (bstrcmp(entry_name, i))
-    //         return (XinEntry *)i;
+    __xin_absolute_path_get(entryname, entrypath, XIN_DIRECTORY); // treat all entries as directories
+    uint32_t entrypath_len = strlen(entrypath);
 
     for (XinEntry *i = (XinEntry *)XIN_FS_ENTRIES_TABLE_BEGIN; (uint32_t)i < (uint32_t)(XIN_FS_ENTRIES_TABLE_BEGIN + (SECTOR_SIZE * XIN_FS_ENTRIES_SIZE)); i++)
     {
-        if (bstrcmp(entry_name, i->path))
+        // check if given folder exists
+        if (bstrcmp(entrypath, i->path))
             return i;
+
+        // check if given file exists
+        entrypath[entrypath_len - 1] = '\0';
+
+        if (bstrcmp(entrypath, i->path))
+            return i;
+
+        entrypath[entrypath_len - 1] = '/';
     }
 
-    entry_name = __xin_path_get(entry_name);
-
-    // if(strlen(entry_name) > 40)
-    //     return NULL;
-
-    for (XinEntry *i = (XinEntry *)XIN_FS_ENTRIES_TABLE_BEGIN; (uint32_t)i < (uint32_t)(XIN_FS_ENTRIES_TABLE_BEGIN + (SECTOR_SIZE * XIN_FS_ENTRIES_SIZE)); i++)
-    {
-        if (bstrcmp(entry_name, i->path))
-            return i;
-    }
     return NULL;
 }
 
@@ -453,36 +445,7 @@ __STATUS __xin_folder_change(char *new_directory)
 
 int __xin_folder_create(char *foldername)
 {
-
-    bool only_entry_name = true;
-
-    char folderpath[XIN_MAX_PATH_LENGTH + 1] = {'\0'};
-
-    XinEntry *Folder = __xin_find_free_entry();
-
-    if (foldername[0] == '/' && foldername[1] == '/')
-        return XIN_FILE_EXISTS;
-
-    if (__xin_find_entry(foldername) != NULL)
-        return XIN_FILE_EXISTS;
-
-    __xin_absolute_path_get(foldername, folderpath, XIN_DIRECTORY);
-    xprintf("abs: %s\n", folderpath);
-
-    time_get(&SystemTime);
-
-    memcpy(Folder->path, folderpath, XIN_MAX_PATH_LENGTH);
-    Folder->creation_date = (uint32_t)((SystemTime.day_of_month << 24) | (SystemTime.month << 16) | (SystemTime.century << 8) | (SystemTime.year));
-    Folder->creation_time = (uint16_t)(SystemTime.hour << 8) | (SystemTime.minutes);
-    Folder->modification_date = (uint32_t)((SystemTime.day_of_month << 24) | (SystemTime.month << 16) | (SystemTime.century << 8) | (SystemTime.year));
-    Folder->modification_time = (uint16_t)(SystemTime.hour << 8) | (SystemTime.minutes);
-    Folder->FileInfo = NULL;
-    Folder->permissions = PERMISSION_MAX;
-    Folder->size = 0x0;
-    Folder->type = XIN_DIRECTORY;
-
-    __xin_tables_update();
-
+    __xin_entry_create(foldername, XIN_DIRECTORY);
     return XANIN_OK;
 }
 
@@ -505,114 +468,38 @@ void __xin_tables_update(void)
     __disk_sectors_write(ATA_FIRST_BUS, ATA_MASTER, XinFsData.first_sector + XIN_FS_PTRS_SIZE, XIN_FS_ENTRIES_SIZE, (uint16_t *)(XIN_FS_ENTRIES_TABLE_BEGIN));
 }
 
-__STATUS __xin_file_create(char *entry_name)
+__STATUS __xin_entry_create(char *entryname, XIN_FS_ENTRY_TYPES type)
 {
+    char entrypath[XIN_MAX_PATH_LENGTH + 1] = {'\0'};
 
-    bool only_entry_name = true;
+    XinEntry *Entry = __xin_find_free_entry();
 
-    XinEntry *entry = __xin_find_free_entry();
+    __xin_absolute_path_get(entryname, entrypath, type);
 
-    if (entry == NULL)
-        return XANIN_ERROR;
-
-    if (__xin_find_entry(entry_name) != NULL)
+    if (__xin_find_entry(entrypath) != NULL)
         return XIN_FILE_EXISTS;
-
-    for (int i = strlen(entry_name) - 1; i >= 0; i--)
-    {
-        if (entry_name[i] == '/')
-        {
-            only_entry_name = false;
-            break;
-        }
-    }
-
-    if (!only_entry_name && entry_name[0] != '/')
-    {
-
-        int i;
-        for (i = strlen(entry_name) - 1; i >= 0; i--)
-        {
-            if (entry_name[i] == '/')
-                break;
-        }
-
-        char tmp[XIN_MAX_PATH_LENGTH] = {0};
-
-        for (int j = 0; j <= i; j++)
-            tmp[j] = entry_name[j];
-
-        strcpy(tmp, __xin_path_get(tmp));
-        XinEntry *path = __xin_find_entry(tmp);
-
-        if (path == NULL)
-        {
-            memset((uint8_t *)entry, 0, 64);
-            return XANIN_ERROR;
-        }
-
-        strcpy(entry->path, __xin_path_get(entry_name));
-    }
-
-    else if (only_entry_name)
-    {
-        char *path = __xin_path_get(entry_name);
-
-        if (__xin_find_entry(entry_name) != NULL)
-            return XIN_FILE_EXISTS;
-
-        strcpy(entry->path, path);
-    }
-
-    else if (entry_name[0] == '/')
-    {
-        if (__xin_find_entry(entry_name) != NULL)
-            return XIN_FILE_EXISTS;
-
-        strcpy(entry->path, entry_name);
-    }
-
-    else if (__xin_get_file_pf(entry_name) != NULL)
-    {
-        if (__xin_find_entry(entry_name) != NULL)
-            return XIN_FILE_EXISTS;
-
-        strcpy(entry->path, entry_name);
-    }
-
-    else
-        return XANIN_ERROR;
-
-    /* write entry to xin entry pointers table */
-    xin_ptr_t *entry_xin_fs_ptr = __xin_find_free_pointer(); //_with_given_size(2);
-
-    entry_xin_fs_ptr[0] = XIN_EOF;
 
     time_get(&SystemTime);
 
-    entry->creation_date = (uint32_t)((SystemTime.day_of_month << 24) | (SystemTime.month << 16) | (SystemTime.century << 8) | (SystemTime.year));
-    entry->creation_time = (uint16_t)(SystemTime.hour << 8) | (SystemTime.minutes);
-    entry->modification_date = (uint32_t)((SystemTime.day_of_month << 24) | (SystemTime.month << 16) | (SystemTime.century << 8) | (SystemTime.year));
-    entry->modification_time = (uint16_t)(SystemTime.hour << 8) | (SystemTime.minutes);
-    entry->FileInfo = NULL;
-    entry->permissions = PERMISSION_MAX;
-    entry->size = 0;
-    entry->type = XIN_FILE;
-
-    entry->first_sector = entry_xin_fs_ptr - XIN_FS_PTRS_TABLE_BEGIN;
-
-    uint8_t *zeros = (uint8_t *)calloc(SECTOR_SIZE);
-
-    __disk_sectors_write(ATA_FIRST_BUS, ATA_MASTER, entry->first_sector, 1, (uint16_t *)zeros);
-
-    free(zeros);
+    strncpy(Entry->path, entrypath, XIN_MAX_PATH_LENGTH);
+    Entry->creation_date = (uint32_t)((SystemTime.day_of_month << 24) | (SystemTime.month << 16) | (SystemTime.century << 8) | (SystemTime.year));
+    Entry->creation_time = (uint16_t)(SystemTime.hour << 8) | (SystemTime.minutes);
+    Entry->modification_date = (uint32_t)((SystemTime.day_of_month << 24) | (SystemTime.month << 16) | (SystemTime.century << 8) | (SystemTime.year));
+    Entry->modification_time = (uint16_t)(SystemTime.hour << 8) | (SystemTime.minutes);
+    Entry->FileInfo = NULL;
+    Entry->permissions = PERMISSION_MAX;
+    Entry->size = 0;
+    Entry->type = type;
+    Entry->first_sector = XIN_FIRST_SECTOR_NOT_DEFINED;
 
     __xin_tables_update();
 
-    // __disk_sectors_write(ATA_FIRST_BUS, ATA_MASTER, 0x12, 8, (uint16_t *)XIN_ENTRY_POINTERS);
-    // __disk_sectors_write(ATA_FIRST_BUS, ATA_MASTER, 0x1a, 40, (uint16_t *)(XIN_ENTRY_TABLE));
-
     return XANIN_OK;
+}
+
+__STATUS __xin_file_create(char *filename)
+{
+    return __xin_entry_create(filename, XIN_FILE);
 }
 
 int __xin_file_reallocate_with_given_size(XinEntry *File, uint32_t size)
