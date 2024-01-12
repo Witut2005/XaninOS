@@ -21,12 +21,18 @@ enum xin_fs_properties
     XIN_MAX_PATH_LENGTH = 38,
     PERMISSION_MAX = 0xFF,
     SECTOR_SIZE = 512,
+
+};
+
+enum XIN_FS_ENTRY_TYPES
+{
     XIN_FILE = 'F',
     XIN_DIRECTORY = 'D',
     XIN_LINK = 'L',
-    XIN_HARD_LINK = 'H',
-
+    XIN_HARD_LINK = 'H'
 };
+
+typedef uint8_t xin_entry_type_t;
 
 struct XinFileSystemData
 {
@@ -110,6 +116,9 @@ extern "C"
     namespace xin
     {
 #endif
+
+        char *__xin_absolute_path_get(char *rpath, char *buf, xin_entry_type_t type);
+        bool __xin_is_relative_path_used(char *path);
 
         void __xin_tables_update(void);
         void __xin_fs_tables_set(uint8_t *tables);

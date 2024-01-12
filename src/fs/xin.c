@@ -10,6 +10,7 @@
 #include <lib/libc/stdlibx.h>
 #include <lib/libc/colors.h>
 #include <lib/libc/file.h>
+#include <lib/libc/stdiox.h>
 
 // #define IF_FILE_NOT_EXIST
 #define XIN_OPENED_FILES_COUNTER 100
@@ -32,6 +33,26 @@ static XinFileSystemData XinFsData; // XinFS DATA SINGLETONE
 
 #define XIN_FS_ENTRIES_SIZE (XinFsData.entries_size)
 #define XIN_FS_PTRS_SIZE (XinFsData.ptrs_size)
+
+char *__xin_absolute_path_get(char *rpath, char *buf, xin_entry_type_t type)
+{
+    strcpy(buf, rpath);
+
+    if (__xin_is_relative_path_used(rpath))
+        strconcat(xin_current_directory, buf);
+
+    uint32_t buf_len = strlen(buf);
+
+    if (type == XIN_DIRECTORY && buf[buf_len - 1] != '/')
+        buf[buf_len] = '/'; // append at the end, so buf must be a little bit bigger
+
+    return buf;
+}
+
+bool __xin_is_relative_path_used(char *path)
+{
+    return path[0] != '/';
+}
 
 XinFileSystemData __xin_fs_data_get(void)
 {
@@ -430,112 +451,39 @@ __STATUS __xin_folder_change(char *new_directory)
     // return XANIN_OK;
 }
 
-int __xin_folder_create(char *entry_name)
+int __xin_folder_create(char *foldername)
 {
 
     bool only_entry_name = true;
 
-    XinEntry *entry = __xin_find_free_entry();
+    char folderpath[XIN_MAX_PATH_LENGTH + 1] = {'\0'};
 
-    if (entry_name[0] == '/' && entry_name[1] == '/')
+    XinEntry *Folder = __xin_find_free_entry();
+
+    if (foldername[0] == '/' && foldername[1] == '/')
         return XIN_FILE_EXISTS;
 
-    // if (entry_name[strlen(entry_name) - 1] != '/')
-    //     return XIN_BAD_FOLDER_NAME;
+    if (__xin_find_entry(foldername) != NULL)
+        return XIN_FILE_EXISTS;
 
-    // entry_name[strlen(entry_name) - 1] = ' ';
-
-    // for (int i = strlen(entry_name) - 1; i >= 0; i--)
-    // {
-    //     if (entry_name[i] == '/')
-    //     {
-    //         only_entry_name = false;
-    //         break;
-    //     }
-    // }
-
-    // entry_name[strlen(entry_name) - 1] = '/';
-
-    // if (only_entry_name)
-    // {
-    //     char *path = __xin_path_get(entry_name);
-
-    //     if (__xin_find_entry(entry_name) != NULL)
-    //         return XIN_FILE_EXISTS;
-
-    //     strcpy(entry->path, path);
-    // }
-
-    // else if (!only_entry_name && entry_name[0] != '/')
-    // {
-    //     char full_path[XIN_MAX_PATH_LENGTH];
-    //     memcpy((uint8_t *)full_path, (uint8_t *)__xin_path_get(entry_name), XIN_MAX_PATH_LENGTH);
-
-    //     XinEntry *path = __xin_find_entry(__xin_get_file_pf(full_path)->path);
-
-    //     if (path == NULL)
-    //         return XANIN_ERROR;
-
-    //     strcpy(entry->path, full_path);
-    // }
-
-    // else if (__xin_get_file_pf(entry_name) != NULL)
-    // {
-    //     if (__xin_find_entry(entry_name) != NULL)
-    //         return XIN_FILE_EXISTS;
-
-    //     strcpy(entry->path, entry_name);
-    // }
-
-    // else
-    //     return XANIN_ERROR;
-
-    /* write entry to xin entry date table */
+    __xin_absolute_path_get(foldername, folderpath, XIN_DIRECTORY);
+    xprintf("abs: %s\n", folderpath);
 
     time_get(&SystemTime);
 
-    memcpy(entry->path, entry_name, XIN_MAX_PATH_LENGTH);
-    entry->creation_date = (uint32_t)((SystemTime.day_of_month << 24) | (SystemTime.month << 16) | (SystemTime.century << 8) | (SystemTime.year));
-    entry->creation_time = (uint16_t)(SystemTime.hour << 8) | (SystemTime.minutes);
-    entry->modification_date = (uint32_t)((SystemTime.day_of_month << 24) | (SystemTime.month << 16) | (SystemTime.century << 8) | (SystemTime.year));
-    entry->modification_time = (uint16_t)(SystemTime.hour << 8) | (SystemTime.minutes);
-    entry->FileInfo = NULL;
-    entry->permissions = PERMISSION_MAX;
-    entry->size = 0x0;
-    entry->type = XIN_DIRECTORY;
+    memcpy(Folder->path, folderpath, XIN_MAX_PATH_LENGTH);
+    Folder->creation_date = (uint32_t)((SystemTime.day_of_month << 24) | (SystemTime.month << 16) | (SystemTime.century << 8) | (SystemTime.year));
+    Folder->creation_time = (uint16_t)(SystemTime.hour << 8) | (SystemTime.minutes);
+    Folder->modification_date = (uint32_t)((SystemTime.day_of_month << 24) | (SystemTime.month << 16) | (SystemTime.century << 8) | (SystemTime.year));
+    Folder->modification_time = (uint16_t)(SystemTime.hour << 8) | (SystemTime.minutes);
+    Folder->FileInfo = NULL;
+    Folder->permissions = PERMISSION_MAX;
+    Folder->size = 0x0;
+    Folder->type = XIN_DIRECTORY;
 
-    // __disk_sectors_write(ATA_FIRST_BUS, ATA_MASTER, 0x12, 5, (uint16_t *)(XIN_ENTRY_POINTERS));
-    // __disk_sectors_write(ATA_FIRST_BUS, ATA_MASTER, 0x1a, 10, (uint16_t *)(XIN_ENTRY_TABLE));
     __xin_tables_update();
 
     return XANIN_OK;
-}
-
-void __xin_file_create_at_given_sector(char *path, uint32_t first_sector, uint8_t size)
-{
-    XinEntry *entry_created = __xin_find_free_entry();
-
-    strcpy(entry_created->path, path);
-
-    entry_created->creation_date = 0;
-    entry_created->creation_time = 0;
-    entry_created->FileInfo = NULL;
-    entry_created->type = XIN_FILE;
-    entry_created->modification_date = 0;
-    entry_created->modification_time = 0;
-    entry_created->permissions = PERMISSION_MAX;
-    entry_created->size = size * SECTOR_SIZE;
-    entry_created->first_sector = first_sector;
-
-    uint8_t *write_entry = (uint8_t *)(XIN_FS_PTRS_TABLE_BEGIN + first_sector);
-
-    uint8_t tmp = 0;
-
-    for (uint8_t *i = write_entry; i < (write_entry + size); i++)
-        *i = XIN_ALLOCATED;
-    tmp++;
-
-    *(write_entry + size - 1) = XIN_EOF;
 }
 
 // ADD PARAMETER TMP TABLE
