@@ -419,16 +419,33 @@ __STATUS __xin_entry_create(XinEntryCreateArgs *Args, XIN_FS_ENTRY_TYPES type)
     if (__xin_find_entry(entrypath) != NULL)
         return XIN_FILE_EXISTS;
 
-    time_get(&SystemTime);
+    if (type == XIN_HARD_LINK)
+    {
+        XinEntry *File = __xin_find_entry(Args->linksource);
 
-    memcpy(Entry->path, entrypath, XIN_MAX_PATH_LENGTH);
-    Entry->creation_date = Entry->modification_date = time_extern_date(&SystemTime);
-    Entry->creation_time = Entry->modification_time = time_extern_time(&SystemTime);
-    Entry->FileInfo = NULL;
-    Entry->permissions = PERMISSION_MAX;
-    Entry->size = 0;
-    Entry->type = type;
-    Entry->first_sector = XIN_FIRST_SECTOR_NOT_DEFINED;
+        if (File == NULL)
+            return XIN_ENTRY_NOT_FOUND;
+
+        memcpy((uint8_t *)Entry, (uint8_t *)File, SIZE_OF(XinEntry));
+
+        strncpy(Entry->path, entrypath, XIN_MAX_PATH_LENGTH);
+        Entry->type = XIN_HARD_LINK;
+    }
+
+    else
+    {
+
+        time_get(&SystemTime);
+
+        memcpy(Entry->path, entrypath, XIN_MAX_PATH_LENGTH);
+        Entry->creation_date = Entry->modification_date = time_extern_date(&SystemTime);
+        Entry->creation_time = Entry->modification_time = time_extern_time(&SystemTime);
+        Entry->FileInfo = NULL;
+        Entry->permissions = PERMISSION_MAX;
+        Entry->size = 0;
+        Entry->type = type;
+        Entry->first_sector = XIN_FIRST_SECTOR_NOT_DEFINED;
+    }
 
     __xin_tables_update();
 
@@ -475,11 +492,8 @@ int __xin_file_reallocate_with_given_size(XinEntry *File, uint32_t size)
     /* write entry to xin entry data table */
     time_get(&SystemTime);
 
-    File->creation_date = (uint32_t)((SystemTime.day_of_month << 24) | (SystemTime.month << 16) | (SystemTime.century << 8) | (SystemTime.year));
-    File->creation_time = (uint16_t)(SystemTime.hour << 8) | (SystemTime.minutes);
-    File->modification_date = (uint32_t)((SystemTime.day_of_month << 24) | (SystemTime.month << 16) | (SystemTime.century << 8) | (SystemTime.year));
-    File->modification_time = (uint16_t)(SystemTime.hour << 8) | (SystemTime.minutes);
-    File->permissions = PERMISSION_MAX;
+    File->modification_date = time_extern_date(&SystemTime);
+    File->modification_time = time_extern_time(&SystemTime);
     File->size = size;
 
     // get all hard links
@@ -668,9 +682,8 @@ size_t __xin_fwrite(XinEntry *entry, void *buf, size_t count)
 
     time_get(&SystemTime);
 
-    entry->modification_date = (uint32_t)((SystemTime.day_of_month << 24) | (SystemTime.month << 16) | (SystemTime.century << 8) | (SystemTime.year));
-    entry->modification_time = (uint16_t)(SystemTime.hour << 8) | (SystemTime.minutes);
-    // xprintf("buf: %s\n", entry->FileInfo->buffer);
+    entry->modification_date = time_extern_date(&SystemTime);
+    entry->modification_time = time_extern_time(&SystemTime);
     return count;
 }
 
@@ -1006,7 +1019,7 @@ __STATUS __xin_folder_remove(char *folder_name)
     return XANIN_OK;
 }
 
-char *xin_get_entry_name(char *path)
+char *__xin_entry_name_extern(char *path)
 {
     char *tmp = (char *)calloc(XIN_MAX_PATH_LENGTH);
 
@@ -1059,7 +1072,7 @@ XinChildrenEntries *xin_get_children_entries(char *folder, bool get_hidden)
         {
             if (!bstrcmp(i->path, folder))
             {
-                if (xin_get_entry_name(i->path)[0] != '.' | get_hidden)
+                if (__xin_entry_name_extern(i->path)[0] != '.' | get_hidden)
                 {
                     Children->children[finded_entries] = i;
                     finded_entries++;
@@ -1183,27 +1196,10 @@ __STATUS __xin_link_remove(const char *linkname)
 
     return XANIN_ERROR;
 }
-__STATUS __xin_link_create(char *file_name, char *link_name)
+__STATUS __xin_link_create(char *filename, char *linkname)
 {
-    XinEntry *file = __xin_find_entry(file_name);
-
-    if (file == NULL)
-        return XIN_ENTRY_NOT_FOUND;
-
-    XinEntry *link = __xin_find_free_entry();
-    memcpy((uint8_t *)link, (uint8_t *)file, SIZE_OF(XinEntry));
-
-    link->type = XIN_HARD_LINK;
-
-    for (int i = 0; i < XIN_MAX_PATH_LENGTH; i++)
-        link->path[i] = file->path[i];
-
-    if (link_name[0] != '/')
-        link_name = __xin_path_get(link_name);
-
-    for (int i = 0; i < XIN_MAX_PATH_LENGTH; i++)
-        link->path[i] = link_name[i];
-
+    XinEntryCreateArgs Args = {linkname, filename};
+    __xin_entry_create(&Args, XIN_HARD_LINK);
     return XANIN_OK;
 }
 

@@ -105,7 +105,7 @@ struct XinEntriesPack
 struct XinEntryCreateArgs
 {
     char *entryname;
-    char *linkname;
+    char *linksource;
 };
 
 typedef struct XinEntryCreateArgs XinEntryCreateArgs;
@@ -127,6 +127,7 @@ extern "C"
         __STATUS __xin_entry_create(XinEntryCreateArgs *Args, XIN_FS_ENTRY_TYPES type);
         char *__xin_absolute_path_get(char *rpath, char *buf, XIN_FS_ENTRY_TYPES type);
         bool __xin_is_relative_path_used(char *path);
+        char *__xin_entry_name_extern(char *path);
 
         void __xin_tables_update(void);
         void __xin_fs_tables_set(uint8_t *tables);
