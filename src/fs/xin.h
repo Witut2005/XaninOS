@@ -40,6 +40,7 @@ struct XinFileSystemData
     uint32_t ptrs_size;    // in sectors
     uint32_t entries_size; // in sectors
     uint8_t *tables;
+    char current_folder[XIN_MAX_PATH_LENGTH];
 } __attribute__((packed));
 
 typedef struct XinFileSystemData XinFileSystemData;
@@ -142,7 +143,7 @@ extern "C"
         void __xin_detect_file_system(void);
         bool __xin_current_directory_set(char *directory);
         char *__xin_current_directory_get(char *buf);
-        char *__xin_path_get(char *file_name);
+        // char *__xin_path_get(char *file_name);
 
         __STATUS __xin_entry_remove(char *entry_name);
         char *__xin_get_current_path(char *file_name);
@@ -174,8 +175,8 @@ extern "C"
         void fclose_with_given_size(XinEntry **file, uint32_t new_size);
         char *getline(XinEntry *file, int line_id);
         char *getline_from_ptr(char *data, int line_id);
-        XinChildrenEntries *xin_get_children_entries(char *folder, bool show_hidden);
-        XinChildrenEntries *xin_get_children_entries_type(char *folder, uint8_t type);
+        XinChildrenEntries *xin_children_entries_get(char *folder, bool show_hidden);
+        XinChildrenEntries *xin_children_entries_type_get(char *folder, uint8_t type);
         char *__xin_entry_name_get(char *path);
         const uint32_t ftell(XinEntry *file);
         const uint32_t lteel(int fd);

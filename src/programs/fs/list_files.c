@@ -65,7 +65,8 @@ int xin_list_files_app(char **argv)
 
             else
             {
-                if (bstrcmp(__xin_get_file_pf(i->path)->path, __xin_path_get(path)))
+                // if (bstrcmp(__xin_get_file_pf(i->path)->path, __xin_path_get(path)))
+                if (bstrcmp(__xin_get_file_pf(i->path)->path, path))
                 {
                     xprintf("%z%s", OUTPUT_COLOR_SET(black, i->type + 0x2), i);
                     xprintf("  ");

@@ -21,7 +21,6 @@ static XinEntry *XinFilesOpened[XIN_OPENED_FILES_COUNTER];
 
 int8_t xin_base_state[100];
 static char xin_current_path[XIN_MAX_PATH_LENGTH];
-static char xin_current_directory[XIN_MAX_PATH_LENGTH];
 
 static XinFileSystemData XinFsData; // XinFS DATA SINGLETONE
 
@@ -39,7 +38,7 @@ char *__xin_absolute_path_get(char *rpath, char *buf, XIN_FS_ENTRY_TYPES type)
     strcpy(buf, rpath);
 
     if (__xin_is_relative_path_used(rpath))
-        strconcat(xin_current_directory, buf);
+        strconcat(XinFsData.current_folder, buf);
 
     uint32_t buf_len = strlen(buf);
 
@@ -121,24 +120,18 @@ bool __xin_current_directory_set(char *directory)
 {
     if (!__xin_check_if_valid_directory(directory))
         return false;
-    strncpy(xin_current_directory, directory, XIN_MAX_PATH_LENGTH);
+    strncpy(XinFsData.current_folder, directory, XIN_MAX_PATH_LENGTH);
     return true;
 }
 
 char *__xin_current_directory_get(char *buf)
 {
-    memcpy((uint8_t *)buf, (uint8_t *)xin_current_directory, XIN_MAX_PATH_LENGTH);
+    memcpy(buf, XinFsData.current_folder, XIN_MAX_PATH_LENGTH);
     return buf;
 }
 
 uint8_t *__xin_find_free_pointer(void)
 {
-    // for (char *i = (char *)XIN_ENTRY_POINTERS; (uint32_t)i < XIN_ENTRY_POINTERS + (SECTOR_SIZE * 8); i++)
-    // {
-    //     if (*i == XIN_UNALLOCATED)
-    //         return (uint8_t *)i;
-    // }
-
     for (xin_ptr_t *i = (xin_ptr_t *)XIN_FS_PTRS_TABLE_BEGIN; (uint32_t)i < (uint32_t)(XIN_FS_PTRS_TABLE_BEGIN + (XIN_FS_PTRS_SIZE * SECTOR_SIZE)); i++)
     {
         if (*i == XIN_UNALLOCATED)
@@ -153,25 +146,6 @@ uint8_t *__xin_find_free_pointer_with_given_size(uint32_t size)
 
     if (!size)
         return NULL;
-
-    // for (uint8_t *i = (uint8_t *)XIN_ENTRY_POINTERS + SECTOR_SIZE; (uint32_t)i < XIN_ENTRY_POINTERS + (SECTOR_SIZE * 8); i++)
-    // {
-    //     if (*i == XIN_UNALLOCATED)
-    //     {
-    //         bool ok = true;
-    //         for (int j = 0; j < size; j++)
-    //         {
-    //             if (i[j] != XIN_UNALLOCATED)
-    //             {
-    //                 ok = false;
-    //                 break;
-    //             }
-    //         }
-
-    //         if (ok)
-    //             return i;
-    //     }
-    // }
 
     // leave alone first 512sectors
     for (xin_ptr_t *i = (uint8_t *)XIN_FS_BEGIN + SECTOR_SIZE; (uint32_t)i < (uint32_t)(XIN_FS_BEGIN + (SECTOR_SIZE * XIN_FS_PTRS_SIZE)); i++)
@@ -212,25 +186,6 @@ void __xin_entry_resize(XinEntry *entry, uint32_t new_size)
         xin_pointer_table_entry[i] = XIN_ALLOCATED;
 }
 
-char *__xin_path_get(char *file_name)
-{
-    char *buf = kcalloc(XIN_MAX_PATH_LENGTH);
-
-    strncpy(buf, xin_current_directory, XIN_MAX_PATH_LENGTH);
-
-    int pos = strlen(buf);
-
-    if (pos + strlen(file_name) >= XIN_MAX_PATH_LENGTH)
-    {
-        kfree(buf);
-        return NULL;
-    }
-
-    strncpy(&buf[pos], file_name, XIN_MAX_PATH_LENGTH - pos);
-
-    return buf;
-}
-
 /* DIRECTORY AND FILES */
 XinEntry *__xin_find_entry(char *entryname)
 {
@@ -264,13 +219,17 @@ XinEntry *__xin_find_entry(char *entryname)
     return NULL;
 }
 
-XinEntry *__xin_get_file_pf(char *path) // pf = parent folder
+XinEntry *__xin_get_file_pf(char *name) // pf = parent folder
 {
     if (!strlen(path))
         return NULL;
 
     if (bstrcmp(path, "/"))
         return NULL;
+
+    char path[XIN_MAX_PATH_LENGTH + 1] = {0};
+
+    __xin_absolute_path_get(name, path, __xin_find_entry(name)->type);
 
     bool if_folder = false;
 
@@ -316,13 +275,13 @@ __STATUS __xin_folder_change(char *foldername)
 
     if (bstrcmp(foldername, ".."))
     {
-        if (bstrcmp(xin_current_directory, "/"))
+        if (bstrcmp(XinFsData.current_folder, "/"))
             return XANIN_ERROR;
         else
         {
-            XinEntry *CurrentFolderParent = __xin_get_file_pf(xin_current_directory);
+            XinEntry *CurrentFolderParent = __xin_get_file_pf(XinFsData.current_folder);
             if (CurrentFolderParent != NULL)
-                strncpy(xin_current_directory, CurrentFolderParent->path, XIN_MAX_PATH_LENGTH);
+                strncpy(XinFsData.current_folder, CurrentFolderParent->path, XIN_MAX_PATH_LENGTH);
             else
                 return __xin_folder_change("/");
         }
@@ -336,7 +295,7 @@ __STATUS __xin_folder_change(char *foldername)
     XinEntry *NewFolder = __xin_find_entry(folderpath);
 
     if (NewFolder != NULL)
-        strcpy(xin_current_directory, NewFolder->path);
+        strcpy(XinFsData.current_folder, NewFolder->path);
 
     else
         return XANIN_ERROR;
@@ -1023,7 +982,7 @@ char *__xin_entry_name_extern(char *path)
     return tmp;
 }
 
-XinChildrenEntries *xin_get_children_entries(char *folder, bool get_hidden)
+XinChildrenEntries *xin_children_entries_get(char *folder, bool get_hidden)
 {
 
     if (__xin_find_entry(folder) == NULL || strlen(folder) == 0)
@@ -1057,7 +1016,7 @@ XinChildrenEntries *xin_get_children_entries(char *folder, bool get_hidden)
     return Children;
 }
 
-XinChildrenEntries *xin_get_children_entries_type(char *folder, uint8_t type)
+XinChildrenEntries *xin_children_entries_type_get(char *folder, uint8_t type)
 {
 
     if (__xin_find_entry(folder) == NULL || strlen(folder) == 0)
@@ -1202,27 +1161,18 @@ __STATUS __xin_copy(char *file_name, char *new_file_name)
     return XANIN_OK;
 }
 
-__STATUS __xin_entry_move(char *entry_name, char *new_name)
+__STATUS __xin_entry_move(char *entryname, char *destname)
 {
 
-    if ((__xin_get_file_pf(new_name) == NULL) || (__xin_find_entry(entry_name) == NULL))
+    if ((__xin_get_file_pf(destname) == NULL) || (__xin_find_entry(entryname) == NULL))
         return XIN_ENTRY_NOT_FOUND;
 
-    XinEntry *entry = __xin_find_entry(entry_name);
+    XinEntry *entry = __xin_find_entry(entryname);
 
-    int i;
-    if (new_name[0] == '/')
-    {
-        for (i = 0; new_name[i] != '\0'; i++)
-            entry->path[i] = new_name[i];
-    }
-    else
-    {
-        for (i = 0; __xin_path_get(new_name)[i] != '\0'; i++)
-            entry->path[i] = __xin_path_get(new_name)[i];
-    }
+    char destpath[XIN_MAX_PATH_LENGTH + 1] = {0};
 
-    entry->path[i] = '\0';
+    __xin_absolute_path_get(destname, destpath, entry->type);
+    memcpy(entry->path, destpath, XIN_MAX_PATH_LENGTH);
 
     return XANIN_OK;
 }
