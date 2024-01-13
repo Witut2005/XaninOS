@@ -15,11 +15,7 @@
 #define XIN_OPENED_FILES_COUNTER 100
 
 XinFileDescriptor *FileDescriptorTable;
-
 static XinEntry *XinFilesOpened[XIN_OPENED_FILES_COUNTER];
-
-int8_t xin_base_state[100];
-static char xin_current_path[XIN_MAX_PATH_LENGTH];
 
 static XinFileSystemData XinFsData; // XinFS DATA SINGLETONE
 
@@ -243,7 +239,7 @@ __STATUS __xin_folder_change(char *foldername)
 
     char *tmp = (char *)calloc(XIN_MAX_PATH_LENGTH);
 
-    if (bstrcmp(foldername, ".."))
+    if (memcmp(foldername, "..", 2))
     {
         if (bstrcmp(XinFsData.current_folder, "/"))
             return XANIN_ERROR;
@@ -255,7 +251,8 @@ __STATUS __xin_folder_change(char *foldername)
             else
                 return __xin_folder_change("/");
         }
-        return XANIN_OK;
+        foldername = foldername + 2;
+        // return XANIN_OK;
     }
 
     char folderpath[XIN_MAX_PATH_LENGTH + 1] = {0};

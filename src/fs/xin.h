@@ -8,12 +8,11 @@
 #include <sys/macros.h>
 #include <sys/flow/exit_codes.h>
 
-#define XIN_SYSTEM_FOLDER '/'
-#define XIN_FILE_BEGIN 0
-#define XIN_ENTRY_SIZE 64
-
-enum xin_fs_properties
+enum XIN_FS_PROPERTIES
 {
+    XIN_SYSTEM_FOLDER = '/',
+    XIN_FILE_BEGIN = 0,
+    XIN_ENTRY_SIZE = 64,
     XIN_ALLOCATED = 0x1,
     XIN_UNALLOCATED = 0x0,
     XIN_EOF = 0xFF,
