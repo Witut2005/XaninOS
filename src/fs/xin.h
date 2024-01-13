@@ -8,6 +8,8 @@
 #include <sys/macros.h>
 #include <sys/flow/exit_codes.h>
 
+#define XIN_SYSTEM_FOLDER_STR "/"
+
 enum XIN_FS_PROPERTIES
 {
     XIN_SYSTEM_FOLDER = '/',

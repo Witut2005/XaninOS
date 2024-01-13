@@ -168,8 +168,8 @@ XinEntry *__xin_find_entry(char *entryname)
     if (!strlen(entryname)) // if path is empty
         return NULL;
 
-    if (entryname[0] == '/' && entryname[1] == '/')
-        return __xin_find_entry("/");
+    if (entryname[0] == XIN_SYSTEM_FOLDER && entryname[1] == XIN_SYSTEM_FOLDER)
+        return __xin_find_entry(XIN_SYSTEM_FOLDER_STR);
 
     __xin_absolute_path_get(entryname, entrypath, XIN_DIRECTORY); // treat all Entries as directories
     uint32_t entrypath_len = strlen(entrypath);
@@ -196,11 +196,11 @@ XinEntry *__xin_entry_pf_get(char *name) // pf = parent folder
 {
     const XinEntry *Entry = __xin_find_entry(name);
 
-    if (bstrcmp(name, "/"))
-        return NULL;
-
     if (Entry == NULL)
         return NULL;
+
+    if (bstrcmp(Entry->path, XIN_SYSTEM_FOLDER_STR))
+        return Entry;
 
     char parent_folder[XIN_MAX_PATH_LENGTH + 1] = {0};
 
@@ -237,11 +237,19 @@ __STATUS __xin_folder_change(char *foldername)
     if (strlen(foldername) > XIN_MAX_PATH_LENGTH)
         return XANIN_ERROR;
 
-    char *tmp = (char *)calloc(XIN_MAX_PATH_LENGTH);
+    else if (bstrcmp(foldername, "."))
+        return XANIN_OK;
 
-    if (memcmp(foldername, "..", 2))
+    else if (bstrcmp(foldername, ".."))
     {
-        if (bstrcmp(XinFsData.current_folder, "/"))
+        XinEntry *CurrentFolderParent = __xin_entry_pf_get(XinFsData.current_folder);
+        __xin_folder_change(CurrentFolderParent != NULL ? CurrentFolderParent->path : "/");
+        return XANIN_OK;
+    }
+
+    while (memcmp(foldername, "../", 3))
+    {
+        if (bstrcmp(XinFsData.current_folder, XIN_SYSTEM_FOLDER_STR))
             return XANIN_ERROR;
         else
         {
@@ -249,17 +257,15 @@ __STATUS __xin_folder_change(char *foldername)
             if (CurrentFolderParent != NULL)
                 strncpy(XinFsData.current_folder, CurrentFolderParent->path, XIN_MAX_PATH_LENGTH);
             else
-                return __xin_folder_change("/");
+                __xin_folder_change(XIN_SYSTEM_FOLDER_STR);
         }
-        foldername = foldername + 2;
-        // return XANIN_OK;
+        foldername = foldername + 3;
     }
 
-    char folderpath[XIN_MAX_PATH_LENGTH + 1] = {0};
+    while (memcmp(foldername, "./", 2))
+        foldername += 2;
 
-    __xin_absolute_path_get(foldername, folderpath, XIN_DIRECTORY);
-
-    XinEntry *NewFolder = __xin_find_entry(folderpath);
+    XinEntry *NewFolder = __xin_find_entry(foldername);
 
     if (NewFolder != NULL)
         strcpy(XinFsData.current_folder, NewFolder->path);
@@ -275,7 +281,7 @@ void __xin_init()
     __xin_fs_tables_set(kcalloc(SECTOR_SIZE * (XinFsData.ptrs_size + XinFsData.entries_size)));
     __xin_fs_load_tables_from_disk();
 
-    __xin_folder_change("/");
+    __xin_folder_change(XIN_SYSTEM_FOLDER_STR);
 
     for (xin_ptr_t *i = XIN_FS_PTRS_TABLE_BEGIN; i < XIN_FS_PTRS_TABLE_BEGIN + 0x280; i++)
     {
@@ -926,7 +932,7 @@ char *__xin_entry_name_extern(char *path)
     if (path[0] == '/' && strlen(path) == 1)
     {
         free(tmp);
-        return "/";
+        return XIN_SYSTEM_FOLDER_STR;
     }
 
     if (!strlen(path))
