@@ -185,7 +185,6 @@ extern "C"
         uint8_t *__xin_find_free_pointer(void);
         uint8_t *____xin_find_free_pointer_with_given_size(uint32_t size);
         void __xin_entry_resize(XinEntry *entry, uint32_t new_size);
-        int __xin_file_size_in_sectors_get(XinEntry *File);
         void ____xin_free_temporary_data(XinEntry *File);
         XinEntriesPack *__xin_hard_links_get(const XinEntry *const File);
         bool __xin_file_to_xfo_add(XinEntry *File);

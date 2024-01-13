@@ -405,20 +405,20 @@ void kernel_start(void)
         xprintf("%z_/      _/    _/_/_/  _/    _/  _/  _/    _/    _/_/    _/_/_/     %z%s: %i:%i:%i\n", OUTPUT_COLOR_SET(logo_back_color, logo_front_color), OUTPUT_COLOR_SET(black, white), daysLUT[SystemTime.weekday], SystemTime.hour, SystemTime.minutes, SystemTime.seconds);
     }
 
-    // char stdio_legacy_config_buf[6] = {0};
-    // XinEntry *StdioLegacyConfig = fopen("/etc/help/stdio_legacy.conf", "rw");
-    // fseek(StdioLegacyConfig, ARRAY_LENGTH("PRINT_LEGACY_STDIO_INFO: ") - 1);
-    // fread(StdioLegacyConfig, stdio_legacy_config_buf, 5);
+    char stdio_legacy_config_buf[6] = {0};
+    XinEntry *StdioLegacyConfig = fopen("/etc/help/stdio_legacy.conf", "rw");
+    fseek(StdioLegacyConfig, ARRAY_LENGTH("PRINT_LEGACY_STDIO_INFO: ") - 1);
+    fread(StdioLegacyConfig, stdio_legacy_config_buf, 5);
 
-    // if (bstrncmp(stdio_legacy_config_buf, "TRUE", 4))
-    // {
-    //     fseek(StdioLegacyConfig, 25);
-    //     fwrite(StdioLegacyConfig, "FALSE", 6);
+    if (bstrncmp(stdio_legacy_config_buf, "TRUE", 4))
+    {
+        fseek(StdioLegacyConfig, 25);
+        fwrite(StdioLegacyConfig, "FALSE", 6);
 
-    //     puts_warning("SINCE V1.8, XANIN USES TWO DIFFERENT GRAPHIC MODES. IF YOU WANT\nTO RUN THE PROGRAM IN A GIVEN MODE, HOLD CTRL WHILE SUBMITTING A COMMAND\n");
-    // }
+        puts_warning("SINCE V1.8, XANIN USES TWO DIFFERENT GRAPHIC MODES. IF YOU WANT\nTO RUN THE PROGRAM IN A GIVEN MODE, HOLD CTRL WHILE SUBMITTING A COMMAND\n");
+    }
 
-    // fclose(&StdioLegacyConfig);
+    fclose(&StdioLegacyConfig);
 
     kernel_loop();
 }

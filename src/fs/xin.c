@@ -446,13 +446,6 @@ __STATUS __xin_entry_remove(char *entry_name)
     return XANIN_OK;
 }
 
-uint32_t xin_get_start_sector(char *entry_name)
-{
-    XinEntry *xin_file_descriptor = __xin_find_entry(entry_name);
-
-    return xin_file_descriptor->first_sector;
-}
-
 size_t __xin_fread(XinEntry *Entry, void *buf, size_t count)
 {
 
@@ -952,9 +945,6 @@ char *__xin_entry_name_extern(char *path)
     for (int i = 0; i < XIN_MAX_PATH_LENGTH; i++)
         tmp[i] = path[index + i];
 
-    // if(path[strlen(path)-1] == '/')
-    // tmp[strlen(tmp)] = '/';
-
     return tmp;
 }
 
@@ -1045,14 +1035,6 @@ XinEntriesPack *__xin_hard_links_get(const XinEntry *const File)
     }
 
     return Pack;
-}
-
-int __xin_file_size_in_sectors_get(XinEntry *File)
-{
-    int size = File->size / SECTOR_SIZE;
-    if (File->size % SECTOR_SIZE)
-        size++;
-    return size;
 }
 
 bool __xin_file_to_xfo_add(XinEntry *File)

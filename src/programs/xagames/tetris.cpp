@@ -130,7 +130,8 @@ extern "C" int tetris(void)
     uint8_t current_color = 5;
     uint32_t score = 0;
 
-    KEYBOARD_KEYSTROKE_HANLDER_LOAD(tetris_keyboard_handler);
+    // ZASTAP NOWA METODA
+    // KEYBOARD_KEYSTROKE_HANLDER_LOAD(tetris_keyboard_handler);
 
     // xprintf("hm? %d\n", std::is_in_range(10, 0, 9));
     // while(1);
@@ -232,7 +233,8 @@ extern "C" int tetris(void)
 
     Screen.y = 14;
     Screen.x = 35;
-    KEYBOARD_KEYSTROKE_HANLDER_UNLOAD();
+    // ZASTAP NOWA METODA
+    // KEYBOARD_KEYSTROKE_HANLDER_UNLOAD();
     xprintf("Your score: %d\n", score);
     while (getxchar().scan_code != ENTER)
         ;

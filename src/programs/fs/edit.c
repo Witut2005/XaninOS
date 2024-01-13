@@ -293,7 +293,7 @@ int edit(char *filename)
 
     fread(file, NULL, file->size);
 
-    EditInfo EditState = {0, (uint16_t *)VGA_TEXT_MEMORY, 0, 0, 0, __xin_file_size_in_sectors_get(file),
+    EditInfo EditState = {0, (uint16_t *)VGA_TEXT_MEMORY, 0, 0, 0, int_to_sectors(file->size),
                           file->FileInfo->buffer, file->FileInfo->buffer};
 
     canvas_xprintf("%s", EditState.program_buffer);
