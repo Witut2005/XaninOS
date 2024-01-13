@@ -127,15 +127,15 @@ class XinEntryData:
             self.insert((0 if self.first_sector == None else self.first_sector).to_bytes(4, byteorder='little'),   xin_entries_cursor + XIN_FIRST_SECTOR_OFFSET)
 
         else:
-            self.first_sector = file_first_sector
+            self.first_sector = file_first_sector + XinEntryData.image_size_in_sectors
             self.insert(len(data).to_bytes(4, byteorder='little'),                                                 xin_entries_cursor + XIN_SIZE_OFFSET)
-            self.insert(file_first_sector.to_bytes(4, byteorder='little'),                                         xin_entries_cursor + XIN_FIRST_SECTOR_OFFSET)
+            self.insert(self.first_sector.to_bytes(4, byteorder='little'),                                         xin_entries_cursor + XIN_FIRST_SECTOR_OFFSET)
 
 
         self.insert(int(0).to_bytes(4, 'little'), xin_entries_cursor + XIN_FILE_INFO_OFFSET) #File Info ptr
 
         if data != None:
-            self.insert(pad_bytes(data, SECTOR_SIZE), self.first_sector * SECTOR_SIZE)
+            self.insert(pad_bytes(data, SECTOR_SIZE), (self.first_sector - XinEntryData.image_size_in_sectors) * SECTOR_SIZE)
         
         self.print_entry_info()
 
@@ -162,7 +162,7 @@ def preinstall(image_size_in_sectors):
     xin_default_entries_to_preinstall = [
         XinEntryData('/',                           XIN_DIRECTORY,  XIN_MAX_PERMISSIONS),
         XinEntryData('/screenshot/',                XIN_DIRECTORY,  XIN_MAX_PERMISSIONS),
-        XinEntryData('/kernel',                     XIN_FILE,       XIN_MAX_PERMISSIONS, SECTOR_SIZE * 800, 0), # okolo 400KB
+        XinEntryData('/kernel',                     XIN_FILE,       XIN_MAX_PERMISSIONS, SECTOR_SIZE * 1000, 0), # okolo 400KB
         XinEntryData('/fast_real_mode_enter.bin',   XIN_FILE,       XIN_MAX_PERMISSIONS, SECTOR_SIZE,       5), 
         XinEntryData('/boot.bin',                   XIN_FILE,       XIN_MAX_PERMISSIONS, SECTOR_SIZE,       0),
         XinEntryData('/fast_real_mode_return.bin',  XIN_FILE,       XIN_MAX_PERMISSIONS, SECTOR_SIZE,       6),
