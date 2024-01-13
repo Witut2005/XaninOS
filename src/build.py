@@ -125,7 +125,7 @@ def compile_kernel(*kargs):
         'dd if=./programs/xanin_external_apps of=./programs/xanin_apps_space bs=512 count=16 conv=notrunc',
         'cat ./boot/boot.bin ./lib/libc/enter_real_mode ./programs/xanin_apps_space ./programs/blank_sector ./fs/xin_pointers ./fs/entries_table ./boot/kernel_loader.bin ./boot/boot2.elf kernel.bin > xanin.bin',
         'dd if=xanin.bin of=xanin.img',
-        'python3 ./build/align_file.py -f ./xanin.img -size 600000',
+        'python3 ./build/align_file.py -f ./xanin.img -size 400000',
 
         f'{("python3 ./build/app_preinstall2.py --files external_apps/ etc/ --image xanin.img")}',
 

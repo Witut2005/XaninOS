@@ -269,27 +269,25 @@ void edit_input(xchar Input, XinEntry *File, EditInfo *EditState)
     }
 }
 
-int edit(char *file_name)
+int edit(char *filename)
 {
 
     stdio_mode_set(STDIO_MODE_CANVAS);
 
     canvas_screen_clear();
-    XinEntry *file = __xin_find_entry(file_name);
+    XinEntry *file = __xin_find_entry(filename);
 
     if (file == NULL)
     {
-        canvas_xprintf("Couldn't open file %s\n", file_name);
+        canvas_xprintf("Couldn't open file %s\n", filename);
         canvas_xprintf("Do want to create it?\nY/n ");
 
         char selected_option = getxchar().character;
         if (selected_option == 'n' || selected_option == 'N')
             return XANIN_ERROR;
-        file = fopen(file_name, "rw");
     }
 
-    else
-        file = fopen(file_name, "rw");
+    file = fopen(filename, "rw");
 
     canvas_screen_clear();
 
