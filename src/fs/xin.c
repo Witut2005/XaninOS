@@ -10,7 +10,6 @@
 #include <lib/libc/stdlibx.h>
 #include <lib/libc/colors.h>
 #include <lib/libc/file.h>
-#include <lib/libc/stdiox.h>
 
 // #define IF_FILE_NOT_EXIST
 #define XIN_OPENED_FILES_COUNTER 100
@@ -149,10 +148,10 @@ uint8_t *__xin_find_free_pointer_with_given_size(uint32_t size)
     return NULL;
 }
 
-void __xin_entry_resize(XinEntry *entry, uint32_t new_size)
+void __xin_entry_resize(XinEntry *Entry, uint32_t new_size)
 {
-    uint8_t *xin_pointer_table_entry = (uint8_t *)(XIN_FS_PTRS_TABLE_BEGIN + entry->first_sector);
-    uint32_t sectors = entry->size / SECTOR_SIZE + (entry->size % SECTOR_SIZE != 0 ? 1 : 0);
+    uint8_t *xin_pointer_table_entry = (uint8_t *)(XIN_FS_PTRS_TABLE_BEGIN + Entry->first_sector);
+    uint32_t sectors = Entry->size / SECTOR_SIZE + (Entry->size % SECTOR_SIZE != 0 ? 1 : 0);
 
     for (int i = 0; i < sectors; i++)
         xin_pointer_table_entry[i] = XIN_UNALLOCATED;
@@ -176,7 +175,7 @@ XinEntry *__xin_find_entry(char *entryname)
     if (entryname[0] == '/' && entryname[1] == '/')
         return __xin_find_entry("/");
 
-    __xin_absolute_path_get(entryname, entrypath, XIN_DIRECTORY); // treat all entries as directories
+    __xin_absolute_path_get(entryname, entrypath, XIN_DIRECTORY); // treat all Entries as directories
     uint32_t entrypath_len = strlen(entrypath);
 
     for (XinEntry *i = (XinEntry *)XIN_FS_ENTRIES_TABLE_BEGIN; (uint32_t)i < (uint32_t)(XIN_FS_ENTRIES_TABLE_BEGIN + (SECTOR_SIZE * XIN_FS_ENTRIES_SIZE)); i++)
@@ -321,11 +320,12 @@ __STATUS __xin_entry_create(XinEntryCreateArgs *Args, XIN_FS_ENTRY_TYPES type)
     else
     {
 
-        time_get(&SystemTime);
+        CmosTime Time;
+        time_get(&Time);
 
         memcpy(Entry->path, entrypath, XIN_MAX_PATH_LENGTH);
-        Entry->creation_date = Entry->modification_date = time_extern_date(&SystemTime);
-        Entry->creation_time = Entry->modification_time = time_extern_time(&SystemTime);
+        Entry->creation_date = Entry->modification_date = time_extern_date(&Time);
+        Entry->creation_time = Entry->modification_time = time_extern_time(&Time);
         Entry->FileInfo = NULL;
         Entry->permissions = PERMISSION_MAX;
         Entry->size = 0;
@@ -383,7 +383,7 @@ int __xin_file_reallocate_with_given_size(XinEntry *File, uint32_t size)
     for (int i = 0; i < number_of_sectors_to_deallocate; i++)
         entry_deallocate[i] = XIN_UNALLOCATED;
 
-    /* write entry to xin entry pointers table */
+    /* write Entry to xin Entry pointers table */
     uint8_t *entry_ptrs = __xin_find_free_pointer_with_given_size(number_of_sectors_to_allocate);
 
     for (int i = 0; i < number_of_sectors_to_allocate - 1; i++)
@@ -391,7 +391,7 @@ int __xin_file_reallocate_with_given_size(XinEntry *File, uint32_t size)
 
     entry_ptrs[number_of_sectors_to_allocate - 1] = XIN_EOF;
 
-    /* write entry to xin entry data table */
+    /* write Entry to xin Entry data table */
 
     __xin_entry_modification_fields_update(File);
     File->size = size;
@@ -401,9 +401,9 @@ int __xin_file_reallocate_with_given_size(XinEntry *File, uint32_t size)
 
     for (int i = 0; i < HardLinks->length; i++)
     {
-        // HardLinks->entries[i]->first_sector = (uint32_t)write_entry - XIN_ENTRY_POINTERS;
-        HardLinks->entries[i]->first_sector = entry_ptrs - XIN_FS_PTRS_TABLE_BEGIN;
-        HardLinks->entries[i]->size = size;
+        // HardLinks->Entries[i]->first_sector = (uint32_t)write_entry - XIN_ENTRY_POINTERS;
+        HardLinks->Entries[i]->first_sector = entry_ptrs - XIN_FS_PTRS_TABLE_BEGIN;
+        HardLinks->Entries[i]->size = size;
     }
 
     // File->first_sector = write_entry - XIN_ENTRY_POINTERS;
@@ -450,7 +450,7 @@ uint32_t xin_get_start_sector(char *entry_name)
     return xin_file_descriptor->first_sector;
 }
 
-size_t __xin_fread(XinEntry *entry, void *buf, size_t count)
+size_t __xin_fread(XinEntry *Entry, void *buf, size_t count)
 {
 
     //////////////////VALIDATION///////////////////
@@ -458,55 +458,55 @@ size_t __xin_fread(XinEntry *entry, void *buf, size_t count)
     if (!count)
         return 0;
 
-    if (entry == NULL)
+    if (Entry == NULL)
         return 0;
 
-    if ((entry->type != XIN_FILE) && (entry->type != XIN_HARD_LINK))
+    if ((Entry->type != XIN_FILE) && (Entry->type != XIN_HARD_LINK))
         return 0;
 
-    if (!entry->size)
+    if (!Entry->size)
         return 0;
 
-    if (entry->first_sector == XIN_FIRST_SECTOR_NOT_DEFINED)
+    if (Entry->first_sector == XIN_FIRST_SECTOR_NOT_DEFINED)
         return 0;
 
-    uint32_t initial_position = ftell(entry);
+    uint32_t initial_position = ftell(Entry);
 
-    if (initial_position + count > entry->size)
-        count = entry->size - initial_position;
+    if (initial_position + count > Entry->size)
+        count = Entry->size - initial_position;
 
     //////////////////////////////////////////////////
 
-    if (initial_position + count > entry->FileInfo->tmp_size)
-        entry->FileInfo->tmp_size = initial_position + count;
+    if (initial_position + count > Entry->FileInfo->tmp_size)
+        Entry->FileInfo->tmp_size = initial_position + count;
 
-    if (entry->FileInfo->tmp_size > entry->size)
+    if (Entry->FileInfo->tmp_size > Entry->size)
     {
-        entry->FileInfo->buffer = (uint8_t *)realloc(entry->FileInfo->buffer, (int_to_sectors(entry->FileInfo->tmp_size) + 1) * SECTOR_SIZE);
-        entry->FileInfo->sector_in_use = (bool *)realloc(entry->FileInfo->sector_in_use, (int_to_sectors(entry->FileInfo->tmp_size) + 1));
+        Entry->FileInfo->buffer = (uint8_t *)realloc(Entry->FileInfo->buffer, (int_to_sectors(Entry->FileInfo->tmp_size) + 1) * SECTOR_SIZE);
+        Entry->FileInfo->sector_in_use = (bool *)realloc(Entry->FileInfo->sector_in_use, (int_to_sectors(Entry->FileInfo->tmp_size) + 1));
     }
 
     uint32_t sectors_to_load = int_to_sectors(count + initial_position);
 
-    if (sectors_to_load > int_to_sectors(entry->size))
-        sectors_to_load = int_to_sectors(entry->size);
+    if (sectors_to_load > int_to_sectors(Entry->size))
+        sectors_to_load = int_to_sectors(Entry->size);
 
     for (int i = 0; i < sectors_to_load; i++)
     {
-        if (!entry->FileInfo->sector_in_use[i])
+        if (!Entry->FileInfo->sector_in_use[i])
         {
-            __disk_read(entry->first_sector + i, 1, (uint16_t *)(entry->FileInfo->buffer + (i * SECTOR_SIZE)));
-            entry->FileInfo->sector_in_use[i] = true;
+            __disk_read(Entry->first_sector + i, 1, (uint16_t *)(Entry->FileInfo->buffer + (i * SECTOR_SIZE)));
+            Entry->FileInfo->sector_in_use[i] = true;
         }
     }
 
     if (buf == NULL)
         return 0;
 
-    for (char *i = (char *)(entry->FileInfo->buffer + initial_position); i < (char *)(entry->FileInfo->buffer + initial_position + count); i++, buf++)
+    for (char *i = (char *)(Entry->FileInfo->buffer + initial_position); i < (char *)(Entry->FileInfo->buffer + initial_position + count); i++, buf++)
         *(char *)buf = *i;
 
-    fseek(entry, initial_position + count);
+    fseek(Entry, initial_position + count);
 
     return count;
 }
@@ -519,77 +519,74 @@ size_t __xin_read(int fd, void *buf, size_t count)
     if (fd < 0)
         return 0;
 
-    // XinEntry *entry = (XinEntry *)(XIN_ENTRY_TABLE + (fd * XIN_ENTRY_SIZE));
-    XinEntry *entry = (XinEntry *)(XIN_FS_ENTRIES_TABLE_BEGIN + (fd * XIN_ENTRY_SIZE));
+    // XinEntry *Entry = (XinEntry *)(XIN_ENTRY_TABLE + (fd * XIN_ENTRY_SIZE));
+    XinEntry *Entry = (XinEntry *)(XIN_FS_ENTRIES_TABLE_BEGIN + (fd * XIN_ENTRY_SIZE));
 
-    if ((entry->type != XIN_FILE) && (entry->type != XIN_HARD_LINK))
+    if ((Entry->type != XIN_FILE) && (Entry->type != XIN_HARD_LINK))
         return 0;
 
-    uint32_t initial_position = ftell(entry);
+    uint32_t initial_position = ftell(Entry);
 
-    if (initial_position >= (entry->size - 1)) // last valid byte
+    if (initial_position >= (Entry->size - 1)) // last valid byte
         return 0;
 
-    if (initial_position + count > entry->size)
-        count = initial_position + count - (entry->size + 1); // 0 is start index
+    if (initial_position + count > Entry->size)
+        count = initial_position + count - (Entry->size + 1); // 0 is start index
 
     //////////////////////////////////////////////////
 
-    return fread(entry, buf, count);
+    return fread(Entry, buf, count);
 }
 
-size_t __xin_fwrite(XinEntry *entry, void *buf, size_t count)
+size_t __xin_fwrite(XinEntry *Entry, void *buf, size_t count)
 {
     //////////////////VALIDATION///////////////////
 
     if (!count)
         return 0;
 
-    if (entry == NULL)
+    if (Entry == NULL)
         return 0;
 
-    if ((entry->type != XIN_FILE) && (entry->type != XIN_HARD_LINK))
+    if ((Entry->type != XIN_FILE) && (Entry->type != XIN_HARD_LINK))
         return 0;
 
-    if (entry->first_sector == XIN_FIRST_SECTOR_NOT_DEFINED)
+    if (Entry->first_sector == XIN_FIRST_SECTOR_NOT_DEFINED)
         return 0;
 
     //////////////////////////////////////////////////
 
-    uint32_t initial_position = ftell(entry);
+    uint32_t initial_position = ftell(Entry);
 
-    if ((initial_position + count) > entry->FileInfo->tmp_size)
-        entry->FileInfo->tmp_size = initial_position + count;
+    if ((initial_position + count) > Entry->FileInfo->tmp_size)
+        Entry->FileInfo->tmp_size = initial_position + count;
 
-    entry->FileInfo->buffer = (uint8_t *)realloc(entry->FileInfo->buffer, (int_to_sectors(entry->FileInfo->tmp_size) + 1) * SECTOR_SIZE);
-    entry->FileInfo->sector_in_use = (bool *)realloc(entry->FileInfo->sector_in_use, (int_to_sectors(entry->FileInfo->tmp_size) + 1));
+    Entry->FileInfo->buffer = (uint8_t *)realloc(Entry->FileInfo->buffer, (int_to_sectors(Entry->FileInfo->tmp_size) + 1) * SECTOR_SIZE);
+    Entry->FileInfo->sector_in_use = (bool *)realloc(Entry->FileInfo->sector_in_use, (int_to_sectors(Entry->FileInfo->tmp_size) + 1));
 
     uint32_t sectors_to_load = int_to_sectors(count + initial_position);
 
-    if (sectors_to_load > int_to_sectors(entry->size))
-        sectors_to_load = int_to_sectors(entry->size);
+    if (sectors_to_load > int_to_sectors(Entry->size))
+        sectors_to_load = int_to_sectors(Entry->size);
 
     for (int i = 0; i < sectors_to_load; i++)
     {
-        if (!entry->FileInfo->sector_in_use[i])
+        if (!Entry->FileInfo->sector_in_use[i])
         {
-            __disk_read(entry->first_sector + i, 1, (uint16_t *)(entry->FileInfo->buffer + (i * SECTOR_SIZE)));
-            entry->FileInfo->sector_in_use[i] = true;
+            __disk_read(Entry->first_sector + i, 1, (uint16_t *)(Entry->FileInfo->buffer + (i * SECTOR_SIZE)));
+            Entry->FileInfo->sector_in_use[i] = true;
         }
     }
 
-    fseek(entry, initial_position);
+    fseek(Entry, initial_position);
 
-    for (char *i = (char *)(entry->FileInfo->buffer) + initial_position; i < (char *)(entry->FileInfo->buffer + initial_position + count); i++, buf++)
+    for (char *i = (char *)(Entry->FileInfo->buffer) + initial_position; i < (char *)(Entry->FileInfo->buffer + initial_position + count); i++, buf++)
     {
         *i = *(char *)buf;
-        fseek(entry, ftell(entry) + 1);
+        fseek(Entry, ftell(Entry) + 1);
     }
 
-    time_get(&SystemTime);
-
-    entry->modification_date = time_extern_date(&SystemTime);
-    entry->modification_time = time_extern_time(&SystemTime);
+    __xin_entry_modification_fields_update(Entry);
     return count;
 }
 
@@ -604,14 +601,14 @@ size_t __xin_write(int fd, void *buf, size_t count)
     if (!FileDescriptorTable[fd].is_used)
         return 0;
 
-    XinEntry *entry = (XinEntry *)(XIN_FS_ENTRIES_TABLE_BEGIN + (fd * XIN_ENTRY_SIZE));
+    XinEntry *Entry = (XinEntry *)(XIN_FS_ENTRIES_TABLE_BEGIN + (fd * XIN_ENTRY_SIZE));
 
-    if ((entry->type != XIN_FILE) && (entry->type != XIN_HARD_LINK))
+    if ((Entry->type != XIN_FILE) && (Entry->type != XIN_HARD_LINK))
         return 0;
 
     //////////////////////////////////////////////////
 
-    return fwrite(entry, buf, count);
+    return fwrite(Entry, buf, count);
 }
 
 void fseek(XinEntry *file, uint32_t new_position)
@@ -623,7 +620,7 @@ void lseek(int fd, uint32_t new_position)
 {
     if (!FileDescriptorTable[fd].is_used)
         return;
-    FileDescriptorTable[fd].entry->FileInfo->position = new_position;
+    FileDescriptorTable[fd].Entry->FileInfo->position = new_position;
 }
 
 const uint32_t ftell(XinEntry *file)
@@ -637,7 +634,7 @@ const uint32_t lteel(int fd)
         return -1;
 
     else
-        return ftell(FileDescriptorTable[fd].entry);
+        return ftell(FileDescriptorTable[fd].Entry);
 }
 
 XinEntry *__xin_fopen(char *file_path, char *mode)
@@ -770,7 +767,7 @@ void __xin_close(int fd)
     if (!FileDescriptorTable[fd].is_used)
         return;
 
-    XinEntry *File = FileDescriptorTable[fd].entry;
+    XinEntry *File = FileDescriptorTable[fd].Entry;
 
     fclose(&File);
 
@@ -792,7 +789,7 @@ int __xin_open(char *file_path, uint32_t options)
         // int fd = (int)((uint32_t)file - XIN_ENTRY_TABLE) / 64;
         int fd = (int)((uint32_t)file - (uint32_t)XIN_FS_ENTRIES_TABLE_BEGIN) / SIZE_OF(XinEntry);
         FileDescriptorTable[fd].is_used = true;
-        FileDescriptorTable[fd].entry = file;
+        FileDescriptorTable[fd].Entry = file;
 
         return fd;
     }
@@ -965,7 +962,7 @@ XinChildrenEntries *xin_children_entries_get(char *folder, bool get_hidden)
         return (XinChildrenEntries *)NULL;
 
     XinChildrenEntries *Children = (XinChildrenEntries *)calloc(SIZE_OF(XinChildrenEntries));
-    Children->children = (XinEntry **)calloc(SIZE_OF(XinEntry *));
+    Children->Children = (XinEntry **)calloc(SIZE_OF(XinEntry *));
 
     // XinEntry *i = (XinEntry *)XIN_ENTRY_TABLE;
     XinEntry *i = (XinEntry *)XIN_FS_ENTRIES_TABLE_BEGIN;
@@ -980,9 +977,9 @@ XinChildrenEntries *xin_children_entries_get(char *folder, bool get_hidden)
             {
                 if (__xin_entry_name_extern(i->path)[0] != '.' | get_hidden)
                 {
-                    Children->children[finded_entries] = i;
+                    Children->Children[finded_entries] = i;
                     finded_entries++;
-                    Children->children = (XinEntry **)realloc(Children->children, SIZE_OF(XinEntry *) * (finded_entries));
+                    Children->Children = (XinEntry **)realloc(Children->Children, SIZE_OF(XinEntry *) * (finded_entries));
                 }
             }
         }
@@ -999,7 +996,7 @@ XinChildrenEntries *xin_children_entries_type_get(char *folder, uint8_t type)
         return (XinChildrenEntries *)NULL;
 
     XinChildrenEntries *Children = (XinChildrenEntries *)calloc(SIZE_OF(XinChildrenEntries));
-    Children->children = (XinEntry **)calloc(SIZE_OF(XinEntry *));
+    Children->Children = (XinEntry **)calloc(SIZE_OF(XinEntry *));
     // XinEntry *i = (XinEntry *)XIN_ENTRY_TABLE;
     XinEntry *i = (XinEntry *)XIN_FS_ENTRIES_TABLE_BEGIN;
 
@@ -1011,9 +1008,9 @@ XinChildrenEntries *xin_children_entries_type_get(char *folder, uint8_t type)
         {
             if ((!bstrcmp(i->path, folder)) && (i->type == type))
             {
-                Children->children[finded_entries] = i;
+                Children->Children[finded_entries] = i;
                 finded_entries++;
-                Children->children = (XinEntry **)realloc(Children->children, SIZE_OF(XinEntry *) * (finded_entries));
+                Children->Children = (XinEntry **)realloc(Children->Children, SIZE_OF(XinEntry *) * (finded_entries));
             }
         }
         i++;
@@ -1026,11 +1023,11 @@ XinEntriesPack *__xin_hard_links_get(const XinEntry *const File)
 {
 
     XinEntriesPack *Pack = (XinEntriesPack *)calloc(SIZE_OF(XinEntriesPack));
-    Pack->entries = (XinEntry **)calloc(SIZE_OF(XinEntry *));
+    Pack->Entries = (XinEntry **)calloc(SIZE_OF(XinEntry *));
 
     if ((File->type != XIN_FILE) || (File == NULL))
     {
-        free(Pack->entries);
+        free(Pack->Entries);
         free(Pack);
         return NULL;
     }
@@ -1039,8 +1036,8 @@ XinEntriesPack *__xin_hard_links_get(const XinEntry *const File)
     {
         if (i->first_sector == File->first_sector)
         {
-            Pack->entries = realloc(Pack->entries, Pack->length + 1);
-            Pack->entries[Pack->length++] = i;
+            Pack->Entries = realloc(Pack->Entries, Pack->length + 1);
+            Pack->Entries[Pack->length++] = i;
         }
     }
 
@@ -1112,9 +1109,9 @@ __STATUS __xin_link_create(char *filename, char *linkname)
 __STATUS __xin_copy(char *file_name, char *new_file_name)
 {
 
-    XinEntry *entry = __xin_find_entry(file_name);
+    XinEntry *Entry = __xin_find_entry(file_name);
 
-    if (entry == NULL)
+    if (Entry == NULL)
         return XIN_ENTRY_NOT_FOUND;
 
     __STATUS status = __xin_file_create(new_file_name);
@@ -1143,12 +1140,12 @@ __STATUS __xin_entry_move(char *entryname, char *destname)
     if ((__xin_entry_pf_get(destname) == NULL) || (__xin_find_entry(entryname) == NULL))
         return XIN_ENTRY_NOT_FOUND;
 
-    XinEntry *entry = __xin_find_entry(entryname);
+    XinEntry *Entry = __xin_find_entry(entryname);
 
     char destpath[XIN_MAX_PATH_LENGTH + 1] = {0};
 
-    __xin_absolute_path_get(destname, destpath, entry->type);
-    memcpy(entry->path, destpath, XIN_MAX_PATH_LENGTH);
+    __xin_absolute_path_get(destname, destpath, Entry->type);
+    memcpy(Entry->path, destpath, XIN_MAX_PATH_LENGTH);
 
     return XANIN_OK;
 }

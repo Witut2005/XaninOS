@@ -8,6 +8,7 @@
 #include <sys/devices/pit/pit.h>
 #include <lib/libc/memory.h>
 #include <lib/libc/process.h>
+#include <lib/libc/endian.h>
 
 uint8_t null_region[20] = {0};
 
@@ -75,12 +76,12 @@ xchar inputg(void)
 
 bcd_date_t time_extern_date(CmosTime *Time)
 {
-    return (uint32_t)((SystemTime.day_of_month << 24) | (SystemTime.month << 16) | (SystemTime.century << 8) | (SystemTime.year));
+    return ((uint32_t)((SystemTime.day_of_month << 24) | (SystemTime.month << 16) | (SystemTime.century << 8) | (SystemTime.year)));
 }
 
 bcd_time_t time_extern_time(CmosTime *Time)
 {
-    return (uint16_t)(SystemTime.hour << 8) | (SystemTime.minutes);
+    return ((uint16_t)(SystemTime.hour << 8) | (SystemTime.minutes));
 }
 
 CmosTime *time_get(CmosTime *Time)
@@ -97,27 +98,27 @@ CmosTime *time_get(CmosTime *Time)
 
     // GET HOURS
     outbIO(CMOS_ADDR, 0x4);
-    Time->hour = inbIO(CMOS_DATA);
+    Time->hour = inbIO(CMOS_DATA) + 1;
 
-    if ((((Time->hour & 0xF0) >> 8) == 2) && ((Time->hour & 0x0F) >= 2))
-    {
-        Time->hour &= 0x0F;
-        Time->hour -= 2;
+    // if ((((Time->hour & 0xF0) >> 8) == 2) && ((Time->hour & 0x0F) >= 2))
+    // {
+    //     Time->hour &= 0x0F;
+    //     Time->hour -= 2;
 
-        Time->hour = Time->hour << 4;
-    }
+    //     Time->hour = Time->hour << 4;
+    // }
 
-    else if ((Time->hour & 0xF) == 9 || (Time->hour & 0xF) == 8)
-    {
-        Time->hour = (Time->hour & 0xF0) + (Time->hour & 0x1);
-        Time->hour = Time->hour + (1 << 4);
-    }
+    // else if ((Time->hour & 0xF) == 9 || (Time->hour & 0xF) == 8)
+    // {
+    //     Time->hour = (Time->hour & 0xF0) + (Time->hour & 0x1);
+    //     Time->hour = Time->hour + (1 << 4);
+    // }
 
-    else
-        Time->hour += 2;
+    // else
+    //     Time->hour += 2;
 
-    if (Time->hour >= 0x24)
-        Time->hour = 0;
+    // if (Time->hour >= 0x24)
+    //     Time->hour = 0;
 
     // GET day
     outbIO(CMOS_ADDR, 0x6);

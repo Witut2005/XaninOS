@@ -88,18 +88,18 @@ enum XIN_RETURN_STATUS
 struct XinFileDescriptor
 {
     uint8_t is_used;
-    XinEntry *entry;
+    XinEntry *Entry;
 };
 
 struct XinChildrenEntries
 {
-    XinEntry **children;
+    XinEntry **Children;
     uint32_t how_many;
 };
 
 struct XinEntriesPack
 {
-    XinEntry **entries;
+    XinEntry **Entries;
     uint32_t length;
 };
 

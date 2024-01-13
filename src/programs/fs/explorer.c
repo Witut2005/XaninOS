@@ -226,7 +226,7 @@ int explorer(char *parent_folder)
                 for (int j = 0; j < 10; j++)
                 {
                     if (i * 10 + j < hoho->how_many)
-                        table_insert(AppInfo.MainTable, j, hoho->children[j + i * 10]->path, black, hoho->children[j + i * 10]->type + 2, i);
+                        table_insert(AppInfo.MainTable, j, hoho->Children[j + i * 10]->path, black, hoho->Children[j + i * 10]->type + 2, i);
 
                     else
                     {
