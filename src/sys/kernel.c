@@ -331,6 +331,9 @@ void kernel_init(void)
 
     __xin_init();
 
+    xprintf("XinFs tables: 0x%x\n", __xin_fs_entries_get());
+    // 0x30c800
+
     puts("Press ENTER to continue...\n");
 
     srand(SystemTime.seconds);

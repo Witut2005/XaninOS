@@ -209,8 +209,8 @@ def preinstall(image_size_in_sectors):
             continue 
         
     for f in file_entires:
-        entry  = XinEntryData(f, XIN_FILE)
-        entry.write(b'/' + open(f, 'rb').read())
+        entry  = XinEntryData('/' + f, XIN_FILE)
+        entry.write(open(f, 'rb').read())
 
     for d in directory_entires:
         entry = XinEntryData('/' + d, XIN_DIRECTORY)

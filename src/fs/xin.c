@@ -173,6 +173,9 @@ XinEntry *__xin_find_entry(char *entryname)
     if (!strlen(entryname)) // if path is empty
         return NULL;
 
+    if (entryname[0] != '/')
+        return NULL;
+
     if (entryname[0] == '/' && entryname[1] == '/')
         return __xin_find_entry("/");
 
