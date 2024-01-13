@@ -137,7 +137,7 @@ void hfs(char *omg, ExplorerInfo *AppInfo)
     else if (bstrcmp(omg, ".."))
     {
         __xin_current_directory_get(AppInfo->current_folder);
-        __xin_folder_change(__xin_get_file_pf(AppInfo->current_folder)->path);
+        __xin_folder_change(__xin_entry_pf_get(AppInfo->current_folder)->path);
         return;
     }
 

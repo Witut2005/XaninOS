@@ -125,6 +125,7 @@ extern "C"
     {
 #endif
 
+        void __xin_entry_modification_fields_update(XinEntry *Entry);
         __STATUS __xin_entry_create(XinEntryCreateArgs *Args, XIN_FS_ENTRY_TYPES type);
         char *__xin_absolute_path_get(char *rpath, char *buf, XIN_FS_ENTRY_TYPES type);
         bool __xin_is_relative_path_used(char *path);
@@ -168,7 +169,7 @@ extern "C"
 
         void fseek(XinEntry *file, uint32_t new_position);
         void lseek(int fd, uint32_t new_position);
-        XinEntry *__xin_get_file_pf(char *path); // pf = parent folder
+        XinEntry *__xin_entry_pf_get(char *path); // pf = parent folder
         XinEntry *__xin_find_entry(char *entry_name);
         __STATUS __xin_folder_remove(char *folder_name);
 
