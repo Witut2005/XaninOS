@@ -25,7 +25,7 @@ enum XIN_FS_PROPERTIES
     XIN_FIRST_SECTOR_NOT_DEFINED = UINT32_MAX
 };
 
-typedef enum
+typedef enum XIN_FS_ENTRY_TYPES
 {
     XIN_FILE = 'F',
     XIN_DIRECTORY = 'D',
@@ -75,16 +75,21 @@ struct XinEntry
 typedef struct XinEntry XinEntry;
 typedef struct XinEntry XinBuffer;
 
-enum XIN_RETURN_STATUS
+typedef enum
 {
+    XIN_OK = 0,
+    XIN_ERROR = 3,
 
-    XIN_FILE_EXISTS = 0x4,
+    XIN_ENTRY_EXISTS = 0x4,
     XIN_BAD_FOLDER_NAME = 0x5,
     XIN_ENTRY_NOT_FOUND = 0x6,
     XIN_TO_LONG_PATH = 0x7,
-    XIN_NOT_A_FOLDER = 0x8,
+    XIN_NOT_A_FOLDER,
+    XIN_NOT_A_FILE,
+    XIN_NOT_A_HARD_LINK,
+    XIN_ENTRY_BAD_TYPE
 
-};
+} XIN_FS_RETURN_STATUSES;
 
 struct XinFileDescriptor
 {
@@ -130,7 +135,6 @@ extern "C"
         bool __xin_entry_address_check(XinEntry *Entry);
         bool __xin_entry_validation_check(XinEntry *Entry);
         void __xin_entry_modification_fields_update(XinEntry *Entry);
-        __STATUS __xin_entry_create(XinEntryCreateArgs *Args, XIN_FS_ENTRY_TYPES type);
         char *__xin_absolute_path_get(char *rpath, char *buf, XIN_FS_ENTRY_TYPES type);
         bool __xin_is_relative_path_used(char *path);
         char *__xin_entry_name_extern(char *path);
@@ -149,15 +153,23 @@ extern "C"
 
         char *__xin_current_directory_get(char *buf);
 
-        __STATUS __xin_file_remove(char *entry_name);
+        XIN_FS_RETURN_STATUSES __xin_file_remove(char *entry_name);
 
         void __xin_init();
         XinEntry *____xin_find_free_entry(void);
 
-        __STATUS __xin_file_create(char *entry_name);
-        __STATUS __xin_folder_create(char *entry_name);
-        __STATUS __xin_folder_change(char *new_directory);
-        __STATUS __xin_entry_move(char *entry_name, char *new_name);
+        XIN_FS_RETURN_STATUSES __xin_folder_change(char *new_directory);
+
+        XIN_FS_RETURN_STATUSES __xin_entry_create(XinEntryCreateArgs *Args, XIN_FS_ENTRY_TYPES type);
+        XIN_FS_RETURN_STATUSES __xin_file_create(char *entry_name);
+        XIN_FS_RETURN_STATUSES __xin_link_create(char *file_name, char *link_name);
+        XIN_FS_RETURN_STATUSES __xin_folder_create(char *entry_name);
+        XIN_FS_RETURN_STATUSES __xin_entry_move(char *entry_name, char *new_name);
+
+        XIN_FS_RETURN_STATUSES __xin_folder_remove(char *folder_name);
+        XIN_FS_RETURN_STATUSES __xin_link_remove(const char *linkname);
+
+        XIN_FS_RETURN_STATUSES __xin_copy(char *file_name, char *new_file_name);
 
         XinEntry *__xin_fopen(char *file_path, char *mode);
         size_t __xin_fwrite(XinEntry *entry, void *buf, size_t count);
@@ -173,7 +185,6 @@ extern "C"
         void lseek(int fd, uint32_t new_position);
         XinEntry *__xin_entry_pf_get(char *path); // pf = parent folder
         XinEntry *__xin_find_entry(char *entry_name);
-        __STATUS __xin_folder_remove(char *folder_name);
 
         void fclose_with_given_size(XinEntry **file, uint32_t new_size);
         char *getline(XinEntry *file, int line_id);
@@ -190,10 +201,6 @@ extern "C"
         XinEntriesPack *__xin_hard_links_get(const XinEntry *const File);
         bool __xin_file_to_xfo_add(XinEntry *File);
         void __xin_all_files_close(void);
-
-        __STATUS __xin_link_remove(const char *linkname);
-        __STATUS __xin_link_create(char *file_name, char *link_name);
-        __STATUS __xin_copy(char *file_name, char *new_file_name);
 
 #ifdef __cplusplus
     }

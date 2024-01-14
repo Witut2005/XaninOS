@@ -261,7 +261,7 @@ void __xin_free_temporary_data(XinEntry *File)
     free(File->FileInfo);
 }
 
-__STATUS __xin_folder_change(char *foldername)
+XIN_FS_RETURN_STATUSES __xin_folder_change(char *foldername)
 {
 
     if (strlen(foldername) > XIN_MAX_PATH_LENGTH)
@@ -326,7 +326,7 @@ void __xin_tables_update(void)
     __disk_sectors_write(ATA_FIRST_BUS, ATA_MASTER, XinFsData.first_sector + XIN_FS_PTRS_SIZE, XIN_FS_ENTRIES_SIZE, (uint16_t *)(XIN_FS_ENTRIES_TABLE_BEGIN));
 }
 
-__STATUS __xin_entry_create(XinEntryCreateArgs *Args, XIN_FS_ENTRY_TYPES type)
+XIN_FS_RETURN_STATUSES __xin_entry_create(XinEntryCreateArgs *Args, XIN_FS_ENTRY_TYPES type)
 {
     char entrypath[XIN_MAX_PATH_LENGTH + 1] = {'\0'};
 
@@ -335,7 +335,7 @@ __STATUS __xin_entry_create(XinEntryCreateArgs *Args, XIN_FS_ENTRY_TYPES type)
     __xin_absolute_path_get(Args->entryname, entrypath, type);
 
     if (__xin_find_entry(entrypath) != NULL)
-        return XIN_FILE_EXISTS;
+        return XIN_ENTRY_EXISTS;
 
     if (type == XIN_HARD_LINK)
     {
@@ -368,17 +368,17 @@ __STATUS __xin_entry_create(XinEntryCreateArgs *Args, XIN_FS_ENTRY_TYPES type)
 
     __xin_tables_update();
 
-    return XANIN_OK;
+    return XIN_OK;
 }
 
-__STATUS __xin_folder_create(char *foldername)
+XIN_FS_RETURN_STATUSES __xin_folder_create(char *foldername)
 {
     XinEntryCreateArgs Args = {foldername, NULL};
     __xin_entry_create(&Args, XIN_DIRECTORY);
     return XANIN_OK;
 }
 
-__STATUS __xin_file_create(char *filename)
+XIN_FS_RETURN_STATUSES __xin_file_create(char *filename)
 {
     XinEntryCreateArgs Args = {filename, NULL};
     return __xin_entry_create(&Args, XIN_FILE);
@@ -396,10 +396,10 @@ void __xin_entry_modification_fields_update(XinEntry *Entry)
     Entry->modification_time = time_extern_time(&Time);
 }
 
-int __xin_file_reallocate_with_given_size(XinEntry *File, uint32_t size)
+XIN_FS_RETURN_STATUSES __xin_file_reallocate_with_given_size(XinEntry *File, uint32_t size)
 {
     if (__xin_entry_validation_check(File) == false)
-        return XANIN_ERROR;
+        return XIN_ERROR;
 
     uint8_t *buf = (uint8_t *)calloc(int_to_sectors(size) * SECTOR_SIZE);
     memcpy(buf, File->FileInfo->buffer, size);
@@ -449,10 +449,10 @@ int __xin_file_reallocate_with_given_size(XinEntry *File, uint32_t size)
 
     free(buf);
 
-    return XANIN_OK;
+    return XIN_OK;
 }
 
-__STATUS __xin_file_remove(char *entry_name)
+XIN_FS_RETURN_STATUSES __xin_file_remove(char *entry_name)
 {
     XinEntry *Entry = __xin_find_entry(entry_name);
 
@@ -466,9 +466,9 @@ __STATUS __xin_file_remove(char *entry_name)
     }
 
     else
-        return XANIN_ERROR; // xin bad entry type
+        return XIN_ERROR; // xin bad entry type
 
-    return XANIN_OK;
+    return XIN_OK;
 }
 
 size_t __xin_fread(XinEntry *Entry, void *buf, size_t count)
@@ -730,7 +730,7 @@ XinEntry *__xin_fopen(char *file_path, char *mode)
             return File;
         }
 
-        else if (status == XIN_FILE_EXISTS)
+        else if (status == XIN_ENTRY_EXISTS)
         {
             __xin_file_to_xfo_add(File);
             return File;
@@ -923,7 +923,7 @@ char *getline(XinEntry *File, int line_id)
     return line;
 }
 
-__STATUS __xin_folder_remove(char *foldername)
+XIN_FS_RETURN_STATUSES __xin_folder_remove(char *foldername)
 {
 
     XinEntry *Folder = __xin_find_entry(foldername);
@@ -940,7 +940,7 @@ __STATUS __xin_folder_remove(char *foldername)
     }
 
     memset((uint8_t *)Folder, '\0', SIZE_OF(XinEntry));
-    return XANIN_OK;
+    return XIN_OK;
 }
 
 char *__xin_entry_name_extern(char *path)
@@ -1097,26 +1097,26 @@ void __xin_all_files_close(void)
         interrupt_enable();
 }
 
-__STATUS __xin_link_remove(const char *linkname)
+XIN_FS_RETURN_STATUSES __xin_link_remove(const char *linkname)
 {
     XinEntry *File = __xin_find_entry(linkname);
 
     if (File != NULL && File->type == XIN_LINK)
     {
-        memset((uint8_t *)File, 0x0, SIZE_OF(XinEntry));
-        return XANIN_OK;
+        memset((uint8_t *)File, '\0', SIZE_OF(XinEntry));
+        return XIN_OK;
     }
 
-    return XANIN_ERROR;
-}
-__STATUS __xin_link_create(char *filename, char *linkname)
-{
-    XinEntryCreateArgs Args = {linkname, filename};
-    __xin_entry_create(&Args, XIN_HARD_LINK);
-    return XANIN_OK;
+    return XIN_ERROR;
 }
 
-__STATUS __xin_copy(char *file_name, char *new_file_name)
+XIN_FS_RETURN_STATUSES __xin_link_create(char *filename, char *linkname)
+{
+    XinEntryCreateArgs Args = {linkname, filename};
+    return __xin_entry_create(&Args, XIN_HARD_LINK);
+}
+
+XIN_FS_RETURN_STATUSES __xin_copy(char *file_name, char *new_file_name)
 {
 
     XinEntry *Entry = __xin_find_entry(file_name);
@@ -1124,9 +1124,9 @@ __STATUS __xin_copy(char *file_name, char *new_file_name)
     if (Entry == NULL)
         return XIN_ENTRY_NOT_FOUND;
 
-    __STATUS status = __xin_file_create(new_file_name);
+    XIN_FS_RETURN_STATUSES status = __xin_file_create(new_file_name);
 
-    if (status != XANIN_OK)
+    if (status != XIN_OK)
         return status;
 
     XinEntry *File = fopen(file_name, "r");
@@ -1141,10 +1141,10 @@ __STATUS __xin_copy(char *file_name, char *new_file_name)
     fclose(&File);
     fclose(&file_created);
 
-    return XANIN_OK;
+    return XIN_OK;
 }
 
-__STATUS __xin_entry_move(char *entryname, char *destname)
+XIN_FS_RETURN_STATUSES __xin_entry_move(char *entryname, char *destname)
 {
 
     if ((__xin_entry_pf_get(destname) == NULL) || (__xin_find_entry(entryname) == NULL))
@@ -1157,5 +1157,5 @@ __STATUS __xin_entry_move(char *entryname, char *destname)
     __xin_absolute_path_get(destname, destpath, Entry->type);
     memcpy(Entry->path, destpath, XIN_MAX_PATH_LENGTH);
 
-    return XANIN_OK;
+    return XIN_OK;
 }
