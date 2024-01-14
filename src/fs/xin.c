@@ -22,11 +22,16 @@ static XinFileSystemData XinFsData; // XinFS DATA SINGLETONE
 #define XIN_FS_BEGIN (XinFsData.tables)
 
 #define XIN_FS_PTRS_TABLE_BEGIN (XinFsData.tables)
+#define XIN_FS_PTRS_TABLE_END (XinFsData.tables + (SECTOR_SIZE * XinFsData.ptrs_size))
+
 #define XIN_FS_ENTRIES_TABLE_BEGIN (XinFsData.tables + (SECTOR_SIZE * XinFsData.ptrs_size))
 #define XIN_FS_ENTRIES_TABLE_END (XinFsData.tables + (SECTOR_SIZE * (XinFsData.ptrs_size + XinFsData.entries_size)))
 
 #define XIN_FS_ENTRIES_SIZE (XinFsData.entries_size)
 #define XIN_FS_PTRS_SIZE (XinFsData.ptrs_size)
+
+#define XIN_FS_ITERATE_OVER_ENTRY_TABLE(iterator) for (const xin_ptr_t *iterator = (XinEntry *)XIN_FS_ENTRIES_TABLE_BEGIN; iterator < (XinEntry *)XIN_FS_ENTRIES_TABLE_END; iterator++)
+#define XIN_FS_ITERATE_OVER_PTRS_TABLE(iterator) for (const xin_ptr_t *iterator = (xin_ptr_t *)XIN_FS_PTRS_TABLE_BEGIN; iterator < (XinEntry *)XIN_FS_ENTRIES_PTRS_END; iterator++)
 
 bool __xin_entry_data_remove(XinEntry *Entry)
 {
@@ -201,7 +206,8 @@ XinEntry *__xin_find_entry(char *entryname)
     __xin_absolute_path_get(entryname, entrypath, XIN_DIRECTORY); // treat all Entries as directories
     uint32_t entrypath_len = strlen(entrypath);
 
-    for (XinEntry *i = (XinEntry *)XIN_FS_ENTRIES_TABLE_BEGIN; (uint32_t)i < (uint32_t)(XIN_FS_ENTRIES_TABLE_BEGIN + (SECTOR_SIZE * XIN_FS_ENTRIES_SIZE)); i++)
+    // for (XinEntry *i = (XinEntry *)XIN_FS_ENTRIES_TABLE_BEGIN; (uint32_t)i < (uint32_t)(XIN_FS_ENTRIES_TABLE_BEGIN + (SECTOR_SIZE * XIN_FS_ENTRIES_SIZE)); i++)
+    XIN_FS_ITERATE_OVER_ENTRY_TABLE(i)
     {
         // check if given folder exists
         if (bstrcmp(entrypath, i->path))
