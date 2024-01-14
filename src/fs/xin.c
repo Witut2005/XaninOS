@@ -28,6 +28,14 @@ static XinFileSystemData XinFsData; // XinFS DATA SINGLETONE
 #define XIN_FS_ENTRIES_SIZE (XinFsData.entries_size)
 #define XIN_FS_PTRS_SIZE (XinFsData.ptrs_size)
 
+bool __xin_entry_data_remove(XinEntry *Entry)
+{
+    if (__xin_entry_validation_check(Entry) == false)
+        return false;
+    memset((uint8_t *)Entry, '\0', SIZE_OF(XinEntry));
+    return true;
+}
+
 bool __xin_entry_alignment_check(XinEntry *Entry)
 {
     return (uint32_t)Entry % SIZE_OF(XinEntry) == 0;
@@ -636,10 +644,10 @@ size_t __xin_write(int fd, void *buf, size_t count)
     return fwrite(Entry, buf, count);
 }
 
-void fseek(XinEntry *file, uint32_t new_position)
+void fseek(XinEntry *File, uint32_t new_position)
 {
-    if (__xin_entry_validation_check(file) == true)
-        file->FileInfo->position = new_position;
+    if (__xin_entry_validation_check(File) == true)
+        File->FileInfo->position = new_position;
 }
 
 void lseek(int fd, uint32_t new_position)
@@ -649,9 +657,9 @@ void lseek(int fd, uint32_t new_position)
     FileDescriptorTable[fd].Entry->FileInfo->position = new_position;
 }
 
-const uint32_t ftell(XinEntry *file)
+const uint32_t ftell(XinEntry *File)
 {
-    return file->FileInfo->position;
+    return File->FileInfo->position;
 }
 
 const uint32_t lteel(int fd)
@@ -664,43 +672,43 @@ const uint32_t lteel(int fd)
 XinEntry *__xin_fopen(char *file_path, char *mode)
 {
 
-    XinEntry *file = __xin_find_entry(file_path);
+    XinEntry *File = __xin_find_entry(file_path);
 
-    if (file != NULL)
+    if (File != NULL)
     {
-        if (file->type != XIN_FILE && file->type != XIN_HARD_LINK)
+        if (File->type != XIN_FILE && File->type != XIN_HARD_LINK)
             return NULL;
 
-        file->FileInfo = (FileInformationBlock *)calloc(SIZE_OF(FileInformationBlock));
-        file->FileInfo->buffer = (uint8_t *)calloc(file->size + SECTOR_SIZE);           // additional space
-        file->FileInfo->sector_in_use = (bool *)calloc(int_to_sectors(file->size) + 1); // additional space
+        File->FileInfo = (FileInformationBlock *)calloc(SIZE_OF(FileInformationBlock));
+        File->FileInfo->buffer = (uint8_t *)calloc(File->size + SECTOR_SIZE);           // additional space
+        File->FileInfo->sector_in_use = (bool *)calloc(int_to_sectors(File->size) + 1); // additional space
 
-        strcpy(file->FileInfo->rights, mode);
+        strcpy(File->FileInfo->rights, mode);
 
-        file->FileInfo->position = 0;
-        file->FileInfo->tmp_size = 0;
-        __xin_file_to_xfo_add(file);
+        File->FileInfo->position = 0;
+        File->FileInfo->tmp_size = 0;
+        __xin_file_to_xfo_add(File);
     }
 
     if (bstrncmp(mode, "a", 2))
     {
-        file->FileInfo = (FileInformationBlock *)calloc(SIZE_OF(FileInformationBlock));
-        file->FileInfo->buffer = (uint8_t *)calloc(file->size + SECTOR_SIZE);
-        file->FileInfo->sector_in_use = (bool *)calloc(int_to_sectors(file->size) + 5);
+        File->FileInfo = (FileInformationBlock *)calloc(SIZE_OF(FileInformationBlock));
+        File->FileInfo->buffer = (uint8_t *)calloc(File->size + SECTOR_SIZE);
+        File->FileInfo->sector_in_use = (bool *)calloc(int_to_sectors(File->size) + 5);
 
-        strcpy(file->FileInfo->rights, mode);
+        strcpy(File->FileInfo->rights, mode);
 
-        file->FileInfo->position = file->size;
-        file->FileInfo->tmp_size = file->size;
-        __xin_file_to_xfo_add(file);
+        File->FileInfo->position = File->size;
+        File->FileInfo->tmp_size = File->size;
+        __xin_file_to_xfo_add(File);
 
-        return file;
+        return File;
     }
 
     else if (bstrncmp(mode, "r", 2))
     {
-        __xin_file_to_xfo_add(file);
-        return file;
+        __xin_file_to_xfo_add(File);
+        return File;
     }
 
     else if (bstrncmp(mode, "rw", 2) || bstrncmp(mode, "w", 2))
@@ -709,23 +717,23 @@ XinEntry *__xin_fopen(char *file_path, char *mode)
 
         if (status == XANIN_OK)
         {
-            file = __xin_find_entry(file_path);
-            file->FileInfo = (FileInformationBlock *)calloc(SIZE_OF(FileInformationBlock));
-            file->FileInfo->buffer = (uint8_t *)calloc(file->size + SECTOR_SIZE);
-            file->FileInfo->sector_in_use = (bool *)calloc(int_to_sectors(file->size) + 5);
+            File = __xin_find_entry(file_path);
+            File->FileInfo = (FileInformationBlock *)calloc(SIZE_OF(FileInformationBlock));
+            File->FileInfo->buffer = (uint8_t *)calloc(File->size + SECTOR_SIZE);
+            File->FileInfo->sector_in_use = (bool *)calloc(int_to_sectors(File->size) + 5);
 
-            strcpy(file->FileInfo->rights, mode);
+            strcpy(File->FileInfo->rights, mode);
 
-            file->FileInfo->position = 0;
-            file->FileInfo->tmp_size = 0;
-            __xin_file_to_xfo_add(file);
-            return file;
+            File->FileInfo->position = 0;
+            File->FileInfo->tmp_size = 0;
+            __xin_file_to_xfo_add(File);
+            return File;
         }
 
         else if (status == XIN_FILE_EXISTS)
         {
-            __xin_file_to_xfo_add(file);
-            return file;
+            __xin_file_to_xfo_add(File);
+            return File;
         }
 
         else
@@ -735,54 +743,53 @@ XinEntry *__xin_fopen(char *file_path, char *mode)
     return NULL;
 }
 
-void fclose_with_given_size(XinEntry **file, uint32_t new_size)
+void fclose_with_given_size(XinEntry **File, uint32_t new_size)
 {
 
-    if (*file == NULL)
+    if (*File == NULL)
         return;
 
-    if (!bstrncmp((*file)->FileInfo->rights, "r", 2)) // READ-ONLY OPTION
-        __xin_file_reallocate_with_given_size((*file), new_size);
+    if (!bstrncmp((*File)->FileInfo->rights, "r", 2)) // READ-ONLY OPTION
+        __xin_file_reallocate_with_given_size((*File), new_size);
 
-    free((*file)->FileInfo->buffer);
-    free((*file)->FileInfo);
+    __xin_free_temporary_data(*File);
 
     for (int i = 0; i < XIN_OPENED_FILES_COUNTER; i++)
     {
-        if (XinFilesOpened[i] == (*file))
+        if (XinFilesOpened[i] == (*File))
             XinFilesOpened[i] = NULL;
     }
 
-    (*file)->FileInfo = NULL;
-    (*file) = NULL;
+    (*File)->FileInfo = NULL;
+    (*File) = NULL;
 }
 
-void __xin_fclose(XinEntry **file)
+void __xin_fclose(XinEntry **File)
 {
-    if (__xin_entry_validation_check(*file) == false)
+    if (__xin_entry_validation_check(*File) == false)
         return;
 
     uint32_t new_size;
 
-    if ((*file)->FileInfo->tmp_size > (*file)->size)
-        new_size = (*file)->FileInfo->tmp_size;
+    if ((*File)->FileInfo->tmp_size > (*File)->size)
+        new_size = (*File)->FileInfo->tmp_size;
     else
-        new_size = (*file)->size;
+        new_size = (*File)->size;
 
-    if (!bstrncmp((*file)->FileInfo->rights, "r", 2)) // READ-ONLY OPTION
-        __xin_file_reallocate_with_given_size((*file), new_size);
+    if (!bstrncmp((*File)->FileInfo->rights, "r", 2)) // READ-ONLY OPTION
+        __xin_file_reallocate_with_given_size((*File), new_size);
 
-    free((*file)->FileInfo->buffer);
-    free((*file)->FileInfo);
+    free((*File)->FileInfo->buffer);
+    free((*File)->FileInfo);
 
     for (int i = 0; i < XIN_OPENED_FILES_COUNTER; i++)
     {
-        if (XinFilesOpened[i] == (*file))
+        if (XinFilesOpened[i] == (*File))
             XinFilesOpened[i] = NULL;
     }
 
-    (*file)->FileInfo = NULL;
-    (*file) = NULL;
+    (*File)->FileInfo = NULL;
+    (*File) = NULL;
 }
 
 void __xin_close(int fd)
@@ -801,19 +808,19 @@ void __xin_close(int fd)
 int __xin_open(char *file_path, uint32_t options)
 {
 
-    XinEntry *file = __xin_find_entry(file_path);
+    XinEntry *File = __xin_find_entry(file_path);
 
-    if (file != NULL && file->type != XIN_DIRECTORY && file->path[0] != '\0')
+    if (File != NULL && File->type != XIN_DIRECTORY && File->path[0] != '\0')
     {
 
-        if (file->FileInfo == NULL)
-            file->FileInfo = (FileInformationBlock *)calloc(SIZE_OF(FileInformationBlock));
+        if (File->FileInfo == NULL)
+            File->FileInfo = (FileInformationBlock *)calloc(SIZE_OF(FileInformationBlock));
 
-        file->FileInfo->position = 0;
+        File->FileInfo->position = 0;
         // int fd = (int)((uint32_t)file - XIN_ENTRY_TABLE) / 64;
-        int fd = (int)((uint32_t)file - (uint32_t)XIN_FS_ENTRIES_TABLE_BEGIN) / SIZE_OF(XinEntry);
+        int fd = (int)((uint32_t)File - (uint32_t)XIN_FS_ENTRIES_TABLE_BEGIN) / SIZE_OF(XinEntry);
         FileDescriptorTable[fd].is_used = true;
-        FileDescriptorTable[fd].Entry = file;
+        FileDescriptorTable[fd].Entry = File;
 
         return fd;
     }
@@ -866,10 +873,10 @@ char *getline_from_ptr(char *data, int line_id)
     return line;
 }
 
-char *getline(XinEntry *file, int line_id)
+char *getline(XinEntry *File, int line_id)
 {
 
-    char *file_data = (char *)(file->FileInfo->buffer);
+    char *file_data = (char *)(File->FileInfo->buffer);
     char *line = (char *)calloc(200);
 
     int column = 0;
@@ -1092,11 +1099,11 @@ void __xin_all_files_close(void)
 
 __STATUS __xin_link_remove(const char *linkname)
 {
-    XinEntry *file = __xin_find_entry(linkname);
+    XinEntry *File = __xin_find_entry(linkname);
 
-    if (file != NULL && file->type == XIN_LINK)
+    if (File != NULL && File->type == XIN_LINK)
     {
-        memset((uint8_t *)file, 0x0, SIZE_OF(XinEntry));
+        memset((uint8_t *)File, 0x0, SIZE_OF(XinEntry));
         return XANIN_OK;
     }
 
@@ -1122,16 +1129,16 @@ __STATUS __xin_copy(char *file_name, char *new_file_name)
     if (status != XANIN_OK)
         return status;
 
-    XinEntry *file = fopen(file_name, "r");
+    XinEntry *File = fopen(file_name, "r");
     XinEntry *file_created = fopen(new_file_name, "rw");
 
-    char *entry_data = (char *)calloc(file->size);
+    char *entry_data = (char *)calloc(File->size);
 
-    fread(file, entry_data, file->size);
-    fwrite(file_created, entry_data, file->size);
+    fread(File, entry_data, File->size);
+    fwrite(file_created, entry_data, File->size);
 
     free(entry_data);
-    fclose(&file);
+    fclose(&File);
     fclose(&file_created);
 
     return XANIN_OK;
