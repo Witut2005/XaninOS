@@ -126,6 +126,9 @@ extern "C"
     {
 #endif
 
+        bool __xin_entry_alignment_check(XinEntry *Entry);
+        bool __xin_entry_address_check(XinEntry *Entry);
+        bool __xin_entry_validation_check(XinEntry *Entry);
         void __xin_entry_modification_fields_update(XinEntry *Entry);
         __STATUS __xin_entry_create(XinEntryCreateArgs *Args, XIN_FS_ENTRY_TYPES type);
         char *__xin_absolute_path_get(char *rpath, char *buf, XIN_FS_ENTRY_TYPES type);
