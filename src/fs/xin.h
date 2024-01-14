@@ -146,12 +146,10 @@ extern "C"
         uint8_t *__xin_fs_tables_get(void);
         XinFileSystemData __xin_fs_data_get(void);
         void __xin_detect_file_system(void);
-        bool __xin_current_directory_set(char *directory);
-        char *__xin_current_directory_get(char *buf);
-        // char *__xin_path_get(char *file_name);
 
-        __STATUS __xin_entry_remove(char *entry_name);
-        char *__xin_get_current_path(char *file_name);
+        char *__xin_current_directory_get(char *buf);
+
+        __STATUS __xin_file_remove(char *entry_name);
 
         void __xin_init();
         XinEntry *____xin_find_free_entry(void);

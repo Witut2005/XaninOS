@@ -6,10 +6,17 @@
 
 int xin_entry_remove_app(char *entry_name)
 {
-    int status = __xin_entry_remove(entry_name);
+    __STATUS status = __xin_file_remove(entry_name);
 
-    if (status == XIN_ENTRY_NOT_FOUND)
+    if (status == XANIN_OK)
+    {
+    }
+
+    else if (status == XIN_ENTRY_NOT_FOUND)
         xprintf("%zNO SUCH FOLDER: %s\n", stderr, entry_name);
+
+    else
+        xprintf("%zERROR\n", stderr);
 
     return status;
 }

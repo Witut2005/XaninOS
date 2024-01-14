@@ -31,7 +31,7 @@ void handle_selected_option(char *option, ExplorerInfo *AppInfo)
     if (bstrcmp(option, "remove"))
     {
         canvas_xprintf("selected file: %s\n", AppInfo->selected_file);
-        __xin_entry_remove(AppInfo->selected_file);
+        __xin_file_remove(AppInfo->selected_file);
     }
 
     else if (bstrcmp(option, "rename"))

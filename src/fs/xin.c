@@ -444,28 +444,21 @@ int __xin_file_reallocate_with_given_size(XinEntry *File, uint32_t size)
     return XANIN_OK;
 }
 
-__STATUS __xin_entry_remove(char *entry_name)
+__STATUS __xin_file_remove(char *entry_name)
 {
-    XinEntry *entry_data = __xin_find_entry(entry_name);
-    uint32_t sectors_used = int_to_sectors(entry_data->size);
+    XinEntry *Entry = __xin_find_entry(entry_name);
 
-    if (!sectors_used)
-        sectors_used++;
-
-    if (entry_data == NULL)
+    if (__xin_entry_validation_check(Entry) == false)
         return XIN_ENTRY_NOT_FOUND;
 
-    else if (entry_data->type == XIN_FILE)
+    if (Entry->type == XIN_FILE)
     {
-        for (xin_ptr_t *i = entry_data->first_sector + XIN_FS_PTRS_TABLE_BEGIN;
-             i < entry_data->first_sector + XIN_FS_PTRS_TABLE_BEGIN + sectors_used; i++)
-            *i = XIN_UNALLOCATED;
-
-        char *tmp = (char *)entry_data;
-
-        for (int i = 0; i < 64; i++)
-            tmp[i] = '\0';
+        memset(XIN_FS_PTRS_TABLE_BEGIN + Entry->first_sector, XIN_UNALLOCATED, int_to_sectors(Entry->size));
+        memset((uint8_t *)Entry, '\0', SIZE_OF(XinEntry));
     }
+
+    else
+        return XANIN_ERROR; // xin bad entry type
 
     return XANIN_OK;
 }
@@ -923,33 +916,23 @@ char *getline(XinEntry *file, int line_id)
     return line;
 }
 
-__STATUS __xin_folder_remove(char *folder_name)
+__STATUS __xin_folder_remove(char *foldername)
 {
 
-    XinEntry *folder = __xin_find_entry(folder_name);
+    XinEntry *Folder = __xin_find_entry(foldername);
 
-    if (folder == NULL)
+    if (__xin_entry_validation_check(Folder) == false)
         return XIN_ENTRY_NOT_FOUND;
 
-    char name[XIN_MAX_PATH_LENGTH];
-    uint32_t name_length;
+    char pf_folders[XIN_MAX_PATH_LENGTH + 1] = {0};
 
-    memcpy((uint8_t *)name, (uint8_t *)folder->path, XIN_MAX_PATH_LENGTH);
-    name_length = strlen(name) - 1;
-
-    // for (XinEntry *i = (XinEntry *)1; i < (XinEntry *)(XIN_ENTRY_TABLE + SECTOR_SIZE * 4); i++)
-    for (XinEntry *i = (XinEntry *)1; i < (XinEntry *)(XIN_FS_ENTRIES_TABLE_BEGIN + SECTOR_SIZE * XIN_FS_ENTRIES_SIZE); i++)
+    for (XinEntry *i = (XinEntry *)XIN_FS_ENTRIES_TABLE_BEGIN; i < (XinEntry *)(XIN_FS_ENTRIES_TABLE_BEGIN + SECTOR_SIZE * XIN_FS_ENTRIES_SIZE); i++)
     {
-
-        if (bstrncmp(name, i->path, name_length))
-        {
-            char *tmp = (char *)i;
-            for (char *j = (char *)i; j < tmp + 64; j++)
-                *j = '\0';
-        }
+        if (bstrcmp(__xin_entry_pf_get(i->path)->path, Folder->path))
+            memset((uint8_t *)i, '\0', SIZE_OF(XinEntry));
     }
 
-    memset((uint8_t *)folder->path, 0, XIN_MAX_PATH_LENGTH);
+    memset((uint8_t *)Folder, '\0', SIZE_OF(XinEntry));
     return XANIN_OK;
 }
 
