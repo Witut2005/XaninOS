@@ -3,7 +3,7 @@
 #include <lib/libc/canvas.h>
 #include <sys/input/input.h>
 
-//CANVAS_APP
+// CANVAS_APP
 
 int ptetris(void)
 {
@@ -11,12 +11,14 @@ int ptetris(void)
     canvas_screen_clear();
     printCube();
 
-    while(1)
+    while (1)
     {
         update();
-        if(KeyInfo.character == 'q')
-            {app_exited = true;return XANIN_OK;}
+        if (__input_is_normal_key_pressed(KBP_Q))
+        {
+            app_exited = true;
+            return XANIN_OK;
+        }
     }
     return XANIN_OK;
-
 }

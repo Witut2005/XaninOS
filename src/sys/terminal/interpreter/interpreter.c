@@ -76,7 +76,7 @@ void scan(void)
 
     bool stdio_mode_overriden = false;
 
-    if (KeyInfo.is_ctrl)
+    if (__input_is_normal_key_pressed(KBP_LEFT_CONTROL))
     {
         puts_warning("Stdio mode override: l(legacy)/t(terminal)\n");
         char stdio_selected_option = getchar();
@@ -90,8 +90,8 @@ void scan(void)
     }
 
     // legacy reasons
-    KeyInfo.scan_code = 0;
-    KeyInfo.character = 0;
+    // KeyInfo.scan_code = 0;
+    // KeyInfo.character = 0;
     argc = 0;
 
     for (int i = 0; i < 5; i++)

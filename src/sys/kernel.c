@@ -41,6 +41,7 @@
 #include <sys/macros.h>
 #include <lib/libc/stdiox_legacy.h>
 #include <fs/xin_syscalls.h>
+#include <sys/call/xanin_sys/calls/input/input.h>
 #include <sys/init/kernel_init.h>
 
 extern void v86_mode_enter(void);
@@ -85,10 +86,18 @@ void stdio_refresh(address_t *args)
         __sys_xtb_flush(__sys_vty_get());
 }
 
+// static inline void is_nicho(key_info_t key, uint8_t **args)
+// {
+//     xprintf("%s", __sys_is_normal_key_pressed(KBP_0) ? "true" : "false");
+// }
+
 void kernel_loop(void)
 {
     while (1)
     {
+
+        // InputHandler TmpHandler = input_handler_create(is_nicho, input_handler_options_create(NULL, KERNEL_INPUT_HANDLER));
+        // __input_add_handler(&TmpHandler);
 
         xtb_enable_flushing();
         stdio_mode_set(STDIO_MODE_TERMINAL);
@@ -104,17 +113,17 @@ void kernel_loop(void)
         // screen_clear();
         time_get(&SystemTime);
 
-        puts("\n");
+        putchar('\n');
 
         for (int i = 0; xin_current_directory[i + 1] != '\0'; i++)
             xprintf("%z%c", OUTPUT_COLOR_SET(black, lblue), xin_current_directory[i]);
 
-        puts(">");
+        putchar('>');
 
         app_exited = false;
 
         xin_close_all_files();
-        __input_remove_user_handlers();
+        __sys_input_remove_user_handlers();
 
         if (app_exited)
             app_exited = false;
@@ -303,6 +312,9 @@ void kernel_init(void)
                                   0x0 << APIC_DELIVERY_MODE | 0x0 << APIC_DESTINATION_MODE | 0x0 << APIC_INT_PIN_POLARITY | 0x0 << APIC_INT_MASK,
                               ioapic_id_get());
 
+    // COS NIE DZIALA SYSCALL
+    __input_scan_code_mapper_set(xanin_default_character_mapper);
+
     set_pit(apic_pit_redirect != NULL ? apic_pit_redirect->global_system_int_table + APIC_IRQ_BASE : PIC_PIT_VECTOR);
     keyboard_init(apic_keyboard_redirect != NULL ? apic_keyboard_redirect->global_system_int_table + APIC_IRQ_BASE : PIC_KEYBOARD_VECTOR);
     i8254x_init(apic_nic_redirect != NULL ? apic_nic_redirect->global_system_int_table + APIC_IRQ_BASE : PIC_NIC_VECTOR);
@@ -366,10 +378,15 @@ void kernel_start(void)
     kernel_init();
     kernel_execute_init_array_section(&XaninInitArrayInfo);
 
+    // PUT ALL CPP MODULES AFTER EXECUTING INIT ARRAY
+    __sys_input_prtsc_handler_set(__input_default_prtsc_handler);
+
     interrupt_enable();
 
     stdio_refresh(NULL);
-    while (getxchar().scan_code != ENTER)
+
+    // while (getxchar().scan_code != ENTER)
+    while (!__input_is_normal_key_pressed(KBP_ENTER))
         ;
     screen_clear();
 

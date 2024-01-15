@@ -15,16 +15,15 @@ static uint8_t y;
 
 void printCube(void)
 {
-    x = 15*2;
+    x = 15 * 2;
     y = 1;
 
-    petris_cursor = (uint16_t*)VGA_TEXT_MEMORY;
+    petris_cursor = (uint16_t *)VGA_TEXT_MEMORY;
 
     petris_cursor += x * y;
 
     *petris_cursor = (uint16_t)(BLANK | (((colorTetris << 4) | colorTetris) << 8));
 }
-
 
 void update(void)
 {
@@ -34,26 +33,23 @@ void update(void)
 
     tetris_input();
 
-
-
-    if((uint32_t)petris_cursor >= (uint32_t)(VGA_TEXT_MEMORY + (27 * 80 * 2)))//VGA_TEXT_MEMORY + (25*80*2))
+    if ((uint32_t)petris_cursor >= (uint32_t)(VGA_TEXT_MEMORY + (VGA_MAX_Y * VGA_WIDTH * VGA_SCREEN_CELL_SIZE))) // VGA_TEXT_MEMORY + (25*80*2))
     {
-        *petris_cursor = buf;            
+        *petris_cursor = buf;
         printCube();
     }
 
-
     petris_cursor = petris_cursor + 80;
-    
-    if((uint8_t)(*petris_cursor) == BLANK)
+
+    if ((uint8_t)(*petris_cursor) == BLANK)
     {
         petris_cursor = petris_cursor - 80;
         *petris_cursor = (uint16_t)(BLANK | (((colorTetris << 4) | colorTetris) << 8));
         printCube();
     }
 
-    buf = (uint16_t)((buf & 0x00ff) | (((colorTetris << 4) | colorTetris) << 8));  
-    *petris_cursor = buf;    
+    buf = (uint16_t)((buf & 0x00ff) | (((colorTetris << 4) | colorTetris) << 8));
+    *petris_cursor = buf;
 
     msleep(300);
 }

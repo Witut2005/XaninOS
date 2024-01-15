@@ -16,19 +16,20 @@ extern void keyboard_handler_init(void);
 
 uint8_t keyboard_self_test()
 {
-    outbIO(0x64,0xaa);
+    outbIO(0x64, 0xaa);
     return inbIO(0x60);
 }
 
 void keyboard_reset(void)
 {
-    outbIO(0x64, KEYBOARD_DISABLE);             // KEYBOARD OFF
+    outbIO(0x64, KEYBOARD_DISABLE); // KEYBOARD OFF
 
-    for(int i = 0; i < 10; i++){
+    for (int i = 0; i < 10; i++)
+    {
         io_wait();
     }
 
-	outbIO(0x64, KEYBOARD_ENABLE);             // KEYBOARD ON
+    outbIO(0x64, KEYBOARD_ENABLE); // KEYBOARD ON
 }
 
 uint8_t keyboard_init(uint8_t vector)
@@ -36,14 +37,13 @@ uint8_t keyboard_init(uint8_t vector)
 
     uint8_t keyboard_status = keyboard_self_test();
 
-    if(keyboard_status == KEYBOARD_TEST_FAILURE)
+    if (keyboard_status == KEYBOARD_TEST_FAILURE)
     {
         xprintf("keyboard self test failed. Halting execution\n");
         interrupt_disable();
         cpu_halt();
     }
 
-    INTERRUPT_REGISTER(vector, keyboard_handler_init); 
+    INTERRUPT_REGISTER(vector, keyboard_handler_init);
     return keyboard_status;
-
 }

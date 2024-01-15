@@ -560,7 +560,7 @@ void xscan_range(char* string_buffer, uint32_t how_many_chars)
                 continue;
 
             string_buffer[--buffer_index] = '\0';
-            stdio_legacy_cell_put('\0', OUTPUT_COLOR_SET(black, black), &Screen.y, &Screen.x);
+            stdio_legacy_cell_put('\0', OUTPUT_COLOR_SET(black, black), Screen.y, Screen.x);
             __sys_xtf_remove_last_cell(__sys_vty_get());
             __sys_xtb_flush(__sys_vty_get());
             Screen.x--;

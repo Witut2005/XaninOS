@@ -6,7 +6,7 @@ void canvas_putchar(char character)
     if(stdio_mode_get() != STDIO_MODE_CANVAS) 
         return;
 
-    stdio_canvas_cell_put(character, OUTPUT_COLOR_SET(black, white), &Screen.y, &Screen.x);
+    stdio_canvas_cell_put(character, OUTPUT_COLOR_SET(black, white), Screen.y, Screen.x);
 
     if((++Screen.x) == VGA_WIDTH)
     {    
@@ -20,7 +20,7 @@ void canvas_putchar_color(uint8_t color, char character)
     if(stdio_mode_get() != STDIO_MODE_CANVAS) 
         return;
 
-    stdio_legacy_cell_put(character, color, &Screen.y, &Screen.x);
+    stdio_legacy_cell_put(character, color, Screen.y, Screen.x);
         
     if((++Screen.x) == VGA_WIDTH)
     {    
@@ -305,7 +305,7 @@ void canvas_xscanf(char* str, ... )
 
         if(Input.scan_code == BSPC)
         {
-            stdio_legacy_cell_put((char)Screen.cursor[Screen.y][Screen.x], OUTPUT_COLOR_SET(black, white), &Screen.y, &Screen.x);
+            stdio_legacy_cell_put((char)Screen.cursor[Screen.y][Screen.x], OUTPUT_COLOR_SET(black, white), Screen.y, Screen.x);
 
             if((InitialScreenPosition.first == Screen.y) && (InitialScreenPosition.second == Screen.x))
                 continue;
@@ -324,7 +324,7 @@ void canvas_xscanf(char* str, ... )
 
             string_typed_buffer[index] = '\0';
 
-            stdio_legacy_cell_put('\0', OUTPUT_COLOR_SET(white, white), &Screen.y, &Screen.x);
+            stdio_legacy_cell_put('\0', OUTPUT_COLOR_SET(white, white), Screen.y, Screen.x);
 
             letters_refresh(&Screen.cursor[Screen.y][Screen.x]);
         }
@@ -450,7 +450,7 @@ void canvas_xscanf(char* str, ... )
             memset(field_buffer, 0, 1000); 
             memset(string_typed_buffer, 0, 1000);
 
-            stdio_legacy_cell_put((char)Screen.cursor[Screen.y][Screen.x], OUTPUT_COLOR_SET(black, white), &Screen.y, &Screen.x);
+            stdio_legacy_cell_put((char)Screen.cursor[Screen.y][Screen.x], OUTPUT_COLOR_SET(black, white), Screen.y, Screen.x);
             xprintf("\n");
             // free(field_buffer);
             break;
@@ -461,12 +461,12 @@ void canvas_xscanf(char* str, ... )
         {
             char tmp = Input.character;
 
-            stdio_legacy_cell_put((char)Screen.cursor[Screen.y][Screen.x], OUTPUT_COLOR_SET(black, white), &Screen.y, &Screen.x);
+            stdio_legacy_cell_put((char)Screen.cursor[Screen.y][Screen.x], OUTPUT_COLOR_SET(black, white), Screen.y, Screen.x);
             char character_saved = (char)(Screen.cursor[Screen.y][Screen.x]);
             
             xprintf("%c", tmp);
     
-            stdio_legacy_cell_put((char)Screen.cursor[Screen.y][Screen.x], OUTPUT_COLOR_SET(white, white), &Screen.y, &Screen.x);
+            stdio_legacy_cell_put((char)Screen.cursor[Screen.y][Screen.x], OUTPUT_COLOR_SET(white, white), Screen.y, Screen.x);
             string_typed_buffer[index] = tmp;
             index++;
         }    
@@ -526,7 +526,7 @@ void canvas_xscan_range(char* string_buffer, uint32_t how_many_chars)
 
             memset(field_buffer, 0, 1000);
 
-            stdio_legacy_cell_put((char)Screen.cursor[Screen.y][Screen.x], OUTPUT_COLOR_SET(black, white), &Screen.y, &Screen.x);
+            stdio_legacy_cell_put((char)Screen.cursor[Screen.y][Screen.x], OUTPUT_COLOR_SET(black, white), Screen.y, Screen.x);
             
             xprintf("\n");
             return;
@@ -537,7 +537,7 @@ void canvas_xscan_range(char* string_buffer, uint32_t how_many_chars)
             if(!index)
                 continue;
 
-            stdio_legacy_cell_put((char)Screen.cursor[Screen.y][Screen.x], OUTPUT_COLOR_SET(black, white), &Screen.y, &Screen.x);
+            stdio_legacy_cell_put((char)Screen.cursor[Screen.y][Screen.x], OUTPUT_COLOR_SET(black, white), Screen.y, Screen.x);
 
             if(!Screen.x)
             {
@@ -551,7 +551,7 @@ void canvas_xscan_range(char* string_buffer, uint32_t how_many_chars)
             index--;
 
             string_typed_buffer[index] = '\0';
-            stdio_legacy_cell_put((char)Screen.cursor[Screen.y][Screen.x], OUTPUT_COLOR_SET(white, white), &Screen.y, &Screen.x);
+            stdio_legacy_cell_put((char)Screen.cursor[Screen.y][Screen.x], OUTPUT_COLOR_SET(white, white), Screen.y, Screen.x);
 
             letters_refresh(&Screen.cursor[Screen.y][Screen.x]);
         }

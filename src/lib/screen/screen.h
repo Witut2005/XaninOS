@@ -26,6 +26,9 @@ struct screen_t
 
 typedef struct screen_t screen_t;
 
+typedef uint8_t color_t;
+typedef uint16_t vga_screen_cell_t;
+
 extern screen_t Screen;
 
 extern uint16_t** screen_rows;

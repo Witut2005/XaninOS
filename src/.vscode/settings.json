@@ -108,7 +108,9 @@
         "cinttypes": "cpp",
         "typeindex": "cpp",
         "typeinfo": "cpp",
-        "limits.h": "c"
+        "limits.h": "c",
+        "types.h": "c",
+        "screen.h": "c"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }

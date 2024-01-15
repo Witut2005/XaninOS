@@ -17,20 +17,10 @@ struct key_info_t
     uint8_t scan_code;
     char character;
 
-    bool is_shift;
-    bool is_ctrl;
-    bool is_caps;
-    bool is_bspc;
-    bool is_alt;
+    bool keys_pressed[0x80];
+    bool special_keys_pressed[0x80];
 
-    bool is_left;
-    bool is_right;
-    bool is_up;
-    bool is_down;
-    
-    bool is_pressed;
-    bool is_hold;
-
+    uint8_t is_caps;
 };
 
 typedef struct key_info_t key_info_t;

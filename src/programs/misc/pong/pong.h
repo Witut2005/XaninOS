@@ -1,29 +1,32 @@
 
 #pragma once
 
-#include <stdint.h>
+struct BallInfo
+{
+    int8_t y;
+    int8_t x;
+};
 
-#define PONG_SIZE_Y 6
+typedef struct BallInfo BallInfo;
 
-uint16_t* pong1[6];
-uint16_t* pong2[6];
+struct PongState
+{
+    PairUInt8 Positions;
 
-uint8_t pong1_y = 0;
-uint8_t pong2_y = 0;
+    PairUInt8 PlayersInput;
+    PairUInt8 PlayersPoints;
 
-uint16_t* ball;
+    PairInt8 BallVector;
+    BallInfo Ball;
+};
 
-int ball_direction = 1;
-int ball_vector = 1;
+typedef struct PongState PongState;
 
-uint8_t player1_input = 0, player2_input = 0;
-uint8_t player1_points = 0, player2_points = 0;
-
-void pong_init(void);
-void pong_update(void);
-void pong_input(void);
-void pong_get_input(void);
-int pong(void);
-void result_screen(char* str);
-void player2_get_input(void);
-void player1_get_input(void);
+// static inline void pong_get_input(key_info_t KeyboardInfo, uint8_t **args);
+// static inline void player1_position_update(PongState *);
+// static inline void player2_position_update(PongState *);
+// static inline void result_screen(char *str);
+// static inline void pong_default_state_restore(PongState *);
+// static inline void ball_update(PongState *);
+// void pong_update(PongState *);
+// int pong(void);

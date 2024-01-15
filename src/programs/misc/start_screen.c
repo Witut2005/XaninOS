@@ -81,7 +81,7 @@ int start_screen(void)
 
     print_xanin_os_string();
 
-    while(KeyInfo.scan_code != ENTER)
+    while(!__input_is_normal_key_pressed(KBP_ENTER))
     {
 
         if(!if_down)

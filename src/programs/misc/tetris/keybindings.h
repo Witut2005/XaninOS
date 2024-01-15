@@ -4,61 +4,58 @@
 #include <sys/input/input.h>
 #include <lib/libc/colors.h>
 #include <lib/screen/screen.h>
-
+#include <sys/devices/keyboard/scan_codes.h>
 
 uint16_t buf;
 uint8_t colorTetris = 0x1;
 
-uint16_t* petris_cursor = (uint16_t*)0xB8000;
-
+uint16_t *petris_cursor = (uint16_t *)0xB8000;
 
 void tetris_input()
 {
 
-
-    if(KeyInfo.character == 'a')
+    if (__input_is_normal_key_pressed(KBP_A))
         petris_cursor--;
 
-    else if(KeyInfo.character == 'd')
-        petris_cursor++;    
+    if (__input_is_normal_key_pressed(KBP_D))
+        petris_cursor++;
 
-    else if(KeyInfo.character == '0')
+    if (__input_is_normal_key_pressed(KBP_0))
         colorTetris = white;
 
-    else if(KeyInfo.character == '1')
+    if (__input_is_normal_key_pressed(KBP_1))
         colorTetris = blue;
 
-    else if(KeyInfo.character == '2')
+    if (__input_is_normal_key_pressed(KBP_2))
         colorTetris = green;
 
-    else if(KeyInfo.character == '3')
+    if (__input_is_normal_key_pressed(KBP_3))
         colorTetris = cyan;
-        
-    else if(KeyInfo.character == '4')
+
+    if (__input_is_normal_key_pressed(KBP_4))
         colorTetris = red;
 
-    else if(KeyInfo.character == '5')
+    if (__input_is_normal_key_pressed(KBP_5))
         colorTetris = brown;
 
-    else if(KeyInfo.character == '6')
+    if (__input_is_normal_key_pressed(KBP_6))
         colorTetris = lblue;
-        
-    else if(KeyInfo.character == '7')
+
+    if (__input_is_normal_key_pressed(KBP_7))
         colorTetris = yellow;
 
-    else if(KeyInfo.character == '8')
+    if (__input_is_normal_key_pressed(KBP_8))
         colorTetris = magenta;
 
-    else if(KeyInfo.character == '9')
+    if (__input_is_normal_key_pressed(KBP_9))
         colorTetris = lgray;
 
-    if(KeyInfo.character == 'p')
+    if (__input_is_normal_key_pressed(KBP_P))
     {
         *petris_cursor = buf;
-        while(KeyInfo.character == 'p');
+        while (__input_is_normal_key_pressed(KBP_P))
+            ;
 
         *petris_cursor = 0x0;
     }
-
-        
 }

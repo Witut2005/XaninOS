@@ -21,7 +21,7 @@ int screen_saver(char* filename)
 
     StringRectangle* StringRect = string_rectangle_create(buf, VGA_WIDTH / 2, VGA_HEIGHT / 2);
 
-    while(KeyInfo.scan_code != ENTER)
+    while(!__input_is_normal_key_pressed(KBP_ENTER))
     {
 
         uint16_t* tmp = (uint16_t*)VGA_TEXT_MEMORY;
