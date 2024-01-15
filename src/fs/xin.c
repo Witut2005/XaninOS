@@ -197,6 +197,22 @@ void __xin_entry_modification_fields_update(XinEntry *Entry)
     Entry->modification_time = time_extern_time(&Time);
 }
 
+bool __xin_is_entry_rwable_check(const XinEntry *Entry) // read and write (nie sprawdza czy size = 0)
+{
+    if (__xin_entry_validation_check(Entry) == false)
+        return false;
+
+    if (Entry->FileInfo == NULL)
+        return false;
+
+    if ((Entry->type != XIN_FILE) && (Entry->type != XIN_HARD_LINK))
+        return false;
+
+    if (Entry->first_sector == XIN_FIRST_SECTOR_NOT_DEFINED)
+        return false;
+    return true;
+}
+
 /* -------------------------------------------------------------------------------------- */
 
 XinEntry *__xin_find_entry(char *entryname)
@@ -736,19 +752,22 @@ size_t __xin_fread(XinEntry *Entry, void *buf, size_t count)
     if (__xin_entry_validation_check(Entry) == false)
         return 0;
 
-    if (Entry->FileInfo == NULL)
-        return 0;
-
     if (!count)
         return 0;
 
-    if ((Entry->type != XIN_FILE) && (Entry->type != XIN_HARD_LINK))
-        return 0;
+    // if (Entry->FileInfo == NULL)
+    //     return 0;
 
-    if (!Entry->size)
-        return 0;
+    // if ((Entry->type != XIN_FILE) && (Entry->type != XIN_HARD_LINK))
+    //     return 0;
 
-    if (Entry->first_sector == XIN_FIRST_SECTOR_NOT_DEFINED)
+    // if (!Entry->size)
+    //     return 0;
+
+    // if (Entry->first_sector == XIN_FIRST_SECTOR_NOT_DEFINED)
+    //     return 0;
+
+    if (__xin_is_entry_rwable_check(Entry) == false)
         return 0;
 
     uint32_t initial_position = ftell(Entry);
@@ -796,22 +815,13 @@ size_t __xin_fwrite(XinEntry *Entry, void *buf, size_t count)
 {
     //////////////////VALIDATION///////////////////
 
-    if (__xin_entry_validation_check(Entry) == false)
-        return 0;
-
-    if (Entry->FileInfo == NULL)
-        return 0;
-
     if (!count)
         return 0;
 
-    if (Entry == NULL)
+    if (__xin_entry_validation_check(Entry) == false)
         return 0;
 
-    if ((Entry->type != XIN_FILE) && (Entry->type != XIN_HARD_LINK))
-        return 0;
-
-    if (Entry->first_sector == XIN_FIRST_SECTOR_NOT_DEFINED)
+    if (__xin_is_entry_rwable_check(Entry) == false)
         return 0;
 
     //////////////////////////////////////////////////
@@ -940,71 +950,63 @@ void __xin_free_temporary_data(XinEntry *File)
 
     free(File->FileInfo->buffer);
     free(File->FileInfo);
+    File->FileInfo = NULL;
 }
 
-XIN_FS_RETURN_STATUSES __xin_file_reallocate_with_given_size(XinEntry *File, uint32_t size)
-{
-    if (__xin_entry_validation_check(File) == false)
-        return XIN_ERROR;
-
-    uint8_t *buf = (uint8_t *)calloc(int_to_sectors(size) * SECTOR_SIZE);
-    memcpy(buf, File->FileInfo->buffer, size);
-    memset(&buf[size], 0, (int_to_sectors(size) * SECTOR_SIZE) - size);
-
-    uint32_t number_of_sectors_to_deallocate = int_to_sectors(File->size);
-    if (!number_of_sectors_to_deallocate)
-        number_of_sectors_to_deallocate++;
-
-    uint32_t number_of_sectors_to_allocate = int_to_sectors(size);
-    if (!number_of_sectors_to_allocate)
-        number_of_sectors_to_allocate++;
-
-    uint8_t *entry_deallocate = (uint8_t *)(File->first_sector + XIN_FS_ENTRIES_TABLE_BEGIN);
-    for (int i = 0; i < number_of_sectors_to_deallocate; i++)
-        entry_deallocate[i] = XIN_UNALLOCATED;
-
-    /* write Entry to xin Entry pointers table */
-    uint8_t *entry_ptrs = __xin_find_free_pointer_with_given_size(number_of_sectors_to_allocate);
-
-    for (int i = 0; i < number_of_sectors_to_allocate - 1; i++)
-        entry_ptrs[i] = XIN_ALLOCATED;
-
-    entry_ptrs[number_of_sectors_to_allocate - 1] = XIN_EOF;
-
-    /* write Entry to xin Entry data table */
-
-    __xin_entry_modification_fields_update(File);
-    File->size = size;
-
-    // get all hard links
-    XinEntriesPack *HardLinks = __xin_hard_links_get(File);
-
-    for (int i = 0; i < HardLinks->length; i++)
-    {
-        __xin_entry_modification_fields_update(HardLinks->Entries[i]);
-        HardLinks->Entries[i]->first_sector = entry_ptrs - XIN_FS_PTRS_TABLE_BEGIN;
-        HardLinks->Entries[i]->size = size;
-    }
-
-    // File->first_sector = write_entry - XIN_ENTRY_POINTERS;
-    File->first_sector = entry_ptrs - XIN_FS_PTRS_TABLE_BEGIN;
-
-    __disk_sectors_write(ATA_FIRST_BUS, ATA_MASTER, File->first_sector, number_of_sectors_to_allocate, (uint16_t *)buf);
-    __xin_tables_update();
-
-    free(buf);
-
-    return XIN_OK;
-}
-
-void __xin_fclose_with_given_size(XinEntry **File, uint32_t new_size)
+bool __xin_fclose_with_given_size(XinEntry **File, uint32_t size)
 {
 
-    if (*File == NULL)
-        return;
+    if (__xin_entry_validation_check(*File) == false)
+        false;
 
     if (!bstrncmp((*File)->FileInfo->rights, "r", 2)) // READ-ONLY OPTION
-        __xin_file_reallocate_with_given_size((*File), new_size);
+    {
+        uint8_t *buf = (uint8_t *)calloc(int_to_sectors(size) * SECTOR_SIZE);
+        memcpy(buf, VAL(File)->FileInfo->buffer, size);
+        memset(&buf[size], 0, (int_to_sectors(size) * SECTOR_SIZE) - size);
+
+        uint32_t number_of_sectors_to_deallocate = int_to_sectors(VAL(File)->size);
+        if (!number_of_sectors_to_deallocate)
+            number_of_sectors_to_deallocate++;
+
+        uint32_t number_of_sectors_to_allocate = int_to_sectors(size);
+        if (!number_of_sectors_to_allocate)
+            number_of_sectors_to_allocate++;
+
+        uint8_t *entry_deallocate = (uint8_t *)(VAL(File)->first_sector + XIN_FS_ENTRIES_TABLE_BEGIN);
+        for (int i = 0; i < number_of_sectors_to_deallocate; i++)
+            entry_deallocate[i] = XIN_UNALLOCATED;
+
+        /* write Entry to xin Entry pointers table */
+        uint8_t *entry_ptrs = __xin_find_free_pointer_with_given_size(number_of_sectors_to_allocate);
+
+        for (int i = 0; i < number_of_sectors_to_allocate - 1; i++)
+            entry_ptrs[i] = XIN_ALLOCATED;
+
+        entry_ptrs[number_of_sectors_to_allocate - 1] = XIN_EOF;
+
+        /* write Entry to xin Entry data table */
+
+        __xin_entry_modification_fields_update(VAL(File));
+        VAL(File)->size = size;
+
+        // get all hard links
+        XinEntriesPack *HardLinks = __xin_hard_links_get(VAL(File));
+
+        for (int i = 0; i < HardLinks->length; i++)
+        {
+            __xin_entry_modification_fields_update(HardLinks->Entries[i]);
+            HardLinks->Entries[i]->first_sector = entry_ptrs - XIN_FS_PTRS_TABLE_BEGIN;
+            HardLinks->Entries[i]->size = size;
+        }
+
+        VAL(File)->first_sector = entry_ptrs - XIN_FS_PTRS_TABLE_BEGIN;
+
+        __disk_sectors_write(ATA_FIRST_BUS, ATA_MASTER, VAL(File)->first_sector, number_of_sectors_to_allocate, (uint16_t *)buf);
+        __xin_tables_update();
+
+        free(buf);
+    }
 
     __xin_free_temporary_data(*File);
 
@@ -1014,8 +1016,8 @@ void __xin_fclose_with_given_size(XinEntry **File, uint32_t new_size)
             XinFilesOpened[i] = NULL;
     }
 
-    (*File)->FileInfo = NULL;
-    (*File) = NULL;
+    *File = NULL;
+    return true;
 }
 
 void __xin_fclose(XinEntry **File)
@@ -1023,18 +1025,17 @@ void __xin_fclose(XinEntry **File)
     if (__xin_entry_validation_check(*File) == false)
         return;
 
-    uint32_t new_size;
+    uint32_t newsize;
 
     if ((*File)->FileInfo->tmp_size > (*File)->size)
-        new_size = (*File)->FileInfo->tmp_size;
+        newsize = (*File)->FileInfo->tmp_size;
     else
-        new_size = (*File)->size;
+        newsize = (*File)->size;
 
     if (!bstrncmp((*File)->FileInfo->rights, "r", 2)) // READ-ONLY OPTION
-        __xin_file_reallocate_with_given_size((*File), new_size);
+        __xin_fclose_with_given_size(File, newsize);
 
-    free((*File)->FileInfo->buffer);
-    free((*File)->FileInfo);
+    __xin_free_temporary_data(*File);
 
     for (int i = 0; i < XIN_OPENED_FILES_COUNTER; i++)
     {
@@ -1042,7 +1043,6 @@ void __xin_fclose(XinEntry **File)
             XinFilesOpened[i] = NULL;
     }
 
-    (*File)->FileInfo = NULL;
     (*File) = NULL;
 }
 

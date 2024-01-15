@@ -121,8 +121,9 @@ typedef struct XinChildrenEntries XinChildrenEntries;
 typedef struct XinEntriesPack XinEntriesPack;
 
 extern XinFileDescriptor *FileDescriptorTable;
-
 typedef uint8_t xin_ptr_t;
+
+#define VAL(x) (*x)
 
 #ifdef __cplusplus
 extern "C"
@@ -160,6 +161,7 @@ extern "C"
         char *__xin_entry_name_extern(char *path);
         int __xin_entry_descriptor_get(const XinEntry *Entry);
         void __xin_entry_modification_fields_update(XinEntry *Entry);
+        bool __xin_is_entry_rwable_check(const XinEntry *Entry); // read and write
 
         /* ------------------------------------------------ */
 
@@ -211,8 +213,7 @@ extern "C"
         const uint32_t lteel(int fd);
 
         void __xin_free_temporary_data(XinEntry *File);
-        XIN_FS_RETURN_STATUSES __xin_file_reallocate_with_given_size(XinEntry *File, uint32_t size);
-        void __xin_fclose_with_given_size(XinEntry **file, uint32_t new_size);
+        bool __xin_fclose_with_given_size(XinEntry **file, uint32_t new_size);
         void __xin_fclose(XinEntry **file);
         void __xin_close(int fd);
         void __xin_all_files_close(void);
