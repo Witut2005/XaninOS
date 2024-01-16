@@ -87,7 +87,8 @@ typedef enum
     XIN_NOT_A_FOLDER,
     XIN_NOT_A_FILE,
     XIN_NOT_A_HARD_LINK,
-    XIN_ENTRY_BAD_TYPE
+    XIN_ENTRY_BAD_TYPE,
+    XIN_ENTRY_VALIDATION_FAILED
 
 } XIN_FS_RETURN_STATUSES;
 
@@ -179,20 +180,21 @@ extern "C"
 
         /* ------------------------------------------------ */
 
-        bool __xin_entry_data_remove(const XinEntry *Entry);
+        bool __xin_entry_sectors_unlock(XinEntry *Entry);
+        bool __xin_entry_data_remove(XinEntry *Entry);
 
         XIN_FS_RETURN_STATUSES __xin_entry_create(XinEntryCreateArgs *Args, XIN_FS_ENTRY_TYPES type);
-        XIN_FS_RETURN_STATUSES __xin_file_create(char *entry_name);
-        XIN_FS_RETURN_STATUSES __xin_folder_create(char *entry_name);
-        XIN_FS_RETURN_STATUSES __xin_link_create(char *file_name, char *link_name);
+        XIN_FS_RETURN_STATUSES __xin_file_create(char *filename);
+        XIN_FS_RETURN_STATUSES __xin_folder_create(char *foldername);
+        XIN_FS_RETURN_STATUSES __xin_link_create(char *filename, char *link_name);
 
-        XIN_FS_RETURN_STATUSES __xin_folder_change(char *new_directory);
+        XIN_FS_RETURN_STATUSES __xin_folder_change(char *foldername);
 
         XIN_FS_RETURN_STATUSES __xin_file_remove(char *filename);
-        XIN_FS_RETURN_STATUSES __xin_folder_remove(char *folder_name);
+        XIN_FS_RETURN_STATUSES __xin_folder_remove(char *foldername);
         XIN_FS_RETURN_STATUSES __xin_link_remove(const char *linkname);
 
-        void __xin_entry_resize(XinEntry *entry, uint32_t new_size); // XIN_FS_RETURN_STATUSES
+        XIN_FS_RETURN_STATUSES __xin_entry_resize(XinEntry *entry, uint32_t size); // XIN_FS_RETURN_STATUSES
         XIN_FS_RETURN_STATUSES __xin_entry_move(char *entry_name, char *new_name);
         XIN_FS_RETURN_STATUSES __xin_copy(char *file_name, char *new_file_name);
 
