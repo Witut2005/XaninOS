@@ -13,6 +13,13 @@ int xin_check(char *path)
     else
         xprintf("no parent folder :((\n");
 
+    ParentEntry = __xin_entry_pf_extern(path);
+
+    if (ParentEntry != NULL)
+        xprintf("parent folder: %s\n", ParentEntry->path);
+    else
+        xprintf("no parent folder :((\n");
+
     XANIN_DEBUG_RETURN(XANIN_OK);
     // xprintf("checking %s\n", path);
 

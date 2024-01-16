@@ -37,11 +37,8 @@ int xin_list_files_app(char **argv)
     for (XinEntry *i = (XinEntry *)__xin_fs_entries_get(); (uint32_t)i < (uint32_t)End; i++)
     {
 
-        if ((substr_find(i->path, "/.") && show_hidden_files)) // skip if hidden files should not be displayed
-        {
-            i++;
+        if ((substr_find(i->path, "/.") && show_hidden_files == false)) // skip if hidden files should not be displayed
             continue;
-        }
 
         if (list_files_of_current_folder)
         {
