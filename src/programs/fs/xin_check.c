@@ -6,19 +6,24 @@
 int xin_check(char *path)
 {
 
-    XinEntry *ParentEntry = __xin_entry_pf_get(path);
+    char buf[XIN_MAX_PATH_LENGTH + 1] = {'\0'};
 
-    if (ParentEntry != NULL)
-        xprintf("parent folder: %s\n", ParentEntry->path);
-    else
-        xprintf("no parent folder :((\n");
+    xprintf("xin path pf extern: %s\n", __xin_path_pf_extern(path, buf));
+    xprintf("xin path pf extern: %s\n", __xin_absolute_path_get(path, buf, path[strlen(path) - 1] == '/' ? XIN_DIRECTORY : XIN_FILE));
 
-    ParentEntry = __xin_entry_pf_extern(path);
+    // XinEntry *ParentEntry = __xin_entry_pf_get(path);
 
-    if (ParentEntry != NULL)
-        xprintf("parent folder: %s\n", ParentEntry->path);
-    else
-        xprintf("no parent folder :((\n");
+    // if (ParentEntry != NULL)
+    //     xprintf("parent folder: %s\n", ParentEntry->path);
+    // else
+    //     xprintf("no parent folder :((\n");
+
+    // ParentEntry = __xin_entry_pf_extern(path);
+
+    // if (ParentEntry != NULL)
+    //     xprintf("parent folder: %s\n", ParentEntry->path);
+    // else
+    //     xprintf("no parent folder :((\n");
 
     XANIN_DEBUG_RETURN(XANIN_OK);
     // xprintf("checking %s\n", path);

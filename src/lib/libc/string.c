@@ -13,6 +13,16 @@ extern void xprintf(char *str, ...);
 
 static uint32_t string_errno;
 
+int char_find(const char *str, char c)
+{
+    for (int i = 0; str[i] != '\0'; i++)
+    {
+        if (str[i] == c)
+            return i;
+    }
+    return -1;
+}
+
 uint32_t check_string_errors(uint32_t mask)
 {
     return string_errno & mask;

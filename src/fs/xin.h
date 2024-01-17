@@ -170,8 +170,9 @@ extern "C"
         XinEntry *__xin_find_free_entry(void);
         uint8_t *__xin_find_free_pointer(void);
         uint8_t *__xin_find_free_pointer_with_given_size(uint32_t size);
-        XinEntry *__xin_entry_pf_extern(char *name); // pf = parent folder
-        XinEntry *__xin_entry_pf_get(char *path);    // pf = parent folder
+        char *__xin_path_pf_extern(char *absname, char *buf); // pf = parent folder
+        XinEntry *__xin_entry_pf_extern(char *name);          // pf = parent folder
+        XinEntry *__xin_entry_pf_get(char *path);             // pf = parent folder
 
         XinChildrenEntries *xin_children_entries_get(char *folder, bool show_hidden);
         XinChildrenEntries *xin_children_entries_type_get(char *folder, uint8_t type);

@@ -37,6 +37,7 @@ extern "C"
 {
 #endif
 
+    int char_find(const char *str, char c);
     uint32_t strlen(const char *a);
     char *strcpy(char *dest, const char *src);
     char *strncpy(char *x, const char *y, size_t size);
