@@ -150,41 +150,46 @@ char *__xin_absolute_path_get(char *rpath, char *buf, XIN_FS_ENTRY_TYPES type)
     int tmp_index = 0;
     int buf_index = 0;
 
+    int parent_folder_counter = 0;
+    memcpy(tmp, buf, XIN_MAX_PATH_LENGTH);
+
     while (buf[buf_index] != '\0')
     {
+        bool special_chars_used = false;
+
+        while (memcmp(&buf[buf_index], "/./", 3))
+        {
+            buf_index += 2;
+            special_chars_used = true;
+        }
+
+        while (memcmp(&buf[buf_index], "/../", 4))
+        {
+            parent_folder_counter++;
+            // memset(&tmp[last_folder_char_index], '\0', XIN_MAX_PATH_LENGTH - last_folder_char_index);
+            // memcpy(&tmp[last_folder_char_index], &buf[buf_index + 3], char_find(&buf[buf_index + 4], '/') - last_folder_char_index);
+
+            // tmp_index = char_find(&tmp[last_folder_char_index + 1], '/') + 1;
+            // special_chars_used = true;
+            buf_index += 3;
+        }
+
+        for (int i = 0; i < parent_folder_counter * 2; i++)
+            __xin_path_pf_extern(buf, buf);
+
+        parent_folder_counter = 0;
+
+        if (special_chars_used)
+            continue;
 
         if (buf[buf_index] == '/')
             last_folder_char_index = buf_index;
 
-        if (memcmp(&buf[buf_index], "/./", 3))
-        {
-            xprintf("cyk\n");
-            buf_index += 2;
-        }
-
-        else if (memcmp(&buf[buf_index], "/../", 4))
-        {
-            xprintf("cyk\n");
-            memset(&tmp[last_folder_char_index], '\0', XIN_MAX_PATH_LENGTH - last_folder_char_index);
-            memcpy(&tmp[last_folder_char_index], &buf[buf_index + 3], char_find(&buf[buf_index + 4], '/'));
-
-            tmp_index = char_find(&tmp[last_folder_char_index + 1], '/') + 1;
-            buf_index += 3;
-            // XinEntry *Entry = __xin_entry_pf_extern(tmp);
-
-            // if (Entry != NULL)
-            //     memcpy(buf, tmp, strlen(tmp));
-
-            // i += 3;
-        }
-        else
-        {
-            tmp[tmp_index] = buf[buf_index];
-            tmp_index++;
-            buf_index++;
-        }
+        // tmp[tmp_index] = buf[buf_index];
+        // tmp_index++;
+        buf_index++;
     }
-    memcpy(buf, tmp, XIN_MAX_PATH_LENGTH);
+    // memcpy(buf, tmp, XIN_MAX_PATH_LENGTH);
 
     uint32_t buf_len = strlen(buf);
 
@@ -344,20 +349,27 @@ uint8_t *__xin_find_free_pointer_with_given_size(uint32_t size)
 
 char *__xin_path_pf_extern(char *abspath, char *buf) // pf = parent folder
 {
-    if (bstrcmp(abspath, XIN_SYSTEM_FOLDER_STR))
+
+    char abspathbuf[XIN_MAX_PATH_LENGTH + 1] = {0};
+
+    memcpy(abspathbuf, abspath, XIN_MAX_PATH_LENGTH);
+
+    if (bstrcmp(abspathbuf, XIN_SYSTEM_FOLDER_STR))
         return "/";
 
-    if (__xin_is_relative_path_used(abspath) == true)
+    if (__xin_is_relative_path_used(abspathbuf) == true)
         return buf;
 
-    bool is_directory = abspath[strlen(abspath) - 1] == '/';
+    bool is_directory = abspathbuf[strlen(abspathbuf) - 1] == '/';
 
     int i;
-    for (i = strlen(abspath) - 1 - is_directory; abspath[i] != '/'; i--)
+    for (i = strlen(abspathbuf) - 1 - is_directory; abspathbuf[i] != '/'; i--)
         ;
 
     for (int j = 0; j <= i; j++)
-        buf[j] = abspath[j];
+        buf[j] = abspathbuf[j];
+
+    buf[i + 1] = '\0';
 
     return buf;
 }

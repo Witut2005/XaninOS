@@ -633,6 +633,20 @@ char *substr_find(char *str, const char *substr)
     return NULL;
 }
 
+char *substr_last_find(char *str, const char *substr)
+{
+    int last_index = -1;
+
+    for (int i = 0; str[i] != '\0'; i++)
+    {
+        if (bstrncmp(&str[i], substr, strlen(substr)))
+            last_index = i;
+        str++;
+    }
+
+    return last_index != -1 ? &str[last_index] : NULL;
+}
+
 char *strconcat(char *str1, char *buf) // concatenate str1 and buf (first str1)
 {
     char *tmp = (char *)calloc(strlen(buf) + 1);
