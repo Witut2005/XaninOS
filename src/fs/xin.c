@@ -137,9 +137,14 @@ bool __xin_is_relative_path_used(char *path)
 // in ret we have parsed abs path
 char *__xin_absolute_path_get(char *rpath, char *buf, XIN_FS_ENTRY_TYPES type)
 {
+    EFlags Flags;
+    INTERRUPTS_OFF(&Flags)
 
     if (strlen(rpath) == 0)
+    {
+        INTERRUPTS_ON(&Flags)
         return __xin_current_directory_get(buf);
+    }
 
     strcpy(buf, rpath);
 
@@ -183,8 +188,15 @@ char *__xin_absolute_path_get(char *rpath, char *buf, XIN_FS_ENTRY_TYPES type)
     memcpy(buf, ret, XIN_MAX_PATH_LENGTH);
     uint32_t buf_len = strlen(buf);
 
-    if (type == XIN_DIRECTORY && buf[buf_len - 1] != '/')
+    // xprintf("buf: %s\n", buf);
+
+    if (type == XIN_DIRECTORY && rpath[strlen(rpath) - 1] != '/')
+    {
         buf[buf_len] = '/'; // append at the end, so buf must be a little bit bigger
+        buf[buf_len + 1] = '\0';
+    }
+
+    INTERRUPTS_ON(&Flags)
 
     return buf;
 }
@@ -346,7 +358,8 @@ char *__xin_path_pf_extern(char *abspath, char *buf) // pf = parent folder
 
     if (bstrcmp(abspathbuf, XIN_SYSTEM_FOLDER_STR))
     {
-        return "/";
+        memcpy(buf, "/", 2);
+        return buf;
     }
 
     if (__xin_is_relative_path_used(abspathbuf) == true)
@@ -1176,8 +1189,8 @@ void __xin_close(int fd)
 
 void __xin_all_files_close(void)
 {
-    EFlags Flags = eflags_get();
-    interrupt_disable();
+    EFlags Flags;
+    INTERRUPTS_OFF(&Flags);
 
     for (int i = 0; i < XIN_OPENED_FILES_COUNTER; i++)
     {
@@ -1185,8 +1198,7 @@ void __xin_all_files_close(void)
             fclose(&XinFilesOpened[i]);
     }
 
-    if (Flags.intf)
-        interrupt_enable();
+    INTERRUPTS_ON(&Flags);
 }
 
 /* -------------------------------------------------------------------------------------- */

@@ -9,7 +9,7 @@
 
 #define IVT_MEMORY_LOCATION NULL
 
-EFlags eflags_get(void)
+void eflags_get(EFlags *ptr)
 {
     uint32_t eflags;
     asm volatile(
@@ -17,7 +17,7 @@ EFlags eflags_get(void)
         "pop %0;"      // Pop the value from the stack into the variable 'eflags'
         : "=r"(eflags) // Output constraint specifying that 'eflags' is an output operand
     );
-    return *(EFlags *)&eflags;
+    *ptr = *(EFlags *)&eflags;
 }
 
 void outbIO(uint16_t port, uint8_t al)

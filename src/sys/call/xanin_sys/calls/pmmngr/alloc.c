@@ -13,7 +13,8 @@ void *__sys_calloc(uint32_t size)
 
 void *__sys_realloc(void *ptr, uint32_t size)
 {
-    EFlags Flags = eflags_get();
+    EFlags Flags;
+    INTERRUPTS_OFF(&Flags);
 
     interrupt_disable();
 
@@ -24,5 +25,6 @@ void *__sys_realloc(void *ptr, uint32_t size)
     if (Flags.intf)
         interrupt_enable();
 
+    INTERRUPTS_ON(&Flags);
     return tmp;
 }

@@ -40,17 +40,25 @@ struct EFlags
 
 typedef struct EFlags EFlags;
 
+#define INTERRUPTS_OFF(flags_ptr) \
+    eflags_get(flags_ptr);        \
+    interrupt_disable();
+
+#define INTERRUPTS_ON(flags_ptr) \
+    if ((flags_ptr)->intf)       \
+        interrupt_enable();
+
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
-    EFlags eflags_get(void);
+    void eflags_get(EFlags *ptr);
+    void interrupt_disable(void);
+    void interrupt_enable(void);
     void outbIO(uint16_t port, uint8_t al);
     void outwIO(uint16_t port, uint16_t ax);
     void outdIO(uint16_t port, uint32_t eax);
-    void interrupt_disable(void);
-    void interrupt_enable(void);
     uint8_t inbIO(uint16_t port);
     uint16_t inwIO(uint16_t port);
     uint32_t indIO(uint16_t port);
