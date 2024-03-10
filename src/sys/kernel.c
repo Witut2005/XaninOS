@@ -122,7 +122,9 @@ void kernel_loop(void)
         char *username = system_variable_get("USERNAME");
         char *hostname = system_variable_get("HOSTNAME");
 
-        xprintf("%z%s@%s%z%s", OUTPUT_COLOR_SET(black, green), username != NULL ? username : "xanin", hostname != NULL ? hostname : "plumieria", OUTPUT_COLOR_SET(black, blue), &xin_current_directory_buf[1]);
+        xprintf("%z%s@%s%z:%z%s", OUTPUT_COLOR_SET(black, green), username != NULL ? username : "xanin", hostname != NULL ? hostname : "plumieria",
+                OUTPUT_COLOR_SET(black, white),
+                OUTPUT_COLOR_SET(black, lblue), &xin_current_directory_buf[1]);
 
         free(username);
         free(hostname);
