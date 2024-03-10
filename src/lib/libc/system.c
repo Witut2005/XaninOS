@@ -1,29 +1,26 @@
-
-
 #include <lib/libc/stdlibx.h>
 #include <lib/libc/string.h>
 #include <lib/libc/stdiox.h>
 #include <lib/libc/file.h>
 
-void system_variable_get(char **buf, char *value)
+char *system_variable_get(char *variable)
 {
-    XinEntry *file = fopen("/config/variables.conf", "r");
+    XinEntry *File = fopen("/etc/var/variables.conf", "r");
+    char *line = getline(File, 0);
 
-    char *line = calloc(512);
-    // for(int i = 1; getline(file,i) != NULL; i++)
+    for (int i = 0; line != NULL;)
     {
-        char *line = getline(file, 1);
-        xprintf("\n%s", line);
-
-        if (bstrncmp(line, value, strlen(value) - 1))
+        if (bstrncmp(line, variable, strlen(variable) - 1))
         {
-            for (int j = strlen(value); j < strlen(line); j++)
-                (*buf)[j - strlen(value)] = line[j];
+            char *buf = calloc(strlen(line) - strlen(variable));
+            strcpy(buf, &line[strlen(variable) + 1]);
             free(line);
-            return;
+            return buf;
         }
+        line = getline(File, ++i);
     }
 
+    fclose(&File);
     free(line);
-    strcpy(*buf, "none");
+    return NULL;
 }

@@ -118,7 +118,15 @@ void kernel_loop(void)
 
         char xin_current_directory_buf[XIN_MAX_PATH_LENGTH];
         __xin_current_directory_get(xin_current_directory_buf);
-        xprintf("%z%s", OUTPUT_COLOR_SET(black, blue), &xin_current_directory_buf[1]);
+
+        char *username = system_variable_get("USERNAME");
+        char *hostname = system_variable_get("HOSTNAME");
+
+        xprintf("%z%s@%s%z%s", OUTPUT_COLOR_SET(black, green), username != NULL ? username : "xanin", hostname != NULL ? hostname : "plumieria", OUTPUT_COLOR_SET(black, blue), &xin_current_directory_buf[1]);
+
+        free(username);
+        free(hostname);
+        // xprintf("%zxanin@plumeria%z%s", OUTPUT_COLOR_SET(black, green), OUTPUT_COLOR_SET(black, blue), &xin_current_directory_buf[1]);
 
         putchar('>');
 

@@ -1250,49 +1250,25 @@ char *getline_from_ptr(char *data, int line_id)
 char *getline(XinEntry *File, int line_id)
 {
 
+    fread(File, NULL, File->size); // loads all data to buffer
+
     char *file_data = (char *)(File->FileInfo->buffer);
-    char *line = (char *)calloc(200);
-
-    int column = 0;
+    char *line = (char *)calloc(XANIN_PMMNGR_BLOCK_SIZE);
     int current_line = 0;
-    int file_offset = 0;
 
-    while (current_line < line_id)
+    for (; *file_data != '\0'; file_data++)
     {
-        memset((uint8_t *)line, 0, 200);
-
-        while (file_data[file_offset] != '\n')
+        if (current_line == line_id)
         {
-            if (file_data[file_offset] == '\0')
-            {
-                if (current_line + 1 == line_id)
-                {
-                    line[column] = file_data[file_offset];
-                    column++;
-                    file_offset++;
-                    break;
-                }
-
-                else
-                {
-                    free(line);
-                    return NULL;
-                }
-                break;
-            }
-
-            line[column] = file_data[file_offset];
-            column++;
-            file_offset++;
+            for (int i = 0; file_data[i] != '\n' && file_data[i] != '\0'; i++)
+                line[i] = file_data[i];
+            return line;
         }
-
-        line[column] = '\0';
-        file_offset++;
-
-        column = 0;
-        current_line++;
+        if (*file_data == '\n')
+            current_line++;
     }
 
     free(line);
-    return line;
+    return NULL;
+    // return line;
 }

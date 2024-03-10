@@ -226,7 +226,6 @@ static inline void map_test(void)
     l.insert("dwa", 2);
     l.insert("trzy", 3);
 
-
     std::string a = "abc";
     std::string b = "def";
 
@@ -578,7 +577,6 @@ void cpp_prog()
 
 extern "C"
 {
-
     int cpp_test(void)
     {
         cpp_prog();
