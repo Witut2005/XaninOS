@@ -165,7 +165,7 @@ builder_options = {
     },
 
     'c':{
-        'default': '-O0 -Werror -Wall -Wno-deprecated-declarations -Wno-unused-but-set-variable -Wno-unused-variable -Wno-discarded-qualifiers -Wno-parentheses -Wno-comment -Wno-address-of-packed-member -Wno-maybe-uninitialized -Wno-pointer-sign -Wno-div-by-zero -Wno-duplicate-decl-specifier -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Werror=return-type -I ./ -c',
+        'default': '-O0 -Werror -Wall -Wno-deprecated-declarations -Wno-unused-but-set-variable -Wno-discarded-qualifiers -Wno-parentheses -Wno-comment -Wno-address-of-packed-member -Wno-maybe-uninitialized -Wno-pointer-sign -Wno-div-by-zero -Wno-duplicate-decl-specifier -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -Werror=return-type -I ./ -c',
         'kernel': '-O0 -Wall -Werror -Wno-discarded-qualifiers -Wno-parentheses -Wno-comment -Wno-address-of-packed-member -Wno-maybe-uninitialized -Wno-pointer-sign -Wno-div-by-zero -Wno-duplicate-decl-specifier -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding  -Wno-unused-function -Wno-div-by-zero -I ./'
     },
 
@@ -290,7 +290,6 @@ objects_to_compile = {
         CompileObject('./sys/input/input.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./sys/log/syslog.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./sys/lock/lock.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
-        CompileObject('./sys/storage/storage.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
     ],
 
     'xanin_sys': [
@@ -438,7 +437,6 @@ objects_to_compile = {
         CompileObject('./programs/fs/xin_note.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./programs/fs/list_files.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./programs/misc/logo.c', builders['c'], builder_options['c']['default'], OBJECT),
-        CompileObject('./programs/misc/ssaver.c', builders['c'], builder_options['c']['default'], OBJECT),
     ],
 
     'built-in 16bit programs': [

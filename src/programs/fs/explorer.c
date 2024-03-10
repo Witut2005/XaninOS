@@ -42,8 +42,6 @@ void handle_selected_option(char *option, ExplorerInfo *AppInfo)
         canvas_xprintf("New file name: ");
         canvas_xscanf("%s", new_name);
 
-        char newpath[XIN_MAX_PATH_LENGTH + 1] = {0};
-
         // __xin_entry_move(AppInfo->selected_file, __xin_path_get(new_name));
         __xin_entry_move(AppInfo->selected_file, new_name);
 

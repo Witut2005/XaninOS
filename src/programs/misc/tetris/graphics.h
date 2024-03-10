@@ -7,9 +7,6 @@
 
 #define BLANK 0xa
 
-static uint8_t newInput;
-static uint8_t oldInput;
-
 static uint8_t x;
 static uint8_t y;
 

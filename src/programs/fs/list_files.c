@@ -19,11 +19,6 @@ int xin_list_files_app(char **argv)
             name = argv[i];
     }
 
-    int printed_text = 0;
-
-    // if (__xin_find_entry(path) == NULL && strlen(path) > 0)
-    //     return XANIN_ERROR;
-
     bool show_hidden_files = bstrcmp(options, "-la");
 
     char path[XIN_MAX_PATH_LENGTH + 1] = {0};

@@ -1,5 +1,5 @@
 
-//CANVAS_APP
+// CANVAS_APP
 
 #include <lib/libc/file.h>
 #include <sys/input/input.h>
@@ -8,7 +8,7 @@
 #include <lib/libc/string.h>
 #include <lib/libc/stdlibx.h>
 
-extern char* argv[5];
+extern char *argv[5];
 
 uint16_t string_x = 5;
 uint16_t string_y = 0;
@@ -17,14 +17,14 @@ bool if_right = true;
 
 static inline void align_xanin_os_string(void)
 {
-    for(int i = 0; i < string_x; i++)
+    for (int i = 0; i < string_x; i++)
         canvas_xprintf(" ");
 }
 
 static inline uint8_t get_new_front_color(void)
 {
     uint8_t tmp = (rand() % 15) + 1;
-    while(tmp == logo_front_color)
+    while (tmp == logo_front_color)
     {
         tmp = (rand() % 15) + 1;
     }
@@ -34,13 +34,13 @@ static inline uint8_t get_new_front_color(void)
 static inline void print_xanin_os_string(void)
 {
 
-    if(bstrcmp(argv[1], "-f"))
+    if (bstrcmp(argv[1], "-f"))
     {
-        char* buf = (char*)calloc(VGA_SCREEN_RESOLUTION * SIZE_OF(XtCell));
+        char *buf = (char *)calloc(VGA_SCREEN_RESOLUTION * SIZE_OF(XtCell));
 
-        XinEntry* File = fopen(argv[2], "r");
+        XinEntry *File = fopen(argv[2], "r");
 
-        if(File == NULL)
+        if (File == NULL)
         {
             exit();
         }
@@ -52,13 +52,13 @@ static inline void print_xanin_os_string(void)
         return;
     }
 
-    for(int i = 0; i < string_y; i++)
+    for (int i = 0; i < string_y; i++)
         canvas_xprintf("\n");
 
-    char* first_row = " __  __          _      ___  ___\n";
-    char* second_row = " \\ \\/ /__ _ _ _ (_)_ _ / _ \\/ __|\n";
-    char* third_row = "  >  </ _` | \' \\| | \' \\ (_) \\__ \\\n";
-    char* fourth_row= " /_/\\_\\__,_|_||_|_|_||_\\___/|___/\n";
+    char *first_row = " __  __          _      ___  ___\n";
+    char *second_row = " \\ \\/ /__ _ _ _ (_)_ _ / _ \\/ __|\n";
+    char *third_row = "  >  </ _` | \' \\| | \' \\ (_) \\__ \\\n";
+    char *fourth_row = " /_/\\_\\__,_|_||_|_|_||_\\___/|___/\n";
 
     align_xanin_os_string();
     canvas_xprintf("%z%s", OUTPUT_COLOR_SET(logo_back_color, logo_front_color), first_row);
@@ -68,7 +68,6 @@ static inline void print_xanin_os_string(void)
     canvas_xprintf("%z%s", OUTPUT_COLOR_SET(logo_back_color, logo_front_color), third_row);
     align_xanin_os_string();
     canvas_xprintf("%z%s", OUTPUT_COLOR_SET(logo_back_color, logo_front_color), fourth_row);
-
 }
 
 int start_screen(void)
@@ -81,12 +80,12 @@ int start_screen(void)
 
     print_xanin_os_string();
 
-    while(!__input_is_normal_key_pressed(KBP_ENTER))
+    while (!__input_is_normal_key_pressed(KBP_F4))
     {
 
-        if(!if_down)
+        if (!if_down)
         {
-            if(string_y) 
+            if (string_y)
             {
                 canvas_screen_clear();
                 string_y--;
@@ -98,12 +97,11 @@ int start_screen(void)
                 logo_front_color = get_new_front_color();
                 if_down = true;
             }
-
         }
 
-        if(if_down)
+        if (if_down)
         {
-            if(string_y < VGA_HEIGHT - 4) 
+            if (string_y < VGA_HEIGHT - 4)
             {
                 canvas_screen_clear();
                 string_y++;
@@ -115,13 +113,11 @@ int start_screen(void)
                 logo_front_color = get_new_front_color();
                 if_down = false;
             }
-
         }
 
-
-        if(if_right)
+        if (if_right)
         {
-            if(string_x < 47) 
+            if (string_x < 47)
             {
                 canvas_screen_clear();
                 string_x++;
@@ -133,12 +129,11 @@ int start_screen(void)
                 logo_front_color = get_new_front_color();
                 if_right = false;
             }
-
         }
 
-        if(!if_right)
+        if (!if_right)
         {
-            if(string_x) 
+            if (string_x)
             {
                 canvas_screen_clear();
                 string_x--;
@@ -150,7 +145,6 @@ int start_screen(void)
                 logo_front_color = get_new_front_color();
                 if_right = true;
             }
-
         }
         msleep(300);
     }

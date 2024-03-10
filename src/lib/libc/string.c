@@ -62,7 +62,6 @@ char *strncpy(char *x, const char *y, size_t size)
 
 char *reverse_string(char *str)
 {
-    char buf;
     char *end = str + strlen(str) - 1;
 
     for (char *begin = str; (uint32_t)begin < (uint32_t)end; begin++, end--)

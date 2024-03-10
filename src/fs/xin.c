@@ -685,8 +685,6 @@ XIN_FS_RETURN_STATUSES __xin_folder_remove(char *foldername)
     if (__xin_entry_validation_check(Folder) == false)
         return XIN_ENTRY_NOT_FOUND;
 
-    char pf_folders[XIN_MAX_PATH_LENGTH + 1] = {0};
-
     XIN_FS_ITERATE_OVER_ENTRY_TABLE(i)
     {
         if (bstrcmp(__xin_entry_pf_get(i->path)->path, Folder->path))
