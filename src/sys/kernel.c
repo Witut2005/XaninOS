@@ -128,7 +128,6 @@ void kernel_loop(void)
 
         free(username);
         free(hostname);
-        // xprintf("%zxanin@plumeria%z%s", OUTPUT_COLOR_SET(black, green), OUTPUT_COLOR_SET(black, blue), &xin_current_directory_buf[1]);
 
         putchar('>');
 

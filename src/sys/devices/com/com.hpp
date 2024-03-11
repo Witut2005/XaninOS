@@ -1,86 +1,100 @@
+
 #pragma once
 
-enum COM_FIELDS
+#include <stdint.h>
+
+namespace Device
 {
-    COM1 = 0x3F8,
-    COM2 = 0x2F8,
-    COM3 = 0x3E8,
-    COM4 = 0x2E8,
-    COM5 = 0x5F8,
-    COM6 = 0x4F8,
-    COM7 = 0x5E8,
-    COM8 = 0x4E8,
-
-    COM_DATA_REGISTER = 0x0,
-    COM_INTERRUPT_REGISTER = 0x1,
-    COM_DLAB0 = 0x0,
-    COM_DLAB1 = 0x1,
-    COM_FIFO = 0x2,
-    COM_INTERRUPT_IDENTIFICATION = 0x2,
-    COM_LINE_CONTROL_REGISTER = 0x3,
-    COM_MODEM_CONTROL_REGISTER = 0x4,
-    COM_SCRATCH_REGISTER = 0x7,
-
-    DLAB_ENABLE = 1 << 7
-};
-
-class SerialPort
-{
-    private:
-        uint8_t com_id;
-        bool dlab_state;
-        bool chip_state;
+    class SerialPort
+    {
 
     public:
-        void dlab_enable(uint16_t divisor)
+        static bool probe(uint16_t);
+        static SerialPort &create(uint16_t);
+        uint32_t baud_rate_get(void) const;
+
+        static constexpr uint8_t s_max_amount_of_ports = 8;
+        static constexpr uint16_t s_addresses[] = {
+            0x3F8,
+            0x2F8,
+            0x3E8,
+            0x2E8,
+            0x5F8,
+            0x4F8,
+            0x5E8,
+            0x4E8,
+        };
+
+        enum class Register : int8_t
         {
-            dlab_state = true;
-            outbIO(COM1 + COM_LINE_CONTROL_REGISTER, DLAB_ENABLE);
+            // DLAB = 0
+            Data = 0,
+            InterruptEnable = 1,
 
-            outbIO(COM1 + COM_DLAB0, divisor & 0xFF);
-            outbIO(COM1 + COM_DLAB1, (divisor >> 8) & 0xFF);
-        }
-        
-        void dlab_disable()
+            // DLAB = 1
+            DivisorLower = 0,
+            DivisorUpper = 1,
+
+            InterruptIdentification = 2,
+            Fifo = 2,
+
+            LineControl,
+            ModemControl,
+            LineStatus,
+            ModemStatus,
+            ScratchRegister
+        };
+
+        enum DataBits : uint8_t
         {
-            dlab_state = false;
-            outbIO(COM1 + COM_LINE_CONTROL_REGISTER, 0x0);
-        }
+            Bit5,
+            Bit6,
+            Bit7,
+            Bit8
+        };
 
-        void interrupt_enable(uint8_t interrupt_number)
+        enum StopBist : uint8_t
         {
-            outbIO(COM1 + COM_INTERRUPT_REGISTER, interrupt_number);
-        }
+            bit1,
+            bits2 = 1 << 1,
+        };
 
-        bool chip_state_get()
+        enum Parity : uint8_t
         {
-            return chip_state;
-        }
+            None = 0,
+            Odd = 1 << 3,
+            Even = 3 << 3,
+            Mark = 5 << 3,
+            Space = 7 << 3
+        };
 
-        void port_init(uint16_t divisor)
+        enum InterruptMode : uint8_t
         {
-            this->interrupt_enable(0x0);
-            this->dlab_enable(0x00C0);
-            outbIO(COM1 + COM_LINE_CONTROL_REGISTER, 0x3); //8 bits, no parity, one stop bit
-            outbIO(COM1 + COM_FIFO, 0xC7); // https://stackoverflow.com/questions/21164092/role-of-fifo-buffer-for-com-port-in-windows
+            DataAvailable = 1,
+            TransmitterEmpty = 1 << 1,
+            BreakOrError = 1 << 2,
+            StatusChange = 1 << 3,
+        };
 
-            outbIO(COM1 + COM_MODEM_CONTROL_REGISTER, 0xB);  //irq on
-            outbIO(COM1 + COM_MODEM_CONTROL_REGISTER, 0x1F); //chip test
+    private:
+        SerialPort(uint16_t);
+        void write(Register, uint8_t);
+        uint8_t read(Register);
 
+        void dlab_toggle(void);
+        void dlab_set(bool);
+        void dlab_get(void);
 
-            outbIO(COM1 + COM_DATA_REGISTER, 0xAE);
+        uint32_t m_divisor;
+    };
 
-            if(inbIO(COM1 + COM_DATA_REGISTER) == 0xAE) 
-            {
-                chip_state = false;
-            }
+    class SerialPortManager
+    {
+    public:
+        static void initialize(void);
 
-            else
-            {
-                outbIO(COM1 + COM_MODEM_CONTROL_REGISTER, 0xF);
-                chip_state = true;
-            }
-        }
+    private:
+        static SerialPort *m_ports[SerialPort::s_max_amount_of_ports];
+    };
 
-}ComPort;
-
+}
