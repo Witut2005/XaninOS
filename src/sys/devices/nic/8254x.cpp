@@ -12,12 +12,22 @@
 #include <sys/interrupts/idt/idt.h>
 
 #include <sys/pmmngr/alloc.h>
+#include <sys/devices/vendor.h>
 
 #define INTEL_8254X_DESCRIPTORS 256
 #define reset() write(0x0, 0x80000000)
 
 Intel8254xDriver* Intel8254x;
 
+bool Intel8254xDriver::probe(const pci_device& device)
+{
+    return device.vendor_id == INTEL_VENDOR_ID && device.device_id == INTEL_8254X_VENDOR_ID;
+}
+
+NetworkDevice* Intel8254xDriver::create(const pci_device& device)
+{
+
+}
 
 void Intel8254xDriver::write(uint32_t reg, uint32_t value)
 {
@@ -393,12 +403,11 @@ Intel8254xDriver::Intel8254xDriver() : name(NULL) {}
 
 void Intel8254xDriver::name_set(const char* name)
 {
-    if(this->name)
+    if(this->name != NULL)
         free(this->name);
     this->name = (char*)kcalloc(strlen(name));
 
     strcpy(this->name, name);
-
 }
 
 const char* Intel8254xDriver::name_get(void) const

@@ -169,10 +169,8 @@ struct i8254xTransmitDescriptor
 
 }__attribute__((packed));
 
-class Intel8254xDriver : public NetworkDevice
+class Intel8254xDriver final : public NetworkDevice
 {
-
-
     private:
     bool is_present;
     uint8_t* iobase;
@@ -190,11 +188,13 @@ class Intel8254xDriver : public NetworkDevice
     uint32_t rxd_current;
     uint8_t* last_packet;
     char* name;
-    
-    //---------------------------------
 
     public:
-    Intel8254xDriver();
+
+    static NetworkDevice* create(const pci_device&);
+    static bool probe(const pci_device&);
+
+    Intel8254xDriver(void);
     void write(uint32_t reg, uint32_t value);
     uint32_t read(uint32_t reg);
     virtual uint8_t* mac_get(void);
@@ -217,5 +217,4 @@ class Intel8254xDriver : public NetworkDevice
     virtual const char* name_get(void) const;
     virtual uint8_t* packet_receive(void);
     virtual void packet_send(uint8_t* address_low, uint16_t length);
-
 };

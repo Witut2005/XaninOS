@@ -3,7 +3,7 @@
 #include <stdint.h>
 #include <sys/devices/pci/pci.h>
 #include <stdbool.h>
-
+#include <stddef.h>
 
 #ifdef __cplusplus
 class NetworkDevice
@@ -12,6 +12,9 @@ class NetworkDevice
         bool(*interrupt_handler)(void);
 
     public:
+
+        static inline bool probe(const pci_device&) {return false;}
+        static inline NetworkDevice* create(const pci_device&) {return NULL;}
         
         inline bool handle_interrupt(void)
         {
@@ -25,7 +28,6 @@ class NetworkDevice
 
         virtual bool is_device_present(void) const = 0;
         virtual uint8_t* mac_get(void) = 0;
-        // virtual void interrupt_handler(void) = 0;
         virtual pci_device* pci_info_get(void)= 0;
 
         virtual void name_set(const char* name) = 0;

@@ -10,8 +10,6 @@
 
 struct pci_device_structure0
 {
-
-    
     uint16_t vendor_id;
     uint16_t device_id;
 
@@ -181,4 +179,3 @@ uint16_t pci_get_data16(const uint8_t bus, const uint8_t slot, const uint8_t fun
 #ifdef __cplusplus
 }
 #endif
-

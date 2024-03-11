@@ -268,6 +268,7 @@ objects_to_compile = {
     ],
 
     'network': [
+        CompileObject('./sys/net/manager/manager.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./sys/net/network_protocols/ethernet_frame/ethernet_frame.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./sys/net/network_protocols/icmp/icmp.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./sys/net/network_protocols/arp/arp.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
