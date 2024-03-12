@@ -68,12 +68,33 @@ public:
         Space = 7 << 3
     };
 
-    enum InterruptMode : uint8_t
+    enum InterruptEnable : uint8_t
     {
         DataAvailable = 1,
         TransmitterEmpty = 1 << 1,
         BreakOrError = 1 << 2,
         StatusChange = 1 << 3,
+    };
+
+    enum ModemControl : uint8_t 
+    {
+        DataTerminalReady = 1,
+        RequestToSend = 1 << 1,
+        Out1 = 1 << 2,
+        Out2 = 1 << 3,
+        Loopback = 1 << 4,
+    };
+
+    enum LineStatus : uint8_t
+    {
+        DataReady = 1,
+        OverrunError = 1 << 1,
+        ParityError = 1 << 2,
+        FramingError = 1 << 3,
+        BreakIndicator = 1 << 4,
+        TransmitterHolderRegisterEmpty = 1 << 5,
+        TransmitterEmptyStatus = 1 << 6,
+        ImpendingError = 1 << 7
     };
 
 private:
@@ -91,7 +112,7 @@ private:
 class SerialPortManager
 {
 public:
-    static void initialize(void);
+    static bool initialize(void);
 
 private:
     static SerialPort *m_ports[SerialPort::s_max_amount_of_ports];

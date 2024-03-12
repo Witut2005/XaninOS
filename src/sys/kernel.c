@@ -40,11 +40,10 @@
 #include <lib/libc/stdiox_legacy.h>
 #include <sys/call/xanin_sys/calls/input/input.h>
 #include <sys/init/kernel_init.h>
+#include <sys/devices/com/com.h>
 
 extern void v86_mode_enter(void);
 extern void mouse_enable(void);
-extern void com_port_init(uint16_t divisor);
-extern bool com_status(void);
 
 /*--------------------------------------/
 |wesolego nowego roku :))               |
@@ -336,7 +335,7 @@ void kernel_init(void)
     xprintf("NIC interrupt line: 0x%x", (apic_nic_redirect != NULL ? apic_nic_redirect->global_system_int_table + APIC_IRQ_BASE : PIC_NIC_VECTOR));
 
     xprintf("\n%z----------------------------\n", OUTPUT_COLOR_SET(black, green));
-    xprintf("Com port status: 0x%x\n", com_status());
+    xprintf("Com port status: %d\n", serial_port_initialize());
 
     __xin_init();
 
