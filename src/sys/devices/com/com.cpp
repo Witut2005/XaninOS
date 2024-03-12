@@ -5,66 +5,58 @@
 #include <sys/devices/com/com.hpp>
 #include <lib/libc/stdiox.h>
 #include <lib/libc/string.h>
-
-// void SerialPort::write(SerialPortRegisters reg, uint8_t value)
-// {
-//     return outbIO()
-// }
-
-// void SerialPort::red(SerialPortRegisters reg)
-// {
-//     return outbIO()
-// }
+#include <lib/libc/loop.h>
 
 using namespace Device;
 
-static inline uint16_t operator+(uint16_t io_base, SerialPort::Register reg)
+static inline uint16_t operator+(uint16_t iobase, SerialPort::Register reg)
 {
-    return io_base + (uint16_t)reg;
+    return iobase + (uint16_t)reg;
 }
 
-SerialPort::SerialPort(uint16_t io_base) : io_base(io_base) {}
-
-uint8_t SerialPort::read(Register reg)
-{
-    return inbIO(this->io_base + reg);
-}
-
-void SerialPort::write(Register reg, uint8_t val)
-{
-    outbIO(this->io_base + reg, val);
-}
-
-SerialPort* SerialPort::try_to_create(uint16_t io_base)
+SerialPort* SerialPort::try_to_create(uint16_t iobase, uint16_t divisor)
 {
     constexpr uint8_t test_byte = 0x30;
 
-    outbIO(io_base + Register::InterruptEnable, false);
-    outbIO(io_base + Register::LineControl, 0x80); // enable dlab
-    outbIO(io_base + Register::DivisorLower, 0x3);
-    outbIO(io_base + Register::DivisorUpper, 0);
-    outbIO(io_base + Register::LineControl, DataBits::Bit8);
-    outbIO(io_base + Register::Fifo, 0xC7); // enable fifo 
-    outbIO(io_base + Register::ModemControl, DataTerminalReady | RequestToSend | Out2);
-    outbIO(io_base + Register::ModemControl, RequestToSend | Out1 | Out2 | Loopback);
-    outbIO(io_base + Register::Data, test_byte);
+    outbIO(iobase + Register::InterruptEnable, false);
+    outbIO(iobase + Register::LineControl, DlabEnable);
+    outbIO(iobase + Register::DivisorLower, divisor & 0xFF);
+    outbIO(iobase + Register::DivisorUpper, divisor >> 8);
+    outbIO(iobase + Register::LineControl, DataBits::Bit8);
+    outbIO(iobase + Register::Fifo, 0xC7); // enable fifo 
+    outbIO(iobase + Register::ModemControl, DataTerminalReady | RequestToSend | Out2);
+    outbIO(iobase + Register::ModemControl, RequestToSend | Out1 | Out2 | Loopback);
+    outbIO(iobase + Register::Data, test_byte);
 
-    outbIO(io_base + Register::ModemControl, 0xF);
+    outbIO(iobase + Register::ModemControl, 0xF);
 
-    return inbIO(io_base) == test_byte ? new SerialPort(io_base) : nullptr;
+    return inbIO(iobase) == test_byte ? new SerialPort(iobase, divisor) : nullptr;
+}
+
+SerialPort::SerialPort(uint16_t iobase, uint16_t divisor) : m_iobase(iobase), m_divisor(divisor) {}
+
+uint8_t SerialPort::read(Register reg) const
+{
+    return inbIO(this->m_iobase + reg);
+}
+
+void SerialPort::write(Register reg, uint8_t val) const
+{
+    outbIO(this->m_iobase + reg, val);
 }
 
 bool SerialPortManager::is_initialized() 
 {
     for(int i = 0; i < SerialPort::s_max_amount_of_ports; i++)
-        if(SerialPortManager::ports[i] != nullptr) return true;
+        if(SerialPortManager::s_ports[i] != nullptr) return true;
     return false;
 }
 
-bool SerialPortManager::initialize(void)
+bool SerialPortManager::initialize(uint16_t default_divisor)
 {
-    for (int i = 0; i < SerialPort::s_max_amount_of_ports; i++)
-        SerialPortManager::ports[i] = SerialPort::try_to_create(SerialPort::s_addresses[i]);
+    ITERATE_OVER(i, SerialPort::s_max_amount_of_ports) {
+        SerialPortManager::s_ports[i] = SerialPort::try_to_create(SerialPort::s_addresses[i], default_divisor);
+    }
     return SerialPortManager::is_initialized();
 }
 
@@ -72,24 +64,23 @@ uint8_t SerialPortManager::receive(void){}
 
 bool SerialPortManager::send(uint8_t val) 
 {
-    for (int i = 0; i < SerialPort::s_max_amount_of_ports; i++)
+    ITERATE_OVER(i, SerialPort::s_max_amount_of_ports)
     {
-        if(SerialPortManager::ports[i] != nullptr)
+        if(SerialPortManager::s_ports[i] != nullptr)
         {
-            // SerialPortManager::ports[i]->write(SerialPort::Register::Data, val);
-            outbIO(0x3F8, val);
+            SerialPortManager::s_ports[i]->write(SerialPort::Register::Data, val);
             return true;
         }
     }
     return false;
 }
 
-SerialPort* SerialPortManager::ports[SerialPort::s_max_amount_of_ports];
+SerialPort* SerialPortManager::s_ports[SerialPort::s_max_amount_of_ports];
 
 extern "C"  {
-    bool serial_port_initialize(void)
+    bool serial_port_initialize(uint16_t default_divisor)
     {
-        return SerialPortManager::initialize();
+        return SerialPortManager::initialize(default_divisor);
     }
 
     bool serial_port_byte_send(uint8_t val)

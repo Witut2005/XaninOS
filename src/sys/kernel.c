@@ -335,7 +335,7 @@ void kernel_init(void)
     xprintf("NIC interrupt line: 0x%x", (apic_nic_redirect != NULL ? apic_nic_redirect->global_system_int_table + APIC_IRQ_BASE : PIC_NIC_VECTOR));
 
     xprintf("\n%z----------------------------\n", OUTPUT_COLOR_SET(black, green));
-    xprintf("Com port status: %d\n", serial_port_initialize());
+    xprintf("Com port status: %d\n", serial_port_initialize(1));
 
     __xin_init();
 

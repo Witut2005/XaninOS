@@ -3,15 +3,25 @@
 
 #include <stdint.h>
 
+
+// first define all public types,
+// then define all non-public types,
+// then declare all public constructors,
+// then declare the public destructor,
+// then declare all public member functions,
+// then declare all public member variables,
+// then declare all non-public constructors,
+// then declare the non-public destructor,
+// then declare all non-public member functions, and
+// then declare all non-public member variables.
+
+
 namespace Device
 {
 class SerialPort
 {
 
 public:
-    static SerialPort* try_to_create(uint16_t);
-    uint32_t baud_rate_get(void) const;
-
     static constexpr uint8_t s_max_amount_of_ports = 8;
     static constexpr uint16_t s_addresses[] = {
         0x3F8,
@@ -42,6 +52,11 @@ public:
         LineStatus,
         ModemStatus,
         ScratchRegister
+    };
+
+    enum Dlab : uint8_t 
+    {
+        DlabEnable = 1 << 7
     };
 
     enum DataBits : uint8_t
@@ -96,17 +111,17 @@ public:
         ImpendingError = 1 << 7
     };
 
+    static SerialPort* try_to_create(uint16_t, uint16_t);
+    void divisor_set(uint16_t);
+    uint32_t baud_rate_get(void) const;
+
 private:
-    SerialPort(uint16_t);
-    uint8_t read(Register);
-    void write(Register, uint8_t);
+    SerialPort(uint16_t, uint16_t);
+    uint8_t read(Register) const;
+    void write(Register, uint8_t) const;
 
-    void dlab_toggle(void);
-    void dlab_set(bool);
-    void dlab_get(void);
-
-    uint32_t divisor {1};
-    uint16_t io_base;
+    uint32_t m_divisor {1};
+    uint16_t m_iobase;
 
     friend class SerialPortManager;
 };
@@ -115,12 +130,12 @@ class SerialPortManager
 {
 public:
     static bool is_initialized(void);
-    static bool initialize(void);
+    static bool initialize(uint16_t);
     static uint8_t receive(void);
     static bool send(uint8_t val);
 
 private:
-    static SerialPort *ports[SerialPort::s_max_amount_of_ports];
+    static SerialPort *s_ports[SerialPort::s_max_amount_of_ports];
 };
 
 }
