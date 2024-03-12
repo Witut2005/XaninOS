@@ -339,6 +339,9 @@ void kernel_init(void)
 
     __xin_init();
 
+    // xprintf("TEST COM: %d\n", serial_port_byte_send('a'));
+    serial_port_string_send("\033[32mnicho\033[0m");
+
     xprintf("XinFs tables: 0x%x\n", __xin_fs_entries_get());
     // 0x30c800
 
