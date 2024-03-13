@@ -6,6 +6,7 @@
 #include <lib/libc/stdiox.h>
 #include <lib/libc/string.h>
 #include <lib/libc/loop.h>
+#include <lib/libcpp/algorithm.h>
 
 using namespace Device;
 
@@ -37,45 +38,58 @@ SerialPort::SerialPort(uint16_t iobase, uint16_t divisor) : m_iobase(iobase), m_
 
 uint8_t SerialPort::read(Register reg) const
 {
-    return inbIO(this->m_iobase + reg);
+    return inbIO(m_iobase + reg);
 }
 
 void SerialPort::write(Register reg, uint8_t val) const
 {
-    outbIO(this->m_iobase + reg, val);
+    outbIO(m_iobase + reg, val);
+}
+
+SerialPortManager& SerialPortManager::instance_get(void) 
+{
+    return s_instance;
 }
 
 bool SerialPortManager::is_initialized() 
 {
-    for(int i = 0; i < SerialPort::s_max_amount_of_ports; i++)
-        if(SerialPortManager::s_ports[i] != nullptr) return true;
-    return false;
+    return s_initialized;
 }
 
 bool SerialPortManager::initialize(uint16_t default_divisor)
 {
-    ITERATE_OVER(i, SerialPort::s_max_amount_of_ports) {
-        SerialPortManager::s_ports[i] = SerialPort::try_to_create(SerialPort::s_addresses[i], default_divisor);
+    if(s_initialized) return is_functional();
+
+    ITERATE_OVER(i, s_max_amount_of_ports) {
+        s_ports[i] = SerialPort::try_to_create(s_addresses[i], default_divisor);
     }
-    return SerialPortManager::is_initialized();
+
+    s_initialized = true;
+    return is_functional();
 }
 
 uint8_t SerialPortManager::receive(void){}
 
-bool SerialPortManager::send(uint8_t val) 
+void SerialPortManager::send(uint8_t val) 
 {
-    ITERATE_OVER(i, SerialPort::s_max_amount_of_ports)
-    {
-        if(SerialPortManager::s_ports[i] != nullptr)
-        {
-            SerialPortManager::s_ports[i]->write(SerialPort::Register::Data, val);
-            return true;
-        }
-    }
-    return false;
+    auto port = first_valid_port_get();
+    if(port != nullptr)
+        port->write(SerialPort::Register::Data, val);
 }
 
-SerialPort* SerialPortManager::s_ports[SerialPort::s_max_amount_of_ports];
+SerialPort* SerialPortManager::first_valid_port_get(void)
+{
+    return *std::FindFirst<SerialPort**>::call(s_ports, &s_ports[s_max_amount_of_ports], [](SerialPort** ptr){return (*ptr) != nullptr;});
+}
+
+bool SerialPortManager::is_functional(void) 
+{
+    return first_valid_port_get() != nullptr;
+}
+
+SerialPort* SerialPortManager::s_ports[s_max_amount_of_ports];
+bool SerialPortManager::s_initialized;
+SerialPortManager SerialPortManager::s_instance;
 
 extern "C"  {
     bool serial_port_initialize(uint16_t default_divisor)
@@ -83,7 +97,7 @@ extern "C"  {
         return SerialPortManager::initialize(default_divisor);
     }
 
-    bool serial_port_byte_send(uint8_t val)
+    void serial_port_byte_send(uint8_t val)
     {
         return SerialPortManager::send(val);
     }
@@ -94,10 +108,33 @@ extern "C"  {
             SerialPortManager::send(arr[i]);
     }
 
-    void serial_port_string_send(char* str)
+    void serial_port_string_send(const char* str)
     {
         uint32_t len = strlen(str);
         for(int i = 0; i < len; i++)
             SerialPortManager::send(str[i]);
     }
+
+    void dbg_info(const char* msg) {
+        serial_port_string_send("\033[94m[info]    "); 
+        serial_port_string_send("\033[0m"); 
+        serial_port_string_send(msg);
+        serial_port_byte_send('\n');
+    }
+    void dbg_warning(const char* msg) 
+    {
+        serial_port_string_send("\033[33m[warning] "); 
+        serial_port_string_send("\033[0m"); 
+        serial_port_string_send(msg);
+        serial_port_byte_send('\n');
+    }
+    
+    void dbg_error(const char* msg) 
+    {
+        serial_port_string_send("\033[31m[error]   "); 
+        serial_port_string_send("\033[0m"); 
+        serial_port_string_send(msg);
+        serial_port_byte_send('\n');
+    }
+
 }

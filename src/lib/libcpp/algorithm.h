@@ -90,9 +90,7 @@ namespace std
     template <typename InputIt>
     InputIt find_first(InputIt beg, InputIt end, auto finder)
     {
-        std::vector<InputIt> results;
         // CHECK IF ARRAY ITERATORS
-        int i = 0;
         for (; beg != end; beg++)
         {
             if (!beg.valid())
@@ -102,6 +100,38 @@ namespace std
         return InputIt(NULL, beg.container);
     }
 
+    template<typename Ptr>
+    struct FindFirst 
+    {
+        static Ptr call(Ptr beg, Ptr end, auto finder) 
+        {
+            for (; beg != end; beg++)
+            {
+                if (!beg.valid())
+                    break;
+                if(finder(beg))
+                    return beg;
+            }
+            return InputIt(NULL, beg.container);
+        }
+    };
+
+    template<typename Ptr>
+    struct FindFirst<Ptr*> 
+    {
+        static Ptr* call(Ptr* beg, Ptr* end, auto finder) 
+        {
+            if(beg > end) return nullptr;
+            for (; beg != end; beg++)
+            {
+                if(finder(beg))
+                    return beg;
+            }
+            return nullptr;
+        }
+    };
+    // template<typename Ptr>
+    // struct FindFirst<Ptr**> : FindFirst<Ptr*> {};
 
     template <class T>
     constexpr std::pair<T &&, T &&> minmax(T &&a, T &&b)

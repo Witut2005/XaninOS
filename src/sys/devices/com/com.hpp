@@ -2,7 +2,7 @@
 #pragma once
 
 #include <stdint.h>
-
+#include <lib/libcpp/class.hpp>
 
 // first define all public types,
 // then define all non-public types,
@@ -21,18 +21,8 @@ namespace Device
 class SerialPort
 {
 
+
 public:
-    static constexpr uint8_t s_max_amount_of_ports = 8;
-    static constexpr uint16_t s_addresses[] = {
-        0x3F8,
-        0x2F8,
-        0x3E8,
-        0x2E8,
-        0x5F8,
-        0x4F8,
-        0x5E8,
-        0x4E8,
-    };
 
     enum class Register : int8_t
     {
@@ -128,14 +118,35 @@ private:
 
 class SerialPortManager
 {
+MAKE_OBJECT_NON_COPYABLE(SerialPortManager)
+
 public:
+    static constexpr uint8_t s_max_amount_of_ports = 8;
+    static constexpr uint16_t s_addresses[] = {
+        0x3F8,
+        0x2F8,
+        0x3E8,
+        0x2E8,
+        0x5F8,
+        0x4F8,
+        0x5E8,
+        0x4E8,
+    };
+
+    static SerialPortManager& instance_get(void);
     static bool is_initialized(void);
+    static bool is_functional(void); // return true if at least one SerialPort is valid
     static bool initialize(uint16_t);
     static uint8_t receive(void);
-    static bool send(uint8_t val);
+    static void send(uint8_t val);
 
 private:
-    static SerialPort *s_ports[SerialPort::s_max_amount_of_ports];
+    SerialPortManager() = default;
+    static SerialPort* first_valid_port_get(void);
+
+    static SerialPortManager s_instance;
+    static SerialPort *s_ports[s_max_amount_of_ports];
+    static bool s_initialized;
 };
 
 }
