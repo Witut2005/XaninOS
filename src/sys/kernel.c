@@ -1,4 +1,5 @@
 
+#include "devices/com/labels.h"
 #include <sys/net/network_protocols/internet_protocol/ipv4/ip.h>
 #include <lib/ascii/ascii.h>
 #include <sys/devices/pit/pit.h>
@@ -339,11 +340,7 @@ void kernel_init(void)
 
     __xin_init();
 
-    // xprintf("TEST COM: %d\n", serial_port_byte_send('a'));
-    // serial_port_string_send("\033[32mnicho\033[0m");
-    dbg_info("Kernel","nicho");
-    dbg_warning("Kernel", "nicho");
-    dbg_error("Nicho", "nicho");
+    dbg_success(DEBUG_LABEL_XANIN, "Babciu zobacz to wszystko jest dla ciebie ❤️");
 
     xprintf("XinFs tables: 0x%x\n", __xin_fs_entries_get());
     // 0x30c800
