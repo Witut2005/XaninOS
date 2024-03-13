@@ -11,6 +11,7 @@
 #include <lib/libc/colors.h>
 #include <lib/libc/file.h>
 #include <lib/libc/stdiox.h>
+#include <sys/devices/com/com.h>
 
 #define XIN_OPENED_FILES_COUNTER 100
 
@@ -109,6 +110,7 @@ void __xin_init(void)
         if (*i == XIN_UNALLOCATED)
             *i = XIN_EOF;
     }
+    dbg_success("XinFs", "xin_fs::init success");
 }
 
 /* -------------------------------------------------------------------------------------- */

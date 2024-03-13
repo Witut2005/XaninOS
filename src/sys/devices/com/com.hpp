@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <lib/libcpp/class.hpp>
+#include <sys/devices/com/com.h>
 
 // first define all public types,
 // then define all non-public types,
