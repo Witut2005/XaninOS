@@ -47,29 +47,29 @@ void SerialPort::write(Register reg, uint8_t val) const
     outbIO(m_iobase + reg, val);
 }
 
-SerialPortManager& SerialPortManager::instance_get(void)
+SerialPortManager& SerialPortManager::the(void)
 {
     return s_instance;
 }
 
 bool SerialPortManager::is_initialized()
 {
-    return s_initialized;
+    return m_initialized;
 }
 
 bool SerialPortManager::initialize(uint16_t default_divisor)
 {
     if (mmngr_is_initialized() == false)
         return false;
-    if (s_initialized)
+    if (m_initialized)
         return is_functional();
 
     ITERATE_OVER(i, s_max_amount_of_ports)
     {
-        s_ports[i] = SerialPort::try_to_create(s_addresses[i], default_divisor);
+        m_ports[i] = SerialPort::try_to_create(s_addresses[i], default_divisor);
     }
 
-    s_initialized = true;
+    m_initialized = true;
     return is_functional();
 }
 
@@ -84,7 +84,7 @@ void SerialPortManager::send(uint8_t val)
 
 SerialPort* SerialPortManager::first_valid_port_get(void)
 {
-    return *std::FindFirst<SerialPort**>::call(s_ports, &s_ports[s_max_amount_of_ports], [](SerialPort** ptr) { return (*ptr) != nullptr; });
+    return *std::FindFirst<SerialPort**>::call(m_ports, &m_ports[s_max_amount_of_ports], [](SerialPort** ptr) { return (*ptr) != nullptr; });
 }
 
 bool SerialPortManager::is_functional(void)
@@ -92,38 +92,36 @@ bool SerialPortManager::is_functional(void)
     return is_initialized() && first_valid_port_get() != nullptr;
 }
 
-SerialPort* SerialPortManager::s_ports[s_max_amount_of_ports];
-bool SerialPortManager::s_initialized;
 SerialPortManager SerialPortManager::s_instance;
 
 extern "C"
 {
     bool serial_port_initialize(uint16_t default_divisor)
     {
-        return SerialPortManager::initialize(default_divisor);
+        return SerialPortManager::the().initialize(default_divisor);
     }
 
     void serial_port_byte_send(uint8_t val)
     {
-        return SerialPortManager::send(val);
+        return SerialPortManager::the().send(val);
     }
 
     void serial_port_array_send(uint8_t* arr, uint32_t size)
     {
         for (int i = 0; i < size; i++)
-            SerialPortManager::send(arr[i]);
+            SerialPortManager::the().send(arr[i]);
     }
 
     void serial_port_string_send(const char* str)
     {
         uint32_t len = strlen(str);
         for (int i = 0; i < len; i++)
-            SerialPortManager::send(str[i]);
+            SerialPortManager::the().send(str[i]);
     }
 
     void dbg_success(const char* label, const char* msg)
     {
-        if (SerialPortManager::is_functional() == false)
+        if (SerialPortManager::the().is_functional() == false)
             return;
 
         serial_port_string_send("\033[32m[");
@@ -136,7 +134,7 @@ extern "C"
 
     void dbg_info(const char* label, const char* msg)
     {
-        if (SerialPortManager::is_functional() == false)
+        if (SerialPortManager::the().is_functional() == false)
             return;
 
         serial_port_string_send("\033[94m[");
@@ -149,7 +147,7 @@ extern "C"
 
     void dbg_warning(const char* label, const char* msg)
     {
-        if (SerialPortManager::is_functional() == false)
+        if (SerialPortManager::the().is_functional() == false)
             return;
 
         serial_port_string_send("\033[33m[");
@@ -162,7 +160,7 @@ extern "C"
 
     void dbg_error(const char* label, const char* msg)
     {
-        if (SerialPortManager::is_functional() == false)
+        if (SerialPortManager::the().is_functional() == false)
             return;
 
         serial_port_string_send("\033[31m[");

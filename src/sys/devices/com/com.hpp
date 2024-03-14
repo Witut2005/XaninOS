@@ -130,20 +130,20 @@ public:
         0x4E8,
     };
 
-    static SerialPortManager& instance_get(void);
-    static bool is_initialized(void);
-    static bool is_functional(void); // return true if at least one SerialPort is valid
-    static bool initialize(uint16_t);
-    static uint8_t receive(void);
-    static void send(uint8_t val);
+    static SerialPortManager& the(void);
+    bool is_initialized(void);
+    bool is_functional(void); // return true if at least one SerialPort is valid
+    bool initialize(uint16_t);
+    uint8_t receive(void);
+    void send(uint8_t val);
 
 private:
     SerialPortManager() = default;
-    static SerialPort* first_valid_port_get(void);
+    SerialPort* first_valid_port_get(void);
 
     static SerialPortManager s_instance;
-    static SerialPort* s_ports[s_max_amount_of_ports];
-    static bool s_initialized;
+    SerialPort* m_ports[s_max_amount_of_ports];
+    bool m_initialized;
 };
 
 }
