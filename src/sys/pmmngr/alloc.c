@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <stddef.h>
+#include <stdbool.h>
 #include <lib/libc/memory.h>
 #include <sys/pmmngr/alloc.h>
 #include <sys/log/syslog.h>
@@ -12,6 +13,8 @@ typedef uint32_t physical_addr;
 
 //! block alignment
 #define PMMNGR_BLOCK_ALIGN PMMNGR_BLOCK_SIZE
+
+static bool mmngr_initalized;
 
 uint8_t *mmngr_mmap;        // mmap address
 uint32_t mmngr_heap_blocks; // SIZE_OF mmngr available memory space
@@ -23,6 +26,11 @@ uint32_t kernel_heap_blocks; // 1/3 of allocated memory space belongs to kernel 
 uint8_t *user_heap_base;
 uint32_t user_heap_offset;
 uint32_t user_heap_blocks; // 2/3 of allocated memory space belongs to user heap
+
+bool mmngr_is_initialized(void)
+{
+    return mmngr_initalized;
+}
 
 static inline uint32_t size_to_blocks_allocated(uint32_t size)
 {
@@ -104,6 +112,7 @@ void mmngr_init(uint8_t *map, uint8_t *base, uint32_t blocks)
     for (int i = 0; i < blocks; i++)
         mmngr_mmap[i] = MEMORY_UNALLOCATED;
     
+    mmngr_initalized = true;
     dbg_success(DEBUG_LABEL_PMMNGR, "PMMNGR successully initialized");
 }
 

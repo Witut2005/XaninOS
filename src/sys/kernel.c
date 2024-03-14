@@ -31,7 +31,7 @@
 #include <sys/net/network_protocols/arp/arp.h>
 #include <lib/libc/xanin_state.h>
 #include <lib/libc/system.h>
-#include <sys/interrupts/handlers/entries/handler_entries.h>
+#include <sys/interrupts/handlers/handlers.h>
 #include <sys/call/xanin_sys/calls/pmmngr/alloc.h>
 #include <sys/terminal/backend/backend.h>
 #include <sys/terminal/frontend/frontend.h>
@@ -41,9 +41,7 @@
 #include <sys/call/xanin_sys/calls/input/input.h>
 #include <sys/init/kernel_init.h>
 #include <sys/devices/com/com.h>
-
-extern void v86_mode_enter(void);
-extern void mouse_enable(void);
+#include <sys/devices/keyboard/keyboard_driver.h>
 
 /*--------------------------------------/
 |wesolego nowego roku :))               |
@@ -154,7 +152,6 @@ uint8_t kernel_mmngr_mmap[PMMNGR_MEMORY_BLOCKS];
 
 void kernel_init(void)
 {
-    serial_port_initialize(1);
 
     INTERRUPT_REGISTER(0, divide_by_zero_exception_entry);
     INTERRUPT_REGISTER(1, debug_exception_entry);
@@ -189,11 +186,15 @@ void kernel_init(void)
     INTERRUPT_REGISTER(31, general_protection_exception_entry);
     INTERRUPT_REGISTER(32, general_protection_exception_entry);
 
-    dbg_info(DEBUG_LABEL_IRQ, "Processor IRQs registered");
+
+    mmngr_init(kernel_mmngr_mmap, (uint8_t *)0x100000, PMMNGR_MEMORY_BLOCKS);
+
+    serial_port_initialize(1);
+    keyboard_init(0x21);
     set_pit(0x20);
 
+    dbg_info(DEBUG_LABEL_IRQ, "Processor IRQs registered");
     vga_disable_cursor();
-    mmngr_init(kernel_mmngr_mmap, (uint8_t *)0x100000, PMMNGR_MEMORY_BLOCKS);
 
     vga_text_mode_height = 25;
     vga_text_mode_width = 80;

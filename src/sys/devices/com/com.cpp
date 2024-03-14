@@ -7,6 +7,7 @@
 #include <lib/libc/string.h>
 #include <lib/libc/loop.h>
 #include <lib/libcpp/algorithm.h>
+#include <sys/pmmngr/alloc.h>
 
 using namespace Device;
 
@@ -58,6 +59,7 @@ bool SerialPortManager::is_initialized()
 
 bool SerialPortManager::initialize(uint16_t default_divisor)
 {
+    if(mmngr_is_initialized() == false) return false;
     if(s_initialized) return is_functional();
 
     ITERATE_OVER(i, s_max_amount_of_ports) {

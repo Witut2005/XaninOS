@@ -59,6 +59,7 @@ static inline uint8_t* kernel_heap_base_get(void)
 extern "C" {
 #endif
 
+bool mmngr_is_initialized(void);
 uint32_t mmngr_mmap_free_block_find(uint8_t mode, uint32_t blocks);
 void mmngr_init(uint8_t* map, uint8_t* base, uint32_t size);
 void* mmngr_block_allocate(uint8_t mode, uint32_t size);
