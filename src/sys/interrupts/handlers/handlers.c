@@ -9,10 +9,7 @@
 #include <sys/devices/keyboard/keyboard_driver.c>
 #include <sys/interrupts/handlers/handlers.h>
 #include <sys/devices/pit/pit.h>
-
-//#include <sys/devices/DMA/dma.c>
-
-
+#include <sys/terminal/backend/backend.h>
 
 extern void kernel_loop(void);
 extern void pit_handler_init(void);

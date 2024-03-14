@@ -11,7 +11,6 @@
 #include <lib/screen/screen.h>
 #include <sys/terminal/interpreter/interpreter.c>
 #include <lib/libc/math.h>
-#include <sys/devices/keyboard/keyboard_init.c>
 #include <sys/devices/pci/pci.h>
 #include <sys/devices/acpi/acpi.h>
 #include <sys/devices/usb/usb.h>
@@ -191,8 +190,6 @@ void kernel_init(void)
     INTERRUPT_REGISTER(32, general_protection_exception_entry);
 
     dbg_info(DEBUG_LABEL_IRQ, "Processor IRQs registered");
-
-    keyboard_init(0x21);
     set_pit(0x20);
 
     vga_disable_cursor();

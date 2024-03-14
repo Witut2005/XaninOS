@@ -15,26 +15,31 @@
 #define PIC2_DATA 0xA1    
 #define PIC_MASK_REG 0xA1
 
-#include <programs/internals/register_dump.h>
-#include <sys/call/xanin_sys/calls/vga/vga.h>
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-extern void divide_by_zero_exception_entry(void);
-extern void debug_exception_entry(void);
-extern void nmi_interrupt_exception_entry(void);
-extern void breakpoint_exception_entry(void);
-extern void overflow_exception_entry(void);
-extern void bound_range_exceeded_exception_entry(void);
-extern void invalid_opcode_exception_entry(void);
-extern void device_not_available_exception_entry(void);
-extern void double_fault_exception_entry(void);
-extern void coprocessor_segment_overrun_exception_entry(void);
-extern void invalid_tss_exception_entry(void);
-extern void segment_not_present_exception_entry(void);
-extern void stack_fault_exception_entry(void);
-extern void general_protection_exception_entry(void);
-extern void page_fault_exception_entry(void);
-extern void x86_fpu_floating_point_exception_entry(void);
-extern void aligment_check_exception_entry(void);
-extern void machine_check_exception_entry(void);
-extern void simd_floating_point_exception_entry(void);
-extern void virtualization_exception_entry(void);
+void divide_by_zero_exception_entry(void);
+void debug_exception_entry(void);
+void nmi_interrupt_exception_entry(void);
+void breakpoint_exception_entry(void);
+void overflow_exception_entry(void);
+void bound_range_exceeded_exception_entry(void);
+void invalid_opcode_exception_entry(void);
+void device_not_available_exception_entry(void);
+void double_fault_exception_entry(void);
+void coprocessor_segment_overrun_exception_entry(void);
+void invalid_tss_exception_entry(void);
+void segment_not_present_exception_entry(void);
+void stack_fault_exception_entry(void);
+void general_protection_exception_entry(void);
+void page_fault_exception_entry(void);
+void x86_fpu_floating_point_exception_entry(void);
+void aligment_check_exception_entry(void);
+void machine_check_exception_entry(void);
+void simd_floating_point_exception_entry(void);
+void virtualization_exception_entry(void);
+
+#ifdef __cplusplus
+}`
+#endif
