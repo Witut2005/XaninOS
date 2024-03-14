@@ -1,15 +1,10 @@
 
 #pragma once
+#include <stdint.h>
+
+typedef uint8_t interrupt_vector_t;
 typedef void (*irq_handler)(void);
 extern irq_handler interrupt_handlers[0x100];
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-extern void set_idt(void);
-// extern void INTERRUPT_REGISTER(uint32_t irq, irq_handler handler);
-// extern void INTERRUPT_REGISTER(uint32_t interrupt_id, irq_handler handler);
 
 #define INTERRUPT_REGISTER(interrupt_id, handler)\
 {\
@@ -23,6 +18,10 @@ extern void set_idt(void);
     set_idt();\
 }
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+    extern void set_idt(void);
 #ifdef __cplusplus
 }
 #endif

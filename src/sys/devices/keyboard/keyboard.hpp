@@ -1,11 +1,14 @@
 #pragma once
 #include <stdint.h>
+#include <lib/libcpp/class.hpp>
 
 namespace Device {
 
 class Keyboard
 {
 public:
+    MAKE_OBJECT_NON_COPYABLE(Keyboard);
+
     enum class ControllerPorts : uint8_t
     {
         KeyboardEncoder = 0x60,
@@ -22,8 +25,21 @@ public:
 
     enum ControllerStatusMask : uint8_t {};
 
-private:
+    bool init(interrupt_vector_t vector);
+    void reset(void);
+    bool test(void);
+    void handle(void);
 
+    static Keyboard& the(void);
+
+private:
+    Keyboard() = default;
+
+    void write(Registers) const;
+    uint8_t read(Registers) const;
+
+    static Keyboard s_instance;
+    bool m_initialized{ false };
 };
 
 }
