@@ -16,7 +16,6 @@
 // then declare all non-public member functions, and
 // then declare all non-public member variables.
 
-
 namespace Device
 {
 class SerialPort

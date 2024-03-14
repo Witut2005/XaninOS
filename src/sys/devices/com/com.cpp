@@ -84,7 +84,7 @@ SerialPort* SerialPortManager::first_valid_port_get(void)
 
 bool SerialPortManager::is_functional(void) 
 {
-    return first_valid_port_get() != nullptr;
+    return is_initialized() && first_valid_port_get() != nullptr;
 }
 
 SerialPort* SerialPortManager::s_ports[s_max_amount_of_ports];
@@ -115,27 +115,37 @@ extern "C"  {
             SerialPortManager::send(str[i]);
     }
 
-    void dbg_success(const char* label, const char* msg) {
+    void dbg_success(const char* label, const char* msg) 
+    {
+        if(SerialPortManager::is_functional() == false) return;
+
         serial_port_string_send("\033[32m["); 
         serial_port_string_send(label); 
-        serial_port_string_send("]: ");
+        serial_port_string_send("] ");
         serial_port_string_send("\033[0m"); 
         serial_port_string_send(msg);
         serial_port_byte_send('\n');
     }
-    void dbg_info(const char* label, const char* msg) {
+
+    void dbg_info(const char* label, const char* msg) 
+    {
+        if(SerialPortManager::is_functional() == false) return;
+
         serial_port_string_send("\033[94m["); 
         serial_port_string_send(label); 
-        serial_port_string_send("]: ");
+        serial_port_string_send("] ");
         serial_port_string_send("\033[0m"); 
         serial_port_string_send(msg);
         serial_port_byte_send('\n');
     }
+    
     void dbg_warning(const char* label, const char* msg) 
     {
+        if(SerialPortManager::is_functional() == false) return;
+
         serial_port_string_send("\033[33m["); 
         serial_port_string_send(label); 
-        serial_port_string_send("]: ");
+        serial_port_string_send("] ");
         serial_port_string_send("\033[0m"); 
         serial_port_string_send(msg);
         serial_port_byte_send('\n');
@@ -143,9 +153,11 @@ extern "C"  {
     
     void dbg_error(const char* label, const char* msg) 
     {
+        if(SerialPortManager::is_functional() == false) return;
+
         serial_port_string_send("\033[31m["); 
         serial_port_string_send(label); 
-        serial_port_string_send("]: ");
+        serial_port_string_send("] ");
         serial_port_string_send("\033[0m"); 
         serial_port_string_send(msg);
         serial_port_byte_send('\n');

@@ -13,7 +13,6 @@ extern "C"
     __STATUS stdio_apply(void);
     __STATUS screen_saver(char *);
     __STATUS bmp_info(char *);
-    __STATUS dev_tools(char *);
     __STATUS netplan_apply(void);
 
     __STATUS xgl_mode_set(void);

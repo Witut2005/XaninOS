@@ -155,6 +155,8 @@ uint8_t kernel_mmngr_mmap[PMMNGR_MEMORY_BLOCKS];
 
 void kernel_init(void)
 {
+    serial_port_initialize(1);
+
     INTERRUPT_REGISTER(0, divide_by_zero_exception_entry);
     INTERRUPT_REGISTER(1, debug_exception_entry);
     INTERRUPT_REGISTER(2, nmi_interrupt_exception_entry);
@@ -187,6 +189,8 @@ void kernel_init(void)
     INTERRUPT_REGISTER(30, general_protection_exception_entry);
     INTERRUPT_REGISTER(31, general_protection_exception_entry);
     INTERRUPT_REGISTER(32, general_protection_exception_entry);
+
+    dbg_info(DEBUG_LABEL_IRQ, "Processor IRQs registered");
 
     keyboard_init(0x21);
     set_pit(0x20);
@@ -323,6 +327,7 @@ void kernel_init(void)
                                   0x0 << APIC_DELIVERY_MODE | 0x0 << APIC_DESTINATION_MODE | 0x0 << APIC_INT_PIN_POLARITY | 0x0 << APIC_INT_MASK,
                               ioapic_id_get());
 
+
     // COS NIE DZIALA SYSCALL
     __input_scan_code_mapper_set(xanin_default_character_mapper);
 
@@ -336,7 +341,6 @@ void kernel_init(void)
     xprintf("NIC interrupt line: 0x%x", (apic_nic_redirect != NULL ? apic_nic_redirect->global_system_int_table + APIC_IRQ_BASE : PIC_NIC_VECTOR));
 
     xprintf("\n%z----------------------------\n", OUTPUT_COLOR_SET(black, green));
-    xprintf("Com port status: %d\n", serial_port_initialize(1));
 
     __xin_init();
 

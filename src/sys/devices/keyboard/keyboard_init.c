@@ -1,16 +1,16 @@
 
-
 #pragma once
+
+#include <lib/libc/hal.h>
+#include <sys/interrupts/handlers/handlers.h>
+#include <sys/interrupts/idt/idt.h>
+#include <sys/devices/com/com.h>
 
 #define KEYBOARD_TEST_FAILURE 0xfc
 #define KEYBOARD_TEST_SUCCESS 0x55
 
 #define KEYBOARD_DISABLE 0xAD
 #define KEYBOARD_ENABLE 0xAE
-
-#include <lib/libc/hal.h>
-#include <sys/interrupts/handlers/handlers.h>
-#include <sys/interrupts/idt/idt.h>
 
 extern void keyboard_handler_init(void);
 
@@ -25,9 +25,7 @@ void keyboard_reset(void)
     outbIO(0x64, KEYBOARD_DISABLE); // KEYBOARD OFF
 
     for (int i = 0; i < 10; i++)
-    {
         io_wait();
-    }
 
     outbIO(0x64, KEYBOARD_ENABLE); // KEYBOARD ON
 }
@@ -39,11 +37,11 @@ uint8_t keyboard_init(uint8_t vector)
 
     if (keyboard_status == KEYBOARD_TEST_FAILURE)
     {
-        xprintf("keyboard self test failed. Halting execution\n");
-        interrupt_disable();
+        dbg_error(DEBUG_LABEL_KERNEL_DEVICE, "keyboard self test failed. Halting execution");
         cpu_halt();
     }
 
     INTERRUPT_REGISTER(vector, keyboard_handler_init);
+    dbg_info(DEBUG_LABEL_IRQ, "Keyboard device installed");
     return keyboard_status;
 }

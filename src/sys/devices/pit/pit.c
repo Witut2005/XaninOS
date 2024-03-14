@@ -7,6 +7,7 @@
 #include <sys/interrupts/idt/idt.h>
 #include <sys/devices/pit/pit.h>
 #include <lib/libc/stdlibx.h>
+#include <sys/devices/com/com.h>
 
 #define PIT_CHANNEL0 0x40
 #define PIT_CHANNEL1 0x41
@@ -39,6 +40,7 @@ void set_pit(uint8_t vector)
     outbIO(PIT_MODE_COMMAND_REGISTER, 0x36); //
     set_pit_divisor(PIT_BASE_FREQUENCY / PIT_XANIN_FREQUENCY); // 10ms
     INTERRUPT_REGISTER(vector, pit_handler_init);
+    dbg_info(DEBUG_LABEL_KERNEL_DEVICE, "PIT successufly initialized");
     interrupt_enable();
 }
 

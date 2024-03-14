@@ -3,16 +3,15 @@
 #include <lib/libcpp/hal.h>
 #include <lib/libc/hal.h>
 #include <sys/log/syslog.h>
-
 #include <lib/libc/memory.h>
 #include <sys/devices/apic/apic_registers.h>
 #include <sys/net/network_protocols/ethernet_frame/ethernet_frame.hpp>
 #include <lib/libcpp/utility.h>
 #include <limits.h>
 #include <sys/interrupts/idt/idt.h>
-
 #include <sys/pmmngr/alloc.h>
 #include <sys/devices/vendor.h>
+#include <sys/devices/com/com.h>
 
 #define INTEL_8254X_DESCRIPTORS 256
 #define reset() write(0x0, 0x80000000)
@@ -482,6 +481,7 @@ extern "C"
         {
             netapi_add_device(NetDev, "i8254x", i8254x_interrupt_handler_entry);
             INTERRUPT_REGISTER(vector, netapi_interrupt_handle_entry);
+            dbg_info(DEBUG_LABEL_NETWORKING, "i8254x network card ready");
         }
     }
 

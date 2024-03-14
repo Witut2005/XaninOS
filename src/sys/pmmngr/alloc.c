@@ -6,6 +6,7 @@
 #include <lib/libc/memory.h>
 #include <sys/pmmngr/alloc.h>
 #include <sys/log/syslog.h>
+#include <sys/devices/com/com.h>
 
 typedef uint32_t physical_addr;
 
@@ -102,9 +103,8 @@ void mmngr_init(uint8_t *map, uint8_t *base, uint32_t blocks)
 
     for (int i = 0; i < blocks; i++)
         mmngr_mmap[i] = MEMORY_UNALLOCATED;
-
-    // for(int i = 0; i < blocks * PMMNGR_BLOCK_SIZE; i++)
-    //     base[i] = 0;
+    
+    dbg_success(DEBUG_LABEL_PMMNGR, "PMMNGR successully initialized");
 }
 
 void *mmngr_block_allocate(uint8_t mode, uint32_t size)
@@ -115,6 +115,7 @@ void *mmngr_block_allocate(uint8_t mode, uint32_t size)
     if (mmap_index == UINT32_MAX) // NO AVAILABLE MEMORY
     {
         printk("HEAP FULL");
+        dbg_error(DEBUG_LABEL_PMMNGR, "HEAD FULL");
         return (void *)NULL;
     }
 

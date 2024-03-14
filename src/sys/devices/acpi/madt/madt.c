@@ -4,6 +4,7 @@
 #include <sys/devices/acpi/sdt/sdt.h>
 #include <sys/devices/acpi/rsdt/rsdt.h>
 #include <sys/devices/acpi/madt/madt.h>
+#include <sys/devices/com/com.h>
 
 uint8_t* madt_entries[0x10];
 uint8_t acpi_madt0_counter = 0;
@@ -58,6 +59,7 @@ void madt_entries_get(SystemAcpiSDT* apic_entry)
         else if (*tmp == 9)
             AcpiMADT9Pointers[acpi_madt9_counter++] = (SystemAcpiMADT9 *)tmp;
     }
+    dbg_info(DEBUG_LABEL_KERNEL, "ACPI madt entries get");
 }
 
 

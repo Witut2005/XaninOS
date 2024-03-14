@@ -239,10 +239,6 @@ objects_to_compile = {
         CompileObject('./sys/call/xanin_sys/handler/xanin_sys.c', builders['c'], builder_options['c']['default'], OBJECT),
     ],
 
-    'debug': [
-        CompileObject('./sys/debug/debug.c', builders['c'], builder_options['c']['default'], OBJECT),
-    ],
-
     'interrupt': [
         CompileObject('./sys/interrupts/idt/idt.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./sys/interrupts/handlers/entries/divide_by_zero_exception.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
@@ -376,7 +372,6 @@ objects_to_compile = {
 
         CompileObject('./programs/stdio/stdio_apply.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./programs/file_format_tools/bmp_info.c', builders['c'], builder_options['c']['default'], OBJECT),
-        CompileObject('./programs/developer/dev_tools.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./programs/network/netplan_apply.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./programs/network/netapi_check.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./programs/usb/usb_controller_info.c', builders['c'], builder_options['c']['default'], OBJECT),

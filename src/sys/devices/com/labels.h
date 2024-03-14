@@ -13,3 +13,4 @@
 #define DEBUG_LABEL_KERNEL_DEVICE "Kernel Device"
 #define DEBUG_LABEL_PMMNGR "PMMNGR"
 #define DEBUG_LABEL_TERMINAL "Terminal"
+#define DEBUG_LABEL_IRQ "IRQ"

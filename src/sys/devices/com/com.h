@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "./labels.h"
 
 #ifdef __cplusplus
 extern "C" {
