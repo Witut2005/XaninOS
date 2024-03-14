@@ -16,16 +16,15 @@
 
 #define PIC1_DATA_REG 0x21   
 
-
 //https://www.youtube.com/watch?v=aK4paXV1XfM <-- USEFUL
 
 extern float pit_time;
 extern float pit_interval_time;
 
 extern void pit_handler_init(void);
-extern void set_pit_divisor(uint16_t divisor_value);
+extern void pit_divisor_set(uint16_t divisor_value);
 extern void pit_tick(void);
 extern void pit_handler(void);
-extern void set_pit(uint8_t vector);
+extern void pit_init(uint8_t vector);
 
 

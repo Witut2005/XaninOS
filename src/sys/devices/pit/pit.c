@@ -21,7 +21,7 @@
 //https://www.youtube.com/watch?v=aK4paXV1XfM <-- USEFUL
 
 
-void set_pit_divisor(uint16_t divisor_value)
+void pit_divisor_set(uint16_t divisor_value)
 {
 
     if(divisor_value < 250)
@@ -33,17 +33,21 @@ void set_pit_divisor(uint16_t divisor_value)
 }
 
 
-void set_pit(uint8_t vector)
+void pit_init(uint8_t vector)
 {
     pit_time = 0;
+    EFlags flags;
+    eflags_get(&flags);
+
     interrupt_disable();
     outbIO(PIT_MODE_COMMAND_REGISTER, 0x36); //
-    set_pit_divisor(PIT_BASE_FREQUENCY / PIT_XANIN_FREQUENCY); // 10ms
+    pit_divisor_set(PIT_BASE_FREQUENCY / PIT_XANIN_FREQUENCY); // 10ms
     INTERRUPT_REGISTER(vector, pit_handler_init);
     dbg_info(DEBUG_LABEL_KERNEL_DEVICE, "PIT successufly initialized");
-    interrupt_enable();
+    
+    if(flags.intf)
+        interrupt_enable();
 }
-
 
 void pit_tick(void)
 {

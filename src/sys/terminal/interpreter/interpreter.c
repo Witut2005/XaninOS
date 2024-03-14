@@ -5,6 +5,7 @@
 #include <lib/libc/stdiox.h>
 #include <lib/libc/string.h>
 #include <lib/libc/file.h>
+#include <sys/devices/com/com.h>
 
 int argc;
 char *argv[5];
@@ -56,9 +57,11 @@ void check_external_apps(void)
 
     if (file != NULL && file->size != 0)
     {
+        dbg_info(DEBUG_LABEL_XANIN, "Opening external file");
         elfreader(app);
         is_external_app = true;
     }
+
     free(external_apps_folder);
     free(app);
 }

@@ -20,10 +20,7 @@ namespace Device
 {
 class SerialPort
 {
-
-
 public:
-
     enum class Register : int8_t
     {
         // DLAB = 0
@@ -44,7 +41,7 @@ public:
         ScratchRegister
     };
 
-    enum Dlab : uint8_t 
+    enum Dlab : uint8_t
     {
         DlabEnable = 1 << 7
     };
@@ -80,7 +77,7 @@ public:
         StatusChange = 1 << 3,
     };
 
-    enum ModemControl : uint8_t 
+    enum ModemControl : uint8_t
     {
         DataTerminalReady = 1,
         RequestToSend = 1 << 1,
@@ -110,7 +107,7 @@ private:
     uint8_t read(Register) const;
     void write(Register, uint8_t) const;
 
-    uint32_t m_divisor {1};
+    uint32_t m_divisor{ 1 };
     uint16_t m_iobase;
 
     friend class SerialPortManager;
@@ -118,7 +115,7 @@ private:
 
 class SerialPortManager
 {
-MAKE_OBJECT_NON_COPYABLE(SerialPortManager)
+    MAKE_OBJECT_NON_COPYABLE(SerialPortManager)
 
 public:
     static constexpr uint8_t s_max_amount_of_ports = 8;
@@ -145,7 +142,7 @@ private:
     static SerialPort* first_valid_port_get(void);
 
     static SerialPortManager s_instance;
-    static SerialPort *s_ports[s_max_amount_of_ports];
+    static SerialPort* s_ports[s_max_amount_of_ports];
     static bool s_initialized;
 };
 

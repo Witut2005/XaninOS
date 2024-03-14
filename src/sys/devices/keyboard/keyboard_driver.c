@@ -54,7 +54,6 @@ void keyboard_reset(void)
 
 uint8_t keyboard_init(uint8_t vector)
 {
-
     uint8_t keyboard_status = keyboard_self_test();
 
     if (keyboard_status == KEYBOARD_TEST_FAILURE)

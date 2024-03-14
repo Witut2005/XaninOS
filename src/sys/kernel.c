@@ -186,12 +186,8 @@ void kernel_init(void)
     INTERRUPT_REGISTER(31, general_protection_exception_entry);
     INTERRUPT_REGISTER(32, general_protection_exception_entry);
 
-
     mmngr_init(kernel_mmngr_mmap, (uint8_t *)0x100000, PMMNGR_MEMORY_BLOCKS);
-
     serial_port_initialize(1);
-    keyboard_init(0x21);
-    set_pit(0x20);
 
     dbg_info(DEBUG_LABEL_IRQ, "Processor IRQs registered");
     vga_disable_cursor();
@@ -329,11 +325,9 @@ void kernel_init(void)
     // COS NIE DZIALA SYSCALL
     __input_scan_code_mapper_set(xanin_default_character_mapper);
 
-    set_pit(apic_pit_redirect != NULL ? apic_pit_redirect->global_system_int_table + APIC_IRQ_BASE : PIC_PIT_VECTOR);
+    pit_init(apic_pit_redirect != NULL ? apic_pit_redirect->global_system_int_table + APIC_IRQ_BASE : PIC_PIT_VECTOR);
     keyboard_init(apic_keyboard_redirect != NULL ? apic_keyboard_redirect->global_system_int_table + APIC_IRQ_BASE : PIC_KEYBOARD_VECTOR);
     i8254x_init(apic_nic_redirect != NULL ? apic_nic_redirect->global_system_int_table + APIC_IRQ_BASE : PIC_NIC_VECTOR);
-
-    interrupt_disable();
 
     xprintf("\n%z----------------------------\n", OUTPUT_COLOR_SET(black, green));
     xprintf("NIC interrupt line: 0x%x", (apic_nic_redirect != NULL ? apic_nic_redirect->global_system_int_table + APIC_IRQ_BASE : PIC_NIC_VECTOR));

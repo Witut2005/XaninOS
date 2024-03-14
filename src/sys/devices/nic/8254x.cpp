@@ -242,7 +242,6 @@ void Intel8254xDriver::packet_send(uint8_t* address, uint16_t length)
 
 void Intel8254xDriver::init()
 {
-    
     reset();
 
     for(int i = 0; i < 100; i++)
@@ -259,15 +258,11 @@ void Intel8254xDriver::init()
     else
         this->is_present = true;
 
-
-
     this->iobase = (uint8_t*)this->pci_info.base0;
-
 
     /* setting pci command register */
     uint16_t pci_command = pci_get_data16(pci_info.bus, pci_info.slot, pci_info.function, 0x4);
     pci_write_data16(pci_info.bus, pci_info.slot, pci_info.function, 0x4, pci_command | 0x7); 
-
 
     this->write(nic::EECD, this->read(nic::EECD) | nic::EECD_SK | nic::EECD_CS | nic::EECD_DI);
     this->mac_get();
@@ -292,22 +287,6 @@ void Intel8254xDriver::init()
     /* enabling interrupts */
     this->write(nic::IMS, this->read(nic::IMS) | nic::ims::RXT | nic::ims::RXO | 
                   nic::ims::RXDMT | nic::ims::RXSEQ | nic::ims::LSC);
-
-    
-
-    // this->write(nic::RCTL, this->read(nic::RCTL) & (~nic::RCTL_EN));
-
-    // while(1)
-    // {
-    //     this->send_packet(0x0, 128);
-    // }
-
-
-    // this->write(nic::IMS, 0x1F6DC);
-    // this->write(nic::IMS, 0xFFFFFFF0);
-
-
-
 
 }
 
