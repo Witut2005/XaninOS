@@ -1,23 +1,22 @@
 
 #pragma once
 
- 
+
 #include <lib/libc/hal.h>
 #include <sys/log/syslog.h>
 #include <lib/libc/stdiox.h>
 #include <sys/devices/keyboard/key_map.h>
-#include <sys/devices/keyboard/keyboard_driver.c>
 #include <sys/interrupts/handlers/handlers.h>
 #include <sys/devices/pit/pit.h>
 #include <sys/terminal/backend/backend.h>
+#include <lib/screen/screen.h>
+#include <sys/input/input.h>
 
 extern void kernel_loop(void);
-extern void pit_handler_init(void);
-extern void keyboard_handler_init(void);
 
-void exception_print(const char* message) 
+void exception_print(const char* message)
 {
-    if(Screen.y != VGA_MAX_Y)
+    if (Screen.y != VGA_MAX_Y)
         Screen.y++;
     else
         Screen.y = VGA_MAX_Y;
@@ -26,7 +25,7 @@ void exception_print(const char* message)
     xprintf("%zERROR: %s\n", stderr, message);
     __xtb_flush(__vty_get());
     interrupt_enable();
-    while(__inputg().scan_code != ENTER);
+    while (__inputg().scan_code != ENTER);
 }
 
 void invalid_opcode_exception_handler(void)
@@ -41,7 +40,7 @@ void divide_by_zero_exception_handler(void)
     exception_print("DIVIDE BY ZERO EXCEPTION");
 }
 
- 
+
 void debug_exception_handler(void)
 {
     printk("ERROR: DEBUG EXCEPTION");
@@ -109,7 +108,7 @@ void stack_fault_exception_handler(void)
 }
 
 void general_protection_exception_handler(void)
-{   
+{
     printk("ERROR: GENERAL PROTECTION EXCEPTION");
     exception_print("GENERAL PROTECTION EXCEPTION");
 }
@@ -119,7 +118,7 @@ void page_fault_exception_handler(void)
     printk("ERROR: PAGE FAULT EXCEPTION");
     exception_print("PAGE FAULT EXCEPTION");
 }
-    
+
 void x86_fpu_floating_point_exception_handler(void)
 {
     printk("ERROR: x86 FPU FLOATING POINT EXCEPTION");

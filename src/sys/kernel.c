@@ -41,7 +41,6 @@
 #include <sys/call/xanin_sys/calls/input/input.h>
 #include <sys/init/kernel_init.h>
 #include <sys/devices/com/com.h>
-#include <sys/devices/keyboard/keyboard_driver.h>
 #include <sys/devices/keyboard/keyboard.h>
 
 /*--------------------------------------/
