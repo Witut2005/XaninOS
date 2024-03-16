@@ -201,6 +201,7 @@ objects_to_compile = {
     ],
 
     'drivers': [
+        CompileObject('./sys/devices/keyboard/keyboard.cpp', builders['cc'], builder_options['cc']['default'], './sys/devices/keyboard/keyboard_cpp.o'),
         CompileObject('./sys/devices/keyboard/keyboard.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
         CompileObject('./sys/devices/pit/pit.asm', builders['asm'], builder_options['asm']['elf32'], './sys/devices/pit/pit_entry.o'),
         CompileObject('./sys/devices/pcspk/pc_speaker.c', builders['c'], builder_options['c']['default'], OBJECT),

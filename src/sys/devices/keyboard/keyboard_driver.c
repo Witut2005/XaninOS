@@ -69,7 +69,7 @@ uint8_t keyboard_init(uint8_t vector)
 
 void keyboard_driver(void)
 {
-    interrupt_disable();
+    // interrupt_disable();
     static key_info_t KeyInfo;
     KeyInfo.scan_code = inbIO(KEYBOARD_DATA_REG);
     // xprintf("%x ", KeyInfo.scan_code);
@@ -86,7 +86,6 @@ void keyboard_driver(void)
             SpecialKeyPressed = false;
     }
 
-    // xprintf("%d ", SpecialKeyPressed);
     if (SpecialKeyPressed)
     {
         if (!is_break_code(KeyInfo.scan_code))
