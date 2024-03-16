@@ -72,6 +72,7 @@ void keyboard_driver(void)
     // interrupt_disable();
     static key_info_t KeyInfo;
     KeyInfo.scan_code = inbIO(KEYBOARD_DATA_REG);
+
     // xprintf("%x ", KeyInfo.scan_code);
 
     if (!SpecialKeyPressed)
@@ -116,6 +117,6 @@ void keyboard_driver(void)
 
     __input_call_handlers(KeyInfo);
 
-    if (__input_is_ctrl_pressed() && KeyInfo.keys_pressed[KBP_C])
-        exit();
+    // if (__input_is_ctrl_pressed() && KeyInfo.keys_pressed[KBP_C])
+    //     exit();
 }

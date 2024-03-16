@@ -43,7 +43,11 @@ public:
         Failure = 0xFC,
     };
 
-    enum ControllerStatusMask : uint8_t {};
+    enum class Leds : uint8_t {
+        Scroll,
+        Num,
+        Caps
+    };
 
     bool init(interrupt_vector_t vector);
     void reset(void);
@@ -59,11 +63,12 @@ public:
 private:
     Keyboard() = default;
 
-    void write(ControllerPort, enum Command);
+    void write(ControllerPort, uint8_t);
     uint8_t read(ControllerPort);
 
     static Keyboard s_instance;
     bool m_initialized{ false };
+    bool m_special_key_pressed{ false };
 };
 
 }

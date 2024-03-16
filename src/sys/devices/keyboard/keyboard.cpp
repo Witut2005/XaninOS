@@ -1,9 +1,12 @@
 
 #include "./keyboard.hpp"
+#include "./scan_codes.h"
+#include <sys/input/input.h>
 #include <lib/libc/hal.h>
 #include <sys/devices/com/com.h>
 
 extern "C" void keyboard_handler_init(void);
+extern "C" int exit(void);
 
 using namespace Device;
 
@@ -43,7 +46,52 @@ bool Keyboard::test(void)
 
 void Keyboard::handle(void)
 {
+    // interrupt_disable();
+    dbg_info(DEBUG_LABEL_KERNEL_DEVICE, "Keyboard handler");
+    static key_info_t KeyInfo;
+    KeyInfo.scan_code = read(ControllerPort::KeyboardEncoder);
+    // xprintf("%x ", KeyInfo.scan_code);
 
+    if (!m_special_key_pressed)
+    {
+        if (KeyInfo.scan_code == KEYBOARD_SPECIAL_KEYS_PREFIX)
+        {
+            m_special_key_pressed = true;
+            return;
+        }
+        else
+            m_special_key_pressed = false;
+    }
+
+    if (m_special_key_pressed)
+    {
+        if (!is_break_code(KeyInfo.scan_code))
+            KeyInfo.special_keys_pressed[KeyInfo.scan_code] = true;
+        else
+            KeyInfo.special_keys_pressed[KeyInfo.scan_code - KEYBOARD_KEYS_BREAK_CODES_OFFSET] = false;
+
+        m_special_key_pressed = false;
+    }
+
+    else
+    {
+        if (!is_break_code(KeyInfo.scan_code))
+            KeyInfo.keys_pressed[KeyInfo.scan_code] = true;
+        else
+            KeyInfo.keys_pressed[KeyInfo.scan_code - KEYBOARD_KEYS_BREAK_CODES_OFFSET] = false;
+    }
+
+    if (KeyInfo.scan_code == KBP_CAPSLOCK)
+        KeyInfo.is_caps = ~KeyInfo.is_caps;
+
+    __input_global_key_info_set(KeyInfo);
+    __input_scan_code_mapper_call(KeyInfo.scan_code);
+    __input_handle_observed_objects(&KeyInfo);
+
+    __input_call_handlers(KeyInfo);
+
+    // if (__input_is_ctrl_pressed() && KeyInfo.keys_pressed[KBP_C])
+    //     exit();
 }
 
 void Keyboard::cpu_reset(void)
@@ -51,9 +99,9 @@ void Keyboard::cpu_reset(void)
     write(ControllerPort::OnboardKeyboardController, Command::CPUSystemReset);
 }
 
-void Keyboard::write(ControllerPort reg, enum Command command)
+void Keyboard::write(ControllerPort reg, uint8_t data)
 {
-    outbIO(reg, command);
+    outbIO(reg, data);
 }
 
 uint8_t Keyboard::read(ControllerPort reg)
@@ -61,8 +109,10 @@ uint8_t Keyboard::read(ControllerPort reg)
     inbIO(reg);
 }
 
-void Keyboard::leds_set(Keyboard::leds_mask_t mask) {
-
+void Keyboard::leds_set(Keyboard::leds_mask_t mask)
+{
+    write(ControllerPort::KeyboardEncoder, Command::LEDset);
+    write(ControllerPort::KeyboardEncoder, mask);
 }
 
 Keyboard Keyboard::s_instance;
@@ -71,6 +121,11 @@ extern "C"
 {
     bool keyboard_init_cpp(interrupt_vector_t vector) {
         return Keyboard::the().init(vector);
+    }
+
+    void keyboard_handler(void)
+    {
+        Keyboard::the().handle();
     }
 
     void kbd_cpu_reset(void)
