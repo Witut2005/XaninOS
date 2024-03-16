@@ -6,6 +6,7 @@ import sys
 import subprocess
 from colorama import init
 from termcolor import colored
+import datetime
 
 OBJECT = 1
 BINARY = 2
@@ -36,6 +37,12 @@ class CompileObject:
 
         else:
             self.output_name = output_name
+    
+    def output_modifcation_time(self):
+        return os.path.getmtime(self.output_name)
+
+    def source_modifcation_time(self):
+        return os.path.getmtime(self.path)
     
     def command(self):
         if self.output_name == None:
@@ -463,16 +470,18 @@ objects_to_compile = {
 for os_module, objects in objects_to_compile.items():
     print(colored('\ncompling {} module'.format(os_module).upper(), 'green'))
     for object in objects:
-        status = os.system(object.command())
-        if status != 0:
-            sys.exit(1)
-        
-        if args.long == False:
-            print(object.path.ljust(90, ' '), end='')
-        else:
-            print(object.command())
 
-        print(colored('OK', 'green'))
+        if object.source_modifcation_time() >= object.output_modifcation_time():
+            status = os.system(object.command())
+            if status != 0:
+                sys.exit(1)
+
+            if args.long == False:
+                print(object.path.ljust(90, ' '), end='')
+            else:
+                print(object.command())
+
+            print(colored('OK', 'green'))
     
 print(colored('\nXANIN OS MODULES BUILDED\n', 'green'))
     

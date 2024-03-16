@@ -90,6 +90,8 @@ void Keyboard::handle(void)
 
     __input_call_handlers(KeyInfo);
 
+    for (int i = 0; i < 20;i += 2);
+
     // if (__input_is_ctrl_pressed() && KeyInfo.keys_pressed[KBP_C])
     //     exit();
 }
