@@ -11,8 +11,19 @@
 #include <sys/devices/keyboard/scan_codes.h>
 #include <sys/terminal/backend/backend.h>
 
-void putchar(char c) { __sys_xtf_character_put(__sys_vty_get(), c); }
+FileInformationBlock* stdin;
+FileInformationBlock* stdout;
+// FileInformationBlock* stderr;
 
+void putchar(char c)
+{
+    __sys_xtf_character_put(__sys_vty_get(), c);
+}
+
+void stdio_init(void)
+{
+    // stdin = __sys_xin_
+}
 
 void putchar_color(char c, color_t color)
 {

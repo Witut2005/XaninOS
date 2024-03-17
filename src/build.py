@@ -325,7 +325,6 @@ objects_to_compile = {
         CompileObject('./lib/libc/memory.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./lib/libc/stdiox.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./lib/libc/stdlibx.c', builders['c'], builder_options['c']['default'], OBJECT),
-        CompileObject('./lib/libc/signal.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./lib/libc/string.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./lib/libc/data_structures.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./lib/libc/system.c', builders['c'], builder_options['c']['default'], OBJECT),
@@ -339,13 +338,11 @@ objects_to_compile = {
 
     'libcpp': [
         CompileObject('./lib/libcpp/command_parser.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
-        # CompileObject('./lib/libcpp/icxxabi.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./lib/libcpp/regex.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./lib/libcpp/istream.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./lib/libcpp/ostream.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./lib/libcpp/string.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./lib/libcpp/time.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
-        # CompileObject('./lib/libcpp/bytes.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./lib/libcpp/endian.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./lib/libcpp/hash.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
     ],

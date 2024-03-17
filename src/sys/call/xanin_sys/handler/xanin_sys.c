@@ -45,43 +45,43 @@ uint32_t xanin_sys_handle(void)
     case XANIN_FOPEN:
     {
         // ECX = file name, EDX = options_str
-        eax = (uint32_t)__xin_fopen((char *)ecx, (char *)edx);
+        eax = (uint32_t)__xin_fopen((char*)ecx, (char*)edx);
         break;
     }
 
     case XANIN_FREAD:
     {
-        eax = __xin_fread((XinEntry *)ecx, (void *)edx, ebx);
+        eax = __xin_fread((XinEntry*)ecx, (void*)edx, ebx);
         break;
     }
 
     case XANIN_FWRITE:
     {
-        eax = __xin_fwrite((XinEntry *)ecx, (void *)edx, ebx);
+        eax = __xin_fwrite((XinEntry*)ecx, (void*)edx, ebx);
         break;
     }
 
     case XANIN_FCLOSE:
     {
-        __xin_fclose((XinEntry **)ecx);
+        __xin_fclose((XinEntry**)ecx);
         break;
     }
 
     case XANIN_OPEN:
     {
-        eax = __xin_open((char *)ecx, edx);
+        eax = __xin_open((char*)ecx, edx);
         break;
     }
 
     case XANIN_READ:
     {
-        eax = __xin_read(ecx, (void *)edx, ebx);
+        eax = __xin_read(ecx, (void*)edx, ebx);
         break;
     }
 
     case XANIN_WRITE:
     {
-        eax = __xin_write(ecx, (void *)edx, ebx);
+        eax = __xin_write(ecx, (void*)edx, ebx);
         break;
     }
 
@@ -91,7 +91,13 @@ uint32_t xanin_sys_handle(void)
         break;
     }
 
-        // Memory Allocation
+    case XANIN_XIN_ENTRY_CREATE:
+    {
+        // eax = __xin_entry_create(eax, edx);
+        break;
+    }
+
+    // Memory Allocation
 
     case XANIN_ALLOCATE:
     {
@@ -112,7 +118,7 @@ uint32_t xanin_sys_handle(void)
         // ECX = PTR
         // xprintf("0x%x\n", ecx);
         interrupt_disable();
-        mmngr_block_free(USER_HEAP, (void *)ecx);
+        mmngr_block_free(USER_HEAP, (void*)ecx);
         interrupt_enable();
         break;
     }
@@ -120,11 +126,11 @@ uint32_t xanin_sys_handle(void)
     case XANIN_REALLOCATE:
     {
         // ECX = ptr, EDX = size
-        eax = (uint32_t)__sys_realloc((void *)ecx, edx);
+        eax = (uint32_t)__sys_realloc((void*)ecx, edx);
         break;
     }
 
-        // Input
+    // Input
 
     case XANIN_GETCHAR:
     {
@@ -141,13 +147,13 @@ uint32_t xanin_sys_handle(void)
     case XANIN_INPUTG:
     {
         // ECX = PTR
-        *(xchar *)ecx = __inputg();
+        *(xchar*)ecx = __inputg();
         break;
     }
 
     case XANIN_KEYINFO_GET:
     {
-        *(key_info_t *)ecx = __keyinfo_get();
+        *(key_info_t*)ecx = __keyinfo_get();
         break;
     }
 
@@ -177,31 +183,31 @@ uint32_t xanin_sys_handle(void)
 
     case XANIN_INPUT_ADD_OBJECT_TO_OBSERVE:
     {
-        __input_add_object_to_observe(*(KeyboardModuleObservedObject *)&ecx);
+        __input_add_object_to_observe(*(KeyboardModuleObservedObject*)&ecx);
         break;
     }
 
     case XANIN_INPUT_REMOVE_OBJECT_FROM_OBSERVE:
     {
-        __input_remove_object_from_observe((const key_info_t *const)ecx);
+        __input_remove_object_from_observe((const key_info_t* const)ecx);
         break;
     }
 
     case XANIN_INPUT_HANDLE_OBSERVED_OBJECTS:
     {
-        __input_handle_observed_objects((const key_info_t *const)ecx);
+        __input_handle_observed_objects((const key_info_t* const)ecx);
         break;
     }
 
     case XANIN_INPUT_ADD_HANDLER:
     {
-        __input_add_handler((const InputHandler *const)ecx);
+        __input_add_handler((const InputHandler* const)ecx);
         break;
     }
 
     case XANIN_INPUT_REMOVE_HANDLER:
     {
-        __input_remove_handler(*((input_handler_t *)&ecx));
+        __input_remove_handler(*((input_handler_t*)&ecx));
         break;
     }
 
@@ -213,7 +219,7 @@ uint32_t xanin_sys_handle(void)
 
     case XANIN_INPUT_CALL_HANDLERS:
     {
-        __input_call_handlers(*((key_info_t *)&ecx));
+        __input_call_handlers(*((key_info_t*)&ecx));
         break;
     }
 
@@ -226,7 +232,7 @@ uint32_t xanin_sys_handle(void)
     case XANIN_DISK_READ:
     {
         // ECX = sector_id, EDX = how_many, EBX = where to load
-        __disk_sectors_read(ATA_FIRST_BUS, ATA_MASTER, ecx, edx, (uint16_t *)ebx);
+        __disk_sectors_read(ATA_FIRST_BUS, ATA_MASTER, ecx, edx, (uint16_t*)ebx);
         eax = (uint32_t)ebx;
         break;
     }
@@ -234,7 +240,7 @@ uint32_t xanin_sys_handle(void)
     case XANIN_DISK_WRITE:
     {
         // ECX = sector_id, EDX = how_many, EBX = from where to load
-        __disk_sectors_write(ATA_FIRST_BUS, ATA_MASTER, ecx, edx, (uint16_t *)ebx);
+        __disk_sectors_write(ATA_FIRST_BUS, ATA_MASTER, ecx, edx, (uint16_t*)ebx);
         break;
     }
 
@@ -274,7 +280,7 @@ uint32_t xanin_sys_handle(void)
 
     case XANIN_VTY_SET:
     {
-        __vty_set((Xtf *)ecx);
+        __vty_set((Xtf*)ecx);
         eax = (uint32_t)__vty_get();
         break;
     }
@@ -293,31 +299,31 @@ uint32_t xanin_sys_handle(void)
 
     case XANIN_XTB_INIT:
     {
-        __xtb_init(ecx, edx, (uint16_t *)ebx);
+        __xtb_init(ecx, edx, (uint16_t*)ebx);
         break;
     }
 
     case XANIN_XTB_FLUSH:
     {
-        __xtb_flush((Xtf *)ecx);
+        __xtb_flush((Xtf*)ecx);
         break;
     }
 
     case XANIN_XTB_FLUSH_ALL:
     {
-        __xtb_flush_all((Xtf *)ecx);
+        __xtb_flush_all((Xtf*)ecx);
         break;
     }
 
     case XANIN_XTB_SCROLL_UP:
     {
-        __xtb_scroll_up((Xtf *)ecx);
+        __xtb_scroll_up((Xtf*)ecx);
         break;
     }
 
     case XANIN_XTB_SCROLL_DOWN:
     {
-        __xtb_scroll_down((Xtf *)ecx);
+        __xtb_scroll_down((Xtf*)ecx);
         break;
     }
 
@@ -329,92 +335,92 @@ uint32_t xanin_sys_handle(void)
 
     case XANIN_XTF_DESTROY:
     {
-        __xtf_destroy((Xtf *)ecx);
+        __xtf_destroy((Xtf*)ecx);
         break;
     }
 
     case XANIN_XTF_BUFFER_NTH_LINE_INDEX_GET:
     {
-        eax = (uint32_t)__xtf_buffer_nth_line_index_get((Xtf *)ecx, edx);
+        eax = (uint32_t)__xtf_buffer_nth_line_index_get((Xtf*)ecx, edx);
         break;
     }
 
     case XANIN_XTF_BUFFER_NTH_LINE_SIZE_GET:
     {
-        eax = (uint32_t)__xtf_buffer_nth_line_size_get((Xtf *)ecx, edx);
+        eax = (uint32_t)__xtf_buffer_nth_line_size_get((Xtf*)ecx, edx);
         break;
     }
 
     case XANIN_XTF_LINE_NUMBER_FROM_POSITION_GET:
     {
-        eax = (uint32_t)__xtf_line_number_from_position_get((Xtf *)ecx, edx);
+        eax = (uint32_t)__xtf_line_number_from_position_get((Xtf*)ecx, edx);
         break;
     }
 
     case XANIN_XTF_CELL_PUT:
     {
-        __xtf_cell_put((Xtf *)ecx, (char)edx, (color_t)ebx);
+        __xtf_cell_put((Xtf*)ecx, (char)edx, (color_t)ebx);
         break;
     }
 
     case XANIN_XTF_CHARACTER_PUT:
     {
-        __xtf_character_put((Xtf *)ecx, (char)edx);
+        __xtf_character_put((Xtf*)ecx, (char)edx);
         break;
     }
 
     case XANIN_XTF_REMOVE_LAST_CELL:
     {
-        __xtf_remove_last_cell((Xtf *)ecx);
+        __xtf_remove_last_cell((Xtf*)ecx);
         break;
     }
 
-        // ADD LATER
-        // case XANIN_XTF_VIRUTAL_CURSOR_ADD:
-        // {
-        //     xtf_virtual_cursor_add((Xtf*)ecx, (color_t)edx);
-        //     break;
-        // }
+    // ADD LATER
+    // case XANIN_XTF_VIRUTAL_CURSOR_ADD:
+    // {
+    //     xtf_virtual_cursor_add((Xtf*)ecx, (color_t)edx);
+    //     break;
+    // }
 
     case XANIN_XTF_BUFFER_CLEAR:
     {
-        __xtf_buffer_clear((Xtf *)ecx);
+        __xtf_buffer_clear((Xtf*)ecx);
         break;
     }
 
     case XANIN_XTF_SCROLLING_ON:
     {
-        __xtf_scrolling_on((Xtf *)ecx);
+        __xtf_scrolling_on((Xtf*)ecx);
         break;
     }
 
     case XANIN_XTF_SCROLLING_OFF:
     {
-        __xtf_scrolling_off((Xtf *)ecx);
+        __xtf_scrolling_off((Xtf*)ecx);
         break;
     }
 
     case XANIN_XTF_CURSOR_ON:
     {
-        __xtf_cursor_on((Xtf *)ecx, (color_t)edx);
+        __xtf_cursor_on((Xtf*)ecx, (color_t)edx);
         break;
     }
 
     case XANIN_XTF_CURSOR_OFF:
     {
-        __xtf_cursor_off((Xtf *)ecx);
+        __xtf_cursor_off((Xtf*)ecx);
         break;
     }
 
     case XANIN_XTF_CURSOR_INC:
     {
-        __xtf_cursor_inc((Xtf *)ecx);
+        __xtf_cursor_inc((Xtf*)ecx);
         break;
     }
 
     case XANIN_XTF_CURSOR_DEC:
     {
-        __xtf_cursor_dec((Xtf *)ecx);
+        __xtf_cursor_dec((Xtf*)ecx);
         break;
     }
 

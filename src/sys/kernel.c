@@ -1,4 +1,5 @@
 
+#include "call/xanin_sys/ids/xanin_syscalls.h"
 #include "devices/com/labels.h"
 #include <sys/net/network_protocols/internet_protocol/ipv4/ip.h>
 #include <lib/ascii/ascii.h>
@@ -423,7 +424,9 @@ void kernel_start(void)
         fwrite(StdioLegacyConfig, "FALSE", 6);
 
         puts_warning("SINCE V1.8, XANIN USES TWO DIFFERENT GRAPHIC MODES. IF YOU WANT\nTO RUN THE PROGRAM IN A GIVEN MODE, HOLD CTRL WHILE SUBMITTING A COMMAND\n");
+        xprintf("VGA WIDTH: %d\n", xanin_syscall0(XANIN_VGA_TEXT_MODE_WIDTH_GET));
     }
+
 
     fclose(&StdioLegacyConfig);
 
