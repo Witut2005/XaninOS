@@ -19,6 +19,8 @@
 #include <sys/terminal/frontend/frontend.h>
 #include <sys/terminal/backend/backend.h>
 
+#include <sys/devices/com/com.h>
+
 stdio_mode_t stdio_current_mode;
 
 uint32_t xanin_sys_handle(void)
@@ -32,7 +34,7 @@ uint32_t xanin_sys_handle(void)
         "mov %3, ebx;"
         : "=g"(eax), "=g"(ecx), "=g"(edx), "=g"(ebx)
         :
-        : "ecx", "edx", "ebx");
+        : "eax", "ecx", "edx", "ebx");
 
     interrupt_enable();
     // xprintf("eax: %d ", eax);
@@ -93,7 +95,7 @@ uint32_t xanin_sys_handle(void)
 
     case XANIN_XIN_ENTRY_CREATE:
     {
-        // eax = __xin_entry_create(eax, edx);
+        eax = __xin_entry_create((XinEntryCreateArgs*)ecx, edx);
         break;
     }
 
@@ -440,6 +442,10 @@ uint32_t xanin_sys_handle(void)
     {
         eax = vga_text_mode_height;
         break;
+    }
+    default:
+    {
+        dbg_error(DEBUG_LABEL_SYSCALL, "Unknown syscall");
     }
     }
 

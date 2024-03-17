@@ -10,9 +10,10 @@
 #include <stdarg.h>
 #include <sys/devices/keyboard/scan_codes.h>
 #include <sys/terminal/backend/backend.h>
+#include <lib/libc/system.h>
 
-FileInformationBlock* stdin;
-FileInformationBlock* stdout;
+XinEntry* stdin;
+XinEntry* stdout;
 // FileInformationBlock* stderr;
 
 void putchar(char c)
@@ -22,7 +23,12 @@ void putchar(char c)
 
 void stdio_init(void)
 {
-    // stdin = __sys_xin_
+    XinEntryCreateArgs args;
+    args.entryname = "stdout";
+    stdout = (XinEntry*)xanin_syscall2(XANIN_XIN_ENTRY_CREATE, (uint32_t)&args, XIN_STDOUT);
+
+    args.entryname = "stdin";
+    stdin = (XinEntry*)xanin_syscall2(XANIN_XIN_ENTRY_CREATE, (uint32_t)&args, XIN_STDIN);
 }
 
 void putchar_color(char c, color_t color)

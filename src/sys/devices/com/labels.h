@@ -14,3 +14,4 @@
 #define DEBUG_LABEL_PMMNGR "PMMNGR"
 #define DEBUG_LABEL_TERMINAL "Terminal"
 #define DEBUG_LABEL_IRQ "IRQ"
+#define DEBUG_LABEL_SYSCALL "Syscall"

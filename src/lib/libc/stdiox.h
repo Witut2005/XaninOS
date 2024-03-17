@@ -23,25 +23,26 @@ Screen.y = y_new
 extern "C" {
 #endif
 
-int screen_clear(void);
-int vga_screen_buffer_clear(void);
+    void stdio_init(void);
+    int screen_clear(void);
+    int vga_screen_buffer_clear(void);
 
-void putchar(char c);
-void putchar_color(char c, color_t color);
+    void putchar(char c);
+    void putchar_color(char c, color_t color);
 
-void xprintf(char* str, ... );
-void xscanf(char* str, ... );
-void xscan_range(char* string_buffer, uint32_t how_many_chars);
-void stdio_vty_set(Xtf* Front);
-Xtf* stdio_vty_get(void);
+    void xprintf(char* str, ...);
+    void xscanf(char* str, ...);
+    void xscan_range(char* string_buffer, uint32_t how_many_chars);
+    void stdio_vty_set(Xtf* Front);
+    Xtf* stdio_vty_get(void);
 
-void putc(char* str, uint32_t count);
-void putsc(const char* str, color_t color);
-void puts(const char* str);
-void puts_warning(const char* str);
-void puts_error(const char* str);
+    void putc(char* str, uint32_t count);
+    void putsc(const char* str, color_t color);
+    void puts(const char* str);
+    void puts_warning(const char* str);
+    void puts_error(const char* str);
 
-void stdio_refresh(address_t* args);
+    void stdio_refresh(address_t* args);
 
 #ifdef __cplusplus
 }

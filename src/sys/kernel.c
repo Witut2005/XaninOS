@@ -424,11 +424,12 @@ void kernel_start(void)
         fwrite(StdioLegacyConfig, "FALSE", 6);
 
         puts_warning("SINCE V1.8, XANIN USES TWO DIFFERENT GRAPHIC MODES. IF YOU WANT\nTO RUN THE PROGRAM IN A GIVEN MODE, HOLD CTRL WHILE SUBMITTING A COMMAND\n");
-        xprintf("VGA WIDTH: %d\n", xanin_syscall0(XANIN_VGA_TEXT_MODE_WIDTH_GET));
     }
 
-
+    stdio_init();
     fclose(&StdioLegacyConfig);
+
+    xanin_syscall0(0x12345);
 
     kernel_loop();
 }

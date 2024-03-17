@@ -3,6 +3,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <sys/call/xanin_sys/ids/xanin_syscalls.h>
 
 char* system_variable_get(char* value);
 
