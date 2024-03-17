@@ -37,12 +37,18 @@ class CompileObject:
 
         else:
             self.output_name = output_name
-    
+
     def output_modifcation_time(self):
         return os.path.getmtime(self.output_name)
 
     def source_modifcation_time(self):
         return os.path.getmtime(self.path)
+
+    def needs_to_be_recompiled(self):
+        try:
+            return self.source_modifcation_time() >= self.output_modifcation_time() 
+        except:
+            return True
     
     def command(self):
         if self.output_name == None:
@@ -471,7 +477,7 @@ for os_module, objects in objects_to_compile.items():
     print(colored('\ncompling {} module'.format(os_module).upper(), 'green'))
     for object in objects:
 
-        if object.source_modifcation_time() >= object.output_modifcation_time():
+        if object.needs_to_be_recompiled():
             status = os.system(object.command())
             if status != 0:
                 sys.exit(1)

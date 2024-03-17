@@ -7,7 +7,7 @@ int reboot(void)
 {
     interrupt_disable();
     *(uint16_t*)VGA_TEXT_MEMORY = 0x4141;
-    kbd_cpu_reset();
+    keyboard_cpu_reset();
     // xprintf("nicho");
 
     // screen_clear();

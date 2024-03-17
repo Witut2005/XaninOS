@@ -29,7 +29,7 @@ public:
         Enable = 0xF4,
         Reset = 0xFF,
 
-        //Onboard Keyboard
+        //Onboard controller
         Read = 0x20,
         Write = 0x60,
         SelfTest = 0xAA,
@@ -49,14 +49,58 @@ public:
         Caps
     };
 
-    bool init(interrupt_vector_t vector);
-    void reset(void);
-    bool test(void);
-    void handle(void);
+    ////////////////////////////////////////////////////////////////
 
-    void leds_set(leds_mask_t);
+    enum StatusRegisterMask : uint8_t {
+        OutputBufferStatus = 1,
+        InputBufferStatus = 2,
+        System = 4,
+        CommandData = 8,
+        LockedFlag = 0x10,
+        AuxOutputBufferFull = 0x20,
+        Timeout = 0x40,
+        ParityError = 0x80
+    };
+
+
+    enum BufferStatus : uint8_t {
+        Empty,
+        Full
+    };
+
+    enum SystemFlag : uint8_t {
+        Default,
+        BATSuccess,
+    };
+
+    enum CommandData : uint8_t {
+        Data,
+        Command
+    };
+
+    enum KeyboardLockStatus : uint8_t {
+        Locked,
+        NotLocked
+    };
+
+    enum Timeout : uint8_t {
+        Ok,
+        Timemout
+    };
+
+    enum ParityError : uint8_t {
+        NoError,
+        Error
+    };
+
+    ////////////////////////////////////////////////////////////////
+
+    bool init(interrupt_vector_t vector);
+    bool test(void);
+    void reset(void);
     void cpu_reset(void);
-    // void scan_code_set(uint8_t);
+    void leds_set(leds_mask_t);
+    void handle(void);
 
     static Keyboard& the(void);
 

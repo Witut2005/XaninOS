@@ -103,11 +103,13 @@ void Keyboard::cpu_reset(void)
 
 void Keyboard::write(ControllerPort reg, uint8_t data)
 {
+    while ((inbIO(ControllerPort::OnboardKeyboardController) & StatusRegisterMask::InputBufferStatus) == BufferStatus::Full);
     outbIO(reg, data);
 }
 
 uint8_t Keyboard::read(ControllerPort reg)
 {
+    while ((inbIO(ControllerPort::OnboardKeyboardController) & StatusRegisterMask::OutputBufferStatus) == BufferStatus::Empty);
     inbIO(reg);
 }
 
@@ -121,8 +123,28 @@ Keyboard Keyboard::s_instance;
 
 extern "C"
 {
-    bool keyboard_init_cpp(interrupt_vector_t vector) {
+    bool keyboard_init(interrupt_vector_t vector) {
         return Keyboard::the().init(vector);
+    }
+
+    void keyboard_test(void)
+    {
+        Keyboard::the().test();
+    }
+
+    void keyboard_reset(void)
+    {
+        Keyboard::the().reset();
+    }
+
+    void keyboard_cpu_reset(void)
+    {
+        Keyboard::the().cpu_reset();
+    }
+
+    void keyboard_leds_set(uint8_t mask)
+    {
+        Keyboard::the().leds_set(mask);
     }
 
     void keyboard_handler(void)
@@ -130,8 +152,4 @@ extern "C"
         Keyboard::the().handle();
     }
 
-    void kbd_cpu_reset(void)
-    {
-        Keyboard::the().cpu_reset();
-    }
 }
