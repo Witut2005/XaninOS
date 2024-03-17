@@ -13,6 +13,7 @@
 
 void putchar(char c) { __sys_xtf_character_put(__sys_vty_get(), c); }
 
+
 void putchar_color(char c, color_t color)
 {
     __sys_xtf_cell_put(__sys_vty_get(), c, color);
@@ -20,7 +21,7 @@ void putchar_color(char c, color_t color)
 
 int vga_screen_buffer_clear(void)
 {
-    uint16_t *screen_cleaner = (uint16_t *)__vga_buffer_segment_get();
+    uint16_t* screen_cleaner = (uint16_t*)__vga_buffer_segment_get();
     for (int i = 0; i < (VGA_WIDTH * VGA_HEIGHT); i++)
     {
         *screen_cleaner = '\0';
@@ -36,7 +37,7 @@ int screen_clear(void)
     return XANIN_OK;
 }
 
-void putc(char *str, uint32_t count)
+void putc(char* str, uint32_t count)
 {
     asm("mov eax, 4;"
         "mov ebx, 1;"
@@ -44,50 +45,50 @@ void putc(char *str, uint32_t count)
         "mov edx, %1;"
         "int 0x80;"
         :
-        : "g"(str), "g"(count));
+    : "g"(str), "g"(count));
 }
 
-void putsc(const char *str, color_t color)
+void putsc(const char* str, color_t color)
 {
-    Xtf *StdioFront = __sys_vty_get();
+    Xtf* StdioFront = __sys_vty_get();
 
     for (int i = 0; i < strlen(str); i++)
         __sys_xtf_cell_put(StdioFront, str[i], color);
 }
 
-void puts(const char *str)
+void puts(const char* str)
 {
 
-    Xtf *StdioVty = __sys_vty_get();
+    Xtf* StdioVty = __sys_vty_get();
 
     while (*str != '\0')
         __sys_xtf_character_put(StdioVty, *(str++));
 }
 
-void puts_warning(const char *str)
+void puts_warning(const char* str)
 {
     putsc("[Warning]", OUTPUT_COLOR_SET(black, yellow));
     __sys_xtf_character_put(__sys_vty_get(), ' ');
     puts(str);
 }
 
-void puts_error(const char *str)
+void puts_error(const char* str)
 {
     putsc("[Error]", OUTPUT_COLOR_SET(black, lred));
     __sys_xtf_character_put(__sys_vty_get(), ' ');
     puts(str);
 }
 
-void xprintf(char *str, ...)
+void xprintf(char* str, ...)
 {
     char tmp[128];
-    memset((uint8_t *)tmp, '\0', SIZE_OF(tmp));
-    char *temporary_pointer = tmp;
+    memset((uint8_t*)tmp, '\0', SIZE_OF(tmp));
+    char* temporary_pointer = tmp;
 
     uint32_t number;
 
-    char *stringPtr;
-    Xtf *StdioVty = __sys_vty_get();
+    char* stringPtr;
+    Xtf* StdioVty = __sys_vty_get();
 
     if (StdioVty == NULL)
         return;
@@ -120,7 +121,7 @@ void xprintf(char *str, ...)
 
                 for (int i = 0; tmp[i] != '\0'; i++)
                     __sys_xtf_cell_put(StdioVty, tmp[i],
-                                       OUTPUT_COLOR_SET(background_color, font_color));
+                        OUTPUT_COLOR_SET(background_color, font_color));
 
                 break;
             }
@@ -133,18 +134,18 @@ void xprintf(char *str, ...)
                 uint32_t time_shift = 28;
 
                 for (int i = 0; i < 8;
-                     i++, time_mask = time_mask >> 4, time_shift -= 4)
+                    i++, time_mask = time_mask >> 4, time_shift -= 4)
                 {
                     if (i == 2 || i == 4)
                         __sys_xtf_cell_put(StdioVty, '-',
-                                           OUTPUT_COLOR_SET(background_color, font_color));
+                            OUTPUT_COLOR_SET(background_color, font_color));
 
                     // Screen.cursor[Screen.y][Screen.x] = (uint16_t)( (((time &
                     // time_mask) >> time_shift) + '0')  | (((background_color << 4) |
                     // font_color) << 8));
                     __sys_xtf_cell_put(StdioVty,
-                                       (((time & time_mask) >> time_shift) + '0'),
-                                       OUTPUT_COLOR_SET(background_color, font_color));
+                        (((time & time_mask) >> time_shift) + '0'),
+                        OUTPUT_COLOR_SET(background_color, font_color));
                 }
 
                 break;
@@ -159,18 +160,18 @@ void xprintf(char *str, ...)
                 uint16_t time_shift = 12;
 
                 for (int i = 0; i < 4;
-                     i++, time_mask = time_mask >> 4, time_shift -= 4)
+                    i++, time_mask = time_mask >> 4, time_shift -= 4)
                 {
                     if (i == 2)
                         __sys_xtf_cell_put(StdioVty, ':',
-                                           OUTPUT_COLOR_SET(background_color, font_color));
+                            OUTPUT_COLOR_SET(background_color, font_color));
 
                     // Screen.cursor[Screen.y][Screen.x] = (uint16_t)( (((time &
                     // time_mask) >> time_shift) + '0')  | (((background_color << 4) |
                     // font_color) << 8));
                     __sys_xtf_cell_put(StdioVty,
-                                       (((time & time_mask) >> time_shift) + '0'),
-                                       OUTPUT_COLOR_SET(background_color, font_color));
+                        (((time & time_mask) >> time_shift) + '0'),
+                        OUTPUT_COLOR_SET(background_color, font_color));
                 }
                 break;
             }
@@ -182,21 +183,21 @@ void xprintf(char *str, ...)
 
                 for (int i = 0; temporary_pointer[i] != '\0'; i++)
                     __sys_xtf_cell_put(StdioVty, temporary_pointer[i],
-                                       OUTPUT_COLOR_SET(background_color, font_color));
+                        OUTPUT_COLOR_SET(background_color, font_color));
 
                 break;
             }
 
             case 's':
             {
-                stringPtr = va_arg(args, char *);
+                stringPtr = va_arg(args, char*);
 
                 if (stringPtr == NULL)
                     break;
 
                 for (int i = 0; stringPtr[i] != '\0'; i++)
                     __sys_xtf_cell_put(StdioVty, stringPtr[i],
-                                       OUTPUT_COLOR_SET(background_color, font_color));
+                        OUTPUT_COLOR_SET(background_color, font_color));
 
                 break;
             }
@@ -205,9 +206,9 @@ void xprintf(char *str, ...)
             {
                 uint8_t number = (uint8_t)va_arg(args, uint32_t);
                 __sys_xtf_cell_put(StdioVty, ((number & 0xF0) >> 4) + '0',
-                                   OUTPUT_COLOR_SET(background_color, font_color));
+                    OUTPUT_COLOR_SET(background_color, font_color));
                 __sys_xtf_cell_put(StdioVty, (number & 0xF) + '0',
-                                   OUTPUT_COLOR_SET(background_color, font_color));
+                    OUTPUT_COLOR_SET(background_color, font_color));
 
                 break;
             }
@@ -215,7 +216,7 @@ void xprintf(char *str, ...)
             case 'c':
             {
                 __sys_xtf_cell_put(StdioVty, (char)va_arg(args, int),
-                                   OUTPUT_COLOR_SET(background_color, font_color));
+                    OUTPUT_COLOR_SET(background_color, font_color));
                 break;
             }
 
@@ -234,7 +235,7 @@ void xprintf(char *str, ...)
 
                 for (int i = 0; temporary_pointer[i] != '\0'; i++)
                     __sys_xtf_cell_put(StdioVty, temporary_pointer[i],
-                                       OUTPUT_COLOR_SET(background_color, font_color));
+                        OUTPUT_COLOR_SET(background_color, font_color));
 
                 break;
             }
@@ -247,7 +248,7 @@ void xprintf(char *str, ...)
 
                 for (int i = 0; temporary_pointer[i] != '\0'; i++)
                     __sys_xtf_cell_put(StdioVty, temporary_pointer[i],
-                                       OUTPUT_COLOR_SET(background_color, font_color));
+                        OUTPUT_COLOR_SET(background_color, font_color));
 
                 break;
             }
@@ -259,7 +260,7 @@ void xprintf(char *str, ...)
 
                 for (int i = 0; temporary_pointer[i] != '\0'; i++)
                     __sys_xtf_cell_put(StdioVty, temporary_pointer[i],
-                                       OUTPUT_COLOR_SET(background_color, font_color));
+                        OUTPUT_COLOR_SET(background_color, font_color));
 
                 break;
             }
@@ -284,7 +285,7 @@ void xprintf(char *str, ...)
 
                     for (int i = 0; temporary_pointer[i] != '\0'; i++)
                         __sys_xtf_cell_put(StdioVty, temporary_pointer[i],
-                                           OUTPUT_COLOR_SET(background_color, font_color));
+                            OUTPUT_COLOR_SET(background_color, font_color));
 
                     break;
                 }
@@ -298,7 +299,7 @@ void xprintf(char *str, ...)
 
                     for (int i = 0; temporary_pointer[i] != '\0'; i++)
                         __sys_xtf_cell_put(StdioVty, temporary_pointer[i],
-                                           OUTPUT_COLOR_SET(background_color, font_color));
+                            OUTPUT_COLOR_SET(background_color, font_color));
 
                     break;
                 }
@@ -313,12 +314,12 @@ void xprintf(char *str, ...)
 
         else
             __sys_xtf_cell_put(StdioVty, str[string_counter++],
-                               OUTPUT_COLOR_SET(background_color, font_color));
+                OUTPUT_COLOR_SET(background_color, font_color));
     }
     va_end(args);
 }
 
-void xscanf(char *str, ...)
+void xscanf(char* str, ...)
 {
     if (stdio_mode_get() != STDIO_MODE_TERMINAL)
         return;
@@ -334,10 +335,10 @@ void xscanf(char *str, ...)
 #define XSCANF_FIELD_BUFFER_SIZE XANIN_PMMNGR_BLOCK_SIZE * 2 * 5
 #define XSCANF_STRING_TYPED_BUFFER_SIZE XANIN_PMMNGR_BLOCK_SIZE * 2 * 5
 
-    char *field_buffer = (char *)calloc(XSCANF_FIELD_BUFFER_SIZE);
-    char *string_typed_buffer = (char *)calloc(XSCANF_STRING_TYPED_BUFFER_SIZE);
+    char* field_buffer = (char*)calloc(XSCANF_FIELD_BUFFER_SIZE);
+    char* string_typed_buffer = (char*)calloc(XSCANF_STRING_TYPED_BUFFER_SIZE);
 
-    Xtf *StdioVty = __sys_vty_get();
+    Xtf* StdioVty = __sys_vty_get();
     uint32_t begin_index = StdioVty->size;
     __sys_xtf_scrolling_on(StdioVty);
     // __sys_xtf_cursor_on(StdioVty, OUTPUT_COLOR_SET(white, black));
@@ -408,25 +409,25 @@ start:
 
                     case 's':
                     {
-                        char *string_pointer = va_arg(args, char *);
+                        char* string_pointer = va_arg(args, char*);
                         // xprintf("0x%x\n", string_pointer);
 
-                        for (char *i = string_pointer; *i != '\0'; i++)
+                        for (char* i = string_pointer; *i != '\0'; i++)
                             *i = '\0';
 
                         if (!strlen(string_typed_buffer))
                             break;
 
                         for (int i = 0; string_typed_buffer[counter] != '\0' &&
-                                        string_typed_buffer[counter] != ' ';
-                             i++)
+                            string_typed_buffer[counter] != ' ';
+                            i++)
                         {
                             field_buffer[i] = string_typed_buffer[counter];
                             counter++;
                         }
 
                         for (int i = 0; field_buffer[i] != '\0' && field_buffer[i] != ' ';
-                             i++)
+                            i++)
                         {
                             if ((field_buffer[i] > 127) || (field_buffer[i] < 0x20))
                             {
@@ -444,11 +445,11 @@ start:
                     case 'd':
                     {
 
-                        uint32_t *number = va_arg(args, uint32_t *);
+                        uint32_t* number = va_arg(args, uint32_t*);
 
                         for (int i = 0; string_typed_buffer[counter] != '\0' &&
-                                        string_typed_buffer[counter] != ' ';
-                             i++)
+                            string_typed_buffer[counter] != ' ';
+                            i++)
                         {
                             field_buffer[i] = string_typed_buffer[counter];
                             counter++;
@@ -465,7 +466,7 @@ start:
                     case 'c':
                     {
 
-                        char *number = va_arg(args, char *);
+                        char* number = va_arg(args, char*);
                         *number = string_typed_buffer[0];
                         break;
                     }
@@ -473,11 +474,11 @@ start:
                     case 'x':
                     {
 
-                        uint32_t *number = va_arg(args, uint32_t *);
+                        uint32_t* number = va_arg(args, uint32_t*);
 
                         for (int i = 0; string_typed_buffer[counter] != '\0' &&
-                                        string_typed_buffer[counter] != ' ';
-                             i++)
+                            string_typed_buffer[counter] != ' ';
+                            i++)
                         {
                             field_buffer[i] = string_typed_buffer[counter];
                             counter++;
@@ -494,11 +495,11 @@ start:
                     case 'b':
                     {
 
-                        uint32_t *number = va_arg(args, uint32_t *);
+                        uint32_t* number = va_arg(args, uint32_t*);
 
                         for (int i = 0; string_typed_buffer[counter] != '\0' &&
-                                        string_typed_buffer[counter] != ' ';
-                             i++)
+                            string_typed_buffer[counter] != ' ';
+                            i++)
                         {
                             field_buffer[i] = string_typed_buffer[counter];
                             counter++;
@@ -541,7 +542,7 @@ start:
     free(string_typed_buffer);
 }
 
-void xscan_range(char *string_buffer, uint32_t how_many_chars)
+void xscan_range(char* string_buffer, uint32_t how_many_chars)
 {
 
     stdio_mode_t stdio_current_mode = stdio_mode_get();
@@ -551,7 +552,7 @@ void xscan_range(char *string_buffer, uint32_t how_many_chars)
         return;
 
     uint32_t buffer_index = 0;
-    char *field_buffer = (char *)calloc(how_many_chars);
+    char* field_buffer = (char*)calloc(how_many_chars);
 
     while (1)
     {
@@ -570,7 +571,7 @@ void xscan_range(char *string_buffer, uint32_t how_many_chars)
 
             string_buffer[--buffer_index] = '\0';
             stdio_legacy_cell_put('\0', OUTPUT_COLOR_SET(black, black), Screen.y,
-                                  Screen.x);
+                Screen.x);
             __sys_xtf_remove_last_cell(__sys_vty_get());
             __sys_xtb_flush(__sys_vty_get());
             Screen.x--;
@@ -583,7 +584,7 @@ void xscan_range(char *string_buffer, uint32_t how_many_chars)
 
             string_buffer[buffer_index] = Input.character;
             __sys_xtf_cell_put(__sys_vty_get(), Input.character,
-                               OUTPUT_COLOR_SET(black, white));
+                OUTPUT_COLOR_SET(black, white));
             __sys_xtb_flush(__sys_vty_get());
             buffer_index++;
             Input.character = 0;
