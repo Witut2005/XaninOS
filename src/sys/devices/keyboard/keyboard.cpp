@@ -46,8 +46,6 @@ bool Keyboard::test(void)
 
 void Keyboard::handle(void)
 {
-    // interrupt_disable();
-    dbg_info(DEBUG_LABEL_KERNEL_DEVICE, "Keyboard handler");
     static key_info_t KeyInfo;
     KeyInfo.scan_code = read(ControllerPort::KeyboardEncoder);
     // xprintf("%x ", KeyInfo.scan_code);
@@ -109,7 +107,8 @@ void Keyboard::write(ControllerPort reg, uint8_t data)
 
 uint8_t Keyboard::read(ControllerPort reg)
 {
-    while ((inbIO(ControllerPort::OnboardKeyboardController) & StatusRegisterMask::OutputBufferStatus) == BufferStatus::Empty);
+    if (reg == ControllerPort::KeyboardEncoder) // wait for Buffer being not empty
+        ((inbIO(ControllerPort::OnboardKeyboardController) & StatusRegisterMask::OutputBufferStatus) == BufferStatus::Empty);
     inbIO(reg);
 }
 
