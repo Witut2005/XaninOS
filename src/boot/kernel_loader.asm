@@ -42,7 +42,6 @@ mov dword esp,0x01000000
 mov eax, 0xb8000 ;VRAM 
 mov dword [eax],0x0F410F41;print something
 
-
 A20on:
 
 in al, 0x92
@@ -52,7 +51,6 @@ out 0x92, al
 ;http://www.brokenthorn.com/Resources/OSDevPic.html
 
 picConf:
-
 cli
 
 ;ICW 1
@@ -82,13 +80,10 @@ mov al,0x1
 out PIC1_DATA,al
 out PIC2_DATA,al
 
-
 ;masking IRQs
 mov al,0xff
 out 0x21,al
 out 0xA1,al
-
-
 
 ;stack test 
 push 0x11111111
@@ -196,7 +191,6 @@ _GDT_ADDR:
 
 
 _GDT:
-
     ;0x0
     ;null segment
     dd 0x0
@@ -204,7 +198,7 @@ _GDT:
 
     ;0x8
     ;code segment
-    dd 0x0000ffff 
+    dd 0x0000fff0 
     db 0x0
     db 10011110b
     db 11001111b
@@ -212,7 +206,7 @@ _GDT:
 
     ;0x10
     ;data segment
-    dd 0x0000ffff 
+    dd 0x0000fff0 
     db 0x0
     db 10010010b
     db 11001111b
@@ -221,7 +215,7 @@ _GDT:
     ;0x18
     ;stack segment
     dw 0
-    dw 0xffff   
+    dw 0xfff0   
     db 0
     db 10010110b
     db 01000000b
@@ -229,7 +223,7 @@ _GDT:
 
     ;0x20
     ;16bit code segment
-    dd 0x0000ffff 
+    dd 0x0000fff0 
     db 0x0
     db 10011000b
     db 00001111b
@@ -237,7 +231,7 @@ _GDT:
     
     ;0x28
     ;16bit data segment
-    dd 0x0000ffff 
+    dd 0x0000fff0 
     db 0x0
     db 10010010b
     db 00001111b
@@ -245,13 +239,36 @@ _GDT:
 
     ;0x30     
     ;XaninOS Task State Segment
-    dd 0xffffffff 
+    dd 0x0000fff0 
     db 0x0
     db 10001001b
     db 00001111b
     db 0x0
 
+    ;0x38
+    ;External Tasks Code Segment
+    dd 0xfffffff0 
+    db 0x0
+    db 10011110b
+    db 11001111b
+    db 0x0
 
+    ;0x40
+    ;External Tasks Data Segment
+    dd 0xfffffff0 
+    db 0x0
+    db 10010010b
+    db 11001111b
+    db 0x0
+
+    ;0x48
+    ;External Tasks Stack Segment
+    ; dw 0
+    ; dw 0xffff   
+    ; db 0
+    ; db 10010110b
+    ; db 01000000b
+    ; db 0xff
 
 
 _GDT_END:
