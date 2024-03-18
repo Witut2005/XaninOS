@@ -15,3 +15,4 @@
 #define DEBUG_LABEL_TERMINAL "Terminal"
 #define DEBUG_LABEL_IRQ "IRQ"
 #define DEBUG_LABEL_SYSCALL "Syscall"
+#define DEBUG_LABEL_PROCESS "Process"
