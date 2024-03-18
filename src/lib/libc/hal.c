@@ -9,15 +9,15 @@
 
 #define IVT_MEMORY_LOCATION NULL
 
-void eflags_get(EFlags *ptr)
+void eflags_get(EFlags* ptr)
 {
     uint32_t eflags;
     asm volatile(
         "pushf;"       // Push the EFLAGS register onto the stack
         "pop %0;"      // Pop the value from the stack into the variable 'eflags'
         : "=r"(eflags) // Output constraint specifying that 'eflags' is an output operand
-    );
-    *ptr = *(EFlags *)&eflags;
+        );
+    *ptr = *(EFlags*)&eflags;
 }
 
 void outbIO(uint16_t port, uint8_t al)
@@ -108,9 +108,9 @@ uint16_t get_cursor_position(void)
 void eoi_send(void)
 {
 
-    if (*(uint32_t *)APIC_SPURIOUS_INTERRUPT_VECTOR_REGISTER & (1 << 8))
+    if (*(uint32_t*)APIC_SPURIOUS_INTERRUPT_VECTOR_REGISTER & (1 << 8))
     {
-        *(uint32_t *)APIC_EOI_REGISTER = 0x0;
+        *(uint32_t*)APIC_EOI_REGISTER = 0x0;
     }
 
     else
@@ -124,40 +124,39 @@ void io_wait(void)
 
 void real_mode_enter(uint16_t segment, uint16_t offset, uint32_t return_address)
 {
+    // __disk_sectors_read(ATA_FIRST_BUS, ATA_MASTER, 1, 1, (uint16_t *)0x600);
+    // __disk_sectors_read(ATA_FIRST_BUS, ATA_MASTER, 1000, 2, (uint16_t *)0); // load ivt from file
 
-    __disk_sectors_read(ATA_FIRST_BUS, ATA_MASTER, 1, 1, (uint16_t *)0x600);
-    __disk_sectors_read(ATA_FIRST_BUS, ATA_MASTER, 1000, 2, (uint16_t *)0); // load ivt from file
+    // asm(
+    //     "mov ebx, %0\n\t"
+    //     "and ebx, 0xFFFF\n\t"
 
-    asm(
-        "mov ebx, %0\n\t"
-        "and ebx, 0xFFFF\n\t"
+    //     "mov edx, %1\n\t"
+    //     "and edx, 0xFFFF\n\t"
+    //     "jmp 0x600"
+    //     :
+    //     : "r"((uint32_t)segment), "r"((uint32_t)offset)
 
-        "mov edx, %1\n\t"
-        "and edx, 0xFFFF\n\t"
-        "jmp 0x600"
-        :
-        : "r"((uint32_t)segment), "r"((uint32_t)offset)
-
-    );
+    // );
 }
 
 void real_mode_enter_no_return(uint16_t segment, uint16_t offset)
 {
 
-    __disk_sectors_read(ATA_FIRST_BUS, ATA_MASTER, __xin_find_entry("/enter_real_mode.bin")->first_sector, 1, (uint16_t *)0x600);
-    __disk_sectors_read(ATA_FIRST_BUS, ATA_MASTER, __xin_find_entry("/ivt")->first_sector, 2, (uint16_t *)IVT_MEMORY_LOCATION); // load ivt from file
+    // __disk_sectors_read(ATA_FIRST_BUS, ATA_MASTER, __xin_find_entry("/enter_real_mode.bin")->first_sector, 1, (uint16_t *)0x600);
+    // __disk_sectors_read(ATA_FIRST_BUS, ATA_MASTER, __xin_find_entry("/ivt")->first_sector, 2, (uint16_t *)IVT_MEMORY_LOCATION); // load ivt from file
 
-    asm(
-        "mov ebx, %0\n\t"
-        "and ebx, 0xFFFF\n\t"
+    // asm(
+    //     "mov ebx, %0\n\t"
+    //     "and ebx, 0xFFFF\n\t"
 
-        "mov edx, %1\n\t"
-        "and edx, 0xFFFF\n\t"
-        "jmp 0x600"
-        :
-        : "r"((uint32_t)segment), "r"((uint32_t)offset)
+    //     "mov edx, %1\n\t"
+    //     "and edx, 0xFFFF\n\t"
+    //     "jmp 0x600"
+    //     :
+    //     : "r"((uint32_t)segment), "r"((uint32_t)offset)
 
-    );
+    // );
 
     // void (*enter16)(void) = (void(*)(void))0x600;
     // enter16();

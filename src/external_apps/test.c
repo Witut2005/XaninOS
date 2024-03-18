@@ -17,14 +17,14 @@ typedef struct screen_t screen_t;
 
 extern screen_t Screen;
 extern void* calloc(uint32_t size);
-extern void xscanf(char* str, ... );
+extern void xscanf(char* str, ...);
 
 
 static char tmp[100];
 
 void main(int argc, char* argv[])
 {
-    xprintf("fasdg %d ", argc);
+    xprintf("fasdgg %d ", argc);
     // char* tmp = (uint8_t*)calloc(100);
     memset(tmp, 0, 100);
     xprintf("tmp 0x%x\n", tmp);
@@ -33,11 +33,11 @@ void main(int argc, char* argv[])
     // xprintf("podaj tmp: ");
     // memset(tmp, 0, 100);
     xscanf("%s", tmp);
-    
+
     xprintf("twoje dane: %s\n", tmp);
     // xprintf("tmp 0x%x\n", tmp);
 
     __sys_inputg();
-    
+
     return;
 }

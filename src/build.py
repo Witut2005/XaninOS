@@ -489,10 +489,9 @@ for os_module, objects in objects_to_compile.items():
 print(colored('\nXANIN OS MODULES BUILDED\n', 'green'))
     
 create_c_library('./lib/libc/libc.o', './lib/libc/libc.a', [obj.output_name for obj in objects_to_compile['libc']] + [
-        './sys/log/syslog.o', 
         './lib/screen/screen.o', 
-        './sys/devices/hda/disk.o', 
-        './fs/xin.o', './sys/call/xanin_sys/calls/devices/disk.o', './sys/call/xanin_sys/calls/stdio/stdio.o', 
+        './sys/call/xanin_sys/calls/devices/disk.o', 
+        './sys/call/xanin_sys/calls/stdio/stdio.o', 
         './sys/call/xanin_sys/calls/terminal/terminal.o', 
         './sys/call/xanin_sys/calls/vga/vga.o', 
         './sys/call/xanin_sys/calls/input/input.o', 

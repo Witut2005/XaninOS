@@ -9,11 +9,11 @@
 #include <sys/devices/keyboard/key_map.h>
 #include <lib/libc/memory.h>
 
-extern void xprintf(char *str, ...);
+extern void xprintf(char* str, ...);
 
 static uint32_t string_errno;
 
-int char_find(const char *str, char c)
+int char_find(const char* str, char c)
 {
     for (int i = 0; str[i] != '\0'; i++)
     {
@@ -28,7 +28,7 @@ uint32_t check_string_errors(uint32_t mask)
     return string_errno & mask;
 }
 
-uint32_t strlen(const char *a)
+uint32_t strlen(const char* a)
 {
 
     if (a == NULL)
@@ -36,13 +36,13 @@ uint32_t strlen(const char *a)
 
     uint32_t length = 0;
 
-    for (const char *i = a; *i != '\0'; i++)
+    for (const char* i = a; *i != '\0'; i++)
         length++;
 
     return length;
 }
 
-char *strcpy(char *dest, const char *src)
+char* strcpy(char* dest, const char* src)
 {
     for (; *src != '\0'; dest++, src++)
         *dest = *src;
@@ -50,7 +50,7 @@ char *strcpy(char *dest, const char *src)
     return dest;
 }
 
-char *strncpy(char *x, const char *y, size_t size)
+char* strncpy(char* x, const char* y, size_t size)
 {
     for (; *y != '\0' && size != 0; x++, y++, size--)
         *x = *y;
@@ -60,11 +60,11 @@ char *strncpy(char *x, const char *y, size_t size)
     return x;
 }
 
-char *reverse_string(char *str)
+char* reverse_string(char* str)
 {
-    char *end = str + strlen(str) - 1;
+    char* end = str + strlen(str) - 1;
 
-    for (char *begin = str; (uint32_t)begin < (uint32_t)end; begin++, end--)
+    for (char* begin = str; (uint32_t)begin < (uint32_t)end; begin++, end--)
     {
         char buf = *begin;
 
@@ -98,7 +98,7 @@ char *reverse_string(char *str)
 
 // }
 
-uint32_t strcmp(char *a, const char *b)
+uint32_t strcmp(char* a, const char* b)
 {
     uint32_t diffrences = 0;
 
@@ -114,7 +114,7 @@ uint32_t strcmp(char *a, const char *b)
     return diffrences;
 }
 
-bool bstrcmp(char *a, const char *b)
+bool bstrcmp(char* a, const char* b)
 {
 
     uint32_t lengtha = strlen(a);
@@ -123,7 +123,7 @@ bool bstrcmp(char *a, const char *b)
     if (lengtha != lengthb)
         return 0;
 
-    for (char *i = a; *i != '\0'; i++)
+    for (char* i = a; *i != '\0'; i++)
     {
         if (*a != *b)
             return 0;
@@ -134,7 +134,7 @@ bool bstrcmp(char *a, const char *b)
     return 1;
 }
 
-bool bstrncmp(char *a, const char *b, size_t string_size)
+bool bstrncmp(char* a, const char* b, size_t string_size)
 {
     for (int i = 0; i < string_size; i++)
     {
@@ -144,7 +144,7 @@ bool bstrncmp(char *a, const char *b, size_t string_size)
     return 1;
 }
 
-char *uint_to_str(uint32_t x, char *buf)
+char* uint_to_str(uint32_t x, char* buf)
 {
     int i = 0;
 
@@ -166,7 +166,7 @@ char *uint_to_str(uint32_t x, char *buf)
     return buf;
 }
 
-char *int_to_str(int x, char *buf)
+char* int_to_str(int x, char* buf)
 {
     int i = 0;
 
@@ -193,7 +193,7 @@ char *int_to_str(int x, char *buf)
     return buf;
 }
 
-char *bin_to_str(int x, char *buf)
+char* bin_to_str(int x, char* buf)
 {
 
     int i = 0;
@@ -218,7 +218,7 @@ char *bin_to_str(int x, char *buf)
     return buf;
 }
 
-char *bcd_to_str(uint8_t x, char *buf)
+char* bcd_to_str(uint8_t x, char* buf)
 {
 
     buf[0] = (((x & 0xf0) >> 4) + 48);
@@ -226,7 +226,7 @@ char *bcd_to_str(uint8_t x, char *buf)
     return buf;
 }
 
-void erase_spaces(char *buf)
+void erase_spaces(char* buf)
 {
     for (int i = 0; buf[i] != '\0'; i++)
     {
@@ -237,10 +237,10 @@ void erase_spaces(char *buf)
     }
 }
 
-char *toupper(char *str)
+char* toupper(char* str)
 {
 
-    for (char *i = str; *i != '\0'; i++)
+    for (char* i = str; *i != '\0'; i++)
     {
         if (*i >= 'a' && *i <= 'z')
             *i -= 32;
@@ -249,9 +249,9 @@ char *toupper(char *str)
     return str;
 }
 
-char *tolower(char *str)
+char* tolower(char* str)
 {
-    for (char *i = str; *i != '\0'; i++)
+    for (char* i = str; *i != '\0'; i++)
     {
         if (*i >= 'A' && *i <= 'Z')
             *i += 32;
@@ -260,9 +260,9 @@ char *tolower(char *str)
     return str;
 }
 
-char *int_to_hex_str(uint32_t x, char *buf)
+char* int_to_hex_str(uint32_t x, char* buf)
 {
-    char hex_values[16] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
+    char hex_values[16] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
 
     int i = 0;
 
@@ -284,12 +284,12 @@ char *int_to_hex_str(uint32_t x, char *buf)
     return buf;
 }
 
-uint32_t hex_str_to_int(char *str)
+uint32_t hex_str_to_int(char* str)
 {
 
     uint32_t value = 0;
 
-    for (char *i = str; *i != '\0' && *i != ' '; i++)
+    for (char* i = str; *i != '\0' && *i != ' '; i++)
     {
         value = value * 0x10;
 
@@ -303,11 +303,11 @@ uint32_t hex_str_to_int(char *str)
     return value;
 }
 
-char *xint_to_hex_str(uint32_t x, char *buf, uint8_t how_many_chars)
+char* xint_to_hex_str(uint32_t x, char* buf, uint8_t how_many_chars)
 {
     how_many_chars *= 2;
 
-    char hex_values[16] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
+    char hex_values[16] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
 
     if (!x)
     {
@@ -338,7 +338,7 @@ char *xint_to_hex_str(uint32_t x, char *buf, uint8_t how_many_chars)
     return buf;
 }
 
-char *int_to_oct_str(int x, char *buf)
+char* int_to_oct_str(int x, char* buf)
 {
     int i = 0;
 
@@ -376,7 +376,7 @@ char* strcpy(char* dest, char* src)
 
 }
 */
-uint32_t atoi(char *str)
+uint32_t atoi(char* str)
 {
 
     uint32_t sum = 0;
@@ -390,7 +390,7 @@ uint32_t atoi(char *str)
     return sum;
 }
 
-uint32_t strtoi(const char *str, uint8_t format)
+uint32_t strtoi(const char* str, uint8_t format)
 {
 
     bool is_negative = false;
@@ -403,7 +403,7 @@ uint32_t strtoi(const char *str, uint8_t format)
     if (format > 16)
         format = 16;
 
-    if (format == 16 && (bstrncmp((char *)str, "0x", 2) || bstrncmp((char *)str, "0b", 2) || bstrncmp((char *)str, "0o", 2)))
+    if (format == 16 && (bstrncmp((char*)str, "0x", 2) || bstrncmp((char*)str, "0b", 2) || bstrncmp((char*)str, "0o", 2)))
         str += 2;
 
     uint8_t digit_counter = strlen(str);
@@ -434,7 +434,7 @@ uint32_t strtoi(const char *str, uint8_t format)
     return sum;
 }
 
-uint32_t str2ipv4(char *str)
+uint32_t str2ipv4(char* str)
 {
 
     uint32_t tmp = 0;
@@ -443,7 +443,7 @@ uint32_t str2ipv4(char *str)
     if (strlen(str) == 15)
     {
 
-        char str_tmp[4] = {'\0'};
+        char str_tmp[4] = { '\0' };
         uint32_t octet;
 
         memcpy(str_tmp, str, 3);
@@ -492,7 +492,7 @@ uint32_t str2ipv4(char *str)
 
     else
     {
-        char str_tmp[4] = {'\0'};
+        char str_tmp[4] = { '\0' };
         uint32_t octet;
 
         for (counter = 0; counter <= 3; counter++)
@@ -621,7 +621,7 @@ uint32_t str2ipv4(char *str)
     return tmp;
 }
 
-char *substr_find(char *str, const char *substr)
+char* substr_find(char* str, const char* substr)
 {
     while (*str != '\0')
     {
@@ -632,7 +632,7 @@ char *substr_find(char *str, const char *substr)
     return NULL;
 }
 
-char *substr_last_find(char *str, const char *substr)
+char* substr_last_find(char* str, const char* substr)
 {
     int last_index = -1;
 
@@ -646,9 +646,9 @@ char *substr_last_find(char *str, const char *substr)
     return last_index != -1 ? &str[last_index] : NULL;
 }
 
-char *strconcat(char *str1, char *buf) // concatenate str1 and buf (first str1)
+char* strconcat(char* str1, char* buf) // concatenate str1 and buf (first str1)
 {
-    char *tmp = (char *)calloc(strlen(buf) + 1);
+    char* tmp = (char*)calloc(strlen(buf) + 1);
 
     strcpy(tmp, buf);
 
@@ -666,7 +666,7 @@ char *strconcat(char *str1, char *buf) // concatenate str1 and buf (first str1)
     return buf;
 }
 
-uint32_t number_of_lines_get(const char *str)
+uint32_t number_of_lines_get(const char* str)
 {
     uint32_t lines = 0;
 
@@ -681,7 +681,7 @@ uint32_t number_of_lines_get(const char *str)
     return lines + 1;
 }
 
-uint32_t size_of_biggest_line_get(const char *str)
+uint32_t size_of_biggest_line_get(const char* str)
 {
 
     int max_line_size = 0;
@@ -708,9 +708,9 @@ uint32_t size_of_biggest_line_get(const char *str)
     return max_line_size;
 }
 
-StringRectangle *const string_rectangle_create(const char *buf, uint32_t position_x, uint32_t position_y)
+StringRectangle* const string_rectangle_create(const char* buf, uint32_t position_x, uint32_t position_y)
 {
-    StringRectangle *Rect = (StringRectangle *)calloc(SIZE_OF(StringRectangle));
+    StringRectangle* Rect = (StringRectangle*)calloc(SIZE_OF(StringRectangle));
     Rect->size_x = size_of_biggest_line_get(buf);
     Rect->size_y = number_of_lines_get(buf);
     Rect->position_x = position_x;
@@ -719,7 +719,7 @@ StringRectangle *const string_rectangle_create(const char *buf, uint32_t positio
     return Rect;
 }
 
-char *string_align_begin(char *const str, char filler, uint32_t count)
+char* string_align_begin(char* const str, char filler, uint32_t count)
 {
 
     uint32_t string_length = strlen(str);
@@ -738,7 +738,7 @@ char *string_align_begin(char *const str, char filler, uint32_t count)
     return str;
 }
 
-char *string_align_end(char *const str, char filler, uint32_t count)
+char* string_align_end(char* const str, char filler, uint32_t count)
 {
     int i;
     for (i = strlen(str); i < count; i++)
@@ -747,4 +747,30 @@ char *string_align_end(char *const str, char filler, uint32_t count)
     str[i] = '\0'; // put NULL terminator
 
     return str;
+}
+
+char* getline(XinEntry* File, int line_id)
+{
+
+    fread(File, NULL, File->size); // loads all data to buffer
+
+    char* file_data = (char*)(File->FileInfo->buffer);
+    char* line = (char*)calloc(XANIN_PMMNGR_BLOCK_SIZE);
+    int current_line = 0;
+
+    for (; *file_data != '\0'; file_data++)
+    {
+        if (current_line == line_id)
+        {
+            for (int i = 0; file_data[i] != '\n' && file_data[i] != '\0'; i++)
+                line[i] = file_data[i];
+            return line;
+        }
+        if (*file_data == '\n')
+            current_line++;
+    }
+
+    free(line);
+    return NULL;
+    // return line;
 }

@@ -14,8 +14,9 @@ APPS = ./programs
 HANDLERS = ./sys/interrupts/handlers
 
 all:
-	# $(C) $(C_COMPILE) -nostdlib brainfuck.c -I /home/witut/xaninOS/src/ -L /home/witut/xaninOS/src/external_apps -o brainfuck -l c 
-	$(C) $(C_COMPILE) -nostdlib test.c -I /home/witut/xaninOS/src/ -L /home/witut/xaninOS/src/external_apps -o test.elf -l c 
-
+	# $(C) $(C_COMPILE) -nostdlib test.c -I /home/witut/xaninOS/src/ -L /home/witut/xaninOS/src/external_apps libc.o -Ttext 0xA00000 -o test.elf
+	
+	# -l c 
     # rm bitmap.bmp
-	rm libc.a libc.o crt0.o 
+	# rm libc.a libc.o crt0.o 
+	$(C) $(C_COMPILE) -nostdlib brainfuck.c -I ../ -L /home/witut/xaninOS/src/external_apps libc.o -Ttext 0xA00000 -o brainfuck 

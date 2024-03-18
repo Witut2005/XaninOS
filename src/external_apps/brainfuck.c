@@ -12,8 +12,8 @@
 
 #define BUFFER_SIZE 32768
 
-char *program;
-char *buffer;
+char* program;
+char* buffer;
 size_t pc, ptr;
 size_t prog_len;
 
@@ -33,13 +33,12 @@ void jmp_fwd();
 
 void jmp_bwd();
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
 
     // stdio_mode_set(STDIO_MODE_CANVAS);
     // __sys_vty_set(__sys_vty_get());
 
-    return;
     // stdio_mode_set(STDIO_MODE_TERMINAL);
     xprintf("Brainfuck\n=========\n");
 

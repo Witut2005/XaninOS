@@ -37,7 +37,12 @@ void elf_load(XinEntry* file)
         return;
     }
 
+    if (data == NULL)
+        dbg_error(DEBUG_LABEL_PMMNGR, "MEMORY OUT");
+
+    dbg_info(DEBUG_LABEL_PROCESS, "ELF data reading");
     fread(file, data, file->size);
+    dbg_info(DEBUG_LABEL_PROCESS, "ELF data readed");
 
     // xprintf("file size: %d\n", file->size);
     // xprintf("press ENTER to start: ");
@@ -71,15 +76,15 @@ void elf_load(XinEntry* file)
         return;
     }
 
+    dbg_success(DEBUG_LABEL_PROCESS, "Valid ELF file");
+
     data += ELF_HEADER_SIZE;
     uint32_t load_sum = 0;
 
     while (phnum)
     {
-
         if (*(uint32_t*)data == PT_LOAD)
         {
-
             load_sum++;
 
             p_offset = *(uint32_t*)((uint8_t*)data + 0x4) + file_base;
