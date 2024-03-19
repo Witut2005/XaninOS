@@ -1,4 +1,5 @@
 
+#include <sys/paging/paging.h>
 #include "call/xanin_sys/ids/xanin_syscalls.h"
 #include "devices/com/labels.h"
 #include <sys/net/network_protocols/internet_protocol/ipv4/ip.h>
@@ -342,6 +343,7 @@ void kernel_init(void)
     xprintf("XinFs tables: 0x%x\n", __xin_fs_entries_get());
     // 0x30c800
 
+    xprintf("CPUID: 0b%b\n", cpu_paging_related_info_get() & (1 << 17));
     puts("Press ENTER to continue...\n");
 
     srand(SystemTime.seconds);
