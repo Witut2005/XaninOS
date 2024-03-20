@@ -323,7 +323,6 @@ void kernel_init(void)
         0x0 << APIC_DELIVERY_MODE | 0x0 << APIC_DESTINATION_MODE | 0x0 << APIC_INT_PIN_POLARITY | 0x0 << APIC_INT_MASK,
         ioapic_id_get());
 
-
     // COS NIE DZIALA SYSCALL
     __input_scan_code_mapper_set(xanin_default_character_mapper);
 
@@ -337,19 +336,16 @@ void kernel_init(void)
     xprintf("\n%z----------------------------\n", OUTPUT_COLOR_SET(black, green));
 
     __xin_init();
+    FileDescriptorTable = (XinFileDescriptor*)kcalloc(SIZE_OF(XinFileDescriptor) * 200); // 200 = number o entries
 
     dbg_success(DEBUG_LABEL_XANIN, "Babciu zobacz to wszystko jest dla ciebie ❤️");
 
     xprintf("XinFs tables: 0x%x\n", __xin_fs_entries_get());
-    // 0x30c800
 
     xprintf("CPUID: 0b%b\n", cpu_paging_related_info_get() & (1 << 17));
     puts("Press ENTER to continue...\n");
 
     srand(SystemTime.seconds);
-
-    // __disk_sectors_read(ATA_FIRST_BUS, ATA_MASTER, 0x1, 0x1, (uint16_t *)0x600);
-    // __disk_sectors_read(ATA_FIRST_BUS, ATA_MASTER, 0x2, 0x1, (uint16_t *)0x400);
 
     argv[0] = (char*)calloc(XANIN_PMMNGR_BLOCK_SIZE * 2);
     argv[1] = (char*)calloc(XANIN_PMMNGR_BLOCK_SIZE * 2);
@@ -358,9 +354,6 @@ void kernel_init(void)
     argv[4] = (char*)calloc(XANIN_PMMNGR_BLOCK_SIZE * 2);
 
     __disk_sectors_write(ATA_FIRST_BUS, ATA_MASTER, __xin_find_entry("/ivt")->first_sector, 2, 0x0); // load ivt to /ivt file
-
-    FileDescriptorTable = (XinFileDescriptor*)kcalloc(SIZE_OF(XinFileDescriptor) * 200); // 200 = number o entries
-
     memset((uint8_t*)ArpTable, 0xFF, SIZE_OF(ArpTable[0]));
 
     __xin_file_create("/syslog");
@@ -373,14 +366,7 @@ void kernel_init(void)
     interrupt_enable();
 
     char* buffer = (char*)kcalloc(100 * SIZE_OF(char));
-
     stdio_refresh_rate = 50;
-    // XinEntry *StdioRefreshRateConfig = fopen("/etc/stdio/refresh_rate.conf", "r");
-    // fseek(StdioRefreshRateConfig, ARRAY_LENGTH("STDIO_REFRESH_RATE: ") - 1);
-    // fread(StdioRefreshRateConfig, buffer, 99);
-
-    // stdio_refresh_rate = strtoi(buffer, 10);
-    // stdio_refresh_rate = stdio_refresh_rate <= 100 ? stdio_refresh_rate : 100;
 
     kfree(buffer);
 }
