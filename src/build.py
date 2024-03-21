@@ -302,6 +302,7 @@ objects_to_compile = {
         CompileObject('./sys/log/syslog.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./sys/lock/lock.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./sys/paging/paging.c', builders['c'], builder_options['c']['default'], OBJECT),
+        CompileObject('./sys/paging/paging.asm', builders['asm'], builder_options['asm']['elf32'], './sys/paging/paging_asm.o'),
     ],
 
     'xanin_sys': [

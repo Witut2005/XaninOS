@@ -154,6 +154,9 @@ uint8_t kernel_mmngr_mmap[PMMNGR_MEMORY_BLOCKS];
 
 void kernel_init(void)
 {
+    PageDirectoryEntry4MB page_dir_entry = { {PAGE_DIRECTORY4MB_CREATE(0x0)} }; // kernel page
+    page_directory_entry_set(0, &page_dir_entry);
+    // paging_enable();
 
     INTERRUPT_REGISTER(0, divide_by_zero_exception_entry);
     INTERRUPT_REGISTER(1, debug_exception_entry);
@@ -192,8 +195,6 @@ void kernel_init(void)
     serial_port_initialize(1);
     dbg_info(DEBUG_LABEL_IRQ, "Processor IRQs registered");
 
-    PageDirectoryEntry4MB page_dir_entry = { {PAGE_DIRECTORY4MB_CREATE(0x0)} }; // kernel page
-    page_directory_entry_set(0, &page_dir_entry);
 
     vga_disable_cursor();
 
@@ -347,7 +348,7 @@ void kernel_init(void)
 
     // xprintf("CPUID: 0x%x\n", cpu_paging_related_info_get());
     // xprintf("CPUID: %d\n", cpu_maxphyaddr_get());
-    xprintf("DIR ENTRY: 0x%x\n", page_dir_entry.fields);
+    // xprintf("DIR ENTRY: 0x%x\n", page_dir_entry.fields);
     puts("Press ENTER to continue...\n");
 
     srand(SystemTime.seconds);

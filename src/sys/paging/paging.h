@@ -8,10 +8,12 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <lib/libc/hal.h>
+#include <lib/libc/memory.h>
 
 #define CPUID_PAE (1 << 6)
 #define CPUID_PSE36 (1 << 17)
 #define PAGE_DIRECTORY4MB_CREATE(addr)(0x001FF | (addr << 22))
+#define PAGE_DIRECTORY_SPACE 0x40000
 
 enum PAGE_DIRECTORY_ENTRY_4MB
 {
@@ -45,9 +47,8 @@ typedef struct {
             uint16_t physical_address : 10;
         } __attribute__((packed));
     };
-}__attribute__((packed))PageDirectoryEntry4MB;
+}__attribute__((packed)) PageDirectoryEntry4MB;
 
-void page_directory_entry_set(uint32_t index, PageDirectoryEntry4MB* data);
 
 static inline bool cpu_pae_supported(void)
 {
@@ -70,3 +71,7 @@ static inline uint32_t cpu_maxphyaddr_get(void)
     //if this cpuid is supported
     return eax & 0xFF;
 }
+
+void paging_init(void);
+void page_directory_entry_set(uint32_t index, PageDirectoryEntry4MB* data);
+void paging_enable(void);

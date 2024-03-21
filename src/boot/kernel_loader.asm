@@ -7,8 +7,6 @@ jmp enter_32
 elf_load_address: dd 0x90909090
 
 enter_32:
-
-
 mov ax, 0x2000
 mov ds, ax
 mov es, ax
@@ -277,10 +275,7 @@ _GDT:
 
 _GDT_END:
 
-
-
 times(512 - ( $ - $$ ) % 512) db 0x0
-
 
 kernel:
 
