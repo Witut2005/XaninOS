@@ -192,7 +192,7 @@ void kernel_init(void)
     serial_port_initialize(1);
     dbg_info(DEBUG_LABEL_IRQ, "Processor IRQs registered");
 
-    PageDirectoryEntry4MB page_dir_entry = { {PAGE_DIRECTORY4MB_CREATE(0x123)} };
+    PageDirectoryEntry4MB page_dir_entry = { {PAGE_DIRECTORY4MB_CREATE(0x0)} }; // kernel page
     page_directory_entry_set(0, &page_dir_entry);
 
     vga_disable_cursor();

@@ -23,6 +23,10 @@ mov eax, cr0
 or eax, 0x1
 mov cr0,eax
 
+mov eax, cr4
+or eax, (1 << 4); Enable Page Size Extensions
+mov cr4, eax
+
 jmp dword CODE_SEGMENT:(_bits32)
 
 

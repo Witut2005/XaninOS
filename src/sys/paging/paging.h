@@ -11,7 +11,7 @@
 
 #define CPUID_PAE (1 << 6)
 #define CPUID_PSE36 (1 << 17)
-#define PAGE_DIRECTORY4MB_CREATE(addr)(0x7FC000 | (addr << 22))
+#define PAGE_DIRECTORY4MB_CREATE(addr)(0x001FF | (addr << 22))
 
 enum PAGE_DIRECTORY_ENTRY_4MB
 {
