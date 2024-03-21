@@ -190,8 +190,11 @@ void kernel_init(void)
 
     mmngr_init(kernel_mmngr_mmap, (uint8_t*)0x100000, PMMNGR_MEMORY_BLOCKS);
     serial_port_initialize(1);
-
     dbg_info(DEBUG_LABEL_IRQ, "Processor IRQs registered");
+
+    PageDirectoryEntry4MB page_dir_entry = { {PAGE_DIRECTORY4MB_CREATE(0x123)} };
+    page_directory_entry_set(0, &page_dir_entry);
+
     vga_disable_cursor();
 
     vga_text_mode_height = 25;
@@ -342,7 +345,9 @@ void kernel_init(void)
 
     xprintf("XinFs tables: 0x%x\n", __xin_fs_entries_get());
 
-    xprintf("CPUID: 0b%b\n", cpu_paging_related_info_get() & (1 << 17));
+    // xprintf("CPUID: 0x%x\n", cpu_paging_related_info_get());
+    // xprintf("CPUID: %d\n", cpu_maxphyaddr_get());
+    xprintf("DIR ENTRY: 0x%x\n", page_dir_entry.fields);
     puts("Press ENTER to continue...\n");
 
     srand(SystemTime.seconds);

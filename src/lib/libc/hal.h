@@ -3,6 +3,13 @@
 
 #include <stdint.h>
 
+typedef struct {
+    uint32_t eax;
+    uint32_t ebx;
+    uint32_t ecx;
+    uint32_t edx;
+}__attribute__((packed)) CPUIDResult;
+
 struct EFlags
 {
     union
@@ -53,7 +60,7 @@ extern "C"
 {
 #endif
 
-    void eflags_get(EFlags *ptr);
+    void eflags_get(EFlags* ptr);
     void interrupt_disable(void);
     void interrupt_enable(void);
     void outbIO(uint16_t port, uint8_t al);
@@ -121,3 +128,5 @@ static inline void cpu_halt(void)
     asm("cli");
     asm("hlt");
 }
+
+CPUIDResult cpuid(uint32_t leaf, uint32_t);

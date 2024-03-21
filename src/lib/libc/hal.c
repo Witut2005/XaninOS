@@ -1,5 +1,5 @@
 
-
+#include <cpuid.h>
 #include <stdint.h>
 #include <sys/devices/apic/apic_registers.h>
 #include <sys/devices/hda/disk.h>
@@ -204,4 +204,12 @@ void pic_mode_disable(void)
 {
     outbIO(0x22, 0x70); // select interrupt mode control register
     outbIO(0x23, 0x1);  // force nmi and intr signals through the apic
+}
+
+CPUIDResult cpuid(uint32_t leaf, uint32_t eax)
+{
+    CPUIDResult cpuid_result;
+    __get_cpuid(leaf, (unsigned int*)&eax, (unsigned int*)&cpuid_result.ebx, (unsigned int*)&cpuid_result.ecx, (unsigned int*)&cpuid_result.edx);
+    cpuid_result.eax = eax;
+    return cpuid_result;
 }
