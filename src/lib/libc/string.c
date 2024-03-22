@@ -1,15 +1,15 @@
 
-#include <lib/libc/string.h>
-#include <stdarg.h>
 #include <stdint.h>
-#include <lib/libc/colors.h>
-#include <lib/screen/screen.h>
-#include <lib/libc/stdlibx.h>
 #include <lib/libc/math.h>
-#include <sys/devices/keyboard/key_map.h>
+#include <lib/libc/colors.h>
 #include <lib/libc/memory.h>
+#include <lib/libc/string.h>
+#include <lib/libc/stdlibx.h>
+#include <lib/screen/screen.h>
+#include <sys/devices/keyboard/key_map.h>
 
 #define ASCII_CASE_OFFSET 32 
+#define EXIT_ON_EQUALS_ZERO(val, return_value) if(val == 0) {return return_value;}
 
 static uint32_t string_errno;
 
@@ -31,8 +31,7 @@ uint32_t check_string_errors(uint32_t mask)
 
 uint32_t strlen(const char* str)
 {
-    if (str == NULL)
-        return 0;
+    EXIT_ON_EQUALS_ZERO(str, 0);
 
     uint32_t length = 0;
     for (int i = 0; str[i] != '\0'; i++, length++);
@@ -42,21 +41,24 @@ uint32_t strlen(const char* str)
 
 char* strcpy(char* dest, const char* src)
 {
-    for (; *src != '\0'; dest++, src++) {
-        *dest = *src;
-    }
-    *dest = *src;
+    EXIT_ON_EQUALS_ZERO(src, NULL);
+    uint32_t length = strlen(src);
+    memcpy(dest, src, strlen(src));
+    dest[length] = '\0';
     return dest;
 }
 
-char* strncpy(char* x, const char* y, size_t size)
+char* strncpy(char* dest, const char* src, size_t size)
 {
-    for (; *y != '\0' && size != 0; x++, y++, size--) {
-        *x = *y;
-    }
+    EXIT_ON_EQUALS_ZERO(size, NULL);
 
-    *x = *y;
-    return x;
+    uint32_t src_length = strlen(src);
+    uint32_t length = src_length > size ? size : src_length;
+
+    memcpy(dest, src, length);
+    dest[length] = '\0';
+
+    return dest;
 }
 
 char* reverse_string(char* str)
@@ -71,30 +73,6 @@ char* reverse_string(char* str)
     }
     return str;
 }
-
-// char* float_to_string(float number, char* str)
-// {
-//     uint32_t* float_ptr = (uint32_t*)&number;
-//     bool sign_bit = (*float_ptr & (1 << 31) >> 31);
-//     uint8_t exponent = (*float_ptr & (0xFF << 23) >> 23);
-//     exponent -= 127;
-//     exponent = pow(2,exponent);
-//     uint32_t mantissa = (*float_ptr & 0x7FFFFF);
-
-//     uint32_t number_high;
-//     uint32_t number_low;
-
-//     int i = 0;
-
-//     number_high = exponent * mantissa;
-
-//     if(sign_bit)
-//     {
-//         str[i] = '-';
-//         i++;
-//     }
-
-// }
 
 uint32_t strcmp(char* a, const char* b)
 {
@@ -264,7 +242,7 @@ char* tolower(char* str)
 
 char* int_to_hex_str(uint32_t number, char* buf)
 {
-    #define HEX_BASE 16
+#define HEX_BASE 16
     char hex_values[16] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
 
     if (!number) {
@@ -315,8 +293,6 @@ char* xint_to_hex_str(uint32_t x, char* buf, uint8_t how_many_chars)
         return buf;
     }
 
-    // uint16_t* debug_cursor = (uint16_t*)0xb8000;
-
     for (int i = 0; i <= how_many_chars; i++)
     {
         if (i < how_many_chars)
@@ -359,21 +335,7 @@ char* int_to_oct_str(int x, char* buf)
 
     return buf;
 }
-/*
-char* strcpy(char* dest, char* src)
-{
-    while(*src)
-    {
-        *dest = *src;
-        dest++;
-        src++;
-    }
 
-    *(++dest) = '\0';
-    return dest;
-
-}
-*/
 uint32_t atoi(char* str)
 {
 
@@ -644,34 +606,37 @@ char* substr_last_find(char* str, const char* substr)
     return last_index != -1 ? &str[last_index] : NULL;
 }
 
-char* strconcat(char* str1, char* buf) // concatenate str1 and buf (first str1)
+char* strdup(char* str)
 {
-    char* tmp = (char*)calloc(strlen(buf) + 1);
+    char* ns = calloc(strlen(str) * SIZE_OF(char));
+    strcpy(ns, str);
+    return ns;
+}
 
-    strcpy(tmp, buf);
+char* strcat(bool dest_first, char* dest, char* src)
+{
+    //dest = dest + src
+    if (dest_first) {
+        memmove(&dest[strlen(dest)], src, strlen(src)); //include '\0' too
+    }
 
-    int i = 0;
-
-    for (; i < strlen(str1); i++)
-        buf[i] = str1[i];
-
-    for (; i < strlen(buf) + strlen(buf); i++)
-        buf[i] = tmp[i - strlen(str1)];
-
-    buf[i] = '\0';
-
-    free(tmp);
-    return buf;
+    //dest = src + dest
+    else {
+        char* ts = calloc(strlen(dest) + strlen(src));
+        strcpy(ts, src);
+        strcpy(&ts[strlen(ts)], dest);
+        strcpy(dest, ts);
+        free(ts);
+    }
+    return dest;
 }
 
 uint32_t number_of_lines_get(const char* str)
 {
     uint32_t lines = 0;
 
-    while (*str)
-    {
-        if (*str == '\n')
-        {
+    while (*str) {
+        if (*str == '\n') {
             lines++;
         }
         str++;

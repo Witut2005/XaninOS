@@ -53,7 +53,7 @@ typedef struct EFlags EFlags;
 
 #define INTERRUPTS_ON(flags_ptr) \
     if ((flags_ptr)->intf)       \
-        interrupt_enable();
+        interrupt_enable()
 
 #ifdef __cplusplus
 extern "C"

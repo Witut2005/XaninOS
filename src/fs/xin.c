@@ -144,14 +144,15 @@ char* __xin_absolute_path_get(char* rpath, char* buf, XIN_FS_ENTRY_TYPES type)
 
         if (strlen(rpath) == 0)
         {
-            INTERRUPTS_ON(&Flags)
-                return __xin_current_directory_get(buf);
+            INTERRUPTS_ON(&Flags);
+            return __xin_current_directory_get(buf);
         }
 
     strcpy(buf, rpath);
 
-    if (__xin_is_relative_path_used(rpath))
-        strconcat(XinFsData.current_folder, buf);
+    if (__xin_is_relative_path_used(rpath)) {
+        strcat(STRCAT_SRC_FIRST, buf, XinFsData.current_folder);
+    }
 
     char ret[XIN_MAX_PATH_LENGTH + 1] = { '\0' };
     int last_folder_char_index = 0;
@@ -162,8 +163,7 @@ char* __xin_absolute_path_get(char* rpath, char* buf, XIN_FS_ENTRY_TYPES type)
     while (buf[buf_index] != '\0')
     {
 
-        if (memcmp(&buf[buf_index], "./", 2))
-        {
+        if (memcmp(&buf[buf_index], "./", 2)) {
             buf_index += 2;
         }
 
@@ -192,15 +192,13 @@ char* __xin_absolute_path_get(char* rpath, char* buf, XIN_FS_ENTRY_TYPES type)
 
     // xprintf("buf: %s\n", buf);
 
-    if (type == XIN_DIRECTORY && rpath[strlen(rpath) - 1] != '/')
-    {
+    if (type == XIN_DIRECTORY && rpath[strlen(rpath) - 1] != '/') {
         buf[buf_len] = '/'; // append at the end, so buf must be a little bit bigger
         buf[buf_len + 1] = '\0';
     }
 
-    INTERRUPTS_ON(&Flags)
-
-        return buf;
+    INTERRUPTS_ON(&Flags);
+    return buf;
 }
 
 char* __xin_entry_name_extern(char* path)
@@ -272,29 +270,35 @@ bool __xin_is_entry_rwable_check(const XinEntry* Entry) // read and write (nie s
 
 XinEntry* __xin_find_entry(char* entryname)
 {
-
     char entrypath[XIN_MAX_PATH_LENGTH + 1] = { 0 };
 
-    if (!strlen(entryname)) // if path is empty
+    // if path is empty 
+    if (!strlen(entryname)) {
         return NULL;
+    }
 
-    if (entryname[0] == XIN_SYSTEM_FOLDER && entryname[1] == XIN_SYSTEM_FOLDER)
+    if (entryname[0] == XIN_SYSTEM_FOLDER && entryname[1] == XIN_SYSTEM_FOLDER) {
         return __xin_find_entry(XIN_SYSTEM_FOLDER_STR);
+    }
 
     __xin_absolute_path_get(entryname, entrypath, XIN_DIRECTORY); // treat all Entries as directories
     uint32_t entrypath_len = strlen(entrypath);
 
+    // dbg_info(DEBUG_LABEL_XIN_FS, entrypath);
+
     XIN_FS_ITERATE_OVER_ENTRY_TABLE(i)
     {
         // check if given folder exists
-        if (bstrcmp(entrypath, i->path))
+        if (bstrcmp(entrypath, i->path)) {
             return i;
+        }
 
         // check if given file exists
         entrypath[entrypath_len - 1] = '\0';
 
-        if (bstrcmp(entrypath, i->path))
+        if (bstrcmp(entrypath, i->path)) {
             return i;
+        }
 
         entrypath[entrypath_len - 1] = '/';
     }
@@ -618,14 +622,15 @@ XIN_FS_RETURN_STATUSES __xin_link_create(char* filename, char* linkname)
 XIN_FS_RETURN_STATUSES __xin_folder_change(char* foldername)
 {
 
-    if (strlen(foldername) > XIN_MAX_PATH_LENGTH)
+    if (strlen(foldername) > XIN_MAX_PATH_LENGTH) {
         return XANIN_ERROR;
+    }
 
-    else if (bstrcmp(foldername, "."))
+    else if (bstrcmp(foldername, ".")) {
         return XANIN_OK;
+    }
 
-    else if (bstrcmp(foldername, ".."))
-    {
+    else if (bstrcmp(foldername, "..")) {
         XinEntry* CurrentFolderParent = __xin_entry_pf_get(XinFsData.current_folder);
         __xin_folder_change(CurrentFolderParent != NULL ? CurrentFolderParent->path : "/");
         return XANIN_OK;
@@ -650,12 +655,15 @@ XIN_FS_RETURN_STATUSES __xin_folder_change(char* foldername)
         foldername += 2;
 
     XinEntry* NewFolder = __xin_find_entry(foldername);
+    dbg_info(DEBUG_LABEL_XIN_FS, NewFolder->path);
 
-    if (NewFolder != NULL)
+    if (NewFolder != NULL) {
         strcpy(XinFsData.current_folder, NewFolder->path);
+    }
 
-    else
+    else {
         return XANIN_ERROR;
+    }
 
     return XANIN_OK;
 }

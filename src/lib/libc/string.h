@@ -37,6 +37,9 @@ enum STRING_ERNNO_VALUES
     IPV4_ERRNO = 0x1
 };
 
+#define STRCAT_DEST_FIRST true
+#define STRCAT_SRC_FIRST false
+
 #ifdef __cplusplus
 extern "C"
 {
@@ -69,7 +72,9 @@ extern "C"
     char* substr_find(char* str, const char* substr);
     char* substr_last_find(char* str, const char* substr);
 
-    char* strconcat(char* str1, char* buf); // concatenate str1 and buf (first str1)
+    char* strdup(char* str); //allocates memory
+    char* strcat(bool dest_first, char* dest, char* src);
+
     uint32_t check_string_errors(uint32_t mask);
     uint32_t number_of_lines_get(const char* str);
     char* string_align_end(char* const str, char filler, uint32_t count);   // puts NULL at end of string
