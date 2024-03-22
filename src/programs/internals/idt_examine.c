@@ -23,7 +23,7 @@ int idt_examine(void)
     {
         if(interrupt_handlers[i] != NULL)
         {
-            string_align_begin(int_to_str(i, buf), ' ', 4);
+            string_align_begin(int_to_str(STRING_UNSIGNED, i, buf), ' ', 4);
             string_align_end(buf, ' ', 6);
             xprintf("%s%z|%z     0x%x\n", buf, OUTPUT_COLOR_SET(black, green), OUTPUT_COLOR_SET(black, white), interrupt_handlers[i]);
         }

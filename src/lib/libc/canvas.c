@@ -82,7 +82,7 @@ void canvas_xprintf(char *str, ...)
             {
 
                 number = va_arg(args, int);
-                int_to_str(number, temporary_pointer);
+                int_to_str(STRING_SIGNED, number, temporary_pointer);
 
                 for (int i = 0; temporary_pointer[i] != '\0'; i++)
                     stdio_legacy_cell_put_with_interpretation(temporary_pointer[i], OUTPUT_COLOR_SET(background_color, font_color), &Screen.y, &Screen.x);

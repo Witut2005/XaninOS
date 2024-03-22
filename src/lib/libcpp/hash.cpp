@@ -30,10 +30,10 @@ uint32_t jhash(std::string str) {
 
 uint32_t jhash(int i) {
     char buf[20];
-    return jhash(int_to_str(i, buf));
+    return jhash(int_to_str(STRING_SIGNED, i, buf));
 }
 
 uint32_t jhash(uint32_t i) {
     char buf[20];
-    return jhash(int_to_str(i, buf));
+    return jhash(int_to_str(STRING_UNSIGNED, i, buf));
 }

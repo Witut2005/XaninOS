@@ -22,13 +22,6 @@ extern void syscall_entry(void);
 
 /* configure interrupt descriptor table entry */
 
-// #define configure_idt_entry(idt_entry,off,seg)\
-//     idtEntries[idt_entry].off_0_15 = (uint16_t)(((uint32_t)&off & 0x0000ffff));\
-//     idtEntries[idt_entry].off_16_31 = (uint16_t)((uint32_t)&off >> 16);\
-//     idtEntries[idt_entry].segment = seg;\
-//     idtEntries[idt_entry].res = 0x0;\
-//     idtEntries[idt_entry].P_DPL = 0x8e
-
 /* configure interrupt descriptor table entry */
 #define configure_idt_entry(idt_entry,off,seg)\
     idtEntries[idt_entry].off_0_15 = (uint16_t)(((uint32_t)off & 0x0000ffff));\
@@ -36,9 +29,6 @@ extern void syscall_entry(void);
     idtEntries[idt_entry].segment = seg;\
     idtEntries[idt_entry].res = 0x0;\
     idtEntries[idt_entry].P_DPL = 0x8e
-
-
-//extern void _syscall(void);
 
 /* IDT Register */
 struct idt_register

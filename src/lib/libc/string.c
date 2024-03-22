@@ -9,7 +9,7 @@
 #include <sys/devices/keyboard/key_map.h>
 #include <lib/libc/memory.h>
 
-extern void xprintf(char* str, ...);
+#define ASCII_CASE_OFFSET 32 
 
 static uint32_t string_errno;
 
@@ -17,8 +17,9 @@ int char_find(const char* str, char c)
 {
     for (int i = 0; str[i] != '\0'; i++)
     {
-        if (str[i] == c)
+        if (str[i] == c) {
             return i;
+        }
     }
     return -1;
 }
@@ -28,42 +29,39 @@ uint32_t check_string_errors(uint32_t mask)
     return string_errno & mask;
 }
 
-uint32_t strlen(const char* a)
+uint32_t strlen(const char* str)
 {
-
-    if (a == NULL)
+    if (str == NULL)
         return 0;
 
     uint32_t length = 0;
-
-    for (const char* i = a; *i != '\0'; i++)
-        length++;
+    for (int i = 0; str[i] != '\0'; i++, length++);
 
     return length;
 }
 
 char* strcpy(char* dest, const char* src)
 {
-    for (; *src != '\0'; dest++, src++)
+    for (; *src != '\0'; dest++, src++) {
         *dest = *src;
+    }
     *dest = *src;
     return dest;
 }
 
 char* strncpy(char* x, const char* y, size_t size)
 {
-    for (; *y != '\0' && size != 0; x++, y++, size--)
+    for (; *y != '\0' && size != 0; x++, y++, size--) {
         *x = *y;
+    }
 
     *x = *y;
-
     return x;
 }
 
 char* reverse_string(char* str)
 {
     char* end = str + strlen(str) - 1;
-
     for (char* begin = str; (uint32_t)begin < (uint32_t)end; begin++, end--)
     {
         char buf = *begin;
@@ -114,34 +112,39 @@ uint32_t strcmp(char* a, const char* b)
     return diffrences;
 }
 
+//bool strcmp
 bool bstrcmp(char* a, const char* b)
 {
 
     uint32_t lengtha = strlen(a);
     uint32_t lengthb = strlen(b);
 
-    if (lengtha != lengthb)
+    if (lengtha != lengthb) {
         return 0;
+    }
 
     for (char* i = a; *i != '\0'; i++)
     {
-        if (*a != *b)
-            return 0;
+        if (*a != *b) {
+            return false;
+        }
         a++;
         b++;
     }
 
-    return 1;
+    return true;
 }
 
+//bool strcmp
 bool bstrncmp(char* a, const char* b, size_t string_size)
 {
     for (int i = 0; i < string_size; i++)
     {
-        if (a[i] != b[i])
-            return 0;
+        if (a[i] != b[i]) {
+            return false;
+        }
     }
-    return 1;
+    return true;
 }
 
 char* uint_to_str(uint32_t x, char* buf)
@@ -166,7 +169,7 @@ char* uint_to_str(uint32_t x, char* buf)
     return buf;
 }
 
-char* int_to_str(int x, char* buf)
+char* int_to_str(bool _signed, int x, char* buf)
 {
     int i = 0;
 
@@ -185,8 +188,9 @@ char* int_to_str(int x, char* buf)
         x = x / 10;
     }
 
-    if (is_negative)
+    if (is_negative) {
         buf[i++] = '-';
+    }
 
     buf[i] = '\0';
     buf = reverse_string(buf);
@@ -226,58 +230,52 @@ char* bcd_to_str(uint8_t x, char* buf)
     return buf;
 }
 
-void erase_spaces(char* buf)
+void erase_spaces(char* str)
 {
-    for (int i = 0; buf[i] != '\0'; i++)
+    for (int i = 0; str[i] != '\0'; i++)
     {
-        if (buf[i] == ' ')
-        {
-            buf[i] = '\0';
+        if (str[i] == ' ') {
+            memmove(&str[i], &str[+1], strlen(str) - i);
         }
     }
 }
 
 char* toupper(char* str)
 {
-
-    for (char* i = str; *i != '\0'; i++)
+    for (int i = 0; str[i] != '\0'; i++)
     {
-        if (*i >= 'a' && *i <= 'z')
-            *i -= 32;
+        if (str[i] >= 'a' && str[i] <= 'z') {
+            str[i] -= ASCII_CASE_OFFSET;
+        }
     }
-
     return str;
 }
 
 char* tolower(char* str)
 {
-    for (char* i = str; *i != '\0'; i++)
+    for (int i = 0; str[i] != '\0'; i++)
     {
-        if (*i >= 'A' && *i <= 'Z')
-            *i += 32;
+        if (str[i] >= 'A' && str[i] <= 'Z') {
+            str[i] += ASCII_CASE_OFFSET;
+        }
     }
-
     return str;
 }
 
-char* int_to_hex_str(uint32_t x, char* buf)
+char* int_to_hex_str(uint32_t number, char* buf)
 {
+    #define HEX_BASE 16
     char hex_values[16] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
 
-    int i = 0;
-
-    if (!x)
-    {
-        buf[0] = '0';
-        buf[1] = '0';
+    if (!number) {
+        memset(buf, '0', 2);
         buf[2] = '\0';
         return buf;
     }
 
-    for (i = 0; x != 0; i++)
-    {
-        buf[i] = hex_values[x % 16];
-        x = x / 16;
+    for (int i = 0; number != 0; i++) {
+        buf[i] = hex_values[number % HEX_BASE];
+        number = number / HEX_BASE;
     }
 
     buf = reverse_string(buf);

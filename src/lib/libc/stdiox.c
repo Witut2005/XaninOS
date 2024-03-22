@@ -134,11 +134,12 @@ void xprintf(char* str, ...)
             {
                 number = va_arg(args, int);
 
-                int_to_str(number, tmp);
+                int_to_str(STRING_SIGNED, number, tmp);
 
-                for (int i = 0; tmp[i] != '\0'; i++)
+                for (int i = 0; tmp[i] != '\0'; i++) {
                     __sys_xtf_cell_put(StdioVty, tmp[i],
                         OUTPUT_COLOR_SET(background_color, font_color));
+                }
 
                 break;
             }

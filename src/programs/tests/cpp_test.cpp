@@ -301,7 +301,7 @@ void cpp_prog()
     std::cout << "hash test: " << jhash(10) << std::endl;
 
     std::cout << "test: " << (uint32_t)0xFFFFFFFF << std::endl;
-    std::cout << "test: " << int_to_str(10, "nicho") << std::endl;
+    // std::cout << "test: " << int_to_str(10, "nicho") << std::endl;
 
     return;
 
