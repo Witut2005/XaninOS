@@ -226,7 +226,7 @@ void kernel_init(void)
 
     puts("CHECKSUM CHECK RSDT: ");
     const SystemAcpiRSDT* const rsdt = acpi_rsdt_get();
-    1 == acpi_rsdt_checksum_check(rsdt) ? xprintf("%zVALID", OUTPUT_COLOR_SET(green, white)) : xprintf("%zINVALID", OUTPUT_COLOR_SET(red, white));
+    acpi_rsdt_checksum_check(rsdt) == 1 ? xprintf("%zVALID", OUTPUT_COLOR_SET(green, white)) : xprintf("%zINVALID", OUTPUT_COLOR_SET(red, white));
     xprintf("\nRSDT address: 0x%x\n", rsdt);
 
     SystemAcpiSDT* AcpiApicSDT = apic_sdt_find();

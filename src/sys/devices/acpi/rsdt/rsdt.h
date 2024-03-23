@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include <sys/devices/acpi/fadt/fadt.h>
 
-struct SystemAcpiRSDT 
+struct SystemAcpiRSDT
 {
     char signature[4];
     uint32_t length;
@@ -16,12 +16,12 @@ struct SystemAcpiRSDT
     uint32_t creator_id;
     uint32_t creator_revision;
     uint32_t pointer_to_sdt[0x10];
-} __attribute__ ((packed));
+} __attribute__((packed));
 
 typedef struct SystemAcpiRSDT SystemAcpiRSDT;
 
 extern SystemAcpiRSDT* AcpiRSDT;
-bool acpi_rsdt_checksum_check(SystemAcpiRSDT *header);
+bool acpi_rsdt_checksum_check(const SystemAcpiRSDT* const header);
 
-extern const SystemAcpiRSDT* const acpi_rsdt_get(void); 
+extern const SystemAcpiRSDT* const acpi_rsdt_get(void);
 void acpi_rsdt_set(SystemAcpiRSDT* RSDTAddress);
