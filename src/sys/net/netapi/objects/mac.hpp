@@ -24,12 +24,12 @@ struct MacAddress
         memcpy(this->address, const_cast<uint8_t*>(mac), SIZE_OF(address));
     }
 
-    bool operator == (MacAddress other) const{
-        return memcmp(const_cast<uint8_t*>(this->address), other.address, SIZE_OF(address));
+    bool operator == (MacAddress other) const {
+        return bmemcmp(const_cast<uint8_t*>(this->address), other.address, SIZE_OF(address));
     }
 
-    bool operator != (MacAddress other) const{
-        return !memcmp(const_cast<uint8_t*>(this->address), other.address, SIZE_OF(address));
+    bool operator != (MacAddress other) const {
+        return !bmemcmp(const_cast<uint8_t*>(this->address), other.address, SIZE_OF(address));
     }
 
 };

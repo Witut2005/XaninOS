@@ -51,7 +51,7 @@ extern "C"
     char* strncpy(char* x, const char* y, size_t size);
     char* reverse_string(char* str);
     char* float_to_string(float number, char* str);
-    uint32_t strcmp(char* a, const char* b);
+    int32_t strcmp(char* a, const char* b);
     bool bstrcmp(char* a, const char* b);
     bool bstrncmp(char* a, const char* b, size_t string_size);
     char* uint_to_str(uint32_t x, char* buf);

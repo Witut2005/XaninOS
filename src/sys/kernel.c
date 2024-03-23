@@ -370,6 +370,9 @@ void kernel_init(void)
     arp_table_add_entry(LOOPBACK_IP_ADDRESS, null_memory_region);
 
     interrupt_enable();
+    char mbuf[50] = { 0 };
+    memcpy_with_skip(mbuf, "fromini", ARRAY_LENGTH("fromini"), 1);
+    dbg_info(DEBUG_LABEL_LIBC, mbuf);
 
     char* buffer = (char*)kcalloc(100 * SIZE_OF(char));
     stdio_refresh_rate = 50;

@@ -74,48 +74,24 @@ char* reverse_string(char* str)
     return str;
 }
 
-uint32_t strcmp(char* a, const char* b)
+int32_t strcmp(char* a, const char* b)
 {
-    uint32_t diffrences = 0;
-
-    if (strlen(a) != strlen(b))
-        return abs(strlen(a) - strlen(b));
-
-    for (int i = 0; i < strlen(a); i++)
-    {
-        if (a[i] != b[i])
-            diffrences++;
-    }
-
-    return diffrences;
-}
-
-//bool strcmp
-bool bstrcmp(char* a, const char* b)
-{
-
-    uint32_t lengtha = strlen(a);
-    uint32_t lengthb = strlen(b);
-
-    if (lengtha != lengthb) {
-        return 0;
-    }
-
-    for (char* i = a; *i != '\0'; i++)
-    {
-        if (*a != *b) {
-            return false;
-        }
+    while (*a && (*a == *b)) {
         a++;
         b++;
     }
 
-    return true;
+    return *a - *b;
 }
 
-//bool strcmp
+bool bstrcmp(char* a, const char* b)
+{
+    return strcmp(a, b) == 0;
+}
+
 bool bstrncmp(char* a, const char* b, size_t string_size)
 {
+    // uint32_t length_to_check = strlen()
     for (int i = 0; i < string_size; i++)
     {
         if (a[i] != b[i]) {

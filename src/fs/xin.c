@@ -163,11 +163,11 @@ char* __xin_absolute_path_get(char* rpath, char* buf, XIN_FS_ENTRY_TYPES type)
     while (buf[buf_index] != '\0')
     {
 
-        if (memcmp(&buf[buf_index], "./", 2)) {
+        if (bmemcmp(&buf[buf_index], "./", 2)) {
             buf_index += 2;
         }
 
-        if (memcmp(&buf[buf_index], "../", 3))
+        if (bmemcmp(&buf[buf_index], "../", 3))
         {
             __xin_path_pf_extern(ret, ret);
             buf_index += 3;
@@ -636,7 +636,7 @@ XIN_FS_RETURN_STATUSES __xin_folder_change(char* foldername)
         return XANIN_OK;
     }
 
-    while (memcmp(foldername, "../", 3))
+    while (bmemcmp(foldername, "../", 3))
     {
         if (bstrcmp(XinFsData.current_folder, XIN_SYSTEM_FOLDER_STR))
             return XANIN_ERROR;
@@ -651,7 +651,7 @@ XIN_FS_RETURN_STATUSES __xin_folder_change(char* foldername)
         foldername = foldername + 3;
     }
 
-    while (memcmp(foldername, "./", 2))
+    while (bmemcmp(foldername, "./", 2))
         foldername += 2;
 
     XinEntry* NewFolder = __xin_find_entry(foldername);

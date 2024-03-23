@@ -38,10 +38,10 @@ bool is_external_app = false;
 void check_external_apps(void)
 {
     char* external_apps_folder = (char*)calloc(ARRAY_LENGTH("/external_apps/"));
-    memcpy(external_apps_folder, "/external_apps/", ARRAY_LENGTH("/external_apps/"));
+    strcpy(external_apps_folder, "/external_apps/");
 
-    char* app = (char*)calloc(512);
-    memcpy(app, external_apps_folder, strlen(external_apps_folder));
+    char* app = (char*)calloc(XANIN_PMMNGR_BLOCK_SIZE);
+    strcpy(app, external_apps_folder);
 
     for (int i = 0; argv[0][i] != '\0'; i++)
         app[ARRAY_LENGTH("/external_apps/") + i - 1] = argv[0][i];

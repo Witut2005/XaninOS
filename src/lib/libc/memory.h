@@ -9,11 +9,11 @@
 extern "C" {
 #endif
 
-    void memcpy(uint8_t *dst, uint8_t* src, size_t size);
-    bool memcmp(uint8_t *dst, uint8_t* src, size_t size);
-    void memset(uint8_t *dst, uint8_t value, size_t size);
-    void memmove(uint8_t* dst, uint8_t* src, size_t size);
-    void memcpy_with_skip(uint8_t *dst, uint8_t* src, size_t size, uint32_t skip);
+    void memcpy(void* dest, void* src, size_t size);  // size in bytes
+    bool bmemcmp(void* dest, void* src, size_t size); // size in bytes
+    void memset(void* dest, uint8_t value, size_t size);
+    void memmove(void* dest, void* src, size_t size);
+    void memcpy_with_skip(void* dest, void* src, size_t size, uint32_t skip); //copies every skip-th byte (last byte copies will be (src + size))
 
 #ifdef __cplusplus
 }

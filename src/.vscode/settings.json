@@ -116,7 +116,8 @@
         "cpuid.h": "c",
         "stdarg.h": "c",
         "key_map.h": "c",
-        "math.h": "c"
+        "math.h": "c",
+        "keyboard.h": "c"
     },
     "C_Cpp.errorSquiggles": "disabled",
     "C_Cpp.clang_format_sortIncludes": "true",
