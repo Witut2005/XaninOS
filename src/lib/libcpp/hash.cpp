@@ -5,7 +5,7 @@ uint32_t jhash_with_length(const char* key, uint32_t length)
 {
     uint32_t hash = 0;
 
-    for(uint32_t i = 0; i < length; i++)
+    for (uint32_t i = 0; i < length; i++)
     {
         hash += key[i];
         hash += hash << 10;
@@ -30,10 +30,10 @@ uint32_t jhash(std::string str) {
 
 uint32_t jhash(int i) {
     char buf[20];
-    return jhash(int_to_str(STRING_SIGNED, i, buf));
+    return jhash(int_to_string(i, buf, HEXADECIMAL));
 }
 
 uint32_t jhash(uint32_t i) {
     char buf[20];
-    return jhash(int_to_str(STRING_UNSIGNED, i, buf));
+    return jhash(int_to_string(i, buf, HEXADECIMAL));
 }

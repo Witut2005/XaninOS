@@ -61,15 +61,16 @@ char* strncpy(char* dest, const char* src, size_t size)
     return dest;
 }
 
-char* reverse_string(char* str)
+char* strrev(char* str)
 {
-    char* end = str + strlen(str) - 1;
-    for (char* begin = str; (uint32_t)begin < (uint32_t)end; begin++, end--)
-    {
-        char buf = *begin;
+    int len = strlen(str);
 
-        *begin = *end;
-        *end = buf;
+    // for loop
+    for (int i = 0, j = len - 1; i <= j; i++, j--) {
+        // swapping characters
+        char c = str[i];
+        str[i] = str[j];
+        str[j] = c;
     }
     return str;
 }
@@ -101,84 +102,40 @@ bool bstrncmp(char* a, const char* b, size_t string_size)
     return true;
 }
 
-char* uint_to_str(uint32_t x, char* buf)
+char* int_to_decimal_string(int32_t value, char* buf)
 {
+    int_to_string(abs(value), buf, 10);
+
+    if (value < 0) {
+        memmove(&buf[1], buf, strlen(buf));
+        buf[0] = '-';
+    }
+}
+
+char* int_to_string(uint32_t value, char* buf, const uint8_t base)
+{
+    char digits[] = { '0','1','2','3','4','5','6','7','8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
+
+    if (base == DECIMAL) {
+        if ((int32_t)value < 0) {
+            buf[0] = '-';
+            buf++;
+        }
+        value = abs((int32_t)value);
+    }
+
     int i = 0;
-
-    if (!x)
-    {
-        buf[0] = '0';
-        buf[1] = '\0';
-        return buf;
-    }
-
-    for (i = 0; x != 0; i++)
-    {
-        buf[i] = (x % 10) + '0';
-        x = x / 10;
-    }
-
+    while (value) {
+        buf[i++] = digits[value % base];
+        value = value / base;
+    };
     buf[i] = '\0';
-    buf = reverse_string(buf);
-    return buf;
+
+    strrev(buf);
 }
 
-char* int_to_str(bool _signed, int x, char* buf)
+char* bcd_to_string(uint8_t x, char* buf)
 {
-    int i = 0;
-
-    bool is_negative = x < 0 ? true : false;
-    x = abs(x);
-
-    if (!x)
-    {
-        memcpy(buf, "0", 2);
-        return buf;
-    }
-
-    for (; x != 0; i++)
-    {
-        buf[i] = (x % 10) + '0';
-        x = x / 10;
-    }
-
-    if (is_negative) {
-        buf[i++] = '-';
-    }
-
-    buf[i] = '\0';
-    buf = reverse_string(buf);
-    return buf;
-}
-
-char* bin_to_str(int x, char* buf)
-{
-
-    int i = 0;
-
-    if (!x)
-    {
-        buf[0] = '0';
-        buf[1] = '\0';
-        return buf;
-    }
-
-    for (i = 0; x != 0; i++)
-    {
-        buf[i] = (x & 1) + '0';
-        x = x >> 1;
-    }
-
-    buf = reverse_string(buf);
-
-    *(buf + i) = '\0';
-
-    return buf;
-}
-
-char* bcd_to_str(uint8_t x, char* buf)
-{
-
     buf[0] = (((x & 0xf0) >> 4) + 48);
     buf[1] = ((x & 0x0f) + 48);
     return buf;
@@ -232,7 +189,7 @@ char* int_to_hex_str(uint32_t number, char* buf)
         number = number / HEX_BASE;
     }
 
-    buf = reverse_string(buf);
+    buf = strrev(buf);
     return buf;
 }
 
@@ -283,7 +240,7 @@ char* xint_to_hex_str(uint32_t x, char* buf, uint8_t how_many_chars)
         x = x / 16;
     }
 
-    buf = reverse_string(buf);
+    buf = strrev(buf);
 
     return buf;
 }
@@ -307,7 +264,7 @@ char* int_to_oct_str(int x, char* buf)
 
     *(buf + i + 1) = '\0';
 
-    buf = reverse_string(buf);
+    buf = strrev(buf);
 
     return buf;
 }

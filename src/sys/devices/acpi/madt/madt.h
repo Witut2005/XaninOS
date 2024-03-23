@@ -27,7 +27,7 @@ struct SystemAcpiMADT1
     uint8_t reserved;
     uint32_t io_apic_base;
     uint32_t global_system_int_table;
-}__attribute__ ((packed));
+}__attribute__((packed));
 typedef struct SystemAcpiMADT1 SystemAcpiMADT1;
 
 
@@ -40,7 +40,7 @@ struct SystemAcpiMADT2
     uint8_t irq_source;
     uint32_t global_system_int_table;
     uint16_t flags;
-}__attribute__ ((packed));
+}__attribute__((packed));
 typedef struct SystemAcpiMADT2 SystemAcpiMADT2;
 
 
@@ -53,7 +53,7 @@ struct SystemAcpiMADT3
     uint8_t reserved;
     uint16_t flags;
     uint32_t global_system_int;
-}__attribute__ ((packed));
+}__attribute__((packed));
 typedef struct SystemAcpiMADT3 SystemAcpiMADT3;
 
 
@@ -65,7 +65,7 @@ struct SystemAcpiMADT4
     uint8_t acpi_processor_id;
     uint16_t flags;
     uint8_t lint;
-}__attribute__ ((packed));
+}__attribute__((packed));
 typedef struct SystemAcpiMADT4 SystemAcpiMADT4;
 
 struct SystemAcpiMADT5
@@ -78,7 +78,7 @@ struct SystemAcpiMADT5
     uint32_t lapic_address_low;
     uint32_t lapic_address_high; //64bit physical address
 
-}__attribute__ ((packed));
+}__attribute__((packed));
 typedef struct SystemAcpiMADT5 SystemAcpiMADT5;
 
 struct SystemAcpiMADT9
@@ -91,7 +91,7 @@ struct SystemAcpiMADT9
     uint32_t flags;
     uint32_t acpi_id;
 
-}__attribute__ ((packed));
+}__attribute__((packed));
 typedef struct SystemAcpiMADT9 SystemAcpiMADT9;
 
 
@@ -115,12 +115,12 @@ extern const SystemAcpiMADT9** AcpiMADT9Pointers;
 extern uint8_t* madt_entries[0x10];
 
 #ifdef __cplusplus
-extern "C"{
+extern "C" {
 #endif
 
-const SystemAcpiSDT* const apic_sdt_find(void);
-void madt_entries_get(SystemAcpiSDT* apic_entry);
-uint8_t madt_checksum_check(SystemAcpiSDT* entry);
+    const SystemAcpiSDT* const apic_sdt_find(void);
+    void madt_entries_get(const SystemAcpiSDT* const apic_entry);
+    uint8_t madt_checksum_check(const SystemAcpiSDT* const entry);
 
 #ifdef __cplusplus
 }

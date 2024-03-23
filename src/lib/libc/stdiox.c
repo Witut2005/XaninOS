@@ -130,11 +130,12 @@ void xprintf(char* str, ...)
             string_counter++;
             switch (str[string_counter])
             {
+
             case 'd':
             {
                 number = va_arg(args, int);
 
-                int_to_str(STRING_SIGNED, number, tmp);
+                int_to_string(number, tmp, DECIMAL);
 
                 for (int i = 0; tmp[i] != '\0'; i++) {
                     __sys_xtf_cell_put(StdioVty, tmp[i],
@@ -197,7 +198,7 @@ void xprintf(char* str, ...)
             case 'b':
             {
                 number = va_arg(args, int);
-                temporary_pointer = bin_to_str(number, tmp);
+                temporary_pointer = int_to_string(number, tmp, BINARY);
 
                 for (int i = 0; temporary_pointer[i] != '\0'; i++)
                     __sys_xtf_cell_put(StdioVty, temporary_pointer[i],

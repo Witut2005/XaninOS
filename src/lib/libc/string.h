@@ -49,18 +49,22 @@ extern "C"
     uint32_t strlen(const char* a);
     char* strcpy(char* dest, const char* src);
     char* strncpy(char* x, const char* y, size_t size);
-    char* reverse_string(char* str);
+    char* strrev(char* str);
     char* float_to_string(float number, char* str);
     int32_t strcmp(char* a, const char* b);
     bool bstrcmp(char* a, const char* b);
     bool bstrncmp(char* a, const char* b, size_t string_size);
-    char* uint_to_str(uint32_t x, char* buf);
-    char* int_to_str(bool _signed, int x, char* buf);
-    char* bin_to_str(int x, char* buf);
-    char* bcd_to_str(uint8_t x, char* buf);
+
+    char* int_to_decimal_string(int32_t value, char* buf);
+    char* int_to_string(uint32_t value, char* buf, const uint8_t base);
+    char* bin_to_string(int x, char* buf);
+    char* bcd_to_string(uint8_t x, char* buf);
+
     void erase_spaces(char* str);
+
     char* toupper(char* str);
     char* tolower(char* str);
+
     char* int_to_hex_str(uint32_t number, char* buf);
     uint32_t hex_str_to_int(char* str);
     char* xint_to_hex_str(uint32_t x, char* buf, uint8_t how_many_chars);

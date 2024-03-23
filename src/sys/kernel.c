@@ -229,11 +229,11 @@ void kernel_init(void)
     acpi_rsdt_checksum_check(rsdt) == 1 ? xprintf("%zVALID", OUTPUT_COLOR_SET(green, white)) : xprintf("%zINVALID", OUTPUT_COLOR_SET(red, white));
     xprintf("\nRSDT address: 0x%x\n", rsdt);
 
-    SystemAcpiSDT* AcpiApicSDT = apic_sdt_find();
+    const SystemAcpiSDT* const AcpiApicSDT = apic_sdt_find();
 
     xprintf("%z----------------------------\n", OUTPUT_COLOR_SET(black, green));
 
-    SystemAcpiFADT* AcpiFADT = acpi_fadt_find();
+    const SystemAcpiFADT* const AcpiFADT = acpi_fadt_find();
 
     puts("FADT address: ");
     xprintf("%z0x%x\n", OUTPUT_COLOR_SET(black, acpi_sdt_checksum_check((uint8_t*)AcpiFADT, AcpiFADT->length) == true ? green : red), AcpiFADT);
@@ -293,9 +293,9 @@ void kernel_init(void)
         }
     }
 
-    SystemAcpiMADT2* apic_keyboard_redirect = NULL;
-    SystemAcpiMADT2* apic_pit_redirect = NULL;
-    SystemAcpiMADT2* apic_nic_redirect = NULL;
+    const SystemAcpiMADT2* apic_keyboard_redirect = NULL;
+    const SystemAcpiMADT2* apic_pit_redirect = NULL;
+    const SystemAcpiMADT2* apic_nic_redirect = NULL;
     // SystemAcpiMADT2 *apic_mouse_redirect = NULL;
 
     for (int i = 0; (*AcpiMADT2Pointers[i]).entry_type == 2; i++)

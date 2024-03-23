@@ -34,7 +34,7 @@ void canvas_screen_clear(void)
     if (stdio_mode_get() != STDIO_MODE_CANVAS)
         return;
 
-    uint16_t *screen_cleaner = (uint16_t *)__vga_buffer_segment_get();
+    uint16_t* screen_cleaner = (uint16_t*)__vga_buffer_segment_get();
     for (int i = 0; i < (__vga_text_mode_width_get() * __vga_text_mode_height_get()); i++)
     {
         *screen_cleaner = '\0';
@@ -44,13 +44,13 @@ void canvas_screen_clear(void)
     stdio_legacy_screen_object_restore_defaults();
 }
 
-void canvas_xprintf(char *str, ...)
+void canvas_xprintf(char* str, ...)
 {
-    char tmp[128] = {0};
-    char *temporary_pointer = tmp;
+    char tmp[128] = { 0 };
+    char* temporary_pointer = tmp;
 
     uint32_t number;
-    char *stringPtr;
+    char* stringPtr;
 
     va_list args;
     va_start(args, str);
@@ -82,7 +82,7 @@ void canvas_xprintf(char *str, ...)
             {
 
                 number = va_arg(args, int);
-                int_to_str(STRING_SIGNED, number, temporary_pointer);
+                int_to_string(number, temporary_pointer, DECIMAL);
 
                 for (int i = 0; temporary_pointer[i] != '\0'; i++)
                     stdio_legacy_cell_put_with_interpretation(temporary_pointer[i], OUTPUT_COLOR_SET(background_color, font_color), &Screen.y, &Screen.x);
@@ -129,7 +129,7 @@ void canvas_xprintf(char *str, ...)
             case 'b':
             {
                 number = va_arg(args, int);
-                temporary_pointer = bin_to_str(number, tmp);
+                temporary_pointer = int_to_string(number, tmp, BINARY);
 
                 for (int i = 0; temporary_pointer[i] != '\0'; i++)
                     stdio_legacy_cell_put_with_interpretation(temporary_pointer[i], OUTPUT_COLOR_SET(background_color, font_color), &Screen.y, &Screen.x);
@@ -140,7 +140,7 @@ void canvas_xprintf(char *str, ...)
             case 's':
             {
 
-                stringPtr = va_arg(args, char *);
+                stringPtr = va_arg(args, char*);
 
                 if (stringPtr == NULL)
                     break;
@@ -271,7 +271,7 @@ void canvas_xprintf(char *str, ...)
     va_end(args);
 }
 
-void canvas_xscanf(char *str, ...)
+void canvas_xscanf(char* str, ...)
 {
     uint32_t str_counter = 0;
     uint32_t counter = 0;
@@ -281,7 +281,7 @@ void canvas_xscanf(char *str, ...)
 
     uint32_t index = 0;
 
-    PairUInt8 InitialScreenPosition = {Screen.y, Screen.x};
+    PairUInt8 InitialScreenPosition = { Screen.y, Screen.x };
 
     char field_buffer[1000];
 
@@ -337,9 +337,9 @@ void canvas_xscanf(char *str, ...)
 
                     case 's':
                     {
-                        char *string_pointer = va_arg(args, char *);
+                        char* string_pointer = va_arg(args, char*);
 
-                        for (char *i = string_pointer; *i != '\0'; i++)
+                        for (char* i = string_pointer; *i != '\0'; i++)
                             *i = '\0';
 
                         if (!strlen(string_typed_buffer))
@@ -369,7 +369,7 @@ void canvas_xscanf(char *str, ...)
                     case 'd':
                     {
 
-                        uint32_t *number = va_arg(args, uint32_t *);
+                        uint32_t* number = va_arg(args, uint32_t*);
 
                         for (int i = 0; string_typed_buffer[counter] != '\0' && string_typed_buffer[counter] != ' '; i++)
                         {
@@ -388,7 +388,7 @@ void canvas_xscanf(char *str, ...)
                     case 'c':
                     {
 
-                        char *number = va_arg(args, char *);
+                        char* number = va_arg(args, char*);
                         *number = string_typed_buffer[0];
                         break;
                     }
@@ -396,7 +396,7 @@ void canvas_xscanf(char *str, ...)
                     case 'x':
                     {
 
-                        uint32_t *number = va_arg(args, uint32_t *);
+                        uint32_t* number = va_arg(args, uint32_t*);
 
                         for (int i = 0; string_typed_buffer[counter] != '\0' && string_typed_buffer[counter] != ' '; i++)
                         {
@@ -415,7 +415,7 @@ void canvas_xscanf(char *str, ...)
                     case 'b':
                     {
 
-                        uint32_t *number = va_arg(args, uint32_t *);
+                        uint32_t* number = va_arg(args, uint32_t*);
 
                         for (int i = 0; string_typed_buffer[counter] != '\0' && string_typed_buffer[counter] != ' '; i++)
                         {
@@ -462,14 +462,14 @@ void canvas_xscanf(char *str, ...)
     free(field_buffer);
 }
 
-void canvas_xscan_range(char *string_buffer, uint32_t how_many_chars)
+void canvas_xscan_range(char* string_buffer, uint32_t how_many_chars)
 {
 
     xchar Input;
 
     uint32_t counter = 0;
-    char *string_pointer;
-    char *field_buffer = (char *)calloc(how_many_chars);
+    char* string_pointer;
+    char* field_buffer = (char*)calloc(how_many_chars);
 
     char string_typed_buffer[1000];
 
@@ -560,7 +560,7 @@ void canvas_screen_background_color_set(color_t color)
     if (stdio_mode_get() != STDIO_MODE_CANVAS)
         return;
 
-    uint8_t *vga_ptr = (uint8_t *)VGA_TEXT_MEMORY;
+    uint8_t* vga_ptr = (uint8_t*)VGA_TEXT_MEMORY;
 
     for (int i = 1; i < VGA_SCREEN_RESOLUTION * 2; i += 2)
     {
