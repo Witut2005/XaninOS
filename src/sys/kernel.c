@@ -1,13 +1,11 @@
 
 #include <sys/paging/paging.h>
-#include "call/xanin_sys/ids/xanin_syscalls.h"
 #include "devices/com/labels.h"
 #include "paging/paging.h"
 #include <sys/net/network_protocols/internet_protocol/ipv4/ip.h>
 #include <lib/ascii/ascii.h>
 #include <sys/devices/pit/pit.h>
 #include <lib/libc/data_structures.h>
-#include <limits.h>
 #include <stdint.h>
 #include <sys/interrupts/idt/idt.h>
 #include <lib/libc/stdlibx.h>
@@ -155,14 +153,10 @@ uint8_t kernel_mmngr_mmap[PMMNGR_MEMORY_BLOCKS];
 
 void kernel_init(void)
 {
-    // PageDirectoryEntry4MB page_dir_entry = { {PAGE_DIRECTORY4MB_CREATE(0x08000000)} }; // kernel page
     for (int i = 0; i < 1024; i++)
         page_directory_entry_set(i, i * (1 << 22));
 
-    paging_enable();
-    // page_dir_entry.fields = PAGE_DIRECTORY4MB_CREATE(0x0); // kernel page
-    // page_directory_entry_set(1, &page_dir_entry);
-
+    // paging_enable();
 
     INTERRUPT_REGISTER(0, divide_by_zero_exception_entry);
     INTERRUPT_REGISTER(1, debug_exception_entry);
@@ -200,7 +194,6 @@ void kernel_init(void)
     mmngr_init(kernel_mmngr_mmap, (uint8_t*)0x100000, PMMNGR_MEMORY_BLOCKS);
     serial_port_initialize(1);
     dbg_info(DEBUG_LABEL_IRQ, "Processor IRQs registered");
-
 
     vga_disable_cursor();
 

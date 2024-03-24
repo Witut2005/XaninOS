@@ -4,9 +4,10 @@
 #include <sys/input/input.h>
 #include <lib/libc/hal.h>
 #include <sys/devices/com/com.h>
+#include <sys/terminal/backend/backend.h>
 
 extern "C" void keyboard_handler_init(void);
-extern "C" int exit(void);
+// extern "C" int exit(void);
 
 using namespace Device;
 
@@ -46,6 +47,9 @@ bool Keyboard::test(void)
 
 void Keyboard::handle(void)
 {
+
+    #warning "TO DO exit on CTRL + C";
+
     static key_info_t KeyInfo;
     KeyInfo.scan_code = read(ControllerPort::KeyboardEncoder);
     // xprintf("%x ", KeyInfo.scan_code);
@@ -87,8 +91,7 @@ void Keyboard::handle(void)
     __input_handle_observed_objects(&KeyInfo);
 
     __input_call_handlers(KeyInfo);
-
-    for (int i = 0; i < 20;i += 2);
+    __xtb_flush_all(__vty_get());
 
     // if (__input_is_ctrl_pressed() && KeyInfo.keys_pressed[KBP_C])
     //     exit();

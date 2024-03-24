@@ -24,14 +24,12 @@
 void pit_divisor_set(uint16_t divisor_value)
 {
 
-    if(divisor_value < 250)
+    if (divisor_value < 250)
         divisor_value = 250;
 
     outbIO(PIT_CHANNEL0, divisor_value & 0x00ff);
     outbIO(PIT_CHANNEL0, (divisor_value & 0xff00) >> 8);
-
 }
-
 
 void pit_init(uint8_t vector)
 {
@@ -40,12 +38,12 @@ void pit_init(uint8_t vector)
     eflags_get(&flags);
 
     interrupt_disable();
-    outbIO(PIT_MODE_COMMAND_REGISTER, 0x36); //
+    outbIO(PIT_MODE_COMMAND_REGISTER, 0x36);
     pit_divisor_set(PIT_BASE_FREQUENCY / PIT_XANIN_FREQUENCY); // 10ms
     INTERRUPT_REGISTER(vector, pit_handler_init);
     dbg_info(DEBUG_LABEL_KERNEL_DEVICE, "PIT successufly initialized");
-    
-    if(flags.intf)
+
+    if (flags.intf)
         interrupt_enable();
 }
 
@@ -53,9 +51,9 @@ void pit_tick(void)
 {
     pit_time = pit_time + 0.0001;
 
-    for(int i = 0; i < INTERVALS_MAX; i++)
+    for (int i = 0; i < INTERVALS_MAX; i++)
         do_interval(i);
-    
+
 }
 
 void pit_handler(void)

@@ -7,7 +7,6 @@
 #include <sys/input/input.h>
 #include <fs/loaders/elf/elf_loader.h>
 #include <sys/devices/com/com.h>
-#include <fs/loaders/task_load.h>
 
 extern char* argv[5]; // USE HERE SYSCALL
 
@@ -106,12 +105,10 @@ void elf_load(XinEntry* file)
 
     dbg_success(DEBUG_LABEL_PROCESS, "ELF file loaded");
 
-    task_load(XANIN_EXTERNAL_TASKS_CODE_SEGMENT, XANIN_EXTERNAL_TASKS_DATA_SEGMENT, entry_point);
-
-    // if (bstrcmp(argv[0], "elf") || bstrcmp(argv[0], "elft"))
-    //     ((void(*)(void))entry_point)();
-    // else
-    //     ((void(*)(void))entry_point)();
+    if (bstrcmp(argv[0], "elf") || bstrcmp(argv[0], "elft"))
+        ((void(*)(void))entry_point)();
+    else
+        ((void(*)(void))entry_point)();
 
     free(data);
 }
