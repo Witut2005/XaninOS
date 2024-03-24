@@ -15,7 +15,7 @@
 Screen.x = x_new; \
 Screen.y = y_new
 
-#define stderr ( red << 4 | white)
+#define OUTPUT_COLOR_ERROR_SET ( red << 4 | white)
 #define mkstr(str) #str
 #define SCREEN_CELL_SET_FROM_POINTER(ptr, background, foreground, character) *ptr = (uint16_t)((foreground | (background << 4)) << 8 | (character & 0xFF))
 

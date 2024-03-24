@@ -214,7 +214,7 @@ void scan(void)
 
         if (!is_external_app)
         {
-            xprintf("%zunknown command: %s\n", stderr, argv[0]);
+            xprintf("%zunknown command: %s\n", OUTPUT_COLOR_ERROR_SET, argv[0]);
             last_command_exit_status = XANIN_ERROR;
         }
 
@@ -226,7 +226,7 @@ void scan(void)
 
     // if(last_command_exit_status != XANIN_OK)
     // {
-    //     xprintf("Command execution status: %z%s", stderr, app_exit_status_text_get());
+    //     xprintf("Command execution status: %z%s", OUTPUT_COLOR_ERROR_SET, app_exit_status_text_get());
     //     screen_background_color_set(red);
     //     msleep(800);
     // }

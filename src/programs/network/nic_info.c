@@ -10,10 +10,10 @@ int nic_info(const char* network_device_name)
 {
 
     pci_device* NetDevice = netapi_device_info_get(network_device_name);
-    
-    if(NetDevice == NULL)
+
+    if (NetDevice == NULL)
     {
-        xprintf("%zNo Such Device: %s\n", stderr, network_device_name);
+        xprintf("%zNo Such Device: %s\n", OUTPUT_COLOR_ERROR_SET, network_device_name);
         return XANIN_ERROR;
     }
 
@@ -22,7 +22,7 @@ int nic_info(const char* network_device_name)
 
     xprintf("vendor id: 0x%X\n", NetDevice->vendor_id);
     xprintf("device id: 0x%X\n", NetDevice->device_id);
-    
+
     xprintf("base: 0x%X\n", NetDevice->base0);
     xprintf("base1: 0x%X\n", NetDevice->base1);
     xprintf("base2: 0x%X\n", NetDevice->base2);
@@ -36,7 +36,7 @@ int nic_info(const char* network_device_name)
 
     uint8_t* mac = netapi_device_mac_get(network_device_name);
     // uint8_t* mac = i8254x_mac_get();
-    for(int i = 0; i < 5; i++)
+    for (int i = 0; i < 5; i++)
         xprintf("%x:", mac[i]);
     xprintf("%x\n", mac[5]);
 

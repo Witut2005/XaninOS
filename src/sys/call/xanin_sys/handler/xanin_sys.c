@@ -22,6 +22,7 @@
 #include <sys/devices/com/com.h>
 
 stdio_mode_t stdio_current_mode;
+uint32_t stdeio_counter = 0;
 
 uint32_t xanin_sys_handle(void)
 {
@@ -37,13 +38,11 @@ uint32_t xanin_sys_handle(void)
         : "eax", "ecx", "edx", "ebx");
 
     interrupt_enable();
-    // xprintf("eax: %d ", eax);
 
     switch (eax)
     {
 
         // XinFs
-
     case XANIN_FOPEN:
     {
         // ECX = file name, EDX = options_str
@@ -100,7 +99,6 @@ uint32_t xanin_sys_handle(void)
     }
 
     // Memory Allocation
-
     case XANIN_ALLOCATE:
     {
         // ECX = SIZE
@@ -443,6 +441,30 @@ uint32_t xanin_sys_handle(void)
         eax = vga_text_mode_height;
         break;
     }
+
+    #warning "Create new folder"
+
+    case XANIN_SHELL_STDEIO_CREATE:
+    {
+        char buf[32] = { 0 };
+        char path[32] = "/proc/";
+        __xin_folder_create(path);
+
+        int_to_string(stdeio_counter, buf, HEXADECIMAL);
+        memcpy(&buf[strlen(buf)], "/", 2);
+
+        strcat(STRCAT_DEST_FIRST, path, buf);
+        __xin_folder_create(path);
+
+        strcat(STRCAT_DEST_FIRST, path, "stderr");
+        __xin_file_create(path);
+
+        dbg_info(DEBUG_LABEL_SYSCALL, path);
+
+        stdeio_counter++;
+        break;
+    }
+
     default:
     {
         dbg_error(DEBUG_LABEL_SYSCALL, "Unknown syscall");

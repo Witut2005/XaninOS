@@ -14,7 +14,7 @@
 
 XinEntry* stdin;
 XinEntry* stdout;
-// FileInformationBlock* stderr;
+XinEntry* stderr;
 
 void putchar(char c)
 {
@@ -23,12 +23,16 @@ void putchar(char c)
 
 void stdio_init(void)
 {
-    XinEntryCreateArgs args;
-    args.entryname = "stdout";
-    stdout = (XinEntry*)xanin_syscall2(XANIN_XIN_ENTRY_CREATE, (uint32_t)&args, XIN_STDOUT);
+    xanin_syscall0(XANIN_SHELL_STDEIO_CREATE);
+    // XinEntryCreateArgs args;
+    // args.entryname = "stdout";
+    // stdout = (XinEntry*)xanin_syscall2(XANIN_XIN_ENTRY_CREATE, (uint32_t)&args, XIN_STDOUT);
 
-    args.entryname = "stdin";
-    stdin = (XinEntry*)xanin_syscall2(XANIN_XIN_ENTRY_CREATE, (uint32_t)&args, XIN_STDIN);
+    // args.entryname = "/proc/stdin";
+    // stdin = (XinEntry*)xanin_syscall2(XANIN_XIN_ENTRY_CREATE, (uint32_t)&args, XIN_STDIN);
+
+    // args.entryname = "/proc/OUTPUT_COLOR_ERROR_SET";
+    // stdin = (XinEntry*)xanin_syscall2(XANIN_XIN_ENTRY_CREATE, (uint32_t)&args, XIN_STDIN);
 }
 
 void putchar_color(char c, color_t color)

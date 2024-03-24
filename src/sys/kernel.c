@@ -154,11 +154,11 @@ uint8_t kernel_mmngr_mmap[PMMNGR_MEMORY_BLOCKS];
 void kernel_init(void)
 {
     for (int i = 0; i < XANIN_NUMBER_OF_PAGE_DIRECTORIES; i++) {
-        page_directory_entry_set(i, i * (1 << 22)); // (shift to determine which directory to use)
+        page_directory_entry_set(i, i * (1 << PAGE_DIRECTORY_ADDRESS_OFFSET)); // (shift to determine which directory to use)
     }
 
     for (int i = 0; i < XANIN_NUMBER_OF_KERNEL_PAGE_DIRECTORIES; i++) {
-        page_directory_entry_set(XANIN_KERNEL_PAGE_DIRECTORIES_INDEX + i, i * (1 << 22));
+        page_directory_entry_set(XANIN_KERNEL_PAGE_DIRECTORIES_INDEX + i, i * (1 << PAGE_DIRECTORY_ADDRESS_OFFSET));
     }
 
     paging_enable();

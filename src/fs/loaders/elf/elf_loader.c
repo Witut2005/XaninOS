@@ -12,7 +12,7 @@ extern char* argv[5]; // USE HERE SYSCALL
 
 bool elf_check_magic(uint8_t* data)
 {
-    return bstrncmp(data + 1, "ELF", 3); // && data[0] == 0x7F;
+    return bstrncmp((char*)data + 1, "ELF", 3); // && data[0] == 0x7F;
 }
 
 bool elf_check_arch(uint8_t* file)
@@ -62,7 +62,7 @@ void elf_load(XinEntry* file)
 
     if (!elf_check_magic(data))
     {
-        xprintf("%zBAD MAGIC\n", stderr);
+        xprintf("%zBAD MAGIC\n", OUTPUT_COLOR_ERROR_SET);
         while (getxchar().scan_code != ENTER)
             ;
         return;
@@ -70,7 +70,7 @@ void elf_load(XinEntry* file)
 
     if (!elf_check_arch(data + 0x12))
     {
-        xprintf("%zBAD ARCH\n", stderr);
+        xprintf("%zBAD ARCH\n", OUTPUT_COLOR_ERROR_SET);
         while (getxchar().scan_code != ENTER)
             ;
         return;
@@ -119,7 +119,7 @@ int elfreader(char* filename)
 
     if (file == NULL)
     {
-        xprintf("%zNO SUCH FILE\n", stderr);
+        xprintf("%zNO SUCH FILE\n", OUTPUT_COLOR_ERROR_SET);
         while (getxchar().scan_code != ENTER)
             ;
         return XANIN_ERROR;

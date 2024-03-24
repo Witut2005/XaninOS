@@ -155,7 +155,6 @@ char* __xin_absolute_path_get(char* rpath, char* buf, XIN_FS_ENTRY_TYPES type)
     }
 
     char ret[XIN_MAX_PATH_LENGTH + 1] = { '\0' };
-    int last_folder_char_index = 0;
 
     int ret_index = 0;
     int buf_index = 0;
@@ -175,9 +174,6 @@ char* __xin_absolute_path_get(char* rpath, char* buf, XIN_FS_ENTRY_TYPES type)
         }
         else
         {
-            if (buf[buf_index] == '/')
-                last_folder_char_index = buf_index;
-
             ret[ret_index] = buf[buf_index];
 
             ret_index++;

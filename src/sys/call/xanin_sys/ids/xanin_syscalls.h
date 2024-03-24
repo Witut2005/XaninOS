@@ -89,3 +89,6 @@
 #define XANIN_VGA_BUFFER_SEGMENT_GET 20000
 #define XANIN_VGA_TEXT_MODE_WIDTH_GET 20001
 #define XANIN_VGA_TEXT_MODE_HEIGHT_GET 20002
+
+//Shell (I know that shell is a userland program, but I will not change XinFs)
+#define XANIN_SHELL_STDEIO_CREATE 30000

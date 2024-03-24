@@ -9,17 +9,17 @@ int nic_rename(char* oldname, char* newname)
 {
     pci_device* NetDevice = netapi_device_info_get(oldname);
 
-    if(NetDevice == NULL)
+    if (NetDevice == NULL)
     {
-        xprintf("%zNo Such Device %s\n", stderr, oldname);
+        xprintf("%zNo Such Device %s\n", OUTPUT_COLOR_ERROR_SET, oldname);
         return XANIN_ERROR;
     }
 
     else
     {
         int status = netapi_rename_device(oldname, newname);
-        if(status != XANIN_OK)
-            xprintf("%zERROR status code: %d\n", stderr, status);
+        if (status != XANIN_OK)
+            xprintf("%zERROR status code: %d\n", OUTPUT_COLOR_ERROR_SET, status);
     }
 
     return XANIN_OK;
