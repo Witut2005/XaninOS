@@ -557,17 +557,6 @@ uint32_t size_of_biggest_line_get(const char* str)
     return max_line_size;
 }
 
-StringRectangle* const string_rectangle_create(const char* buf, uint32_t position_x, uint32_t position_y)
-{
-    StringRectangle* Rect = (StringRectangle*)calloc(SIZE_OF(StringRectangle));
-    Rect->size_x = size_of_biggest_line_get(buf);
-    Rect->size_y = number_of_lines_get(buf);
-    Rect->position_x = position_x;
-    Rect->position_y = position_y;
-
-    return Rect;
-}
-
 char* string_align_begin(char* const str, char filler, uint32_t count)
 {
 
@@ -625,4 +614,28 @@ char* getline(XinEntry* File, int line_id)
 
     free(line);
     return NULL;
+}
+
+
+enum SPRINTF_EXPECT
+{
+    SPRINTF_EXPECTING_FILLER,
+    SPRINTF_EXPECTING_FILLER_COUNTER,
+    SPRINTF_EXPECTING_FORMAT,
+};
+
+char* sprintf(char* str, char* fmt, ...)
+{
+    for (int i = 0; fmt[i] != '\0'; i++)
+    {
+        if (fmt[i] == '%')
+        {
+
+        }
+
+        else
+        {
+
+        }
+    }
 }
