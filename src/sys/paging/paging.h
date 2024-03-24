@@ -1,9 +1,6 @@
 
 #pragma once
 
-//CR0.PG = 1
-//CR4.PAE = 0
-//CR4.PSE
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -13,7 +10,22 @@
 #define CPUID_PAE (1 << 6)
 #define CPUID_PSE36 (1 << 17)
 #define PAGE_DIRECTORY4MB_CREATE(addr)(0x001E7 | (addr & 0xFFC00000))
-#define PAGE_DIRECTORY_SPACE 0x40000
+
+#define XANIN_NUMBER_OF_PAGE_DIRECTORIES 4096 
+#define XANIN_KERNEL_PAGE_DIRECTORIES_INDEX 0xF
+#define XANIN_NUMBER_OF_KERNEL_PAGE_DIRECTORIES 32
+
+#if XANIN_NUMBER_OF_PAGE_DIRECTORIES != 4096
+#error  "Number of pages must be equal to 4096"
+#endif
+
+#if XANIN_NUMBER_OF_KERNEL_PAGE_DIRECTORIES < 32
+#error "Number of XaninPageDirectories must be greater of equal to 32"
+#endif
+
+#if XANIN_KERNEL_PAGE_DIRECTORIES_INDEX != 0xF
+#error "XaninPAgeDirectories index must be equal to 0xF" 
+#endif 
 
 enum PAGE_DIRECTORY_ENTRY_4MB
 {
@@ -65,13 +77,14 @@ static inline uint32_t cpu_maxphyaddr_get(void)
     uint32_t eax = cpuid(0x80000008, 0).eax;
 
     //if this cpuid is not supported
-    if (eax == 0)
+    if (eax == 0) {
         return cpu_pae_supported() == true ? 36 : 32;
+    }
 
     //if this cpuid is supported
     return eax & 0xFF;
 }
 
 void paging_init(void);
-void page_directory_entry_set(uint32_t index, uint32_t address);
+void page_directory_entry_set(uint32_t index, uint32_t page_base_address);
 void paging_enable(void);

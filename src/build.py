@@ -171,6 +171,8 @@ builders = {
     'cc': args.ccbuilder,
 }
 
+c_compilation_options = '-O0 -Wall -Werror=unused-result -Werror-implicit-function-declaration -Wno-parentheses -Wno-comment -Wno-address-of-packed-member -Wno-duplicate-decl-specifier -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding  -Wno-unused-function -I ./'
+
 builder_options = {
     'asm': {
         'bin': '-fbin',
@@ -178,8 +180,8 @@ builder_options = {
     },
 
     'c':{
-        'default': '-O0 -Wall -Werror-implicit-function-declaration -Wno-parentheses -Wno-comment -Wno-address-of-packed-member -Wno-duplicate-decl-specifier -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -I ./ -c',
-        'kernel': '-O0 -Wall -Werror-implicit-function-declaration  -Wno-parentheses -Wno-comment -Wno-address-of-packed-member -Wno-duplicate-decl-specifier -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding  -Wno-unused-function -I ./'
+        'default': f"{c_compilation_options} -c",
+        'kernel': f"{c_compilation_options} -Ttext 0xF00000"
     },
 
     'cc':{

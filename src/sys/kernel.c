@@ -153,10 +153,15 @@ uint8_t kernel_mmngr_mmap[PMMNGR_MEMORY_BLOCKS];
 
 void kernel_init(void)
 {
-    for (int i = 0; i < 1024; i++)
-        page_directory_entry_set(i, i * (1 << 22));
+    for (int i = 0; i < XANIN_NUMBER_OF_PAGE_DIRECTORIES; i++) {
+        page_directory_entry_set(i, i * (1 << 22)); // (shift to determine which directory to use)
+    }
 
-    // paging_enable();
+    for (int i = 0; i < XANIN_NUMBER_OF_KERNEL_PAGE_DIRECTORIES; i++) {
+        page_directory_entry_set(XANIN_KERNEL_PAGE_DIRECTORIES_INDEX + i, i * (1 << 22));
+    }
+
+    paging_enable();
 
     INTERRUPT_REGISTER(0, divide_by_zero_exception_entry);
     INTERRUPT_REGISTER(1, debug_exception_entry);
