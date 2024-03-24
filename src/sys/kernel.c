@@ -154,8 +154,8 @@ uint8_t kernel_mmngr_mmap[PMMNGR_MEMORY_BLOCKS];
 
 void kernel_init(void)
 {
-    PageDirectoryEntry4MB page_dir_entry = { {PAGE_DIRECTORY4MB_CREATE(0x0)} }; // kernel page
-    page_directory_entry_set(0, &page_dir_entry);
+    // PageDirectoryEntry4MB page_dir_entry = { {PAGE_DIRECTORY4MB_CREATE(0x0)} }; // kernel page
+    // page_directory_entry_set(0, &page_dir_entry);
     // paging_enable();
 
     INTERRUPT_REGISTER(0, divide_by_zero_exception_entry);

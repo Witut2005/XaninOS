@@ -154,7 +154,7 @@ void scan(void)
         XANIN_ADD_APP_ENTRY0("pong", pong)
         XANIN_ADD_APP_ENTRY1("loadch", loadch)
 
-        XANIN_ADD_APP_ENTRY0("reboot_ble", reboot)
+        XANIN_ADD_APP_ENTRY0("reboot", reboot)
         XANIN_ADD_APP_ENTRY1("create", xin_create_file_app)
         XANIN_ADD_APP_ENTRY1("mkdir", xin_create_folder_app)
         XANIN_ADD_APP_ENTRY0("shutdown", shutdown)

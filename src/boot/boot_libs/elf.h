@@ -4,7 +4,8 @@
 #include <lib/elf/elf.h>
 #include "./disk.h"
 
-#define XANIN_OS_KERNEL_MEMORY_LOCATION (0x20200 + (15 * SECTOR_SIZE))
+// #define XANIN_OS_KERNEL_MEMORY_LOCATION (0x20200 + (15 * SECTOR_SIZE))
+#define XANIN_OS_KERNEL_LOCATION (0x100000)
 
 typedef uint8_t* address_t;
 

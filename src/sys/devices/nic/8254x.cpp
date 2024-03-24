@@ -36,12 +36,12 @@ void Intel8254xDriver::write(uint32_t reg, uint32_t value)
 
 uint32_t Intel8254xDriver::read(uint32_t reg)
 {
-    return *(uint32_t*)(this->iobase + reg); 
+    return *(uint32_t*)(this->iobase + reg);
 }
 
 void Intel8254xDriver::multicast_table_array_clear(void)
 {
-    for(int i = 0 ; i < 0x1FC; i += 4)
+    for (int i = 0; i < 0x1FC; i += 4)
         this->write(nic::MTA + i, 0x0);
 }
 
@@ -51,13 +51,13 @@ bool Intel8254xDriver::is_eeprom_present(void)
 
     bool eerprom_exists;
 
-    for(int i = 0; i < 1000 && ! eerprom_exists; i++)
+    for (int i = 0; i < 1000 && !eerprom_exists; i++)
     {
-            auto val = this->read(nic::EERD);
-            if(val & 0x10)
-                    eerprom_exists = true;
-            else
-                    eerprom_exists = false;
+        auto val = this->read(nic::EERD);
+        if (val & 0x10)
+            eerprom_exists = true;
+        else
+            eerprom_exists = false;
     }
     return eerprom_exists;
 
@@ -69,15 +69,15 @@ uint16_t Intel8254xDriver::eeprom_read(uint8_t address)
 
     /* enable reading from eeprom */
     this->write(nic::EECD, this->read(nic::EECD) | nic::EECD_REQ);
-    while((this->read(nic::EECD) & nic::EECD_GNT) >> 7 == 0);
+    while ((this->read(nic::EECD) & nic::EECD_GNT) >> 7 == 0);
 
-    if(!this->is_present)
+    if (!this->is_present)
         return USHRT_MAX;
 
     this->write(nic::EERD, (uint32_t)((address << 8) | 0x1));
-    
-    while(!(this->read(nic::EERD) & (1 << 4)));
-    
+
+    while (!(this->read(nic::EERD) & (1 << 4)));
+
     uint32_t ret = this->read(nic::EERD);
     this->write(nic::EECD, this->read(nic::EECD) ^ nic::EECD_REQ);
 
@@ -88,10 +88,10 @@ uint16_t Intel8254xDriver::eeprom_read(uint8_t address)
 
 }
 
-uint8_t* Intel8254xDriver::mac_get() 
+uint8_t* Intel8254xDriver::mac_get()
 {
 
-    if(!this->is_present)
+    if (!this->is_present)
         return (uint8_t*)NULL;
 
 
@@ -106,14 +106,14 @@ uint8_t* Intel8254xDriver::mac_get()
 void Intel8254xDriver::receive_init(void)
 {
 
-    if(!this->is_present)
+    if (!this->is_present)
         return;
 
     this->receive_descriptors_buffer = (i8254xReceiveDescriptor*)kmalloc(SIZE_OF(i8254xReceiveDescriptor) * INTEL_8254X_DESCRIPTORS);
     const auto receive_buffer_size = 4096;
     this->receive_buffer = (uint8_t*)kmalloc(receive_buffer_size * INTEL_8254X_DESCRIPTORS);
 
-    for(int i = 0; i < INTEL_8254X_DESCRIPTORS; i++)
+    for (int i = 0; i < INTEL_8254X_DESCRIPTORS; i++)
     {
         this->receive_descriptors_buffer[i].address_low = (uint32_t)&this->receive_buffer[i * receive_buffer_size];
         this->receive_descriptors_buffer[i].address_high = 0x0;
@@ -128,7 +128,7 @@ void Intel8254xDriver::receive_init(void)
     this->write(nic::RDBAL, (uint32_t)this->receive_descriptors_buffer);
     this->write(nic::RDBAH, 0x0);
 
-    
+
     this->write(nic::RDLEN, INTEL_8254X_DESCRIPTORS * SIZE_OF(i8254xReceiveDescriptor));
 
     /* set head and tail to proper values */
@@ -141,7 +141,7 @@ void Intel8254xDriver::receive_init(void)
     // std::cout << std::hex << "SIZE BUFFER: " << this->read(nic::RCTL) << std::endl;
 
     this->write(nic::RCTL, this->read(nic::RCTL) | nic::rctl::BAM); // accept broadcast packets
-    
+
     this->write(nic::RCTL, this->read(nic::RCTL) | nic::rctl::BSEX);
     this->write(nic::RCTL, this->read(nic::RCTL) | (0x1 << 16));  // BSIZE
 
@@ -155,7 +155,7 @@ void Intel8254xDriver::receive_init(void)
 void Intel8254xDriver::transmit_init(void)
 {
 
-    if(!this->is_present)
+    if (!this->is_present)
         return;
 
 
@@ -169,7 +169,7 @@ void Intel8254xDriver::transmit_init(void)
 
     this->transmit_buffer = (uint8_t*)kmalloc(TRANSMIT_BUFFER_SIZE * INTEL_8254X_DESCRIPTORS);
 
-    for(int i = 0; i < INTEL_8254X_DESCRIPTORS; i++)
+    for (int i = 0; i < INTEL_8254X_DESCRIPTORS; i++)
     {
         this->transmit_descriptors_buffer[i].address_low = (uint32_t)&this->transmit_descriptors_buffer[i * TRANSMIT_BUFFER_SIZE];
         this->transmit_descriptors_buffer[i].address_high = 0x0;
@@ -214,7 +214,7 @@ void Intel8254xDriver::transmit_init(void)
 void Intel8254xDriver::packet_send(uint8_t* address, uint16_t length)
 {
 
-    if(!is_present)
+    if (!is_present)
         return;
 
     // xprintf("a");
@@ -231,10 +231,10 @@ void Intel8254xDriver::packet_send(uint8_t* address, uint16_t length)
 
 
     auto txd_old = this->txd_current;
-    this->write(nic::TDT,(this->txd_current + 1) % INTEL_8254X_DESCRIPTORS);
+    this->write(nic::TDT, (this->txd_current + 1) % INTEL_8254X_DESCRIPTORS);
     this->txd_current = (this->txd_current + 1) % INTEL_8254X_DESCRIPTORS;
 
-    while(!this->transmit_descriptors_buffer[txd_old].status);
+    while (!this->transmit_descriptors_buffer[txd_old].status);
 
 
 }
@@ -244,12 +244,12 @@ void Intel8254xDriver::init()
 {
     reset();
 
-    for(int i = 0; i < 100; i++)
+    for (int i = 0; i < 100; i++)
         io_wait();
 
     /* finding device */
     this->pci_selector = pci_find_device(INTEL_8254X, 0x100E, &pci_info);
-    if(this->pci_selector == UINT32_MAX)
+    if (this->pci_selector == UINT32_MAX)
     {
         this->is_present = false;
         return;
@@ -262,7 +262,7 @@ void Intel8254xDriver::init()
 
     /* setting pci command register */
     uint16_t pci_command = pci_get_data16(pci_info.bus, pci_info.slot, pci_info.function, 0x4);
-    pci_write_data16(pci_info.bus, pci_info.slot, pci_info.function, 0x4, pci_command | 0x7); 
+    pci_write_data16(pci_info.bus, pci_info.slot, pci_info.function, 0x4, pci_command | 0x7);
 
     this->write(nic::EECD, this->read(nic::EECD) | nic::EECD_SK | nic::EECD_CS | nic::EECD_DI);
     this->mac_get();
@@ -275,7 +275,7 @@ void Intel8254xDriver::init()
 
     this->multicast_table_array_clear(); // clear multicast table
     this->multicast_table_array_clear(); // clear multicast table
-    
+
     // /* disable VLANs */
     this->write(nic::CTRL, this->read(nic::CTRL) & (~nic::ctrl::VME));
 
@@ -285,8 +285,8 @@ void Intel8254xDriver::init()
     this->last_packet = (uint8_t*)kcalloc(SIZE_OF(uint8_t) * XANIN_PMMNGR_BLOCK_SIZE);
 
     /* enabling interrupts */
-    this->write(nic::IMS, this->read(nic::IMS) | nic::ims::RXT | nic::ims::RXO | 
-                  nic::ims::RXDMT | nic::ims::RXSEQ | nic::ims::LSC);
+    this->write(nic::IMS, this->read(nic::IMS) | nic::ims::RXT | nic::ims::RXO |
+        nic::ims::RXDMT | nic::ims::RXSEQ | nic::ims::LSC);
 
 }
 
@@ -301,7 +301,7 @@ uint32_t Intel8254xDriver::transmit_descriptors_buffer_get(void)
     // return this->read(nic::TDBAL);
 }
 
-pci_device* Intel8254xDriver::pci_info_get() 
+pci_device* Intel8254xDriver::pci_info_get()
 {
     return &this->pci_info;
 }
@@ -319,16 +319,16 @@ uint16_t Intel8254xDriver::vendorid_get() const
 uint8_t* Intel8254xDriver::packet_receive(void)
 {
 
-    if(!this->is_present)
+    if (!this->is_present)
         return (uint8_t*)NULL;
 
     this->rxd_current = this->read(nic::RDT) % INTEL_8254X_DESCRIPTORS;
     this->rxd_current = (this->rxd_current + 1) % INTEL_8254X_DESCRIPTORS;
-    
+
     uint8_t* packet;
     uint16_t packet_lenght;
-    
-    while(!this->receive_descriptors_buffer[this->rxd_current].status & 0x1);
+
+    while (!this->receive_descriptors_buffer[this->rxd_current].status & 0x1);
     io_wait();
 
     packet = (uint8_t*)this->receive_descriptors_buffer[rxd_current].address_low;
@@ -348,11 +348,11 @@ uint8_t* Intel8254xDriver::packet_receive(void)
 }
 
 
-bool Intel8254xDriver::interrupt_handler(void) 
+bool Intel8254xDriver::interrupt_handler(void)
 {
     uint16_t interrupt_status = this->read(nic::ICR);
-    
-    if(interrupt_status & 0x80)
+
+    if (interrupt_status & 0x80)
     {
         this->packet_receive();
         return true;
@@ -381,7 +381,7 @@ Intel8254xDriver::Intel8254xDriver() : name(NULL) {}
 
 void Intel8254xDriver::name_set(const char* name)
 {
-    if(this->name != NULL)
+    if (this->name != NULL)
         free(this->name);
     this->name = (char*)kcalloc(strlen(name));
 
@@ -456,7 +456,7 @@ extern "C"
 
         Intel8254x->init();
 
-        if(Intel8254x->is_device_present())
+        if (Intel8254x->is_device_present())
         {
             netapi_add_device(NetDev, "i8254x", i8254x_interrupt_handler_entry);
             INTERRUPT_REGISTER(vector, netapi_interrupt_handle_entry);

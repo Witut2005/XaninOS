@@ -219,30 +219,6 @@ char* xint_to_hex_str(uint32_t x, char* buf, uint8_t how_many_chars)
     return buf;
 }
 
-char* int_to_oct_str(int x, char* buf)
-{
-    int i = 0;
-
-    if (!x)
-    {
-        buf[0] = '0';
-        buf[1] = '\0';
-        return buf;
-    }
-
-    for (i = 0; x != 0; i++)
-    {
-        buf[i] = (x % 8) + 48;
-        x = x / 8;
-    }
-
-    *(buf + i + 1) = '\0';
-
-    buf = strrev(buf);
-
-    return buf;
-}
-
 uint32_t atoi(char* str)
 {
 
@@ -492,8 +468,9 @@ char* substr_find(char* str, const char* substr)
 {
     while (*str != '\0')
     {
-        if (bstrncmp(str, substr, strlen(substr)))
+        if (bstrncmp(str, substr, strlen(substr))) {
             return str;
+        }
         str++;
     }
     return NULL;
@@ -505,8 +482,9 @@ char* substr_last_find(char* str, const char* substr)
 
     for (int i = 0; str[i] != '\0'; i++)
     {
-        if (bstrncmp(&str[i], substr, strlen(substr)))
+        if (bstrncmp(&str[i], substr, strlen(substr))) {
             last_index = i;
+        }
         str++;
     }
 
@@ -553,7 +531,6 @@ uint32_t number_of_lines_get(const char* str)
 
 uint32_t size_of_biggest_line_get(const char* str)
 {
-
     int max_line_size = 0;
     int current_line_size = 0;
 
@@ -561,19 +538,21 @@ uint32_t size_of_biggest_line_get(const char* str)
     {
         if (*str == '\n') // do not include \x1e
         {
-            if (current_line_size > max_line_size)
+            if (current_line_size > max_line_size) {
                 max_line_size = current_line_size;
+            }
 
             current_line_size = 0;
         }
-        else
+        else {
             current_line_size++;
-
+        }
         str++;
     }
 
-    if (current_line_size > max_line_size)
+    if (current_line_size > max_line_size) {
         max_line_size = current_line_size;
+    }
 
     return max_line_size;
 }
@@ -594,8 +573,9 @@ char* string_align_begin(char* const str, char filler, uint32_t count)
 
     uint32_t string_length = strlen(str);
 
-    if (string_length >= count)
+    if (string_length >= count) {
         return str;
+    }
 
     memmove(str + (count - string_length), str, string_length);
 
@@ -611,8 +591,9 @@ char* string_align_begin(char* const str, char filler, uint32_t count)
 char* string_align_end(char* const str, char filler, uint32_t count)
 {
     int i;
-    for (i = strlen(str); i < count; i++)
+    for (i = strlen(str); i < count; i++) {
         str[i] = filler;
+    }
 
     str[i] = '\0'; // put NULL terminator
 
@@ -632,15 +613,16 @@ char* getline(XinEntry* File, int line_id)
     {
         if (current_line == line_id)
         {
-            for (int i = 0; file_data[i] != '\n' && file_data[i] != '\0'; i++)
+            for (int i = 0; file_data[i] != '\n' && file_data[i] != '\0'; i++) {
                 line[i] = file_data[i];
+            }
             return line;
         }
-        if (*file_data == '\n')
+        if (*file_data == '\n') {
             current_line++;
+        }
     }
 
     free(line);
     return NULL;
-    // return line;
 }
