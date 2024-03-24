@@ -177,8 +177,8 @@ void canvas_xprintf(char* str, ...)
 
             case 'x':
             {
-                uint32_t number_hex = va_arg(args, uint32_t);
-                int_to_hex_str(number_hex, temporary_pointer);
+                uint32_t number = va_arg(args, uint32_t);
+                int_to_string(number, temporary_pointer, HEXADECIMAL);
 
                 for (int i = 0; temporary_pointer[i] != '\0'; i++)
                     stdio_legacy_cell_put_with_interpretation(temporary_pointer[i], OUTPUT_COLOR_SET(background_color, font_color), &Screen.y, &Screen.x);
@@ -188,10 +188,10 @@ void canvas_xprintf(char* str, ...)
 
             case 'X':
             {
-                number = va_arg(args, int);
+                uint32_t number = va_arg(args, uint32_t);
+                int_to_string(number, temporary_pointer, HEXADECIMAL);
 
-                int_to_hex_str(number, temporary_pointer);
-                toupper(temporary_pointer);
+                // toupper(temporary_pointer);
 
                 for (int i = 0; temporary_pointer[i] != '\0'; i++)
                     stdio_legacy_cell_put_with_interpretation(temporary_pointer[i], OUTPUT_COLOR_SET(background_color, font_color), &Screen.y, &Screen.x);
@@ -202,7 +202,7 @@ void canvas_xprintf(char* str, ...)
             case 'o':
             {
                 number = va_arg(args, int);
-                int_to_oct_str(number, temporary_pointer);
+                int_to_string(number, temporary_pointer, OCTAL);
 
                 for (int i = 0; temporary_pointer[i] != '\0'; i++)
                     stdio_legacy_cell_put_with_interpretation(temporary_pointer[i], OUTPUT_COLOR_SET(background_color, font_color), &Screen.y, &Screen.x);

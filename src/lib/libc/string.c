@@ -110,11 +110,23 @@ char* int_to_decimal_string(int32_t value, char* buf)
         memmove(&buf[1], buf, strlen(buf));
         buf[0] = '-';
     }
+    return buf;
 }
 
 char* int_to_string(uint32_t value, char* buf, const uint8_t base)
 {
-    char digits[] = { '0','1','2','3','4','5','6','7','8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
+    char digits[] = { '0','1','2','3','4','5','6','7','8', '9', 'A', 'B', 'C', 'D', 'E', 'F',
+                        'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',
+                        'T', 'U', 'V', 'W' };
+
+    if (base > 32)
+        return NULL;
+
+    if (value == 0) {
+        buf[0] = '0';
+        buf[1] = '\0';
+        return buf;
+    }
 
     if (base == DECIMAL) {
         if ((int32_t)value < 0) {
@@ -132,6 +144,7 @@ char* int_to_string(uint32_t value, char* buf, const uint8_t base)
     buf[i] = '\0';
 
     strrev(buf);
+    return buf;
 }
 
 char* bcd_to_string(uint8_t x, char* buf)
@@ -171,45 +184,6 @@ char* tolower(char* str)
         }
     }
     return str;
-}
-
-char* int_to_hex_str(uint32_t number, char* buf)
-{
-#define HEX_BASE 16
-    char hex_values[16] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
-
-    if (!number) {
-        memset(buf, '0', 2);
-        buf[2] = '\0';
-        return buf;
-    }
-
-    for (int i = 0; number != 0; i++) {
-        buf[i] = hex_values[number % HEX_BASE];
-        number = number / HEX_BASE;
-    }
-
-    buf = strrev(buf);
-    return buf;
-}
-
-uint32_t hex_str_to_int(char* str)
-{
-
-    uint32_t value = 0;
-
-    for (char* i = str; *i != '\0' && *i != ' '; i++)
-    {
-        value = value * 0x10;
-
-        if (*i >= '0' && *i <= '9')
-            value += *i - '0';
-
-        else if (*i >= 'A' && *i <= 'F')
-            value += *i - 'A' + 0xa;
-    }
-
-    return value;
 }
 
 char* xint_to_hex_str(uint32_t x, char* buf, uint8_t how_many_chars)

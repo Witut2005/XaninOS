@@ -5,11 +5,11 @@
 #include <lib/libc/string.h>
 #include <lib/libc/stdiox.h>
 
-extern char *argv[5]; // USE HERE SYSCALL
+extern char* argv[5]; // USE HERE SYSCALL
 
 // TERMINAL_APP
 
-int load_file(char *file_name, char *options)
+int load_file(char* file_name, char* options)
 {
 
     uint32_t offset = 0;
@@ -19,21 +19,21 @@ int load_file(char *file_name, char *options)
 
     screen_clear();
 
-    XinEntry *File = fopen(file_name, "r");
+    XinEntry* File = fopen(file_name, "r");
 
-    uint8_t *file_data = (uint8_t *)calloc(File->size);
+    uint8_t* file_data = (uint8_t*)calloc(File->size);
     fread(File, file_data, File->size);
 
     uint32_t address = (uint32_t)file_data + offset;
-    char *data_pointer = (char *)file_data + offset;
+    char* data_pointer = (char*)file_data + offset;
 
     for (int i = 0; i < 28; i++)
     {
 
-        char tmp[9] = {0x0};
+        char tmp[9] = { 0x0 };
         xprintf("0x%X:", address + i * 16);
 
-        for (int k = 0; k < 8 - strlen(int_to_hex_str(address + i * 16, tmp)); k++) // better address aligment (visually)
+        for (int k = 0; k < 8 - strlen(int_to_string(address + i * 16, tmp, HEXADECIMAL)); k++) // better address aligment (visually)
             xprintf(" ");
 
         for (int j = 0; j < 16; j++)

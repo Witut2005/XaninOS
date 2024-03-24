@@ -102,8 +102,6 @@ void xprintf(char* str, ...)
     memset((uint8_t*)tmp, '\0', SIZE_OF(tmp));
     char* temporary_pointer = tmp;
 
-    uint32_t number;
-
     char* stringPtr;
     Xtf* StdioVty = __sys_vty_get();
 
@@ -133,8 +131,7 @@ void xprintf(char* str, ...)
 
             case 'd':
             {
-                number = va_arg(args, int);
-
+                uint32_t number = va_arg(args, int);
                 int_to_string(number, tmp, DECIMAL);
 
                 for (int i = 0; tmp[i] != '\0'; i++) {
@@ -197,7 +194,7 @@ void xprintf(char* str, ...)
 
             case 'b':
             {
-                number = va_arg(args, int);
+                uint32_t number = va_arg(args, int);
                 temporary_pointer = int_to_string(number, tmp, BINARY);
 
                 for (int i = 0; temporary_pointer[i] != '\0'; i++)
@@ -249,8 +246,8 @@ void xprintf(char* str, ...)
 
             case 'x':
             {
-                uint32_t number_hex = va_arg(args, uint32_t);
-                int_to_hex_str(number_hex, temporary_pointer);
+                uint32_t number = va_arg(args, uint32_t);
+                int_to_string(number, temporary_pointer, HEXADECIMAL);
 
                 for (int i = 0; temporary_pointer[i] != '\0'; i++)
                     __sys_xtf_cell_put(StdioVty, temporary_pointer[i],
@@ -261,8 +258,8 @@ void xprintf(char* str, ...)
 
             case 'X':
             {
-                number = va_arg(args, int);
-                int_to_hex_str(number, temporary_pointer);
+                uint32_t number = va_arg(args, uint32_t);
+                int_to_string(number, temporary_pointer, HEXADECIMAL);
                 toupper(temporary_pointer);
 
                 for (int i = 0; temporary_pointer[i] != '\0'; i++)
@@ -274,8 +271,8 @@ void xprintf(char* str, ...)
 
             case 'o':
             {
-                number = va_arg(args, int);
-                int_to_oct_str(number, temporary_pointer);
+                uint32_t number = va_arg(args, int);
+                int_to_string(number, temporary_pointer, OCTAL);
 
                 for (int i = 0; temporary_pointer[i] != '\0'; i++)
                     __sys_xtf_cell_put(StdioVty, temporary_pointer[i],

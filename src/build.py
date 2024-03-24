@@ -179,7 +179,7 @@ builder_options = {
 
     'c':{
         'default': '-O0 -Wall -Werror-implicit-function-declaration -Wno-parentheses -Wno-comment -Wno-address-of-packed-member -Wno-duplicate-decl-specifier -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -Wno-unused-function -I ./ -c',
-        'kernel': '-O0 -Wall -Wno-parentheses -Wno-comment -Wno-address-of-packed-member -Wno-duplicate-decl-specifier -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding  -Wno-unused-function -I ./'
+        'kernel': '-O0 -Wall -Werror-implicit-function-declaration  -Wno-parentheses -Wno-comment -Wno-address-of-packed-member -Wno-duplicate-decl-specifier -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding  -Wno-unused-function -I ./'
     },
 
     'cc':{
