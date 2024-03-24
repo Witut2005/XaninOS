@@ -12,7 +12,7 @@
 
 #define CPUID_PAE (1 << 6)
 #define CPUID_PSE36 (1 << 17)
-#define PAGE_DIRECTORY4MB_CREATE(addr)(0x001FF | (addr << 22))
+#define PAGE_DIRECTORY4MB_CREATE(addr)(0x001E7 | (addr & 0xFFC00000))
 #define PAGE_DIRECTORY_SPACE 0x40000
 
 enum PAGE_DIRECTORY_ENTRY_4MB
@@ -73,5 +73,5 @@ static inline uint32_t cpu_maxphyaddr_get(void)
 }
 
 void paging_init(void);
-void page_directory_entry_set(uint32_t index, PageDirectoryEntry4MB* data);
+void page_directory_entry_set(uint32_t index, uint32_t address);
 void paging_enable(void);

@@ -10,7 +10,7 @@ void _start(void)
 {
 
 #if XANIN_OS_KERNEL_LOCATION < 0x100000
-#error "KERNEL must be loaded after Motherboard BIOS memory space
+#error "KERNEL must be loaded after Motherboard BIOS memory space"
 #endif
     __disk_init(ATA_FIRST_BUS, ATA_MASTER);
 

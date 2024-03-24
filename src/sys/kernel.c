@@ -2,6 +2,7 @@
 #include <sys/paging/paging.h>
 #include "call/xanin_sys/ids/xanin_syscalls.h"
 #include "devices/com/labels.h"
+#include "paging/paging.h"
 #include <sys/net/network_protocols/internet_protocol/ipv4/ip.h>
 #include <lib/ascii/ascii.h>
 #include <sys/devices/pit/pit.h>
@@ -154,9 +155,14 @@ uint8_t kernel_mmngr_mmap[PMMNGR_MEMORY_BLOCKS];
 
 void kernel_init(void)
 {
-    // PageDirectoryEntry4MB page_dir_entry = { {PAGE_DIRECTORY4MB_CREATE(0x0)} }; // kernel page
-    // page_directory_entry_set(0, &page_dir_entry);
-    // paging_enable();
+    // PageDirectoryEntry4MB page_dir_entry = { {PAGE_DIRECTORY4MB_CREATE(0x08000000)} }; // kernel page
+    for (int i = 0; i < 1024; i++)
+        page_directory_entry_set(i, i * (1 << 22));
+
+    paging_enable();
+    // page_dir_entry.fields = PAGE_DIRECTORY4MB_CREATE(0x0); // kernel page
+    // page_directory_entry_set(1, &page_dir_entry);
+
 
     INTERRUPT_REGISTER(0, divide_by_zero_exception_entry);
     INTERRUPT_REGISTER(1, debug_exception_entry);
@@ -346,8 +352,8 @@ void kernel_init(void)
 
     xprintf("XinFs tables: 0x%x\n", __xin_fs_entries_get());
 
-    // xprintf("CPUID: 0x%x\n", cpu_paging_related_info_get());
-    // xprintf("CPUID: %d\n", cpu_maxphyaddr_get());
+    xprintf("CPUID: 0x%x\n", cpu_pse36_supported());
+    xprintf("CPUID: %d\n", cpu_maxphyaddr_get());
     // xprintf("DIR ENTRY: 0x%x\n", page_dir_entry.fields);
     puts("Press ENTER to continue...\n");
 
