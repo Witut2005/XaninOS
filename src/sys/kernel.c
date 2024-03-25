@@ -346,15 +346,13 @@ void kernel_init(void)
     __xin_init();
     FileDescriptorTable = (XinFileDescriptor*)kcalloc(SIZE_OF(XinFileDescriptor) * 200); // 200 = number o entries
 
-    dbg_success(DEBUG_LABEL_XANIN, "Babciu zobacz to wszystko jest dla ciebie ❤️");
+    dbg_success(DEBUG_LABEL_XANIN, "Babciu, zobacz to wszystko jest dla ciebie ❤️");
 
     xprintf("XinFs tables: 0x%x\n", __xin_fs_entries_get());
     // xprintf("CPUID: 0x%x\n", cpu_pse36_supported());
     // xprintf("CPUID: %d\n", cpu_maxphyaddr_get());
-    // xprintf("DIR ENTRY: 0x%x\n", page_dir_entry.fields);
-    // puts(
-    sprintf(calloc(50), "sprintf test: %d\n", 10);
-    //);
+
+    dbg_success(DEBUG_LABEL_LIBC, sprintf(calloc(50), "sprintf test: %010x\n", 0xabcd));
     puts("Press ENTER to continue...\n");
 
     srand(SystemTime.seconds);
@@ -377,7 +375,6 @@ void kernel_init(void)
 
     interrupt_enable();
     char mbuf[50] = { 0 };
-    memcpy_with_skip(mbuf, "fromini", ARRAY_LENGTH("fromini"), 1);
     dbg_info(DEBUG_LABEL_LIBC, mbuf);
 
     char* buffer = (char*)kcalloc(100 * SIZE_OF(char));

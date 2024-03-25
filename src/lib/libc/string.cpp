@@ -14,675 +14,675 @@
 
 static uint32_t string_errno;
 
-extern "C" 
+extern "C"
 {
 
-bool is_in_char_range(char r1, char r2, char c)
-{
-    return  c > r1 && c < r2;
-}
-
-bool is_char(char c)
-{
-    return c > '0' && c < '~';
-}
-
-int char_find(const char* str, char c)
-{
-    for (int i = 0; str[i] != '\0'; i++)
+    bool is_in_char_range(char r1, char r2, char c)
     {
-        if (str[i] == c) {
-            return i;
-        }
-    }
-    return -1;
-}
-
-uint32_t check_string_errors(uint32_t mask)
-{
-    return string_errno & mask;
-}
-
-uint32_t strlen(const char* str)
-{
-    EXIT_ON_EQUALS_ZERO(str, 0);
-
-    uint32_t length = 0;
-    for (int i = 0; str[i] != '\0'; i++, length++);
-
-    return length;
-}
-
-char* strcpy(char* dest, const char* src)
-{
-    EXIT_ON_EQUALS_ZERO(src, NULL);
-    uint32_t length = strlen(src);
-    memcpy(dest, src, strlen(src));
-    dest[length] = '\0';
-    return dest;
-}
-
-char* strncpy(char* dest, const char* src, size_t size)
-{
-    EXIT_ON_EQUALS_ZERO(size, NULL);
-
-    uint32_t src_length = strlen(src);
-    uint32_t length = src_length > size ? size : src_length;
-
-    memcpy(dest, src, length);
-    dest[length] = '\0';
-
-    return dest;
-}
-
-char* strrev(char* str)
-{
-    int len = strlen(str);
-
-    // for loop
-    for (int i = 0, j = len - 1; i <= j; i++, j--) {
-        // swapping characters
-        char c = str[i];
-        str[i] = str[j];
-        str[j] = c;
-    }
-    return str;
-}
-
-int32_t strcmp(char* a, const char* b)
-{
-    while (*a && (*a == *b)) {
-        a++;
-        b++;
+        return  c > r1 && c < r2;
     }
 
-    return *a - *b;
-}
-
-bool bstrcmp(char* a, const char* b)
-{
-    return strcmp(a, b) == 0;
-}
-
-bool bstrncmp(char* a, const char* b, size_t string_size)
-{
-    // uint32_t length_to_check = strlen()
-    for (int i = 0; i < string_size; i++)
+    bool is_char(char c)
     {
-        if (a[i] != b[i]) {
-            return false;
-        }
-    }
-    return true;
-}
-
-char* int_to_decimal_string(int32_t value, char* buf)
-{
-    int_to_string(abs(value), buf, 10);
-
-    if (value < 0) {
-        memmove(&buf[1], buf, strlen(buf));
-        buf[0] = '-';
-    }
-    return buf;
-}
-
-char* int_to_string(uint32_t value, char* buf, const uint8_t base)
-{
-    char digits[] = { '0','1','2','3','4','5','6','7','8', '9', 'A', 'B', 'C', 'D', 'E', 'F',
-                        'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',
-                        'T', 'U', 'V', 'W' };
-
-    if (base > 32)
-        return NULL;
-
-    if (value == 0) {
-        buf[0] = '0';
-        buf[1] = '\0';
-        return buf;
+        return c > '0' && c < '~';
     }
 
-    if (base == DECIMAL) {
-        if ((int32_t)value < 0) {
-            buf[0] = '-';
-            buf++;
-        }
-        value = abs((int32_t)value);
-    }
-
-    int i = 0;
-    while (value) {
-        buf[i++] = digits[value % base];
-        value = value / base;
-    };
-    buf[i] = '\0';
-
-    strrev(buf);
-    return buf;
-}
-
-char* bcd_to_string(uint8_t x, char* buf)
-{
-    buf[0] = (((x & 0xf0) >> 4) + 48);
-    buf[1] = ((x & 0x0f) + 48);
-    return buf;
-}
-
-void erase_spaces(char* str)
-{
-    for (int i = 0; str[i] != '\0'; i++)
+    int char_find(const char* str, char c)
     {
-        if (str[i] == ' ') {
-            memmove(&str[i], &str[+1], strlen(str) - i);
-        }
-    }
-}
-
-char* toupper(char* str)
-{
-    for (int i = 0; str[i] != '\0'; i++)
-    {
-        if (str[i] >= 'a' && str[i] <= 'z') {
-            str[i] -= ASCII_CASE_OFFSET;
-        }
-    }
-    return str;
-}
-
-char* tolower(char* str)
-{
-    for (int i = 0; str[i] != '\0'; i++)
-    {
-        if (str[i] >= 'A' && str[i] <= 'Z') {
-            str[i] += ASCII_CASE_OFFSET;
-        }
-    }
-    return str;
-}
-
-char* xint_to_hex_str(uint32_t x, char* buf, uint8_t how_many_chars)
-{
-    how_many_chars *= 2;
-
-    char hex_values[16] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
-
-    if (!x)
-    {
-        buf[0] = '0';
-        buf[1] = '0';
-        buf[2] = '\0';
-        return buf;
-    }
-
-    for (int i = 0; i <= how_many_chars; i++)
-    {
-        if (i < how_many_chars)
-            buf[i] = '0';
-        else
-            buf[i] = '\0';
-    }
-
-    for (int i = 0; x != 0; i++)
-    {
-        buf[i] = hex_values[x % 16];
-        x = x / 16;
-    }
-
-    buf = strrev(buf);
-
-    return buf;
-}
-
-uint32_t atoi(char* str)
-{
-
-    uint32_t sum = 0;
-
-    for (int i = 0; i < strlen(str); i++)
-    {
-        sum *= 10;
-        sum += str[i] - 48;
-    }
-
-    return sum;
-}
-
-uint32_t strtoi(const char* str, uint8_t format)
-{
-
-    bool is_negative = false;
-
-    if (str[0] == '-')
-        is_negative = true;
-
-    uint32_t sum = 0;
-
-    if (format > 16)
-        format = 16;
-
-    if (format == 16 && (bstrncmp((char*)str, "0x", 2) || bstrncmp((char*)str, "0b", 2) || bstrncmp((char*)str, "0o", 2)))
-        str += 2;
-
-    uint8_t digit_counter = strlen(str);
-    uint32_t tmp;
-
-    for (int i = 0; i < digit_counter; i++)
-    {
-
-        if (str[i] >= '0' && str[i] <= '9')
-            tmp = str[i] - 48;
-
-        else if (str[i] >= 'a' && str[i] <= 'f')
-            tmp = str[i] - 'a' + 0xa;
-
-        else if (str[i] >= 'A' && str[i] <= 'F')
-            tmp = str[i] - 'A' + 0xa;
-
-        if (tmp >= format)
-            continue;
-
-        sum *= format;
-
-        sum += tmp;
-    }
-
-    if (is_negative)
-        sum = sum * (-1);
-    return sum;
-}
-
-uint32_t str2ipv4(char* str)
-{
-
-    uint32_t tmp = 0;
-    uint32_t counter = 0;
-
-    if (strlen(str) == 15)
-    {
-
-        char str_tmp[4] = { '\0' };
-        uint32_t octet;
-
-        memcpy(str_tmp, str, 3);
-
-        octet = strtoi(str_tmp, DECIMAL);
-        if (octet > 0xFF)
-            octet = 0xFF;
-
-        tmp = octet << 8;
-
-        if (str[3] != '.')
-            return BAD_IP_ADDRESS;
-
-        memcpy(str_tmp, str + 4, 3);
-
-        octet = strtoi(str_tmp, DECIMAL);
-        if (octet > 0xFF)
-            octet = 0xFF;
-
-        tmp = tmp | octet;
-        tmp = tmp << 8;
-
-        if (str[7] != '.')
-            return BAD_IP_ADDRESS;
-
-        memcpy(str_tmp, str + 8, 3);
-
-        octet = strtoi(str_tmp, DECIMAL);
-        if (octet > 0xFF)
-            octet = 0xFF;
-
-        tmp = tmp | octet;
-        tmp = tmp << 8;
-
-        if (str[11] != '.')
-            return BAD_IP_ADDRESS;
-
-        memcpy(str_tmp, str + 12, 3);
-        octet = strtoi(str_tmp, DECIMAL);
-
-        if (octet > 0xFF)
-            octet = 0xFF;
-
-        tmp = tmp | octet;
-    }
-
-    else
-    {
-        char str_tmp[4] = { '\0' };
-        uint32_t octet;
-
-        for (counter = 0; counter <= 3; counter++)
+        for (int i = 0; str[i] != '\0'; i++)
         {
-            if (str[counter] == '.')
-            {
-                counter++;
-                break;
+            if (str[i] == c) {
+                return i;
             }
-
-            if ((str[counter] != '.') && (counter == 3))
-            {
-                string_errno = string_errno | IPV4_ERRNO;
-                return BAD_IP_ADDRESS;
-            }
-
-            str_tmp[counter] = str[counter];
         }
-
-        octet = strtoi(str_tmp, DECIMAL);
-
-        if (octet > 255)
-        {
-            string_errno = string_errno | IPV4_ERRNO;
-            return BAD_IP_ADDRESS;
-        }
-
-        tmp = tmp | octet;
-        tmp = tmp << 8;
-        memset(str_tmp, 0, 4);
-
-        uint32_t counter_start = counter;
-        uint32_t counter_tmp = counter + 3;
-
-        for (; counter <= counter_tmp; counter++)
-        {
-            if (str[counter] == '.')
-            {
-                counter++;
-                break;
-            }
-
-            if ((str[counter] != '.') && (counter == counter_tmp))
-            {
-                string_errno = string_errno | IPV4_ERRNO;
-                return BAD_IP_ADDRESS;
-            }
-
-            str_tmp[counter - counter_start] = str[counter];
-        }
-
-        octet = strtoi(str_tmp, DECIMAL);
-
-        if (octet > 255)
-        {
-            string_errno = string_errno | IPV4_ERRNO;
-            return BAD_IP_ADDRESS;
-        }
-
-        tmp = tmp | octet;
-        tmp = tmp << 8;
-        memset(str_tmp, 0, 4);
-
-        counter_start = counter;
-        counter_tmp = counter + 3;
-
-        for (; counter <= counter_tmp; counter++)
-        {
-            if (str[counter] == '.')
-            {
-                counter++;
-                break;
-            }
-
-            if ((str[counter] != '.') && (counter == counter_tmp))
-            {
-                string_errno = string_errno | IPV4_ERRNO;
-                return BAD_IP_ADDRESS;
-            }
-
-            str_tmp[counter - counter_start] = str[counter];
-        }
-
-        octet = strtoi(str_tmp, DECIMAL);
-
-        if (octet > 255)
-        {
-            string_errno = string_errno | IPV4_ERRNO;
-            return BAD_IP_ADDRESS;
-        }
-
-        tmp = tmp | octet;
-        tmp = tmp << 8;
-        memset(str_tmp, 0, 4);
-
-        counter_start = counter;
-        counter_tmp = counter + 3;
-
-        for (; counter <= counter_tmp; counter++)
-        {
-            if (str[counter] == '\0')
-                break;
-
-            if ((str[counter] != '.') && (counter == counter_tmp))
-            {
-                string_errno = string_errno | IPV4_ERRNO;
-                return BAD_IP_ADDRESS;
-            }
-
-            str_tmp[counter - counter_start] = str[counter];
-        }
-
-        octet = strtoi(str_tmp, DECIMAL);
-
-        if (octet > 255)
-        {
-            string_errno = string_errno | IPV4_ERRNO;
-            return BAD_IP_ADDRESS;
-        }
-
-        tmp = tmp | octet;
+        return -1;
     }
 
-    string_errno = (uint32_t)NULL;
-
-    return tmp;
-}
-
-char* substr_find(char* str, const char* substr)
-{
-    while (*str != '\0')
+    uint32_t check_string_errors(uint32_t mask)
     {
-        if (bstrncmp(str, substr, strlen(substr))) {
-            return str;
-        }
-        str++;
+        return string_errno & mask;
     }
-    return NULL;
-}
 
-char* substr_last_find(char* str, const char* substr)
-{
-    int last_index = -1;
-
-    for (int i = 0; str[i] != '\0'; i++)
+    uint32_t strlen(const char* str)
     {
-        if (bstrncmp(&str[i], substr, strlen(substr))) {
-            last_index = i;
-        }
-        str++;
+        EXIT_ON_EQUALS_ZERO(str, 0);
+
+        uint32_t length = 0;
+        for (int i = 0; str[i] != '\0'; i++, length++);
+
+        return length;
     }
 
-    return last_index != -1 ? &str[last_index] : NULL;
-}
-
-char* strdup(char* str)
-{
-    char* ns = (char*)calloc(strlen(str) * SIZE_OF(char));
-    strcpy(ns, str);
-    return ns;
-}
-
-char* strcat(bool dest_first, char* dest, char* src)
-{
-    //dest = dest + src
-    if (dest_first) {
-        memmove(&dest[strlen(dest)], src, strlen(src)); //include '\0' too
-    }
-
-    //dest = src + dest
-    else {
-        char* ts = (char*)calloc(strlen(dest) + strlen(src));
-        strcpy(ts, src);
-        strcpy(&ts[strlen(ts)], dest);
-        strcpy(dest, ts);
-        free(ts);
-    }
-    return dest;
-}
-
-uint32_t number_of_lines_get(const char* str)
-{
-    uint32_t lines = 0;
-
-    while (*str) {
-        if (*str == '\n') {
-            lines++;
-        }
-        str++;
-    }
-    return lines + 1;
-}
-
-uint32_t size_of_biggest_line_get(const char* str)
-{
-    int max_line_size = 0;
-    int current_line_size = 0;
-
-    while (*str)
+    char* strcpy(char* dest, const char* src)
     {
-        if (*str == '\n') // do not include \x1e
-        {
-            if (current_line_size > max_line_size) {
-                max_line_size = current_line_size;
-            }
-
-            current_line_size = 0;
-        }
-        else {
-            current_line_size++;
-        }
-        str++;
+        EXIT_ON_EQUALS_ZERO(src, NULL);
+        uint32_t length = strlen(src);
+        memcpy(dest, src, strlen(src));
+        dest[length] = '\0';
+        return dest;
     }
 
-    if (current_line_size > max_line_size) {
-        max_line_size = current_line_size;
+    char* strncpy(char* dest, const char* src, size_t size)
+    {
+        EXIT_ON_EQUALS_ZERO(size, NULL);
+
+        uint32_t src_length = strlen(src);
+        uint32_t length = src_length > size ? size : src_length;
+
+        memcpy(dest, src, length);
+        dest[length] = '\0';
+
+        return dest;
     }
 
-    return max_line_size;
-}
+    char* strrev(char* str)
+    {
+        int len = strlen(str);
 
-char* string_align_begin(char* const str, char filler, uint32_t count)
-{
-
-    uint32_t string_length = strlen(str);
-
-    if (string_length >= count) {
+        // for loop
+        for (int i = 0, j = len - 1; i <= j; i++, j--) {
+            // swapping characters
+            char c = str[i];
+            str[i] = str[j];
+            str[j] = c;
+        }
         return str;
     }
 
-    memmove(str + (count - string_length), str, string_length);
+    int32_t strcmp(char* a, const char* b)
+    {
+        while (*a && (*a == *b)) {
+            a++;
+            b++;
+        }
 
-    int i;
-    for (i = 0; i < count - string_length; i++)
-        str[i] = filler;
-
-    str[count] = '\0'; // put NULL terminator
-
-    return str;
-}
-
-char* string_align_end(char* const str, char filler, uint32_t count)
-{
-    int i;
-    for (i = strlen(str); i < count; i++) {
-        str[i] = filler;
+        return *a - *b;
     }
 
-    str[i] = '\0'; // put NULL terminator
-
-    return str;
-}
-
-char* getline(XinEntry* File, int line_id)
-{
-
-    xin::fread(File, NULL, File->size); // loads all data to buffer
-
-    char* file_data = (char*)(File->FileInfo->buffer);
-    char* line = (char*)calloc(XANIN_PMMNGR_BLOCK_SIZE);
-    int current_line = 0;
-
-    for (; *file_data != '\0'; file_data++)
+    bool bstrcmp(char* a, const char* b)
     {
-        if (current_line == line_id)
+        return strcmp(a, b) == 0;
+    }
+
+    bool bstrncmp(char* a, const char* b, size_t string_size)
+    {
+        // uint32_t length_to_check = strlen()
+        for (int i = 0; i < string_size; i++)
         {
-            for (int i = 0; file_data[i] != '\n' && file_data[i] != '\0'; i++) {
-                line[i] = file_data[i];
+            if (a[i] != b[i]) {
+                return false;
             }
-            return line;
         }
-        if (*file_data == '\n') {
-            current_line++;
+        return true;
+    }
+
+    char* int_to_decimal_string(int32_t value, char* buf)
+    {
+        int_to_string(abs(value), buf, 10);
+
+        if (value < 0) {
+            memmove(&buf[1], buf, strlen(buf));
+            buf[0] = '-';
+        }
+        return buf;
+    }
+
+    char* int_to_string(uint32_t value, char* buf, const uint8_t base)
+    {
+        char digits[] = { '0','1','2','3','4','5','6','7','8', '9', 'A', 'B', 'C', 'D', 'E', 'F',
+                            'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',
+                            'T', 'U', 'V', 'W' };
+
+        if (base > 32)
+            return NULL;
+
+        if (value == 0) {
+            buf[0] = '0';
+            buf[1] = '\0';
+            return buf;
+        }
+
+        if (base == DECIMAL) {
+            if ((int32_t)value < 0) {
+                buf[0] = '-';
+                buf++;
+            }
+            value = abs((int32_t)value);
+        }
+
+        int i = 0;
+        while (value) {
+            buf[i++] = digits[value % base];
+            value = value / base;
+        };
+        buf[i] = '\0';
+
+        strrev(buf);
+        return buf;
+    }
+
+    char* bcd_to_string(uint8_t x, char* buf)
+    {
+        buf[0] = (((x & 0xf0) >> 4) + 48);
+        buf[1] = ((x & 0x0f) + 48);
+        return buf;
+    }
+
+    void erase_spaces(char* str)
+    {
+        for (int i = 0; str[i] != '\0'; i++)
+        {
+            if (str[i] == ' ') {
+                memmove(&str[i], &str[+1], strlen(str) - i);
+            }
         }
     }
 
-    free(line);
-    return NULL;
-}
+    char* toupper(char* str)
+    {
+        for (int i = 0; str[i] != '\0'; i++)
+        {
+            if (str[i] >= 'a' && str[i] <= 'z') {
+                str[i] -= ASCII_CASE_OFFSET;
+            }
+        }
+        return str;
+    }
 
+    char* tolower(char* str)
+    {
+        for (int i = 0; str[i] != '\0'; i++)
+        {
+            if (str[i] >= 'A' && str[i] <= 'Z') {
+                str[i] += ASCII_CASE_OFFSET;
+            }
+        }
+        return str;
+    }
 
-enum class SPrintfExpect
-{
-    NormalChar,
-    Filler,
-    FillerCounter,
-    Format
-};
+    char* xint_to_hex_str(uint32_t x, char* buf, uint8_t how_many_chars)
+    {
+        how_many_chars *= 2;
 
-enum SprintfFormat {
+        char hex_values[16] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
 
-};
+        if (!x)
+        {
+            buf[0] = '0';
+            buf[1] = '0';
+            buf[2] = '\0';
+            return buf;
+        }
 
-//printf(%02x)
-char* sprintf(char* str, char* fmt, ...)
-{
-    #warning "TO DO finish sprintf";
+        for (int i = 0; i <= how_many_chars; i++)
+        {
+            if (i < how_many_chars)
+                buf[i] = '0';
+            else
+                buf[i] = '\0';
+        }
 
-    SPrintfExpect expect = SPrintfExpect::NormalChar;
-    char filler = ' ';
-    uint32_t filler_counter = 0;
+        for (int i = 0; x != 0; i++)
+        {
+            buf[i] = hex_values[x % 16];
+            x = x / 16;
+        }
 
-    va_list args;
-    va_start(args, fmt);
+        buf = strrev(buf);
 
-    // auto is_format_char = [=](char c){return c == }
+        return buf;
+    }
 
-    for (int si = 0, di = 0; fmt[si] != '\0'; )
+    uint32_t atoi(char* str)
     {
 
-        switch(expect)
+        uint32_t sum = 0;
+
+        for (int i = 0; i < strlen(str); i++)
         {
+            sum *= 10;
+            sum += str[i] - 48;
+        }
+
+        return sum;
+    }
+
+    uint32_t strtoi(const char* str, uint8_t format)
+    {
+
+        bool is_negative = false;
+
+        if (str[0] == '-')
+            is_negative = true;
+
+        uint32_t sum = 0;
+
+        if (format > 16)
+            format = 16;
+
+        if (format == 16 && (bstrncmp((char*)str, "0x", 2) || bstrncmp((char*)str, "0b", 2) || bstrncmp((char*)str, "0o", 2)))
+            str += 2;
+
+        uint8_t digit_counter = strlen(str);
+        uint32_t tmp;
+
+        for (int i = 0; i < digit_counter; i++)
+        {
+
+            if (str[i] >= '0' && str[i] <= '9')
+                tmp = str[i] - 48;
+
+            else if (str[i] >= 'a' && str[i] <= 'f')
+                tmp = str[i] - 'a' + 0xa;
+
+            else if (str[i] >= 'A' && str[i] <= 'F')
+                tmp = str[i] - 'A' + 0xa;
+
+            if (tmp >= format)
+                continue;
+
+            sum *= format;
+
+            sum += tmp;
+        }
+
+        if (is_negative)
+            sum = sum * (-1);
+        return sum;
+    }
+
+    uint32_t str2ipv4(char* str)
+    {
+
+        uint32_t tmp = 0;
+        uint32_t counter = 0;
+
+        if (strlen(str) == 15)
+        {
+
+            char str_tmp[4] = { '\0' };
+            uint32_t octet;
+
+            memcpy(str_tmp, str, 3);
+
+            octet = strtoi(str_tmp, DECIMAL);
+            if (octet > 0xFF)
+                octet = 0xFF;
+
+            tmp = octet << 8;
+
+            if (str[3] != '.')
+                return BAD_IP_ADDRESS;
+
+            memcpy(str_tmp, str + 4, 3);
+
+            octet = strtoi(str_tmp, DECIMAL);
+            if (octet > 0xFF)
+                octet = 0xFF;
+
+            tmp = tmp | octet;
+            tmp = tmp << 8;
+
+            if (str[7] != '.')
+                return BAD_IP_ADDRESS;
+
+            memcpy(str_tmp, str + 8, 3);
+
+            octet = strtoi(str_tmp, DECIMAL);
+            if (octet > 0xFF)
+                octet = 0xFF;
+
+            tmp = tmp | octet;
+            tmp = tmp << 8;
+
+            if (str[11] != '.')
+                return BAD_IP_ADDRESS;
+
+            memcpy(str_tmp, str + 12, 3);
+            octet = strtoi(str_tmp, DECIMAL);
+
+            if (octet > 0xFF)
+                octet = 0xFF;
+
+            tmp = tmp | octet;
+        }
+
+        else
+        {
+            char str_tmp[4] = { '\0' };
+            uint32_t octet;
+
+            for (counter = 0; counter <= 3; counter++)
+            {
+                if (str[counter] == '.')
+                {
+                    counter++;
+                    break;
+                }
+
+                if ((str[counter] != '.') && (counter == 3))
+                {
+                    string_errno = string_errno | IPV4_ERRNO;
+                    return BAD_IP_ADDRESS;
+                }
+
+                str_tmp[counter] = str[counter];
+            }
+
+            octet = strtoi(str_tmp, DECIMAL);
+
+            if (octet > 255)
+            {
+                string_errno = string_errno | IPV4_ERRNO;
+                return BAD_IP_ADDRESS;
+            }
+
+            tmp = tmp | octet;
+            tmp = tmp << 8;
+            memset(str_tmp, 0, 4);
+
+            uint32_t counter_start = counter;
+            uint32_t counter_tmp = counter + 3;
+
+            for (; counter <= counter_tmp; counter++)
+            {
+                if (str[counter] == '.')
+                {
+                    counter++;
+                    break;
+                }
+
+                if ((str[counter] != '.') && (counter == counter_tmp))
+                {
+                    string_errno = string_errno | IPV4_ERRNO;
+                    return BAD_IP_ADDRESS;
+                }
+
+                str_tmp[counter - counter_start] = str[counter];
+            }
+
+            octet = strtoi(str_tmp, DECIMAL);
+
+            if (octet > 255)
+            {
+                string_errno = string_errno | IPV4_ERRNO;
+                return BAD_IP_ADDRESS;
+            }
+
+            tmp = tmp | octet;
+            tmp = tmp << 8;
+            memset(str_tmp, 0, 4);
+
+            counter_start = counter;
+            counter_tmp = counter + 3;
+
+            for (; counter <= counter_tmp; counter++)
+            {
+                if (str[counter] == '.')
+                {
+                    counter++;
+                    break;
+                }
+
+                if ((str[counter] != '.') && (counter == counter_tmp))
+                {
+                    string_errno = string_errno | IPV4_ERRNO;
+                    return BAD_IP_ADDRESS;
+                }
+
+                str_tmp[counter - counter_start] = str[counter];
+            }
+
+            octet = strtoi(str_tmp, DECIMAL);
+
+            if (octet > 255)
+            {
+                string_errno = string_errno | IPV4_ERRNO;
+                return BAD_IP_ADDRESS;
+            }
+
+            tmp = tmp | octet;
+            tmp = tmp << 8;
+            memset(str_tmp, 0, 4);
+
+            counter_start = counter;
+            counter_tmp = counter + 3;
+
+            for (; counter <= counter_tmp; counter++)
+            {
+                if (str[counter] == '\0')
+                    break;
+
+                if ((str[counter] != '.') && (counter == counter_tmp))
+                {
+                    string_errno = string_errno | IPV4_ERRNO;
+                    return BAD_IP_ADDRESS;
+                }
+
+                str_tmp[counter - counter_start] = str[counter];
+            }
+
+            octet = strtoi(str_tmp, DECIMAL);
+
+            if (octet > 255)
+            {
+                string_errno = string_errno | IPV4_ERRNO;
+                return BAD_IP_ADDRESS;
+            }
+
+            tmp = tmp | octet;
+        }
+
+        string_errno = (uint32_t)NULL;
+
+        return tmp;
+    }
+
+    char* substr_find(char* str, const char* substr)
+    {
+        while (*str != '\0')
+        {
+            if (bstrncmp(str, substr, strlen(substr))) {
+                return str;
+            }
+            str++;
+        }
+        return NULL;
+    }
+
+    char* substr_last_find(char* str, const char* substr)
+    {
+        int last_index = -1;
+
+        for (int i = 0; str[i] != '\0'; i++)
+        {
+            if (bstrncmp(&str[i], substr, strlen(substr))) {
+                last_index = i;
+            }
+            str++;
+        }
+
+        return last_index != -1 ? &str[last_index] : NULL;
+    }
+
+    char* strdup(char* str)
+    {
+        char* ns = (char*)calloc(strlen(str) * SIZE_OF(char));
+        strcpy(ns, str);
+        return ns;
+    }
+
+    char* strcat(bool dest_first, char* dest, char* src)
+    {
+        //dest = dest + src
+        if (dest_first) {
+            memmove(&dest[strlen(dest)], src, strlen(src)); //include '\0' too
+        }
+
+        //dest = src + dest
+        else {
+            char* ts = (char*)calloc(strlen(dest) + strlen(src));
+            strcpy(ts, src);
+            strcpy(&ts[strlen(ts)], dest);
+            strcpy(dest, ts);
+            free(ts);
+        }
+        return dest;
+    }
+
+    uint32_t number_of_lines_get(const char* str)
+    {
+        uint32_t lines = 0;
+
+        while (*str) {
+            if (*str == '\n') {
+                lines++;
+            }
+            str++;
+        }
+        return lines + 1;
+    }
+
+    uint32_t size_of_biggest_line_get(const char* str)
+    {
+        int max_line_size = 0;
+        int current_line_size = 0;
+
+        while (*str)
+        {
+            if (*str == '\n') // do not include \x1e
+            {
+                if (current_line_size > max_line_size) {
+                    max_line_size = current_line_size;
+                }
+
+                current_line_size = 0;
+            }
+            else {
+                current_line_size++;
+            }
+            str++;
+        }
+
+        if (current_line_size > max_line_size) {
+            max_line_size = current_line_size;
+        }
+
+        return max_line_size;
+    }
+
+    char* string_align_begin(char* const str, char filler, uint32_t count)
+    {
+
+        uint32_t string_length = strlen(str);
+
+        if (string_length >= count) {
+            return str;
+        }
+
+        memmove(str + (count - string_length), str, string_length);
+
+        int i;
+        for (i = 0; i < count - string_length; i++)
+            str[i] = filler;
+
+        str[count] = '\0'; // put NULL terminator
+
+        return str;
+    }
+
+    char* string_align_end(char* const str, char filler, uint32_t count)
+    {
+        int i;
+        for (i = strlen(str); i < count; i++) {
+            str[i] = filler;
+        }
+
+        str[i] = '\0'; // put NULL terminator
+
+        return str;
+    }
+
+    char* getline(XinEntry* File, int line_id)
+    {
+
+        xin::fread(File, NULL, File->size); // loads all data to buffer
+
+        char* file_data = (char*)(File->FileInfo->buffer);
+        char* line = (char*)calloc(XANIN_PMMNGR_BLOCK_SIZE);
+        int current_line = 0;
+
+        for (; *file_data != '\0'; file_data++)
+        {
+            if (current_line == line_id)
+            {
+                for (int i = 0; file_data[i] != '\n' && file_data[i] != '\0'; i++) {
+                    line[i] = file_data[i];
+                }
+                return line;
+            }
+            if (*file_data == '\n') {
+                current_line++;
+            }
+        }
+
+        free(line);
+        return NULL;
+    }
+
+
+    enum class SPrintfExpect
+    {
+        NormalChar,
+        Filler,
+        FillerCounter,
+        Format
+    };
+
+    char* sprintf(char* str, char* fmt, ...)
+    {
+        #warning "TO DO finish sprintf";
+
+        SPrintfExpect expect = SPrintfExpect::NormalChar;
+        char filler = ' ';
+        uint32_t filler_counter = 0;
+
+        va_list args;
+        va_start(args, fmt);
+
+        auto is_format_char = [](char c) {return c == 'x' || c == 'd' || c == 'b' || c == 'c' || c == 's';};
+        auto format_base_get = [](char c) {
+            switch (c) {
+            case 'b': return BINARY;
+            case 'o': return OCTAL;
+            case 'd': return DECIMAL;
+            case 'x': return HEXADECIMAL;
+            }};
+        auto uppercase_if_needed = [](char c, char* str) -> char* {if (c >= 'A' && c <= 'Z')  toupper(str); return str;};
+
+        for (int si = 0, di = 0; fmt[si] != '\0'; )
+        {
+            switch (expect)
+            {
 
             case SPrintfExpect::NormalChar: {
 
-                dbg_info(DEBUG_LABEL_LIBC, "Expecting normal char");
+                // dbg_info(DEBUG_LABEL_LIBC, "Expecting normal char");
                 if (fmt[si] == '%') {
                     expect = SPrintfExpect::Filler;
                 }
 
                 else {
-                    str[di++] = fmt[si++];
+                    str[di++] = fmt[si];
                 }
+                si++;
                 break;
             }
 
             case SPrintfExpect::Filler:
             {
-                dbg_info(DEBUG_LABEL_LIBC, "Expecting filler counter");
-                if(!is_in_char_range('0', '9', fmt[si])) {
-                    filler = fmt[si];
-                }
-
+                // dbg_info(DEBUG_LABEL_LIBC, "Expecting filler");
+                filler = fmt[si];
                 si++;
                 expect = SPrintfExpect::FillerCounter;
                 break;
@@ -690,47 +690,64 @@ char* sprintf(char* str, char* fmt, ...)
 
             case SPrintfExpect::FillerCounter:
             {
-                dbg_info(DEBUG_LABEL_LIBC, "Expecting filler counter");
-                for(int j = 0; true; j++) 
+                // dbg_info(DEBUG_LABEL_LIBC, "Expecting filler counter");
+                char counter_str[64] = { 0 };
+                for (int j = 0; fmt[si + j] != '\0'; j++)
                 {
-                    char counter_str[64] = {0};
-                    if(fmt[si + j] == 'x' || fmt[si + j] == 'd') {
+                    if (is_format_char(fmt[si + j])) {
                         memcpy(counter_str, &fmt[si], j);
                         filler_counter = atoi(counter_str);
                         si = si + j;
+                        expect = SPrintfExpect::Format;
+                        break;
                     }
                 }
-
-                expect = SPrintfExpect::Format;
                 break;
             }
 
             case SPrintfExpect::Format:
             {
-                // xprintf(")
-                dbg_info(DEBUG_LABEL_LIBC, "Expecting format");
-                if(fmt[si] == 'x')                    
-                {
-
+                // dbg_info(DEBUG_LABEL_LIBC, "Expecting format");
+                if (fmt[si] == 'c') {
+                    str[di] = va_arg(args, char);
+                    di++;
                 }
 
-                else if(fmt[si] == 'd')                    
-                {
-                    char tmp[64] = {0};
-                    strcpy(&str[di], int_to_string(va_arg(args, int), tmp, DECIMAL));
-                    di = di + strlen(tmp);
+                else if (fmt[si] == 's') {
+                    char* sa = va_arg(args, char*); // sa = string_argument
+                    uint32_t sa_length = strlen(sa);
+
+                    strcpy(&str[di], sa);
+                    string_align_begin(&str[di], filler, filler_counter);
+
+                    di = di + (sa_length > filler_counter ? sa_length : filler_counter);
+                }
+
+                //%h is used to print BCD digits
+                else if (fmt[si] == 'h') {
+                    char tmp[64] = { 0 };
+                    strcpy(&str[di], bcd_to_string(va_arg(args, uint8_t), tmp));
+                    uint32_t tmp_length = strlen(tmp);
+                    di = di + (tmp_length > filler_counter ? tmp_length : filler_counter);
+                }
+
+                else {
+                    char tmp[64] = { 0 };
+                    strcpy(&str[di], string_align_begin(uppercase_if_needed(fmt[si], int_to_string(va_arg(args, int), tmp, format_base_get(fmt[si]))), filler, filler_counter));
+                    uint32_t tmp_length = strlen(tmp);
+                    di = di + (tmp_length > filler_counter ? tmp_length : filler_counter);
                 }
 
                 si++;
                 expect = SPrintfExpect::NormalChar;
                 filler = ' ';
                 filler_counter = 0;
-                
+
                 break;
             }
+            }
         }
+        return str;
     }
-    return str;
-}
 
 }

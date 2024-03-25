@@ -35,8 +35,8 @@ extern "C"
 {
 #endif
 
-    [[nodiscard]]bool is_in_char_range(char r1, char r2, char c);
-    [[nodiscard]]bool is_char(char c);
+    [[nodiscard]] bool is_in_char_range(char r1, char r2, char c);
+    [[nodiscard]] bool is_char(char c);
     [[nodiscard]] int char_find(const char* str, char c);
     [[nodiscard]] uint32_t strlen(const char* a);
     char* strcpy(char* dest, const char* src);
@@ -48,7 +48,7 @@ extern "C"
 
     char* int_to_decimal_string(int32_t value, char* buf);
     char* int_to_string(uint32_t value, char* buf, const uint8_t base);
-    char* bcd_to_string(uint8_t x, char* buf);
+    char* bcd_to_string(uint8_t value, char* buf);
 
     void erase_spaces(char* str);
 
