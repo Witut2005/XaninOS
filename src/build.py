@@ -329,7 +329,7 @@ objects_to_compile = {
         CompileObject('./lib/libc/memory.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./lib/libc/stdiox.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./lib/libc/stdlibx.c', builders['c'], builder_options['c']['default'], OBJECT),
-        CompileObject('./lib/libc/string.c', builders['c'], builder_options['c']['default'], OBJECT),
+        CompileObject('./lib/libc/string.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./lib/libc/data_structures.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./lib/libc/system.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./lib/libc/algorithm.c', builders['c'], builder_options['c']['default'], OBJECT),

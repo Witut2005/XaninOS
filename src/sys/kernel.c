@@ -349,10 +349,12 @@ void kernel_init(void)
     dbg_success(DEBUG_LABEL_XANIN, "Babciu zobacz to wszystko jest dla ciebie ❤️");
 
     xprintf("XinFs tables: 0x%x\n", __xin_fs_entries_get());
-
-    xprintf("CPUID: 0x%x\n", cpu_pse36_supported());
-    xprintf("CPUID: %d\n", cpu_maxphyaddr_get());
+    // xprintf("CPUID: 0x%x\n", cpu_pse36_supported());
+    // xprintf("CPUID: %d\n", cpu_maxphyaddr_get());
     // xprintf("DIR ENTRY: 0x%x\n", page_dir_entry.fields);
+    // puts(
+    sprintf(calloc(50), "sprintf test: %d\n", 10);
+    //);
     puts("Press ENTER to continue...\n");
 
     srand(SystemTime.seconds);

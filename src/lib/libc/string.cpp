@@ -1,4 +1,5 @@
 
+#include <stdarg.h>
 #include <stdint.h>
 #include <lib/libc/math.h>
 #include <lib/libc/colors.h>
@@ -6,12 +7,25 @@
 #include <lib/libc/string.h>
 #include <lib/libc/stdlibx.h>
 #include <lib/screen/screen.h>
-#include <sys/devices/keyboard/key_map.h>
+#include <sys/devices/com/com.h>
 
 #define ASCII_CASE_OFFSET 32 
 #define EXIT_ON_EQUALS_ZERO(val, return_value) if(val == 0) {return return_value;}
 
 static uint32_t string_errno;
+
+extern "C" 
+{
+
+bool is_in_char_range(char r1, char r2, char c)
+{
+    return  c > r1 && c < r2;
+}
+
+bool is_char(char c)
+{
+    return c > '0' && c < '~';
+}
 
 int char_find(const char* str, char c)
 {
@@ -493,7 +507,7 @@ char* substr_last_find(char* str, const char* substr)
 
 char* strdup(char* str)
 {
-    char* ns = calloc(strlen(str) * SIZE_OF(char));
+    char* ns = (char*)calloc(strlen(str) * SIZE_OF(char));
     strcpy(ns, str);
     return ns;
 }
@@ -507,7 +521,7 @@ char* strcat(bool dest_first, char* dest, char* src)
 
     //dest = src + dest
     else {
-        char* ts = calloc(strlen(dest) + strlen(src));
+        char* ts = (char*)calloc(strlen(dest) + strlen(src));
         strcpy(ts, src);
         strcpy(&ts[strlen(ts)], dest);
         strcpy(dest, ts);
@@ -592,7 +606,7 @@ char* string_align_end(char* const str, char filler, uint32_t count)
 char* getline(XinEntry* File, int line_id)
 {
 
-    fread(File, NULL, File->size); // loads all data to buffer
+    xin::fread(File, NULL, File->size); // loads all data to buffer
 
     char* file_data = (char*)(File->FileInfo->buffer);
     char* line = (char*)calloc(XANIN_PMMNGR_BLOCK_SIZE);
@@ -617,25 +631,106 @@ char* getline(XinEntry* File, int line_id)
 }
 
 
-enum SPRINTF_EXPECT
+enum class SPrintfExpect
 {
-    SPRINTF_EXPECTING_FILLER,
-    SPRINTF_EXPECTING_FILLER_COUNTER,
-    SPRINTF_EXPECTING_FORMAT,
+    NormalChar,
+    Filler,
+    FillerCounter,
+    Format
 };
 
+enum SprintfFormat {
+
+};
+
+//printf(%02x)
 char* sprintf(char* str, char* fmt, ...)
 {
-    for (int i = 0; fmt[i] != '\0'; i++)
+    #warning "TO DO finish sprintf";
+
+    SPrintfExpect expect = SPrintfExpect::NormalChar;
+    char filler = ' ';
+    uint32_t filler_counter = 0;
+
+    va_list args;
+    va_start(args, fmt);
+
+    // auto is_format_char = [=](char c){return c == }
+
+    for (int si = 0, di = 0; fmt[si] != '\0'; )
     {
-        if (fmt[i] == '%')
+
+        switch(expect)
         {
 
-        }
+            case SPrintfExpect::NormalChar: {
 
-        else
-        {
+                dbg_info(DEBUG_LABEL_LIBC, "Expecting normal char");
+                if (fmt[si] == '%') {
+                    expect = SPrintfExpect::Filler;
+                }
 
+                else {
+                    str[di++] = fmt[si++];
+                }
+                break;
+            }
+
+            case SPrintfExpect::Filler:
+            {
+                dbg_info(DEBUG_LABEL_LIBC, "Expecting filler counter");
+                if(!is_in_char_range('0', '9', fmt[si])) {
+                    filler = fmt[si];
+                }
+
+                si++;
+                expect = SPrintfExpect::FillerCounter;
+                break;
+            }
+
+            case SPrintfExpect::FillerCounter:
+            {
+                dbg_info(DEBUG_LABEL_LIBC, "Expecting filler counter");
+                for(int j = 0; true; j++) 
+                {
+                    char counter_str[64] = {0};
+                    if(fmt[si + j] == 'x' || fmt[si + j] == 'd') {
+                        memcpy(counter_str, &fmt[si], j);
+                        filler_counter = atoi(counter_str);
+                        si = si + j;
+                    }
+                }
+
+                expect = SPrintfExpect::Format;
+                break;
+            }
+
+            case SPrintfExpect::Format:
+            {
+                // xprintf(")
+                dbg_info(DEBUG_LABEL_LIBC, "Expecting format");
+                if(fmt[si] == 'x')                    
+                {
+
+                }
+
+                else if(fmt[si] == 'd')                    
+                {
+                    char tmp[64] = {0};
+                    strcpy(&str[di], int_to_string(va_arg(args, int), tmp, DECIMAL));
+                    di = di + strlen(tmp);
+                }
+
+                si++;
+                expect = SPrintfExpect::NormalChar;
+                filler = ' ';
+                filler_counter = 0;
+                
+                break;
+            }
         }
     }
+    return str;
+}
+
 }

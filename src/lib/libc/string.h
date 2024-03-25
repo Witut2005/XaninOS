@@ -11,7 +11,7 @@
 
 #define BAD_IP_ADDRESS 0xFFFFFFFF
 
-#define STRING_UNSIGNED 1
+#define STRING_UNSIGNED 0
 #define STRING_SIGNED 1
 
 enum STRTOI_OPTIONS
@@ -21,16 +21,6 @@ enum STRTOI_OPTIONS
     DECIMAL = 10,
     HEXADECIMAL = 16
 };
-
-struct StringRectangle
-{
-    uint32_t size_x;
-    uint32_t size_y;
-    uint32_t position_x;
-    uint32_t position_y;
-};
-
-typedef struct StringRectangle StringRectangle;
 
 enum STRING_ERNNO_VALUES
 {
@@ -45,6 +35,8 @@ extern "C"
 {
 #endif
 
+    [[nodiscard]]bool is_in_char_range(char r1, char r2, char c);
+    [[nodiscard]]bool is_char(char c);
     [[nodiscard]] int char_find(const char* str, char c);
     [[nodiscard]] uint32_t strlen(const char* a);
     char* strcpy(char* dest, const char* src);
@@ -83,6 +75,8 @@ extern "C"
     [[nodiscard]] uint32_t size_of_biggest_line_get(const char* str);
 
     [[nodiscard]] char* getline(XinEntry* File, int line_id);
+
+    char* sprintf(char* str, char* fmt, ...);
 
 #ifdef __cplusplus
 }
