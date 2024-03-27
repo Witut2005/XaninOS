@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include <stdarg.h>
 #include <stddef.h>
 #include <stdbool.h>
 #include <stdint.h>
@@ -76,7 +77,13 @@ extern "C"
 
     [[nodiscard]] char* getline(XinEntry* File, int line_id);
 
-    char* sprintf(char* str, char* fmt, ...);
+    char* xvsnprintf(char* str, size_t n, char* fmt, va_list args);
+    char* xsnprintf(char* str, size_t n, char* fmt, ...);
+    char* xsprintf(char* str, char* fmt, ...);
+
+    int vsnprintf(char* str, size_t n, char* fmt, va_list args);
+    int snprintf(char* str, size_t n, char* fmt, ...);
+    int sprintf(char* str, char* fmt, ...);
 
 #ifdef __cplusplus
 }

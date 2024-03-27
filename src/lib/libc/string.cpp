@@ -618,16 +618,16 @@ extern "C"
         Format
     };
 
-    char* sprintf(char* str, char* fmt, ...)
+    char* xvsnprintf(char* str, size_t n, char* fmt, va_list args)
     {
         #warning "TO DO finish sprintf";
+
+        // va_list args;
+        // va_start(args, fmt);
 
         SPrintfExpect expect = SPrintfExpect::NormalChar;
         char filler = ' ';
         uint32_t filler_counter = 0;
-
-        va_list args;
-        va_start(args, fmt);
 
         constexpr char formats[] = { 'd', 'i', 'u', 'o', 'x', 'X', 'c', 's', 'p' , 'n', 'h' };
 
@@ -649,7 +649,7 @@ extern "C"
 
         auto uppercase_if_needed = [](char c, char* str) -> char* {if (c >= 'A' && c <= 'Z')  toupper(str); return str;};
 
-        for (int si = 0, di = 0; fmt[si] != '\0'; )
+        for (int si = 0, di = 0; fmt[si] != '\0' && di < n; )
         {
             switch (expect)
             {
@@ -725,7 +725,7 @@ extern "C"
                 case 's': {
                     char* sa = va_arg(args, char*); // sa = string_argument
                     uint32_t sa_length = strlen(sa);
-                    strcpy(&str[di + (sa_length >= filler_counter ? 0 : (filler_counter - sa_length))], sa);
+                    strncpy(&str[di + (sa_length >= filler_counter ? 0 : (filler_counter - sa_length))], sa, n - di);
 
                     di = di + (sa_length > filler_counter ? sa_length : filler_counter);
                     break;
@@ -733,19 +733,19 @@ extern "C"
 
                 case 'h': {
                     //%h is used to print BCD digits
+                    constexpr uint32_t bcd_length = 2;
                     bcd_to_string((uint8_t)va_arg(args, int), st);
-                    uint32_t st_length = strlen(st);
 
-                    strcpy(&str[di + (st_length >= filler_counter ? 0 : (filler_counter - st_length))], st);
+                    strncpy(&str[di + (bcd_length >= filler_counter ? 0 : (filler_counter - bcd_length))], st, n - di);
 
-                    di = di + (st_length > filler_counter ? st_length : filler_counter);
+                    di = di + (bcd_length > filler_counter ? bcd_length : filler_counter);
                     break;
                 }
 
                 case 'u': {
                     int_to_decimal_string(STRING_UNSIGNED, va_arg(args, int), st);
                     uint32_t st_length = strlen(st);
-                    strcpy(&str[di + (st_length >= filler_counter ? 0 : (filler_counter - st_length))], st);
+                    strncpy(&str[di + (st_length >= filler_counter ? 0 : (filler_counter - st_length))], st, n - di);
                     di = di + (st_length > filler_counter ? st_length : filler_counter);
                     break;
                 }
@@ -757,10 +757,9 @@ extern "C"
                 }
 
                 default: {
-                    char tmp[64] = { 0 };
-                    int_to_string(va_arg(args, int), tmp, format_base_get(fmt[si]));
-                    uint32_t st_length = strlen(tmp);
-                    strcpy(&str[di + (st_length >= filler_counter ? 0 : (filler_counter - st_length))], tmp);
+                    int_to_string(va_arg(args, int), st, format_base_get(fmt[si]));
+                    uint32_t st_length = strlen(st);
+                    strncpy(&str[di + (st_length >= filler_counter ? 0 : (filler_counter - st_length))], st, n - di);
 
                     di = di + (st_length > filler_counter ? st_length : filler_counter);
                 }
@@ -778,4 +777,39 @@ extern "C"
         return str;
     }
 
-}
+    char* xsnprintf(char* str, size_t n, char* fmt, ...)
+    {
+        va_list args;
+        va_start(args, fmt);
+
+        return xvsnprintf(str, n, fmt, args);
+    }
+
+
+    char* xsprintf(char* str, char* fmt, ...)
+    {
+        va_list args;
+        va_start(args, fmt);
+
+        return xvsnprintf(str, UINT32_MAX, fmt, args);
+    }
+
+    int vsnprintf(char* str, size_t n, char* fmt, va_list args) {
+        return strlen(xvsnprintf(str, n, fmt, args));
+    }
+
+    int snprintf(char* str, size_t n, char* fmt, ...) {
+        va_list args;
+        va_start(args, fmt);
+
+        return strlen(xvsnprintf(str, n, fmt, args));
+    }
+
+    int sprintf(char* str, char* fmt, ...) {
+        va_list args;
+        va_start(args, fmt);
+
+        return strlen(xvsnprintf(str, UINT32_MAX, fmt, args));
+    }
+
+} //extern "C"
