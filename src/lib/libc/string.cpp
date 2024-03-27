@@ -120,6 +120,24 @@ extern "C"
         return true;
     }
 
+    char* date_to_string(bcd_date_t date, char* buf)
+    {
+        constexpr uint32_t date_lenght = 10; // 10 characters
+
+
+        char* dptr = (char*)&date;
+
+        for (int i = 0; i < 6; i++) {
+            if (i == 2 || i == 5) {
+                buf[i] = '-';
+                continue;
+            }
+            bcd_to_string(dptr[i], buf);
+        }
+
+        return buf;
+    }
+
     char* int_to_decimal_string(bool _signed, int32_t value, char* buf)
     {
         if (_signed && value < 0) {
@@ -178,6 +196,16 @@ extern "C"
     {
         buf[0] = (((x & 0xf0) >> 4) % 10 + '0');
         buf[1] = ((x & 0x0f) % 10 + '0');
+        buf[2] = '\0';
+        return buf;
+    }
+
+    char* bcd_stream_to_string(uint8_t* value, uint32_t value_size, char* buf)
+    {
+        for (int i = 0; i < value_size; i++) {
+            bcd_to_string(value[i], &buf[i * 2]);
+        }
+
         return buf;
     }
 
@@ -629,7 +657,7 @@ extern "C"
         char filler = ' ';
         uint32_t filler_counter = 0;
 
-        constexpr char formats[] = { 'd', 'i', 'u', 'o', 'x', 'X', 'c', 's', 'p' , 'n', 'h' };
+        constexpr char formats[] = { 'd', 'i', 'u', 'o', 'x', 'X', 'c', 's', 'p' , 'n', 'h', 'y', 't' };
 
         auto is_format_char = [formats](char c) {
             for (int i = 0; i < ARRAY_LENGTH(formats); i++) {
@@ -649,7 +677,9 @@ extern "C"
 
         auto uppercase_if_needed = [](char c, char* str) -> char* {if (c >= 'A' && c <= 'Z')  toupper(str); return str;};
 
-        for (int si = 0, di = 0; fmt[si] != '\0' && di < n; )
+        n--; // last character cant be overriden
+
+        for (int si = 0, di = 0; fmt[si] != '\0' && di <= n; )
         {
             switch (expect)
             {
@@ -753,6 +783,22 @@ extern "C"
                 case 'n': {
                     //weird character counter
                     *(va_arg(args, uint32_t*)) = di;
+                    break;
+                }
+
+                case 'y': {
+                    //date
+                    constexpr uint32_t date_length = 10;
+                    date_to_string(va_arg(args, bcd_date_t), st);
+
+                    strncpy(&str[di + (date_length >= filler_counter ? 0 : (filler_counter - date_length))], st, n - di);
+
+                    di = di + (date_length > filler_counter ? date_length : filler_counter);
+                    break;
+                }
+
+                case 't': {
+                    //date
                     break;
                 }
 

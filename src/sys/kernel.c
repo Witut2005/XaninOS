@@ -360,6 +360,8 @@ void kernel_init(void)
     // dbg_success(DEBUG_LABEL_LIBC, xsnprintf(calloc(50), 5, "xsprintf test:%6u", -1));
     dbg_success(DEBUG_LABEL_LIBC, xsprintf(calloc(50), "xsprintf test:%6d", -1));
 
+    dbg_success(DEBUG_LABEL_LIBC, xsprintf(calloc(50), "bcd date test:%y", 0x03272024));
+
     uint32_t nbuf;
 
     xprintf("UGABGUA: %d\n", sprintf(calloc(50), "ugabuga"));

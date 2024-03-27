@@ -9,6 +9,7 @@
 #include <sys/macros.h>
 #include <fs/xin_structures.h>
 #include <lib/libc/file.h>
+#include <lib/libc/stdlibx.h>
 
 #define BAD_IP_ADDRESS 0xFFFFFFFF
 
@@ -48,9 +49,11 @@ extern "C"
     [[nodiscard]] bool bstrcmp(char* a, const char* b);
     [[nodiscard]] bool bstrncmp(char* a, const char* b, size_t string_size);
 
+    char* date_to_string(bcd_date_t date, char* buf);
     char* int_to_decimal_string(bool _signed, int32_t value, char* buf);
     char* int_to_string(uint32_t value, char* buf, const uint8_t base);
-    char* bcd_to_string(uint8_t value, char* buf);
+    char* bcd_to_string(uint8_t x, char* buf);
+    char* bcd_stream_to_string(uint8_t* value, uint32_t value_size, char* buf);
 
     void erase_spaces(char* str);
 
