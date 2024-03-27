@@ -91,7 +91,9 @@ void Keyboard::handle(void)
     __input_handle_observed_objects(&KeyInfo);
 
     __input_call_handlers(KeyInfo);
-    __xtb_flush_all(__vty_get());
+
+    if (stdio_mode_get() == STDIO_MODE_TERMINAL)
+        __xtb_flush_all(__vty_get());
 
     // if (__input_is_ctrl_pressed() && KeyInfo.keys_pressed[KBP_C])
     //     exit();

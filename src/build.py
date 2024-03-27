@@ -3,10 +3,7 @@
 import os
 import argparse
 import sys
-import subprocess
-from colorama import init
 from termcolor import colored
-import datetime
 
 OBJECT = 1
 BINARY = 2
@@ -140,7 +137,7 @@ def compile_kernel(*kargs):
         'dd if=xanin.bin of=xanin.img',
         'python3 ./build/align_file.py -f ./xanin.img -size 400000',
 
-        f'{("python3 ./build/app_preinstall2.py --files external_apps/ etc/ --image xanin.img")}',
+        f'python3 ./build/app_preinstall2.py --files external_apps/ etc/ --image xanin.img {"--xin_print" if args.dont_print_xin_info == True else ""}',
 
         'mv xanin.img -f ../bin',
         'mv xanin.bin -f ../bin'
@@ -151,6 +148,7 @@ def compile_kernel(*kargs):
 
 parser = argparse.ArgumentParser()
 
+parser.add_argument('--dont_print_xin_info', action='store_true')
 parser.add_argument('--srcpath', type=str)
 parser.add_argument('--binpath', type=str)
 
@@ -500,16 +498,6 @@ create_c_library('./lib/libc/libc.o', './lib/libc/libc.a', [obj.output_name for 
         './sys/call/xanin_sys/calls/vga/vga.o', 
         './sys/call/xanin_sys/calls/input/input.o', 
                 ])
-
-# create_kernel_c_library('./lib/libc/kernel_libc.o', './lib/libc/kernel_libc.a', [obj.output_name for obj in objects_to_compile['libc']] + [
-#         './sys/log/syslog.o',
-#         './lib/screen/screen.o', 
-#         './sys/devices/hda/disk.o', 
-#         './fs/xin.o', './sys/call/xanin_sys/calls/devices/disk.o', './sys/call/xanin_sys/calls/stdio/stdio.o', 
-#         './sys/call/xanin_sys/calls/terminal/terminal.o', 
-#         './sys/call/xanin_sys/calls/vga/vga.o', 
-#         './sys/call/xanin_sys/calls/input/input.o', 
-#     ])
 
 compile_boot2()
 compile_kernel(objects_to_compile)

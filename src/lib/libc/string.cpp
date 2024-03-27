@@ -16,6 +16,10 @@ static uint32_t string_errno;
 
 extern "C"
 {
+    bool is_digit(char c)
+    {
+        return c >= '0' && c <= '9';
+    }
 
     bool is_in_char_range(char r1, char r2, char c)
     {
@@ -116,22 +120,31 @@ extern "C"
         return true;
     }
 
-    char* int_to_decimal_string(int32_t value, char* buf)
+    char* int_to_decimal_string(bool _signed, int32_t value, char* buf)
     {
-        int_to_string(abs(value), buf, 10);
-
-        if (value < 0) {
-            memmove(&buf[1], buf, strlen(buf));
+        if (_signed && value < 0) {
             buf[0] = '-';
+            buf++;
         }
-        return buf;
+
+        uint32_t vt = _signed ? abs(value) : value;
+        int i = 0;
+        while (vt) {
+            buf[i++] = '0' + (vt % 10);
+            vt = vt / 10;
+        };
+
+        buf[i] = '\0';
+        strrev(buf);
+
+        return (_signed && (value < 0)) ? buf - 1 : buf;
     }
 
     char* int_to_string(uint32_t value, char* buf, const uint8_t base)
     {
-        char digits[] = { '0','1','2','3','4','5','6','7','8', '9', 'A', 'B', 'C', 'D', 'E', 'F',
-                            'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',
-                            'T', 'U', 'V', 'W' };
+        char digits[] = { '0','1','2','3','4','5','6','7','8', '9', 'a', 'b', 'c', 'd', 'e', 'f',
+                            'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's',
+                            't', 'u', 'v', 'w' };
 
         if (base > 32)
             return NULL;
@@ -163,8 +176,8 @@ extern "C"
 
     char* bcd_to_string(uint8_t x, char* buf)
     {
-        buf[0] = (((x & 0xf0) >> 4) + 48);
-        buf[1] = ((x & 0x0f) + 48);
+        buf[0] = (((x & 0xf0) >> 4) % 10 + '0');
+        buf[1] = ((x & 0x0f) % 10 + '0');
         return buf;
     }
 
@@ -200,50 +213,16 @@ extern "C"
         return str;
     }
 
-    char* xint_to_hex_str(uint32_t x, char* buf, uint8_t how_many_chars)
-    {
-        how_many_chars *= 2;
-
-        char hex_values[16] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
-
-        if (!x)
-        {
-            buf[0] = '0';
-            buf[1] = '0';
-            buf[2] = '\0';
-            return buf;
-        }
-
-        for (int i = 0; i <= how_many_chars; i++)
-        {
-            if (i < how_many_chars)
-                buf[i] = '0';
-            else
-                buf[i] = '\0';
-        }
-
-        for (int i = 0; x != 0; i++)
-        {
-            buf[i] = hex_values[x % 16];
-            x = x / 16;
-        }
-
-        buf = strrev(buf);
-
-        return buf;
-    }
-
     uint32_t atoi(char* str)
     {
-
         uint32_t sum = 0;
 
-        for (int i = 0; i < strlen(str); i++)
-        {
-            sum *= 10;
-            sum += str[i] - 48;
+        for (int i = 0; i < strlen(str); i++) {
+            if (is_digit(str[i])) {
+                sum *= 10;
+                sum += str[i] - '0';
+            }
         }
-
         return sum;
     }
 
@@ -650,14 +629,24 @@ extern "C"
         va_list args;
         va_start(args, fmt);
 
-        auto is_format_char = [](char c) {return c == 'x' || c == 'd' || c == 'b' || c == 'c' || c == 's';};
-        auto format_base_get = [](char c) {
+        constexpr char formats[] = { 'd', 'i', 'u', 'o', 'x', 'X', 'c', 's', 'p' , 'n', 'h' };
+
+        auto is_format_char = [formats](char c) {
+            for (int i = 0; i < ARRAY_LENGTH(formats); i++) {
+                if (c == formats[i]) return true;
+            }
+            return false;
+        };
+
+        auto format_base_get = [](char c) -> uint8_t {
             switch (c) {
             case 'b': return BINARY;
             case 'o': return OCTAL;
             case 'd': return DECIMAL;
-            case 'x': return HEXADECIMAL;
+            case 'x':
+            case 'X': return HEXADECIMAL;
             }};
+
         auto uppercase_if_needed = [](char c, char* str) -> char* {if (c >= 'A' && c <= 'Z')  toupper(str); return str;};
 
         for (int si = 0, di = 0; fmt[si] != '\0'; )
@@ -667,14 +656,22 @@ extern "C"
 
             case SPrintfExpect::NormalChar: {
 
-                // dbg_info(DEBUG_LABEL_LIBC, "Expecting normal char");
-                if (fmt[si] == '%') {
+                if (fmt[si + 1] == '%' && fmt[si] == '%') {
+
+                    if (fmt[si + 1] == '%') {
+                        str[di++] = '%';
+                        si++;
+                    }
+                }
+
+                else if (fmt[si] == '%') {
                     expect = SPrintfExpect::Filler;
                 }
 
                 else {
                     str[di++] = fmt[si];
                 }
+
                 si++;
                 break;
             }
@@ -682,8 +679,15 @@ extern "C"
             case SPrintfExpect::Filler:
             {
                 // dbg_info(DEBUG_LABEL_LIBC, "Expecting filler");
-                filler = fmt[si];
-                si++;
+                if (is_format_char(fmt[si])) {
+                    expect = SPrintfExpect::Format;
+                    break;
+                }
+
+                if (!(fmt[si] >= '1' && fmt[si] <= '9')) {
+                    filler = fmt[si];
+                    si++;
+                }
                 expect = SPrintfExpect::FillerCounter;
                 break;
             }
@@ -707,35 +711,59 @@ extern "C"
 
             case SPrintfExpect::Format:
             {
-                // dbg_info(DEBUG_LABEL_LIBC, "Expecting format");
-                if (fmt[si] == 'c') {
-                    str[di] = va_arg(args, char);
+                char st[64] = { 0 };
+                memset(&str[di], filler, filler_counter); //fill with filler 
+
+                switch (fmt[si]) {
+
+                case 'c': {
+                    str[di + (filler_counter > 1 ? filler_counter - 1 : 0)] = (char)va_arg(args, uint32_t);
                     di++;
+                    break;
                 }
 
-                else if (fmt[si] == 's') {
+                case 's': {
                     char* sa = va_arg(args, char*); // sa = string_argument
                     uint32_t sa_length = strlen(sa);
-
-                    strcpy(&str[di], sa);
-                    string_align_begin(&str[di], filler, filler_counter);
+                    strcpy(&str[di + (sa_length >= filler_counter ? 0 : (filler_counter - sa_length))], sa);
 
                     di = di + (sa_length > filler_counter ? sa_length : filler_counter);
+                    break;
                 }
 
-                //%h is used to print BCD digits
-                else if (fmt[si] == 'h') {
-                    char tmp[64] = { 0 };
-                    strcpy(&str[di], bcd_to_string(va_arg(args, uint8_t), tmp));
-                    uint32_t tmp_length = strlen(tmp);
-                    di = di + (tmp_length > filler_counter ? tmp_length : filler_counter);
+                case 'h': {
+                    //%h is used to print BCD digits
+                    bcd_to_string((uint8_t)va_arg(args, int), st);
+                    uint32_t st_length = strlen(st);
+
+                    strcpy(&str[di + (st_length >= filler_counter ? 0 : (filler_counter - st_length))], st);
+
+                    di = di + (st_length > filler_counter ? st_length : filler_counter);
+                    break;
                 }
 
-                else {
+                case 'u': {
+                    int_to_decimal_string(STRING_UNSIGNED, va_arg(args, int), st);
+                    uint32_t st_length = strlen(st);
+                    strcpy(&str[di + (st_length >= filler_counter ? 0 : (filler_counter - st_length))], st);
+                    di = di + (st_length > filler_counter ? st_length : filler_counter);
+                    break;
+                }
+
+                case 'n': {
+                    //weird character counter
+                    *(va_arg(args, uint32_t*)) = di;
+                    break;
+                }
+
+                default: {
                     char tmp[64] = { 0 };
-                    strcpy(&str[di], string_align_begin(uppercase_if_needed(fmt[si], int_to_string(va_arg(args, int), tmp, format_base_get(fmt[si]))), filler, filler_counter));
-                    uint32_t tmp_length = strlen(tmp);
-                    di = di + (tmp_length > filler_counter ? tmp_length : filler_counter);
+                    int_to_string(va_arg(args, int), tmp, format_base_get(fmt[si]));
+                    uint32_t st_length = strlen(tmp);
+                    strcpy(&str[di + (st_length >= filler_counter ? 0 : (filler_counter - st_length))], tmp);
+
+                    di = di + (st_length > filler_counter ? st_length : filler_counter);
+                }
                 }
 
                 si++;

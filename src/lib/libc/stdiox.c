@@ -301,7 +301,7 @@ void xprintf(char* str, ...)
                 {
 
                     uint8_t number_hex = (uint8_t)va_arg(args, uint32_t);
-                    xint_to_hex_str(number_hex, temporary_pointer, SIZE_OF(uint8_t));
+                    sprintf(temporary_pointer, "%02x", number_hex);
 
                     for (int i = 0; temporary_pointer[i] != '\0'; i++)
                         __sys_xtf_cell_put(StdioVty, temporary_pointer[i],
@@ -314,8 +314,7 @@ void xprintf(char* str, ...)
                 {
 
                     uint8_t number_hex = (uint8_t)va_arg(args, uint32_t);
-                    xint_to_hex_str(number_hex, temporary_pointer, SIZE_OF(uint8_t));
-                    toupper(temporary_pointer);
+                    sprintf(temporary_pointer, "%02X", number_hex);
 
                     for (int i = 0; temporary_pointer[i] != '\0'; i++)
                         __sys_xtf_cell_put(StdioVty, temporary_pointer[i],

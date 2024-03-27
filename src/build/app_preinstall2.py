@@ -9,12 +9,13 @@ from app_preinstall_functions import *
 
 init(autoreset=True)
 
-args = argparse.ArgumentParser()
-args.add_argument('--image', action='store', type=str, required=True)
-args.add_argument('--files', action='store', type=str, required=True, nargs='+')
-args.add_argument('--errors', action='store_true')
+parser = argparse.ArgumentParser()
+parser.add_argument('--dont_print_xin_info', action='store_true')
+parser.add_argument('--image', action='store', type=str, required=True)
+parser.add_argument('--files', action='store', type=str, required=True, nargs='+')
+parser.add_argument('--errors', action='store_true')
 
-args = args.parse_args()
+args = parser.parse_args()
 
 xin_current_date = decimal_to_bcd(datetime.now().strftime('%d%m%Y'))
 xin_current_time = decimal_to_bcd(datetime.now().strftime('%H%M'))
@@ -137,7 +138,8 @@ class XinEntryData:
         if data != None:
             self.insert(pad_bytes(data, SECTOR_SIZE), (self.first_sector - XinEntryData.image_size_in_sectors) * SECTOR_SIZE)
         
-        self.print_entry_info()
+        if args.dont_print_xin_info == True:
+            self.print_entry_info()
 
         XinEntryData.xin_entries_index += 1
     
