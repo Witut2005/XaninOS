@@ -1,4 +1,5 @@
 
+#include "endian.h"
 #include <stdarg.h>
 #include <stdint.h>
 #include <lib/libc/math.h>
@@ -124,15 +125,17 @@ extern "C"
     {
         constexpr uint32_t date_lenght = 10; // 10 characters
 
-
+        date = endian_switch32(date);
         char* dptr = (char*)&date;
 
-        for (int i = 0; i < 6; i++) {
-            if (i == 2 || i == 5) {
-                buf[i] = '-';
-                continue;
+        for (int si = 0, di = 0; di < date_lenght; ) {
+            if (di == 2 || di == 5) {
+                buf[di++] = '-';
             }
-            bcd_to_string(dptr[i], buf);
+
+            bcd_to_string(dptr[si], &buf[di]);
+            si++;
+            di = di + 2;
         }
 
         return buf;
@@ -790,6 +793,9 @@ extern "C"
                     //date
                     constexpr uint32_t date_length = 10;
                     date_to_string(va_arg(args, bcd_date_t), st);
+
+                    // bcd_date_t date = endian_switch32((bcd_date_t)va_arg(args, int));
+                    // bcd_stream_to_string((uint8_t*)&date, 4, st);
 
                     strncpy(&str[di + (date_length >= filler_counter ? 0 : (filler_counter - date_length))], st, n - di);
 
