@@ -121,23 +121,47 @@ extern "C"
         return true;
     }
 
+    char* time_to_string(bcd_time_t time, char* buf)
+    {
+        constexpr uint32_t time_lenght = 5; // 5 characters
+
+        time = endian_switch16(time);
+        char* sp = (char*)&time;
+
+        for (int si = 0, di = 0; di < time_lenght;)
+        {
+            if (di == 2) {
+                buf[di++] = ':';
+            }
+
+            bcd_to_string(sp[si], &buf[di]);
+            si++;
+            di = di + 2;
+        }
+
+        buf[time_lenght] = '\0';
+        return buf;
+    }
+
     char* date_to_string(bcd_date_t date, char* buf)
     {
         constexpr uint32_t date_lenght = 10; // 10 characters
 
         date = endian_switch32(date);
-        char* dptr = (char*)&date;
+        char* sp = (char*)&date; //source pointer
 
-        for (int si = 0, di = 0; di < date_lenght; ) {
+        for (int si = 0, di = 0; di < date_lenght; )
+        {
             if (di == 2 || di == 5) {
                 buf[di++] = '-';
             }
 
-            bcd_to_string(dptr[si], &buf[di]);
+            bcd_to_string(sp[si], &buf[di]);
             si++;
             di = di + 2;
         }
 
+        buf[date_lenght] = '\0';
         return buf;
     }
 
@@ -794,9 +818,6 @@ extern "C"
                     constexpr uint32_t date_length = 10;
                     date_to_string(va_arg(args, bcd_date_t), st);
 
-                    // bcd_date_t date = endian_switch32((bcd_date_t)va_arg(args, int));
-                    // bcd_stream_to_string((uint8_t*)&date, 4, st);
-
                     strncpy(&str[di + (date_length >= filler_counter ? 0 : (filler_counter - date_length))], st, n - di);
 
                     di = di + (date_length > filler_counter ? date_length : filler_counter);
@@ -804,7 +825,13 @@ extern "C"
                 }
 
                 case 't': {
-                    //date
+                    //time
+                    constexpr uint32_t time_length = 5;
+                    time_to_string((bcd_time_t)va_arg(args, int), st);
+
+                    strncpy(&str[di + (time_length >= filler_counter ? 0 : (filler_counter - time_length))], st, n - di);
+
+                    di = di + (time_length > filler_counter ? time_length : filler_counter);
                     break;
                 }
 

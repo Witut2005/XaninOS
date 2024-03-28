@@ -88,6 +88,7 @@ extern "C"
     __STATUS xin_create_file_app(char*);
     __STATUS disk_func(void);
     __STATUS c_test(void);
+    __STATUS sprintf_test(void);
 
 #ifdef __cplusplus
 }

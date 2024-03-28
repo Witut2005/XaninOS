@@ -352,22 +352,6 @@ void kernel_init(void)
     // xprintf("CPUID: 0x%x\n", cpu_pse36_supported());
     // xprintf("CPUID: %d\n", cpu_maxphyaddr_get());
 
-    dbg_success(DEBUG_LABEL_LIBC, xsprintf(calloc(50), "xsprintf test: %x", 0xabcd));
-    dbg_success(DEBUG_LABEL_LIBC, xsprintf(calloc(50), "xsprintf test:%u", 123));
-    dbg_success(DEBUG_LABEL_LIBC, xsprintf(calloc(50), "xsprintf test:%d", -10));
-    dbg_success(DEBUG_LABEL_LIBC, xsprintf(calloc(50), "xsprintf test: %49c", 'o'));
-    dbg_success(DEBUG_LABEL_LIBC, xsprintf(calloc(50), "xsprintf test:%06s", "ble"));
-    // dbg_success(DEBUG_LABEL_LIBC, xsnprintf(calloc(50), 5, "xsprintf test:%6u", -1));
-    dbg_success(DEBUG_LABEL_LIBC, xsprintf(calloc(50), "xsprintf test:%6d", -1));
-
-    dbg_success(DEBUG_LABEL_LIBC, xsprintf(calloc(50), "bcd date test:%y", 0x03272024));
-
-    uint32_t nbuf;
-
-    xprintf("UGABGUA: %d\n", sprintf(calloc(50), "ugabuga"));
-
-    // dbg_success(DEBUG_LABEL_LIBC, xsprintf(calloc(50), "xsprintf test:%02 %x", 0x45));
-
     puts("Press ENTER to continue...\n");
 
     srand(SystemTime.seconds);

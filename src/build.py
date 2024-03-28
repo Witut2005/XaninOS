@@ -418,6 +418,7 @@ objects_to_compile = {
         CompileObject('./programs/misc/tetris/tetris.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./programs/misc/start_screen.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./programs/tests/timer_test.c', builders['c'], builder_options['c']['default'], OBJECT),
+        CompileObject('./programs/tests/sprintf_test.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./programs/fs/cat.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./programs/misc/zsk.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./programs/misc/epilepsy.c', builders['c'], builder_options['c']['default'], OBJECT),
