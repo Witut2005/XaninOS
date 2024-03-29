@@ -7,6 +7,7 @@
 // #include <stdlib.h>
 // #include <string.h>
 
+#include <lib/libc/string.h>
 #include <lib/libc/stdiox.h>
 #include <lib/libc/stdlibx.h>
 

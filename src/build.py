@@ -318,7 +318,7 @@ objects_to_compile = {
     'libc':[
         # CompileObject('./lib/libc/real_mode_fswitch.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
         CompileObject('./lib/libc/file.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
-        CompileObject('./lib/libc/crt0.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
+        # CompileObject('./lib/libc/crt0.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
         CompileObject('./lib/libc/alloc.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
         CompileObject('./lib/cpu/code/cpu_state_info.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
         # CompileObject('./lib/libc/real_mode_fswitch.c', builders['c'], builder_options['c']['default'], OBJECT),
@@ -419,6 +419,7 @@ objects_to_compile = {
         CompileObject('./programs/misc/start_screen.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./programs/tests/timer_test.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./programs/tests/sprintf_test.c', builders['c'], builder_options['c']['default'], OBJECT),
+        CompileObject('./programs/tests/paging_test.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./programs/fs/cat.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./programs/misc/zsk.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./programs/misc/epilepsy.c', builders['c'], builder_options['c']['default'], OBJECT),
