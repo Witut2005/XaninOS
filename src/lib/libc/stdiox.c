@@ -123,9 +123,6 @@ void xprintf(char* str, ...)
     while (str[string_counter])
     {
 
-        for (int i = 0; i < SIZE_OF(tmp); i++)
-            tmp[i] = '\0';
-
         if (str[string_counter] == '%')
         {
 
@@ -610,4 +607,68 @@ void xscan_range(char* string_buffer, uint32_t how_many_chars)
         }
     }
     free(field_buffer);
+}
+
+
+#warning TODO must be finished
+void new_xprintf(char* fmt, ...)
+{
+    va_list args;
+    va_start(args, fmt);
+
+    struct { uint8_t background; uint8_t foreground; } font_color = { black, white };
+
+    for (int i = 0; fmt[i] != '\0';)
+    {
+        if (fmt[i] == '%')
+        {
+            switch (fmt[i + 1])
+            {
+
+            case '\0': {
+                break;
+            }
+
+            case 'z':
+            {
+                uint8_t received_color = (uint8_t)va_arg(args, int);
+                font_color.background = (received_color & 0xf0) >> 4;
+                font_color.foreground = received_color & 0x0f;
+                i = i + 2;
+                break;
+            }
+
+            default:
+            {
+                char* format = strdup(&fmt[i]);
+                char* format_end = (char_find(format, CHAR_FIND_LETTERS));
+                *(format_end + 1) = '\0';
+
+                char* buf = calloc(XANIN_PMMNGR_BLOCK_SIZE * 4);
+
+                sprintf(buf, format, va_arg(args, int));
+
+                for (int j = 0; buf[j] != '\0'; j++) {
+                    __sys_xtf_cell_put(__sys_vty_get(), buf[j],
+                        OUTPUT_COLOR_SET(font_color.background, font_color.foreground));
+                }
+
+                free(format);
+                free(buf);
+
+                i = ((uint32_t)format_end - (uint32_t)format);
+
+                break;
+            }
+            }
+        }
+
+        else
+        {
+            __sys_xtf_cell_put(__sys_vty_get(), fmt[i],
+                OUTPUT_COLOR_SET(font_color.background, font_color.foreground));
+            i++;
+        }
+    }
+    __sys_xtb_flush(__sys_vty_get());
 }

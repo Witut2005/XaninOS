@@ -8,7 +8,8 @@ __STATUS sprintf_test(void)
 
     puts("Results will be emitted to Serial Port Device");
 
-    dbg_success(DEBUG_LABEL_LIBC, xsprintf(buf, "xsprintf test: %x", 0xabcd));
+    dbg_success(DEBUG_LABEL_LIBC, xsprintf(buf, "xsprintf test:%010x", 0xabcd));
+    dbg_success(DEBUG_LABEL_LIBC, xsprintf(buf, "xsprintf test:%010X", 0xabcd));
     dbg_success(DEBUG_LABEL_LIBC, xsprintf(buf, "xsprintf test:%u", 123));
     dbg_success(DEBUG_LABEL_LIBC, xsprintf(buf, "xsprintf test:%d", -10));
     dbg_success(DEBUG_LABEL_LIBC, xsprintf(buf, "xsprintf test:%10c", 'o'));

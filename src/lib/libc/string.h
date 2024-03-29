@@ -16,6 +16,12 @@
 #define STRING_UNSIGNED 0
 #define STRING_SIGNED 1
 
+enum CHAR_FIND_OPTIONS
+{
+    CHAR_FIND_DIGITS = 0xFE,
+    CHAR_FIND_LETTERS = 0xFF
+};
+
 enum STRTOI_OPTIONS
 {
     BINARY = 2,
@@ -40,7 +46,7 @@ extern "C"
     [[nodiscard]] bool is_digit(char c);
     [[nodiscard]] bool is_in_char_range(char r1, char r2, char c);
     [[nodiscard]] bool is_char(char c);
-    [[nodiscard]] int char_find(const char* str, char c);
+    [[nodiscard]] char* char_find(char* str, char c);
     [[nodiscard]] uint32_t strlen(const char* a);
     char* strcpy(char* dest, const char* src);
     char* strncpy(char* x, const char* y, size_t size);

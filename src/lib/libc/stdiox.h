@@ -31,6 +31,7 @@ extern "C" {
     void putchar_color(char c, color_t color);
 
     void xprintf(char* str, ...);
+    void new_xprintf(char* fmt, ...);
     void xscanf(char* str, ...);
     void xscan_range(char* string_buffer, uint32_t how_many_chars);
     void stdio_vty_set(Xtf* Front);

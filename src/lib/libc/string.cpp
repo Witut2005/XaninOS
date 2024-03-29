@@ -32,15 +32,39 @@ extern "C"
         return c > '0' && c < '~';
     }
 
-    int char_find(const char* str, char c)
+    char* char_find(char* str, char c)
     {
-        for (int i = 0; str[i] != '\0'; i++)
+        if (c == CHAR_FIND_LETTERS)
         {
-            if (str[i] == c) {
-                return i;
+            for (int i = 0; str[i] != '\0'; i++)
+            {
+                if ((str[i] >= 'A' && str[i] <= 'Z') || (str[i] >= 'a' && str[i] <= 'z')) {
+                    return &str[i];
+                }
             }
         }
-        return -1;
+
+        else if (c == CHAR_FIND_DIGITS)
+        {
+            for (int i = 0; str[i] != '\0'; i++)
+            {
+                if (str[i] >= '0' && str[i] <= '9') {
+                    return &str[i];
+                }
+            }
+        }
+
+        else
+        {
+            for (int i = 0; str[i] != '\0'; i++)
+            {
+                if (str[i] == c) {
+                    return &str[i];
+                }
+            }
+        }
+
+        return NULL;
     }
 
     uint32_t check_string_errors(uint32_t mask)
@@ -684,7 +708,7 @@ extern "C"
         char filler = ' ';
         uint32_t filler_counter = 0;
 
-        constexpr char formats[] = { 'd', 'i', 'u', 'o', 'x', 'X', 'c', 's', 'p' , 'n', 'h', 'y', 't' };
+        constexpr char formats[] = { 'd', 'i', 'u', 'o', 'x', 'X', 'c', 's', 'p' , 'n', 'q', 'y', 't' };
 
         auto is_format_char = [formats](char c) {
             for (int i = 0; i < ARRAY_LENGTH(formats); i++) {
@@ -702,7 +726,7 @@ extern "C"
             case 'X': return HEXADECIMAL;
             }};
 
-        auto uppercase_if_needed = [](char c, char* str) -> char* {if (c >= 'A' && c <= 'Z')  toupper(str); return str;};
+        auto toupper_if_needed = [](char c, char* str) -> char* {if (c >= 'A' && c <= 'Z') { toupper(str); } return str;};
 
         n--; // last character cant be overriden
 
@@ -773,6 +797,10 @@ extern "C"
 
                 switch (fmt[si]) {
 
+                case '\0': {
+                    break;
+                }
+
                 case 'c': {
                     str[di + (filler_counter > 1 ? filler_counter - 1 : 0)] = (char)va_arg(args, uint32_t);
                     di++;
@@ -788,7 +816,7 @@ extern "C"
                     break;
                 }
 
-                case 'h': {
+                case 'q': {
                     //%h is used to print BCD digits
                     constexpr uint32_t bcd_length = 2;
                     bcd_to_string((uint8_t)va_arg(args, int), st);
@@ -838,8 +866,9 @@ extern "C"
                 default: {
                     int_to_string(va_arg(args, int), st, format_base_get(fmt[si]));
                     uint32_t st_length = strlen(st);
-                    strncpy(&str[di + (st_length >= filler_counter ? 0 : (filler_counter - st_length))], st, n - di);
+                    toupper_if_needed(fmt[si], st);
 
+                    strncpy(&str[di + (st_length >= filler_counter ? 0 : (filler_counter - st_length))], st, n - di);
                     di = di + (st_length > filler_counter ? st_length : filler_counter);
                 }
                 }
