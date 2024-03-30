@@ -157,6 +157,11 @@ void kernel_init(void)
         page_directory_entry_set(i, i * (1 << PAGE_FRAME_UPPER_BITS_OFFSET)); // (shift to determine which directory to use)
     }
 
+    // for (int i = 0; i < 16; i++) {
+    //     page_directory_entry_set(5 + i, 0x1400000); // (shift to determine which directory to use)
+    // }
+
+    // page_directory_entry_set(0, 20 * (1 << PAGE_FRAME_UPPER_BITS_OFFSET)); // (shift to determine which directory to use)
     // for (int i = 0; i < 5; i++) {
     //     page_directory_entry_set(XANIN_KERNEL_PAGE_DIRECTORIES_INDEX + i, i * (1 << PAGE_FRAME_UPPER_BITS_OFFSET));
     // }
@@ -196,12 +201,13 @@ void kernel_init(void)
     INTERRUPT_REGISTER(31, general_protection_exception_entry);
     INTERRUPT_REGISTER(32, general_protection_exception_entry);
 
-    mmngr_init(kernel_mmngr_mmap, (uint8_t*)0x100000, PMMNGR_MEMORY_BLOCKS);
+    mmngr_init(kernel_mmngr_mmap, (uint8_t*)0x1400000, PMMNGR_MEMORY_BLOCKS);
     serial_port_initialize(1);
     dbg_info(DEBUG_LABEL_IRQ, "Processor IRQs registered");
 
     vga_disable_cursor();
 
+    #warning TODO set vga size with functions(singletone);
     vga_text_mode_height = 25;
     vga_text_mode_width = 80;
 

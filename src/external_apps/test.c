@@ -1,7 +1,7 @@
-#include <lib/libc/stdiox.h>
+#include "./shared.h"
 
 void main(int argc, char* argv[])
 {
-    xprintf("hallo to ja\n");
+    iamshared = 10;
     return;
 }

@@ -64,8 +64,7 @@ bool SerialPortManager::initialize(uint16_t default_divisor)
     if (m_initialized)
         return is_functional();
 
-    ITERATE_OVER(i, s_max_amount_of_ports)
-    {
+    ITERATE_OVER(i, s_max_amount_of_ports) {
         m_ports[i] = SerialPort::try_to_create(s_addresses[i], default_divisor);
     }
 

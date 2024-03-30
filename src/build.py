@@ -74,11 +74,6 @@ def create_c_library(objpath, libpath, objs=[]):
         f"{args.linker} -r {' '.join(objs)} -o {objpath}",
         f"{args.archive} rsc {libpath} {objpath} ./lib/libc/crt0.o", 
         'cp ./lib/libc/libc.a ./external_apps/libc.a',
-        'cp ./lib/libc/libc.o ./external_apps/libc.o',
-        'cp ./lib/libc/crt0.o ./external_apps/crt0.o',
-        'cd ./external_apps/',
-        'make ./external_apps/',
-        'cd ..'
     ]
 
     for command in commands:
@@ -153,7 +148,7 @@ parser.add_argument('--srcpath', type=str)
 parser.add_argument('--binpath', type=str)
 
 parser.add_argument('--assembler', type=str, default='nasm')
-parser.add_argument('--cbuilder', type=str, default='i386-elf-gcc')
+parser.add_argument('--cbuilder', type=str, default='i386-elf-gcc-12.2.0')
 parser.add_argument('--ccbuilder', type=str, default='i386-elf-g++')
 parser.add_argument('--linker', type=str, default='i386-elf-ld')
 parser.add_argument('--archive', type=str, default='i386-elf-ar')
