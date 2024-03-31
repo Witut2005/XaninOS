@@ -27,9 +27,8 @@ enum ELF_HEADER_PROPERTIES
 
 typedef uint8_t elfh_arch_t;
 
-struct ElfHeader32 
+struct ElfHeader32
 {
-
     char ei_mag[EI_MAG_SIZE];
     uint8_t ei_class;
     uint8_t ei_data;
@@ -59,7 +58,7 @@ struct ElfHeader32
 }__attribute__((packed));
 typedef struct ElfHeader32 ElfHeader32;
 
-struct ElfHeader64 
+struct ElfHeader64
 {
 
     char ei_mag[EI_MAG_SIZE];

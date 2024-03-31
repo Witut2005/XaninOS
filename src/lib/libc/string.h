@@ -51,9 +51,9 @@ extern "C"
     char* strcpy(char* dest, const char* src);
     char* strncpy(char* x, const char* y, size_t size);
     char* strrev(char* str);
-    [[nodiscard]] int32_t strcmp(char* a, const char* b);
-    [[nodiscard]] bool bstrcmp(char* a, const char* b);
-    [[nodiscard]] bool bstrncmp(char* a, const char* b, size_t string_size);
+    [[nodiscard]] int32_t strcmp(const char* a, const char* b);
+    [[nodiscard]] bool bstrcmp(const char* a, const char* b);
+    [[nodiscard]] bool bstrncmp(const char* a, const char* b, size_t string_size);
 
     char* int_to_decimal_string(bool _signed, int32_t value, char* buf);
     char* int_to_string(uint32_t value, char* buf, const uint8_t base);
@@ -70,7 +70,7 @@ extern "C"
 
     [[nodiscard]] uint32_t atoi(char* str);
     [[nodiscard]] uint32_t strtoi(const char* str, uint8_t format);
-    [[nodiscard]] uint32_t str2ipv4(char* str);
+    [[nodiscard]] uint32_t str2ipv4(const char* str);
 
     [[nodiscard]] char* substr_find(char* str, const char* substr);
     [[nodiscard]] char* substr_last_find(char* str, const char* substr);

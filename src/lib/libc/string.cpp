@@ -118,7 +118,7 @@ extern "C"
         return str;
     }
 
-    int32_t strcmp(char* a, const char* b)
+    int32_t strcmp(const char* a, const char* b)
     {
         while (*a && (*a == *b)) {
             a++;
@@ -128,12 +128,12 @@ extern "C"
         return *a - *b;
     }
 
-    bool bstrcmp(char* a, const char* b)
+    bool bstrcmp(const char* a, const char* b)
     {
         return strcmp(a, b) == 0;
     }
 
-    bool bstrncmp(char* a, const char* b, size_t string_size)
+    bool bstrncmp(const char* a, const char* b, size_t string_size)
     {
         // uint32_t length_to_check = strlen()
         for (int i = 0; i < string_size; i++)
@@ -349,7 +349,7 @@ extern "C"
         return sum;
     }
 
-    uint32_t str2ipv4(char* str)
+    uint32_t str2ipv4(const char* str)
     {
 
         uint32_t tmp = 0;

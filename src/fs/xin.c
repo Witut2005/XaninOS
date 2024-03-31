@@ -31,8 +31,8 @@ static XinFileSystemData XinFsData; // XinFS DATA SINGLETONE
 #define XIN_FS_ENTRIES_SIZE (XinFsData.entries_size)
 #define XIN_FS_PTRS_SIZE (XinFsData.ptrs_size)
 
-#define XIN_FS_ITERATE_OVER_ENTRY_TABLE(iterator) for (const XinEntry *iterator = (XinEntry *)XIN_FS_ENTRIES_TABLE_BEGIN; iterator < (XinEntry *)XIN_FS_ENTRIES_TABLE_END; iterator++)
-#define XIN_FS_ITERATE_OVER_PTRS_TABLE(iterator) for (const xin_ptr_t *iterator = (xin_ptr_t *)XIN_FS_PTRS_TABLE_BEGIN; iterator < (xin_ptr_t *)XIN_FS_PTRS_TABLE_END; iterator++)
+#define XIN_FS_ITERATE_OVER_ENTRY_TABLE(iterator) for (XinEntry *iterator = (XinEntry *)XIN_FS_ENTRIES_TABLE_BEGIN; iterator < (XinEntry *)XIN_FS_ENTRIES_TABLE_END; iterator++)
+#define XIN_FS_ITERATE_OVER_PTRS_TABLE(iterator) for (xin_ptr_t *iterator = (xin_ptr_t *)XIN_FS_PTRS_TABLE_BEGIN; iterator < (xin_ptr_t *)XIN_FS_PTRS_TABLE_END; iterator++)
 
 /* -------------------------------------------------------------------------------------- */
 
@@ -130,14 +130,14 @@ bool __xin_entry_validation_check(const XinEntry* Entry)
     return __xin_entry_alignment_check(Entry) && __xin_entry_address_check(Entry);
 }
 
-bool __xin_is_relative_path_used(char* path)
+bool __xin_is_relative_path_used(const char* path)
 {
     return path[0] != XIN_SYSTEM_FOLDER;
 }
 
 // in buf we have abs path
 // in ret we have parsed abs path
-char* __xin_absolute_path_get(char* rpath, char* buf, XIN_FS_ENTRY_TYPES type)
+char* __xin_absolute_path_get(const char* rpath, char* buf, XIN_FS_ENTRY_TYPES type)
 {
     EFlags Flags;
     INTERRUPTS_OFF(&Flags)
@@ -264,7 +264,7 @@ bool __xin_is_entry_rwable_check(const XinEntry* Entry) // read and write (nie s
 
 /* -------------------------------------------------------------------------------------- */
 
-XinEntry* __xin_find_entry(char* entryname)
+XinEntry* __xin_find_entry(const char* entryname)
 {
     char entrypath[XIN_MAX_PATH_LENGTH + 1] = { 0 };
 
@@ -407,7 +407,7 @@ XinEntry* __xin_entry_pf_extern(char* name) // pf = parent folder
 
 XinEntry* __xin_entry_pf_get(char* name) // pf = parent folder
 {
-    const XinEntry* Entry = __xin_find_entry(name);
+    XinEntry* Entry = __xin_find_entry(name);
 
     if (__xin_entry_validation_check(Entry) == false)
         return NULL;
@@ -615,7 +615,7 @@ XIN_FS_RETURN_STATUSES __xin_link_create(char* filename, char* linkname)
     return __xin_entry_create(&Args, XIN_HARD_LINK);
 }
 
-XIN_FS_RETURN_STATUSES __xin_folder_change(char* foldername)
+XIN_FS_RETURN_STATUSES __xin_folder_change(const char* foldername)
 {
 
     if (strlen(foldername) > XIN_MAX_PATH_LENGTH) {

@@ -20,4 +20,5 @@ __STATUS sprintf_test(void)
 
     free(buf);
 
+    return XANIN_OK;
 }

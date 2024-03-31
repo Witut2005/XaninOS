@@ -3,6 +3,7 @@
 #include <sys/call/xanin_sys/ids/xanin_syscalls.h>
 #include <lib/libc/stdlibx.h>
 #include <lib/libc/stdiox.h>
+#include <lib/libc/string.h>
 #include <lib/libc/canvas.h>
 #include <lib/libc/memory.h>
 

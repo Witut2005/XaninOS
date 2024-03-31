@@ -2,7 +2,9 @@ C = i386-elf-gcc
 
 build_kernel:
 	python3 build.py 
-	@# --dwarf
+
+build_all:
+	python3 build.py --build_all
 
 gcc_obj:
 	CRTBEGIN_PATH := $(shell i386-elf-gcc -print-file-name=crtbegin.o)

@@ -43,8 +43,8 @@ extern "C"
     bool __xin_entry_alignment_check(const XinEntry* Entry);
     bool __xin_entry_address_check(const XinEntry* Entry);
     bool __xin_entry_validation_check(const XinEntry* Entry);
-    bool __xin_is_relative_path_used(char* path);
-    char* __xin_absolute_path_get(char* rpath, char* buf, XIN_FS_ENTRY_TYPES type);
+    bool __xin_is_relative_path_used(const char* path);
+    char* __xin_absolute_path_get(const char* rpath, char* buf, XIN_FS_ENTRY_TYPES type);
     char* __xin_entry_name_extern(char* path);
     int __xin_entry_descriptor_get(const XinEntry* Entry);
     void __xin_entry_modification_fields_update(XinEntry* Entry);
@@ -52,7 +52,7 @@ extern "C"
 
     /* ------------------------------------------------ */
 
-    XinEntry* __xin_find_entry(char* entry_name);
+    XinEntry* __xin_find_entry(const char* entry_name);
     XinEntry* __xin_find_free_entry(void);
     uint8_t* __xin_find_free_pointer(void);
     uint8_t* __xin_find_free_pointer_with_given_size(uint32_t size);
@@ -76,7 +76,7 @@ extern "C"
     XIN_FS_RETURN_STATUSES __xin_folder_create(char* foldername);
     XIN_FS_RETURN_STATUSES __xin_link_create(char* filename, char* link_name);
 
-    XIN_FS_RETURN_STATUSES __xin_folder_change(char* foldername);
+    XIN_FS_RETURN_STATUSES __xin_folder_change(const char* foldername);
 
     XIN_FS_RETURN_STATUSES __xin_file_remove(char* filename);
     XIN_FS_RETURN_STATUSES __xin_folder_remove(char* foldername);

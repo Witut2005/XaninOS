@@ -10,7 +10,7 @@ void memcpy(uint8_t* dest, uint8_t* src, size_t size)
     }
 }
 
-int32_t memcmp(uint8_t* dest, uint8_t* src, size_t size)
+int32_t memcmp(const uint8_t* dest, uint8_t* src, size_t size)
 {
     for (int i = 0; i < size; i++) {
         if (dest[i] != src[i]) {
@@ -20,7 +20,7 @@ int32_t memcmp(uint8_t* dest, uint8_t* src, size_t size)
     return 0;
 }
 
-bool bmemcmp(uint8_t* dest, uint8_t* src, size_t size)
+bool bmemcmp(const uint8_t* dest, uint8_t* src, size_t size)
 {
     return memcmp(dest, src, size) == 0;
 }

@@ -1,4 +1,4 @@
 
 #pragma once
 
-extern int iamshared;
+extern int myadd(int, int);

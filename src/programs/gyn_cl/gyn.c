@@ -32,7 +32,7 @@ int gyn_interpreter(char* file_to_interpret)
         for (int i = 0; i < 5; i++)
             memset(argv[i], '\0', 40);
 
-        command = (uint8_t*)calloc(strlen(getline(file, i)) + 1);
+        command = (char*)calloc(strlen(getline(file, i)) + 1);
         command = getline(file, i);
 
         int arg_counter = 0;

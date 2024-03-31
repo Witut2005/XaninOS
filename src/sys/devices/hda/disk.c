@@ -40,7 +40,7 @@ void __disk_init(uint16_t base, uint8_t master)
         inwIO(base + ATA_DATA_REGISTER);
 }
 
-void __disk_single_sector_read(uint16_t base, uint16_t master, uint32_t sector_number, uint16_t *where)
+void __disk_single_sector_read(uint16_t base, uint16_t master, uint32_t sector_number, uint16_t* where)
 {
 
     uint8_t disk_status;
@@ -83,12 +83,12 @@ void __disk_single_sector_read(uint16_t base, uint16_t master, uint32_t sector_n
 }
 
 // miej to na oku
-void __disk_read_bytes(uint16_t base, uint16_t master, uint32_t sector_number, uint16_t offset, uint32_t amount, uint8_t *buf)
+void __disk_read_bytes(uint16_t base, uint16_t master, uint32_t sector_number, uint16_t offset, uint32_t amount, uint8_t* buf)
 {
 
     uint8_t func_buf[512];
 
-    __disk_single_sector_read(base, master, sector_number, (uint16_t *)func_buf);
+    __disk_single_sector_read(base, master, sector_number, (uint16_t*)func_buf);
 
     memcpy(buf, func_buf + offset, amount);
     return;
@@ -147,11 +147,11 @@ void __disk_read_bytes(uint16_t base, uint16_t master, uint32_t sector_number, u
 }
 
 void __disk_sectors_read(uint16_t base, uint8_t master, uint32_t sector_number,
-                         uint16_t how_many_sectors, uint16_t *where)
+    uint16_t how_many_sectors, uint16_t* where)
 {
 
     for (int i = 0; i < how_many_sectors; i++)
-        __disk_single_sector_read(base, master, sector_number + i, (uint16_t *)((uint32_t)where + (i * SECTOR_SIZE)));
+        __disk_single_sector_read(base, master, sector_number + i, (uint16_t*)((uint32_t)where + (i * SECTOR_SIZE)));
 }
 
 void __disk_flush(uint16_t base, uint8_t master)
@@ -169,7 +169,8 @@ void __disk_flush(uint16_t base, uint8_t master)
         disk_status = inbIO(base + ATA_STATUS_REGISTER);
 }
 
-void __disk_single_sector_write(uint16_t base, uint8_t master, uint32_t sector_number, uint16_t *where)
+#warning "Disk status sus";
+void __disk_single_sector_write(uint16_t base, uint8_t master, uint32_t sector_number, uint16_t* where)
 {
 
     if (sector_number == 1) // DO NOT ALLOW BOOTLOADER OVERRIDING
@@ -198,13 +199,15 @@ void __disk_single_sector_write(uint16_t base, uint8_t master, uint32_t sector_n
         outwIO(base + ATA_DATA_REGISTER, where[j]);
     __disk_flush(ATA_FIRST_BUS, ATA_MASTER);
 
+    disk_status = inbIO(base + ATA_STATUS_REGISTER);
+
     if (disk_status & 0x1 == 1)
         printk("Disk module writing error");
 }
 
-void __disk_sectors_write(uint16_t base, uint8_t master, uint32_t sector_number, uint16_t how_many_sectors, uint16_t *where)
+void __disk_sectors_write(uint16_t base, uint8_t master, uint32_t sector_number, uint16_t how_many_sectors, uint16_t* where)
 {
 
     for (int i = 0; i < how_many_sectors; i++)
-        __disk_single_sector_write(base, master, sector_number + i, (uint16_t *)((uint32_t)where + (i * SECTOR_SIZE)));
+        __disk_single_sector_write(base, master, sector_number + i, (uint16_t*)((uint32_t)where + (i * SECTOR_SIZE)));
 }

@@ -10,7 +10,7 @@ void elf_data_load(XinEntry* file)
 {
     uint8_t* data = (uint8_t*)calloc(file->size);
     fread(file, data, file->size * SECTOR_SIZE);
-    char* magic = data;
+    char* magic = (char*)data;
 
     uint32_t file_base = (uint32_t)data;
 

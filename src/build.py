@@ -473,7 +473,7 @@ for os_module, objects in objects_to_compile.items():
     print(colored('\ncompling {} module'.format(os_module).upper(), 'green'))
     for object in objects:
 
-        if object.needs_to_be_recompiled():
+        if True:#object.needs_to_be_recompiled():
             status = os.system(object.command())
             if status != 0:
                 sys.exit(1)
