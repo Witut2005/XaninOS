@@ -1,4 +1,5 @@
 
+#include <stdbool.h>
 #include <lib/libc/file.h>
 #include <lib/libc/stdiox.h>
 #include <lib/libc/string.h>
@@ -11,9 +12,9 @@ extern interval_id stdio_refresh_interval_id;
 
 __STATUS stdio_apply(void)
 {
-    char *buffer = (char *)calloc(100 * SIZE_OF(char));
+    char* buffer = (char*)calloc(100 * SIZE_OF(char));
 
-    XinEntry *StdioRefreshRateConfig = fopen("/etc/stdio/refresh_rate.conf", "r");
+    XinEntry* StdioRefreshRateConfig = fopen("/etc/stdio/refresh_rate.conf", "r");
     fseek(StdioRefreshRateConfig, ARRAY_LENGTH("STDIO_REFRESH_RATE: ") - 1);
 
     fread(StdioRefreshRateConfig, buffer, 99);

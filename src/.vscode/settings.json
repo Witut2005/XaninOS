@@ -118,7 +118,8 @@
         "key_map.h": "c",
         "math.h": "c",
         "keyboard.h": "c",
-        "assert.h": "c"
+        "assert.h": "c",
+        "syscall.h": "c"
     },
     "C_Cpp.errorSquiggles": "disabled",
     "C_Cpp.clang_format_sortIncludes": "true",

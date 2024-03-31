@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <stdbool.h>
+#include <lib/libc/system.h>
 #include <sys/devices/keyboard/scan_codes.h>
 #include <sys/input/key_info.h>
 #include <fs/xin.h>
@@ -15,13 +16,13 @@
 
 extern void (*keyboard_handle)(void);
 
-typedef uint8_t *address_t;
-typedef uint8_t *object_t;
+typedef uint8_t* address_t;
+typedef uint8_t* object_t;
 
 typedef uint32_t bcd_date_t;
 typedef uint16_t bcd_time_t;
 
-extern uint8_t *const zeros;
+extern uint8_t* const zeros;
 
 struct CmosTime
 {
@@ -43,11 +44,11 @@ extern CmosTime SystemTime;
 #define CMOS_ADDR 0x70
 #define CMOS_DATA 0x71
 
-extern char *daysLUT[7];
+extern char* daysLUT[7];
 
-extern char *keyboard_command;
+extern char* keyboard_command;
 
-extern uint8_t *null_memory_region;
+extern uint8_t* null_memory_region;
 
 struct
 {
@@ -82,35 +83,35 @@ extern "C"
 
     extern float pit_time;
 
-    bcd_date_t time_extern_date(CmosTime *Time);
-    bcd_time_t time_extern_time(CmosTime *Time);
+    bcd_date_t time_extern_date(CmosTime* Time);
+    bcd_time_t time_extern_time(CmosTime* Time);
     bool key_pressed(void);
     char getchar(void);
     char getscan(void);
-    void keyboard_buffer_refresh(uint16_t *screen_buffer);
-    CmosTime *time_get(CmosTime *Time);
+    void keyboard_buffer_refresh(uint16_t* screen_buffer);
+    CmosTime* time_get(CmosTime* Time);
     uint8_t floppy_type_get_cmos(void);
     void get_cpu_speed(void);
-    void swap_int(int *xp, int *yp);
-    void swap_char(char *xp, char *yp);
-    void swap_short(uint16_t *xp, uint16_t *yp);
+    void swap_int(int* xp, int* yp);
+    void swap_char(char* xp, char* yp);
+    void swap_short(uint16_t* xp, uint16_t* yp);
     void srand(uint32_t seed);
     uint32_t memory_map_get_cmos(void);
-    void int_swap(int *xp, int *yp);
-    void bubble_sort(int *array, int n);
-    void merge(int *array, int first, int middle, int last);
+    void int_swap(int* xp, int* yp);
+    void bubble_sort(int* array, int n);
+    void merge(int* array, int first, int middle, int last);
     void merge_sort(int array[], int first, int last);
 
-    void *malloc(uint32_t size) __attribute__((fastcall));
-    void *calloc(uint32_t size) __attribute__((fastcall));
-    void free(void *ptr) __attribute__((fastcall));
-    void *realloc(void *ptr, uint32_t size) __attribute__((fastcall));
+    static inline void* malloc(uint32_t size) { return (void*)xanin_syscall1(XANIN_ALLOCATE, (uint32_t)size); }
+    static inline void* calloc(uint32_t size) { return (void*)xanin_syscall1(XANIN_CALLOCATE, (uint32_t)size); }
+    static inline void free(void* ptr) { xanin_syscall1(XANIN_FREE, (uint32_t)ptr); }
+    static inline void* realloc(void* ptr, uint32_t size) { return (void*)xanin_syscall2(XANIN_REALLOCATE, (uint32_t)ptr, (uint32_t)size); }
 
-    void *kmalloc(uint32_t size);
-    void *kcalloc(uint32_t size);
-    void kfree(void *ptr);
-    void *krealloc(void *ptr, uint32_t size_new);
-    void *mmngr_realloc(void *ptr, uint32_t size);
+    void* kmalloc(uint32_t size);
+    void* kcalloc(uint32_t size);
+    void kfree(void* ptr);
+    void* krealloc(void* ptr, uint32_t size_new);
+    void* mmngr_realloc(void* ptr, uint32_t size);
 
     void exit(void);
     uint32_t rand(void);
@@ -131,7 +132,7 @@ extern "C"
 extern bool app_exited;
 extern uint8_t null_region[20];
 
-typedef uint8_t *address_t;
+typedef uint8_t* address_t;
 
 enum XANIN_RETURN_STATUS
 {
@@ -149,13 +150,13 @@ enum XANIN_INTERVAL
 };
 
 typedef uint32_t interval_id;
-typedef void (*interval_handler)(address_t *args);
+typedef void (*interval_handler)(address_t* args);
 
 struct IntervalEntry
 {
     bool is_in_use;
     interval_handler handler;
-    address_t *arguments;
+    address_t* arguments;
     float timeout;
     float start_time;
 };
@@ -168,7 +169,7 @@ extern "C"
 {
 #endif
 
-    interval_id interval_set(interval_handler handler, float ms, address_t *args);
+    interval_id interval_set(interval_handler handler, float ms, address_t* args);
     void interval_clear(interval_id used_interval);
     void do_interval(interval_id interval);
     void all_intervals_clear(void);

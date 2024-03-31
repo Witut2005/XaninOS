@@ -148,7 +148,7 @@ parser.add_argument('--srcpath', type=str)
 parser.add_argument('--binpath', type=str)
 
 parser.add_argument('--assembler', type=str, default='nasm')
-parser.add_argument('--cbuilder', type=str, default='i386-elf-gcc-12.2.0')
+parser.add_argument('--cbuilder', type=str, default='i386-elf-gcc')
 parser.add_argument('--ccbuilder', type=str, default='i386-elf-g++')
 parser.add_argument('--linker', type=str, default='i386-elf-ld')
 parser.add_argument('--archive', type=str, default='i386-elf-ar')
@@ -239,7 +239,6 @@ objects_to_compile = {
     'syscalls': [
         CompileObject('./sys/call/posix/syscall_entry.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
         CompileObject('./sys/call/xanin_sys/handler/xanin_sys_entry.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
-        CompileObject('./sys/call/xanin_sys/calls/devices/disk.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
         CompileObject('./sys/call/xanin_sys/calls/stdio/stdio.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
         CompileObject('./sys/call/xanin_sys/calls/terminal/terminal.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
         CompileObject('./sys/call/xanin_sys/calls/vga/vga.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
@@ -312,9 +311,7 @@ objects_to_compile = {
 
     'libc':[
         # CompileObject('./lib/libc/real_mode_fswitch.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
-        CompileObject('./lib/libc/file.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
         # CompileObject('./lib/libc/crt0.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
-        CompileObject('./lib/libc/alloc.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
         CompileObject('./lib/cpu/code/cpu_state_info.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
         # CompileObject('./lib/libc/real_mode_fswitch.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./lib/libc/hal.c', builders['c'], builder_options['c']['default'], OBJECT),
@@ -489,7 +486,6 @@ print(colored('\nXANIN OS MODULES BUILDED\n', 'green'))
     
 create_c_library('./lib/libc/libc.o', './lib/libc/libc.a', [obj.output_name for obj in objects_to_compile['libc']] + [
         './lib/screen/screen.o', 
-        './sys/call/xanin_sys/calls/devices/disk.o', 
         './sys/call/xanin_sys/calls/stdio/stdio.o', 
         './sys/call/xanin_sys/calls/terminal/terminal.o', 
         './sys/call/xanin_sys/calls/vga/vga.o', 

@@ -126,12 +126,12 @@ extern "C" {
 
     uint32_t xanin_ip_get(void) // get XaninOS IP from file
     {
-        XinEntry* nic_ip = xin::fopen("/config/nic.conf", "r");
+        XinEntry* nic_ip = fopen("/config/nic.conf", "r");
 
         char* ip_str = (char*)calloc(64);
-        xin::fread(nic_ip, ip_str, 15);
 
-        xin::fclose(&nic_ip);
+        fread(nic_ip, (uint8_t*)ip_str, 15);
+        fclose(&nic_ip);
 
         uint32_t ip = str2ipv4(ip_str);
         free(ip_str);

@@ -7,6 +7,7 @@
 #include <lib/libc/stdlibx.h>
 #include <sys/macros.h>
 #include <sys/flow/exit_codes.h>
+#include <sys/call/xanin_sys/calls/devices/disk.h>
 #include "./xin_structures.h"
 
 

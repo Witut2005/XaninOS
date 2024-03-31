@@ -664,7 +664,7 @@ extern "C"
     char* getline(XinEntry* File, int line_id)
     {
 
-        xin::fread(File, NULL, File->size); // loads all data to buffer
+        fread(File, NULL, File->size); // loads all data to buffer
 
         char* file_data = (char*)(File->FileInfo->buffer);
         char* line = (char*)calloc(XANIN_PMMNGR_BLOCK_SIZE);

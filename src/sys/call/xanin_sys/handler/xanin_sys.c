@@ -234,6 +234,7 @@ uint32_t xanin_sys_handle(void)
     {
         // ECX = sector_id, EDX = how_many, EBX = where to load
         __disk_sectors_read(ATA_FIRST_BUS, ATA_MASTER, ecx, edx, (uint16_t*)ebx);
+        dbg_warning("DISK READ", "\0");
         eax = (uint32_t)ebx;
         break;
     }
@@ -242,6 +243,7 @@ uint32_t xanin_sys_handle(void)
     {
         // ECX = sector_id, EDX = how_many, EBX = from where to load
         __disk_sectors_write(ATA_FIRST_BUS, ATA_MASTER, ecx, edx, (uint16_t*)ebx);
+        dbg_warning("DISK WRITE", "\0");
         break;
     }
 
