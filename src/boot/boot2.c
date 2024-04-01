@@ -12,10 +12,10 @@ void _start(void)
 #if XANIN_OS_KERNEL_LOCATION < 0x100000
 #error "KERNEL must be loaded after Motherboard BIOS memory space"
 #endif
-    __disk_init(ATA_FIRST_BUS, ATA_MASTER);
+    disk_init(ATA_FIRST_BUS, ATA_MASTER);
 
     for (int i = 0; i < 2500; i++) {
-        __disk_sectors_read(ATA_FIRST_BUS, ATA_MASTER, 0xA9 + 14 + i, 1, (uint16_t*)(XANIN_OS_KERNEL_LOCATION + (i * SECTOR_SIZE)));
+        disk_sectors_read(ATA_FIRST_BUS, ATA_MASTER, 0xA9 + 14 + i, 1, (uint16_t*)(XANIN_OS_KERNEL_LOCATION + (i * SECTOR_SIZE)));
     }
 
     elf_load((ElfHeaderAuto*)XANIN_OS_KERNEL_LOCATION);

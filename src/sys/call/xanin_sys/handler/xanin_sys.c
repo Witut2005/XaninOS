@@ -13,14 +13,15 @@
 #include <sys/terminal/interpreter/interpreter.h>
 #include <lib/libc/hal.h>
 
+#include <sys/pmmngr/alloc.h>
+#include <sys/devices/com/com.h>
+
 // SYSCALLS FUNCTIONS
-#include <sys/call/xanin_sys/calls/pmmngr/alloc.h>
 #include <sys/call/xanin_sys/calls/vga/vga.h>
 #include <sys/devices/vga/vga.h>
 #include <sys/terminal/frontend/frontend.h>
 #include <sys/terminal/backend/backend.h>
 
-#include <sys/devices/com/com.h>
 
 stdio_mode_t stdio_current_mode;
 uint32_t stdeio_counter = 0;
@@ -103,31 +104,28 @@ uint32_t xanin_sys_handle(void)
     case XANIN_ALLOCATE:
     {
         // ECX = SIZE
-        eax = (uint32_t)__sys_malloc(ecx);
+        eax = umalloc(ecx);
         break;
     }
 
     case XANIN_CALLOCATE:
     {
         // ECX = SIZE
-        eax = (uint32_t)__sys_calloc(ecx);
+        eax = ucalloc(ecx);
         break;
     }
 
     case XANIN_FREE:
     {
         // ECX = PTR
-        // xprintf("0x%x\n", ecx);
-        interrupt_disable();
-        mmngr_block_free(USER_HEAP, (void*)ecx);
-        interrupt_enable();
+        ufree(ecx);
         break;
     }
 
     case XANIN_REALLOCATE:
     {
         // ECX = ptr, EDX = size
-        eax = (uint32_t)__sys_realloc((void*)ecx, edx);
+        eax = urealloc(ecx, edx);
         break;
     }
 
@@ -233,8 +231,7 @@ uint32_t xanin_sys_handle(void)
     case XANIN_DISK_READ:
     {
         // ECX = sector_id, EDX = how_many, EBX = where to load
-        __disk_sectors_read(ATA_FIRST_BUS, ATA_MASTER, ecx, edx, (uint16_t*)ebx);
-        dbg_warning("DISK READ", "\0");
+        disk_sectors_read(ATA_FIRST_BUS, ATA_MASTER, ecx, edx, (uint16_t*)ebx);
         eax = (uint32_t)ebx;
         break;
     }
@@ -242,8 +239,7 @@ uint32_t xanin_sys_handle(void)
     case XANIN_DISK_WRITE:
     {
         // ECX = sector_id, EDX = how_many, EBX = from where to load
-        __disk_sectors_write(ATA_FIRST_BUS, ATA_MASTER, ecx, edx, (uint16_t*)ebx);
-        dbg_warning("DISK WRITE", "\0");
+        disk_sectors_write(ATA_FIRST_BUS, ATA_MASTER, ecx, edx, (uint16_t*)ebx);
         break;
     }
 

@@ -124,8 +124,8 @@ void io_wait(void)
 
 void real_mode_enter(uint16_t segment, uint16_t offset, uint32_t return_address)
 {
-    // __disk_sectors_read(ATA_FIRST_BUS, ATA_MASTER, 1, 1, (uint16_t *)0x600);
-    // __disk_sectors_read(ATA_FIRST_BUS, ATA_MASTER, 1000, 2, (uint16_t *)0); // load ivt from file
+    // disk_sectors_read(ATA_FIRST_BUS, ATA_MASTER, 1, 1, (uint16_t *)0x600);
+    // disk_sectors_read(ATA_FIRST_BUS, ATA_MASTER, 1000, 2, (uint16_t *)0); // load ivt from file
 
     // asm(
     //     "mov ebx, %0\n\t"
@@ -143,8 +143,8 @@ void real_mode_enter(uint16_t segment, uint16_t offset, uint32_t return_address)
 void real_mode_enter_no_return(uint16_t segment, uint16_t offset)
 {
 
-    // __disk_sectors_read(ATA_FIRST_BUS, ATA_MASTER, __xin_find_entry("/enter_real_mode.bin")->first_sector, 1, (uint16_t *)0x600);
-    // __disk_sectors_read(ATA_FIRST_BUS, ATA_MASTER, __xin_find_entry("/ivt")->first_sector, 2, (uint16_t *)IVT_MEMORY_LOCATION); // load ivt from file
+    // disk_sectors_read(ATA_FIRST_BUS, ATA_MASTER, __xin_find_entry("/enter_real_mode.bin")->first_sector, 1, (uint16_t *)0x600);
+    // disk_sectors_read(ATA_FIRST_BUS, ATA_MASTER, __xin_find_entry("/ivt")->first_sector, 2, (uint16_t *)IVT_MEMORY_LOCATION); // load ivt from file
 
     // asm(
     //     "mov ebx, %0\n\t"

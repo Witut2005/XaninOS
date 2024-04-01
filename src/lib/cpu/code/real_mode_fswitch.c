@@ -25,7 +25,7 @@ __STATUS real_mode_fswitch(char* file_name)
         return XANIN_ERROR;
     }
 
-    // __disk_sectors_read(ATA_FIRST_BUS, ATA_MASTER, RealModeReturn->first_sector, 1, (uint16_t*)0x600);
+    // disk_sectors_read(ATA_FIRST_BUS, ATA_MASTER, RealModeReturn->first_sector, 1, (uint16_t*)0x600);
 
     fread(File, (segment << 4) | offset, SECTOR_SIZE); // 512Bytes should be enough
 

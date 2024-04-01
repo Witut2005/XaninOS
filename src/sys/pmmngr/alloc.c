@@ -4,9 +4,10 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <stdbool.h>
+#include <lib/libc/hal.h>
+#include <sys/log/syslog.h>
 #include <lib/libc/memory.h>
 #include <sys/pmmngr/alloc.h>
-#include <sys/log/syslog.h>
 #include <sys/devices/com/com.h>
 
 typedef uint32_t physical_addr;
@@ -16,14 +17,14 @@ typedef uint32_t physical_addr;
 
 static bool mmngr_initalized;
 
-uint8_t *mmngr_mmap;        // mmap address
+uint8_t* mmngr_mmap;        // mmap address
 uint32_t mmngr_heap_blocks; // SIZE_OF mmngr available memory space
 
-uint8_t *kernel_heap_base;
+uint8_t* kernel_heap_base;
 uint32_t kernel_heap_offset;
 uint32_t kernel_heap_blocks; // 1/3 of allocated memory space belongs to kernel heap
 
-uint8_t *user_heap_base;
+uint8_t* user_heap_base;
 uint32_t user_heap_offset;
 uint32_t user_heap_blocks; // 2/3 of allocated memory space belongs to user heap
 
@@ -93,7 +94,7 @@ uint32_t mmngr_mmap_free_block_find(uint8_t mode, uint32_t blocks)
     }
 }
 
-void mmngr_init(uint8_t *map, uint8_t *base, uint32_t blocks)
+void mmngr_init(uint8_t* map, uint8_t* base, uint32_t blocks)
 {
     mmngr_mmap = map;
 
@@ -111,12 +112,12 @@ void mmngr_init(uint8_t *map, uint8_t *base, uint32_t blocks)
 
     for (int i = 0; i < blocks; i++)
         mmngr_mmap[i] = MEMORY_UNALLOCATED;
-    
+
     mmngr_initalized = true;
     dbg_success(DEBUG_LABEL_PMMNGR, "PMMNGR successully initialized");
 }
 
-void *mmngr_block_allocate(uint8_t mode, uint32_t size)
+void* mmngr_block_allocate(uint8_t mode, uint32_t size)
 {
 
     uint32_t mmap_index = mmngr_mmap_free_block_find(mode, size_to_blocks_allocated(size));
@@ -125,7 +126,7 @@ void *mmngr_block_allocate(uint8_t mode, uint32_t size)
     {
         printk("HEAP FULL");
         dbg_error(DEBUG_LABEL_PMMNGR, "HEAD FULL");
-        return (void *)NULL;
+        return (void*)NULL;
     }
 
     uint32_t blocks_allocated = size_to_blocks_allocated(size);
@@ -141,7 +142,7 @@ void *mmngr_block_allocate(uint8_t mode, uint32_t size)
     return user_heap_base + (mmap_index * PMMNGR_BLOCK_SIZE);
 }
 
-void mmngr_block_free(uint8_t mode, void *ptr)
+void mmngr_block_free(uint8_t mode, void* ptr)
 {
     uint32_t index;
 
@@ -177,30 +178,66 @@ void mmngr_block_free(uint8_t mode, void *ptr)
     mmngr_mmap[index] = MEMORY_UNALLOCATED;
 }
 
-void *kmalloc(uint32_t size)
+void* kmalloc(uint32_t size)
 {
     return mmngr_block_allocate(KERNEL_HEAP, size);
 }
 
-void *kcalloc(uint32_t size)
+void* kcalloc(uint32_t size)
 {
-    uint8_t *tmp = mmngr_block_allocate(KERNEL_HEAP, size);
+    uint8_t* tmp = mmngr_block_allocate(KERNEL_HEAP, size);
     memset(tmp, 0, size);
 
     return tmp;
 }
 
-void kfree(void *ptr)
+void kfree(void* ptr)
 {
     mmngr_block_free(KERNEL_HEAP, ptr);
 }
 
-void *krealloc(void *ptr, uint32_t size)
+void* krealloc(void* ptr, uint32_t size)
 {
-
-    uint8_t *tmp = mmngr_block_allocate(KERNEL_HEAP, size);
+    uint8_t* tmp = mmngr_block_allocate(KERNEL_HEAP, size);
     memmove(tmp, ptr, size);
     mmngr_block_free(KERNEL_HEAP, ptr);
 
     return tmp;
+}
+
+void* umalloc(uint32_t size)
+{
+    uint8_t* tmp = mmngr_block_allocate(USER_HEAP, size);
+    return tmp;
+}
+
+void* ucalloc(uint32_t size)
+{
+    uint8_t* tmp = mmngr_block_allocate(USER_HEAP, size);
+    memset(tmp, 0, size);
+
+    return tmp;
+}
+
+void* urealloc(void* ptr, uint32_t size)
+{
+    EFlags Flags;
+    INTERRUPTS_OFF(&Flags);
+
+    interrupt_disable();
+
+    mmngr_block_free(USER_HEAP, (void*)ptr); // FIRST ALLOCATE THEN FREE (REVERSED ORDER MAKES WEIRD BUGS)
+    uint8_t* tmp = (uint8_t*)mmngr_block_allocate(USER_HEAP, size);
+    memmove(tmp, (uint8_t*)ptr, size);
+
+    if (Flags.intf)
+        interrupt_enable();
+
+    INTERRUPTS_ON(&Flags);
+    return tmp;
+}
+
+void ufree(void* ptr)
+{
+    mmngr_block_free(USER_HEAP, ptr);
 }

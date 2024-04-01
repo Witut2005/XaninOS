@@ -11,11 +11,11 @@
 
 // TERMINAL_APP
 
-int run16(char *file_name)
+int run16(char* file_name)
 {
     screen_clear();
 
-    XinEntry *xin_file = __xin_find_entry(file_name);
+    XinEntry* xin_file = __xin_find_entry(file_name);
 
     if (xin_file == NULL)
     {
@@ -38,10 +38,10 @@ int run16(char *file_name)
             return XANIN_ERROR;
         }
 
-        uint8_t *dest = (uint8_t *)0x10000;
+        uint8_t* dest = (uint8_t*)0x10000;
         // fread(xin_file, dest, xin_file->size);
         // fread(xin_file, dest, SECTOR_SIZE);
-        __disk_sectors_read(ATA_FIRST_BUS, ATA_MASTER, xin_file->first_sector, 1, (uint16_t *)dest);
+        disk_sectors_read(ATA_FIRST_BUS, ATA_MASTER, xin_file->first_sector, 1, (uint16_t*)dest);
 
         // xprintf("nicho");
         // while(getxchar().scan_code == ENTER);

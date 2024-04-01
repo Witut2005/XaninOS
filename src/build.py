@@ -148,13 +148,14 @@ parser.add_argument('--srcpath', type=str)
 parser.add_argument('--binpath', type=str)
 
 parser.add_argument('--assembler', type=str, default='nasm')
-parser.add_argument('--cbuilder', type=str, default='gcc -m32')
+parser.add_argument('--cbuilder', type=str, default='i386-elf-gcc')
 parser.add_argument('--ccbuilder', type=str, default='i386-elf-g++')
-parser.add_argument('--linker', type=str, default='ld -m elf_i386')
+parser.add_argument('--linker', type=str, default='i386-elf-ld')
 parser.add_argument('--archive', type=str, default='i386-elf-ar')
 parser.add_argument('--dwarf', action='store_true', default=False)
 
 parser.add_argument('--long', action='store_true')
+parser.add_argument('--build_all', action='store_true')
 
 args = parser.parse_args()
 
@@ -297,11 +298,6 @@ objects_to_compile = {
         CompileObject('./sys/paging/paging.asm', builders['asm'], builder_options['asm']['elf32'], './sys/paging/paging_asm.o'),
     ],
 
-    'xanin_sys': [
-        CompileObject('./sys/call/xanin_sys/calls/pmmngr/alloc.c', builders['c'], builder_options['c']['default'], OBJECT),
-    ],
-    
-
     'compiler': [
         CompileObject('./compiler/files/crt0.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
         CompileObject('./compiler/files/crti.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
@@ -319,7 +315,6 @@ objects_to_compile = {
         CompileObject('./lib/libc/stdlibx.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./lib/libc/string.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./lib/libc/data_structures.c', builders['c'], builder_options['c']['default'], OBJECT),
-        CompileObject('./lib/libc/system.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./lib/libc/algorithm.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./lib/libc/time.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./lib/libc/process.c', builders['c'], builder_options['c']['default'], OBJECT),
@@ -337,6 +332,10 @@ objects_to_compile = {
         CompileObject('./lib/libcpp/time.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./lib/libcpp/endian.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./lib/libcpp/hash.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
+    ],
+
+    'system': [
+        CompileObject('./lib/libc/system.c', builders['c'], builder_options['c']['default'], OBJECT)
     ],
 
     'vty': [
@@ -469,7 +468,7 @@ for os_module, objects in objects_to_compile.items():
     print(colored('\ncompling {} module'.format(os_module).upper(), 'green'))
     for object in objects:
 
-        if True:#object.needs_to_be_recompiled():
+        if object.needs_to_be_recompiled() or args.build_all: 
             status = os.system(object.command())
             if status != 0:
                 sys.exit(1)

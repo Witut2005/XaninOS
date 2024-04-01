@@ -1,17 +1,17 @@
 
-#include <sys/call/xanin_sys/handler/xanin_sys.h>
-#include <sys/log/syslog.h>
-#include <lib/libc/hal.h>
 #include <fs/xin.h>
-#include <lib/libc/memory.h>
 #include <stddef.h>
-#include <sys/devices/hda/disk.h>
-#include <lib/libc/string.h>
-#include <lib/libc/stdlibx.h>
-#include <lib/libc/colors.h>
+#include <lib/libc/hal.h>
 #include <lib/libc/file.h>
+#include <sys/log/syslog.h>
+#include <lib/libc/memory.h>
+#include <lib/libc/string.h>
+#include <lib/libc/colors.h>
 #include <lib/libc/stdiox.h>
+#include <lib/libc/stdlibx.h>
 #include <sys/devices/com/com.h>
+#include <sys/devices/hda/disk.h>
+#include <sys/call/xanin_sys/handler/xanin_sys.h>
 
 #define XIN_OPENED_FILES_COUNTER 100
 
@@ -38,7 +38,7 @@ static XinFileSystemData XinFsData; // XinFS DATA SINGLETONE
 
 void __xin_detect_file_system(void)
 {
-    __disk_read_bytes(ATA_FIRST_BUS, ATA_MASTER, 0, 2, 12, (uint8_t*)&XinFsData);
+    disk_read_bytes(ATA_FIRST_BUS, ATA_MASTER, 0, 2, 12, (uint8_t*)&XinFsData);
 }
 
 XinFileSystemData __xin_fs_data_get(void)
@@ -88,13 +88,13 @@ void __xin_fs_tables_set(uint8_t* tables)
 
 void __xin_fs_load_tables_from_disk(void) // oj calkiem risky
 {
-    __disk_read(XinFsData.first_sector, XinFsData.ptrs_size + XinFsData.entries_size, (uint16_t*)XinFsData.tables);
+    disk_read(XinFsData.first_sector, XinFsData.ptrs_size + XinFsData.entries_size, (uint16_t*)XinFsData.tables);
 }
 
 void __xin_tables_update(void)
 {
-    __disk_sectors_write(ATA_FIRST_BUS, ATA_MASTER, XinFsData.first_sector, XIN_FS_PTRS_SIZE, (uint16_t*)XIN_FS_ENTRIES_TABLE_BEGIN);
-    __disk_sectors_write(ATA_FIRST_BUS, ATA_MASTER, XinFsData.first_sector + XIN_FS_PTRS_SIZE, XIN_FS_ENTRIES_SIZE, (uint16_t*)(XIN_FS_ENTRIES_TABLE_BEGIN));
+    disk_sectors_write(ATA_FIRST_BUS, ATA_MASTER, XinFsData.first_sector, XIN_FS_PTRS_SIZE, (uint16_t*)XIN_FS_ENTRIES_TABLE_BEGIN);
+    disk_sectors_write(ATA_FIRST_BUS, ATA_MASTER, XinFsData.first_sector + XIN_FS_PTRS_SIZE, XIN_FS_ENTRIES_SIZE, (uint16_t*)(XIN_FS_ENTRIES_TABLE_BEGIN));
 }
 
 void __xin_init(void)
@@ -927,7 +927,7 @@ size_t __xin_fread(XinEntry* Entry, void* buf, size_t count)
     {
         if (!Entry->FileInfo->sector_in_use[i])
         {
-            __disk_read(Entry->first_sector + i, 1, (uint16_t*)(Entry->FileInfo->buffer + (i * SECTOR_SIZE)));
+            disk_read(Entry->first_sector + i, 1, (uint16_t*)(Entry->FileInfo->buffer + (i * SECTOR_SIZE)));
             Entry->FileInfo->sector_in_use[i] = true;
         }
     }
@@ -975,7 +975,7 @@ size_t __xin_fwrite(XinEntry* Entry, void* buf, size_t count)
     {
         if (!Entry->FileInfo->sector_in_use[i])
         {
-            __disk_read(Entry->first_sector + i, 1, (uint16_t*)(Entry->FileInfo->buffer + (i * SECTOR_SIZE)));
+            disk_read(Entry->first_sector + i, 1, (uint16_t*)(Entry->FileInfo->buffer + (i * SECTOR_SIZE)));
             Entry->FileInfo->sector_in_use[i] = true;
         }
     }
@@ -1134,7 +1134,7 @@ bool __xin_fclose_with_given_size(XinEntry** File, uint32_t size)
 
         VAL(File)->first_sector = entry_ptrs - XIN_FS_PTRS_TABLE_BEGIN;
 
-        __disk_sectors_write(ATA_FIRST_BUS, ATA_MASTER, VAL(File)->first_sector, number_of_sectors_to_allocate, (uint16_t*)buf);
+        disk_sectors_write(ATA_FIRST_BUS, ATA_MASTER, VAL(File)->first_sector, number_of_sectors_to_allocate, (uint16_t*)buf);
         __xin_tables_update();
 
         free(buf);

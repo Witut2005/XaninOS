@@ -129,12 +129,12 @@ void note_input(xchar x)
     }
 }
 
-int xin_note(char *file_name)
+int xin_note(char* file_name)
 {
     stdio_mode_set(STDIO_MODE_CANVAS);
     canvas_screen_clear();
 
-    XinEntry *xin_file = fopen(file_name, "rw");
+    XinEntry* xin_file = fopen(file_name, "rw");
 
     if (xin_file == NULL)
     {
@@ -148,13 +148,13 @@ int xin_note(char *file_name)
     {
 
         for (int i = 0; i < 16; i++)
-            __disk_sectors_read(ATA_FIRST_BUS, ATA_MASTER, xin_file->first_sector + i, 1, (uint16_t *)((xin_file->first_sector + i) * SECTOR_SIZE));
+            disk_sectors_read(ATA_FIRST_BUS, ATA_MASTER, xin_file->first_sector + i, 1, (uint16_t*)((xin_file->first_sector + i) * SECTOR_SIZE));
 
         canvas_screen_clear();
 
-        char *data_pointer = (char *)(xin_file->first_sector * SECTOR_SIZE);
+        char* data_pointer = (char*)(xin_file->first_sector * SECTOR_SIZE);
 
-        uint16_t *bruh_moment = (uint16_t *)VGA_TEXT_MEMORY;
+        uint16_t* bruh_moment = (uint16_t*)VGA_TEXT_MEMORY;
 
         for (int i = 0; i < VGA_SCREEN_RESOLUTION / 2; i++)
             bruh_moment[i] = (uint16_t)(data_pointer[i] + (((black << 4) | white) << 8));
@@ -164,20 +164,20 @@ int xin_note(char *file_name)
 
         uint32_t file_data_counter = 0x0;
 
-        uint16_t *screen_ptr = (uint16_t *)VGA_TEXT_MEMORY;
-        uint8_t *tmp = (uint8_t *)malloc(VGA_SCREEN_RESOLUTION);
+        uint16_t* screen_ptr = (uint16_t*)VGA_TEXT_MEMORY;
+        uint8_t* tmp = (uint8_t*)malloc(VGA_SCREEN_RESOLUTION);
 
         for (int i = 0; i < VGA_SCREEN_RESOLUTION / 2; i++, screen_ptr++)
         {
             fseek(xin_file, i);
-            fwrite(xin_file, (char *)screen_ptr, 1);
+            fwrite(xin_file, (char*)screen_ptr, 1);
 
-            tmp[i] = *(char *)screen_ptr;
+            tmp[i] = *(char*)screen_ptr;
         }
 
         xin_file->size = file_data_counter;
 
-        __disk_sectors_write(ATA_FIRST_BUS, ATA_MASTER, xin_file->first_sector, int_to_sectors(xin_file->size), (uint16_t *)(tmp));
+        disk_sectors_write(ATA_FIRST_BUS, ATA_MASTER, xin_file->first_sector, int_to_sectors(xin_file->size), (uint16_t*)(tmp));
 
         free(tmp);
     }

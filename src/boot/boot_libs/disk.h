@@ -7,13 +7,13 @@
 
 enum ATA_REGISTERS
 {
-      
+
     ATA_MASTER = 0x1,
     ATA_SLAVE = 0x0,
 
     ATA_FIRST_BUS = 0x1F0,
     ATA_SECONDARY_BUS = 0x170,
-        
+
 
     ATA_DATA_REGISTER = 0x0,
 
@@ -46,6 +46,6 @@ enum ATA_COMMANDS
 
 };
 
-void __disk_init(uint16_t base, uint8_t master);
-void __disk_sectors_read(uint16_t base, uint8_t master, uint32_t sector_number, 
-                                uint16_t how_many_sectors, uint16_t* where);
+void disk_init(uint16_t base, uint8_t master);
+void disk_sectors_read(uint16_t base, uint8_t master, uint32_t sector_number,
+    uint16_t how_many_sectors, uint16_t* where);

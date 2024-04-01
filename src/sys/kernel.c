@@ -33,7 +33,6 @@
 #include <lib/libc/xanin_state.h>
 #include <lib/libc/system.h>
 #include <sys/interrupts/handlers/handlers.h>
-#include <sys/call/xanin_sys/calls/pmmngr/alloc.h>
 #include <sys/terminal/backend/backend.h>
 #include <sys/terminal/frontend/frontend.h>
 #include <lib/cpu/headers/cpu_state_info.h>
@@ -370,7 +369,7 @@ void kernel_init(void)
     argv[3] = (char*)calloc(XANIN_PMMNGR_BLOCK_SIZE * 2);
     argv[4] = (char*)calloc(XANIN_PMMNGR_BLOCK_SIZE * 2);
 
-    __disk_sectors_write(ATA_FIRST_BUS, ATA_MASTER, __xin_find_entry("/ivt")->first_sector, 2, 0x0); // load ivt to /ivt file
+    disk_sectors_write(ATA_FIRST_BUS, ATA_MASTER, __xin_find_entry("/ivt")->first_sector, 2, 0x0); // load ivt to /ivt file
     memset((uint8_t*)ArpTable, 0xFF, SIZE_OF(ArpTable[0]));
 
     __xin_file_create("/syslog");

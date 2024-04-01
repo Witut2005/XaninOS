@@ -28,8 +28,8 @@
 //_start
 int gyn_interpreter(char** argv)
 {
-    
-    std::UnorderedMap<std::string, void(*)(char**, int)> XaninInternalCommands = { 
+
+    std::UnorderedMap<std::string, void(*)(char**, int)> XaninInternalCommands = {
         {"stdio_apply", stdio_apply},
         {"ssaver", screen_saver},
         {"bmp_info", bmp_info},
@@ -69,7 +69,7 @@ int gyn_interpreter(char** argv)
         {"reg_dump", reg_dump},
         {"load", load},
         {"disk_load", disk_load},
-        {"__disk_sectors_write", disk_write_data},
+        {"disk_sectors_write", disk_write_data},
         {"execute_addr", execute_addr},
         {"pong", pong},
         {"loadch", loadch},
