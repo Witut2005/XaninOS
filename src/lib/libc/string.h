@@ -75,7 +75,7 @@ extern "C"
     [[nodiscard]] char* substr_find(char* str, const char* substr);
     [[nodiscard]] char* substr_last_find(char* str, const char* substr);
 
-    [[nodiscard]] char* strdup(char* str); //allocates memory
+    [[nodiscard]] char* strdup(const char* str); //allocates memory
     char* strcat(bool dest_first, char* dest, char* src);
 
     uint32_t check_string_errors(uint32_t mask);

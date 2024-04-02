@@ -1,47 +1,47 @@
 
-#include <sys/paging/paging.h>
-#include "devices/com/labels.h"
-#include "paging/paging.h"
-#include <sys/net/network_protocols/internet_protocol/ipv4/ip.h>
-#include <lib/ascii/ascii.h>
-#include <sys/devices/pit/pit.h>
-#include <lib/libc/data_structures.h>
 #include <stdint.h>
-#include <sys/interrupts/idt/idt.h>
-#include <lib/libc/stdlibx.h>
-#include <lib/screen/screen.h>
-#include <sys/terminal/interpreter/interpreter.c>
-#include <lib/libc/math.h>
-#include <sys/devices/pci/pci.h>
-#include <sys/devices/acpi/acpi.h>
-#include <sys/devices/usb/usb.h>
-#include <sys/devices/hda/disk.h>
-#include <sys/devices/vga/vga.h>
 #include <fs/xin.h>
+#include <sys/macros.h>
+#include "paging/paging.h"
+#include <lib/libc/math.h>
+#include <sys/log/syslog.h>
+#include <lib/ascii/ascii.h>
 #include <lib/libc/assert.h>
+#include <lib/libc/system.h>
+#include <lib/libc/stdlibx.h>
 #include <sys/pmmngr/alloc.h>
-#include <sys/devices/apic/apic_registers.h>
+#include <sys/paging/paging.h>
+#include <lib/screen/screen.h>
+#include "devices/com/labels.h"
+#include <sys/devices/pit/pit.h>
+#include <sys/devices/pci/pci.h>
+#include <sys/devices/usb/usb.h>
+#include <sys/devices/vga/vga.h>
+#include <sys/devices/com/com.h>
+#include <sys/devices/hda/disk.h>
+#include <lib/libc/xanin_state.h>
+#include <sys/init/kernel_init.h>
+#include <sys/devices/acpi/acpi.h>
 #include <sys/devices/apic/apic.h>
+#include <sys/devices/nic/8254x.h>
+#include <sys/interrupts/idt/idt.h>
+#include <lib/libc/stdiox_legacy.h>
+#include <lib/libc/data_structures.h>
 #include <sys/devices/ioapic/ioapic.h>
 #include <fs/loaders/elf/elf_loader.h>
-#include <sys/log/syslog.h>
-#include <sys/devices/nic/8254x.h>
-#include <sys/devices/pcspk/pc_speaker.h>
 #include <sys/devices/acpi/fadt/fadt.h>
-#include <sys/net/netapi/network_device.h>
-#include <sys/net/network_protocols/arp/arp.h>
-#include <lib/libc/xanin_state.h>
-#include <lib/libc/system.h>
-#include <sys/interrupts/handlers/handlers.h>
+#include <sys/devices/pcspk/pc_speaker.h>
 #include <sys/terminal/backend/backend.h>
+#include <sys/net/netapi/network_device.h>
+#include <sys/devices/keyboard/keyboard.h>
 #include <sys/terminal/frontend/frontend.h>
 #include <lib/cpu/headers/cpu_state_info.h>
-#include <sys/macros.h>
-#include <lib/libc/stdiox_legacy.h>
+#include <sys/devices/apic/apic_registers.h>
+#include <sys/interrupts/handlers/handlers.h>
+#include <sys/net/network_protocols/arp/arp.h>
+#include <sys/terminal/interpreter/interpreter.c>
 #include <sys/call/xanin_sys/calls/input/input.h>
-#include <sys/init/kernel_init.h>
-#include <sys/devices/com/com.h>
-#include <sys/devices/keyboard/keyboard.h>
+#include <sys/net/network_protocols/internet_protocol/ipv4/ip.h>
 
 /*--------------------------------------/
 |wesolego nowego roku :))               |
@@ -81,8 +81,6 @@
 |Pokonam wszelkie przeciwności          |
 |Ja, rok 2023, 31 grudzień, 17:38:50    |
 /--------------------------------------*/
-
-uint8_t* const zeros;
 
 uint32_t stdio_refresh_rate;
 interval_id stdio_refresh_interval_id;

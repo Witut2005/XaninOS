@@ -1050,6 +1050,7 @@ size_t __xin_write(int fd, void* buf, size_t count)
     return fwrite(Entry, buf, count);
 }
 
+#warning "TODO move fseek and ftell to stdlibx";
 void fseek(XinEntry* File, uint32_t new_position)
 {
     if (__xin_entry_validation_check(File) == true)

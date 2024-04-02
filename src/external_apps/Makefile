@@ -13,7 +13,11 @@ HANDLERS = ./sys/interrupts/handlers
 all:
 	# $(C) -O0 -fpic -shared shared.c -o libshared.so
 	# $(C) -O0 -g -nostdlib -fPIE -pie test.c -o test -L. -lshared
-
 	@#$(C) shared.c -g -O0 -fpic -shared -c -o shared.so
 	@#$(C) -O0 -g -fPIE -pie -nostdlib shared.so -shared -Wno-builtin-declaration-mismatch test.c -I ../ -L /home/witut/XaninOS/src/external_apps libc.a -o test 
+
+pie:
+	$(C) -Wno-builtin-declaration-mismatch -fPIE -pie -nostdlib brainfuck.c -I ../ -L /home/witut/XaninOS/src/external_apps libc.a -o brainfuck 
+
+exec:
 	$(C) -Wno-builtin-declaration-mismatch -nostdlib brainfuck.c -I ../ -L /home/witut/XaninOS/src/external_apps libc.a -o brainfuck 

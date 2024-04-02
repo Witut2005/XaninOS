@@ -7,6 +7,8 @@
 
 char* system_variable_get(char* value);
 
+#warning "TODO put every __sys like function to this folder";
+
 #ifdef __cplusplus
 extern "C" {
 #endif 

@@ -563,7 +563,7 @@ extern "C"
         return last_index != -1 ? &str[last_index] : NULL;
     }
 
-    char* strdup(char* str)
+    char* strdup(const char* str)
     {
         char* ns = (char*)calloc(strlen(str) * SIZE_OF(char));
         strcpy(ns, str);

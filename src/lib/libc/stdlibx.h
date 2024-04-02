@@ -22,8 +22,6 @@ typedef uint8_t* object_t;
 typedef uint32_t bcd_date_t;
 typedef uint16_t bcd_time_t;
 
-extern uint8_t* const zeros;
-
 struct CmosTime
 {
     uint8_t seconds;

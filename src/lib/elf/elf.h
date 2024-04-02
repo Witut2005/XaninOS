@@ -8,10 +8,36 @@
 enum ELF_FIELD
 {
     X86_E_MACHINE = 0x3,
-    ELF_HEADER_SIZE = 0x34,
-    PT_LOAD = 0x1
+
+#ifdef __x86_64__
+    ELF_HEADER_SIZE = 64,
+#else
+    ELF_HEADER_SIZE = 52,
+#endif
+
 };
 
+enum ELF_TYPE {
+    ET_NONE,
+    ET_REL,
+    ET_EXEC,
+    ET_DYN,
+    ET_CORE,
+    ET_LOPROC = 0xff00,
+    ET_HIPROC = 0xffff
+};
+
+enum ELF_PROGRAM_HEADER_TYPE {
+    PT_NULL,
+    PT_LOAD,
+    PT_DYNAMIC,
+    PT_INTERP,
+    PT_NOTE,
+    PT_SHLIB,
+    PT_PHDR,
+    PT_LOPROC = 0x70000000,
+    PT_HIPROC = 0x7fffffff
+};
 // enum ELF_PROPERTIES 
 // {
 // };

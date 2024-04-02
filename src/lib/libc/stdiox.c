@@ -100,6 +100,7 @@ void puts_error(const char* str)
     puts(str);
 }
 
+#warning "Use here srpintf";
 void xprintf(char* str, ...)
 {
     char tmp[128];

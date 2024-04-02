@@ -335,7 +335,7 @@ objects_to_compile = {
     ],
 
     'system': [
-        CompileObject('./lib/libc/system.c', builders['c'], builder_options['c']['default'], OBJECT)
+        CompileObject('./lib/system/system.c', builders['c'], builder_options['c']['default'], OBJECT)
     ],
 
     'vty': [
@@ -379,6 +379,7 @@ objects_to_compile = {
         CompileObject('./programs/usb/usb_controller_info.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./programs/tests/memory_allocator_test.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./programs/tests/disk_func.c', builders['c'], builder_options['c']['default'], OBJECT),
+        CompileObject('./programs/tests/elf_loader_test.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./programs/misc/grapher/grapher.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./programs/fs/explorer.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./programs/tests/interrupt_test.c', builders['c'], builder_options['c']['default'], OBJECT),
@@ -454,6 +455,7 @@ objects_to_compile = {
         CompileObject('./fs/loaders/bin/bit32/run.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./fs/loaders/bin/bit16/run16.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./fs/loaders/elf/elf_loader.c', builders['c'], builder_options['c']['default'], OBJECT),
+        CompileObject('./fs/loaders/elf/elf_loader.cpp', builders['cc'], builder_options['cc']['default'], './fs/loaders/elf/elf_loader_cpp.o'),
         CompileObject('./lib/libc/crt0.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
         CompileObject('./fs/loaders/elf/elfdump.c', builders['c'], builder_options['c']['default'], OBJECT),
     ],
@@ -484,6 +486,7 @@ print(colored('\nXANIN OS MODULES BUILDED\n', 'green'))
     
 create_c_library('./lib/libc/libc.o', './lib/libc/libc.a', [obj.output_name for obj in objects_to_compile['libc']] + [
         './lib/screen/screen.o', 
+        './lib/system/system.o', 
         './sys/call/xanin_sys/calls/terminal/terminal.o', 
         './sys/call/xanin_sys/calls/vga/vga.o', 
         './sys/call/xanin_sys/calls/input/input.o', 
