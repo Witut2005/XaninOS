@@ -175,11 +175,13 @@ builder_options = {
 
     'c':{
         'default': f"{c_compilation_options} -c",
+        'lib': f"{c_compilation_options} -fpic -c",
         'kernel': f"{c_compilation_options} -Ttext 0xF00000"
     },
 
     'cc':{
-        'default': '-O0 -fno-exceptions -masm=intel -std=c++17 -Wno-return-type -Wno-builtin-declaration-mismatch -nostdlib -Wno-unused-function -Wno-write-strings -fno-rtti -fconcepts-ts -I ./ -c'
+        'default': '-O0 -fno-exceptions -masm=intel -std=c++17 -Wno-return-type -Wno-builtin-declaration-mismatch -nostdlib -Wno-unused-function -Wno-write-strings -fno-rtti -fconcepts-ts -I ./ -c',
+        'lib': '-fpic -O0 -fno-exceptions -masm=intel -std=c++17 -Wno-return-type -Wno-builtin-declaration-mismatch -nostdlib -Wno-unused-function -Wno-write-strings -fno-rtti -fconcepts-ts -I ./ -c'
     }
 }
 
@@ -306,21 +308,21 @@ objects_to_compile = {
 
     'libc':[
         # CompileObject('./lib/libc/real_mode_fswitch.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
-        CompileObject('./lib/cpu/code/cpu_state_info.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
         # CompileObject('./lib/libc/real_mode_fswitch.c', builders['c'], builder_options['c']['default'], OBJECT),
-        CompileObject('./lib/libc/hal.c', builders['c'], builder_options['c']['default'], OBJECT),
-        CompileObject('./lib/libc/math.c', builders['c'], builder_options['c']['default'], OBJECT),
-        CompileObject('./lib/libc/memory.c', builders['c'], builder_options['c']['default'], OBJECT),
+        CompileObject('./lib/cpu/code/cpu_state_info.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
+        CompileObject('./lib/libc/hal.c', builders['c'], builder_options['c']['lib'], OBJECT),
+        CompileObject('./lib/libc/math.c', builders['c'], builder_options['c']['lib'], OBJECT),
+        CompileObject('./lib/libc/memory.c', builders['c'], builder_options['c']['lib'], OBJECT),
         CompileObject('./lib/libc/stdiox.c', builders['c'], builder_options['c']['default'], OBJECT),
-        CompileObject('./lib/libc/stdlibx.c', builders['c'], builder_options['c']['default'], OBJECT),
-        CompileObject('./lib/libc/string.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
-        CompileObject('./lib/libc/data_structures.c', builders['c'], builder_options['c']['default'], OBJECT),
-        CompileObject('./lib/libc/algorithm.c', builders['c'], builder_options['c']['default'], OBJECT),
-        CompileObject('./lib/libc/time.c', builders['c'], builder_options['c']['default'], OBJECT),
-        CompileObject('./lib/libc/process.c', builders['c'], builder_options['c']['default'], OBJECT),
-        CompileObject('./lib/libc/stdiox_legacy.c', builders['c'], builder_options['c']['default'], OBJECT),
-        CompileObject('./lib/libc/canvas.c', builders['c'], builder_options['c']['default'], OBJECT),
-        CompileObject('./lib/libc/hash.c', builders['c'], builder_options['c']['default'], OBJECT),
+        CompileObject('./lib/libc/stdlibx.c', builders['c'], builder_options['c']['lib'], OBJECT),
+        CompileObject('./lib/libc/string.cpp', builders['cc'], builder_options['cc']['lib'], OBJECT),
+        CompileObject('./lib/libc/data_structures.c', builders['c'], builder_options['c']['lib'], OBJECT),
+        CompileObject('./lib/libc/algorithm.c', builders['c'], builder_options['c']['lib'], OBJECT),
+        CompileObject('./lib/libc/time.c', builders['c'], builder_options['c']['lib'], OBJECT),
+        CompileObject('./lib/libc/process.c', builders['c'], builder_options['c']['lib'], OBJECT),
+        CompileObject('./lib/libc/stdiox_legacy.c', builders['c'], builder_options['c']['lib'], OBJECT),
+        CompileObject('./lib/libc/canvas.c', builders['c'], builder_options['c']['lib'], OBJECT),
+        CompileObject('./lib/libc/hash.c', builders['c'], builder_options['c']['lib'], OBJECT),
     ],
 
     'libcpp': [

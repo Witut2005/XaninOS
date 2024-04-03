@@ -5,10 +5,10 @@
 #include <lib/elf/elf.h>
 #include <lib/libcpp/class.hpp>
 #include <sys/devices/com/com.h>
+#include <lib/libcpp/container/array.hpp>
 #include <lib/libcpp/container/vector.hpp>
 
 class ElfLoader {
-    // MAKE_OBJECT_NON_COPYABLE(ElfLoader)
 
 public:
 
@@ -38,6 +38,7 @@ public:
         return  s_xanin_native_arch == arch;
     }
 
+
     ElfLoader(const char* path);
     ~ElfLoader(void);
 
@@ -47,10 +48,15 @@ public:
     [[nodiscard]] std::vector<ElfProgramHeaderAuto> program_headers_get(void) const;
     [[nodiscard]] std::vector<ElfSectionHeaderAuto> section_headers_get(void) const;
 
+    bool is_loadable_segment(const ElfProgramHeaderAuto& pheader) const;
+
     bool load(uint8_t* address);
-    void execute(void) const;
+    bool load_segment(const ElfProgramHeaderAuto& pheader) const;
+    bool execute(void) const;
 
 private:
+
+    static constexpr enum ELF_PROGRAM_HEADER_TYPE s_ignored_segments[] = { PT_PHDR };
 
     bool m_loaded{ false };
     uint8_t* m_elf_location{ nullptr };

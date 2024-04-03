@@ -17,6 +17,7 @@ enum ELF_FIELD
 
 };
 
+
 enum ELF_TYPE {
     ET_NONE,
     ET_REL,
@@ -38,9 +39,6 @@ enum ELF_PROGRAM_HEADER_TYPE {
     PT_LOPROC = 0x70000000,
     PT_HIPROC = 0x7fffffff
 };
-// enum ELF_PROPERTIES 
-// {
-// };
 
 enum ELF_HEADER_PROPERTIES
 {

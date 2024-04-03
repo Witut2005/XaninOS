@@ -79,7 +79,6 @@ void putsc(const char* str, color_t color)
 
 void puts(const char* str)
 {
-
     Xtf* StdioVty = __sys_vty_get();
 
     while (*str != '\0')

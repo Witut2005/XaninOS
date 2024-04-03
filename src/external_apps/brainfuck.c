@@ -98,7 +98,7 @@ int main(int argc, char* argv[])
             jmp_bwd();
             break;
         default:
-            xprintf("Bad. Illegal character in program string:");//  %c", current);
+            xprintf("Bad. Illegal character in program string: %c", current);
             // asm volatile("jmp $");
             return 3;
         }
