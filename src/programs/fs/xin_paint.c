@@ -214,7 +214,7 @@ int xin_paint(char *file_name)
 
         uint8_t *screen_ptr = (uint8_t *)VGA_TEXT_MEMORY;
 
-        fseek(xin_file, 0);
+        __xin_fseek(xin_file, 0);
         for (int i = 0; i < VGA_SCREEN_RESOLUTION * SIZE_OF(XtCell); i++, screen_ptr += 2)
         {
             fwrite(xin_file, screen_ptr + 1, 1);

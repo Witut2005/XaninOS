@@ -100,6 +100,30 @@ uint32_t xanin_sys_handle(void)
         break;
     }
 
+    case XANIN_FSEEK:
+    {
+        __xin_fseek((XinEntry*)ecx, edx);
+        break;
+    }
+
+    case XANIN_FTELL:
+    {
+        eax = __xin_ftell((XinEntry*)ecx);
+        break;
+    }
+
+    case XANIN_SEEK:
+    {
+        __xin_fseek(ecx, edx);
+        break;
+    }
+
+    case XANIN_TELL:
+    {
+        eax = __xin_ltell(ecx);
+        break;
+    }
+
     // Memory Allocation
     case XANIN_ALLOCATE:
     {

@@ -222,7 +222,7 @@ int hexeditor(char *file_name, char *options)
 
     data_pointer = (char *)calloc(VGA_SCREEN_RESOLUTION);
 
-    fseek(file, hexeditor_offset);
+    __xin_fseek(file, hexeditor_offset);
     fread(file, data_pointer, VGA_SCREEN_RESOLUTION);
 
     for (int i = 0; i < VGA_HEIGHT; i++)
@@ -244,7 +244,7 @@ int hexeditor(char *file_name, char *options)
     while (!__input_is_normal_key_pressed(KBP_F4))
         hexeditor_input(getxchar());
 
-    fseek(file, hexeditor_offset);
+    __xin_fseek(file, hexeditor_offset);
     fwrite(file, data_pointer, 512);
     fclose(&file);
     free(data_pointer);

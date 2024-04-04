@@ -44,7 +44,7 @@ std::vector<ElfProgramHeaderAuto> ElfLoader::program_headers_get() const
 
     fread(file, &header, SIZE_OF(ElfHeaderAuto));
 
-    fseek(file, header.e_phoff);
+    __xin_fseek(file, header.e_phoff);
     fread(file, program_headers_buffer, header.e_phentsize * header.e_phnum);
 
     fclose(&file);
@@ -86,7 +86,7 @@ bool ElfLoader::load_segment(const ElfProgramHeaderAuto& pheader) const
 
     if (is_loadable_segment(pheader) == false) { return false; }
 
-    fseek(file, pheader.p_offset);
+    __xin_fseek(file, pheader.p_offset);
 
     switch (pheader.p_type)
     {

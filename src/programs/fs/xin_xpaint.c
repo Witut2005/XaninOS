@@ -153,7 +153,7 @@ int xin_xpaint(char *file_name)
         }
 
         *cursor = saved_cell;
-        fseek(xin_file, XIN_FILE_BEGIN);
+        __xin_fseek(xin_file, XIN_FILE_BEGIN);
         fwrite(xin_file, (char *)VGA_TEXT_MEMORY, VGA_SCREEN_RESOLUTION * SIZE_OF(XtCell));
     }
     fclose(&xin_file);

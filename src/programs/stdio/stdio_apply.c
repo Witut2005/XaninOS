@@ -15,7 +15,7 @@ __STATUS stdio_apply(void)
     char* buffer = (char*)calloc(100 * SIZE_OF(char));
 
     XinEntry* StdioRefreshRateConfig = fopen("/etc/stdio/refresh_rate.conf", "r");
-    fseek(StdioRefreshRateConfig, ARRAY_LENGTH("STDIO_REFRESH_RATE: ") - 1);
+    __xin_fseek(StdioRefreshRateConfig, ARRAY_LENGTH("STDIO_REFRESH_RATE: ") - 1);
 
     fread(StdioRefreshRateConfig, buffer, 99);
 

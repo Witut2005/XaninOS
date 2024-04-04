@@ -94,10 +94,11 @@ extern "C"
     size_t __xin_read(int fd, void* buf, size_t count);
     size_t __xin_write(int fd, void* buf, size_t count);
 
-    void fseek(XinEntry* file, uint32_t new_position);
-    void lseek(int fd, uint32_t new_position);
-    const uint32_t ftell(XinEntry* file);
-    const uint32_t lteel(int fd);
+    void __xin_fseek(XinEntry* file, uint32_t new_position);
+    void __xin_lseek(int fd, uint32_t new_position);
+
+    const uint32_t __xin_ftell(XinEntry* file);
+    const uint32_t __xin_ltell(int fd);
 
     void __xin_free_temporary_data(XinEntry* File);
     bool __xin_fclose_with_given_size(XinEntry** file, uint32_t new_size);

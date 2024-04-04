@@ -902,7 +902,7 @@ size_t __xin_fread(XinEntry* Entry, void* buf, size_t count)
     if (__xin_is_entry_rwable_check(Entry) == false)
         return 0;
 
-    uint32_t initial_position = ftell(Entry);
+    uint32_t initial_position = __xin_ftell(Entry);
 
     if (initial_position + count > Entry->size)
         count = Entry->size - initial_position;
@@ -938,7 +938,7 @@ size_t __xin_fread(XinEntry* Entry, void* buf, size_t count)
     for (char* i = (char*)(Entry->FileInfo->buffer + initial_position); i < (char*)(Entry->FileInfo->buffer + initial_position + count); i++, buf++)
         *(char*)buf = *i;
 
-    fseek(Entry, initial_position + count);
+    __xin_fseek(Entry, initial_position + count);
 
     return count;
 }
@@ -958,7 +958,7 @@ size_t __xin_fwrite(XinEntry* Entry, void* buf, size_t count)
 
     //////////////////////////////////////////////////
 
-    uint32_t initial_position = ftell(Entry);
+    uint32_t initial_position = __xin_ftell(Entry);
 
     if ((initial_position + count) > Entry->FileInfo->tmp_size)
         Entry->FileInfo->tmp_size = initial_position + count;
@@ -980,12 +980,12 @@ size_t __xin_fwrite(XinEntry* Entry, void* buf, size_t count)
         }
     }
 
-    fseek(Entry, initial_position);
+    __xin_fseek(Entry, initial_position);
 
     for (char* i = (char*)(Entry->FileInfo->buffer) + initial_position; i < (char*)(Entry->FileInfo->buffer + initial_position + count); i++, buf++)
     {
         *i = *(char*)buf;
-        fseek(Entry, ftell(Entry) + 1);
+        __xin_fseek(Entry, __xin_ftell(Entry) + 1);
     }
 
     __xin_entry_modification_fields_update(Entry);
@@ -1050,30 +1050,29 @@ size_t __xin_write(int fd, void* buf, size_t count)
     return fwrite(Entry, buf, count);
 }
 
-#warning "TODO move fseek and ftell to stdlibx";
-void fseek(XinEntry* File, uint32_t new_position)
+#warning "TODO move __xin_fseek and __xin_ftell to stdlibx";
+void __xin_fseek(XinEntry* File, uint32_t new_position)
 {
-    if (__xin_entry_validation_check(File) == true)
+    if (__xin_entry_validation_check(File) == true) {
         File->FileInfo->position = new_position;
+    } 
 }
 
-void lseek(int fd, uint32_t new_position)
+void __xin_lseek(int fd, uint32_t new_position)
 {
-    if (FileDescriptorTable[fd].is_used == false || __xin_entry_validation_check(FileDescriptorTable[fd].Entry) == false)
-        return;
+    if (FileDescriptorTable[fd].is_used == false || __xin_entry_validation_check(FileDescriptorTable[fd].Entry) == false) { return; }
     FileDescriptorTable[fd].Entry->FileInfo->position = new_position;
 }
 
-const uint32_t ftell(XinEntry* File)
+const uint32_t __xin_ftell(XinEntry* File)
 {
     return File->FileInfo->position;
 }
 
-const uint32_t lteel(int fd)
+const uint32_t __xin_ltell(int fd)
 {
-    if (FileDescriptorTable[fd].is_used == false || __xin_entry_validation_check(FileDescriptorTable[fd].Entry) == false)
-        return -1;
-    return ftell(FileDescriptorTable[fd].Entry);
+    if (FileDescriptorTable[fd].is_used == false || __xin_entry_validation_check(FileDescriptorTable[fd].Entry) == false) { return -1; }
+    return __xin_ftell(FileDescriptorTable[fd].Entry);
 }
 
 void __xin_free_temporary_data(XinEntry* File)

@@ -34,7 +34,7 @@ void printk(const char* str)
 
     XinEntry* file = fopen("/syslog", "rw");
 
-    fseek(file, file->size);
+    __xin_fseek(file, file->size);
 
     fwrite(file, bcd_to_string(SystemTime.hour, buf), 2);
 
