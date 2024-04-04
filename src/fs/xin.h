@@ -37,29 +37,29 @@ extern "C"
 
     /* ------------------------------------------------ */
 
-    bool __xin_entry_alignment_check(const XinEntry* Entry);
-    bool __xin_entry_address_check(const XinEntry* Entry);
-    bool __xin_entry_validation_check(const XinEntry* Entry);
-    bool __xin_is_relative_path_used(const char* path);
+    [[nodiscard]]bool __xin_entry_alignment_check(const XinEntry* Entry);
+    [[nodiscard]]bool __xin_entry_address_check(const XinEntry* Entry);
+    [[nodiscard]]bool __xin_entry_validation_check(const XinEntry* Entry);
+    [[nodiscard]]bool __xin_is_relative_path_used(const char* path);
     char* __xin_absolute_path_get(const char* rpath, char* buf, XIN_FS_ENTRY_TYPES type);
-    char* __xin_entry_name_extern(char* path);
-    int __xin_entry_descriptor_get(const XinEntry* Entry);
+    [[nodiscard]]char* __xin_entry_name_extern(char* path, char* buf);
+    [[nodiscard]]int __xin_entry_descriptor_get(const XinEntry* Entry);
     void __xin_entry_modification_fields_update(XinEntry* Entry);
-    bool __xin_is_entry_rwable_check(const XinEntry* Entry); // read and write
+    [[nodiscard]]bool __xin_is_entry_rwable_check(const XinEntry* Entry); // read and write
 
     /* ------------------------------------------------ */
 
-    XinEntry* __xin_find_entry(const char* entry_name);
-    XinEntry* __xin_find_free_entry(void);
-    uint8_t* __xin_find_free_pointer(void);
-    uint8_t* __xin_find_free_pointer_with_given_size(uint32_t size);
+    [[nodiscard]] XinEntry* __xin_find_entry(const char* entry_name);
+    [[nodiscard]] XinEntry* __xin_find_free_entry(void);
+    [[nodiscard]] uint8_t* __xin_find_free_pointer(void);
+    [[nodiscard]] uint8_t* __xin_find_free_pointer_with_given_size(uint32_t size);
     char* __xin_path_pf_extern(char* absname, char* buf); // pf = parent folder
-    XinEntry* __xin_entry_pf_extern(char* name);          // pf = parent folder
-    XinEntry* __xin_entry_pf_get(char* path);             // pf = parent folder
+    [[nodiscard]] XinEntry* __xin_entry_pf_extern(char* name);          // pf = parent folder
+    [[nodiscard]] XinEntry* __xin_entry_pf_get(char* path);             // pf = parent folder
 
-    XinChildrenEntries* xin_children_entries_get(char* folder, bool show_hidden);
-    XinChildrenEntries* xin_children_entries_type_get(char* folder, uint8_t type);
-    XinEntriesPack* __xin_hard_links_get(const XinEntry* const File);
+    [[nodiscard]] XinChildrenEntries* xin_children_entries_get(char* folder, bool show_hidden);
+    [[nodiscard]] XinChildrenEntries* xin_children_entries_type_get(char* folder, uint8_t type);
+    [[nodiscard]] XinEntriesPack* __xin_hard_links_get(const XinEntry* const File);
 
     char* __xin_current_directory_get(char* buf);
 
@@ -86,19 +86,19 @@ extern "C"
     /* ------------------------------------------------ */
 
     bool __xin_file_to_xfo_add(XinEntry* File);
-    XinEntry* __xin_fopen(char* file_path, char* mode);
+    [[nodiscard]] XinEntry* __xin_fopen(char* file_path, char* mode);
     size_t __xin_fread(XinEntry* entry, void* buf, size_t count);
     size_t __xin_fwrite(XinEntry* entry, void* buf, size_t count);
 
-    int __xin_open(char* file_path, uint32_t options);
+    [[nodiscard]] int __xin_open(char* file_path, uint32_t options);
     size_t __xin_read(int fd, void* buf, size_t count);
     size_t __xin_write(int fd, void* buf, size_t count);
 
     void __xin_fseek(XinEntry* file, uint32_t new_position);
     void __xin_lseek(int fd, uint32_t new_position);
 
-    const uint32_t __xin_ftell(XinEntry* file);
-    const uint32_t __xin_ltell(int fd);
+    [[nodiscard]] const uint32_t __xin_ftell(XinEntry* file);
+    [[nodiscard]] const uint32_t __xin_ltell(int fd);
 
     void __xin_free_temporary_data(XinEntry* File);
     bool __xin_fclose_with_given_size(XinEntry** file, uint32_t new_size);

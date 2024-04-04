@@ -34,7 +34,6 @@ int xin_list_files_app(char **argv)
             continue;
 
         if (__xin_entry_pf_get(i->path) != NULL)
-        // xprintf("%z%s", OUTPUT_COLOR_SET(black, i->type + 0x2), __xin_entry_pf_get(i->path)->path);
         {
             if (bstrcmp(__xin_entry_pf_get(i->path)->path, path))
             {
@@ -43,30 +42,6 @@ int xin_list_files_app(char **argv)
             }
         }
 
-        // else
-        // {
-        //     if (is_using_abs_path)
-        //     {
-        //         // printed_text += strlen(i->path) + 2;
-
-        //         if (bstrcmp(__xin_entry_pf_get(i->path)->path, path))
-        //         {
-        //             xprintf("%z%s", OUTPUT_COLOR_SET(black, i->type + 0x2), i);
-        //             xprintf("  ");
-        //         }
-        //         // printed_text = printed_text + strlen("  ");
-        //     }
-
-        //     else
-        //     {
-        //         // if (bstrcmp(__xin_entry_pf_get(i->path)->path, __xin_path_get(path)))
-        //         if (bstrcmp(__xin_entry_pf_get(i->path)->path, path))
-        //         {
-        //             xprintf("%z%s", OUTPUT_COLOR_SET(black, i->type + 0x2), i);
-        //             xprintf("  ");
-        //         }
-        //     }
-        // }
     }
 
     return XANIN_OK;
