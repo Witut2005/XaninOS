@@ -33,7 +33,7 @@ void disk_init(uint16_t base, uint8_t master)
 
     disk_status = inbIO(base + ATA_COMMAND_REGISTER);
 
-    while (disk_status & 0x81 == 80)
+    while ((disk_status & 0x81) == 0x80)
         disk_status = inbIO(base + ATA_COMMAND_REGISTER);
 
     for (int i = 0; i < 256; i++)
@@ -149,7 +149,7 @@ void __disk_single_sector_write(uint16_t base, uint8_t master, uint32_t sector_n
 
     disk_status = inbIO(base + ATA_STATUS_REGISTER);
 
-    if (disk_status & 0x1 == 1) {
+    if ((disk_status & 0x1) == 0x1) {
         printk("Disk module writing error");
     }
 }

@@ -12,9 +12,9 @@
 #include <sys/terminal/backend/backend.h>
 #include <lib/libc/system.h>
 
-XinEntry* stdin;
-XinEntry* stdout;
-XinEntry* stderr;
+// XinEntry* stdin;
+// XinEntry* stdout;
+// XinEntry* stderr;
 
 void putchar(char c)
 {

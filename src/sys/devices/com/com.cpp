@@ -72,7 +72,7 @@ bool SerialPortManager::initialize(uint16_t default_divisor)
     return is_functional();
 }
 
-uint8_t SerialPortManager::receive(void) {}
+// uint8_t SerialPortManager::receive(void) {}
 
 void SerialPortManager::send(uint8_t val)
 {

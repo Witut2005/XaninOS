@@ -73,7 +73,7 @@ extern "C"
 
         if (c == CHAR_FIND_LETTERS)
         {
-            for(;it >= str; it--)
+            for (;it >= str; it--)
             {
                 if ((*it >= 'A' && *it <= 'Z') || (*it >= 'a' && *it <= 'z')) {
                     return it;
@@ -83,7 +83,7 @@ extern "C"
 
         else if (c == CHAR_FIND_DIGITS)
         {
-            for(;it >= str; it--) 
+            for (;it >= str; it--)
             {
                 if (*it >= '0' && *it <= '9') {
                     return it;
@@ -93,7 +93,7 @@ extern "C"
 
         else
         {
-            for(;it >= str; it--)
+            for (;it >= str; it--)
             {
                 if (*it == c) {
                     return it;
@@ -762,6 +762,7 @@ extern "C"
             case 'd': return DECIMAL;
             case 'x':
             case 'X': return HEXADECIMAL;
+            default: return DECIMAL;
             }};
 
         auto toupper_if_needed = [](char c, char* str) -> char* {if (c >= 'A' && c <= 'Z') { toupper(str); } return str;};

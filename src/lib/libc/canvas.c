@@ -271,6 +271,28 @@ void canvas_xprintf(char* str, ...)
     va_end(args);
 }
 
+static inline void letters_refresh(uint16_t* cursor_current_positon)
+{
+    cursor_current_positon++;
+
+    for (uint16_t* i = cursor_current_positon; (uint32_t)i < (uint32_t)(VGA_TEXT_MEMORY + VGA_SCREEN_RESOLUTION * 2); i++)
+        *(i - 1) = *i;
+}
+
+static inline void letters_refresh_add(uint16_t* cursor_current_positon, char character_saved)
+{
+    char tmp;
+
+    for (uint16_t* i = cursor_current_positon; (uint32_t)i < (uint32_t)(VGA_TEXT_MEMORY + VGA_SCREEN_RESOLUTION * 2); i++)
+    {
+        tmp = *(char*)(i);
+        *i = (uint16_t)((char)(character_saved)+(((black << 4) | white) << 8));
+        character_saved = tmp;
+    }
+
+    *cursor_current_positon = (uint16_t)((char)(*cursor_current_positon) + (((black << 4) | white) << 8));
+}
+
 void canvas_xscanf(char* str, ...)
 {
     uint32_t str_counter = 0;

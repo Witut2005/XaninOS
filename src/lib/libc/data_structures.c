@@ -9,9 +9,9 @@ void stack_create(stack_t** Stack)
     (*Stack)->end = (uint32_t*)calloc(SIZE_OF(XANIN_PMMNGR_BLOCK_SIZE));
 }
 
-void stack_push(stack_t* Stack, const address_t const value)
+void stack_push(stack_t* Stack, const address_t value)
 {
-    if(Stack->number_of_elements)
+    if (Stack->number_of_elements)
         Stack->end++;
 
     *(Stack->end) = (uint32_t)value;
@@ -20,9 +20,9 @@ void stack_push(stack_t* Stack, const address_t const value)
 
 address_t stack_pop(stack_t* Stack)
 {
-    if(!Stack->number_of_elements)
+    if (!Stack->number_of_elements)
         return (address_t)INT32_MAX;
-        
+
     uint32_t tmp = *(Stack->end);
     Stack->end--;
     Stack->number_of_elements--;

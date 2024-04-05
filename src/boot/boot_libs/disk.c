@@ -32,7 +32,7 @@ void disk_init(uint16_t base, uint8_t master)
 
     disk_status = inbIO(base + ATA_COMMAND_REGISTER);
 
-    while ((disk_status & 0x81) == 80)
+    while ((disk_status & 0x81) == 0x80)
         disk_status = inbIO(base + ATA_COMMAND_REGISTER);
 
     for (int i = 0; i < 256; i++)

@@ -166,9 +166,19 @@ builders = {
 }
 
 c_compilation_options = '-O0 -Wall -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -I ./'
+cc_compilation_options = '-O0 -fno-exceptions -masm=intel -std=c++17 -Wno-builtin-declaration-mismatch -Wno-unused-function -Wno-write-strings -fno-rtti -fconcepts-ts -nostdlib -ffreestanding -I ./ -c'
 
-def as_error(warning):
+def compiler_cast_given_warning(warning):
     return f'-Werror={warning}'
+
+def compiler_ignore_given_warning(warning):
+    return f'-Wno-{warning}'
+
+compiler_ignored_warnings_li = ['unused-function', 'address-of-packed-member']
+compiler_ignored_warnings = ' '.join([compiler_ignore_given_warning(warning) for warning in compiler_ignored_warnings_li])
+
+compiler_casted_warnings_li = ['int-conversion', 'implicit-function-declaration', 'return-type']
+compiler_casted_warnings = ' '.join([compiler_cast_given_warning(warning) for warning in compiler_casted_warnings_li])
 
 builder_options = {
     'asm': {
@@ -177,14 +187,14 @@ builder_options = {
     },
 
     'c':{
-        'default': f"{c_compilation_options} {as_error('int-conversion')} {as_error('implicit-function-declaration')} -c",
-        'lib': f"{c_compilation_options} -fpic -c",
-        'kernel': f"{c_compilation_options} -Ttext 0xF00000"
+        'default': f"{c_compilation_options} {compiler_casted_warnings} {compiler_ignored_warnings} -c",
+        'lib': f"{c_compilation_options} {compiler_casted_warnings} {compiler_ignored_warnings} -fpic -c",
+        'kernel': f"{c_compilation_options} {compiler_casted_warnings} {compiler_ignored_warnings} -Ttext 0xF00000"
     },
 
     'cc':{
-        'default': '-O0 -fno-exceptions -masm=intel -std=c++17 -Wno-return-type -Wno-builtin-declaration-mismatch -nostdlib -Wno-unused-function -Wno-write-strings -fno-rtti -fconcepts-ts -I ./ -c',
-        'lib': '-fpic -O0 -fno-exceptions -masm=intel -std=c++17 -Wno-return-type -Wno-builtin-declaration-mismatch -nostdlib -Wno-unused-function -Wno-write-strings -fno-rtti -fconcepts-ts -I ./ -c'
+        'default': f"{cc_compilation_options}  -c",
+        'lib': f"{cc_compilation_options} -fpic -c"
     }
 }
 
@@ -441,7 +451,7 @@ objects_to_compile = {
         CompileObject('./programs/fs/move.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./programs/fs/link_create.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./programs/fs/xin_info.c', builders['c'], builder_options['c']['default'], OBJECT),
-        CompileObject('./programs/fs/xin_note.c', builders['c'], builder_options['c']['default'], OBJECT),
+        # CompileObject('./programs/fs/xin_note.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./programs/fs/list_files.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./programs/misc/logo.c', builders['c'], builder_options['c']['default'], OBJECT),
     ],

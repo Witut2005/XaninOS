@@ -180,8 +180,8 @@ void scan(void)
     {
         xin_list_files_app(argv);
     }
-    XANIN_ADD_APP_ENTRY1("note", xin_note)
-        XANIN_ADD_APP_ENTRY2("logo", logo_color_change)
+    // XANIN_ADD_APP_ENTRY1("note", xin_note)
+    XANIN_ADD_APP_ENTRY2("logo", logo_color_change)
         XANIN_ADD_APP_ENTRY1("nic_info", nic_info)
         XANIN_ADD_APP_ENTRY1("gyn", gyn_interpreter)
         XANIN_ADD_APP_ENTRY0("screenshot", screenshot)

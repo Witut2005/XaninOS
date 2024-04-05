@@ -205,7 +205,7 @@ char* __xin_entry_name_extern(char* path, char* buf)
         return NULL;
     }
 
-    char* pathptr = char_find_from_end(path, path[strlen(path) - 1] == '/' ? 1 : 0 , '/');
+    char* pathptr = char_find_from_end(path, path[strlen(path) - 1] == '/' ? 1 : 0, '/');
     memcpy(buf, pathptr, XIN_MAX_PATH_LENGTH - (pointers_offset_get(pathptr, path)));
 
     return buf;
@@ -424,7 +424,7 @@ XinChildrenEntries* xin_children_entries_get(char* folder, bool get_hidden)
     Children->Children = (XinEntry**)calloc(SIZE_OF(XinEntry*));
 
     XinEntry* i = (XinEntry*)XIN_FS_ENTRIES_TABLE_BEGIN;
-    char entrypf[XIN_MAX_PATH_LENGTH + 1] = {0};
+    char entrypf[XIN_MAX_PATH_LENGTH + 1] = { 0 };
 
     uint32_t finded_entries = 0;
 
@@ -588,6 +588,7 @@ XIN_FS_RETURN_STATUSES __xin_file_create(char* filename)
     return __xin_entry_create(&Args, XIN_FILE);
 }
 
+#warning "check if parent folder exists";
 XIN_FS_RETURN_STATUSES __xin_folder_create(char* foldername)
 {
     XinEntryCreateArgs Args = { foldername, NULL };
@@ -632,13 +633,15 @@ XIN_FS_RETURN_STATUSES __xin_folder_change(const char* foldername)
         foldername = foldername + 3;
     }
 
-    while (bmemcmp(foldername, "./", 2))
+    #warning "TODO I think xin_find_entry can handle this";
+    while (bmemcmp(foldername, "./", 2)) {
         foldername += 2;
+    }
 
     XinEntry* NewFolder = __xin_find_entry(foldername);
     dbg_info(DEBUG_LABEL_XIN_FS, NewFolder->path);
 
-    if (NewFolder != NULL) {
+    if (NewFolder != NULL && NewFolder->type == XIN_DIRECTORY) {
         strcpy(XinFsData.current_folder, NewFolder->path);
     }
 
@@ -1040,7 +1043,7 @@ void __xin_fseek(XinEntry* File, uint32_t new_position)
 {
     if (__xin_entry_validation_check(File) == true) {
         File->FileInfo->position = new_position;
-    } 
+    }
 }
 
 void __xin_lseek(int fd, uint32_t new_position)

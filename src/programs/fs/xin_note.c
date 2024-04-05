@@ -124,7 +124,8 @@ void note_input(xchar x)
 
             char character_saved_tmp = (char)Screen.cursor[Screen.y][Screen.x];
             canvas_xprintf("%c", getchar());
-            letters_refresh_add(&Screen.cursor[Screen.y][Screen.x], character_saved_tmp);
+            #warning "letters refresh add function need to be here";
+            // letters_refresh_add(&Screen.cursor[Screen.y][Screen.x], character_saved_tmp);
         }
     }
 }

@@ -1,7 +1,7 @@
 
 #include "elf_loader.hpp"
 
-#warning "ERROR OR struct";
+#warning "TODO ERROR OR struct";
 
 ElfLoader::ElfLoader(const char* path)
 {
@@ -18,7 +18,6 @@ bool ElfLoader::magic_check(const ElfHeaderAuto& header)
     return bmemcmp(&header, s_valid_magic, EI_MAG_SIZE);
 }
 
-#warning "ERROR OR struct";
 ElfHeaderAuto ElfLoader::header_get(void) const
 {
     ElfHeaderAuto header;
@@ -33,7 +32,6 @@ ElfHeaderAuto ElfLoader::header_get(void) const
     return header;
 }
 
-#warning "ERROR OR struct";
 std::vector<ElfProgramHeaderAuto> ElfLoader::program_headers_get() const
 {
     auto header = header_get();
@@ -58,7 +56,7 @@ std::vector<ElfProgramHeaderAuto> ElfLoader::program_headers_get() const
     return program_headers;
 }
 
-std::vector<ElfSectionHeaderAuto> ElfLoader::section_headers_get(void) const {}
+// std::vector<ElfSectionHeaderAuto> ElfLoader::section_headers_get(void) const {}
 
 bool ElfLoader::load(uint8_t* address)
 {
@@ -141,4 +139,5 @@ bool ElfLoader::execute(void) const
     }
 
     ((void(*)(void))(eheader.e_entry + (is_pie ? s_pie_load_address : 0x0)))();
+    return true;
 }

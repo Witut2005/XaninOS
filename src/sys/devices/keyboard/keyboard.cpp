@@ -114,7 +114,7 @@ uint8_t Keyboard::read(ControllerPort reg)
 {
     if (reg == ControllerPort::KeyboardEncoder) // wait for Buffer being not empty
         ((inbIO(ControllerPort::OnboardKeyboardController) & StatusRegisterMask::OutputBufferStatus) == BufferStatus::Empty);
-    inbIO(reg);
+    return inbIO(reg);
 }
 
 void Keyboard::leds_set(Keyboard::leds_mask_t mask)

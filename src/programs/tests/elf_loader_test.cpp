@@ -8,6 +8,7 @@ extern "C" {
     {
         ElfLoader loader(path);
         loader.execute();
+        return XANIN_OK;
 
         // auto header = loader.header_get();
         // auto program_headers = loader.program_headers_get();

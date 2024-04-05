@@ -23,10 +23,10 @@ bool Intel8254xDriver::probe(const pci_device& device)
     return device.vendor_id == INTEL_VENDOR_ID && device.device_id == INTEL_8254X_VENDOR_ID;
 }
 
-NetworkDevice* Intel8254xDriver::create(const pci_device& device)
-{
+// NetworkDevice* Intel8254xDriver::create(const pci_device& device)
+// {
 
-}
+// }
 
 void Intel8254xDriver::write(uint32_t reg, uint32_t value)
 {

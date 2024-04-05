@@ -134,7 +134,7 @@ public:
     bool is_initialized(void);
     bool is_functional(void); // return true if at least one SerialPort is valid
     bool initialize(uint16_t);
-    uint8_t receive(void);
+    //uint8_t receive(void); TODO implement this
     void send(uint8_t val);
 
 private:

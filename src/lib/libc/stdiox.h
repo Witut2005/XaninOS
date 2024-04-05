@@ -8,8 +8,8 @@
 #include <sys/call/xanin_sys/calls/vga/vga.h>
 #include <sys/call/xanin_sys/calls/stdio/stdio.h>
 
-#define OUTPUT_COLOR_SET(background, foreground) ((background & 0xF) << 4 | (foreground & 0xF))
-#define OUTPUT_POSITION_SET(y, x) (((y & 0xFF) << 8) | (x & 0xFF))
+#define OUTPUT_COLOR_SET(background, foreground) (((background) & 0xF) << 4 | ((foreground) & 0xF))
+#define OUTPUT_POSITION_SET(y, x) ((((y) & 0xFF) << 8) | ((x) & 0xFF))
 
 #define cursor_set_position(x_new, y_new) \
 Screen.x = x_new; \
