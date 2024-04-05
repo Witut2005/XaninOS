@@ -114,7 +114,7 @@ uint32_t xanin_sys_handle(void)
 
     case XANIN_SEEK:
     {
-        __xin_fseek(ecx, edx);
+        __xin_fseek((XinEntry*)ecx, edx);
         break;
     }
 
@@ -128,28 +128,28 @@ uint32_t xanin_sys_handle(void)
     case XANIN_ALLOCATE:
     {
         // ECX = SIZE
-        eax = umalloc(ecx);
+        eax = (uint32_t)umalloc((uint32_t)ecx);
         break;
     }
 
     case XANIN_CALLOCATE:
     {
         // ECX = SIZE
-        eax = ucalloc(ecx);
+        eax = (uint32_t)ucalloc((uint32_t)ecx);
         break;
     }
 
     case XANIN_FREE:
     {
         // ECX = PTR
-        ufree(ecx);
+        ufree((void*)ecx);
         break;
     }
 
     case XANIN_REALLOCATE:
     {
         // ECX = ptr, EDX = size
-        eax = urealloc(ecx, edx);
+        eax = (uint32_t)urealloc((void*)ecx, edx);
         break;
     }
 
