@@ -47,8 +47,8 @@ extern "C"
     [[nodiscard]] bool is_in_char_range(char r1, char r2, char c);
     [[nodiscard]] bool is_char(char c);
 
-    [[nodiscard]] int char_find(char* str, char c);
-    [[nodiscard]] int char_find_from_end(char* str, uint32_t offset, char c);
+    [[nodiscard]] char* char_find(char* str, char c);
+    [[nodiscard]] char* char_find_from_end(char* str, uint32_t offset, char c);
 
     [[nodiscard]] uint32_t strlen(const char* a);
     char* strcpy(char* dest, const char* src);

@@ -32,14 +32,14 @@ extern "C"
         return c > '0' && c < '~';
     }
 
-    int char_find(char* str, char c)
+    char* char_find(char* str, char c)
     {
         if (c == CHAR_FIND_LETTERS)
         {
             for (int i = 0; str[i] != '\0'; i++)
             {
                 if ((str[i] >= 'A' && str[i] <= 'Z') || (str[i] >= 'a' && str[i] <= 'z')) {
-                    return i;
+                    return &str[i];
                 }
             }
         }
@@ -49,7 +49,7 @@ extern "C"
             for (int i = 0; str[i] != '\0'; i++)
             {
                 if (str[i] >= '0' && str[i] <= '9') {
-                    return i;
+                    return &str[i];
                 }
             }
         }
@@ -59,15 +59,15 @@ extern "C"
             for (int i = 0; str[i] != '\0'; i++)
             {
                 if (str[i] == c) {
-                    return i;
+                    return &str[i];
                 }
             }
         }
 
-        return NULL;
+        return nullptr;
     }
 
-    int char_find_from_end(char* str, uint32_t offset, char c)
+    char* char_find_from_end(char* str, uint32_t offset, char c)
     {
         char* it = str + (strlen(str) - offset - 1);
 
@@ -76,7 +76,7 @@ extern "C"
             for(;it >= str; it--)
             {
                 if ((*it >= 'A' && *it <= 'Z') || (*it >= 'a' && *it <= 'z')) {
-                    return (uint32_t)str - (uint32_t)it;
+                    return it;
                 }
             }
         }
@@ -86,7 +86,7 @@ extern "C"
             for(;it >= str; it--) 
             {
                 if (*it >= '0' && *it <= '9') {
-                    return (uint32_t)str - (uint32_t)it;
+                    return it;
                 }
             }
         }
@@ -96,12 +96,12 @@ extern "C"
             for(;it >= str; it--)
             {
                 if (*it == c) {
-                    return (uint32_t)str - (uint32_t)it;
+                    return it;
                 }
             }
         }
 
-        return -1;
+        return nullptr;
     }
 
 

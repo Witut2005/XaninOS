@@ -154,10 +154,6 @@ char* __xin_absolute_path_get(const char* rpath, char* buf, XIN_FS_ENTRY_TYPES t
         strcat(STRCAT_SRC_FIRST, buf, XinFsData.current_folder);
     }
 
-    if(type == XIN_DIRECTORY) {
-        buf[strlen(buf) - 1] = '/';
-    }
-
     char ret[XIN_MAX_PATH_LENGTH + 1] = { '\0' };
 
     int ret_index = 0;
@@ -205,8 +201,12 @@ char* __xin_entry_name_extern(char* path, char* buf)
         return XIN_SYSTEM_FOLDER_STR;
     }
 
-    int index = char_find_from_end(path, path[strlen(path) - 1] == '/' ? 1 : 0, '/'); // no need to check if index is valid
-    memcpy(buf, &path[index], XIN_MAX_PATH_LENGTH - index);
+    if (!strlen(path)) {
+        return NULL;
+    }
+
+    char* pathptr = char_find_from_end(path, path[strlen(path) - 1] == '/' ? 1 : 0 , '/');
+    memcpy(buf, pathptr, XIN_MAX_PATH_LENGTH - (pointers_offset_get(pathptr, path)));
 
     return buf;
 }
@@ -365,6 +365,30 @@ char* __xin_path_pf_extern(char* abspath, char* buf) // pf = parent folder
     return buf;
 }
 
+XinEntry* __xin_entry_pf_extern(char* name) // pf = parent folder
+{
+    if (bstrcmp(name, XIN_SYSTEM_FOLDER_STR))
+        return __xin_find_entry("/");
+
+    char parent_folder[XIN_MAX_PATH_LENGTH + 1] = { 0 };
+    char path[XIN_MAX_PATH_LENGTH + 1] = { 0 };
+
+    bool is_directory = name[strlen(name) - 1] == '/';
+
+    __xin_absolute_path_get(name, path, is_directory ? XIN_DIRECTORY : XIN_FILE);
+
+    int i;
+    for (i = strlen(path) - 1 - is_directory; path[i] != '/'; i--)
+        ;
+
+    for (int j = 0; j <= i; j++)
+        parent_folder[j] = path[j];
+
+    XinEntry* ParentEntry = __xin_find_entry(parent_folder);
+
+    return ParentEntry != NULL ? ParentEntry : NULL;
+}
+
 XinEntry* __xin_entry_pf_get(char* name) // pf = parent folder
 {
     XinEntry* Entry = __xin_find_entry(name);
@@ -392,17 +416,17 @@ XinEntry* __xin_entry_pf_get(char* name) // pf = parent folder
 XinChildrenEntries* xin_children_entries_get(char* folder, bool get_hidden)
 {
 
-    if (__xin_find_entry(folder) == NULL || strlen(folder) == 0)
-        return (XinChildrenEntries*)NULL;
+    if (__xin_find_entry(folder) == NULL || strlen(folder) == 0) {
+        return NULL;
+    }
 
     XinChildrenEntries* Children = (XinChildrenEntries*)calloc(SIZE_OF(XinChildrenEntries));
     Children->Children = (XinEntry**)calloc(SIZE_OF(XinEntry*));
 
-    // XinEntry *i = (XinEntry *)XIN_ENTRY_TABLE;
     XinEntry* i = (XinEntry*)XIN_FS_ENTRIES_TABLE_BEGIN;
+    char entrypf[XIN_MAX_PATH_LENGTH + 1] = {0};
 
     uint32_t finded_entries = 0;
-    char* tp = calloc(XIN_MAX_PATH_LENGTH);
 
     while (i < (XinEntry*)(XIN_FS_ENTRIES_TABLE_BEGIN + SECTOR_SIZE * XIN_FS_ENTRIES_SIZE))
     {
@@ -410,7 +434,7 @@ XinChildrenEntries* xin_children_entries_get(char* folder, bool get_hidden)
         {
             if (!bstrcmp(i->path, folder))
             {
-                if (__xin_entry_name_extern(i->path, tp)[0] != '.' | get_hidden)
+                if (get_hidden || __xin_entry_name_extern(i->path, entrypf)[0] != '.')
                 {
                     Children->Children[finded_entries] = i;
                     finded_entries++;

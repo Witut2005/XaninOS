@@ -165,7 +165,7 @@ builders = {
     'cc': args.ccbuilder,
 }
 
-c_compilation_options = '-O0 -Wall -Wno-parentheses -Wno-comment -Wno-address-of-packed-member -Wno-duplicate-decl-specifier -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding  -Wno-unused-function -I ./'
+c_compilation_options = '-O0 -Wall -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -I ./'
 
 def as_error(warning):
     return f'-Werror={warning}'
@@ -177,7 +177,7 @@ builder_options = {
     },
 
     'c':{
-        'default': f"{c_compilation_options} {as_error('int-conversion')} {as_error('unused-result')} {as_error('implicit-function-declaration')}  -c",
+        'default': f"{c_compilation_options} {as_error('int-conversion')} {as_error('implicit-function-declaration')} -c",
         'lib': f"{c_compilation_options} -fpic -c",
         'kernel': f"{c_compilation_options} -Ttext 0xF00000"
     },
