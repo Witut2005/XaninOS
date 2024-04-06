@@ -7,14 +7,14 @@
 // #include <stdlib.h>
 // #include <string.h>
 
-#include <lib/libc/string.h>
 #include <lib/libc/stdiox.h>
 #include <lib/libc/stdlibx.h>
+#include <lib/libc/string.h>
 
 #define BUFFER_SIZE 32768
 
-char* program;
-char* buffer;
+char *program;
+char *buffer;
 size_t pc, ptr;
 size_t prog_len;
 
@@ -34,7 +34,7 @@ void jmp_fwd();
 
 void jmp_bwd();
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
 
     // stdio_mode_set(STDIO_MODE_CANVAS);
@@ -98,6 +98,7 @@ int main(int argc, char* argv[])
             jmp_bwd();
             break;
         default:
+            puts("skibidi nicho\n");
             xprintf("Bad. Illegal character in program string: %c", current);
             // asm volatile("jmp $");
             return 3;

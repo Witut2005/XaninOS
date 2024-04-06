@@ -293,6 +293,7 @@ static inline void letters_refresh_add(uint16_t* cursor_current_positon, char ch
     *cursor_current_positon = (uint16_t)((char)(*cursor_current_positon) + (((black << 4) | white) << 8));
 }
 
+#warning "TODO DOESNT WORK";
 void canvas_xscanf(char* str, ...)
 {
     uint32_t str_counter = 0;

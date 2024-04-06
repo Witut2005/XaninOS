@@ -107,10 +107,10 @@ bool ElfLoader::load_segment(const ElfProgramHeaderAuto& pheader) const
         break;
     }
 
-    case PT_DYNAMIC:
+    case PT_DYNAMIC: 
     {
         dbg_info(DEBUG_LABEL_ELF_LOADER, "Loading DYNAMIC segment");
-        fread(file, (uint8_t*)s_pie_load_address + pheader.p_vaddr, pheader.p_filesz);
+        fread(file, (uint8_t*)(s_pie_load_address + pheader.p_vaddr), pheader.p_filesz);
         memset((uint8_t*)(s_pie_load_address + pheader.p_paddr + pheader.p_filesz), 0, bss_section_size_get(pheader)); //initialize bss section
         break;
     }
