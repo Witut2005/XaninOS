@@ -326,7 +326,7 @@ objects_to_compile = {
         CompileObject('./lib/libc/hal.c', builders['c'], builder_options['c']['lib'], OBJECT),
         CompileObject('./lib/libc/math.c', builders['c'], builder_options['c']['lib'], OBJECT),
         CompileObject('./lib/libc/memory.c', builders['c'], builder_options['c']['lib'], OBJECT),
-        CompileObject('./lib/libc/stdiox.c', builders['c'], builder_options['c']['lib'], OBJECT),
+        CompileObject('./lib/libc/stdiox.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./lib/libc/stdlibx.c', builders['c'], builder_options['c']['lib'], OBJECT),
         CompileObject('./lib/libc/string.cpp', builders['cc'], builder_options['cc']['lib'], OBJECT),
         CompileObject('./lib/libc/data_structures.c', builders['c'], builder_options['c']['lib'], OBJECT),
@@ -358,6 +358,10 @@ objects_to_compile = {
         CompileObject('./sys/terminal/frontend/frontend.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./sys/terminal/backend/backend.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./sys/terminal/handlers/handlers.c', builders['c'], builder_options['c']['default'], OBJECT),
+    ],
+
+    'shell': [
+        CompileObject('./sys/terminal/interpreter/interpreter.cpp', builders['cc'], builder_options['cc']['default'], OBJECT)
     ],
 
     'tui': [
@@ -394,7 +398,6 @@ objects_to_compile = {
         CompileObject('./programs/usb/usb_controller_info.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./programs/tests/memory_allocator_test.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./programs/tests/disk_func.c', builders['c'], builder_options['c']['default'], OBJECT),
-        CompileObject('./programs/tests/elf_loader_test.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./programs/misc/grapher/grapher.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./programs/fs/explorer.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./programs/tests/interrupt_test.c', builders['c'], builder_options['c']['default'], OBJECT),
@@ -469,8 +472,7 @@ objects_to_compile = {
         CompileObject('./fs/loaders/bin/bit32/execute_addr.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./fs/loaders/bin/bit32/run.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./fs/loaders/bin/bit16/run16.c', builders['c'], builder_options['c']['default'], OBJECT),
-        CompileObject('./fs/loaders/elf/elf_loader.c', builders['c'], builder_options['c']['default'], OBJECT),
-        CompileObject('./fs/loaders/elf/elf_loader.cpp', builders['cc'], builder_options['cc']['default'], './fs/loaders/elf/elf_loader_cpp.o'),
+        CompileObject('./fs/loaders/elf/elf_loader.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./lib/libc/crt0.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
         CompileObject('./fs/loaders/elf/elfdump.c', builders['c'], builder_options['c']['default'], OBJECT),
     ],

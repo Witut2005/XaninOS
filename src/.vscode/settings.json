@@ -120,7 +120,8 @@
         "keyboard.h": "c",
         "assert.h": "c",
         "syscall.h": "c",
-        "com.h": "c"
+        "com.h": "c",
+        "ip.h": "c"
     },
 
     "editor.formatOnSave": true,

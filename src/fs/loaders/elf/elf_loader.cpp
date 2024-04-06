@@ -107,7 +107,7 @@ bool ElfLoader::load_segment(const ElfProgramHeaderAuto& pheader) const
         break;
     }
 
-    case PT_DYNAMIC: 
+    case PT_DYNAMIC:
     {
         dbg_info(DEBUG_LABEL_ELF_LOADER, "Loading DYNAMIC segment");
         fread(file, (uint8_t*)(s_pie_load_address + pheader.p_vaddr), pheader.p_filesz);

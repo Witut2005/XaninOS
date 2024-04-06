@@ -35,7 +35,6 @@ extern "C"
     __STATUS cat(char*);
     __STATUS zsk(char*);
     __STATUS epilepsy(void);
-    __STATUS elfreader(char*);
     __STATUS elfdump(char*);
     __STATUS hexeditor(char*, char*);
     __STATUS run16(char*);
@@ -90,7 +89,6 @@ extern "C"
     __STATUS disk_func(void);
     __STATUS c_test(void);
     __STATUS sprintf_test(void);
-    __STATUS elf_loader_test(char* path);
 
 #ifdef __cplusplus
 }
