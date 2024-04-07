@@ -339,6 +339,7 @@ objects_to_compile = {
     ],
 
     'libcpp': [
+        CompileObject('./lib/libcpp/lexer.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./lib/libcpp/command_parser.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./lib/libcpp/regex.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./lib/libcpp/istream.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),

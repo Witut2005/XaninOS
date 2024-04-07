@@ -28,6 +28,12 @@ constexpr T& max(T& x, T& y)
 }
 
 template <class T>
+constexpr T min(T x, T y)
+{
+    return (x < y) ? x : y;
+}
+
+template <class T>
 constexpr T& min(T& x, T& y)
 {
     return (x < y) ? x : y;
