@@ -2,8 +2,11 @@
 #pragma once
 
 #include <stdint.h>
+#include <sys/devices/com/com.h>
+#include <lib/libc/stdlibx.h>
 
 #ifdef KERNEL_MODULE
+#include <sys/pmmngr/alloc.h>
 #define UNIQUE_PTR_FREE(p) kfree(p)
 #else
 #define UNIQUE_PTR_FREE(p) free(p)

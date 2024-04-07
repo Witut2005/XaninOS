@@ -5,8 +5,16 @@
 #include <lib/elf/elf.h>
 #include <lib/libcpp/class.hpp>
 #include <sys/devices/com/com.h>
+#include <lib/libcpp/error.hpp>
 #include <lib/libcpp/container/array.hpp>
 #include <lib/libcpp/container/vector.hpp>
+
+struct ElfMainHeaders
+{
+    ElfHeaderAuto elf_header;
+    std::vector<ElfProgramHeaderAuto> program_headers;
+    std::vector<ElfSectionHeaderAuto> section_headers;
+};
 
 class ElfLoader {
 
@@ -44,13 +52,12 @@ public:
 
     [[nodiscard]] bool magic_check(const ElfHeaderAuto&);
 
-    [[nodiscard]] ElfHeaderAuto header_get(void) const;
+    [[nodiscard]] ErrorOr<ElfHeaderAuto> header_get(void) const;
     [[nodiscard]] std::vector<ElfProgramHeaderAuto> program_headers_get(void) const;
     [[nodiscard]] std::vector<ElfSectionHeaderAuto> section_headers_get(void) const;
+    [[nodiscard]] ErrorOr<ElfMainHeaders> main_headers_get(void) const;
 
     bool is_loadable_segment(const ElfProgramHeaderAuto& pheader) const;
-
-
     bool load_segment(const ElfProgramHeaderAuto& pheader) const;
     bool execute(void) const;
 

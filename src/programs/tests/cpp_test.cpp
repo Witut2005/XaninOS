@@ -14,7 +14,7 @@
 #include <lib/libcpp/bytes.h>
 #include <lib/libcpp/fstream.h>
 #include <lib/libcpp/regex.h>
-#include <lib/libcpp/memory.h>
+// #include <lib/libcpp/memory.h>
 #include <lib/libcpp/command_parser.h>
 #include <lib/screen/screen.h>
 #include <sys/terminal/interpreter/interpreter.h>
@@ -36,7 +36,7 @@ public:
 };
 
 template <class Cont>
-static inline void printcont(std::ForwardIterator<Cont> &&beg, std::ForwardIterator<Cont> &&end)
+static inline void printcont(std::ForwardIterator<Cont>&& beg, std::ForwardIterator<Cont>&& end)
 {
     for (; beg != end; beg++)
     {
@@ -48,7 +48,7 @@ static inline void arr_test(void)
 {
     std::cout << "ARRAY TEST" << std::endl;
 
-    std::vector<int> vec = {1, 2, 3, 4, 5};
+    std::vector<int> vec = { 1, 2, 3, 4, 5 };
 
     std::array<int, 5> arr(vec.begin(), vec.end());
 
@@ -86,7 +86,7 @@ static inline void arr_test(void)
 
     return;
 
-    auto &value = arr[-11];
+    auto& value = arr[-11];
 
     xprintf("value: 0x%x 0x%x\n", &value, &arr[0]);
 
@@ -114,7 +114,7 @@ static inline void vec_test(void)
 
     std::cout << "VEC TEST" << std::endl;
 
-    std::vector<int> vtmp = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+    std::vector<int> vtmp = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
     vtmp.push_back(1);
 
@@ -222,7 +222,7 @@ static inline void map_test(void)
 {
     std::cout << "MAP TEST" << std::endl;
 
-    std::UnorderedMap<std::string, uint32_t> l = {{"jeden", 1}};
+    std::UnorderedMap<std::string, uint32_t> l = { {"jeden", 1} };
     l.insert("dwa", 2);
     l.insert("trzy", 3);
 
@@ -236,7 +236,7 @@ static inline void map_test(void)
 
     std::UnorderedMap<int, int> map = {
         {1, 10},
-        {2, 20}};
+        {2, 20} };
 
     std::cout << "found: " << map[3] << std::endl;
     map[3] = 1234;
@@ -259,11 +259,11 @@ static inline void map_test(void)
 
 static inline void cont_test(void)
 {
-    std::vector<int> vec = {1, 2, 3, 4, 5, 3};
+    std::vector<int> vec = { 1, 2, 3, 4, 5, 3 };
 
     // vector of iterators
     auto result = std::find(vec.begin(), vec.end(), [=](auto cur) -> bool
-                            { return *cur <= 3; });
+    { return *cur <= 3; });
 
     // for (auto &a : result)
     //     *a = 1;

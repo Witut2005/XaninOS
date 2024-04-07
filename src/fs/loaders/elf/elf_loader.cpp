@@ -3,10 +3,7 @@
 
 #include "elf_loader.hpp"
 #include <lib/libcpp/memory.hpp>
-
-#warning "TODO ERROR OR struct";
-
-#undef KERNEL_MODULE
+#include <lib/libcpp/error.hpp>
 
 ElfLoader::ElfLoader(const char* path)
 {
@@ -23,7 +20,7 @@ bool ElfLoader::magic_check(const ElfHeaderAuto& header)
     return bmemcmp(&header, s_valid_magic, EI_MAG_SIZE);
 }
 
-ElfHeaderAuto ElfLoader::header_get(void) const
+ErrorOr<ElfHeaderAuto> ElfLoader::header_get(void) const
 {
     ElfHeaderAuto header;
 
@@ -39,7 +36,8 @@ ElfHeaderAuto ElfLoader::header_get(void) const
 
 std::vector<ElfProgramHeaderAuto> ElfLoader::program_headers_get() const
 {
-    auto header = header_get();
+    TRY(auto header, header_get(), {});
+
     uint8_t* program_headers_buffer = (uint8_t*)calloc(header.e_phentsize * header.e_phnum);
 
     auto file = fopen(m_exepath, "r");
@@ -62,21 +60,29 @@ std::vector<ElfProgramHeaderAuto> ElfLoader::program_headers_get() const
 }
 
 std::vector<ElfSectionHeaderAuto> ElfLoader::section_headers_get(void) const {
-    auto pheader = header_get();
+    TRY(auto header, header_get(), {});
 
-    std::UniquePtr<ElfSectionHeaderAuto> data((ElfSectionHeaderAuto*)calloc(pheader.e_shentsize * pheader.e_shnum));
+    std::UniquePtr<ElfSectionHeaderAuto> data((ElfSectionHeaderAuto*)calloc(header.e_shentsize * header.e_shnum));
 
     auto file = fopen(m_exepath, "r");
-    __xin_fseek(file, pheader.e_shoff);
-    fread(file, data.get(), pheader.e_shentsize * pheader.e_shnum);
+    __xin_fseek(file, header.e_shoff);
+    fread(file, data.get(), header.e_shentsize * header.e_shnum);
 
     std::vector<ElfSectionHeaderAuto> section_headers;
 
-    for (int i = 0; i < pheader.e_shnum; i++)
-    {
+    for (int i = 0; i < header.e_shnum; i++) {
         section_headers.push_back(*(data.get() + i));
     }
 
+    fclose(&file);
+    return section_headers;
+}
+
+ErrorOr<ElfMainHeaders> ElfLoader::main_headers_get(void) const
+{
+    TRY(auto header, header_get(), ErrorOr<ElfMainHeaders>());
+    ElfMainHeaders main_headers = { header, program_headers_get(), section_headers_get() };
+    return main_headers;
 }
 
 bool ElfLoader::is_loadable_segment(const ElfProgramHeaderAuto& pheader) const
@@ -91,9 +97,9 @@ bool ElfLoader::load_segment(const ElfProgramHeaderAuto& pheader) const
 {
     auto bss_section_size_get = [](const ElfProgramHeaderAuto pheader) -> size_t { return pheader.p_filesz > pheader.p_memsz ? 0 : pheader.p_memsz - pheader.p_filesz;};
 
-    auto eheader = header_get();
-    bool is_pie = eheader.e_type == ET_DYN;
+    TRY(auto header, header_get(), {});
 
+    bool is_pie = header.e_type == ET_DYN;
     auto file = fopen(m_exepath, "r");
 
     if (is_loadable_segment(pheader) == false) { return false; }
@@ -138,12 +144,10 @@ bool ElfLoader::load_segment(const ElfProgramHeaderAuto& pheader) const
 
 bool ElfLoader::execute(void) const
 {
-    //check if everything is ok
-
-    auto eheader = header_get();
+    TRY(auto header, header_get(), {});
     auto pheaders = program_headers_get();
 
-    bool is_pie = eheader.e_type == ET_DYN;
+    bool is_pie = header.e_type == ET_DYN;
 
     auto file = fopen(m_exepath, "r");
     if (file == nullptr) { return false; }
@@ -152,6 +156,8 @@ bool ElfLoader::execute(void) const
         load_segment(pheader);
     }
 
-    ((void(*)(void))(eheader.e_entry + (is_pie ? s_pie_load_address : 0x0)))();
+    ((void(*)(void))(header.e_entry + (is_pie ? s_pie_load_address : 0x0)))();
     return true;
 }
+
+#undef KERNEL_MODULE

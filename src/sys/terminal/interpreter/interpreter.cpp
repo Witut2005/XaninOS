@@ -87,7 +87,8 @@ extern "C"
         {
         }
 
-        XANIN_ADD_APP_ENTRY1("xin_check", xin_check)
+        XANIN_ADD_APP_ENTRY1("elftest", elf_loader_test)
+            XANIN_ADD_APP_ENTRY1("xin_check", xin_check)
             XANIN_ADD_APP_ENTRY0("sprintf_test", sprintf_test)
             XANIN_ADD_APP_ENTRY0("disk", disk_func)
             XANIN_ADD_APP_ENTRY0("paging_test", paging_test)
