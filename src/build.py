@@ -219,7 +219,7 @@ objects_to_compile = {
     'filesystem': [
         CompileObject('./fs/xin_pointers.asm', builders['asm'], builder_options['asm']['bin'], BINARY),
         CompileObject('./fs/entries_table.asm', builders['asm'], builder_options['asm']['bin'], BINARY),
-        CompileObject('./fs/xin.c', builders['c'], builder_options['c']['default'], OBJECT),
+        CompileObject('./fs/xin.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./fs/xin_extended_table.asm', builders['asm'], builder_options['asm']['bin'], BINARY),
         # CompileObject('./fs/xanin_apps_space.asm', builders['asm'], builder_options['asm']['bin'], BINARY),
     ],

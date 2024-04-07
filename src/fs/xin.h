@@ -17,6 +17,7 @@ extern "C"
 #endif
     /* ------------------------------------------------ */
 
+
     void __xin_detect_file_system(void);
     XinFileSystemData __xin_fs_data_get(void);
 
@@ -37,15 +38,15 @@ extern "C"
 
     /* ------------------------------------------------ */
 
-    [[nodiscard]]bool __xin_entry_alignment_check(const XinEntry* Entry);
-    [[nodiscard]]bool __xin_entry_address_check(const XinEntry* Entry);
-    [[nodiscard]]bool __xin_entry_validation_check(const XinEntry* Entry);
-    [[nodiscard]]bool __xin_is_relative_path_used(const char* path);
+    [[nodiscard]] bool __xin_entry_alignment_check(const XinEntry* Entry);
+    [[nodiscard]] bool __xin_entry_address_check(const XinEntry* Entry);
+    [[nodiscard]] bool __xin_entry_validation_check(const XinEntry* Entry);
+    [[nodiscard]] bool __xin_is_relative_path_used(const char* path);
     char* __xin_absolute_path_get(const char* rpath, char* buf, XIN_FS_ENTRY_TYPES type);
-    [[nodiscard]]char* __xin_entry_name_extern(char* path, char* buf);
-    [[nodiscard]]int __xin_entry_descriptor_get(const XinEntry* Entry);
+    [[nodiscard]] char* __xin_entry_name_extern(char* path, char* buf);
+    [[nodiscard]] int __xin_entry_descriptor_get(const XinEntry* Entry);
     void __xin_entry_modification_fields_update(XinEntry* Entry);
-    [[nodiscard]]bool __xin_is_entry_rwable_check(const XinEntry* Entry); // read and write
+    [[nodiscard]] bool __xin_is_entry_rwable_check(const XinEntry* Entry); // read and write
 
     /* ------------------------------------------------ */
 

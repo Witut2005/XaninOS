@@ -18,6 +18,7 @@ Keyboard& Keyboard::the(void)
 
 bool Keyboard::init(interrupt_vector_t vector)
 {
+    reset();
     bool ok = test();
     if (ok)
     {
@@ -110,6 +111,7 @@ void Keyboard::write(ControllerPort reg, uint8_t data)
     outbIO(reg, data);
 }
 
+#warning "TODO sus";
 uint8_t Keyboard::read(ControllerPort reg)
 {
     if (reg == ControllerPort::KeyboardEncoder) // wait for Buffer being not empty
