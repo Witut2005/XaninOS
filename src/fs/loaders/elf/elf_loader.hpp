@@ -50,7 +50,7 @@ public:
 
     bool is_loadable_segment(const ElfProgramHeaderAuto& pheader) const;
 
-    bool load(uint8_t* address);
+
     bool load_segment(const ElfProgramHeaderAuto& pheader) const;
     bool execute(void) const;
 

@@ -1,7 +1,12 @@
 
+#define KERNEL_MODULE
+
 #include "elf_loader.hpp"
+#include <lib/libcpp/memory.hpp>
 
 #warning "TODO ERROR OR struct";
+
+#undef KERNEL_MODULE
 
 ElfLoader::ElfLoader(const char* path)
 {
@@ -56,13 +61,22 @@ std::vector<ElfProgramHeaderAuto> ElfLoader::program_headers_get() const
     return program_headers;
 }
 
-// std::vector<ElfSectionHeaderAuto> ElfLoader::section_headers_get(void) const {}
+std::vector<ElfSectionHeaderAuto> ElfLoader::section_headers_get(void) const {
+    auto pheader = header_get();
 
-bool ElfLoader::load(uint8_t* address)
-{
-    m_elf_location = address;
-    return true;
-    // return fread(m_file, m_elf_location, m_file->size) != 0; // returns true if sth was loaded
+    std::UniquePtr<ElfSectionHeaderAuto> data((ElfSectionHeaderAuto*)calloc(pheader.e_shentsize * pheader.e_shnum));
+
+    auto file = fopen(m_exepath, "r");
+    __xin_fseek(file, pheader.e_shoff);
+    fread(file, data.get(), pheader.e_shentsize * pheader.e_shnum);
+
+    std::vector<ElfSectionHeaderAuto> section_headers;
+
+    for (int i = 0; i < pheader.e_shnum; i++)
+    {
+        section_headers.push_back(*(data.get() + i));
+    }
+
 }
 
 bool ElfLoader::is_loadable_segment(const ElfProgramHeaderAuto& pheader) const
