@@ -1,21 +1,22 @@
 
 #pragma once
 
-#include <lib/libc/string.h>
-#include <lib/libc/stdlibx.h>
 #include <lib/libc/stdiox.h>
+#include <lib/libc/stdlibx.h>
+#include <lib/libc/string.h>
 
-namespace std
-{
+namespace std {
 
-class ReversedStringIterator
-{
+class ReversedStringIterator {
 private:
     char* i_ptr;
 
 public:
-    ReversedStringIterator(char* ptr) : i_ptr(ptr) {}
-    ReversedStringIterator(const ReversedStringIterator& other) = default;
+    ReversedStringIterator(char* ptr)
+        : i_ptr(ptr)
+    {
+    }
+    ReversedStringIterator(ReversedStringIterator const& other) = default;
 
     ReversedStringIterator& operator++() // prefix operator
     {
@@ -50,25 +51,27 @@ public:
         return *i_ptr;
     }
 
-    bool operator==(const ReversedStringIterator x)
+    bool operator==(ReversedStringIterator const x)
     {
         return i_ptr == x.i_ptr;
     }
 
-    bool operator!=(const ReversedStringIterator x)
+    bool operator!=(ReversedStringIterator const x)
     {
         return i_ptr != x.i_ptr;
     }
 };
 
-class StringIterator
-{
+class StringIterator {
 private:
     char* i_ptr;
 
 public:
-    StringIterator(char* ptr) : i_ptr(ptr) {}
-    StringIterator(const StringIterator& other) = default;
+    StringIterator(char* ptr)
+        : i_ptr(ptr)
+    {
+    }
+    StringIterator(StringIterator const& other) = default;
 
     StringIterator& operator++() // prefix operator
     {
@@ -103,19 +106,18 @@ public:
         return *i_ptr;
     }
 
-    bool operator==(const StringIterator x)
+    bool operator==(StringIterator const x)
     {
         return i_ptr == x.i_ptr;
     }
 
-    bool operator!=(const StringIterator x)
+    bool operator!=(StringIterator const x)
     {
         return i_ptr != x.i_ptr;
     }
 };
 
-class string
-{
+class string {
 
 private:
     char* string_data;
@@ -131,16 +133,16 @@ public:
     string(StringIterator beg, StringIterator end);
     string(ReversedStringIterator rbeg, ReversedStringIterator rend);
     string(char* str);
-    string(const char* str);
-    string(const string& str);
+    string(char const* str);
+    string(string const& str);
     string(string&& str);
     inline ~string() { free(string_data); }
 
-    string operator=(const char* x);
+    string operator=(char const* x);
     string operator=(std::string x);
     std::string operator+(char character);
     std::string operator+(std::string second);
-    std::string operator+(const char* second);
+    std::string operator+(char const* second);
 
     inline bool operator==(std::string x)
     {
@@ -149,7 +151,7 @@ public:
 
     inline bool operator!=(std::string x)
     {
-        return !bstrcmp(this->c_str(), x.c_str());
+        return !(*this == x);
     }
 
     inline char& operator[](uint32_t index)
@@ -180,4 +182,41 @@ public:
     }
 };
 
-}
+class nstring {
+public:
+    using Type = char;
+    using Iterator = StringIterator;
+
+    nstring(void) = default;
+    nstring(StringIterator beg, StringIterator end);
+    nstring(ReversedStringIterator rbeg, ReversedStringIterator rend);
+    nstring(char const* str);
+    nstring(nstring const& str);
+    nstring(nstring&& str);
+    ~nstring() { free(m_ptr); }
+
+    uint32_t size(void) const;
+    void reserve(uint32_t size);
+    char const* c_str(void) const;
+    uint32_t length(void) const;
+
+    nstring& operator=(nstring const& other);
+    nstring& operator+(char character);
+    nstring& operator+(nstring&& other);
+
+    char& operator[](uint32_t index);
+
+    StringIterator begin() const;
+    ReversedStringIterator rbegin() const;
+    StringIterator end() const;
+    ReversedStringIterator rend() const;
+
+private:
+    uint32_t reserved_space_size_get(void) const; // data are allocated in 512 byte blocks
+    bool reallocate_if_needed(uint32_t size);     // returns true when data was reallocted
+
+    char* m_ptr { nullptr };
+    uint32_t m_size_reserved { 0 };
+};
+
+} // namespace
