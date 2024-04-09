@@ -182,6 +182,60 @@ public:
     }
 };
 
+class NStringIterator {
+
+public:
+    NStringIterator(char* ptr) : m_ptr(ptr) {};
+    NStringIterator(NStringIterator const& other) = default;
+
+    NStringIterator& operator++(void); // prefix operator
+    NStringIterator operator++(int); // postfix operator
+    NStringIterator& operator--(void); // prefix operator
+    NStringIterator operator--(int); // postfix operator
+
+    NStringIterator operator+(int offset); // prefix operator
+    NStringIterator operator-(int offset); // postfix operator
+
+    char& operator*();
+
+    bool operator==(const NStringIterator& other);
+    bool operator!=(const NStringIterator& other);
+
+private:
+    char* m_ptr;
+};
+
+
+// class ConstNStringIterator : public NStringIterator {
+// public:
+//     const char& operator*();
+// private:
+//     const char* m_ptr;
+// };
+
+class NReversedStringIterator {
+
+public:
+    NReversedStringIterator(char* ptr) : m_ptr(ptr) {};
+    NReversedStringIterator(const NReversedStringIterator& other) = default;
+
+    NReversedStringIterator& operator++(void); // prefix operator
+    NReversedStringIterator operator++(int); // postfix operator
+    NReversedStringIterator& operator--(void); // prefix operator
+    NReversedStringIterator operator--(int); // postfix operator
+
+    NReversedStringIterator operator+(int offset); // prefix operator
+    NReversedStringIterator operator-(int offset); // postfix operator
+
+    char& operator*();
+
+    bool operator==(const NReversedStringIterator& other);
+    bool operator!=(const NReversedStringIterator& other);
+
+private:
+    char* m_ptr;
+};
+
 class nstring {
 public:
     using Type = char;
@@ -189,8 +243,8 @@ public:
 
     nstring(void) = default;
     explicit nstring(uint32_t size);
-    nstring(StringIterator beg, StringIterator end);
-    nstring(ReversedStringIterator rbeg, ReversedStringIterator rend);
+    nstring(NStringIterator beg, NStringIterator end);
+    nstring(NReversedStringIterator rbeg, NReversedStringIterator rend);
     nstring(char const* str);
     nstring(nstring const& str);
     nstring(nstring&& str);
@@ -210,15 +264,10 @@ public:
     bool operator == (nstring const& other);
     bool operator != (nstring const& other);
 
-    StringIterator begin(void);
-    ReversedStringIterator rbegin(void);
-    StringIterator end(void);
-    ReversedStringIterator rend(void);
-
-    StringIterator begin(void);
-    ReversedStringIterator rbegin(void);
-    StringIterator end(void);
-    ReversedStringIterator rend(void);
+    NStringIterator begin(void);
+    NReversedStringIterator rbegin(void);
+    NStringIterator end(void);
+    NReversedStringIterator rend(void);
 
 private:
     bool reallocate_if_needed(uint32_t size);     // returns true when data was reallocted
@@ -228,3 +277,4 @@ private:
 };
 
 } // namespace
+

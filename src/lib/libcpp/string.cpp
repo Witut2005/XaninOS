@@ -136,9 +136,10 @@ uint32_t string::size()
     return size;
 }
 
+
 nstring::nstring(uint32_t size) : m_size_reserved(size + 1), m_ptr(new char[size]) {}
 
-nstring::nstring(StringIterator beg, StringIterator end)
+nstring::nstring(NStringIterator beg, NStringIterator end)
 {
     for (int i = 1;beg != end; beg++, i++) {
         reallocate_if_needed(i);
@@ -146,7 +147,7 @@ nstring::nstring(StringIterator beg, StringIterator end)
     }
 }
 
-nstring::nstring(ReversedStringIterator rbeg, ReversedStringIterator rend)
+nstring::nstring(NReversedStringIterator rbeg, NReversedStringIterator rend)
 {
     for (int i = 1;rbeg != rend; rbeg++, i++) {
         reallocate_if_needed(i);
@@ -272,22 +273,22 @@ bool nstring::operator != (nstring const& other)
     return !(*this == other);
 }
 
-StringIterator nstring::begin()
+NStringIterator nstring::begin()
 {
     return m_ptr;
 }
 
-ReversedStringIterator nstring::rbegin()
+NReversedStringIterator nstring::rbegin()
 {
     return m_ptr + length() - 1;
 }
 
-StringIterator nstring::end()
+NStringIterator nstring::end()
 {
     return m_ptr + length();
 }
 
-ReversedStringIterator nstring::rend()
+NReversedStringIterator nstring::rend()
 {
     return m_ptr - 1;
 }
@@ -313,5 +314,123 @@ bool nstring::reallocate_if_needed(uint32_t size)
 
     return false;
 }
+
+
+NStringIterator& NStringIterator::operator++() // prefix operator
+{
+    m_ptr++;
+    return *this;
+}
+
+NStringIterator NStringIterator::operator++(int) // postfix operator
+{
+    auto itmp = *this;
+    ++(this->m_ptr); //++(*this);
+
+    return itmp;
+}
+
+NStringIterator& NStringIterator::operator--() // prefix operator
+{
+    m_ptr--;
+    return *this;
+}
+
+NStringIterator NStringIterator::operator--(int) // postfix operator
+{
+    auto itmp = *this;
+    --(this->m_ptr);
+
+    return itmp;
+}
+
+NStringIterator NStringIterator::operator+(int offset)
+{
+    auto itmp = *this;
+    itmp.m_ptr = itmp.m_ptr + offset;
+    return itmp;
+}
+
+NStringIterator NStringIterator::operator-(int offset)
+{
+    auto itmp = *this;
+    itmp.m_ptr = itmp.m_ptr - offset;
+    return itmp;
+}
+
+char& NStringIterator::operator*()
+{
+    return *m_ptr;
+}
+
+bool NStringIterator::operator==(const NStringIterator& other)
+{
+    return m_ptr == other.m_ptr;
+}
+
+bool NStringIterator::operator!=(const NStringIterator& other)
+{
+    return !(*this == other);
+}
+
+
+NReversedStringIterator& NReversedStringIterator::operator++() // prefix operator
+{
+    m_ptr--;
+    return *this;
+}
+
+NReversedStringIterator NReversedStringIterator::operator++(int) // postfix operator
+{
+    auto itmp = *this;
+    --m_ptr; //++(*this);
+
+    return itmp;
+}
+
+NReversedStringIterator& NReversedStringIterator::operator--() // prefix operator
+{
+    m_ptr++;
+    return *this;
+}
+
+NReversedStringIterator NReversedStringIterator::operator--(int) // postfix operator
+{
+    auto itmp = *this;
+    ++m_ptr;
+
+    return itmp;
+}
+
+NReversedStringIterator NReversedStringIterator::operator+(int offset)
+{
+    auto itmp = *this;
+    itmp.m_ptr = itmp.m_ptr - offset;
+    return itmp;
+}
+
+NReversedStringIterator NReversedStringIterator::operator-(int offset)
+{
+    auto itmp = *this;
+    itmp.m_ptr = itmp.m_ptr + offset;
+    return itmp;
+}
+
+char& NReversedStringIterator::operator*()
+{
+    return *m_ptr;
+}
+
+bool NReversedStringIterator::operator==(const NReversedStringIterator& other)
+{
+    return m_ptr == other.m_ptr;
+}
+
+bool NReversedStringIterator::operator!=(const NReversedStringIterator& other)
+{
+    return !(*this == other);
+}
+
+///////////////////////ITERATORS////////////////////////////
 
 } // namespace
