@@ -124,7 +124,7 @@ extern "C"
     {
         EXIT_ON_EQUALS_ZERO(src, NULL);
         uint32_t length = strlen(src);
-        memcpy(dest, src, strlen(src));
+        memmove(dest, src, length);
         dest[length] = '\0';
         return dest;
     }

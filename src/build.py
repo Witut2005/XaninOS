@@ -339,6 +339,7 @@ objects_to_compile = {
     ],
 
     'libcpp': [
+        CompileObject('./lib/libcpp/new.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./lib/libcpp/lexer.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./lib/libcpp/command_parser.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./lib/libcpp/regex.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
@@ -392,6 +393,8 @@ objects_to_compile = {
         CompileObject('./programs/tests/cpp_test.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./programs/tests/elf_loader_test.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./programs/tests/c_test.c', builders['c'], builder_options['c']['default'], OBJECT),
+
+        CompileObject('./programs/tests/cpp/string.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
 
         CompileObject('./programs/stdio/stdio_apply.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./programs/file_format_tools/bmp_info.c', builders['c'], builder_options['c']['default'], OBJECT),

@@ -12,6 +12,7 @@
 #include <sys/devices/com/com.h>
 #include <sys/devices/hda/disk.h>
 #include <sys/call/xanin_sys/handler/xanin_sys.h>
+#include <sys/pmmngr/alloc.h>
 
 #define XIN_OPENED_FILES_COUNTER 100
 

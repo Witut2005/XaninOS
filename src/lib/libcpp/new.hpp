@@ -1,17 +1,12 @@
 
 #include <stdint.h>
 #include <stddef.h>
-#include <lib/libcpp/initializer_list.hpp>
-#include <lib/libc/stdlibx.h>
 
+void* operator new(size_t size) noexcept;
+void* operator new[](size_t size) noexcept;
 
-
-inline void* operator new(size_t size) noexcept
-{
-    void* p = malloc(size);
-    return p;
-}
-
+void operator delete(void* ptr) noexcept;
+void operator delete[](void* ptr) noexcept;
 /*
 template <class T>
 void* operator new(std::initializer_list<T> element)

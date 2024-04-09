@@ -1,5 +1,10 @@
 
 #include "./string.h"
+#include <lib/libcpp/new.hpp>
+#include <lib/libcpp/memory.hpp>
+#include <sys/devices/com/com.h>
+
+//KERNEL ALLOCATION
 
 namespace std {
 
@@ -131,18 +136,30 @@ uint32_t string::size()
     return size;
 }
 
-// nstring(StringIterator beg, StringIterator end)
-// {
-// }
+nstring::nstring(uint32_t size) : m_size_reserved(size + 1), m_ptr(new char[size]) {}
 
-// nstring(ReversedStringIterator rbeg, ReversedStringIterator rend)
-// {
-// }
+nstring::nstring(StringIterator beg, StringIterator end)
+{
+    for (int i = 1;beg != end; beg++, i++) {
+        reallocate_if_needed(i);
+        m_ptr[i - 1] = *beg;
+    }
+}
+
+nstring::nstring(ReversedStringIterator rbeg, ReversedStringIterator rend)
+{
+    for (int i = 1;rbeg != rend; rbeg++, i++) {
+        reallocate_if_needed(i);
+        m_ptr[i - 1] = *rbeg;
+    }
+}
 
 nstring::nstring(char const* other)
-    : m_ptr(new char[strlen(other)])
-    , m_size_reserved(m_size_reserved)
 {
+    auto otherlen = strlen(other) + 1;
+    m_ptr = new char[otherlen];
+    m_size_reserved = otherlen;
+    strcpy(m_ptr, other);
 }
 
 nstring::nstring(nstring const& other)
@@ -156,23 +173,25 @@ nstring::nstring(nstring&& other)
     : m_size_reserved(other.m_size_reserved)
     , m_ptr(other.m_ptr)
 {
-    m_size_reserved = 0;
-    other = nullptr;
+    other.m_size_reserved = 0;
+    other.m_ptr = nullptr;
 }
 
 nstring::~nstring()
 {
-    free(m_ptr);
+    if (m_ptr != nullptr) {
+        free(m_ptr);
+    }
 }
 
-uint32_t nstring::size(void) const
+uint32_t nstring::capacity(void) const
 {
-    return m_size_reserved;
+    return m_size_reserved > 0 ? m_size_reserved - SIZE_OF('\0') : 0; // null char
 }
 
 void nstring::reserve(uint32_t size)
 {
-    m_size_reserved = size;
+    m_size_reserved = size + 1;
 }
 
 char const* nstring::c_str(void) const
@@ -185,20 +204,92 @@ uint32_t nstring::length(void) const
     return strlen(m_ptr);
 }
 
+uint32_t nstring::size(void) const
+{
+    return length();
+}
+
+char& nstring::operator[](uint32_t index)
+{
+    return m_ptr[index];
+}
+
 nstring& nstring::operator=(std::nstring const& other)
 {
+    if (m_ptr != nullptr) {
+        free(m_ptr);
+    }
+
+    m_size_reserved = other.m_size_reserved;
+    m_ptr = new char[other.m_size_reserved];
+
+    strcpy(m_ptr, other.m_ptr);
+    return *this;
+}
+
+nstring& nstring::operator=(std::nstring&& other)
+{
+    m_ptr = other.m_ptr;
     m_size_reserved = other.m_size_reserved;
 
-    m_ptr = new char[other.m_size_reserved];
-    strcpy(m_ptr, other.m_ptr);
+    other.m_ptr = nullptr;
+    other.m_size_reserved = 0;
+
+    return *this;
 }
 
-nstring& nstring::operator+(char character)
+nstring nstring::operator+(char character)
 {
+    uint32_t datalen = length();
+
+    // we will need to put '\0' at the end too
+    reallocate_if_needed(datalen + SIZE_OF(char));
+
+    m_ptr[datalen] = character;
+    m_ptr[datalen + 1] = '\0';
+
+    return *this;
 }
 
-nstring& nstring::operator+(std::nstring&& other)
+nstring nstring::operator+(const std::nstring& other)
 {
+    // reallocate_if_needed(length() + other.length());
+    auto tstr = nstring(length() + other.length() + SIZE_OF('\0'));
+
+    strcat(STRCAT_DEST_FIRST, tstr.m_ptr, m_ptr);
+    strcat(STRCAT_DEST_FIRST, &tstr.m_ptr[tstr.length()], other.m_ptr);
+
+    return tstr;
+}
+
+bool nstring::operator == (nstring const& other)
+{
+    return bstrcmp(m_ptr, other.m_ptr);
+}
+
+bool nstring::operator != (nstring const& other)
+{
+    return !(*this == other);
+}
+
+StringIterator nstring::begin()
+{
+    return m_ptr;
+}
+
+ReversedStringIterator nstring::rbegin()
+{
+    return m_ptr + length() - 1;
+}
+
+StringIterator nstring::end()
+{
+    return m_ptr + length();
+}
+
+ReversedStringIterator nstring::rend()
+{
+    return m_ptr - 1;
 }
 
 // uint32_t nstring::reserved_space_size_get(void) const {
@@ -207,10 +298,16 @@ nstring& nstring::operator+(std::nstring&& other)
 
 bool nstring::reallocate_if_needed(uint32_t size)
 {
+    size += 1;
     if (size > m_size_reserved)
     {
         m_size_reserved = size;
-        m_ptr = (char*)realloc(m_ptr, size);
+        if (m_ptr == nullptr) {
+            m_ptr = (char*)calloc(size);
+        }
+        else {
+            m_ptr = (char*)realloc(m_ptr, size);
+        }
         return true;
     }
 

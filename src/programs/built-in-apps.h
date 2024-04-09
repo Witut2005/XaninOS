@@ -91,6 +91,8 @@ extern "C"
     __STATUS sprintf_test(void);
     __STATUS elf_loader_test(char*);
 
+    __STATUS  __cpp_string_test(void);
+
 #ifdef __cplusplus
 }
 #endif

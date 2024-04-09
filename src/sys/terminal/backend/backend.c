@@ -1,8 +1,9 @@
 
-#include <sys/macros.h>
 #include <lib/libc/memory.h>
 #include <lib/libc/stdlibx.h>
 #include <lib/screen/screen.h>
+#include <sys/macros.h>
+#include <sys/pmmngr/alloc.h>
 #include <sys/terminal/backend/backend.h>
 #include <sys/terminal/handlers/handlers.h>
 
@@ -21,7 +22,6 @@ void __xtb_init(uint32_t vga_width, uint32_t vga_height, uint16_t* vram)
     XtBackend->vram = vram;
     XtBackend->is_flushable = true;
 }
-
 
 // CURSOR DISABLED GLOBALLY
 void __xtb_scroll_up(Xtf* XtFrontend)
@@ -48,11 +48,10 @@ void __xtb_scroll_up(Xtf* XtFrontend)
 
     memset((uint8_t*)VGA_TEXT_MEMORY, BLANK_SCREEN_CELL, XtBackend->vga_width * SIZE_OF(XtCell)); // clear row
 
-    memcpy((uint8_t*)VGA_TEXT_MEMORY, (uint8_t*)&XtFrontend->buffer[start_index],               // display new line
+    memcpy((uint8_t*)VGA_TEXT_MEMORY, (uint8_t*)&XtFrontend->buffer[start_index], // display new line
         number_of_bytes_to_copy * SIZE_OF(XtCell));
 
     xtb_enable_flushing();
-
 }
 
 void __xtb_scroll_down(Xtf* XtFrontend)
@@ -78,7 +77,7 @@ void __xtb_scroll_down(Xtf* XtFrontend)
 
         memset((uint8_t*)VGA_TEXT_MEMORY + ((XtBackend->vga_height - 1) * XtBackend->vga_width * SIZE_OF(XtCell)), BLANK_SCREEN_CELL, XtBackend->vga_width * SIZE_OF(XtCell)); // clear row
 
-        memcpy((uint8_t*)VGA_TEXT_MEMORY + ((XtBackend->vga_height - 1) * XtBackend->vga_width * SIZE_OF(XtCell)),                                                            // display new line
+        memcpy((uint8_t*)VGA_TEXT_MEMORY + ((XtBackend->vga_height - 1) * XtBackend->vga_width * SIZE_OF(XtCell)), // display new line
             (uint8_t*)&XtFrontend->buffer[start_index], number_of_cells_to_copy * SIZE_OF(XtCell));
 
         xtb_enable_flushing();
@@ -134,12 +133,11 @@ void __xtb_flush(Xtf* XtFrontend)
             }
             vram_index++;
         }
-
     }
 
     vram_index++;
 
-    #warning "I am not sure if __vga_buffer_segment_get should be used here";
+#warning "I am not sure if __vga_buffer_segment_get should be used here";
     X86_POINTER vram_to_clear = (X86_POINTER)__vga_buffer_segment_get();
 
     for (; vram_index < XtBackend->vga_height * XtBackend->vga_width * SIZE_OF(XtCell) / (X86_POINTER_SIZE / SIZE_OF(XtCell)); vram_index++)

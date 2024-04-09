@@ -188,35 +188,43 @@ public:
     using Iterator = StringIterator;
 
     nstring(void) = default;
+    explicit nstring(uint32_t size);
     nstring(StringIterator beg, StringIterator end);
     nstring(ReversedStringIterator rbeg, ReversedStringIterator rend);
     nstring(char const* str);
     nstring(nstring const& str);
     nstring(nstring&& str);
-    ~nstring() { free(m_ptr); }
+    ~nstring(void);
 
-    uint32_t size(void) const;
-    void reserve(uint32_t size);
+    void reserve(uint32_t size); //reserves to hold size characters
     char const* c_str(void) const;
+    uint32_t capacity(void) const; //returns m_size_reserved - sizeof('\0')
     uint32_t length(void) const;
-
-    nstring& operator=(nstring const& other);
-    nstring& operator+(char character);
-    nstring& operator+(nstring&& other);
+    uint32_t size(void) const;
 
     char& operator[](uint32_t index);
+    nstring& operator=(nstring const& other);
+    nstring& operator=(std::nstring&& other);
+    nstring operator+(char character);
+    nstring operator+(const std::nstring& other);
+    bool operator == (nstring const& other);
+    bool operator != (nstring const& other);
 
-    StringIterator begin() const;
-    ReversedStringIterator rbegin() const;
-    StringIterator end() const;
-    ReversedStringIterator rend() const;
+    StringIterator begin(void);
+    ReversedStringIterator rbegin(void);
+    StringIterator end(void);
+    ReversedStringIterator rend(void);
+
+    StringIterator begin(void);
+    ReversedStringIterator rbegin(void);
+    StringIterator end(void);
+    ReversedStringIterator rend(void);
 
 private:
-    uint32_t reserved_space_size_get(void) const; // data are allocated in 512 byte blocks
     bool reallocate_if_needed(uint32_t size);     // returns true when data was reallocted
 
-    char* m_ptr { nullptr };
-    uint32_t m_size_reserved { 0 };
+    char* m_ptr{ nullptr };
+    uint32_t m_size_reserved{ 0 };
 };
 
 } // namespace
