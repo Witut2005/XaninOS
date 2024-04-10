@@ -4,6 +4,7 @@
 #include <lib/libc/stdiox.h>
 #include <lib/libc/stdlibx.h>
 #include <lib/libc/string.h>
+#include <lib/libcpp/container/iterator.hpp>
 
 namespace std {
 
@@ -182,58 +183,29 @@ public:
     }
 };
 
-class NStringIterator {
-
+BASIC_ITERATOR_DECLARE(NStringIterator, char)
 public:
-    NStringIterator(char* ptr) : m_ptr(ptr) {};
-    NStringIterator(NStringIterator const& other) = default;
+    NStringIterator operator+(int offset);
+    NStringIterator operator-(int offset);
+};
 
-    NStringIterator& operator++(void); // prefix operator
-    NStringIterator operator++(int); // postfix operator
-    NStringIterator& operator--(void); // prefix operator
-    NStringIterator operator--(int); // postfix operator
-
-    NStringIterator operator+(int offset); // prefix operator
-    NStringIterator operator-(int offset); // postfix operator
-
-    char& operator*();
-
-    bool operator==(const NStringIterator& other);
-    bool operator!=(const NStringIterator& other);
-
-private:
-    char* m_ptr;
+BASIC_CONSTANT_ITERATOR_DECLARE(ConstNStringIterator, char)
+public:
+    const ConstNStringIterator operator+(int offset);
+    const ConstNStringIterator operator-(int offset);
 };
 
 
-// class ConstNStringIterator : public NStringIterator {
-// public:
-//     const char& operator*();
-// private:
-//     const char* m_ptr;
-// };
-
-class NReversedStringIterator {
-
+BASIC_ITERATOR_DECLARE(ReversedNStringIterator, char)
 public:
-    NReversedStringIterator(char* ptr) : m_ptr(ptr) {};
-    NReversedStringIterator(const NReversedStringIterator& other) = default;
+    ReversedNStringIterator operator+(int offset);
+    ReversedNStringIterator operator-(int offset);
+};
 
-    NReversedStringIterator& operator++(void); // prefix operator
-    NReversedStringIterator operator++(int); // postfix operator
-    NReversedStringIterator& operator--(void); // prefix operator
-    NReversedStringIterator operator--(int); // postfix operator
-
-    NReversedStringIterator operator+(int offset); // prefix operator
-    NReversedStringIterator operator-(int offset); // postfix operator
-
-    char& operator*();
-
-    bool operator==(const NReversedStringIterator& other);
-    bool operator!=(const NReversedStringIterator& other);
-
-private:
-    char* m_ptr;
+BASIC_CONSTANT_ITERATOR_DECLARE(ConstReversedNStringIterator, char)
+public:
+    const ConstReversedNStringIterator operator+(int offset);
+    const ConstReversedNStringIterator operator-(int offset);
 };
 
 class nstring {
@@ -243,8 +215,10 @@ public:
 
     nstring(void) = default;
     explicit nstring(uint32_t size);
-    nstring(NStringIterator beg, NStringIterator end);
-    nstring(NReversedStringIterator rbeg, NReversedStringIterator rend);
+
+    template <typename It>
+    nstring(It beg, It end);
+
     nstring(char const* str);
     nstring(nstring const& str);
     nstring(nstring&& str);
@@ -264,10 +238,7 @@ public:
     bool operator == (nstring const& other);
     bool operator != (nstring const& other);
 
-    NStringIterator begin(void);
-    NReversedStringIterator rbegin(void);
-    NStringIterator end(void);
-    NReversedStringIterator rend(void);
+    DEFINE_CLASS_RANGE_OPERATIONS(NStringIterator);
 
 private:
     bool reallocate_if_needed(uint32_t size);     // returns true when data was reallocted
@@ -275,6 +246,15 @@ private:
     char* m_ptr{ nullptr };
     uint32_t m_size_reserved{ 0 };
 };
+
+template <typename It>
+nstring::nstring(It beg, It end)
+{
+    for (int i = 1;beg != end; beg++, i++) {
+        reallocate_if_needed(i);
+        m_ptr[i - 1] = *beg;
+    }
+}
 
 } // namespace
 

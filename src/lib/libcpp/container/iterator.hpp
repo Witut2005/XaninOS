@@ -2,6 +2,7 @@
 #pragma once
 
 #include <limits.h>
+#include <lib/libcpp/type_traits.h>
 
 namespace std
 {
@@ -257,4 +258,51 @@ public:
     virtual bool valid(void) const = 0;
 };
 
-}
+#define BASIC_ITERATOR_DECLARE(ItType, StoredType) \
+class ItType{ \
+public: \
+    ItType(StoredType* ptr) : m_ptr(ptr) {}; \
+    ItType(ItType const& other) = default; \
+    ItType& operator++(void); \
+    ItType operator++(int); \
+    ItType& operator--(void); \
+    ItType operator--(int); \
+    StoredType& operator*(); \
+    bool operator==(const ItType& other); \
+    bool operator!=(const ItType& other); \
+private: \
+    StoredType* m_ptr; \
+// };
+
+#define BASIC_CONSTANT_ITERATOR_DECLARE(ItType, StoredType) \
+class ItType{ \
+public: \
+    ItType(StoredType* ptr) : m_ptr(ptr) {}; \
+    ItType(ItType const& other) = default; \
+    ItType& operator++(void); \
+    ItType operator++(int); \
+    ItType& operator--(void); \
+    ItType operator--(int); \
+    const StoredType& operator*(); \
+    bool operator==(const ItType& other); \
+    bool operator!=(const ItType& other); \
+private: \
+    const StoredType* m_ptr; \
+// };
+
+#define DEFINE_CLASS_RANGE_OPERATIONS(ItBaseName) \
+ItBaseName begin(void); \
+ItBaseName end(void); \
+Const##ItBaseName cbegin(void); \
+Const##ItBaseName cend(void); \
+\
+Reversed##ItBaseName rbegin(void); \
+Reversed##ItBaseName rend(void); \
+ConstReversed##ItBaseName crbegin(void); \
+ConstReversed##ItBaseName crend(void); \
+
+#define DEFINE_ITERATOR_FUNCTIONALITY(ItBaseName, Operation, ReturnType, ArgType, Arg, Functionality) \
+ReturnType ItBaseName::operator Operation (Arg ArgType) Functionality \
+Const##ReturnType Const##ItBaseName::operator Operation (Arg ArgType) Functionality
+
+} //namspace
