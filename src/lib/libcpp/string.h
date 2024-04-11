@@ -191,10 +191,9 @@ public:
 
 BASIC_CONSTANT_ITERATOR_DECLARE(ConstNStringIterator, char)
 public:
-    const ConstNStringIterator operator+(int offset);
-    const ConstNStringIterator operator-(int offset);
+    ConstNStringIterator operator+(int offset);
+    ConstNStringIterator operator-(int offset);
 };
-
 
 BASIC_ITERATOR_DECLARE(ReversedNStringIterator, char)
 public:
@@ -204,8 +203,8 @@ public:
 
 BASIC_CONSTANT_ITERATOR_DECLARE(ConstReversedNStringIterator, char)
 public:
-    const ConstReversedNStringIterator operator+(int offset);
-    const ConstReversedNStringIterator operator-(int offset);
+    ConstReversedNStringIterator operator+(int offset);
+    ConstReversedNStringIterator operator-(int offset);
 };
 
 class nstring {

@@ -293,16 +293,62 @@ private: \
 #define DEFINE_CLASS_RANGE_OPERATIONS(ItBaseName) \
 ItBaseName begin(void); \
 ItBaseName end(void); \
-Const##ItBaseName cbegin(void); \
-Const##ItBaseName cend(void); \
+Const##ItBaseName cbegin(void) const; \
+Const##ItBaseName cend(void) const; \
 \
 Reversed##ItBaseName rbegin(void); \
 Reversed##ItBaseName rend(void); \
-ConstReversed##ItBaseName crbegin(void); \
-ConstReversed##ItBaseName crend(void); \
+ConstReversed##ItBaseName crbegin(void) const; \
+ConstReversed##ItBaseName crend(void) const; \
 
-#define DEFINE_ITERATOR_FUNCTIONALITY(ItBaseName, Operation, ReturnType, ArgType, Arg, Functionality) \
-ReturnType ItBaseName::operator Operation (Arg ArgType) Functionality \
-Const##ReturnType Const##ItBaseName::operator Operation (Arg ArgType) Functionality
+#define DEFINE_ITERATOR_FUNCTIONALITY(ItBaseName, Operation, ReturnType, Arg, Functionality) \
+ReturnType ItBaseName::operator Operation (Arg) Functionality \
+Const##ReturnType Const##ItBaseName::operator Operation (Arg) Functionality
+
+////////////////////////////////
+
+#define DEFINE_ITERATOR_PLUSPLUS_PREFIX_OPERATOR(ItBaseName, Functionality) \
+ItBaseName& ItBaseName::operator ++ (void) Functionality \
+Const##ItBaseName& Const##ItBaseName::operator ++ (void) Functionality 
+
+#define DEFINE_ITERATOR_PLUSPLUS_POSTFIX_OPERATOR(ItBaseName, Functionality) \
+ItBaseName ItBaseName::operator ++ (int) Functionality \
+Const##ItBaseName Const##ItBaseName::operator ++ (int) Functionality 
+
+////////////////////////////////
+
+#define DEFINE_ITERATOR_MINUSMINUS_PREFIX_OPERATOR(ItBaseName, Functionality) \
+ItBaseName& ItBaseName::operator -- (void) Functionality \
+Const##ItBaseName& Const##ItBaseName::operator -- (void) Functionality \
+
+#define DEFINE_ITERATOR_MINUSMINUS_POSTFIX_OPERATOR(ItBaseName, Functionality) \
+ItBaseName ItBaseName::operator -- (int) Functionality \
+Const##ItBaseName Const##ItBaseName::operator -- (int) Functionality \
+
+////////////////////////////////
+
+#define DEFINE_ITERATOR_PLUS_OPERATOR(ItBaseName, Arg, Functionality) \
+ItBaseName ItBaseName::operator + (Arg) Functionality \
+Const##ItBaseName Const##ItBaseName::operator + (Arg) Functionality 
+
+#define DEFINE_ITERATOR_MINUS_OPERATOR(ItBaseName, Arg, Functionality) \
+ItBaseName ItBaseName::operator - (Arg) Functionality \
+Const##ItBaseName Const##ItBaseName::operator - (Arg) Functionality 
+
+////////////////////////////////
+
+#define DEFINE_ITERATOR_ASTERISK_OPERATOR(ItBaseName, ReturnType, Functionality) \
+ReturnType ItBaseName::operator * (void) Functionality \
+const ReturnType Const##ItBaseName::operator * (void) Functionality 
+
+////////////////////////////////
+
+#define DEFINE_ITERATOR_EQUALITY_OPERATOR(ItBaseName,  Functionality) \
+bool ItBaseName::operator == (const ItBaseName& other) Functionality \
+bool Const##ItBaseName::operator == (const Const##ItBaseName& other) Functionality 
+
+#define DEFINE_ITERATOR_INEQUALITY_OPERATOR(ItBaseName,  Functionality) \
+bool ItBaseName::operator != (const ItBaseName& other) Functionality \
+bool Const##ItBaseName::operator != (const Const##ItBaseName& other) Functionality 
 
 } //namspace

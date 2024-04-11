@@ -300,83 +300,80 @@ bool nstring::reallocate_if_needed(uint32_t size)
 }
 
 
-NStringIterator& NStringIterator::operator++() // prefix operator
-{
-    m_ptr++;
-    return *this;
-}
+DEFINE_ITERATOR_PLUSPLUS_PREFIX_OPERATOR(NStringIterator,
+    {
+        m_ptr++;
+        return *this;
+    }
+);
 
-NStringIterator NStringIterator::operator++(int) // postfix operator
-{
-    auto itmp = *this;
-    ++(this->m_ptr); //++(*this);
+DEFINE_ITERATOR_PLUSPLUS_POSTFIX_OPERATOR(NStringIterator,
+    {
+        auto itmp = *this;
+        ++(this->m_ptr); //++(*this);
 
-    return itmp;
-}
+        return itmp;
+    }
+);
 
-NStringIterator& NStringIterator::operator--() // prefix operator
-{
-    m_ptr--;
-    return *this;
-}
-
-NStringIterator NStringIterator::operator--(int) // postfix operator
-{
-    auto itmp = *this;
-    --(this->m_ptr);
-
-    return itmp;
-}
-
-NStringIterator NStringIterator::operator+(int offset)
-{
-    auto itmp = *this;
-    itmp.m_ptr = itmp.m_ptr + offset;
-    return itmp;
-}
-
-NStringIterator NStringIterator::operator-(int offset)
-{
-    auto itmp = *this;
-    itmp.m_ptr = itmp.m_ptr - offset;
-    return itmp;
-}
-
-char& NStringIterator::operator*()
-{
-    return *m_ptr;
-}
-
-bool NStringIterator::operator==(const NStringIterator& other)
-{
-    return m_ptr == other.m_ptr;
-}
-
-bool NStringIterator::operator!=(const NStringIterator& other)
-{
-    return !(*this == other);
-}
-
-// const ConstNStringIterator& ConstNStringIterator::operator++() : NStringIterator::operator++()() {} // prefix operator
-// {
-//     m_ptr++;
-//     return *this;
-// }
-
-// ReversedNStringIterator& ReversedNStringIterator::operator++() // prefix operator
-// {
-//     m_ptr--;
-//     return *this;
-// }
-
-DEFINE_ITERATOR_FUNCTIONALITY(ReversedNStringIterator, ++, ReversedNStringIterator&, , ,
+DEFINE_ITERATOR_MINUSMINUS_PREFIX_OPERATOR(NStringIterator,
     {
         m_ptr--;
         return *this;
     }
 );
 
-DEFINE_ITERATOR_FUNCTIONALITY(ReversedNStringIterator, ++, ReversedNStringIterator, int, ,
+DEFINE_ITERATOR_MINUSMINUS_POSTFIX_OPERATOR(NStringIterator,
+    {
+        auto itmp = *this;
+        --(this->m_ptr);
+
+        return itmp;
+    }
+);
+
+DEFINE_ITERATOR_PLUS_OPERATOR(NStringIterator, int offset,
+    {
+        auto itmp = *this;
+        itmp.m_ptr = itmp.m_ptr + offset;
+        return itmp;
+    }
+);
+
+DEFINE_ITERATOR_MINUS_OPERATOR(NStringIterator, int offset,
+    {
+        auto itmp = *this;
+        itmp.m_ptr = itmp.m_ptr - offset;
+        return itmp;
+    }
+);
+
+DEFINE_ITERATOR_ASTERISK_OPERATOR(NStringIterator, char&,
+    {
+        return *m_ptr;
+    }
+);
+
+DEFINE_ITERATOR_EQUALITY_OPERATOR(NStringIterator,
+    {
+        return m_ptr == other.m_ptr;
+    }
+);
+
+DEFINE_ITERATOR_INEQUALITY_OPERATOR(NStringIterator,
+    {
+        return !(*this == other);
+    }
+);
+
+DEFINE_ITERATOR_PLUSPLUS_PREFIX_OPERATOR(ReversedNStringIterator,
+    {
+        m_ptr--;
+        return *this;
+    }
+);
+
+DEFINE_ITERATOR_PLUSPLUS_POSTFIX_OPERATOR(ReversedNStringIterator,
     {
         auto itmp = *this;
         --m_ptr; //++(*this);
@@ -385,56 +382,56 @@ DEFINE_ITERATOR_FUNCTIONALITY(ReversedNStringIterator, ++, ReversedNStringIterat
     }
 );
 
-// ReversedNStringIterator ReversedNStringIterator::operator++(int) // postfix operator
-// {
-//     auto itmp = *this;
-//     --m_ptr; //++(*this);
+DEFINE_ITERATOR_MINUSMINUS_PREFIX_OPERATOR(ReversedNStringIterator,
+    {
+        m_ptr++;
+        return *this;
+    }
+);
 
-//     return itmp;
-// }
+DEFINE_ITERATOR_MINUSMINUS_POSTFIX_OPERATOR(ReversedNStringIterator,
+    {
+        auto itmp = *this;
+        ++m_ptr;
 
-ReversedNStringIterator& ReversedNStringIterator::operator--() // prefix operator
-{
-    m_ptr++;
-    return *this;
-}
+        return itmp;
+    }
+);
 
-ReversedNStringIterator ReversedNStringIterator::operator--(int) // postfix operator
-{
-    auto itmp = *this;
-    ++m_ptr;
+// DEFINE_ITERATOR_FUNCTIONALITY(ReversedNStringIterator, +, ReversedNStringIterator, int offset,
+DEFINE_ITERATOR_PLUS_OPERATOR(ReversedNStringIterator, int offset,
+    {
+        auto itmp = *this;
+        itmp.m_ptr = itmp.m_ptr - offset;
+        return itmp;
+    }
+);
 
-    return itmp;
-}
-
-ReversedNStringIterator ReversedNStringIterator::operator+(int offset)
-{
-    auto itmp = *this;
-    itmp.m_ptr = itmp.m_ptr - offset;
-    return itmp;
-}
-
-ReversedNStringIterator ReversedNStringIterator::operator-(int offset)
-{
+DEFINE_ITERATOR_MINUS_OPERATOR(ReversedNStringIterator, int offset,
+    {
     auto itmp = *this;
     itmp.m_ptr = itmp.m_ptr + offset;
     return itmp;
-}
+    }
+);
 
-char& ReversedNStringIterator::operator*()
-{
-    return *m_ptr;
-}
+DEFINE_ITERATOR_ASTERISK_OPERATOR(ReversedNStringIterator, char&,
+    {
+        return *m_ptr;
+    }
+);
 
-bool ReversedNStringIterator::operator==(const ReversedNStringIterator& other)
-{
+DEFINE_ITERATOR_EQUALITY_OPERATOR(ReversedNStringIterator,
+    {
     return m_ptr == other.m_ptr;
-}
+    }
+);
 
-bool ReversedNStringIterator::operator!=(const ReversedNStringIterator& other)
-{
+DEFINE_ITERATOR_INEQUALITY_OPERATOR(ReversedNStringIterator,
+    {
     return !(*this == other);
-}
+    }
+);
 
 ///////////////////////ITERATORS////////////////////////////
 
