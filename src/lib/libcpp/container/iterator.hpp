@@ -4,6 +4,8 @@
 #include <limits.h>
 #include <lib/libcpp/type_traits.h>
 
+#warning "TODO begin definitions macros";
+
 namespace std
 {
 
