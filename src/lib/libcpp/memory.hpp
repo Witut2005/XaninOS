@@ -31,7 +31,7 @@ public:
         obj.res = nullptr;
     }
 
-    ~UniquePtr<T>()
+    ~UniquePtr()
     {
         if (m_ptr != nullptr)
         {

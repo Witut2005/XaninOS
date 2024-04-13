@@ -26,8 +26,7 @@ extern "C" __STATUS __cpp_string_test(void)
     xprintf("copy operator = %d\n", copytome == nicho);
 
     xprintf("first of %s: %d\n", nicho.c_str(), nicho.first_of("ch") == 2);
-    xprintf("last of %s: %d\n", nicho.c_str(), nicho.last_of("o"));
-
+    xprintf("last of %s: %d\n", nicho.c_str(), nicho.last_of("ni") == 0);
 
     std::string movetome(std::move(nicho));
     xprintf("move operator = %d\n", !(movetome == nicho)); // should be false

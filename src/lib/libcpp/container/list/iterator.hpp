@@ -19,9 +19,9 @@ public:
 
     constexpr static Types type = Types::ForwardListIterator;
 
-    ForwardListIterator<Li>(iterable_type i_ptr, Li& list) : ForwardIterator<Li>(i_ptr, list) {}
+    ForwardListIterator(iterable_type i_ptr, Li& list) : ForwardIterator<Li>(i_ptr, list) {}
 
-    ForwardListIterator<Li>(const this_type& other) = default;
+    ForwardListIterator(const this_type& other) = default;
     // ForwardListIterator<Li>(this_type &&other)
     // {
     //     this->i_ptr = other.i_ptr;
@@ -165,9 +165,9 @@ public:
 
     constexpr static Types type = Types::ReversedListIterator;
 
-    ReversedListIterator<Li>(iterable_type i_ptr, Li& list) : ReversedIterator<Li>(i_ptr, list) {}
+    ReversedListIterator(iterable_type i_ptr, Li& list) : ReversedIterator<Li>(i_ptr, list) {}
 
-    ReversedListIterator<Li>(const this_type& other) = default;
+    ReversedListIterator(const this_type& other) = default;
 
     this_type& operator++() override
     {
@@ -306,10 +306,10 @@ public:
 
     constexpr static Types type = Types::ForwardListIterator;
 
-    ConstForwardListIterator<Li>(iterable_type ptr) { this->i_ptr = ptr; }
+    ConstForwardListIterator(iterable_type ptr) { this->i_ptr = ptr; }
 
-    ConstForwardListIterator<Li>(const this_type& other) = default;
-    ConstForwardListIterator<Li>(this_type&& other)
+    ConstForwardListIterator(const this_type& other) = default;
+    ConstForwardListIterator(this_type&& other)
     {
         this->i_ptr = other.i_ptr;
         other.i_ptr = NULL;
@@ -452,9 +452,9 @@ public:
 
     constexpr static Types type = Types::ReversedListIterator;
 
-    ConstReversedListIterator<Li>(iterable_type i_ptr, Li& list) : ConstReversedIterator<Li>(i_ptr, list) {}
+    ConstReversedListIterator(iterable_type i_ptr, Li& list) : ConstReversedIterator<Li>(i_ptr, list) {}
+    ConstReversedListIterator(const this_type& other) = default;
 
-    ConstReversedListIterator<Li>(const this_type& other) = default;
     // ConstReversedListIterator<Li>(this_type &&other)
     // {
     //     this->i_ptr = other.i_ptr;

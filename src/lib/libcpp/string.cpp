@@ -74,45 +74,24 @@ uint32_t string::size(void) const
 int string::last_of(std::string to_find, int start_index) const
 {
     auto to_find_length = to_find.length();
-    std::UniquePtr<ConstReversedIterator> tmp((ConstReversedIterator*)calloc(SIZE_OF(ConstReversedIterator)));
 
-    if (start_index < 0) {
-        *tmp = crbegin() + (abs(start_index) - 1);
-    }
-
-    else {
-        *tmp = string::ConstReversedIterator(cbegin() + start_index);
-    }
-
-    #warning "TODO use here std::move";
-    auto start = *tmp;
-
+    auto start = start_index < 0 ? string::ConstIterator(crbegin() + (abs(start_index) - 1)) : cbegin() + start_index;
     int i = length() - 1;
-    for (auto it = start; it != crend(); it++, i--)
+
+    for (auto it = start; it != cbegin() - 1; it--, i--)
     {
-        dbg_info("nicho", string(string::Iterator(it + to_find_length), string::Iterator(it)).c_str());
-        if (string(string::Iterator(it + to_find_length), string::Iterator(it)) == to_find) {
+        if (string(it, it + to_find_length) == to_find) {
             return i;
         }
     }
 
-    return -1;
+    return npos;
 }
 
 int string::first_of(std::string to_find, int start_index) const
 {
     auto to_find_length = to_find.length();
-    ConstIterator* tmp = nullptr;
-
-    if (start_index < 0) {
-        *tmp = string::ConstIterator(crbegin() + (abs(start_index) - 1));
-    }
-
-    else {
-        *tmp = cbegin() + start_index;
-    }
-
-    auto start = *tmp;
+    auto start = start_index < 0 ? string::ConstIterator(crbegin() + (abs(start_index) - 1)) : cbegin() + start_index;
 
     int i = 0;
     for (auto it = start; it != cend(); it++, i++)
@@ -122,7 +101,7 @@ int string::first_of(std::string to_find, int start_index) const
         }
     }
 
-    return -1;
+    return npos;
 }
 
 char& string::operator[](uint32_t index)

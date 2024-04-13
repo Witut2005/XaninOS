@@ -84,10 +84,10 @@ public:
     X second;
 
     pair() = default;
-    pair<T, X>(T x, X y) : first(x), second(y) {}
+    pair(T x, X y) : first(x), second(y) {}
 
-    pair<T, X>(const pair<T, X>& copy) = default;
-    pair<T, X>(pair<T, X>&& copy)
+    pair(const pair<T, X>& copy) = default;
+    pair(pair<T, X>&& copy)
     {
         this->first = copy.first;
         this->second = copy.second;

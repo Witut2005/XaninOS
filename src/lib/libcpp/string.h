@@ -24,6 +24,7 @@ public:
     using ReversedIterator = ConstReversedNStringIterator;
     using ConstIterator = ConstNStringIterator;
     using ConstReversedIterator = ConstReversedNStringIterator;
+    static constexpr int npos = -1;
 
     string(void) = default;
     explicit string(uint32_t size);

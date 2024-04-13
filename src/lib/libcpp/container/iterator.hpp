@@ -19,8 +19,8 @@ protected:
 public:
     Cont& container;
 
-    Iterator<Cont>() : container(*(Cont*)NULL) {}
-    Iterator<Cont>(iterable_type i_ptr, Cont& container) : i_ptr(i_ptr), container(container) {}
+    Iterator() : container(*(Cont*)NULL) {}
+    Iterator(iterable_type i_ptr, Cont& container) : i_ptr(i_ptr), container(container) {}
 
     iterable_type pointer()
     {
@@ -59,13 +59,13 @@ public:
     using value_type = typename Cont::value_type;
     using lreference = typename Cont::lreference;
 
-    ForwardIterator<Cont>() : Iterator<Cont>()
+    ForwardIterator() : Iterator<Cont>()
     {
         this->begin = (iterable_type)INT_MAX;
         this->end = (iterable_type)INT_MAX;
     }
 
-    ForwardIterator<Cont>(iterable_type i_ptr, Cont& container) : Iterator<Cont>(i_ptr, container),
+    ForwardIterator(iterable_type i_ptr, Cont& container) : Iterator<Cont>(i_ptr, container),
         begin(container.begin_ptr()), end(container.end_ptr()) {}
 
     // virtual constexpr const char* type_info(void);
@@ -111,7 +111,7 @@ public:
     using value_type = typename Cont::value_type;
     using lreference = typename Cont::lreference;
 
-    ReversedIterator<Cont>()
+    ReversedIterator()
     {
         this->i_ptr = NULL;
         this->container = NULL;
@@ -119,7 +119,7 @@ public:
         this->rend = (iterable_type)INT_MAX;
     }
 
-    ReversedIterator<Cont>(iterable_type i_ptr, Cont& container) : Iterator<Cont>(i_ptr, container),
+    ReversedIterator(iterable_type i_ptr, Cont& container) : Iterator<Cont>(i_ptr, container),
         rbegin(container.rbegin_ptr()), rend(container.rend_ptr()) {}
     virtual iterator_type& operator++(void) = 0;
     virtual iterator_type operator++(int) = 0;
@@ -157,7 +157,7 @@ protected:
 public:
     Cont& container;
 
-    ConstIterator<Cont>(iterable_type i_ptr, Cont& container) : i_ptr(i_ptr), container(container) {}
+    ConstIterator(iterable_type i_ptr, Cont& container) : i_ptr(i_ptr), container(container) {}
 
     template <typename InputIt>
     friend bool operator==(InputIt lhs, InputIt rhs);
@@ -180,7 +180,7 @@ public:
     using value_type = typename Cont::value_type;
     using const_lreference = typename Cont::const_lreference;
 
-    ConstForwardIterator<Cont>()
+    ConstForwardIterator()
     {
         this->i_ptr = NULL;
         this->container = NULL;
@@ -188,7 +188,7 @@ public:
         this->end = (iterable_type)INT_MAX;
     }
 
-    ConstForwardIterator<Cont>(iterable_type i_ptr, Cont& container) : ConstIterator<Cont>(i_ptr, container),
+    ConstForwardIterator(iterable_type i_ptr, Cont& container) : ConstIterator<Cont>(i_ptr, container),
         begin(container.begin_ptr()),
         end(container.end_ptr()) {}
 
@@ -232,7 +232,7 @@ public:
     using value_type = typename Cont::value_type;
     using const_lreference = typename Cont::const_lreference;
 
-    ConstReversedIterator<Cont>()
+    ConstReversedIterator()
     {
         this->i_ptr = NULL;
         this->container = NULL;
@@ -240,7 +240,7 @@ public:
         this->rend = (iterable_type)INT_MAX;
     }
 
-    ConstReversedIterator<Cont>(iterable_type i_ptr, Cont& container) : ConstIterator<Cont>(i_ptr, container),
+    ConstReversedIterator(iterable_type i_ptr, Cont& container) : ConstIterator<Cont>(i_ptr, container),
         rbegin(container.rbegin_ptr()),
         rend(container.rend_ptr()) {}
     virtual iterator_type& operator++(void) = 0;
@@ -285,7 +285,7 @@ public: \
     bool operator!=(const ItType& other); \
 private: \
     StoredType* m_ptr; \
-    friend class Const##ItType; \ 
+    friend class Const##ItType; \
 friend class Reversed##ItType; \
 friend class ConstReversed##ItType; \
 }; \
@@ -375,7 +375,7 @@ public: \
     bool operator==(const ItType& other); \
     bool operator!=(const ItType& other); \
 private: \
-    StoredType* m_ptr; \
+    StoredType* m_ptr; 
 // };
 
 #define BASIC_CONSTANT_ITERATOR_DECLARE(ItType, StoredType) \
@@ -391,7 +391,7 @@ public: \
     bool operator==(const ItType& other); \
     bool operator!=(const ItType& other); \
 private: \
-    const StoredType* m_ptr; \
+    const StoredType* m_ptr; 
 // };
 
 #define DEFINE_CLASS_RANGE_OPERATIONS(ItType) \
@@ -403,7 +403,7 @@ Const##ItType cend(void) const; \
 Reversed##ItType rbegin(void); \
 Reversed##ItType rend(void); \
 ConstReversed##ItType crbegin(void) const; \
-ConstReversed##ItType crend(void) const; \
+ConstReversed##ItType crend(void) const; 
 
 #define DEFINE_ITERATORS_CONVERTION_CONSTRUCTORS(ItType)\
 ItType::ItType(Const##ItType const& other) : m_ptr(other.m_ptr) {} \
@@ -476,3 +476,4 @@ bool ItType::operator != (const ItType& other) Functionality \
 bool Const##ItType::operator != (const Const##ItType& other) Functionality 
 
 } //namspace
+
