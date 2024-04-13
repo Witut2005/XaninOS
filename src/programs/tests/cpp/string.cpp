@@ -31,6 +31,10 @@ extern "C" __STATUS __cpp_string_test(void)
     std::string movetome(std::move(nicho));
     xprintf("move operator = %d\n", !(movetome == nicho)); // should be false
 
+    const std::string cons("ugauga");
+
+    cons + cons;
+
 
     return XANIN_OK;
 }

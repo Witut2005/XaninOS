@@ -24,7 +24,6 @@ public:
     using ReversedIterator = ConstReversedNStringIterator;
     using ConstIterator = ConstNStringIterator;
     using ConstReversedIterator = ConstReversedNStringIterator;
-    static constexpr int npos = -1;
 
     string(void) = default;
     explicit string(uint32_t size);
@@ -41,27 +40,28 @@ public:
     string(string&& str);
     ~string(void);
 
+    int index_serialize(int index) const;
+    uint32_t capacity(void) const; //returns m_size_reserved - sizeof('\0')
     void reserve(uint32_t size); //reserves to hold size characters
     char const* c_str(void) const;
-    uint32_t capacity(void) const; //returns m_size_reserved - sizeof('\0')
     uint32_t length(void) const;
     uint32_t size(void) const;
 
     int last_of(std::string to_find, int start_index = -1) const;
     int first_of(std::string to_find, int start_index = 0) const;
 
-    char& operator[](uint32_t index);
-    const char& operator[](uint32_t index) const;
+    char& operator[](int index);
+    const char& operator[](int index) const;
 
-    // string& operator=(std::string other);
     string& operator=(string const& other);
     string& operator=(std::string&& other);
-    string operator+(char character);
-    string operator+(const std::string& other);
-    bool operator == (string const& other);
-    bool operator != (string const& other);
+    string operator+(const std::string& other) const;
+    bool operator == (string const& other) const;
+    bool operator != (string const& other) const;
 
     DEFINE_CLASS_RANGE_OPERATIONS(NStringIterator);
+
+    static constexpr int npos = -1;
 
 private:
     bool reallocate_if_needed(uint32_t size);     // returns true when data was reallocted

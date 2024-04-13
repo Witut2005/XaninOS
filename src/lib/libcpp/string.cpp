@@ -46,6 +46,11 @@ string::~string()
     }
 }
 
+int string::index_serialize(int index) const
+{
+    return index < 0 ? (int)length() + index : index;
+}
+
 uint32_t string::capacity(void) const
 {
     return m_size_reserved > 0 ? m_size_reserved - SIZE_OF('\0') : 0; // null char
@@ -74,10 +79,12 @@ uint32_t string::size(void) const
 int string::last_of(std::string to_find, int start_index) const
 {
     auto to_find_length = to_find.length();
+    auto start = cbegin() + index_serialize(start_index);
 
-    auto start = start_index < 0 ? string::ConstIterator(crbegin() + (abs(start_index) - 1)) : cbegin() + start_index;
+    if (start < cbegin() || start >= cend()) return npos;
+    if (start + to_find_length >= cend()) return npos;
+
     int i = length() - 1;
-
     for (auto it = start; it != cbegin() - 1; it--, i--)
     {
         if (string(it, it + to_find_length) == to_find) {
@@ -91,7 +98,10 @@ int string::last_of(std::string to_find, int start_index) const
 int string::first_of(std::string to_find, int start_index) const
 {
     auto to_find_length = to_find.length();
-    auto start = start_index < 0 ? string::ConstIterator(crbegin() + (abs(start_index) - 1)) : cbegin() + start_index;
+    auto start = cbegin() + index_serialize(start_index);
+
+    if (start < cbegin() || start >= cend()) return npos;
+    if (start + to_find_length >= cend()) return npos;
 
     int i = 0;
     for (auto it = start; it != cend(); it++, i++)
@@ -104,14 +114,14 @@ int string::first_of(std::string to_find, int start_index) const
     return npos;
 }
 
-char& string::operator[](uint32_t index)
+char& string::operator[](int index)
 {
-    return m_ptr[index];
+    return m_ptr[index_serialize(index)];
 }
 
-const char& string::operator[](uint32_t index) const
+const char& string::operator[](int index) const
 {
-    return m_ptr[index];
+    return m_ptr[index_serialize(index)];
 }
 
 string& string::operator=(std::string const& other)
@@ -127,19 +137,6 @@ string& string::operator=(std::string const& other)
     return *this;
 }
 
-// string& string::operator=(std::string other)
-// {
-//     if (m_ptr != nullptr) {
-//         free(m_ptr);
-//     }
-
-//     m_size_reserved = other.m_size_reserved;
-//     m_ptr = new char[other.m_size_reserved];
-
-//     strcpy(m_ptr, other.m_ptr);
-//     return *this;
-// }
-
 string& string::operator=(std::string&& other)
 {
     m_ptr = other.m_ptr;
@@ -151,20 +148,7 @@ string& string::operator=(std::string&& other)
     return *this;
 }
 
-string string::operator+(char character)
-{
-    uint32_t datalen = length();
-
-    // we will need to put '\0' at the end too
-    reallocate_if_needed(datalen + SIZE_OF(char));
-
-    m_ptr[datalen] = character;
-    m_ptr[datalen + 1] = '\0';
-
-    return *this;
-}
-
-string string::operator+(const std::string& other)
+string string::operator+(const std::string& other) const
 {
     // reallocate_if_needed(length() + other.length());
     auto tstr = string(length() + other.length() + SIZE_OF('\0'));
@@ -175,12 +159,12 @@ string string::operator+(const std::string& other)
     return tstr;
 }
 
-bool string::operator == (string const& other)
+bool string::operator == (string const& other) const
 {
     return bstrcmp(m_ptr, other.m_ptr);
 }
 
-bool string::operator != (string const& other)
+bool string::operator != (string const& other) const
 {
     return !(*this == other);
 }
@@ -304,6 +288,12 @@ DEFINE_ITERATOR_ASTERISK_OPERATOR(NStringIterator, char&,
     }
 );
 
+DEFINE_ITERATOR_SPACESHIP_OPERATOR(NStringIterator,
+    {
+        return m_ptr == other.m_ptr ? 0 : m_ptr > other.m_ptr ? 1 : -1;
+    }
+);
+
 DEFINE_ITERATOR_EQUALITY_OPERATOR(NStringIterator,
     {
         return m_ptr == other.m_ptr;
@@ -368,6 +358,12 @@ DEFINE_ITERATOR_MINUS_OPERATOR(ReversedNStringIterator, int offset,
 DEFINE_ITERATOR_ASTERISK_OPERATOR(ReversedNStringIterator, char&,
     {
         return *m_ptr;
+    }
+);
+
+DEFINE_ITERATOR_SPACESHIP_OPERATOR(ReversedNStringIterator,
+    {
+        return m_ptr == other.m_ptr ? 0 : m_ptr > other.m_ptr ? -1 : 1;
     }
 );
 

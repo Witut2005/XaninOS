@@ -4,8 +4,6 @@
 #include <limits.h>
 #include <lib/libcpp/type_traits.h>
 
-#warning "TODO begin definitions macros";
-
 namespace std
 {
 
@@ -281,6 +279,7 @@ public: \
     ItType operator+(int offset); \
     ItType operator-(int offset); \
     StoredType& operator*(); \
+    int operator<=>(const ItType& other); \
     bool operator==(const ItType& other); \
     bool operator!=(const ItType& other); \
 private: \
@@ -305,6 +304,7 @@ public: \
     Const##ItType operator+(int offset); \
     Const##ItType operator-(int offset); \
     const StoredType& operator*(); \
+    int operator<=>(const Const##ItType& other); \
     bool operator==(const Const##ItType& other); \
     bool operator!=(const Const##ItType& other); \
 private: \
@@ -328,6 +328,7 @@ public: \
         Reversed##ItType operator+(int offset); \
         Reversed##ItType operator-(int offset); \
         StoredType& operator*(); \
+        int operator<=>(const Reversed##ItType& other); \
         bool operator==(const Reversed##ItType& other); \
         bool operator!=(const Reversed##ItType& other); \
 private: \
@@ -351,6 +352,7 @@ public: \
         ConstReversed##ItType operator+(int offset); \
         ConstReversed##ItType operator-(int offset); \
         const StoredType& operator*(); \
+        int operator<=>(const ConstReversed##ItType& other); \
         bool operator==(const ConstReversed##ItType& other); \
         bool operator!=(const ConstReversed##ItType& other); \
 private: \
@@ -466,6 +468,10 @@ ReturnType ItType::operator * (void) Functionality \
 const ReturnType Const##ItType::operator * (void) Functionality 
 
 ////////////////////////////////
+
+#define DEFINE_ITERATOR_SPACESHIP_OPERATOR(ItType,  Functionality) \
+int ItType::operator <=> (const ItType& other) Functionality \
+int Const##ItType::operator <=> (const Const##ItType& other) Functionality 
 
 #define DEFINE_ITERATOR_EQUALITY_OPERATOR(ItType,  Functionality) \
 bool ItType::operator == (const ItType& other) Functionality \
