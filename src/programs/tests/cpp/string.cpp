@@ -17,7 +17,7 @@ extern "C" __STATUS __cpp_string_test(void)
     xprintf("str != str: %d\n", !(nicho != std::string(test_str)));
 
     xprintf("iterator constructor: %d\n", nicho == std::string(nicho.begin(), nicho.end()));
-    // xprintf("riterator constructor: %d\n", std::string(nicho.rbegin(), nicho.rend()) == std::string(reversed_test_str));
+    xprintf("riterator constructor: %d\n", std::string(nicho.rbegin(), nicho.rend()) == std::string(reversed_test_str));
 
     xprintf("str + str: %s\n", (nicho + nicho).c_str());
 
@@ -25,12 +25,13 @@ extern "C" __STATUS __cpp_string_test(void)
     copytome = nicho;
     xprintf("copy operator = %d\n", copytome == nicho);
 
+    xprintf("first of %s: %d\n", nicho.c_str(), nicho.first_of("ch") == 2);
+    xprintf("last of %s: %d\n", nicho.c_str(), nicho.last_of("o"));
+
+
     std::string movetome(std::move(nicho));
     xprintf("move operator = %d\n", !(movetome == nicho)); // should be false
 
-    const std::string constr("ugabuga");
-
-    constr.cbegin();
 
     return XANIN_OK;
 }

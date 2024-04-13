@@ -9,52 +9,33 @@
 
 namespace std {
 
-BASIC_ITERATOR_DECLARE(NStringIterator, char)
-public:
-    NStringIterator operator+(int offset);
-    NStringIterator operator-(int offset);
-};
-
-BASIC_CONSTANT_ITERATOR_DECLARE(ConstNStringIterator, char)
-public:
-    ConstNStringIterator operator+(int offset);
-    ConstNStringIterator operator-(int offset);
-};
-
-BASIC_ITERATOR_DECLARE(ReversedNStringIterator, char)
-public:
-    ReversedNStringIterator operator+(int offset);
-    ReversedNStringIterator operator-(int offset);
-};
-
-BASIC_CONSTANT_ITERATOR_DECLARE(ConstReversedNStringIterator, char)
-public:
-    ConstReversedNStringIterator operator+(int offset);
-    ConstReversedNStringIterator operator-(int offset);
-};
+RANDOM_ACCESS_ITERATORS_DECLARE(NStringIterator, char)
 
 template <typename T>
-concept StringIt = is_same<T, NStringIterator>::value || is_same<T, ReversedNStringIterator>::value
-|| is_same<T, ConstNStringIterator>::value || is_same<T, ConstReversedNStringIterator>::value;
+concept StringIt = requires() {
+    is_same<T, NStringIterator>::value || is_same<T, ReversedNStringIterator>::value
+        || is_same<T, ConstNStringIterator>::value || is_same<T, ConstReversedNStringIterator>::value;
+};
 
 class string {
 public:
     using Type = char;
     using Iterator = NStringIterator;
-    using ReversedIterator = ReversedNStringIterator;
+    using ReversedIterator = ConstReversedNStringIterator;
     using ConstIterator = ConstNStringIterator;
     using ConstReversedIterator = ConstReversedNStringIterator;
 
     string(void) = default;
     explicit string(uint32_t size);
 
-    // template <typename It>
-    //     requires StringIt<It>
-    // string(It beg, It end);
-    string(NStringIterator beg, NStringIterator end);
+    // string(const NStringIterator beg, const NStringIterator end);
+    template <StringIt It>
+    string(It beg, It end);
+
+    // template <typename Str, typename Size>
+    string(char const* other, uint32_t size);
 
     string(char const* str);
-    explicit string(char const* str, uint32_t size);
     string(string const& str);
     string(string&& str);
     ~string(void);
@@ -64,6 +45,9 @@ public:
     uint32_t capacity(void) const; //returns m_size_reserved - sizeof('\0')
     uint32_t length(void) const;
     uint32_t size(void) const;
+
+    int last_of(std::string to_find, int start_index = -1) const;
+    int first_of(std::string to_find, int start_index = 0) const;
 
     char& operator[](uint32_t index);
     const char& operator[](uint32_t index) const;
@@ -85,15 +69,16 @@ private:
     uint32_t m_size_reserved{ 0 };
 };
 
-// template <typename It>
-//     requires StringIt<It>
-// string::string(It beg, It end)
-// {
-//     for (int i = 1;beg != end; beg++, i++) {
-//         reallocate_if_needed(i);
-//         m_ptr[i - 1] = *beg;
-//     }
-// }
+template <StringIt It>
+string::string(It beg, It end)
+{
+    int i = 1;
+    for (;beg != end; beg++, i++) {
+        reallocate_if_needed(i);
+        m_ptr[i - 1] = *beg;
+    }
+    m_ptr[i - 1] = '\0';
+}
 
 } // namespace
 

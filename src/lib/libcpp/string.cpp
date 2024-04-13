@@ -1,6 +1,7 @@
 
 #include "./string.h"
 #include <lib/libcpp/new.hpp>
+#include <lib/libc/stdlibx.h>
 #include <lib/libcpp/memory.hpp>
 #include <sys/devices/com/com.h>
 
@@ -15,14 +16,6 @@ string::string(char const* other)
     m_ptr = new char[otherlen];
     m_size_reserved = otherlen;
     strcpy(m_ptr, other);
-}
-
-string::string(NStringIterator beg, NStringIterator end)
-{
-    for (int i = 1;beg != end; beg++, i++) {
-        reallocate_if_needed(i);
-        m_ptr[i - 1] = *beg;
-    }
 }
 
 string::string(char const* other, uint32_t size) : m_size_reserved(size + 1)
@@ -76,6 +69,60 @@ uint32_t string::length(void) const
 uint32_t string::size(void) const
 {
     return length();
+}
+
+int string::last_of(std::string to_find, int start_index) const
+{
+    auto to_find_length = to_find.length();
+    std::UniquePtr<ConstReversedIterator> tmp((ConstReversedIterator*)calloc(SIZE_OF(ConstReversedIterator)));
+
+    if (start_index < 0) {
+        *tmp = crbegin() + (abs(start_index) - 1);
+    }
+
+    else {
+        *tmp = string::ConstReversedIterator(cbegin() + start_index);
+    }
+
+    #warning "TODO use here std::move";
+    auto start = *tmp;
+
+    int i = length() - 1;
+    for (auto it = start; it != crend(); it++, i--)
+    {
+        dbg_info("nicho", string(string::Iterator(it + to_find_length), string::Iterator(it)).c_str());
+        if (string(string::Iterator(it + to_find_length), string::Iterator(it)) == to_find) {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+int string::first_of(std::string to_find, int start_index) const
+{
+    auto to_find_length = to_find.length();
+    ConstIterator* tmp = nullptr;
+
+    if (start_index < 0) {
+        *tmp = string::ConstIterator(crbegin() + (abs(start_index) - 1));
+    }
+
+    else {
+        *tmp = cbegin() + start_index;
+    }
+
+    auto start = *tmp;
+
+    int i = 0;
+    for (auto it = start; it != cend(); it++, i++)
+    {
+        if (string(it, it + to_find_length) == to_find) {
+            return i;
+        }
+    }
+
+    return -1;
 }
 
 char& string::operator[](uint32_t index)
@@ -222,6 +269,7 @@ bool string::reallocate_if_needed(uint32_t size)
     return false;
 }
 
+DEFINE_ITERATORS_CONVERTION_CONSTRUCTORS(NStringIterator)
 
 DEFINE_ITERATOR_PLUSPLUS_PREFIX_OPERATOR(NStringIterator,
     {

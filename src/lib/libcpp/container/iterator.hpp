@@ -260,6 +260,108 @@ public:
     virtual bool valid(void) const = 0;
 };
 
+#define RANDOM_ACCESS_ITERATORS_DECLARE(ItType, StoredType) \
+class ItType;\
+class Const##ItType;\
+class Reversed##ItType;\
+class ConstReversed##ItType;\
+\
+class ItType { \
+public: \
+    ItType(StoredType* ptr) : m_ptr(ptr) {}; \
+    ItType(ItType const& other) = default; \
+    ItType(Const##ItType const& other); \
+    ItType(Reversed##ItType const& other); \
+    ItType(ConstReversed##ItType const& other); \
+    \
+    ItType& operator++(void); \
+    ItType operator++(int); \
+    ItType& operator--(void); \
+    ItType operator--(int); \
+    ItType operator+(int offset); \
+    ItType operator-(int offset); \
+    StoredType& operator*(); \
+    bool operator==(const ItType& other); \
+    bool operator!=(const ItType& other); \
+private: \
+    StoredType* m_ptr; \
+    friend class Const##ItType; \ 
+friend class Reversed##ItType; \
+friend class ConstReversed##ItType; \
+}; \
+\
+class Const##ItType{ \
+public: \
+    Const##ItType(StoredType * ptr) : m_ptr(ptr) {}; \
+    Const##ItType(ItType const& other); \
+    Const##ItType(Const##ItType const& other) = default; \
+    Const##ItType(Reversed##ItType const& other); \
+    Const##ItType(ConstReversed##ItType const& other); \
+    \
+    Const##ItType& operator++(void); \
+    Const##ItType operator++(int); \
+    Const##ItType& operator--(void); \
+    Const##ItType operator--(int); \
+    Const##ItType operator+(int offset); \
+    Const##ItType operator-(int offset); \
+    const StoredType& operator*(); \
+    bool operator==(const Const##ItType& other); \
+    bool operator!=(const Const##ItType& other); \
+private: \
+    StoredType* m_ptr; \
+        friend class ItType; \
+        friend class Reversed##ItType;\
+        friend class ConstReversed##ItType;\
+}; \
+class Reversed##ItType{ \
+public: \
+        Reversed##ItType(StoredType * ptr) : m_ptr(ptr) {}; \
+        Reversed##ItType(ItType const& other); \
+        Reversed##ItType(Const##ItType const& other); \
+        Reversed##ItType(Reversed##ItType const& other) = default; \
+        Reversed##ItType(ConstReversed##ItType const& other); \
+        \
+        Reversed##ItType& operator++(void); \
+        Reversed##ItType operator++(int); \
+        Reversed##ItType& operator--(void); \
+        Reversed##ItType operator--(int); \
+        Reversed##ItType operator+(int offset); \
+        Reversed##ItType operator-(int offset); \
+        StoredType& operator*(); \
+        bool operator==(const Reversed##ItType& other); \
+        bool operator!=(const Reversed##ItType& other); \
+private: \
+        StoredType* m_ptr; \
+        friend class ItType; \
+        friend class Const##ItType;\
+        friend class ConstReversed##ItType;\
+}; \
+class ConstReversed##ItType{ \
+public: \
+        ConstReversed##ItType(StoredType * ptr) : m_ptr(ptr) {}; \
+        ConstReversed##ItType(ItType const& other); \
+        ConstReversed##ItType(Const##ItType const& other); \
+        ConstReversed##ItType(Reversed##ItType const& other); \
+        ConstReversed##ItType(ConstReversed##ItType const& other) = default; \
+        \
+        ConstReversed##ItType& operator++(void); \
+        ConstReversed##ItType operator++(int); \
+        ConstReversed##ItType& operator--(void); \
+        ConstReversed##ItType operator--(int); \
+        ConstReversed##ItType operator+(int offset); \
+        ConstReversed##ItType operator-(int offset); \
+        const StoredType& operator*(); \
+        bool operator==(const ConstReversed##ItType& other); \
+        bool operator!=(const ConstReversed##ItType& other); \
+private: \
+        StoredType* m_ptr; \
+        friend class ItType; \
+        friend class Const##ItType;\
+        friend class Reversed##ItType;\
+};
+
+/////////////////////////////////////////////////////
+
 #define BASIC_ITERATOR_DECLARE(ItType, StoredType) \
 class ItType{ \
 public: \
@@ -292,65 +394,85 @@ private: \
     const StoredType* m_ptr; \
 // };
 
-#define DEFINE_CLASS_RANGE_OPERATIONS(ItBaseName) \
-ItBaseName begin(void); \
-ItBaseName end(void); \
-Const##ItBaseName cbegin(void) const; \
-Const##ItBaseName cend(void) const; \
+#define DEFINE_CLASS_RANGE_OPERATIONS(ItType) \
+ItType begin(void); \
+ItType end(void); \
+Const##ItType cbegin(void) const; \
+Const##ItType cend(void) const; \
 \
-Reversed##ItBaseName rbegin(void); \
-Reversed##ItBaseName rend(void); \
-ConstReversed##ItBaseName crbegin(void) const; \
-ConstReversed##ItBaseName crend(void) const; \
+Reversed##ItType rbegin(void); \
+Reversed##ItType rend(void); \
+ConstReversed##ItType crbegin(void) const; \
+ConstReversed##ItType crend(void) const; \
 
-#define DEFINE_ITERATOR_FUNCTIONALITY(ItBaseName, Operation, ReturnType, Arg, Functionality) \
-ReturnType ItBaseName::operator Operation (Arg) Functionality \
-Const##ReturnType Const##ItBaseName::operator Operation (Arg) Functionality
+#define DEFINE_ITERATORS_CONVERTION_CONSTRUCTORS(ItType)\
+ItType::ItType(Const##ItType const& other) : m_ptr(other.m_ptr) {} \
+ItType::ItType(Reversed##ItType const& other) : m_ptr(other.m_ptr) {} \
+ItType::ItType(ConstReversed##ItType const& other) : m_ptr(other.m_ptr) {} \
+\
+Const##ItType::Const##ItType(ItType const& other) : m_ptr(other.m_ptr) {} \
+Const##ItType::Const##ItType(Reversed##ItType const& other) : m_ptr(other.m_ptr) {} \
+Const##ItType::Const##ItType(ConstReversed##ItType const& other) : m_ptr(other.m_ptr) {} \
+\
+Reversed##ItType::Reversed##ItType(ItType const& other) : m_ptr(other.m_ptr) {} \
+Reversed##ItType::Reversed##ItType(Const##ItType const& other) : m_ptr(other.m_ptr) {} \
+Reversed##ItType::Reversed##ItType(ConstReversed##ItType const& other) : m_ptr(other.m_ptr) {} \
+\
+ConstReversed##ItType::ConstReversed##ItType(ItType const& other) : m_ptr(other.m_ptr) {} \
+ConstReversed##ItType::ConstReversed##ItType(Const##ItType const& other) : m_ptr(other.m_ptr) {} \
+ConstReversed##ItType::ConstReversed##ItType(Reversed##ItType const& other) : m_ptr(other.m_ptr) {} 
 
-////////////////////////////////
-
-#define DEFINE_ITERATOR_PLUSPLUS_PREFIX_OPERATOR(ItBaseName, Functionality) \
-ItBaseName& ItBaseName::operator ++ (void) Functionality \
-Const##ItBaseName& Const##ItBaseName::operator ++ (void) Functionality 
-
-#define DEFINE_ITERATOR_PLUSPLUS_POSTFIX_OPERATOR(ItBaseName, Functionality) \
-ItBaseName ItBaseName::operator ++ (int) Functionality \
-Const##ItBaseName Const##ItBaseName::operator ++ (int) Functionality 
-
-////////////////////////////////
-
-#define DEFINE_ITERATOR_MINUSMINUS_PREFIX_OPERATOR(ItBaseName, Functionality) \
-ItBaseName& ItBaseName::operator -- (void) Functionality \
-Const##ItBaseName& Const##ItBaseName::operator -- (void) Functionality \
-
-#define DEFINE_ITERATOR_MINUSMINUS_POSTFIX_OPERATOR(ItBaseName, Functionality) \
-ItBaseName ItBaseName::operator -- (int) Functionality \
-Const##ItBaseName Const##ItBaseName::operator -- (int) Functionality \
 
 ////////////////////////////////
 
-#define DEFINE_ITERATOR_PLUS_OPERATOR(ItBaseName, Arg, Functionality) \
-ItBaseName ItBaseName::operator + (Arg) Functionality \
-Const##ItBaseName Const##ItBaseName::operator + (Arg) Functionality 
-
-#define DEFINE_ITERATOR_MINUS_OPERATOR(ItBaseName, Arg, Functionality) \
-ItBaseName ItBaseName::operator - (Arg) Functionality \
-Const##ItBaseName Const##ItBaseName::operator - (Arg) Functionality 
+#define DEFINE_ITERATOR_FUNCTIONALITY(ItType, Operation, ReturnType, Arg, Functionality) \
+ReturnType ItType::operator Operation (Arg) Functionality \
+Const##ReturnType Const##ItType::operator Operation (Arg) Functionality
 
 ////////////////////////////////
 
-#define DEFINE_ITERATOR_ASTERISK_OPERATOR(ItBaseName, ReturnType, Functionality) \
-ReturnType ItBaseName::operator * (void) Functionality \
-const ReturnType Const##ItBaseName::operator * (void) Functionality 
+#define DEFINE_ITERATOR_PLUSPLUS_PREFIX_OPERATOR(ItType, Functionality) \
+ItType& ItType::operator ++ (void) Functionality \
+Const##ItType& Const##ItType::operator ++ (void) Functionality 
+
+#define DEFINE_ITERATOR_PLUSPLUS_POSTFIX_OPERATOR(ItType, Functionality) \
+ItType ItType::operator ++ (int) Functionality \
+Const##ItType Const##ItType::operator ++ (int) Functionality 
 
 ////////////////////////////////
 
-#define DEFINE_ITERATOR_EQUALITY_OPERATOR(ItBaseName,  Functionality) \
-bool ItBaseName::operator == (const ItBaseName& other) Functionality \
-bool Const##ItBaseName::operator == (const Const##ItBaseName& other) Functionality 
+#define DEFINE_ITERATOR_MINUSMINUS_PREFIX_OPERATOR(ItType, Functionality) \
+ItType& ItType::operator -- (void) Functionality \
+Const##ItType& Const##ItType::operator -- (void) Functionality \
 
-#define DEFINE_ITERATOR_INEQUALITY_OPERATOR(ItBaseName,  Functionality) \
-bool ItBaseName::operator != (const ItBaseName& other) Functionality \
-bool Const##ItBaseName::operator != (const Const##ItBaseName& other) Functionality 
+#define DEFINE_ITERATOR_MINUSMINUS_POSTFIX_OPERATOR(ItType, Functionality) \
+ItType ItType::operator -- (int) Functionality \
+Const##ItType Const##ItType::operator -- (int) Functionality \
+
+////////////////////////////////
+
+#define DEFINE_ITERATOR_PLUS_OPERATOR(ItType, Arg, Functionality) \
+ItType ItType::operator + (Arg) Functionality \
+Const##ItType Const##ItType::operator + (Arg) Functionality 
+
+#define DEFINE_ITERATOR_MINUS_OPERATOR(ItType, Arg, Functionality) \
+ItType ItType::operator - (Arg) Functionality \
+Const##ItType Const##ItType::operator - (Arg) Functionality 
+
+////////////////////////////////
+
+#define DEFINE_ITERATOR_ASTERISK_OPERATOR(ItType, ReturnType, Functionality) \
+ReturnType ItType::operator * (void) Functionality \
+const ReturnType Const##ItType::operator * (void) Functionality 
+
+////////////////////////////////
+
+#define DEFINE_ITERATOR_EQUALITY_OPERATOR(ItType,  Functionality) \
+bool ItType::operator == (const ItType& other) Functionality \
+bool Const##ItType::operator == (const Const##ItType& other) Functionality 
+
+#define DEFINE_ITERATOR_INEQUALITY_OPERATOR(ItType,  Functionality) \
+bool ItType::operator != (const ItType& other) Functionality \
+bool Const##ItType::operator != (const Const##ItType& other) Functionality 
 
 } //namspace

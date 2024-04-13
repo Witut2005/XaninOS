@@ -26,10 +26,8 @@ std::string BaseLexer::consume_until(std::string end)
     for (auto it = start; it != m_input.end(); it++)
     {
         auto tmp = std::string(it, it + endlen);
-        dbg_info(DEBUG_LABEL_LEXER, tmp.c_str());
 
         if (tmp == end) {
-            dbg_success(DEBUG_LABEL_LEXER, std::string(start, it).c_str());
             return std::string(start, it);
         }
     }
