@@ -1,13 +1,11 @@
 
 #include <lib/libc/colors.h>
-#include <sys/devices/keyboard/key_map.h>
 #include <lib/libc/stdlibx.h>
 #include <lib/libc/string.h>
 #include <lib/screen/screen.h>
+#include <sys/devices/keyboard/key_map.h>
 
 typedef void (*keyboard_handle_input)(void);
-
-keyboard_handle_input keyboard_handle = NULL;
 
 uint8_t logo_front_color = yellow;
 uint8_t logo_back_color = black;
@@ -27,4 +25,3 @@ void screen_init(void)
     Screen.x = 0;
     Screen.y = 0;
 }
-

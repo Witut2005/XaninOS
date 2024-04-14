@@ -2,12 +2,11 @@
 
 #pragma once
 
-#include <stdint.h>
-#include <stddef.h>
+#include <lib/libc/colors.h>
 #include <stdbool.h>
-#include <lib/libc/colors.h> 
+#include <stddef.h>
+#include <stdint.h>
 #include <sys/call/xanin_sys/calls/vga/vga.h>
-
 
 // #ifndef VGA_HEIGHT
 // #define VGA_HEIGHT 25
@@ -16,9 +15,7 @@
 extern uint8_t logo_front_color;
 extern uint8_t logo_back_color;
 
-
-struct screen_t
-{
+struct screen_t {
     uint16_t** cursor;
     uint8_t x;
     uint8_t y;
@@ -35,7 +32,5 @@ extern uint16_t** screen_rows;
 
 void screen_init(void);
 typedef void (*keyboard_handle_input)(void);
-
-extern keyboard_handle_input keyboard_handle;
 
 void terminal(void);

@@ -1,14 +1,14 @@
 
 
-#include <lib/libc/canvas.h>
 #include <fs/xin.h>
+#include <lib/libc/canvas.h>
 #include <lib/libc/file.h>
 #include <lib/libc/memory.h>
-#include <sys/terminal/interpreter/interpreter.h>
 #include <lib/libc/string.h>
-#include <sys/input/input.h>
 #include <lib/screen/screen.h>
 #include <sys/devices/hda/disk.h>
+#include <sys/input/input.h>
+#include <sys/terminal/interpreter/interpreter.h>
 
 // CANVAS_APP
 
@@ -124,7 +124,7 @@ void note_input(xchar x)
 
             char character_saved_tmp = (char)Screen.cursor[Screen.y][Screen.x];
             canvas_xprintf("%c", getchar());
-            #warning "letters refresh add function need to be here";
+#warning "letters refresh add function need to be here";
             // letters_refresh_add(&Screen.cursor[Screen.y][Screen.x], character_saved_tmp);
         }
     }
@@ -183,6 +183,5 @@ int xin_note(char* file_name)
         free(tmp);
     }
 
-    keyboard_handle = NULL;
     return XANIN_OK;
 }

@@ -1,5 +1,7 @@
 
 #pragma once
+
+#include <lib/libc/system.h>
 #include <sys/call/xanin_sys/ids/xanin_syscalls.h>
 
 typedef uint8_t stdio_mode_t;
@@ -8,8 +10,11 @@ typedef uint8_t stdio_mode_t;
 extern "C" {
 #endif
 
-    static inline void stdio_mode_set(stdio_mode_t mode) { xanin_syscall1(XANIN_STDIO_MODE_SET, mode); }
-    static inline stdio_mode_t stdio_mode_get(void) { return (stdio_mode_t)xanin_syscall0(XANIN_STDIO_MODE_GET); }
+static inline void stdio_mode_set(stdio_mode_t mode)
+{
+    xanin_syscall1(XANIN_STDIO_MODE_SET, mode);
+}
+static inline stdio_mode_t stdio_mode_get(void) { return (stdio_mode_t)xanin_syscall0(XANIN_STDIO_MODE_GET); }
 
 #ifdef __cplusplus
 }

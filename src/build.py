@@ -396,6 +396,7 @@ objects_to_compile = {
 
         CompileObject('./programs/tests/cpp/string.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./programs/tests/cpp/lexer.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
+        CompileObject('./programs/tests/cpp/xin.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
 
         CompileObject('./programs/stdio/stdio_apply.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./programs/file_format_tools/bmp_info.c', builders['c'], builder_options['c']['default'], OBJECT),

@@ -9,6 +9,8 @@
 #include <lib/libc/colors.h>
 #include <lib/libc/stdiox.h>
 #include <lib/libc/stdlibx.h>
+#include <lib/libcpp/string.h>
+#include <lib/libcpp/memory.hpp>
 #include <sys/devices/com/com.h>
 #include <sys/devices/hda/disk.h>
 #include <sys/call/xanin_sys/handler/xanin_sys.h>
@@ -38,6 +40,25 @@ static XinFileSystemData XinFsData; // XinFS DATA SINGLETONE
 /* -------------------------------------------------------------------------------------- */
 
 static constexpr XIN_FS_ENTRY_TYPES xin_entry_type(uint8_t type) { return (XIN_FS_ENTRY_TYPES)type; }
+
+
+std::string __nxin_absolute_path_get(const std::string& name)
+{
+    if (__xin_is_relative_path_used(name.c_str()))
+    {
+        return name + std::string(__xin_current_directory_get(std::UniquePtr((char*)kcalloc(XIN_MAX_PATH_LENGTH)).get()));
+    }
+    return name;
+}
+
+std::string __nxin_entry_name_extern(const std::string& path)
+{
+    if (auto delim_index = path.last_of("/"); delim_index != -1) {
+        return std::string(path.cbegin(), path.cbegin() + delim_index);
+    }
+    return path;
+}
+
 
 extern "C"
 {
