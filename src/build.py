@@ -132,7 +132,7 @@ def compile_kernel(*kargs):
         'dd if=xanin.bin of=xanin.img',
         'python3 ./build/align_file.py -f ./xanin.img -size 400000',
 
-        f'python3 ./build/app_preinstall2.py --files external_apps/ etc/ --image xanin.img {"--xin_print" if args.dont_print_xin_info == True else ""}',
+        f'python3 ./build/app_preinstall2.py --files external_apps/ etc/ --image xanin.img {"--dont_print_xin_info" if args.dont_print_xin_info == True else ""}',
 
         'mv xanin.img -f ../bin',
         'mv xanin.bin -f ../bin'

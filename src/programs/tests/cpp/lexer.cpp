@@ -26,6 +26,12 @@ extern "C" __STATUS __cpp_lexer_test(void)
         xprintf("parsed path: %s delim: %s\n", path.c_str(), result.second.c_str());
     }
 
+    lexer.reassign("123456");
+    lexer.ignore(2);
+    xprintf("rest test: %s\n", lexer.rest(false).c_str());
+    xprintf("rest test: %s\n", lexer.rest(true).c_str());
+
+    return XANIN_OK;
 
     // if (result.second == "../") {
     //     result.first = std::string(result.first.begin(), result.first.begin() + result.first.last_of("/", -2));

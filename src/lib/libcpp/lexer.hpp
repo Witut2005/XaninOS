@@ -13,6 +13,7 @@ public:
 
     void reassign(const std::string& input);
 
+    std::string rest(bool to_right = true);
     std::string consume(uint32_t count = 1);
     void ignore(uint32_t count = 1);
     std::string consume_until(std::string end, bool ignore_end = true);

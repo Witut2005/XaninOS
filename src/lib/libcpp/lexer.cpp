@@ -12,6 +12,11 @@ void BaseLexer::reassign(const std::string& input)
     m_input = input;
 }
 
+std::string BaseLexer::rest(bool to_right)
+{
+    return to_right ? std::string(m_input.begin() + m_index, m_input.end()) : std::string(m_input.begin(), m_input.begin() + (m_index + 1));
+}
+
 std::string BaseLexer::consume(uint32_t count)
 {
     auto input_len = m_input.length();

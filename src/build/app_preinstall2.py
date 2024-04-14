@@ -138,7 +138,7 @@ class XinEntryData:
         if data != None:
             self.insert(pad_bytes(data, SECTOR_SIZE), (self.first_sector - XinEntryData.image_size_in_sectors) * SECTOR_SIZE)
         
-        if args.dont_print_xin_info == True:
+        if args.dont_print_xin_info == False:
             self.print_entry_info()
 
         XinEntryData.xin_entries_index += 1
@@ -163,7 +163,7 @@ def preinstall(image_size_in_sectors):
 
     xin_default_entries_to_preinstall = [
         XinEntryData('/',                           XIN_DIRECTORY,  XIN_MAX_PERMISSIONS),
-        XinEntryData('/screenshot/',                XIN_DIRECTORY,  XIN_MAX_PERMISSIONS),
+        XinEntryData('/screenshot',                XIN_DIRECTORY,  XIN_MAX_PERMISSIONS),
         XinEntryData('/kernel',                     XIN_FILE,       XIN_MAX_PERMISSIONS, SECTOR_SIZE * 1000, 0), # okolo 400KB
         XinEntryData('/fast_real_mode_enter.bin',   XIN_FILE,       XIN_MAX_PERMISSIONS, SECTOR_SIZE,       5), 
         XinEntryData('/boot.bin',                   XIN_FILE,       XIN_MAX_PERMISSIONS, SECTOR_SIZE,       0),
@@ -193,14 +193,14 @@ def preinstall(image_size_in_sectors):
             elif os.path.isdir(current_file):
                 # print('FOLDER DETECTED') 
                 for path, dirs, files in os.walk(current_file):
+                    directory_entires.add(path)
                     if(path[-1] != '/'):
                         path = path + '/'
-                    directory_entires.add(path)
                     for f in files:
-                        # print(path + f)
                         file_entires.add(path + f)
                     for d in dirs:
-                        directory_entires.add(path + d + '/')
+                        # print(f'DIR: {path + d}')
+                        directory_entires.add(path + d) #+ '/')
                 continue
 
         except FileNotFoundError:
@@ -214,8 +214,9 @@ def preinstall(image_size_in_sectors):
         entry  = XinEntryData('/' + f, XIN_FILE)
         entry.write(open(f, 'rb').read())
 
+
     for d in directory_entires:
-        entry = XinEntryData('/' + d, XIN_DIRECTORY)
+        entry = XinEntryData('/' + d[:-1] if d[-1] == '/' else d, XIN_DIRECTORY)
         entry.write()
 
     # write changes to XaninOS image
@@ -228,6 +229,7 @@ def preinstall(image_size_in_sectors):
 def main(args):
     # os.system(f'dd if=/dev/zero of={os.path.abspath(args.image)} bs=10K count=1')
     print(f"\nPath: {os.path.abspath(args.image)}")
+    print(f"Files:: {args.files}")
 
     args.image = os.path.abspath(args.image)
 
