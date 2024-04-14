@@ -88,7 +88,7 @@ uint32_t stdio_refresh_rate;
 interval_id stdio_refresh_interval_id;
 ElfInitArraySectionInfo XaninInitArrayInfo;
 
-void stdio_refresh(address_t *args)
+void stdio_refresh(address_t* args)
 {
     if ((stdio_mode_get() == STDIO_MODE_TERMINAL) && (__xtb_get()->is_flushable))
     {
@@ -118,12 +118,12 @@ void kernel_loop(void)
         char xin_current_directory_buf[XIN_MAX_PATH_LENGTH];
         __xin_current_directory_get(xin_current_directory_buf);
 
-        char *username = system_variable_get("USERNAME");
-        char *hostname = system_variable_get("HOSTNAME");
+        char* username = system_variable_get("USERNAME");
+        char* hostname = system_variable_get("HOSTNAME");
 
         xprintf("%z%s@%s%z:%z%s", OUTPUT_COLOR_SET(black, green), username != NULL ? username : "xanin",
-                hostname != NULL ? hostname : "plumieria", OUTPUT_COLOR_SET(black, white),
-                OUTPUT_COLOR_SET(black, lblue), &xin_current_directory_buf[1]);
+            hostname != NULL ? hostname : "plumieria", OUTPUT_COLOR_SET(black, white),
+            OUTPUT_COLOR_SET(black, lblue), &xin_current_directory_buf[1]);
 
         free(username);
         free(hostname);
@@ -204,7 +204,7 @@ void kernel_init(void)
     INTERRUPT_REGISTER(31, general_protection_exception_entry);
     INTERRUPT_REGISTER(32, general_protection_exception_entry);
 
-    mmngr_init(kernel_mmngr_mmap, (uint8_t *)0x1400000, PMMNGR_MEMORY_BLOCKS);
+    mmngr_init(kernel_mmngr_mmap, (uint8_t*)0x1400000, PMMNGR_MEMORY_BLOCKS);
     serial_port_initialize(1);
     dbg_success(DEBUG_LABEL_IRQ, "Processor IRQs registered");
 
@@ -217,53 +217,52 @@ void kernel_init(void)
     screen_init(); // init screen management system
     screen_clear();
 
-    __xtb_init(__vga_text_mode_width_get(), __vga_text_mode_height_get(), (uint16_t *)__vga_buffer_segment_get());
+    __xtb_init(__vga_text_mode_width_get(), __vga_text_mode_height_get(), (uint16_t*)__vga_buffer_segment_get());
     __vty_set(xtf_init(100));
     stdio_mode_set(STDIO_MODE_TERMINAL);
 
     time_get(&SystemTime);
 
-    null_memory_region = (uint8_t *)kcalloc(VGA_SCREEN_RESOLUTION);
+    null_memory_region = (uint8_t*)kcalloc(VGA_SCREEN_RESOLUTION);
     xprintf("%z----------------------------\n", OUTPUT_COLOR_SET(black, green));
 
     puts("CHECKSUM CHECK RSDP: ");
 
-    SystemAcpiRSDP *rsdp = acpi_rsdp_find();
+    SystemAcpiRSDP* rsdp = acpi_rsdp_find();
 
     1 == acpi_rsdp_checksum_check(rsdp) ? xprintf("%zVALID", OUTPUT_COLOR_SET(green, white))
                                         : xprintf("%zINVALID", OUTPUT_COLOR_SET(red, white));
 
     xprintf("\nRSDP address: 0x%x\n", rsdp);
 
-    acpi_rsdt_set((SystemAcpiRSDT *)rsdp->rsdt_address);
+    acpi_rsdt_set((SystemAcpiRSDT*)rsdp->rsdt_address);
 
     xprintf("%z----------------------------\n", OUTPUT_COLOR_SET(black, green));
 
     puts("CHECKSUM CHECK RSDT: ");
-    const SystemAcpiRSDT *const rsdt = acpi_rsdt_get();
+    SystemAcpiRSDT const* const rsdt = acpi_rsdt_get();
     acpi_rsdt_checksum_check(rsdt) == 1 ? xprintf("%zVALID", OUTPUT_COLOR_SET(green, white))
                                         : xprintf("%zINVALID", OUTPUT_COLOR_SET(red, white));
     xprintf("\nRSDT address: 0x%x\n", rsdt);
 
-    const SystemAcpiSDT *const AcpiApicSDT = apic_sdt_find();
+    SystemAcpiSDT const* const AcpiApicSDT = apic_sdt_find();
 
     xprintf("%z----------------------------\n", OUTPUT_COLOR_SET(black, green));
 
-    const SystemAcpiFADT *const AcpiFADT = acpi_fadt_find();
+    SystemAcpiFADT const* const AcpiFADT = acpi_fadt_find();
 
     puts("FADT address: ");
     xprintf(
         "%z0x%x\n",
-        OUTPUT_COLOR_SET(black, acpi_sdt_checksum_check((uint8_t *)AcpiFADT, AcpiFADT->length) == true ? green : red),
+        OUTPUT_COLOR_SET(black, acpi_sdt_checksum_check((uint8_t*)AcpiFADT, AcpiFADT->length) == true ? green : red),
         AcpiFADT);
 
     puts("MADT address: ");
     xprintf("%z0x%x\n",
-            OUTPUT_COLOR_SET(black, acpi_sdt_checksum_check((uint8_t *)AcpiApicSDT, AcpiApicSDT->length) == true ? green
-                                                                                                                 : red),
-            AcpiApicSDT);
+        OUTPUT_COLOR_SET(black, acpi_sdt_checksum_check((uint8_t*)AcpiApicSDT, AcpiApicSDT->length) == true ? green : red),
+        AcpiApicSDT);
 
-    xprintf("MADT entries: 0x%x\n", (uint8_t *)AcpiApicSDT + 0x28);
+    xprintf("MADT entries: 0x%x\n", (uint8_t*)AcpiApicSDT + 0x28);
 
     pic_disable();
     pic_mode_disable();
@@ -288,10 +287,10 @@ void kernel_init(void)
     xprintf("%z----------------------------\n", OUTPUT_COLOR_SET(black, green));
 
     apic_enable();
-    xprintf("apic state: 0x%x\n", *(uint32_t *)APIC_SPURIOUS_INTERRUPT_VECTOR_REGISTER);
+    xprintf("apic state: 0x%x\n", *(uint32_t*)APIC_SPURIOUS_INTERRUPT_VECTOR_REGISTER);
 
     static uint32_t ioapic_iso_couter; // iso = interrupt source override
-    uint8_t used_irqs[32] = {0xFF};
+    uint8_t used_irqs[32] = { 0xFF };
     uint8_t used_irqs_counter = 0;
 
     for (int i = 0; (*AcpiMADT2Pointers[i]).entry_type == 2; i++)
@@ -315,9 +314,9 @@ void kernel_init(void)
         }
     }
 
-    const SystemAcpiMADT2 *apic_keyboard_redirect = NULL;
-    const SystemAcpiMADT2 *apic_pit_redirect = NULL;
-    const SystemAcpiMADT2 *apic_nic_redirect = NULL;
+    SystemAcpiMADT2 const* apic_keyboard_redirect = NULL;
+    SystemAcpiMADT2 const* apic_pit_redirect = NULL;
+    SystemAcpiMADT2 const* apic_nic_redirect = NULL;
     // SystemAcpiMADT2 *apic_mouse_redirect = NULL;
 
     for (int i = 0; (*AcpiMADT2Pointers[i]).entry_type == 2; i++)
@@ -335,25 +334,22 @@ void kernel_init(void)
     interrupt_disable();
 
     ioapic_ioredtbl_configure((apic_keyboard_redirect != NULL
-                                   ? apic_keyboard_redirect->global_system_int_table + APIC_IRQ_BASE
-                                   : PIC_KEYBOARD_VECTOR)
-                                      << APIC_VECTOR |
-                                  0x0 << APIC_DELIVERY_MODE | 0x0 << APIC_DESTINATION_MODE |
-                                  0x0 << APIC_INT_PIN_POLARITY | 0x0 << APIC_INT_MASK,
-                              ioapic_id_get());
+                                      ? apic_keyboard_redirect->global_system_int_table + APIC_IRQ_BASE
+                                      : PIC_KEYBOARD_VECTOR)
+                << APIC_VECTOR
+            | 0x0 << APIC_DELIVERY_MODE | 0x0 << APIC_DESTINATION_MODE | 0x0 << APIC_INT_PIN_POLARITY | 0x0 << APIC_INT_MASK,
+        ioapic_id_get());
 
     ioapic_ioredtbl_configure(
         (apic_pit_redirect != NULL ? apic_pit_redirect->global_system_int_table + APIC_IRQ_BASE : PIC_PIT_VECTOR)
-                << APIC_VECTOR |
-            0x0 << APIC_DELIVERY_MODE | 0x0 << APIC_DESTINATION_MODE | 0x0 << APIC_INT_PIN_POLARITY |
-            0x0 << APIC_INT_MASK,
+                << APIC_VECTOR
+            | 0x0 << APIC_DELIVERY_MODE | 0x0 << APIC_DESTINATION_MODE | 0x0 << APIC_INT_PIN_POLARITY | 0x0 << APIC_INT_MASK,
         ioapic_id_get());
 
     ioapic_ioredtbl_configure(
         (apic_nic_redirect != NULL ? apic_nic_redirect->global_system_int_table + APIC_IRQ_BASE : PIC_NIC_VECTOR)
-                << APIC_VECTOR |
-            0x0 << APIC_DELIVERY_MODE | 0x0 << APIC_DESTINATION_MODE | 0x0 << APIC_INT_PIN_POLARITY |
-            0x0 << APIC_INT_MASK,
+                << APIC_VECTOR
+            | 0x0 << APIC_DELIVERY_MODE | 0x0 << APIC_DESTINATION_MODE | 0x0 << APIC_INT_PIN_POLARITY | 0x0 << APIC_INT_MASK,
         ioapic_id_get());
 
     // COS NIE DZIALA SYSCALL
@@ -367,12 +363,12 @@ void kernel_init(void)
 
     xprintf("\n%z----------------------------\n", OUTPUT_COLOR_SET(black, green));
     xprintf("NIC interrupt line: 0x%x",
-            (apic_nic_redirect != NULL ? apic_nic_redirect->global_system_int_table + APIC_IRQ_BASE : PIC_NIC_VECTOR));
+        (apic_nic_redirect != NULL ? apic_nic_redirect->global_system_int_table + APIC_IRQ_BASE : PIC_NIC_VECTOR));
 
     xprintf("\n%z----------------------------\n", OUTPUT_COLOR_SET(black, green));
 
     __xin_init();
-    FileDescriptorTable = (XinFileDescriptor *)kcalloc(SIZE_OF(XinFileDescriptor) * 200); // 200 = number o entries
+    FileDescriptorTable = (XinFileDescriptor*)kcalloc(SIZE_OF(XinFileDescriptor) * 200); // 200 = number o entries
 
     dbg_success(DEBUG_LABEL_XANIN, "Babciu, zobacz to wszystko jest dla ciebie ❤️");
 
@@ -386,15 +382,15 @@ void kernel_init(void)
 
     srand(SystemTime.seconds);
 
-    argv[0] = (char *)calloc(XANIN_PMMNGR_BLOCK_SIZE * 2);
-    argv[1] = (char *)calloc(XANIN_PMMNGR_BLOCK_SIZE * 2);
-    argv[2] = (char *)calloc(XANIN_PMMNGR_BLOCK_SIZE * 2);
-    argv[3] = (char *)calloc(XANIN_PMMNGR_BLOCK_SIZE * 2);
-    argv[4] = (char *)calloc(XANIN_PMMNGR_BLOCK_SIZE * 2);
+    argv[0] = (char*)calloc(XANIN_PMMNGR_BLOCK_SIZE * 2);
+    argv[1] = (char*)calloc(XANIN_PMMNGR_BLOCK_SIZE * 2);
+    argv[2] = (char*)calloc(XANIN_PMMNGR_BLOCK_SIZE * 2);
+    argv[3] = (char*)calloc(XANIN_PMMNGR_BLOCK_SIZE * 2);
+    argv[4] = (char*)calloc(XANIN_PMMNGR_BLOCK_SIZE * 2);
 
     disk_sectors_write(ATA_FIRST_BUS, ATA_MASTER, __xin_find_entry("/ivt")->first_sector, 2,
-                       0x0); // load ivt to /ivt file
-    memset((uint8_t *)ArpTable, 0xFF, SIZE_OF(ArpTable[0]));
+        0x0); // load ivt to /ivt file
+    memset((uint8_t*)ArpTable, 0xFF, SIZE_OF(ArpTable[0]));
 
     __xin_file_create("/syslog");
     syslog_enable();
@@ -404,10 +400,10 @@ void kernel_init(void)
     arp_table_add_entry(LOOPBACK_IP_ADDRESS, null_memory_region);
 
     interrupt_enable();
-    char mbuf[50] = {0};
+    char mbuf[50] = { 0 };
     dbg_info(DEBUG_LABEL_LIBC, mbuf);
 
-    char *buffer = (char *)kcalloc(100 * SIZE_OF(char));
+    char* buffer = (char*)kcalloc(100 * SIZE_OF(char));
     stdio_refresh_rate = 50;
 
     kfree(buffer);
@@ -437,20 +433,20 @@ void kernel_start(void)
     if (vga_text_mode_width == 80)
     {
         xprintf("%z    _/      _/                      _/              _/_/      _/_/_/       \n",
-                OUTPUT_COLOR_SET(logo_back_color, logo_front_color));
+            OUTPUT_COLOR_SET(logo_back_color, logo_front_color));
         xprintf("%z     _/  _/      _/_/_/  _/_/_/        _/_/_/    _/    _/  _/              \n",
-                OUTPUT_COLOR_SET(logo_back_color, logo_front_color));
+            OUTPUT_COLOR_SET(logo_back_color, logo_front_color));
         xprintf("%z      _/      _/    _/  _/    _/  _/  _/    _/  _/    _/    _/_/           \n",
-                OUTPUT_COLOR_SET(logo_back_color, logo_front_color));
+            OUTPUT_COLOR_SET(logo_back_color, logo_front_color));
         xprintf("%z   _/  _/    _/    _/  _/    _/  _/  _/    _/  _/    _/        _/%z   version 2.0v",
-                OUTPUT_COLOR_SET(logo_back_color, logo_front_color), OUTPUT_COLOR_SET(black, white));
-        xprintf("%z_/      _/    _/_/_/  _/    _/  _/  _/    _/    _/_/    _/_/_/     %z%s: %q:%q:%q\n",
-                OUTPUT_COLOR_SET(logo_back_color, logo_front_color), OUTPUT_COLOR_SET(black, white),
-                daysLUT[SystemTime.weekday], SystemTime.hour, SystemTime.minutes, SystemTime.seconds);
+            OUTPUT_COLOR_SET(logo_back_color, logo_front_color), OUTPUT_COLOR_SET(black, white));
+        xprintf("%z_/      _/    _/_/_/  _/    _/  _/  _/    _/    _/_/    _/_/_/     %z%s: %i:%i:%i\n",
+            OUTPUT_COLOR_SET(logo_back_color, logo_front_color), OUTPUT_COLOR_SET(black, white),
+            daysLUT[SystemTime.weekday], SystemTime.hour, SystemTime.minutes, SystemTime.seconds);
     }
 
-    char stdio_legacy_config_buf[6] = {0};
-    XinEntry *StdioLegacyConfig = fopen("/etc/help/stdio_legacy.conf", "rw");
+    char stdio_legacy_config_buf[6] = { 0 };
+    XinEntry* StdioLegacyConfig = fopen("/etc/help/stdio_legacy.conf", "rw");
     __xin_fseek(StdioLegacyConfig, ARRAY_LENGTH("PRINT_LEGACY_STDIO_INFO: ") - 1);
     fread(StdioLegacyConfig, stdio_legacy_config_buf, 5);
 

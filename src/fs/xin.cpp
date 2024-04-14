@@ -167,7 +167,6 @@ extern "C"
 
         while (buf[buf_index] != '\0')
         {
-
             if (bmemcmp(&buf[buf_index], "./", 2)) {
                 buf_index += 2;
             }

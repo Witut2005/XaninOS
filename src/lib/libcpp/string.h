@@ -50,6 +50,7 @@ public:
     int last_of(std::string to_find, int start_index = -1) const;
     int first_of(std::string to_find, int start_index = 0) const;
 
+    operator bool() const;
     char& operator[](int index);
     const char& operator[](int index) const;
 

@@ -114,6 +114,11 @@ int string::first_of(std::string to_find, int start_index) const
     return npos;
 }
 
+string::operator bool(void) const
+{
+    return m_ptr[0] != '\0';
+}
+
 char& string::operator[](int index)
 {
     return m_ptr[index_serialize(index)];
