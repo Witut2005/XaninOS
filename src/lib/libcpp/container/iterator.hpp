@@ -272,6 +272,8 @@ public: \
     ItType(Reversed##ItType const& other); \
     ItType(ConstReversed##ItType const& other); \
     \
+    StoredType* data(void) { return m_ptr; }\
+    \
     ItType& operator++(void); \
     ItType operator++(int); \
     ItType& operator--(void); \
@@ -285,17 +287,19 @@ public: \
 private: \
     StoredType* m_ptr; \
     friend class Const##ItType; \
-friend class Reversed##ItType; \
-friend class ConstReversed##ItType; \
+    friend class Reversed##ItType; \
+    friend class ConstReversed##ItType; \
 }; \
 \
 class Const##ItType{ \
 public: \
-    Const##ItType(StoredType * ptr) : m_ptr(ptr) {}; \
+    Const##ItType(const StoredType * ptr) : m_ptr(ptr) {}; \
     Const##ItType(ItType const& other); \
     Const##ItType(Const##ItType const& other) = default; \
     Const##ItType(Reversed##ItType const& other); \
     Const##ItType(ConstReversed##ItType const& other); \
+    \
+    const StoredType* data(void){ return m_ptr; }\
     \
     Const##ItType& operator++(void); \
     Const##ItType operator++(int); \
@@ -308,7 +312,7 @@ public: \
     bool operator==(const Const##ItType& other); \
     bool operator!=(const Const##ItType& other); \
 private: \
-    StoredType* m_ptr; \
+    const StoredType* m_ptr; \
         friend class ItType; \
         friend class Reversed##ItType;\
         friend class ConstReversed##ItType;\
@@ -320,6 +324,8 @@ public: \
         Reversed##ItType(Const##ItType const& other); \
         Reversed##ItType(Reversed##ItType const& other) = default; \
         Reversed##ItType(ConstReversed##ItType const& other); \
+        \
+        StoredType* data(void) { return m_ptr; }\
         \
         Reversed##ItType& operator++(void); \
         Reversed##ItType operator++(int); \
@@ -339,11 +345,13 @@ private: \
 }; \
 class ConstReversed##ItType{ \
 public: \
-        ConstReversed##ItType(StoredType * ptr) : m_ptr(ptr) {}; \
+        ConstReversed##ItType(const StoredType * ptr) : m_ptr(ptr) {}; \
         ConstReversed##ItType(ItType const& other); \
         ConstReversed##ItType(Const##ItType const& other); \
         ConstReversed##ItType(Reversed##ItType const& other); \
         ConstReversed##ItType(ConstReversed##ItType const& other) = default; \
+        \
+        const StoredType* data(void){ return m_ptr; }\
         \
         ConstReversed##ItType& operator++(void); \
         ConstReversed##ItType operator++(int); \
@@ -356,7 +364,7 @@ public: \
         bool operator==(const ConstReversed##ItType& other); \
         bool operator!=(const ConstReversed##ItType& other); \
 private: \
-        StoredType* m_ptr; \
+        const StoredType* m_ptr; \
         friend class ItType; \
         friend class Const##ItType;\
         friend class Reversed##ItType;\
@@ -408,17 +416,17 @@ ConstReversed##ItType crbegin(void) const; \
 ConstReversed##ItType crend(void) const; 
 
 #define DEFINE_ITERATORS_CONVERTION_CONSTRUCTORS(ItType)\
-ItType::ItType(Const##ItType const& other) : m_ptr(other.m_ptr) {} \
+ItType::ItType(Const##ItType const& other) : m_ptr(const_cast<char*>(other.m_ptr)) {} \
 ItType::ItType(Reversed##ItType const& other) : m_ptr(other.m_ptr) {} \
-ItType::ItType(ConstReversed##ItType const& other) : m_ptr(other.m_ptr) {} \
+ItType::ItType(ConstReversed##ItType const& other) : m_ptr(const_cast<char*>(other.m_ptr)) {} \
 \
 Const##ItType::Const##ItType(ItType const& other) : m_ptr(other.m_ptr) {} \
 Const##ItType::Const##ItType(Reversed##ItType const& other) : m_ptr(other.m_ptr) {} \
 Const##ItType::Const##ItType(ConstReversed##ItType const& other) : m_ptr(other.m_ptr) {} \
 \
 Reversed##ItType::Reversed##ItType(ItType const& other) : m_ptr(other.m_ptr) {} \
-Reversed##ItType::Reversed##ItType(Const##ItType const& other) : m_ptr(other.m_ptr) {} \
-Reversed##ItType::Reversed##ItType(ConstReversed##ItType const& other) : m_ptr(other.m_ptr) {} \
+Reversed##ItType::Reversed##ItType(Const##ItType const& other) : m_ptr(const_cast<char*>(other.m_ptr)) {} \
+Reversed##ItType::Reversed##ItType(ConstReversed##ItType const& other) : m_ptr(const_cast<char*>(other.m_ptr)) {} \
 \
 ConstReversed##ItType::ConstReversed##ItType(ItType const& other) : m_ptr(other.m_ptr) {} \
 ConstReversed##ItType::ConstReversed##ItType(Const##ItType const& other) : m_ptr(other.m_ptr) {} \

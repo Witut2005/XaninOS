@@ -5,12 +5,12 @@
 #include <lib/libc/stdiox_legacy.h>
 #include <lib/libc/stdlibx.h>
 #include <lib/libc/string.h>
+#include <lib/libc/system.h>
 #include <lib/libc/time.h>
 #include <lib/screen/screen.h>
 #include <stdarg.h>
 #include <sys/devices/keyboard/scan_codes.h>
 #include <sys/terminal/backend/backend.h>
-#include <lib/libc/system.h>
 
 // XinEntry* stdin;
 // XinEntry* stdout;
@@ -66,10 +66,10 @@ void putc(char* str, uint32_t count)
         "mov edx, %1;"
         "int 0x80;"
         :
-    : "g"(str), "g"(count));
+        : "g"(str), "g"(count));
 }
 
-void putsc(const char* str, color_t color)
+void putsc(char const* str, color_t color)
 {
     Xtf* StdioFront = __sys_vty_get();
 
@@ -77,7 +77,7 @@ void putsc(const char* str, color_t color)
         __sys_xtf_cell_put(StdioFront, str[i], color);
 }
 
-void puts(const char* str)
+void puts(char const* str)
 {
     Xtf* StdioVty = __sys_vty_get();
 
@@ -85,14 +85,14 @@ void puts(const char* str)
         __sys_xtf_character_put(StdioVty, *(str++));
 }
 
-void puts_warning(const char* str)
+void puts_warning(char const* str)
 {
     putsc("[Warning]", OUTPUT_COLOR_SET(black, yellow));
     __sys_xtf_character_put(__sys_vty_get(), ' ');
     puts(str);
 }
 
-void puts_error(const char* str)
+void puts_error(char const* str)
 {
     putsc("[Error]", OUTPUT_COLOR_SET(black, lred));
     __sys_xtf_character_put(__sys_vty_get(), ' ');
@@ -103,7 +103,7 @@ void puts_error(const char* str)
 void xprintf(char* str, ...)
 {
     char tmp[128];
-    memset((uint8_t*)tmp, '\0', SIZE_OF(tmp));
+    memset((uint8_t*)tmp, '\0', sizeof(tmp));
     char* temporary_pointer = tmp;
 
     char* stringPtr;
@@ -130,12 +130,12 @@ void xprintf(char* str, ...)
             switch (str[string_counter])
             {
 
-            case 'd':
-            {
+            case 'd': {
                 uint32_t number = va_arg(args, int);
                 int_to_string(number, tmp, DECIMAL);
 
-                for (int i = 0; tmp[i] != '\0'; i++) {
+                for (int i = 0; tmp[i] != '\0'; i++)
+                {
                     __sys_xtf_cell_put(StdioVty, tmp[i],
                         OUTPUT_COLOR_SET(background_color, font_color));
                 }
@@ -143,15 +143,14 @@ void xprintf(char* str, ...)
                 break;
             }
 
-            case 'y':
-            {
+            case 'y': {
                 uint32_t time = va_arg(args, int);
 
                 uint32_t time_mask = 0xF0000000;
                 uint32_t time_shift = 28;
 
                 for (int i = 0; i < 8;
-                    i++, time_mask = time_mask >> 4, time_shift -= 4)
+                     i++, time_mask = time_mask >> 4, time_shift -= 4)
                 {
                     if (i == 2 || i == 4)
                         __sys_xtf_cell_put(StdioVty, '-',
@@ -168,8 +167,7 @@ void xprintf(char* str, ...)
                 break;
             }
 
-            case 't':
-            {
+            case 't': {
 
                 uint16_t time = va_arg(args, int);
 
@@ -177,7 +175,7 @@ void xprintf(char* str, ...)
                 uint16_t time_shift = 12;
 
                 for (int i = 0; i < 4;
-                    i++, time_mask = time_mask >> 4, time_shift -= 4)
+                     i++, time_mask = time_mask >> 4, time_shift -= 4)
                 {
                     if (i == 2)
                         __sys_xtf_cell_put(StdioVty, ':',
@@ -193,8 +191,7 @@ void xprintf(char* str, ...)
                 break;
             }
 
-            case 'b':
-            {
+            case 'b': {
                 uint32_t number = va_arg(args, int);
                 temporary_pointer = int_to_string(number, tmp, BINARY);
 
@@ -205,8 +202,7 @@ void xprintf(char* str, ...)
                 break;
             }
 
-            case 's':
-            {
+            case 's': {
                 stringPtr = va_arg(args, char*);
 
                 if (stringPtr == NULL)
@@ -219,8 +215,7 @@ void xprintf(char* str, ...)
                 break;
             }
 
-            case 'i':
-            {
+            case 'i': {
                 uint8_t number = (uint8_t)va_arg(args, uint32_t);
                 __sys_xtf_cell_put(StdioVty, ((number & 0xF0) >> 4) + '0',
                     OUTPUT_COLOR_SET(background_color, font_color));
@@ -230,23 +225,20 @@ void xprintf(char* str, ...)
                 break;
             }
 
-            case 'c':
-            {
+            case 'c': {
                 __sys_xtf_cell_put(StdioVty, (char)va_arg(args, int),
                     OUTPUT_COLOR_SET(background_color, font_color));
                 break;
             }
 
-            case 'z':
-            {
+            case 'z': {
                 font_color = (uint8_t)va_arg(args, int);
                 background_color = (font_color & 0xf0) >> 4;
                 font_color = font_color & 0x0f;
                 break;
             }
 
-            case 'x':
-            {
+            case 'x': {
                 uint32_t number = va_arg(args, uint32_t);
                 int_to_string(number, temporary_pointer, HEXADECIMAL);
 
@@ -257,8 +249,7 @@ void xprintf(char* str, ...)
                 break;
             }
 
-            case 'X':
-            {
+            case 'X': {
                 uint32_t number = va_arg(args, uint32_t);
                 int_to_string(number, temporary_pointer, HEXADECIMAL);
                 toupper(temporary_pointer);
@@ -270,8 +261,7 @@ void xprintf(char* str, ...)
                 break;
             }
 
-            case 'o':
-            {
+            case 'o': {
                 uint32_t number = va_arg(args, int);
                 int_to_string(number, temporary_pointer, OCTAL);
 
@@ -282,20 +272,17 @@ void xprintf(char* str, ...)
                 break;
             }
 
-            case 'h':
-            {
+            case 'h': {
                 // (uint16_t)va_arg(args,uint32_t);
                 break;
             }
 
-            case 'm':
-            {
+            case 'm': {
 
                 string_counter++;
                 switch (str[string_counter])
                 {
-                case 'x':
-                {
+                case 'x': {
 
                     uint8_t number_hex = (uint8_t)va_arg(args, uint32_t);
                     xsprintf(temporary_pointer, "%02x", number_hex);
@@ -307,8 +294,7 @@ void xprintf(char* str, ...)
                     break;
                 }
 
-                case 'X':
-                {
+                case 'X': {
 
                     uint8_t number_hex = (uint8_t)va_arg(args, uint32_t);
                     xsprintf(temporary_pointer, "%02X", number_hex);
@@ -423,8 +409,7 @@ start:
                     switch (str[str_counter])
                     {
 
-                    case 's':
-                    {
+                    case 's': {
                         char* string_pointer = va_arg(args, char*);
                         // xprintf("0x%x\n", string_pointer);
 
@@ -434,16 +419,15 @@ start:
                         if (!strlen(string_typed_buffer))
                             break;
 
-                        for (int i = 0; string_typed_buffer[counter] != '\0' &&
-                            string_typed_buffer[counter] != ' ';
-                            i++)
+                        for (int i = 0; string_typed_buffer[counter] != '\0' && string_typed_buffer[counter] != ' ';
+                             i++)
                         {
                             field_buffer[i] = string_typed_buffer[counter];
                             counter++;
                         }
 
                         for (int i = 0; field_buffer[i] != '\0' && field_buffer[i] != ' ';
-                            i++)
+                             i++)
                         {
                             if ((field_buffer[i] > 127) || (field_buffer[i] < 0x20))
                             {
@@ -458,14 +442,12 @@ start:
                         break;
                     }
 
-                    case 'd':
-                    {
+                    case 'd': {
 
                         uint32_t* number = va_arg(args, uint32_t*);
 
-                        for (int i = 0; string_typed_buffer[counter] != '\0' &&
-                            string_typed_buffer[counter] != ' ';
-                            i++)
+                        for (int i = 0; string_typed_buffer[counter] != '\0' && string_typed_buffer[counter] != ' ';
+                             i++)
                         {
                             field_buffer[i] = string_typed_buffer[counter];
                             counter++;
@@ -479,22 +461,19 @@ start:
                         break;
                     }
 
-                    case 'c':
-                    {
+                    case 'c': {
 
                         char* number = va_arg(args, char*);
                         *number = string_typed_buffer[0];
                         break;
                     }
 
-                    case 'x':
-                    {
+                    case 'x': {
 
                         uint32_t* number = va_arg(args, uint32_t*);
 
-                        for (int i = 0; string_typed_buffer[counter] != '\0' &&
-                            string_typed_buffer[counter] != ' ';
-                            i++)
+                        for (int i = 0; string_typed_buffer[counter] != '\0' && string_typed_buffer[counter] != ' ';
+                             i++)
                         {
                             field_buffer[i] = string_typed_buffer[counter];
                             counter++;
@@ -508,14 +487,12 @@ start:
                         break;
                     }
 
-                    case 'b':
-                    {
+                    case 'b': {
 
                         uint32_t* number = va_arg(args, uint32_t*);
 
-                        for (int i = 0; string_typed_buffer[counter] != '\0' &&
-                            string_typed_buffer[counter] != ' ';
-                            i++)
+                        for (int i = 0; string_typed_buffer[counter] != '\0' && string_typed_buffer[counter] != ' ';
+                             i++)
                         {
                             field_buffer[i] = string_typed_buffer[counter];
                             counter++;
@@ -609,14 +586,16 @@ void xscan_range(char* string_buffer, uint32_t how_many_chars)
     free(field_buffer);
 }
 
-
 #warning TODO must be finished
 void new_xprintf(char* fmt, ...)
 {
     va_list args;
     va_start(args, fmt);
 
-    struct { uint8_t background; uint8_t foreground; } font_color = { black, white };
+    struct {
+        uint8_t background;
+        uint8_t foreground;
+    } font_color = { black, white };
 
     for (int i = 0; fmt[i] != '\0';)
     {
@@ -629,8 +608,7 @@ void new_xprintf(char* fmt, ...)
                 break;
             }
 
-            case 'z':
-            {
+            case 'z': {
                 uint8_t received_color = (uint8_t)va_arg(args, int);
                 font_color.background = (received_color & 0xf0) >> 4;
                 font_color.foreground = received_color & 0x0f;
@@ -638,8 +616,7 @@ void new_xprintf(char* fmt, ...)
                 break;
             }
 
-            default:
-            {
+            default: {
                 char* format = strdup(&fmt[i]);
                 char* format_end = (char_find(format, CHAR_FIND_LETTERS));
                 *(format_end + 1) = '\0';
@@ -648,7 +625,8 @@ void new_xprintf(char* fmt, ...)
 
                 sprintf(buf, format, va_arg(args, int));
 
-                for (int j = 0; buf[j] != '\0'; j++) {
+                for (int j = 0; buf[j] != '\0'; j++)
+                {
                     __sys_xtf_cell_put(__sys_vty_get(), buf[j],
                         OUTPUT_COLOR_SET(font_color.background, font_color.foreground));
                 }

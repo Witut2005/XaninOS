@@ -368,7 +368,7 @@ void kernel_init(void)
     xprintf("\n%z----------------------------\n", OUTPUT_COLOR_SET(black, green));
 
     __xin_init();
-    FileDescriptorTable = (XinFileDescriptor*)kcalloc(SIZE_OF(XinFileDescriptor) * 200); // 200 = number o entries
+    FileDescriptorTable = (XinFileDescriptor*)kcalloc(sizeof(XinFileDescriptor) * 200); // 200 = number o entries
 
     dbg_success(DEBUG_LABEL_XANIN, "Babciu, zobacz to wszystko jest dla ciebie ❤️");
 
@@ -390,7 +390,7 @@ void kernel_init(void)
 
     disk_sectors_write(ATA_FIRST_BUS, ATA_MASTER, __xin_find_entry("/ivt")->first_sector, 2,
         0x0); // load ivt to /ivt file
-    memset((uint8_t*)ArpTable, 0xFF, SIZE_OF(ArpTable[0]));
+    memset((uint8_t*)ArpTable, 0xFF, sizeof(ArpTable[0]));
 
     __xin_file_create("/syslog");
     syslog_enable();
@@ -403,7 +403,7 @@ void kernel_init(void)
     char mbuf[50] = { 0 };
     dbg_info(DEBUG_LABEL_LIBC, mbuf);
 
-    char* buffer = (char*)kcalloc(100 * SIZE_OF(char));
+    char* buffer = (char*)kcalloc(100 * sizeof(char));
     stdio_refresh_rate = 50;
 
     kfree(buffer);

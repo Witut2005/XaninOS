@@ -1,32 +1,32 @@
 
 #include <lib/bmp/bmp.h>
-#include <sys/flow/exit_codes.h>
 #include <lib/libc/file.h>
 #include <lib/libc/stdiox.h>
+#include <sys/flow/exit_codes.h>
 
-//TERMINAL_APP
+// TERMINAL_APP
 
-__STATUS bmp_info(const char* filename)
+__STATUS bmp_info(char const* filename)
 {
     XinEntry* File = fopen(filename, "r");
 
     BitMapFileStructure BmpInfo;
 
-    if(File == NULL)
+    if (File == NULL)
     {
         xprintf("ERROR: Could not open\n");
         getchar();
         return XANIN_ERROR;
     }
 
-    fread(File, &BmpInfo, SIZE_OF(BitMapFileStructure));
+    fread(File, &BmpInfo, sizeof(BitMapFileStructure));
 
     xprintf("%zBitMapHeader:\n", OUTPUT_COLOR_SET(black, green));
     xprintf("signature: ");
-     
-    for(int i = 0; i < SIZE_OF(BmpInfo.Header.signature); i++)
+
+    for (int i = 0; i < sizeof(BmpInfo.Header.signature); i++)
         putchar(BmpInfo.Header.signature[i]);
-    
+
     xprintf("\nfile_size: %d\n", BmpInfo.Header.file_size);
     xprintf("resv: %d\n", BmpInfo.Header.reserved);
     xprintf("data_offset: %d\n", BmpInfo.Header.data_offset);
@@ -43,8 +43,7 @@ __STATUS bmp_info(const char* filename)
     xprintf("y_pixels_per_m: %d\n", BmpInfo.InfoHeader.y_pixels_per_m);
     xprintf("colors_used: %d\n", BmpInfo.InfoHeader.colors_used);
     xprintf("colors_important: %d\n", BmpInfo.InfoHeader.colors_important);
-    
+
     getchar();
     return XANIN_OK;
-    
 }

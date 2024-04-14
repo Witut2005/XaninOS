@@ -411,15 +411,15 @@ void cpp_prog()
 
     // int* p;
 
-    // p = (int*)malloc(SIZE_OF(int));
+    // p = (int*)malloc(sizeof(int));
     // std::cout << std::hex << p <<std::endl;
     // p = new int{32};
 
-    // p = reinterpret_cast<int*> (operator new (SIZE_OF(int)));
+    // p = reinterpret_cast<int*> (operator new (sizeof(int)));
 
     // //Test* hm = new Test{10, 20};
 
-    // Test* hm = reinterpret_cast<Test*>(::operator new (SIZE_OF(Test)));
+    // Test* hm = reinterpret_cast<Test*>(::operator new (sizeof(Test)));
 
     // hm->print(50, 100);
 

@@ -1,14 +1,14 @@
 
 // http://www.brokenthorn.com/Resources/OSDev17.html
 
-#include <stdint.h>
-#include <stddef.h>
-#include <stdbool.h>
 #include <lib/libc/hal.h>
-#include <sys/log/syslog.h>
 #include <lib/libc/memory.h>
-#include <sys/pmmngr/alloc.h>
+#include <stdbool.h>
+#include <stddef.h>
+#include <stdint.h>
 #include <sys/devices/com/com.h>
+#include <sys/log/syslog.h>
+#include <sys/pmmngr/alloc.h>
 
 typedef uint32_t physical_addr;
 
@@ -18,7 +18,7 @@ typedef uint32_t physical_addr;
 static bool mmngr_initalized;
 
 uint8_t* mmngr_mmap;        // mmap address
-uint32_t mmngr_heap_blocks; // SIZE_OF mmngr available memory space
+uint32_t mmngr_heap_blocks; // sizeof mmngr available memory space
 
 uint8_t* kernel_heap_base;
 uint32_t kernel_heap_offset;

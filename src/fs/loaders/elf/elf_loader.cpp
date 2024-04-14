@@ -28,7 +28,7 @@ ErrorOr<ElfHeaderAuto> ElfLoader::header_get(void) const
 
     if (file == nullptr) { return {}; }
 
-    fread(file, &header, SIZE_OF(ElfHeaderAuto));
+    fread(file, &header, sizeof(ElfHeaderAuto));
     fclose(&file);
 
     return header;
@@ -43,7 +43,7 @@ std::vector<ElfProgramHeaderAuto> ElfLoader::program_headers_get() const
     auto file = fopen(m_exepath, "r");
     if (file == nullptr) { return {}; }
 
-    fread(file, &header, SIZE_OF(ElfHeaderAuto));
+    fread(file, &header, sizeof(ElfHeaderAuto));
 
     __xin_fseek(file, header.e_phoff);
     fread(file, program_headers_buffer, header.e_phentsize * header.e_phnum);

@@ -11,7 +11,7 @@ void DynamicHostConfigurationProtocolSubystem::discover_send(void)
 
 
 
-    DhcpHeader* Message = (DhcpHeader*)malloc(SIZE_OF(DhcpHeader));
+    DhcpHeader* Message = (DhcpHeader*)malloc(sizeof(DhcpHeader));
     Message->opcode = 1;
     Message->htype = 1;
     Message->hlen = 1;
@@ -39,7 +39,7 @@ void DynamicHostConfigurationProtocolSubystem::discover_send(void)
 
     Message->endmark = 0xFF;
 
-    UserDatagramProtocolInterface* UdpPacket = (UserDatagramProtocolInterface*)malloc(SIZE_OF(UserDatagramProtocolInterface));
+    UserDatagramProtocolInterface* UdpPacket = (UserDatagramProtocolInterface*)malloc(sizeof(UserDatagramProtocolInterface));
     UdpPacket->ipv4_send(UDP_BROADCAST, xanin_ip_get(), DHCP_SERVER_PORT, DHCP_CLIENT_PORT, (uint8_t*)Message, DHCP_HEADER_SIZE, NULL);
 
     free(Message);

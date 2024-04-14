@@ -19,6 +19,7 @@ concept StringIt = requires() {
 
 class string {
 public:
+    using value_type = char;
     using Type = char;
     using Iterator = NStringIterator;
     using ReversedIterator = ConstReversedNStringIterator;
@@ -46,6 +47,7 @@ public:
     char const* c_str(void) const;
     uint32_t length(void) const;
     uint32_t size(void) const;
+    void clear(void);
 
     int last_of(std::string to_find, int start_index = -1) const;
     int first_of(std::string to_find, int start_index = 0) const;
@@ -71,6 +73,56 @@ private:
     uint32_t m_size_reserved{ 0 };
 };
 
+class string_view {
+public:
+    using value_type = char;
+    using Type = char;
+    using Iterator = NStringIterator;
+    using ReversedIterator = ConstReversedNStringIterator;
+    using ConstIterator = ConstNStringIterator;
+    using ConstReversedIterator = ConstReversedNStringIterator;
+
+    constexpr string_view() = delete;
+    constexpr string_view(nullptr_t) = delete;
+    string_view(const char* str) : m_ptr(str), m_size(strlen(str)) {}
+    string_view(string str) : m_ptr(str.c_str()), m_size(str.length()) {}
+    constexpr string_view(const char* str, size_t size) : m_ptr(str), m_size(size) {}
+    template <StringIt It>
+    string_view(It beg);
+
+    constexpr uint32_t length(void) const { return m_size; }
+    constexpr uint32_t size(void) { return m_size; }
+
+    constexpr operator bool() { return m_ptr != nullptr; }
+    const constexpr char& operator[](int index) { return m_ptr[index]; }
+
+    string_view& operator=(string_view const& other) { m_ptr = other.m_ptr; m_size = other.m_size; return *this; }
+    string_view& operator=(string_view&& other) {
+        m_ptr = other.m_ptr;
+        m_size = other.m_size;
+        other.m_ptr = nullptr;
+        return *this;
+    }
+    bool operator == (string_view const& other) { return bstrcmp(m_ptr, other.m_ptr); }
+    bool operator != (string const& other) { return !(*this == other); }
+
+    ConstIterator begin(void) { return ConstIterator(m_ptr); }
+    ConstIterator end(void) { return ConstIterator(m_ptr + m_size); };
+    ConstReversedIterator rbegin(void) { return ConstReversedIterator(m_ptr + m_size - 1); };
+    ConstReversedIterator rend(void) { return ConstReversedIterator(m_ptr - 1); };
+
+    ConstIterator cbegin(void) { return ConstIterator(m_ptr); }
+    ConstIterator cend(void) { return ConstIterator(m_ptr + m_size); };
+    ConstReversedIterator crbegin(void) { return ConstReversedIterator(m_ptr + m_size - 1); };
+    ConstReversedIterator crend(void) { return ConstReversedIterator(m_ptr - 1); };
+
+private:
+    const char* m_ptr;
+    size_t m_size;
+};
+
+constexpr string_view operator""sv(const char* str, size_t len);
+
 template <StringIt It>
 string::string(It beg, It end)
 {
@@ -82,5 +134,15 @@ string::string(It beg, It end)
     m_ptr[i - 1] = '\0';
 }
 
-} // namespace
+template <StringIt It>
+string_view::string_view(It beg) : m_ptr(beg.data())
+{
+    for (int i = 0; m_ptr[i] != '\0'; i++) {
+        m_size++;
+    }
+
+}
+
+}// namespace
+
 

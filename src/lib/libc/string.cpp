@@ -603,7 +603,7 @@ extern "C"
 
     char* strdup(const char* str)
     {
-        char* ns = (char*)calloc(strlen(str) * SIZE_OF(char));
+        char* ns = (char*)calloc(strlen(str) * sizeof(char));
         strcpy(ns, str);
         return ns;
     }

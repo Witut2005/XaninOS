@@ -11,14 +11,16 @@
 
 #define VAL(x) (*x)
 
-// #ifdef __cplusplus
-// #    include <lib/libcpp/string.h>
-
-// std::string __nxin_absolute_path_get(std::string const& name);
-// std::string __nxin_entry_name_extern(std::string const& path);
-// #endif
-
 #ifdef __cplusplus
+#include <lib/libcpp/string.h>
+
+// class XinPath
+// {
+// public:
+//     XinPath(const std::string_view& path);
+
+// };
+
 extern "C" {
 #endif
     /* ------------------------------------------------ */

@@ -11,16 +11,16 @@ namespace std
 template<class T>
 class stack
 {
-    private:
+private:
 
     T* stack_pointer;
     uint32_t size;
 
-    public:
+public:
 
     stack()
     {
-        stack_pointer = (T*)malloc(SIZE_OF(T));       
+        stack_pointer = (T*)malloc(sizeof(T));
         size = 0;
     }
 
@@ -32,12 +32,12 @@ class stack
     void push(T val)
     {
         stack_pointer = (T*)realloc(stack_pointer, ++size);
-        *(stack_pointer + size - 1) = val; 
+        *(stack_pointer + size - 1) = val;
     }
 
     void pop()
     {
-        stack_pointer =(T*)realloc(stack_pointer, --size);
+        stack_pointer = (T*)realloc(stack_pointer, --size);
     }
 
     T top()
@@ -49,7 +49,7 @@ class stack
     {
         return size == 0;
     }
-    
+
 
 };
 

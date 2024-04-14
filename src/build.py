@@ -174,8 +174,11 @@ def compiler_cast_given_warning(warning):
 def compiler_ignore_given_warning(warning):
     return f'-Wno-{warning}'
 
-compiler_ignored_warnings_li = ['unused-function', 'address-of-packed-member']
-compiler_ignored_warnings = ' '.join([compiler_ignore_given_warning(warning) for warning in compiler_ignored_warnings_li])
+c_compiler_ignored_warnings_li = ['unused-function', 'address-of-packed-member']
+c_compiler_ignored_warnings = ' '.join([compiler_ignore_given_warning(warning) for warning in c_compiler_ignored_warnings_li])
+
+cpp_compiler_ignored_warnings_li = ['unused-function', 'address-of-packed-member', 'literal-suffix']
+cpp_compiler_ignored_warnings = ' '.join([compiler_ignore_given_warning(warning) for warning in cpp_compiler_ignored_warnings_li])
 
 compiler_casted_warnings_li = ['int-conversion', 'implicit-function-declaration', 'return-type']
 compiler_casted_warnings = ' '.join([compiler_cast_given_warning(warning) for warning in compiler_casted_warnings_li])
@@ -187,14 +190,14 @@ builder_options = {
     },
 
     'c':{
-        'default': f"{c_compilation_options} {compiler_casted_warnings} {compiler_ignored_warnings} -c",
-        'lib': f"{c_compilation_options} {compiler_casted_warnings} {compiler_ignored_warnings} -fpic -c",
-        'kernel': f"{c_compilation_options} {compiler_casted_warnings} {compiler_ignored_warnings} -Ttext 0xF00000"
+        'default': f"{c_compilation_options} {compiler_casted_warnings} {c_compiler_ignored_warnings} -c",
+        'lib': f"{c_compilation_options} {compiler_casted_warnings} {c_compiler_ignored_warnings} -fpic -c",
+        'kernel': f"{c_compilation_options} {compiler_casted_warnings} {c_compiler_ignored_warnings} -Ttext 0xF00000"
     },
 
     'cc':{
-        'default': f"{cc_compilation_options}  -c",
-        'lib': f"{cc_compilation_options} -fpic -c"
+        'default': f"{cc_compilation_options} {cpp_compiler_ignored_warnings} -c",
+        'lib': f"{cc_compilation_options} {cpp_compiler_ignored_warnings} -fpic -c"
     }
 }
 

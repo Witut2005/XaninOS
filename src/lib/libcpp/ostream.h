@@ -21,17 +21,17 @@ enum OstreamOptions
     dec = 'd',
     oct = 'o',
     bin = 'b',
-    clear ='c'
+    clear = 'c'
 };
 
 typedef uint8_t* ostream_address_t;
 
-class ostream 
+class ostream
 {
-    private:
-    uint8_t current_format_option {'d'};
+private:
+    uint8_t current_format_option{ 'd' };
 
-    public:
+public:
 
     ostream& operator<<(OstreamOptions x);
     ostream& operator<<(char x);
@@ -65,28 +65,28 @@ void print(const char* str, X&& arg, T&& ... args)
 
     int i = strlen(str);
 
-    if(!i)
+    if (!i)
         return;
 
-    if(bstrncmp((char*)str, "{}", 2))
+    if (bstrncmp((char*)str, "{}", 2))
     {
         print(arg);
-        print(str+2, (args)...);
+        print(str + 2, (args)...);
     }
 
-    else if(*str == '%')
+    else if (*str == '%')
     {
-        if(bstrncmp((char*)str, "%d", 2))
+        if (bstrncmp((char*)str, "%d", 2))
         {
             xprintf("%d", arg);
         }
 
-        else if(bstrncmp((char*)str, "%x", 2))
+        else if (bstrncmp((char*)str, "%x", 2))
         {
             xprintf("%x", arg);
         }
 
-        else if(bstrncmp((char*)str, "%b", 2))
+        else if (bstrncmp((char*)str, "%b", 2))
         {
             xprintf("%b", arg);
         }

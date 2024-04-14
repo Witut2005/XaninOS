@@ -10,6 +10,8 @@
 #include <lib/libc/stdiox.h>
 #include <lib/libc/stdlibx.h>
 #include <lib/libcpp/string.h>
+#include <lib/libcpp/lexer.hpp>
+#include <lib/libcpp/container/vector.hpp>
 #include <lib/libcpp/memory.hpp>
 #include <sys/devices/com/com.h>
 #include <sys/devices/hda/disk.h>
@@ -44,9 +46,8 @@ static constexpr XIN_FS_ENTRY_TYPES xin_entry_type(uint8_t type) { return (XIN_F
 
 std::string __nxin_absolute_path_get(const std::string& name)
 {
-    if (__xin_is_relative_path_used(name.c_str()))
-    {
-        return name + std::string(__xin_current_directory_get(std::UniquePtr((char*)kcalloc(XIN_MAX_PATH_LENGTH)).get()));
+    if (__xin_is_relative_path_used(name.c_str())) {
+        return std::string(__xin_current_directory_get(std::UniquePtr((char*)kcalloc(XIN_MAX_PATH_LENGTH)).get())) + name;
     }
     return name;
 }
@@ -54,11 +55,39 @@ std::string __nxin_absolute_path_get(const std::string& name)
 std::string __nxin_entry_name_extern(const std::string& path)
 {
     if (auto delim_index = path.last_of("/"); delim_index != -1) {
+        dbg_info("SKIBIDI", "RAFAL");
         return std::string(path.cbegin(), path.cbegin() + delim_index);
     }
     return path;
 }
 
+std::string __nxin_path_parse(std::string path)
+{
+    if (__xin_is_relative_path_used(path.c_str())) {
+        path = std::string(__xin_current_directory_get(std::UniquePtr((char*)kcalloc(XIN_MAX_PATH_LENGTH)).get())) + path;
+    }
+
+    std::BaseLexer lexer(path);
+    path.clear();
+
+    while (lexer.all_parsed() == false)
+    {
+        auto result = lexer.consume_until(std::vector<std::string>({ "../", "./" }), true);
+        dbg_warning("PATH PARSE", result.first.c_str());
+        path = path + result.first;// + std::string("/"); //TODO char + operator
+        // dbg_warning("PATH PARSE", path.c_str());
+
+        if (result.second == "../") {
+            if (auto delim_index = path.last_of("/"); delim_index != std::string::npos) {
+                path = std::string(path.begin(), path.begin() + delim_index + 1);
+            }
+            else {
+                return "/";
+            }
+        }
+    }
+    return path;
+}
 
 extern "C"
 {
@@ -144,7 +173,7 @@ extern "C"
 
     bool __xin_entry_alignment_check(const XinEntry* Entry)
     {
-        return (uint32_t)Entry % SIZE_OF(XinEntry) == 0;
+        return (uint32_t)Entry % sizeof(XinEntry) == 0;
     }
 
     bool __xin_entry_address_check(const XinEntry* Entry)
@@ -241,7 +270,7 @@ extern "C"
     {
         if (__xin_entry_validation_check(Entry) == false)
             return -1;
-        return (int)((uint32_t)Entry - (uint32_t)XIN_FS_ENTRIES_TABLE_BEGIN) / SIZE_OF(XinEntry);
+        return (int)((uint32_t)Entry - (uint32_t)XIN_FS_ENTRIES_TABLE_BEGIN) / sizeof(XinEntry);
     }
 
     void __xin_entry_modification_fields_update(XinEntry* Entry)
@@ -446,8 +475,8 @@ extern "C"
             return NULL;
         }
 
-        XinChildrenEntries* Children = (XinChildrenEntries*)calloc(SIZE_OF(XinChildrenEntries));
-        Children->Children = (XinEntry**)calloc(SIZE_OF(XinEntry*));
+        XinChildrenEntries* Children = (XinChildrenEntries*)calloc(sizeof(XinChildrenEntries));
+        Children->Children = (XinEntry**)calloc(sizeof(XinEntry*));
 
         XinEntry* i = (XinEntry*)XIN_FS_ENTRIES_TABLE_BEGIN;
         char entrypf[XIN_MAX_PATH_LENGTH + 1] = { 0 };
@@ -464,7 +493,7 @@ extern "C"
                     {
                         Children->Children[finded_entries] = i;
                         finded_entries++;
-                        Children->Children = (XinEntry**)realloc(Children->Children, SIZE_OF(XinEntry*) * (finded_entries));
+                        Children->Children = (XinEntry**)realloc(Children->Children, sizeof(XinEntry*) * (finded_entries));
                     }
                 }
             }
@@ -480,8 +509,8 @@ extern "C"
         if (__xin_find_entry(folder) == NULL || strlen(folder) == 0)
             return (XinChildrenEntries*)NULL;
 
-        XinChildrenEntries* Children = (XinChildrenEntries*)calloc(SIZE_OF(XinChildrenEntries));
-        Children->Children = (XinEntry**)calloc(SIZE_OF(XinEntry*));
+        XinChildrenEntries* Children = (XinChildrenEntries*)calloc(sizeof(XinChildrenEntries));
+        Children->Children = (XinEntry**)calloc(sizeof(XinEntry*));
 
         XinEntry* i = (XinEntry*)XIN_FS_ENTRIES_TABLE_BEGIN;
 
@@ -495,7 +524,7 @@ extern "C"
                 {
                     Children->Children[finded_entries] = i;
                     finded_entries++;
-                    Children->Children = (XinEntry**)realloc(Children->Children, SIZE_OF(XinEntry*) * (finded_entries));
+                    Children->Children = (XinEntry**)realloc(Children->Children, sizeof(XinEntry*) * (finded_entries));
                 }
             }
             i++;
@@ -507,8 +536,8 @@ extern "C"
     XinEntriesPack* __xin_hard_links_get(const XinEntry* const File)
     {
 
-        XinEntriesPack* Pack = (XinEntriesPack*)calloc(SIZE_OF(XinEntriesPack));
-        Pack->Entries = (XinEntry**)calloc(SIZE_OF(XinEntry*));
+        XinEntriesPack* Pack = (XinEntriesPack*)calloc(sizeof(XinEntriesPack));
+        Pack->Entries = (XinEntry**)calloc(sizeof(XinEntry*));
 
         if (File->type != XIN_FILE || File == NULL)
         {
@@ -521,7 +550,7 @@ extern "C"
         {
             if (i->first_sector == File->first_sector)
             {
-                Pack->Entries = (XinEntry**)realloc(Pack->Entries, SIZE_OF(XinEntry) * Pack->length + 1);
+                Pack->Entries = (XinEntry**)realloc(Pack->Entries, sizeof(XinEntry) * Pack->length + 1);
                 Pack->Entries[Pack->length++] = i;
             }
         }
@@ -559,7 +588,7 @@ extern "C"
             return false;
 
         __xin_entry_sectors_unlock(Entry);
-        memset((uint8_t*)Entry, '\0', SIZE_OF(XinEntry));
+        memset((uint8_t*)Entry, '\0', sizeof(XinEntry));
         return true;
     }
 
@@ -581,7 +610,7 @@ extern "C"
             if (File == NULL)
                 return XIN_ENTRY_NOT_FOUND;
 
-            memcpy((uint8_t*)Entry, (uint8_t*)File, SIZE_OF(XinEntry));
+            memcpy((uint8_t*)Entry, (uint8_t*)File, sizeof(XinEntry));
 
             strncpy(Entry->path, entrypath, XIN_MAX_PATH_LENGTH);
             Entry->type = XIN_HARD_LINK;
@@ -826,7 +855,7 @@ extern "C"
             if (File->type != XIN_FILE && File->type != XIN_HARD_LINK)
                 return NULL;
 
-            File->FileInfo = (FileInformationBlock*)calloc(SIZE_OF(FileInformationBlock));
+            File->FileInfo = (FileInformationBlock*)calloc(sizeof(FileInformationBlock));
             File->FileInfo->buffer = (uint8_t*)calloc(File->size + SECTOR_SIZE);           // additional space
             File->FileInfo->sector_in_use = (bool*)calloc(int_to_sectors(File->size) + 1); // additional space
 
@@ -839,7 +868,7 @@ extern "C"
 
         if (bstrncmp(mode, "a", 2))
         {
-            File->FileInfo = (FileInformationBlock*)calloc(SIZE_OF(FileInformationBlock));
+            File->FileInfo = (FileInformationBlock*)calloc(sizeof(FileInformationBlock));
             File->FileInfo->buffer = (uint8_t*)calloc(File->size + SECTOR_SIZE);
             File->FileInfo->sector_in_use = (bool*)calloc(int_to_sectors(File->size) + 5);
 
@@ -865,7 +894,7 @@ extern "C"
             if (status == XANIN_OK)
             {
                 File = __xin_find_entry(file_path);
-                File->FileInfo = (FileInformationBlock*)calloc(SIZE_OF(FileInformationBlock));
+                File->FileInfo = (FileInformationBlock*)calloc(sizeof(FileInformationBlock));
                 File->FileInfo->buffer = (uint8_t*)calloc(File->size + SECTOR_SIZE);
                 File->FileInfo->sector_in_use = (bool*)calloc(int_to_sectors(File->size) + 5);
 
@@ -1018,7 +1047,7 @@ extern "C"
         // {
 
         //     if (File->FileInfo == NULL)
-        //         File->FileInfo = (FileInformationBlock *)calloc(SIZE_OF(FileInformationBlock));
+        //         File->FileInfo = (FileInformationBlock *)calloc(sizeof(FileInformationBlock));
 
         //     File->FileInfo->position = 0;
         //     FileDescriptorTable[fd].is_used = true;

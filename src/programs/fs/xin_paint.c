@@ -1,11 +1,11 @@
 
 
-#include <lib/libc/stdiox.h>
 #include <fs/xin.h>
+#include <lib/libc/canvas.h>
 #include <lib/libc/file.h>
 #include <lib/libc/memory.h>
+#include <lib/libc/stdiox.h>
 #include <lib/libc/string.h>
-#include <lib/libc/canvas.h>
 #include <sys/input/input.h>
 
 // CANVAS_APP
@@ -23,7 +23,7 @@ void paint_input(xchar x)
         selected_cell = '\0';
     }
 
-    if ((uint32_t)&Screen.cursor[Screen.y][Screen.x] >= (uint32_t)(VGA_TEXT_MEMORY + VGA_SCREEN_RESOLUTION * SIZE_OF(XtCell)))
+    if ((uint32_t)&Screen.cursor[Screen.y][Screen.x] >= (uint32_t)(VGA_TEXT_MEMORY + VGA_SCREEN_RESOLUTION * sizeof(XtCell)))
     {
         Screen.x = 79;
         Screen.y = 27;
@@ -50,7 +50,7 @@ void paint_input(xchar x)
     {
         Screen.cursor[Screen.y][Screen.x] = selected_cell;
 
-        if ((uint32_t)&Screen.cursor[Screen.y + 1][Screen.x] <= (uint32_t)(VGA_TEXT_MEMORY + VGA_SCREEN_RESOLUTION * SIZE_OF(XtCell)))
+        if ((uint32_t)&Screen.cursor[Screen.y + 1][Screen.x] <= (uint32_t)(VGA_TEXT_MEMORY + VGA_SCREEN_RESOLUTION * sizeof(XtCell)))
             Screen.y++;
 
         selected_cell = Screen.cursor[Screen.y][Screen.x];
@@ -172,12 +172,12 @@ void paint_input(xchar x)
     }
 }
 
-int xin_paint(char *file_name)
+int xin_paint(char* file_name)
 {
     stdio_mode_set(STDIO_MODE_CANVAS);
     canvas_screen_clear();
 
-    XinEntry *xin_file = fopen(file_name, "rw");
+    XinEntry* xin_file = fopen(file_name, "rw");
 
     if (xin_file == NULL)
     {
@@ -191,11 +191,11 @@ int xin_paint(char *file_name)
     else
     {
 
-        char *data_pointer = (char *)calloc(VGA_SCREEN_RESOLUTION); // xin_file->first_sector * SECTOR_SIZE;
-        char *data_pointer_save = data_pointer;
+        char* data_pointer = (char*)calloc(VGA_SCREEN_RESOLUTION); // xin_file->first_sector * SECTOR_SIZE;
+        char* data_pointer_save = data_pointer;
         fread(xin_file, data_pointer, VGA_SCREEN_RESOLUTION);
 
-        uint16_t *screen = (uint16_t *)VGA_TEXT_MEMORY;
+        uint16_t* screen = (uint16_t*)VGA_TEXT_MEMORY;
 
         for (int i = 0; i < VGA_SCREEN_RESOLUTION; i++)
             screen[i] = (uint16_t)(' ' | ((data_pointer[i]) << 8));
@@ -212,10 +212,10 @@ int xin_paint(char *file_name)
 
         data_pointer = data_pointer_save;
 
-        uint8_t *screen_ptr = (uint8_t *)VGA_TEXT_MEMORY;
+        uint8_t* screen_ptr = (uint8_t*)VGA_TEXT_MEMORY;
 
         __xin_fseek(xin_file, 0);
-        for (int i = 0; i < VGA_SCREEN_RESOLUTION * SIZE_OF(XtCell); i++, screen_ptr += 2)
+        for (int i = 0; i < VGA_SCREEN_RESOLUTION * sizeof(XtCell); i++, screen_ptr += 2)
         {
             fwrite(xin_file, screen_ptr + 1, 1);
         }

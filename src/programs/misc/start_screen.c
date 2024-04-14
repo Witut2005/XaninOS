@@ -1,14 +1,14 @@
 
 // CANVAS_APP
 
-#include <lib/libc/file.h>
-#include <sys/input/input.h>
 #include <lib/libc/canvas.h>
 #include <lib/libc/colors.h>
-#include <lib/libc/string.h>
+#include <lib/libc/file.h>
 #include <lib/libc/stdlibx.h>
+#include <lib/libc/string.h>
+#include <sys/input/input.h>
 
-extern char *argv[5];
+extern char* argv[5];
 
 uint16_t string_x = 5;
 uint16_t string_y = 0;
@@ -36,9 +36,9 @@ static inline void print_xanin_os_string(void)
 
     if (bstrcmp(argv[1], "-f"))
     {
-        char *buf = (char *)calloc(VGA_SCREEN_RESOLUTION * SIZE_OF(XtCell));
+        char* buf = (char*)calloc(VGA_SCREEN_RESOLUTION * sizeof(XtCell));
 
-        XinEntry *File = fopen(argv[2], "r");
+        XinEntry* File = fopen(argv[2], "r");
 
         if (File == NULL)
         {
@@ -55,10 +55,10 @@ static inline void print_xanin_os_string(void)
     for (int i = 0; i < string_y; i++)
         canvas_xprintf("\n");
 
-    char *first_row = " __  __          _      ___  ___\n";
-    char *second_row = " \\ \\/ /__ _ _ _ (_)_ _ / _ \\/ __|\n";
-    char *third_row = "  >  </ _` | \' \\| | \' \\ (_) \\__ \\\n";
-    char *fourth_row = " /_/\\_\\__,_|_||_|_|_||_\\___/|___/\n";
+    char* first_row = " __  __          _      ___  ___\n";
+    char* second_row = " \\ \\/ /__ _ _ _ (_)_ _ / _ \\/ __|\n";
+    char* third_row = "  >  </ _` | \' \\| | \' \\ (_) \\__ \\\n";
+    char* fourth_row = " /_/\\_\\__,_|_||_|_|_||_\\___/|___/\n";
 
     align_xanin_os_string();
     canvas_xprintf("%z%s", OUTPUT_COLOR_SET(logo_back_color, logo_front_color), first_row);

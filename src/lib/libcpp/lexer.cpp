@@ -42,7 +42,9 @@ std::string BaseLexer::consume_until(std::string end, bool ignore_end)
     for (auto it = start; it != m_input.cend(); it++, m_index++)
     {
         if (std::string(it, it + endlen) == end) {
-            ignore(endlen);
+            if (ignore_end) {
+                ignore(endlen);
+            }
             return std::string(start, it);
         }
     }
@@ -56,7 +58,6 @@ std::pair<std::string, std::string> BaseLexer::consume_until(std::vector<std::st
         return { "", "" };
     }
 
-
     auto start = m_input.cbegin() + m_index;
 
     for (auto it = start; it != m_input.cend(); it++, m_index++)
@@ -69,7 +70,9 @@ std::pair<std::string, std::string> BaseLexer::consume_until(std::vector<std::st
             auto endlen = end.length();
 
             if (std::string(it, it + endlen) == end) {
-                ignore(endlen);
+                if (ignore_end) {
+                    ignore(endlen);
+                }
                 return { std::string(start, it), end };
             }
         }

@@ -1,14 +1,14 @@
 
+#include <lib/libc/endian.h>
+#include <lib/libc/memory.h>
+#include <lib/libc/stdiox.h>
+#include <lib/libc/string.h>
+#include <sys/input/input.h>
+#include <sys/net/netapi/objects/response.h>
 #include <sys/net/network_protocols/icmp/icmp.h>
 #include <sys/net/network_protocols/internet_protocol/ipv4/ip.h>
-#include <lib/libc/string.h>
-#include <lib/libc/memory.h>
-#include <lib/libc/endian.h>
-#include <sys/net/netapi/objects/response.h>
-#include <sys/input/input.h>
-#include <lib/libc/stdiox.h>
 
-//TERMIMAL_APP
+// TERMIMAL_APP
 
 int ping(char* ip_addr_str)
 {
@@ -16,7 +16,8 @@ int ping(char* ip_addr_str)
     if (!network_device_available_check())
     {
         xprintf("%zCANT EXECUTE PING COMMAND: NO NETWORK CARD\n", OUTPUT_COLOR_ERROR_SET);
-        while (getxchar().scan_code != ENTER);
+        while (getxchar().scan_code != ENTER)
+            ;
         return XANIN_ERROR;
     }
 
@@ -28,7 +29,8 @@ int ping(char* ip_addr_str)
     if (check_string_errors(IPV4_ERRNO))
     {
         xprintf("IP error (invalid ip given)\n");
-        while (getxchar().scan_code != ENTER);
+        while (getxchar().scan_code != ENTER)
+            ;
         return XANIN_OK;
     }
 
@@ -38,7 +40,7 @@ int ping(char* ip_addr_str)
     xprintf("%d\n\n\n", tmp[0]);
 
     NetworkResponse* IcmpResponse;
-    response_object_create(&IcmpResponse, SIZE_OF(IcmpPacket));
+    response_object_create(&IcmpResponse, sizeof(IcmpPacket));
 
     for (int i = 0; i < 4; i++)
     {
@@ -54,9 +56,6 @@ int ping(char* ip_addr_str)
 
         else
             xprintf("%z%s not found\n", OUTPUT_COLOR_ERROR_SET, ip_addr_str);
-
-
-
     }
     return XANIN_OK;
 }

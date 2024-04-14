@@ -1,12 +1,12 @@
 
-#include <lib/libc/stdlibx.h>
 #include <lib/libc/data_structures.h>
+#include <lib/libc/stdlibx.h>
 
 void stack_create(stack_t** Stack)
 {
-    (*Stack) = (stack_t*)calloc(SIZE_OF(stack_t));
-    (*Stack)->number_of_elements = 0;                 //I know that calloc uses 0 but you know ;))
-    (*Stack)->end = (uint32_t*)calloc(SIZE_OF(XANIN_PMMNGR_BLOCK_SIZE));
+    (*Stack) = (stack_t*)calloc(sizeof(stack_t));
+    (*Stack)->number_of_elements = 0; // I know that calloc uses 0 but you know ;))
+    (*Stack)->end = (uint32_t*)calloc(sizeof(XANIN_PMMNGR_BLOCK_SIZE));
 }
 
 void stack_push(stack_t* Stack, const address_t value)
@@ -43,15 +43,12 @@ void stack_remove(stack_t** Stack)
 
 void queue_create(void)
 {
-
 }
 
 void binary_tree_create(void)
 {
-
 }
 
 void tree_create(void)
 {
-
 }

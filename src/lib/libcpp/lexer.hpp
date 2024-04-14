@@ -6,6 +6,9 @@ namespace std {
 
 class BaseLexer {
 public:
+
+    static constexpr int npos = -1;
+
     BaseLexer(const std::string& input)
         : m_input(input)
     {

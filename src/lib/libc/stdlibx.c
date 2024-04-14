@@ -1,16 +1,16 @@
 
-#include <lib/libc/hal.h>
-#include <lib/libc/time.h>
-#include <lib/screen/screen.h>
 #include <lib/libc/colors.h>
-#include <lib/libc/string.h>
-#include <lib/libc/stdlibx.h>
-#include <sys/devices/pit/pit.h>
+#include <lib/libc/endian.h>
+#include <lib/libc/hal.h>
 #include <lib/libc/memory.h>
 #include <lib/libc/process.h>
-#include <lib/libc/endian.h>
+#include <lib/libc/stdlibx.h>
+#include <lib/libc/string.h>
+#include <lib/libc/time.h>
+#include <lib/screen/screen.h>
+#include <sys/devices/pit/pit.h>
 
-uint8_t null_region[20] = {0};
+uint8_t null_region[20] = { 0 };
 
 CmosTime SystemTime;
 
@@ -19,8 +19,8 @@ CmosTime SystemTime;
 
 float pit_time;
 
-char *daysLUT[7] = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
-uint8_t *null_memory_region;
+char* daysLUT[7] = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
+uint8_t* null_memory_region;
 
 extern void kernel_loop(void);
 
@@ -74,17 +74,17 @@ xchar inputg(void)
 //     return __sys_keyinfo_get();
 // }
 
-bcd_date_t time_extern_date(CmosTime *Time)
+bcd_date_t time_extern_date(CmosTime* Time)
 {
     return ((uint32_t)((SystemTime.day_of_month << 24) | (SystemTime.month << 16) | (SystemTime.century << 8) | (SystemTime.year)));
 }
 
-bcd_time_t time_extern_time(CmosTime *Time)
+bcd_time_t time_extern_time(CmosTime* Time)
 {
     return ((uint16_t)(SystemTime.hour << 8) | (SystemTime.minutes));
 }
 
-CmosTime *time_get(CmosTime *Time)
+CmosTime* time_get(CmosTime* Time)
 {
     interrupt_disable();
 
@@ -153,21 +153,21 @@ uint8_t floppy_type_get_cmos(void)
 
 uint32_t randomizer;
 
-void swap_int(int *xp, int *yp)
+void swap_int(int* xp, int* yp)
 {
     int temp = *xp;
     *xp = *yp;
     *yp = temp;
 }
 
-void swap_char(char *xp, char *yp)
+void swap_char(char* xp, char* yp)
 {
     char temp = *xp;
     *xp = *yp;
     *yp = temp;
 }
 
-void swap_short(uint16_t *xp, uint16_t *yp)
+void swap_short(uint16_t* xp, uint16_t* yp)
 {
     uint16_t temp = *xp;
     *xp = *yp;
@@ -201,14 +201,14 @@ uint32_t memory_map_get_cmos(void)
     return low_memory | (high_memory << 8);
 }
 
-void int_swap(int *xp, int *yp)
+void int_swap(int* xp, int* yp)
 {
     int temp = *xp;
     *xp = *yp;
     *yp = temp;
 }
 
-void bubble_sort(int *array, int n) // syntax bubble_sort(array[], n=size of array)
+void bubble_sort(int* array, int n) // syntax bubble_sort(array[], n=size of array)
 {
     bool swapped;
     int i, j;
@@ -228,11 +228,11 @@ void bubble_sort(int *array, int n) // syntax bubble_sort(array[], n=size of arr
     }
 }
 
-void merge(int *array, int first, int middle, int last)
+void merge(int* array, int first, int middle, int last)
 {
     int i, j, k;
-    int n1 = middle - first + 1; // SIZE_OF
-    int n2 = last - middle;      // SIZE_OF
+    int n1 = middle - first + 1; // sizeof
+    int n2 = last - middle;      // sizeof
     int L[n1], R[n2];
 
     for (i = 0; i < n1; i++) // copy array into L
@@ -288,9 +288,9 @@ void merge_sort(int array[], int first, int last)
 
 bool app_exited = false;
 
-IntervalEntry XaninIntervals[INTERVALS_MAX] = {INTERVAL_CLEAR};
+IntervalEntry XaninIntervals[INTERVALS_MAX] = { INTERVAL_CLEAR };
 
-interval_id interval_set(interval_handler handler, float ms, address_t *args)
+interval_id interval_set(interval_handler handler, float ms, address_t* args)
 {
 
     for (int i = 0; i < INTERVALS_MAX; i++)
