@@ -1,6 +1,10 @@
 
+#include <lib/libcpp/ostream.h>
 #include <lib/libcpp/string.h>
 #include <lib/libcpp/utility.h>
+
+using namespace std;
+using namespace std::literals;
 
 extern "C" __STATUS __cpp_string_test(void)
 {
@@ -9,29 +13,37 @@ extern "C" __STATUS __cpp_string_test(void)
 
     std::string nicho = test_str;
 
-    xprintf("c_str: %s\n", nicho.c_str());
-    xprintf("capacity: %d\n", nicho.capacity());
-    xprintf("bstrcmp: %d\n", bstrcmp(nicho.c_str(), test_str));
-    xprintf("strlen: %d\n", strlen(nicho.c_str()) == strlen(test_str));
-    xprintf("str == str: %d\n", nicho == std::string(test_str));
-    xprintf("str != str: %d\n", !(nicho != std::string(test_str)));
+    print("iterator constructor: %d\n", nicho == std::string(nicho.begin(), nicho.end()));
+    print("riterator constructor: %d\n", std::string(nicho.rbegin(), nicho.rend()) == std::string(reversed_test_str));
 
-    xprintf("iterator constructor: %d\n", nicho == std::string(nicho.begin(), nicho.end()));
-    xprintf("riterator constructor: %d\n", std::string(nicho.rbegin(), nicho.rend()) == std::string(reversed_test_str));
+    print("str + str: %s\n", (nicho + nicho).c_str());
 
-    xprintf("str + str: %s\n", (nicho + nicho).c_str());
+    std::string copytome = nicho;
 
-    std::string copytome;
-    copytome = nicho;
-    xprintf("copy operator = %d\n", copytome == nicho);
+    print("constructors: %d\n", nicho == std::string(test_str));
 
-    xprintf("first of %s: %d\n", nicho.c_str(), nicho.first_of("ch") == 2);
-    xprintf("last of %s: %d\n", nicho.c_str(), nicho.last_of("ni") == 0);
+
+    print("first of %s: %d\n", nicho.c_str(), nicho.first_of("ch") == 2);
+    print("last of %s: %d\n", nicho.c_str(), nicho.last_of("ni") == 0);
 
     std::string movetome(std::move(nicho));
-    xprintf("move operator = %d\n", !(movetome == nicho)); // should be false
+    print("move operator = %d\n", !(movetome == nicho)); // should be false
 
     const std::string cons("ugauga");
+
+    print("str == str: {}\n", "abc"s == "abc"s);
+    print("str < str: {}\n", "abc"s < "abcd"s);
+    print("str > str: {}\n", !("abc"s > "abcd"s));
+    print("str <= str: {}\n", "abc"s <= "abc"s);
+    print("str >= str: {}\n", "abc"s >= "abc"s);
+
+    print("--------------std::string_view--------------\n");
+
+    print("str == str: {}\n", "abc"sv == "abc"sv);
+    print("str < str: {}\n", "abc"sv < "abcd"sv);
+    print("str > str: {}\n", !("abc"sv > "abcd"sv));
+    print("str <= str: {}\n", "abc"sv<= "abc"sv);
+    print("str >= str: {}\n", "abc"sv >= "abc"sv);
 
     cons + cons;
 

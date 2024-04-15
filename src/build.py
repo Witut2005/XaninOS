@@ -180,8 +180,11 @@ c_compiler_ignored_warnings = ' '.join([compiler_ignore_given_warning(warning) f
 cpp_compiler_ignored_warnings_li = ['unused-function', 'address-of-packed-member', 'literal-suffix']
 cpp_compiler_ignored_warnings = ' '.join([compiler_ignore_given_warning(warning) for warning in cpp_compiler_ignored_warnings_li])
 
-compiler_casted_warnings_li = ['int-conversion', 'implicit-function-declaration', 'return-type']
-compiler_casted_warnings = ' '.join([compiler_cast_given_warning(warning) for warning in compiler_casted_warnings_li])
+c_compiler_casted_warnings_li = ['int-conversion', 'implicit-function-declaration', 'return-type']
+c_compiler_casted_warnings = ' '.join([compiler_cast_given_warning(warning) for warning in c_compiler_casted_warnings_li])
+
+cpp_compiler_casted_warnings_li = ['return-type']
+cpp_compiler_casted_warnings = ' '.join([compiler_cast_given_warning(warning) for warning in cpp_compiler_casted_warnings_li])
 
 builder_options = {
     'asm': {
@@ -190,14 +193,14 @@ builder_options = {
     },
 
     'c':{
-        'default': f"{c_compilation_options} {compiler_casted_warnings} {c_compiler_ignored_warnings} -c",
-        'lib': f"{c_compilation_options} {compiler_casted_warnings} {c_compiler_ignored_warnings} -fpic -c",
-        'kernel': f"{c_compilation_options} {compiler_casted_warnings} {c_compiler_ignored_warnings} -Ttext 0xF00000"
+        'default': f"{c_compilation_options} {c_compiler_casted_warnings} {c_compiler_ignored_warnings} -c",
+        'lib': f"{c_compilation_options} {c_compiler_casted_warnings} {c_compiler_ignored_warnings} -fpic -c",
+        'kernel': f"{c_compilation_options} {c_compiler_casted_warnings} {c_compiler_ignored_warnings} -Ttext 0xF00000"
     },
 
     'cc':{
-        'default': f"{cc_compilation_options} {cpp_compiler_ignored_warnings} -c",
-        'lib': f"{cc_compilation_options} {cpp_compiler_ignored_warnings} -fpic -c"
+        'default': f"{cc_compilation_options} {cpp_compiler_casted_warnings} {cpp_compiler_ignored_warnings} -c",
+        'lib': f"{cc_compilation_options} {cpp_compiler_casted_warnings} {cpp_compiler_ignored_warnings} -fpic -c"
     }
 }
 
@@ -344,7 +347,6 @@ objects_to_compile = {
     'libcpp': [
         CompileObject('./lib/libcpp/new.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./lib/libcpp/lexer.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
-        CompileObject('./lib/libcpp/command_parser.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./lib/libcpp/regex.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./lib/libcpp/istream.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./lib/libcpp/ostream.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),

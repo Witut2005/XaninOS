@@ -21,8 +21,9 @@ std::string BaseLexer::consume(uint32_t count)
 {
     auto input_len = m_input.length();
 
-    std::string(m_input.c_str() + m_index, count + m_index > input_len ? input_len : count);
+    auto tmp = std::string(m_input.c_str() + m_index, count + m_index > input_len ? input_len : count);
     m_index = count + m_index > input_len ? input_len : m_index = count;
+    return tmp;
 }
 
 void BaseLexer::ignore(uint32_t count)

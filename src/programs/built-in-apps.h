@@ -93,6 +93,7 @@ extern "C" {
     __STATUS __cpp_string_test(void);
     __STATUS __cpp_lexer_test(void);
     __STATUS __cpp_xin_test(void);
+    __STATUS __cpp_array_test(void);
 
 #ifdef __cplusplus
 }

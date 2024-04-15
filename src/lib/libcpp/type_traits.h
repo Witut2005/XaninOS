@@ -55,9 +55,9 @@ struct is_pointer<T* const volatile> : std::true_type {};
 
 #define is_char_ptr(T) std::is_pointer<T>::value && (sizeof(std::remove_pointer<T>) == sizeof(char))
 
-#define is_int(T) (sizeof(T) == sizeof(int))
-#define is_short(T) (sizeof(T) == sizeof(short))
-#define is_char(T) (sizeof(T) == sizeof(char))
+// #define std::is_same<int, K>(T) true//(sizeof(T) == sizeof(int))
+// #define is_short(T) true//(sizeof(T) == sizeof(short))
+// #define is_char(T) (sizeof(T) == sizeof(char))
 
 template <typename T, typename K>
 struct is_same {

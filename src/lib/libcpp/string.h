@@ -9,7 +9,6 @@
 
 namespace std {
 
-RANDOM_ACCESS_ITERATORS_DECLARE(NStringIterator, char)
 
 template <typename T>
 concept StringIt = requires() {
@@ -44,7 +43,7 @@ public:
     int index_serialize(int index) const;
     uint32_t capacity(void) const; //returns m_size_reserved - sizeof('\0')
     void reserve(uint32_t size); //reserves to hold size characters
-    char const* c_str(void) const;
+    const char * c_str(void) const;
     uint32_t length(void) const;
     uint32_t size(void) const;
     void clear(void);
@@ -53,6 +52,7 @@ public:
     int first_of(std::string to_find, int start_index = 0) const;
 
     operator bool() const;
+    int operator <=> (const string& other) const {return strcmp(m_ptr, other.m_ptr);}
     char& operator[](int index);
     const char& operator[](int index) const;
 
@@ -72,6 +72,8 @@ private:
     char* m_ptr{ nullptr };
     uint32_t m_size_reserved{ 0 };
 };
+
+RANDOM_ACCESS_ITERATORS_DECLARE(NStringIterator, string)
 
 class string_view {
 public:
@@ -94,6 +96,7 @@ public:
     constexpr uint32_t size(void) { return m_size; }
 
     constexpr operator bool() { return m_ptr != nullptr; }
+    int operator <=> (const string_view& other) {return strcmp(m_ptr, other.m_ptr);}
     const constexpr char& operator[](int index) { return m_ptr[index]; }
 
     string_view& operator=(string_view const& other) { m_ptr = other.m_ptr; m_size = other.m_size; return *this; }
@@ -103,6 +106,7 @@ public:
         other.m_ptr = nullptr;
         return *this;
     }
+
     bool operator == (string_view const& other) { return bstrcmp(m_ptr, other.m_ptr); }
     bool operator != (string const& other) { return !(*this == other); }
 
@@ -121,8 +125,6 @@ private:
     size_t m_size;
 };
 
-constexpr string_view operator""sv(const char* str, size_t len);
-
 template <StringIt It>
 string::string(It beg, It end)
 {
@@ -140,6 +142,21 @@ string_view::string_view(It beg) : m_ptr(beg.data())
     for (int i = 0; m_ptr[i] != '\0'; i++) {
         m_size++;
     }
+
+}
+
+namespace literals 
+{
+
+static inline string operator""s(const char* str, size_t len)
+{
+    return std::string(str, len);    
+}
+
+constexpr static inline string_view operator""sv(const char* str, size_t len)
+{
+    return std::string_view(str, len);    
+}
 
 }
 
