@@ -119,6 +119,8 @@ void mmngr_init(uint8_t* map, uint8_t* base, uint32_t blocks)
 
 void* mmngr_block_allocate(uint8_t mode, uint32_t size)
 {
+#warning "TODO what happens when size = 0?";
+    if (size == 0) size++;
 
     uint32_t mmap_index = mmngr_mmap_free_block_find(mode, size_to_blocks_allocated(size));
 

@@ -79,45 +79,24 @@ template <class T, class X>
 struct pair
 {
 
-public:
-    T first;
-    X second;
+    using this_type = pair<T, X>;
 
     pair() = default;
     pair(T x, X y) : first(x), second(y) {}
 
-    pair(const pair<T, X>& copy) = default;
-    pair(pair<T, X>&& copy)
-    {
-        this->first = copy.first;
-        this->second = copy.second;
-    }
-    pair<T, X>& operator=(const pair<T, X>& copy) = default;
+    pair(const this_type& other) = default;
+    pair<T, X>& operator=(const this_type& other) = default;
 
-    pair<T, X>& operator=(pair<T, X>&& copy) //meaningless (do same as copy assigment operator)
-    {
-        this->first = copy.first;
-        this->second = copy.second;
-        return *this;
+    bool operator==(const pair<T, X>& other) {
+        return ((this->first == other.first) && (this->second == other.second));
     }
 
-    // pair<T, X>& operator = (pair<T, X>& copy) = default;
-
-    bool operator==(const pair<T, X>& other)
-    {
-        if ((this->first == other.first) && (this->second == other.second))
-            return true;
-        else
-            return false;
+    bool operator!=(const pair<T, X>& other) {
+        return !(*this == other);
     }
 
-    bool operator!=(const pair<T, X>& other)
-    {
-        if ((this->first == other.first) && (this->second == other.second))
-            return false;
-        else
-            return true;
-    }
+    T first;
+    X second;
 };
 
 template <class T, class X>

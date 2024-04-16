@@ -9,6 +9,7 @@
 
 namespace std {
 
+RANDOM_ACCESS_ITERATORS_DECLARE(NStringIterator, char)
 
 template <typename T>
 concept StringIt = requires() {
@@ -25,7 +26,7 @@ public:
     using ConstIterator = ConstNStringIterator;
     using ConstReversedIterator = ConstReversedNStringIterator;
 
-    string(void) = default;
+    string(void);
     explicit string(uint32_t size);
 
     // string(const NStringIterator beg, const NStringIterator end);
@@ -43,16 +44,17 @@ public:
     int index_serialize(int index) const;
     uint32_t capacity(void) const; //returns m_size_reserved - sizeof('\0')
     void reserve(uint32_t size); //reserves to hold size characters
-    const char * c_str(void) const;
+    const char* c_str(void) const;
     uint32_t length(void) const;
     uint32_t size(void) const;
     void clear(void);
 
+    string substr(int start_index, size_t len = npos) const;
     int last_of(std::string to_find, int start_index = -1) const;
     int first_of(std::string to_find, int start_index = 0) const;
 
     operator bool() const;
-    int operator <=> (const string& other) const {return strcmp(m_ptr, other.m_ptr);}
+    int operator <=> (const string& other) const { return strcmp(m_ptr, other.m_ptr); }
     char& operator[](int index);
     const char& operator[](int index) const;
 
@@ -72,8 +74,6 @@ private:
     char* m_ptr{ nullptr };
     uint32_t m_size_reserved{ 0 };
 };
-
-RANDOM_ACCESS_ITERATORS_DECLARE(NStringIterator, string)
 
 class string_view {
 public:
@@ -96,7 +96,7 @@ public:
     constexpr uint32_t size(void) { return m_size; }
 
     constexpr operator bool() { return m_ptr != nullptr; }
-    int operator <=> (const string_view& other) {return strcmp(m_ptr, other.m_ptr);}
+    int operator <=> (const string_view& other) { return strcmp(m_ptr, other.m_ptr); }
     const constexpr char& operator[](int index) { return m_ptr[index]; }
 
     string_view& operator=(string_view const& other) { m_ptr = other.m_ptr; m_size = other.m_size; return *this; }
@@ -126,7 +126,7 @@ private:
 };
 
 template <StringIt It>
-string::string(It beg, It end)
+string::string(It beg, It end) : string()
 {
     int i = 1;
     for (;beg != end; beg++, i++) {
@@ -145,17 +145,17 @@ string_view::string_view(It beg) : m_ptr(beg.data())
 
 }
 
-namespace literals 
+namespace literals
 {
 
 static inline string operator""s(const char* str, size_t len)
 {
-    return std::string(str, len);    
+    return std::string(str, len);
 }
 
 constexpr static inline string_view operator""sv(const char* str, size_t len)
 {
-    return std::string_view(str, len);    
+    return std::string_view(str, len);
 }
 
 }

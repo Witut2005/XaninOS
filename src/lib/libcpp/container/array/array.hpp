@@ -317,43 +317,43 @@ std::array<T, SIZE> to_array(T* ptr)
         arr[i] = ptr[i];
 }
 
-template<typename T, int Size>
-class narray {
-    public:
-    using value_type = T;
-    using Iterator = NArrayIterator<T>;
-    using ReversedIterator = ConstReversedNArrayIterator;
-    using ConstIterator = ConstNArrayIterator;
-    using ConstReversedIterator = ConstReversedNIterator;
+// template<typename T, int Size>
+// class narray {
+//     public:
+//     using value_type = T;
+//     using Iterator = NArrayIterator<T>;
+//     using ReversedIterator = ConstReversedNArrayIterator;
+//     using ConstIterator = ConstNArrayIterator;
+//     using ConstReversedIterator = ConstReversedNIterator;
 
-    array(void) = default;
+//     array(void) = default;
 
-    // string(const NStringIterator beg, const NStringIterator end);
-    template <typename It>
-    array(It beg);
+//     // string(const NStringIterator beg, const NStringIterator end);
+//     template <typename It>
+//     array(It beg);
 
-    int index_serialize(int index) const;
-    constexpr const char * data(void) { return m_ptr; }
-    constexpr const char * data(void) const {return m_ptr; }
-    constexpr uint32_t size(void) const { return Size; }
+//     int index_serialize(int index) const;
+//     constexpr const char * data(void) { return m_ptr; }
+//     constexpr const char * data(void) const {return m_ptr; }
+//     constexpr uint32_t size(void) const { return Size; }
 
-    // int last_of(std::string to_find, int start_index = -1) const;
-    // int first_of(std::string to_find, int start_index = 0) const;
+//     // int last_of(std::string to_find, int start_index = -1) const;
+//     // int first_of(std::string to_find, int start_index = 0) const;
 
-    char& operator[](int index) { return m_ptr[index_serialize(index)]; }
-    const char& operator[](int index) const { return m_ptr[index_serialize(index)]; }
+//     char& operator[](int index) { return m_ptr[index_serialize(index)]; }
+//     const char& operator[](int index) const { return m_ptr[index_serialize(index)]; }
 
-    narray& operator=(narray const& other);
-    bool operator == (narray const& other) const;
-    bool operator != (narray const& other) const;
+//     narray& operator=(narray const& other);
+//     bool operator == (narray const& other) const;
+//     bool operator != (narray const& other) const;
 
-    DEFINE_CLASS_RANGE_OPERATIONS(NArrayIterator);
+//     DEFINE_CLASS_RANGE_OPERATIONS(NArrayIterator);
 
-    static constexpr int npos = -1;
+//     static constexpr int npos = -1;
 
-    private:
-    T m_ptr[Size];
-};
+//     private:
+//     T m_ptr[Size];
+// };
 
 // RANDOM_ACCESS_ITERATORS_DECLARE(NArrayIterator, narray)
 

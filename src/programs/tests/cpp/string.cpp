@@ -2,6 +2,7 @@
 #include <lib/libcpp/ostream.h>
 #include <lib/libcpp/string.h>
 #include <lib/libcpp/utility.h>
+#include <sys/devices/com/com.h>
 
 using namespace std;
 using namespace std::literals;
@@ -14,6 +15,7 @@ extern "C" __STATUS __cpp_string_test(void)
     std::string nicho = test_str;
 
     print("iterator constructor: %d\n", nicho == std::string(nicho.begin(), nicho.end()));
+    print("tricky iterator constructor: {}\n", std::string(nicho.begin(), nicho.begin()));
     print("riterator constructor: %d\n", std::string(nicho.rbegin(), nicho.rend()) == std::string(reversed_test_str));
 
     print("str + str: %s\n", (nicho + nicho).c_str());
@@ -22,9 +24,13 @@ extern "C" __STATUS __cpp_string_test(void)
 
     print("constructors: %d\n", nicho == std::string(test_str));
 
-
     print("first of %s: %d\n", nicho.c_str(), nicho.first_of("ch") == 2);
     print("last of %s: %d\n", nicho.c_str(), nicho.last_of("ni") == 0);
+
+    dbg_info("STRING START", "");
+    print("last of (second test) %s: %d\n", nicho.c_str(), nicho.last_of("i", -3) == 1);
+    print("last of (second test) %s: %d\n", nicho.c_str(), nicho.last_of("i", 2) == 1);
+    print("last of (second test) %s: %d\n", nicho.c_str(), nicho.index_serialize(-3) == 2);
 
     std::string movetome(std::move(nicho));
     print("move operator = %d\n", !(movetome == nicho)); // should be false
@@ -42,7 +48,7 @@ extern "C" __STATUS __cpp_string_test(void)
     print("str == str: {}\n", "abc"sv == "abc"sv);
     print("str < str: {}\n", "abc"sv < "abcd"sv);
     print("str > str: {}\n", !("abc"sv > "abcd"sv));
-    print("str <= str: {}\n", "abc"sv<= "abc"sv);
+    print("str <= str: {}\n", "abc"sv <= "abc"sv);
     print("str >= str: {}\n", "abc"sv >= "abc"sv);
 
     cons + cons;

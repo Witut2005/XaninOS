@@ -2,8 +2,11 @@
 #include "./lexer.hpp"
 #include <lib/libcpp/algorithm.h>
 #include <sys/devices/com/com.h>
+#include <lib/libcpp/memory.hpp>
 
 namespace std {
+
+using namespace literals;
 
 // check if '\0'
 void BaseLexer::reassign(const std::string& input)

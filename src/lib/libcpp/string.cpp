@@ -156,7 +156,11 @@ DEFINE_ITERATOR_INEQUALITY_OPERATOR(ReversedNStringIterator,
     }
 );
 
-string::string(uint32_t size) : m_size_reserved(size + 1), m_ptr(new char[size]) {}
+string::string(void) {
+    m_ptr = (char*)calloc(0);
+}
+
+string::string(uint32_t size) : m_size_reserved(size + 1), m_ptr(new char[size + 2]) {}
 
 string::string(char const* other)
 {
@@ -207,6 +211,7 @@ uint32_t string::capacity(void) const
 void string::reserve(uint32_t size)
 {
     m_size_reserved = size + 1;
+    m_ptr = (char*)realloc(m_ptr, m_size_reserved);
 }
 
 char const* string::c_str(void) const
@@ -233,14 +238,15 @@ void string::clear(void)
 
 int string::last_of(std::string to_find, int start_index) const
 {
+    start_index = index_serialize(start_index);
     auto to_find_length = to_find.length();
-    auto start = cbegin() + index_serialize(start_index);
+    auto start = cbegin() + (start_index - to_find_length + 1);
 
     if (start < cbegin() || start >= cend()) return npos;
-    if (start - to_find_length < cbegin()) return npos;
+    if (start_index - to_find_length < 0) return npos;
 
-    int i = length() - 1;
-    for (auto it = start; it != cbegin() - 1; it--, i--)
+    int i = start_index;
+    for (auto it = start; i != -1; it--, i--)
     {
         if (string(it, it + to_find_length) == to_find) {
             return i;
@@ -271,7 +277,7 @@ int string::first_of(std::string to_find, int start_index) const
 
 string::operator bool(void) const
 {
-    return m_ptr[0] != '\0';
+    return m_size_reserved != 0;
 }
 
 char& string::operator[](int index)
@@ -310,8 +316,7 @@ string& string::operator=(std::string&& other)
 
 string string::operator+(const std::string& other) const
 {
-    // reallocate_if_needed(length() + other.length());
-    auto tstr = string(length() + other.length() + sizeof('\0'));
+    auto tstr = string(length() + other.length());
 
     strcat(STRCAT_DEST_FIRST, tstr.m_ptr, m_ptr);
     strcat(STRCAT_DEST_FIRST, &tstr.m_ptr[tstr.length()], other.m_ptr);
