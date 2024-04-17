@@ -128,21 +128,19 @@ private:
 template <StringIt It>
 string::string(It beg, It end) : string()
 {
-    int i = 1;
-    for (;beg != end; beg++, i++) {
-        reallocate_if_needed(i);
-        m_ptr[i - 1] = *beg;
+    if (beg.data() < end.data())
+    {
+        auto size_to_allocate = (uint32_t)end.data() - (uint32_t)beg.data();
+        reallocate_if_needed(size_to_allocate);
+        memcpy(m_ptr, beg.data(), size_to_allocate);
     }
-    m_ptr[i - 1] = '\0';
 }
-
 template <StringIt It>
 string_view::string_view(It beg) : m_ptr(beg.data())
 {
     for (int i = 0; m_ptr[i] != '\0'; i++) {
         m_size++;
     }
-
 }
 
 namespace literals

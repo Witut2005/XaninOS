@@ -92,9 +92,9 @@ std::string __nxin_path_parse(std::string path)
     }
 
     if (path.substr(-2) == "/.") {
-        path.substr(0, path.length() - 2);
+        return path.substr(0, path.length() - 2);
     }
-    return conditional_goto_to_parent_folder(string(path.end() - 2, path.end()) == "..", path, -4); // check if path ends with .. (nicho/ble/ble/..)
+    return conditional_goto_to_parent_folder(path.substr(-2) == "..", path, -4); // check if path ends with .. (nicho/ble/ble/..)
 }
 
 extern "C"
