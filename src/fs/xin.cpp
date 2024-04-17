@@ -67,7 +67,7 @@ std::string __nxin_path_parse(std::string path)
     auto conditional_goto_to_parent_folder = [](bool cond, const std::string& path, int start_index) -> std::string {
         if (cond) {
             if (auto delim_index = path.last_of("/", start_index); delim_index != std::string::npos) {
-                return std::string(path.cbegin(), path.cbegin() + delim_index + 1); //we dont want to delete '/' char
+                return path.substr(0, delim_index + 1); //we dont want to delete '/' char
             }
             else {
                 return "/";
@@ -91,8 +91,8 @@ std::string __nxin_path_parse(std::string path)
         path = conditional_goto_to_parent_folder(result.second == "../", path, -2);
     }
 
-    if (string(path.end() - 2, path.end()) == "/.") {
-        path = string(path.begin(), path.end() - 2);
+    if (path.substr(-2) == "/.") {
+        path.substr(0, path.length() - 2);
     }
     return conditional_goto_to_parent_folder(string(path.end() - 2, path.end()) == "..", path, -4); // check if path ends with .. (nicho/ble/ble/..)
 }

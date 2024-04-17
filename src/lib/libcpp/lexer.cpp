@@ -70,7 +70,7 @@ std::pair<std::string, std::string> BaseLexer::consume_until(std::vector<std::st
             break;
         }
 
-        for (auto end : ends) {
+        for (const auto& end : ends) {
             auto endlen = end.length();
 
             if (std::string(it, it + endlen) == end) {

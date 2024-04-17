@@ -157,7 +157,7 @@ DEFINE_ITERATOR_INEQUALITY_OPERATOR(ReversedNStringIterator,
 );
 
 string::string(void) {
-    m_ptr = (char*)calloc(0);
+    m_ptr = (char*)calloc(1);
 }
 
 string::string(uint32_t size) : m_size_reserved(size + 1), m_ptr(new char[size + 2]) {}
@@ -237,7 +237,7 @@ void string::clear(void)
     }
 
     m_size_reserved = 0;
-    m_ptr = (char*)calloc(0);
+    m_ptr = (char*)calloc(1);
 }
 
 string string::substr(int start_index, size_t len) const

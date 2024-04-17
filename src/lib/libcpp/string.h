@@ -71,7 +71,7 @@ public:
 private:
     bool reallocate_if_needed(uint32_t size);     // returns true when data was reallocted
 
-    char* m_ptr{ nullptr };
+    char* m_ptr;
     uint32_t m_size_reserved{ 0 };
 };
 
