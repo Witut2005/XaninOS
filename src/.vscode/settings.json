@@ -121,7 +121,9 @@
         "assert.h": "c",
         "syscall.h": "c",
         "com.h": "c",
-        "ip.h": "c"
+        "ip.h": "c",
+        "csignal": "cpp",
+        "valarray": "cpp"
     },
 
     "editor.formatOnSave": true,

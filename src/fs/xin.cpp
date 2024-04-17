@@ -56,7 +56,6 @@ std::string __nxin_absolute_path_get(const std::string& name)
 std::string __nxin_entry_name_extern(const std::string& path)
 {
     if (auto delim_index = path.last_of("/"); delim_index != -1) {
-        dbg_info("SKIBIDI", "RAFAL");
         return std::string(path.cbegin(), path.cbegin() + delim_index);
     }
     return path;

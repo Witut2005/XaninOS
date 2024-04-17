@@ -221,6 +221,7 @@ char const* string::c_str(void) const
 
 uint32_t string::length(void) const
 {
+    if (m_size_reserved == 0) return 0;
     return strlen(m_ptr);
 }
 
@@ -231,19 +232,30 @@ uint32_t string::size(void) const
 
 void string::clear(void)
 {
-    free(m_ptr);
+    if (m_ptr != nullptr) {
+        free(m_ptr);
+    }
+
     m_size_reserved = 0;
-    m_ptr = nullptr;
+    m_ptr = (char*)calloc(0);
+}
+
+string string::substr(int start_index, size_t len) const
+{
+    if (length() == 0) return "";
+    auto begin_it = cbegin() + index_serialize(start_index);
+
+    return string(begin_it, len == npos ? cend() :
+        (begin_it + len >= cend() ? cend() : begin_it + len));
 }
 
 int string::last_of(std::string to_find, int start_index) const
 {
-    start_index = index_serialize(start_index);
     auto to_find_length = to_find.length();
-    auto start = cbegin() + (start_index - to_find_length + 1);
+    start_index = index_serialize(start_index) - to_find_length + 1;
+    auto start = cbegin() + start_index;
 
     if (start < cbegin() || start >= cend()) return npos;
-    if (start_index - to_find_length < 0) return npos;
 
     int i = start_index;
     for (auto it = start; i != -1; it--, i--)
@@ -318,8 +330,8 @@ string string::operator+(const std::string& other) const
 {
     auto tstr = string(length() + other.length());
 
-    strcat(STRCAT_DEST_FIRST, tstr.m_ptr, m_ptr);
-    strcat(STRCAT_DEST_FIRST, &tstr.m_ptr[tstr.length()], other.m_ptr);
+    memcpy(tstr.m_ptr, m_ptr, length());
+    memcpy(&tstr.m_ptr[tstr.length()], other.m_ptr, other.length());
 
     return tstr;
 }

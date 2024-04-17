@@ -187,6 +187,7 @@ void* kmalloc(uint32_t size)
 
 void* kcalloc(uint32_t size)
 {
+    if (size == 0) size++;
     uint8_t* tmp = mmngr_block_allocate(KERNEL_HEAP, size);
     memset(tmp, 0, size);
 
@@ -200,6 +201,7 @@ void kfree(void* ptr)
 
 void* krealloc(void* ptr, uint32_t size)
 {
+    if (size == 0) size++;
     uint8_t* tmp = mmngr_block_allocate(KERNEL_HEAP, size);
     memmove(tmp, ptr, size);
     mmngr_block_free(KERNEL_HEAP, ptr);
@@ -215,6 +217,7 @@ void* umalloc(uint32_t size)
 
 void* ucalloc(uint32_t size)
 {
+    if (size == 0) size++;
     uint8_t* tmp = mmngr_block_allocate(USER_HEAP, size);
     memset(tmp, 0, size);
 
@@ -223,6 +226,8 @@ void* ucalloc(uint32_t size)
 
 void* urealloc(void* ptr, uint32_t size)
 {
+    if (size == 0) size++;
+
     EFlags Flags;
     INTERRUPTS_OFF(&Flags);
 

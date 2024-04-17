@@ -23,14 +23,15 @@ extern "C" __STATUS __cpp_string_test(void)
     std::string copytome = nicho;
 
     print("constructors: %d\n", nicho == std::string(test_str));
+    print("first of {}: %d\n", nicho, nicho.first_of("ch") == 2);
+    print("last of {}: %d\n", nicho, nicho.last_of("nic") == 0);
 
-    print("first of %s: %d\n", nicho.c_str(), nicho.first_of("ch") == 2);
-    print("last of %s: %d\n", nicho.c_str(), nicho.last_of("ni") == 0);
-
-    dbg_info("STRING START", "");
     print("last of (second test) %s: %d\n", nicho.c_str(), nicho.last_of("i", -3) == 1);
     print("last of (second test) %s: %d\n", nicho.c_str(), nicho.last_of("i", 2) == 1);
     print("last of (second test) %s: %d\n", nicho.c_str(), nicho.index_serialize(-3) == 2);
+
+    print("substr: {}\n", nicho.substr(1, 3).c_str());// == "icho"s);
+    print("substr: {}\n", nicho.substr(0, 3).c_str());//== "nic"s);
 
     std::string movetome(std::move(nicho));
     print("move operator = %d\n", !(movetome == nicho)); // should be false
