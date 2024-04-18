@@ -166,7 +166,7 @@ builders = {
 }
 
 c_compilation_options = '-O0 -Wall -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -I ./'
-cc_compilation_options = '-O0 -std=c++20 -fno-exceptions -masm=intel -Wno-builtin-declaration-mismatch -Wno-unused-function -Wno-write-strings -fno-rtti -fconcepts-ts -nostdlib -ffreestanding -I ./ -c'
+cc_compilation_options = '-O0 -std=c++2a -fno-exceptions -masm=intel -Wno-builtin-declaration-mismatch -Wno-unused-function -Wno-write-strings -fno-rtti -fconcepts-ts -nostdlib -ffreestanding -I ./ -c'
 
 def compiler_cast_given_warning(warning):
     return f'-Werror={warning}'

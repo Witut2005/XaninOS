@@ -260,6 +260,130 @@ public:
     virtual bool valid(void) const = 0;
 };
 
+#define NRANDOM_ACCESS_ITERATORS_DECLARE(ItType) \
+template<class Cont>\
+class ItType;\
+template<class Cont>\
+class Const##ItType;\
+template<class Cont>\
+class Reversed##ItType;\
+template<class Cont>\
+class ConstReversed##ItType;\
+\
+template<class Cont>\
+class ItType { \
+public: \
+ItType(Cont::value_type* ptr) : m_ptr(ptr) {}; \
+ItType(ItType const& other) = default; \
+ItType(Const##ItType<Cont> const& other); \
+ItType(Reversed##ItType<Cont> const& other); \
+ItType(ConstReversed##ItType<Cont> const& other); \
+\
+Cont::value_type* data(void) { return m_ptr; }\
+\
+ItType& operator++(void); \
+ItType operator++(int); \
+ItType& operator--(void); \
+ItType operator--(int); \
+ItType operator+(int offset); \
+ItType operator-(int offset); \
+Cont::value_type& operator*(); \
+int operator<=>(const ItType& other); \
+bool operator==(const ItType& other); \
+bool operator!=(const ItType& other); \
+private: \
+    Cont::value_type* m_ptr; \
+    friend class Const##ItType<Cont>; \
+    friend class Reversed##ItType<Cont>; \
+    friend class ConstReversed##ItType<Cont>; \
+}; \
+\
+template<class Cont>\
+class Const##ItType{ \
+public: \
+    using value_type = typename Cont::value_type;\
+    Const##ItType(const value_type* ptr) : m_ptr(ptr) {}; \
+    Const##ItType(ItType<Cont> const& other); \
+    Const##ItType(Const##ItType const& other) = default; \
+    Const##ItType(Reversed##ItType<Cont> const& other); \
+    Const##ItType(ConstReversed##ItType<Cont> const& other); \
+    \
+    const value_type* data(void) { return m_ptr; }\
+    \
+    Const##ItType& operator++(void); \
+    Const##ItType operator++(int); \
+    Const##ItType& operator--(void); \
+    Const##ItType operator--(int); \
+    Const##ItType operator+(int offset); \
+    Const##ItType operator-(int offset); \
+    const value_type& operator*(); \
+    int operator<=>(const Const##ItType& other); \
+    bool operator==(const Const##ItType& other); \
+    bool operator!=(const Const##ItType& other); \
+private: \
+    const value_type* m_ptr; \
+    friend class ItType<Cont>; \
+    friend class Reversed##ItType<Cont>;\
+    friend class ConstReversed##ItType<Cont>;\
+}; \
+template<class Cont>\
+class Reversed##ItType{ \
+public: \
+        using value_type = typename Cont::value_type;\
+        Reversed##ItType(value_type* ptr) : m_ptr(ptr) {}; \
+        Reversed##ItType(ItType<Cont> const& other); \
+        Reversed##ItType(Const##ItType<Cont> const& other); \
+        Reversed##ItType(Reversed##ItType const& other) = default; \
+        Reversed##ItType(ConstReversed##ItType<Cont> const& other); \
+        \
+        value_type* data(void) { return m_ptr; }\
+        \
+        Reversed##ItType& operator++(void); \
+        Reversed##ItType operator++(int); \
+        Reversed##ItType& operator--(void); \
+        Reversed##ItType operator--(int); \
+        Reversed##ItType operator+(int offset); \
+        Reversed##ItType operator-(int offset); \
+        value_type& operator*(); \
+        int operator<=>(const Reversed##ItType& other); \
+        bool operator==(const Reversed##ItType& other); \
+        bool operator!=(const Reversed##ItType& other); \
+private: \
+        value_type* m_ptr; \
+        friend class ItType<Cont>; \
+        friend class Const##ItType<Cont>;\
+        friend class ConstReversed##ItType<Cont>;\
+}; \
+template<class Cont>\
+class ConstReversed##ItType{ \
+public: \
+        using value_type = typename Cont::value_type;\
+        ConstReversed##ItType(const value_type* ptr) : m_ptr(ptr) {}; \
+        ConstReversed##ItType(ItType<Cont> const& other); \
+        ConstReversed##ItType(Const##ItType<Cont> const& other); \
+        ConstReversed##ItType(Reversed##ItType<Cont> const& other); \
+        ConstReversed##ItType(ConstReversed##ItType const& other) = default; \
+        \
+        const value_type* data(void) { return m_ptr; }\
+        \
+        ConstReversed##ItType& operator++(void); \
+        ConstReversed##ItType operator++(int); \
+        ConstReversed##ItType& operator--(void); \
+        ConstReversed##ItType operator--(int); \
+        ConstReversed##ItType operator+(int offset); \
+        ConstReversed##ItType operator-(int offset); \
+        const value_type& operator*(); \
+        int operator<=>(const ConstReversed##ItType& other); \
+        bool operator==(const ConstReversed##ItType& other); \
+        bool operator!=(const ConstReversed##ItType& other); \
+private: \
+        const value_type* m_ptr; \
+        friend class ItType<Cont>; \
+        friend class Const##ItType<Cont>;\
+        friend class Reversed##ItType<Cont>;\
+};
+
+
 #define RANDOM_ACCESS_ITERATORS_DECLARE(ItType, StoredType) \
 class ItType;\
 class Const##ItType;\
@@ -288,9 +412,9 @@ public: \
     bool operator!=(const ItType& other); \
 private: \
     StoredType* m_ptr; \
-    friend class Const##ItType; \
-    friend class Reversed##ItType; \
-    friend class ConstReversed##ItType; \
+    friend class Const##ItType<Cont>; \
+    friend class Reversed##ItType<Cont>; \
+    friend class ConstReversed##ItType<Cont>; \
 }; \
 \
 class Const##ItType{ \
@@ -323,9 +447,9 @@ class Reversed##ItType{ \
 public: \
         Reversed##ItType(StoredType * ptr) : m_ptr(ptr) {}; \
         Reversed##ItType(ItType const& other); \
-        Reversed##ItType(Const##ItType const& other); \
-        Reversed##ItType(Reversed##ItType const& other) = default; \
-        Reversed##ItType(ConstReversed##ItType const& other); \
+        Reversed##ItType(Const##ItType<Cont> const& other); \
+        Reversed##ItType(Reversed##ItType<Cont> const& other) = default; \
+        Reversed##ItType(ConstReversed##ItType<Cont> const& other); \
         \
         StoredType* data(void) { return m_ptr; }\
         \
@@ -341,17 +465,17 @@ public: \
         bool operator!=(const Reversed##ItType& other); \
 private: \
         StoredType* m_ptr; \
-        friend class ItType; \
-        friend class Const##ItType;\
-        friend class ConstReversed##ItType;\
+        friend class ItType<Cont>; \
+        friend class Const##ItType<Cont>;\
+        friend class ConstReversed##ItType<Cont>;\
 }; \
 class ConstReversed##ItType{ \
 public: \
         ConstReversed##ItType(const StoredType * ptr) : m_ptr(ptr) {}; \
         ConstReversed##ItType(ItType const& other); \
-        ConstReversed##ItType(Const##ItType const& other); \
-        ConstReversed##ItType(Reversed##ItType const& other); \
-        ConstReversed##ItType(ConstReversed##ItType const& other) = default; \
+        ConstReversed##ItType(Const##ItType<Cont> const& other); \
+        ConstReversed##ItType(Reversed##ItType<Cont> const& other); \
+        ConstReversed##ItType(ConstReversed##ItType<Cont> const& other) = default; \
         \
         const StoredType* data(void){ return m_ptr; }\
         \
@@ -367,9 +491,9 @@ public: \
         bool operator!=(const ConstReversed##ItType& other); \
 private: \
         const StoredType* m_ptr; \
-        friend class ItType; \
-        friend class Const##ItType;\
-        friend class Reversed##ItType;\
+        friend class ItType<Cont>; \
+        friend class Const##ItType<Cont>;\
+        friend class Reversed##ItType<Cont>;\
 };
 
 /////////////////////////////////////////////////////
@@ -405,6 +529,18 @@ public: \
 private: \
     const StoredType* m_ptr; 
 // };
+
+#define NDEFINE_CLASS_RANGE_OPERATIONS(Class) \
+Class::Iterator begin(void); \
+Class::Iterator end(void); \
+Class::ConstIterator cbegin(void) const; \
+Class::ConstIterator cend(void) const; \
+\
+Class::ReversedIterator rbegin(void); \
+Class::ReversedIterator rend(void); \
+Class::ConstReversedIterator crbegin(void) const; \
+Class::ConstReversedIterator crend(void) const; 
+
 
 #define DEFINE_CLASS_RANGE_OPERATIONS(ItType) \
 ItType begin(void); \

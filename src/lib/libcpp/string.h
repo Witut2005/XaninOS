@@ -9,29 +9,34 @@
 
 namespace std {
 
-RANDOM_ACCESS_ITERATORS_DECLARE(NStringIterator, char)
-
-template <typename T>
-concept StringIt = requires() {
-    is_same<T, NStringIterator>::value || is_same<T, ReversedNStringIterator>::value
-        || is_same<T, ConstNStringIterator>::value || is_same<T, ConstReversedNStringIterator>::value;
-};
+// template <typename T>
+// concept StringIt = requires() {
+//     is_same<T, string::Iterator>::value || is_same<T, string::ReversedIterator>::value
+//         || is_same<T, string::ConstIterator>::value || is_same<T, string::ConstReversedIterator>::value;
+// };
 
 class string {
 public:
     using value_type = char;
     using Type = char;
-    using Iterator = NStringIterator;
-    using ReversedIterator = ConstReversedNStringIterator;
-    using ConstIterator = ConstNStringIterator;
-    using ConstReversedIterator = ConstReversedNStringIterator;
+
+    NRANDOM_ACCESS_ITERATORS_DECLARE(NStringIterator);
+
+    using Iterator = NStringIterator<char>;
+    using ReversedIterator = ConstReversedNStringIterator<char>;
+    using ConstIterator = ConstNStringIterator<char>;
+    using ConstReversedIterator = ConstReversedNStringIterator<char>;
 
     string(void);
     explicit string(uint32_t size);
 
     // string(const NStringIterator beg, const NStringIterator end);
-    template <StringIt It>
-    string(It beg, It end);
+    template <typename T>
+        requires requires() {
+        is_same<T, string::Iterator>::value || is_same<T, string::ReversedIterator>::value
+            || is_same<T, string::ConstIterator>::value || is_same<T, string::ConstReversedIterator>::value;
+    }
+    string(T beg, T end);
 
     // template <typename Str, typename Size>
     string(char const* other, uint32_t size);
@@ -64,7 +69,7 @@ public:
     bool operator == (string const& other) const;
     bool operator != (string const& other) const;
 
-    DEFINE_CLASS_RANGE_OPERATIONS(NStringIterator);
+    NDEFINE_CLASS_RANGE_OPERATIONS(string);
 
     static constexpr int npos = -1;
 
@@ -79,18 +84,18 @@ class string_view {
 public:
     using value_type = char;
     using Type = char;
-    using Iterator = NStringIterator;
-    using ReversedIterator = ConstReversedNStringIterator;
-    using ConstIterator = ConstNStringIterator;
-    using ConstReversedIterator = ConstReversedNStringIterator;
+    using Iterator = string::Iterator;
+    using ReversedIterator = string::ConstReversedIterator;
+    using ConstIterator = string::ConstIterator;
+    using ConstReversedIterator = string::ConstReversedIterator;
 
     constexpr string_view() = delete;
     constexpr string_view(nullptr_t) = delete;
     string_view(const char* str) : m_ptr(str), m_size(strlen(str)) {}
     string_view(string str) : m_ptr(str.c_str()), m_size(str.length()) {}
     constexpr string_view(const char* str, size_t size) : m_ptr(str), m_size(size) {}
-    template <StringIt It>
-    string_view(It beg);
+    // template <StringIt It>
+    // string_view(It beg);
 
     constexpr uint32_t length(void) const { return m_size; }
     constexpr uint32_t size(void) { return m_size; }
@@ -125,23 +130,23 @@ private:
     size_t m_size;
 };
 
-template <StringIt It>
-string::string(It beg, It end) : string()
-{
-    if (beg.data() < end.data())
-    {
-        auto size_to_allocate = (uint32_t)end.data() - (uint32_t)beg.data();
-        reallocate_if_needed(size_to_allocate);
-        memcpy(m_ptr, beg.data(), size_to_allocate);
-    }
-}
-template <StringIt It>
-string_view::string_view(It beg) : m_ptr(beg.data())
-{
-    for (int i = 0; m_ptr[i] != '\0'; i++) {
-        m_size++;
-    }
-}
+// template <StringIt It>
+// string::string(It beg, It end) : string()
+// {
+//     if (beg.data() < end.data())
+//     {
+//         auto size_to_allocate = (uint32_t)end.data() - (uint32_t)beg.data();
+//         reallocate_if_needed(size_to_allocate);
+//         memcpy(m_ptr, beg.data(), size_to_allocate);
+//     }
+// }
+// template <StringIt It>
+// string_view::string_view(It beg) : m_ptr(beg.data())
+// {
+//     for (int i = 0; m_ptr[i] != '\0'; i++) {
+//         m_size++;
+//     }
+// }
 
 namespace literals
 {
