@@ -9,6 +9,8 @@
 
 namespace std {
 
+// RANDOM_ACCESS_ITERATORS_DECLARE(NStringIterator, char);
+
 // template <typename T>
 // concept StringIt = requires() {
 //     is_same<T, string::Iterator>::value || is_same<T, string::ReversedIterator>::value
@@ -22,21 +24,21 @@ public:
 
     NRANDOM_ACCESS_ITERATORS_DECLARE(NStringIterator);
 
-    using Iterator = NStringIterator<char>;
-    using ReversedIterator = ConstReversedNStringIterator<char>;
-    using ConstIterator = ConstNStringIterator<char>;
-    using ConstReversedIterator = ConstReversedNStringIterator<char>;
+    using Iterator = NStringIterator<string>;
+    using ReversedIterator = ReversedNStringIterator<string>;
+    using ConstIterator = ConstNStringIterator<string>;
+    using ConstReversedIterator = ConstReversedNStringIterator<string>;
 
     string(void);
     explicit string(uint32_t size);
 
     // string(const NStringIterator beg, const NStringIterator end);
-    template <typename T>
+    template <typename It>
         requires requires() {
-        is_same<T, string::Iterator>::value || is_same<T, string::ReversedIterator>::value
-            || is_same<T, string::ConstIterator>::value || is_same<T, string::ConstReversedIterator>::value;
+        is_same<It, string::Iterator>::value || is_same<It, string::ReversedIterator>::value
+            || is_same<It, string::ConstIterator>::value || is_same<It, string::ConstReversedIterator>::value;
     }
-    string(T beg, T end);
+    string(It beg, It end);
 
     // template <typename Str, typename Size>
     string(char const* other, uint32_t size);
@@ -130,23 +132,174 @@ private:
     size_t m_size;
 };
 
-// template <StringIt It>
-// string::string(It beg, It end) : string()
-// {
-//     if (beg.data() < end.data())
-//     {
-//         auto size_to_allocate = (uint32_t)end.data() - (uint32_t)beg.data();
-//         reallocate_if_needed(size_to_allocate);
-//         memcpy(m_ptr, beg.data(), size_to_allocate);
-//     }
-// }
-// template <StringIt It>
+template <typename It>
+    requires requires() {
+    is_same<It, string::Iterator>::value || is_same<It, string::ReversedIterator>::value
+        || is_same<It, string::ConstIterator>::value || is_same<It, string::ConstReversedIterator>::value;
+}
+string::string(It beg, It end) : string()
+{
+    if (beg.data() < end.data())
+    {
+        auto size_to_allocate = (uint32_t)end.data() - (uint32_t)beg.data();
+        reallocate_if_needed(size_to_allocate);
+        memcpy(m_ptr, beg.data(), size_to_allocate);
+    }
+}
+
+// template <typename It>
 // string_view::string_view(It beg) : m_ptr(beg.data())
 // {
 //     for (int i = 0; m_ptr[i] != '\0'; i++) {
 //         m_size++;
 //     }
 // }
+
+DEFINE_ITERATORS_CONVERTION_CONSTRUCTORS(string, NStringIterator)
+DEFINE_ITERATOR_PLUSPLUS_PREFIX_OPERATOR(string, NStringIterator,
+    {
+        m_ptr++;
+        return *this;
+    }
+);
+
+DEFINE_ITERATOR_PLUSPLUS_POSTFIX_OPERATOR(string, NStringIterator,
+    {
+        auto itmp = *this;
+        ++(this->m_ptr); //++(*this);
+
+        return itmp;
+    }
+);
+
+DEFINE_ITERATOR_MINUSMINUS_PREFIX_OPERATOR(string, NStringIterator,
+    {
+        m_ptr--;
+        return *this;
+    }
+);
+
+DEFINE_ITERATOR_MINUSMINUS_POSTFIX_OPERATOR(string, NStringIterator,
+    {
+        auto itmp = *this;
+        --(this->m_ptr);
+
+        return itmp;
+    }
+);
+
+DEFINE_ITERATOR_PLUS_OPERATOR(string, NStringIterator, int offset,
+    {
+        auto itmp = *this;
+        itmp.m_ptr = itmp.m_ptr + offset;
+        return itmp;
+    }
+);
+
+DEFINE_ITERATOR_MINUS_OPERATOR(string, NStringIterator, int offset,
+    {
+        auto itmp = *this;
+        itmp.m_ptr = itmp.m_ptr - offset;
+        return itmp;
+    }
+);
+
+DEFINE_ITERATOR_ASTERISK_OPERATOR(string, NStringIterator,
+    {
+        return *m_ptr;
+    }
+);
+
+DEFINE_ITERATOR_SPACESHIP_OPERATOR(string, NStringIterator,
+    {
+        return m_ptr == other.m_ptr ? 0 : m_ptr > other.m_ptr ? 1 : -1;
+    }
+);
+
+DEFINE_ITERATOR_EQUALITY_OPERATOR(string, NStringIterator,
+    {
+        return m_ptr == other.m_ptr;
+    }
+);
+
+DEFINE_ITERATOR_INEQUALITY_OPERATOR(string, NStringIterator,
+    {
+        return !(*this == other);
+    }
+);
+
+DEFINE_ITERATOR_PLUSPLUS_PREFIX_OPERATOR(string, ReversedNStringIterator,
+    {
+        m_ptr--;
+        return *this;
+    }
+);
+
+DEFINE_ITERATOR_PLUSPLUS_POSTFIX_OPERATOR(string, ReversedNStringIterator,
+    {
+        auto itmp = *this;
+        --m_ptr; //++(*this);
+
+        return itmp;
+    }
+);
+
+DEFINE_ITERATOR_MINUSMINUS_PREFIX_OPERATOR(string, ReversedNStringIterator,
+    {
+        m_ptr++;
+        return *this;
+    }
+);
+
+DEFINE_ITERATOR_MINUSMINUS_POSTFIX_OPERATOR(string, ReversedNStringIterator,
+    {
+        auto itmp = *this;
+        ++m_ptr;
+
+        return itmp;
+    }
+);
+
+DEFINE_ITERATOR_PLUS_OPERATOR(string, ReversedNStringIterator, int offset,
+    {
+        auto itmp = *this;
+        itmp.m_ptr = itmp.m_ptr - offset;
+        return itmp;
+    }
+);
+
+DEFINE_ITERATOR_MINUS_OPERATOR(string, ReversedNStringIterator, int offset,
+    {
+    auto itmp = *this;
+    itmp.m_ptr = itmp.m_ptr + offset;
+    return itmp;
+    }
+);
+
+DEFINE_ITERATOR_ASTERISK_OPERATOR(string, ReversedNStringIterator,
+    {
+        return *m_ptr;
+    }
+);
+
+DEFINE_ITERATOR_SPACESHIP_OPERATOR(string, ReversedNStringIterator,
+    {
+        return m_ptr == other.m_ptr ? 0 : m_ptr > other.m_ptr ? -1 : 1;
+    }
+);
+
+DEFINE_ITERATOR_EQUALITY_OPERATOR(string, ReversedNStringIterator,
+    {
+    return m_ptr == other.m_ptr;
+    }
+);
+
+DEFINE_ITERATOR_INEQUALITY_OPERATOR(string, ReversedNStringIterator,
+    {
+    return !(*this == other);
+    }
+);
+
 
 namespace literals
 {

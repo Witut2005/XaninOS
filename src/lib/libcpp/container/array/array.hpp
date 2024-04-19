@@ -319,12 +319,12 @@ std::array<T, SIZE> to_array(T* ptr)
 
 // template<typename T, int Size>
 // class narray {
-//     public:
+// public:
 //     using value_type = T;
-//     using Iterator = NArrayIterator<T>;
-//     using ReversedIterator = ConstReversedNArrayIterator;
-//     using ConstIterator = ConstNArrayIterator;
-//     using ConstReversedIterator = ConstReversedNIterator;
+//     using Iterator = NArrayIterator<value_type>;
+//     using ReversedIterator = ConstReversedNArrayIterator<value_type>;
+//     using ConstIterator = ConstNArrayIterator<value_type>;
+//     using ConstReversedIterator = ConstReversedNArrayIterator<value_type>;
 
 //     array(void) = default;
 
@@ -333,8 +333,8 @@ std::array<T, SIZE> to_array(T* ptr)
 //     array(It beg);
 
 //     int index_serialize(int index) const;
-//     constexpr const char * data(void) { return m_ptr; }
-//     constexpr const char * data(void) const {return m_ptr; }
+//     constexpr const char* data(void) { return m_ptr; }
+//     constexpr const char* data(void) const { return m_ptr; }
 //     constexpr uint32_t size(void) const { return Size; }
 
 //     // int last_of(std::string to_find, int start_index = -1) const;
@@ -351,7 +351,7 @@ std::array<T, SIZE> to_array(T* ptr)
 
 //     static constexpr int npos = -1;
 
-//     private:
+// private:
 //     T m_ptr[Size];
 // };
 

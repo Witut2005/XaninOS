@@ -9,153 +9,6 @@
 
 namespace std {
 
-DEFINE_ITERATORS_CONVERTION_CONSTRUCTORS(NStringIterator)
-
-DEFINE_ITERATOR_PLUSPLUS_PREFIX_OPERATOR(NStringIterator,
-    {
-        m_ptr++;
-        return *this;
-    }
-);
-
-DEFINE_ITERATOR_PLUSPLUS_POSTFIX_OPERATOR(NStringIterator,
-    {
-        auto itmp = *this;
-        ++(this->m_ptr); //++(*this);
-
-        return itmp;
-    }
-);
-
-DEFINE_ITERATOR_MINUSMINUS_PREFIX_OPERATOR(NStringIterator,
-    {
-        m_ptr--;
-        return *this;
-    }
-);
-
-DEFINE_ITERATOR_MINUSMINUS_POSTFIX_OPERATOR(NStringIterator,
-    {
-        auto itmp = *this;
-        --(this->m_ptr);
-
-        return itmp;
-    }
-);
-
-DEFINE_ITERATOR_PLUS_OPERATOR(NStringIterator, int offset,
-    {
-        auto itmp = *this;
-        itmp.m_ptr = itmp.m_ptr + offset;
-        return itmp;
-    }
-);
-
-DEFINE_ITERATOR_MINUS_OPERATOR(NStringIterator, int offset,
-    {
-        auto itmp = *this;
-        itmp.m_ptr = itmp.m_ptr - offset;
-        return itmp;
-    }
-);
-
-DEFINE_ITERATOR_ASTERISK_OPERATOR(NStringIterator, char&,
-    {
-        return *m_ptr;
-    }
-);
-
-DEFINE_ITERATOR_SPACESHIP_OPERATOR(NStringIterator,
-    {
-        return m_ptr == other.m_ptr ? 0 : m_ptr > other.m_ptr ? 1 : -1;
-    }
-);
-
-DEFINE_ITERATOR_EQUALITY_OPERATOR(NStringIterator,
-    {
-        return m_ptr == other.m_ptr;
-    }
-);
-
-DEFINE_ITERATOR_INEQUALITY_OPERATOR(NStringIterator,
-    {
-        return !(*this == other);
-    }
-);
-
-DEFINE_ITERATOR_PLUSPLUS_PREFIX_OPERATOR(ReversedNStringIterator,
-    {
-        m_ptr--;
-        return *this;
-    }
-);
-
-DEFINE_ITERATOR_PLUSPLUS_POSTFIX_OPERATOR(ReversedNStringIterator,
-    {
-        auto itmp = *this;
-        --m_ptr; //++(*this);
-
-        return itmp;
-    }
-);
-
-DEFINE_ITERATOR_MINUSMINUS_PREFIX_OPERATOR(ReversedNStringIterator,
-    {
-        m_ptr++;
-        return *this;
-    }
-);
-
-DEFINE_ITERATOR_MINUSMINUS_POSTFIX_OPERATOR(ReversedNStringIterator,
-    {
-        auto itmp = *this;
-        ++m_ptr;
-
-        return itmp;
-    }
-);
-
-// DEFINE_ITERATOR_FUNCTIONALITY(ReversedNStringIterator, +, ReversedNStringIterator, int offset,
-DEFINE_ITERATOR_PLUS_OPERATOR(ReversedNStringIterator, int offset,
-    {
-        auto itmp = *this;
-        itmp.m_ptr = itmp.m_ptr - offset;
-        return itmp;
-    }
-);
-
-DEFINE_ITERATOR_MINUS_OPERATOR(ReversedNStringIterator, int offset,
-    {
-    auto itmp = *this;
-    itmp.m_ptr = itmp.m_ptr + offset;
-    return itmp;
-    }
-);
-
-DEFINE_ITERATOR_ASTERISK_OPERATOR(ReversedNStringIterator, char&,
-    {
-        return *m_ptr;
-    }
-);
-
-DEFINE_ITERATOR_SPACESHIP_OPERATOR(ReversedNStringIterator,
-    {
-        return m_ptr == other.m_ptr ? 0 : m_ptr > other.m_ptr ? -1 : 1;
-    }
-);
-
-DEFINE_ITERATOR_EQUALITY_OPERATOR(ReversedNStringIterator,
-    {
-    return m_ptr == other.m_ptr;
-    }
-);
-
-DEFINE_ITERATOR_INEQUALITY_OPERATOR(ReversedNStringIterator,
-    {
-    return !(*this == other);
-    }
-);
-
 string::string(void) {
     m_ptr = (char*)calloc(1);
 }
@@ -346,42 +199,42 @@ bool string::operator != (string const& other) const
     return !(*this == other);
 }
 
-NStringIterator string::begin()
+string::Iterator string::begin()
 {
     return m_ptr;
 }
 
-NStringIterator string::end()
+string::Iterator string::end()
 {
     return m_ptr + length();
 }
 
-ConstNStringIterator string::cbegin() const
+string::ConstIterator string::cbegin() const
 {
     return m_ptr;
 }
 
-ConstNStringIterator string::cend() const
+string::ConstIterator string::cend() const
 {
     return m_ptr + length();
 }
 
-ReversedNStringIterator string::rbegin()
+string::ReversedIterator string::rbegin()
 {
     return m_ptr + length() - 1;
 }
 
-ReversedNStringIterator string::rend()
+string::ReversedIterator string::rend()
 {
     return m_ptr - 1;
 }
 
-ConstReversedNStringIterator string::crbegin() const
+string::ConstReversedIterator string::crbegin() const
 {
     return m_ptr + length() - 1;
 }
 
-ConstReversedNStringIterator string::crend() const
+string::ConstReversedIterator string::crend() const
 {
     return m_ptr - 1;
 }
