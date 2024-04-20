@@ -6,7 +6,7 @@
 #include <lib/libc/stdlibx.h>
 #include <lib/libcpp/utility.h>
 #include <lib/libcpp/limits.hpp>
-// #include <lib/libcpp/container/vector/vector.hpp>
+#include <lib/libcpp/container/vector/vector.hpp>
 
 namespace std
 {
@@ -78,21 +78,21 @@ constexpr void swap(T& x, T& y)
 }
 
 // IN ITERATOR MAKE PTR TO CONTAINER OBJECT
-// template <typename InputIt>
-// std::vector<InputIt> find(InputIt beg, InputIt end, auto finder)
-// {
-//     std::vector<InputIt> results;
-//     // CHECK IF ARRAY ITERATORS
-//     int i = 0;
-//     for (; beg != end; beg++)
-//     {
-//         if (!beg.valid())
-//             break;
-//         if (finder(beg))
-//             results.push_back(beg);
-//     }
-//     return results;
-// }
+template <typename InputIt>
+std::vector<InputIt> find(InputIt beg, InputIt end, auto finder)
+{
+    std::vector<InputIt> results;
+    // CHECK IF ARRAY ITERATORS
+    int i = 0;
+    for (; beg != end; beg++)
+    {
+        if (!beg.valid())
+            break;
+        if (finder(beg))
+            results.push_back(beg);
+    }
+    return results;
+}
 
 
 template <typename InputIt>

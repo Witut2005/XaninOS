@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <lib/libc/stdlibx.h>
 #include <lib/libc/math.h>
+#include <lib/libc/memory.h>
 #include <lib/libcpp/initializer_list.hpp>
 #include <lib/libcpp/utility.h>
 #include <lib/libcpp/type_traits.h>
