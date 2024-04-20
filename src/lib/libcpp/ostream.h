@@ -43,7 +43,7 @@ public:
     ostream& operator<<(ostream_address_t x);
     ostream& operator<<(int* x);
     ostream& operator<<(const char* x);
-    ostream& operator<<(const std::string& x);
+    ostream& operator<<(const string& x);
     ostream& operator<<(char* x);
     ostream& operator<< (const CmosTime& time);
     ostream& operator<< (const bcd& year);

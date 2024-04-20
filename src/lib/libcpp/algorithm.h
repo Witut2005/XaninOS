@@ -2,9 +2,11 @@
 
 #pragma once
 #include <stdint.h>
-#include <lib/libcpp/utility.h>
 #include <sys/macros.h>
-#include <lib/libcpp/container/vector/vector.hpp>
+#include <lib/libc/stdlibx.h>
+#include <lib/libcpp/utility.h>
+#include <lib/libcpp/limits.hpp>
+// #include <lib/libcpp/container/vector/vector.hpp>
 
 namespace std
 {
@@ -76,21 +78,21 @@ constexpr void swap(T& x, T& y)
 }
 
 // IN ITERATOR MAKE PTR TO CONTAINER OBJECT
-template <typename InputIt>
-std::vector<InputIt> find(InputIt beg, InputIt end, auto finder)
-{
-    std::vector<InputIt> results;
-    // CHECK IF ARRAY ITERATORS
-    int i = 0;
-    for (; beg != end; beg++)
-    {
-        if (!beg.valid())
-            break;
-        if (finder(beg))
-            results.push_back(beg);
-    }
-    return results;
-}
+// template <typename InputIt>
+// std::vector<InputIt> find(InputIt beg, InputIt end, auto finder)
+// {
+//     std::vector<InputIt> results;
+//     // CHECK IF ARRAY ITERATORS
+//     int i = 0;
+//     for (; beg != end; beg++)
+//     {
+//         if (!beg.valid())
+//             break;
+//         if (finder(beg))
+//             results.push_back(beg);
+//     }
+//     return results;
+// }
 
 
 template <typename InputIt>
@@ -213,6 +215,24 @@ bool is_in_range(T start, T end, T value)
             return true;
 
     return false;
+}
+
+enum class OverflowCheck {
+    Addition,
+    Subtraction
+};
+
+template<OverflowCheck Operation, typename T>
+bool is_overflow(T a, T b)
+{
+    if constexpr (Operation == OverflowCheck::Addition) {
+        return ((b > 0 && a > std::numeric_limits<T>::max() - b) ||
+            (b < 0 && a < std::numeric_limits<T>::min() - b));
+    }
+    else {
+        return ((b > 0 && a < std::numeric_limits<T>::min() + b) ||
+            (b < 0 && a > std::numeric_limits<T>::max() + b));
+    }
 }
 
 }

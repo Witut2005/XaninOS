@@ -13,8 +13,11 @@ extern "C" __STATUS __cpp_string_test(void)
     constexpr char* reversed_test_str = "ohcin";
 
     std::string nicho = test_str;
+    auto nicho2 = string(nicho.begin(), nicho.end());
 
-    print("iterator constructor: %d\n", nicho == std::string(nicho.begin(), nicho.end()));
+    print("iterator constructor: {} \n", std::string(nicho.begin(), nicho.end() - 1));
+    print("iterator constructor: {} {}\n", nicho, std::string(nicho.begin(), nicho.end()));
+    print("iterator constructor: {} {}\n", nicho, nicho == std::string(nicho.begin(), nicho.end()));
     print("tricky iterator constructor: {}\n", std::string(nicho.begin(), nicho.begin()));
     print("riterator constructor: %d\n", std::string(nicho.rbegin(), nicho.rend()) == std::string(reversed_test_str));
 
