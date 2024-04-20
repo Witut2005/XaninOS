@@ -12,7 +12,7 @@
 #define VAL(x) (*x)
 
 #ifdef __cplusplus
-#include <lib/libcpp/string.h>
+// #include <lib/libcpp/string.h>
 
 // class XinPath
 // {
