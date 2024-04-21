@@ -65,7 +65,7 @@ extern "C" {
     [[nodiscard]] uint8_t* __xin_find_free_pointer_with_given_size(uint32_t size);
     char* __xin_path_pf_extern(char* absname, char* buf);      // pf = parent folder
     [[nodiscard]] XinEntry* __xin_entry_pf_extern(char* name); // pf = parent folder
-    [[nodiscard]] XinEntry* __xin_entry_pf_get(char* path);    // pf = parent folder
+    [[nodiscard]] XinEntry* __xin_entry_pf_get(const char* path);    // pf = parent folder
 
     [[nodiscard]] XinChildrenEntries* xin_children_entries_get(char* folder, bool show_hidden);
     [[nodiscard]] XinChildrenEntries* xin_children_entries_type_get(char* folder, uint8_t type);

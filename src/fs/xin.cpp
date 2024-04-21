@@ -48,12 +48,13 @@ using std::string;
 std::string __nxin_absolute_path_get(const std::string& name)
 {
     if (__xin_is_relative_path_used(name.c_str())) {
-        return std::string(__xin_current_directory_get(std::UniquePtr((char*)kcalloc(XIN_MAX_PATH_LENGTH)).get())) + name;
+        auto path = string(__xin_current_directory_get(std::UniquePtr((char*)kcalloc(XIN_MAX_PATH_LENGTH)).get()));
+        return path == "/" ? path + name : path + '/' + name;
     }
     return name;
 }
 
-std::string __nxin_entry_name_extern(const std::string& path)
+string __nxin_entry_name_extern(const string& path)
 {
     if (auto delim_index = path.last_of("/"); delim_index != -1) {
         return std::string(path.cbegin(), path.cbegin() + delim_index);
@@ -61,12 +62,12 @@ std::string __nxin_entry_name_extern(const std::string& path)
     return path;
 }
 
-std::string __nxin_path_parse(std::string path)
+string __nxin_path_parse(string path)
 {
 
-    auto conditional_goto_to_parent_folder = [](bool cond, const std::string& path, int start_index) -> std::string {
+    auto conditional_goto_to_parent_folder = [](bool cond, const string& path, int start_index) -> string {
         if (cond) {
-            if (auto delim_index = path.last_of("/", start_index); delim_index != std::string::npos) {
+            if (auto delim_index = path.last_of("/", start_index); delim_index != string::npos) {
                 return path.substr(0, delim_index + 1); //we dont want to delete '/' char
             }
             else {
@@ -76,16 +77,14 @@ std::string __nxin_path_parse(std::string path)
         return path;
     };
 
-    if (__xin_is_relative_path_used(path.c_str())) {
-        path = std::string(__xin_current_directory_get(std::UniquePtr((char*)kcalloc(XIN_MAX_PATH_LENGTH)).get())) + path;
-    }
+    path = __nxin_absolute_path_get(path);
 
     std::BaseLexer lexer(path);
-    path = "";
+    path.clear();
 
     while (lexer.all_parsed() == false)
     {
-        auto result = lexer.consume_until(std::vector<std::string>({ "../", "./" }), true);
+        auto result = lexer.consume_until(std::vector<string>({ "../", "./" }), true);
         path = path + result.first;// + std::string("/"); //TODO char + operator
 
         path = conditional_goto_to_parent_folder(result.second == "../", path, -2);
@@ -95,6 +94,30 @@ std::string __nxin_path_parse(std::string path)
         return path.substr(0, path.length() - 2);
     }
     return conditional_goto_to_parent_folder(path.substr(-2) == "..", path, -4); // check if path ends with .. (nicho/ble/ble/..)
+}
+
+string __nxin_parent_folder_get(string path)
+{
+    path = __nxin_path_parse(path);
+    if (path == "/") return "/";
+
+    if (*path.rbegin() == '/') {
+        path = path.substr(0, path.length() - 1);
+    }
+
+    return string(path.begin(), path.begin() + path.last_of("/") + 1);
+}
+
+XinEntry* __nxin_parent_folder_entry_get(string path)
+{
+    path = __nxin_path_parse(path);
+    if (path == "/") return __xin_find_entry("/");
+
+    if (*path.rbegin() == '/') {
+        path = path.substr(0, path.length() - 1);
+    }
+
+    return __xin_find_entry(path.c_str());
 }
 
 extern "C"
@@ -311,6 +334,38 @@ extern "C"
 
     /* -------------------------------------------------------------------------------------- */
 
+
+
+    XinEntry* __nxin_find_entry(const char* entryname)
+    {
+        if (strlen(entryname) == 0) {
+            return nullptr;
+        }
+
+        auto path = __nxin_path_parse(entryname);
+        if (path.length() == 0) return nullptr;
+
+        XIN_FS_ITERATE_OVER_ENTRY_TABLE(i)
+        {
+            if (bstrcmp(path.c_str(), i->path)) {
+                return i;
+            }
+        }
+
+        return nullptr;
+    }
+
+    XinEntry* __xin_find_free_entry(void)
+    {
+        XIN_FS_ITERATE_OVER_ENTRY_TABLE(i)
+        {
+            if (i->path[0] == '\0')
+                return i;
+        }
+
+        return NULL;
+    }
+
     XinEntry* __xin_find_entry(const char* entryname)
     {
         char entrypath[XIN_MAX_PATH_LENGTH + 1] = { 0 };
@@ -344,17 +399,6 @@ extern "C"
             }
 
             entrypath[entrypath_len - 1] = '/';
-        }
-
-        return NULL;
-    }
-
-    XinEntry* __xin_find_free_entry(void)
-    {
-        XIN_FS_ITERATE_OVER_ENTRY_TABLE(i)
-        {
-            if (i->path[0] == '\0')
-                return i;
         }
 
         return NULL;
@@ -428,39 +472,23 @@ extern "C"
         return buf;
     }
 
-    XinEntry* __xin_entry_pf_extern(char* name) // pf = parent folder
+
+
+    XinEntry* __xin_entry_pf_get(const char* name) // pf = parent folder
     {
-        if (bstrcmp(name, XIN_SYSTEM_FOLDER_STR))
+        if (bstrcmp(name, XIN_SYSTEM_FOLDER_STR)) {
             return __xin_find_entry("/");
+        }
 
-        char parent_folder[XIN_MAX_PATH_LENGTH + 1] = { 0 };
-        char path[XIN_MAX_PATH_LENGTH + 1] = { 0 };
-
-        bool is_directory = name[strlen(name) - 1] == '/';
-
-        __xin_absolute_path_get(name, path, is_directory ? XIN_DIRECTORY : XIN_FILE);
-
-        int i;
-        for (i = strlen(path) - 1 - is_directory; path[i] != '/'; i--)
-            ;
-
-        for (int j = 0; j <= i; j++)
-            parent_folder[j] = path[j];
-
-        XinEntry* ParentEntry = __xin_find_entry(parent_folder);
-
-        return ParentEntry != NULL ? ParentEntry : NULL;
-    }
-
-    XinEntry* __xin_entry_pf_get(char* name) // pf = parent folder
-    {
         XinEntry* Entry = __xin_find_entry(name);
 
-        if (__xin_entry_validation_check(Entry) == false)
+        if (__xin_entry_validation_check(Entry) == false) {
             return NULL;
+        }
 
-        if (bstrcmp(Entry->path, XIN_SYSTEM_FOLDER_STR))
+        if (bstrcmp(Entry->path, XIN_SYSTEM_FOLDER_STR)) {
             return Entry;
+        }
 
         char parent_folder[XIN_MAX_PATH_LENGTH + 1] = { 0 };
 
@@ -647,21 +675,67 @@ extern "C"
 
     XIN_FS_RETURN_STATUSES __xin_file_create(char* filename)
     {
-        XinEntryCreateArgs Args = { filename, NULL };
-        return __xin_entry_create(&Args, XIN_FILE);
+        auto path = __nxin_path_parse(filename);
+        dbg_warning("INFO", path.c_str());
+
+        if (__xin_find_entry(path.c_str()) != nullptr) return XIN_ENTRY_EXISTS;
+
+        auto entry = __xin_find_free_entry();
+
+        CmosTime Time;
+        time_get(&Time);
+
+        memcpy(entry->path, path.c_str(), XIN_MAX_PATH_LENGTH);
+        entry->creation_date = entry->modification_date = time_extern_date(&Time);
+        entry->creation_time = entry->modification_time = time_extern_time(&Time);
+        entry->FileInfo = nullptr;
+        entry->permissions = PERMISSION_MAX;
+        entry->size = 0;
+        entry->type = XIN_FILE;
+        entry->first_sector = XIN_FIRST_SECTOR_NOT_DEFINED;
+
+        return XIN_OK;
     }
 
     #warning "check if parent folder exists";
     XIN_FS_RETURN_STATUSES __xin_folder_create(char* foldername)
     {
-        XinEntryCreateArgs Args = { foldername, NULL };
-        return __xin_entry_create(&Args, XIN_DIRECTORY);
+        auto path = __nxin_path_parse(foldername);
+
+        if (__xin_find_entry(path.c_str()) != nullptr) return XIN_ENTRY_EXISTS;
+        if (__xin_find_entry(__nxin_path_parse(std::string(path.begin(), path.begin() + path.last_of("/"))).c_str()) == nullptr) return XIN_ERROR;
+
+        auto entry = __xin_find_free_entry();
+
+        CmosTime Time;
+        time_get(&Time);
+
+        memcpy(entry->path, path.c_str(), XIN_MAX_PATH_LENGTH);
+        entry->creation_date = entry->modification_date = time_extern_date(&Time);
+        entry->creation_time = entry->modification_time = time_extern_time(&Time);
+        entry->FileInfo = nullptr;
+        entry->permissions = PERMISSION_MAX;
+        entry->size = 0;
+        entry->type = XIN_DIRECTORY;
+        entry->first_sector = XIN_FIRST_SECTOR_NOT_DEFINED;
+
+        return XIN_OK;
     }
 
     XIN_FS_RETURN_STATUSES __xin_link_create(char* filename, char* linkname)
     {
-        XinEntryCreateArgs Args = { linkname, filename };
-        return __xin_entry_create(&Args, XIN_HARD_LINK);
+        if (__xin_find_entry(linkname) != nullptr) return XIN_ENTRY_EXISTS;
+
+        XinEntry* file = __xin_find_entry(filename);
+        if (file == nullptr) return XIN_ENTRY_NOT_FOUND;
+
+        XinEntry* entry = __xin_find_free_entry();
+
+        memcpy((uint8_t*)entry, (uint8_t*)file, sizeof(XinEntry));
+        strncpy(entry->path, __nxin_path_parse(linkname).c_str(), XIN_MAX_PATH_LENGTH);
+        entry->type = XIN_HARD_LINK;
+
+        return XIN_OK;
     }
 
     XIN_FS_RETURN_STATUSES __xin_folder_change(const char* foldername)

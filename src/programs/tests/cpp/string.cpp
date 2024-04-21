@@ -8,6 +8,7 @@
 using namespace std;
 using namespace std::literals;
 
+#warning "TODO NULL str initialization is sus";
 extern "C" __STATUS __cpp_string_test(void)
 {
     constexpr char* test_str = "nicho";
