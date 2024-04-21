@@ -65,16 +65,15 @@ string __nxin_entry_name_extern(const string& path)
 string __nxin_path_parse(string path)
 {
 
-    auto conditional_goto_to_parent_folder = [](bool cond, const string& path, int start_index) -> string {
+    auto conditional_goto_to_parent_folder = [](bool cond, string& path, int start_index) -> void {
         if (cond) {
             if (auto delim_index = path.last_of("/", start_index); delim_index != string::npos) {
-                return path.substr(0, delim_index + 1); //we dont want to delete '/' char
+                path = path.substr(0, delim_index + 1); //we dont want to delete '/' char
             }
             else {
-                return "/";
+                path = "/";
             }
         }
-        return path;
     };
 
     path = __nxin_absolute_path_get(path);
@@ -87,13 +86,15 @@ string __nxin_path_parse(string path)
         auto result = lexer.consume_until(std::vector<string>({ "../", "./" }), true);
         path = path + result.first;// + std::string("/"); //TODO char + operator
 
-        path = conditional_goto_to_parent_folder(result.second == "../", path, -2);
+        conditional_goto_to_parent_folder(result.second == "../", path, -2);
     }
 
     if (path.substr(-2) == "/.") {
         return path.substr(0, path.length() - 2);
     }
-    return conditional_goto_to_parent_folder(path.substr(-2) == "..", path, -4); // check if path ends with .. (nicho/ble/ble/..)
+
+    conditional_goto_to_parent_folder(path.substr(-2) == "..", path, -4); // check if path ends with .. (nicho/ble/ble/..)
+    return path;
 }
 
 string __nxin_parent_folder_get(string path)
@@ -379,7 +380,7 @@ extern "C"
             return __xin_find_entry(XIN_SYSTEM_FOLDER_STR);
         }
 
-        __xin_absolute_path_get(entryname, entrypath, XIN_DIRECTORY); // treat all Entries as directories
+        __xin_absolute_path_get(entryname, entrypath, XIN_FILE); // treat all Entries as directories
         uint32_t entrypath_len = strlen(entrypath);
 
         // dbg_info(DEBUG_LABEL_XIN_FS, entrypath);
@@ -390,15 +391,6 @@ extern "C"
             if (bstrcmp(entrypath, i->path)) {
                 return i;
             }
-
-            // check if given file exists
-            entrypath[entrypath_len - 1] = '\0';
-
-            if (bstrcmp(entrypath, i->path)) {
-                return i;
-            }
-
-            entrypath[entrypath_len - 1] = '/';
         }
 
         return NULL;
@@ -476,6 +468,7 @@ extern "C"
 
     XinEntry* __xin_entry_pf_get(const char* name) // pf = parent folder
     {
+        // return __nxin_parent_folder_entry_get(name);
         if (bstrcmp(name, XIN_SYSTEM_FOLDER_STR)) {
             return __xin_find_entry("/");
         }

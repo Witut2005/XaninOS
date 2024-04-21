@@ -36,17 +36,19 @@ string::string(string const& other)
     strcpy(m_ptr, other.m_ptr);
 }
 
-string::string(string&& other)
-    : m_size_reserved(other.m_size_reserved)
-    , m_ptr(other.m_ptr)
-{
-    other.m_size_reserved = 0;
-    other.m_ptr = nullptr;
-}
+// string::string(string&& other)
+//     : m_size_reserved(other.m_size_reserved)
+//     , m_ptr(other.m_ptr)
+// {
+//     other.m_size_reserved = 0;
+//     other.m_ptr = nullptr;
+// }
 
 string::~string()
 {
+    char buf[50] = { 0 };
     if (m_ptr != nullptr) {
+        dbg_warning("FREE", xsprintf(buf, "0x%x", m_ptr));
         free(m_ptr);
     }
 }

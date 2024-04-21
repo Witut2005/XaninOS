@@ -39,7 +39,7 @@ public:
 
     string(char const* str);
     string(string const& str);
-    string(string&& str);
+    // string(string&& str);
     ~string(void);
 
     int index_serialize(int index) const;
