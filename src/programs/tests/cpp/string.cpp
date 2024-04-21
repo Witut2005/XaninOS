@@ -15,11 +15,10 @@ extern "C" __STATUS __cpp_string_test(void)
     std::string nicho = test_str;
     auto nicho2 = string(nicho.begin(), nicho.end());
 
-    print("iterator constructor: {} \n", std::string(nicho.begin(), nicho.end() - 1));
-    print("iterator constructor: {} {}\n", nicho, std::string(nicho.begin(), nicho.end()));
-    print("iterator constructor: {} {}\n", nicho, nicho == std::string(nicho.begin(), nicho.end()));
-    print("tricky iterator constructor: {}\n", std::string(nicho.begin(), nicho.begin()));
-    print("riterator constructor: %d\n", std::string(nicho.rbegin(), nicho.rend()) == std::string(reversed_test_str));
+    print("iterator constructor: {}\n", string(nicho.begin(), nicho.end() - 1));
+    print("iterator constructor: {} {}\n", nicho, nicho == string(nicho.begin(), nicho.end()));
+    print("tricky iterator constructor: {}\n", string(nicho.begin(), nicho.begin()));
+    print("riterator constructor: %d\n", string(nicho.rbegin(), nicho.rend()) == string(reversed_test_str));
 
     print("str + str: %s\n", (nicho + nicho).c_str());
 
@@ -28,7 +27,11 @@ extern "C" __STATUS __cpp_string_test(void)
     print("constructors: %d\n", nicho == std::string(test_str));
     print("first of {}: %d\n", nicho, nicho.first_of("ch") == 2);
     print("last of {}: %d\n", nicho, nicho.last_of("nic") == 0);
+    print("operator + (char) {}\n", nicho + 'x' == "nichox");
 
+    auto res_str = string(nicho);
+    res_str.resize(7, 'o');
+    print("resize {}\n", res_str);
     print("last of (second test) %s: %d\n", nicho.c_str(), nicho.last_of("i", -3) == 1);
     print("last of (second test) %s: %d\n", nicho.c_str(), nicho.last_of("i", 2) == 1);
     print("last of (second test) %s: %d\n", nicho.c_str(), nicho.index_serialize(-3) == 2);

@@ -12,12 +12,6 @@ namespace std {
 
 // RANDOM_ACCESS_ITERATORS_DECLARE(NStringIterator, char);
 
-// template <typename T>
-// concept StringIt = requires() {
-//     is_same<T, string::Iterator>::value || is_same<T, string::ReversedIterator>::value
-//         || is_same<T, string::ConstIterator>::value || is_same<T, string::ConstReversedIterator>::value;
-// };
-
 class string {
 public:
     using value_type = char;
@@ -33,15 +27,14 @@ public:
     string(void);
     explicit string(uint32_t size);
 
-    // string(const NStringIterator beg, const NStringIterator end);
     template<typename It>
-        requires requires() {
-        is_same<It, string::Iterator>::value || is_same<It, string::ReversedIterator>::value
-            || is_same<It, string::ConstIterator>::value || is_same<It, string::ConstReversedIterator>::value;
-    }
+        requires is_same<It, string::Iterator>::value || is_same<It, string::ConstIterator>::value
     string(It beg, It end);
 
-    // template <typename Str, typename Size>
+    template<typename It>
+        requires is_same<It, string::ReversedIterator>::value || is_same<It, string::ConstReversedIterator>::value
+    string(It beg, It end);
+
     string(char const* other, uint32_t size);
 
     string(char const* str);
@@ -52,6 +45,7 @@ public:
     int index_serialize(int index) const;
     uint32_t capacity(void) const; // returns m_size_reserved - sizeof('\0')
     void reserve(uint32_t size);   // reserves to hold size characters
+    void resize(uint32_t size, char c);
     char const* c_str(void) const;
     uint32_t length(void) const;
     uint32_t size(void) const;
@@ -68,6 +62,7 @@ public:
 
     string& operator=(string const& other);
     string& operator=(std::string&& other);
+    string operator+(char c) const;
     string operator+(std::string const& other) const;
     bool operator==(string const& other) const;
     bool operator!=(string const& other) const;
@@ -156,18 +151,35 @@ private:
     char const* m_ptr;
     size_t m_size;
 };
+
+// ITERATOR CONSTRUCTOR
 template<typename It>
-    requires requires() {
-    is_same<It, string::Iterator>::value || is_same<It, string::ReversedIterator>::value
-        || is_same<It, string::ConstIterator>::value || is_same<It, string::ConstReversedIterator>::value;
-}
+    requires is_same<It, string::Iterator>::value || is_same<It, string::ConstIterator>::value
 string::string(It beg, It end) : string()
 {
     if (beg < end)
     {
-        auto size_to_allocate = is_overflow<OverflowCheck::Subtraction>((uint32_t)end.data(), (uint32_t)beg.data());
+        auto size_to_allocate = (uint32_t)(end.data() - beg.data());
         reallocate_if_needed(size_to_allocate);
         strncpy(m_ptr, beg.data(), size_to_allocate);
+    }
+}
+
+// RITERATOR CONSTRUCTOR
+template<typename It>
+    requires is_same<It, string::ReversedIterator>::value || is_same<It, string::ConstReversedIterator>::value
+string::string(It beg, It end) : string()
+{
+    if (beg < end)
+    {
+        auto size_to_allocate = (uint32_t)(beg.data() - end.data());
+        reallocate_if_needed(size_to_allocate);
+
+        int i = 0;
+        for (auto it = beg.data(); it != end.data(); it--, i++) {
+            m_ptr[i] = *it;
+        }
+        m_ptr[i] = '\0';
     }
 }
 

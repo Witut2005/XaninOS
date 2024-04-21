@@ -63,8 +63,26 @@ uint32_t string::capacity(void) const
 
 void string::reserve(uint32_t size)
 {
-    m_size_reserved = size + 1;
-    m_ptr = (char*)realloc(m_ptr, m_size_reserved);
+    size += 1;
+    if (size > m_size_reserved) {
+        m_size_reserved = size;
+        m_ptr = (char*)realloc(m_ptr, m_size_reserved);
+    }
+}
+
+void string::resize(uint32_t size, char c)
+{
+    auto str_len = length();
+    reallocate_if_needed(size);
+
+    if (size > str_len) {
+        memset(end().data(), c, size - str_len);
+        m_ptr[size] = '\0';
+    }
+
+    else {
+        m_ptr[size] = '\0';
+    }
 }
 
 char const* string::c_str(void) const
@@ -179,6 +197,19 @@ string& string::operator=(std::string&& other)
     return *this;
 }
 
+string string::operator+(char c) const
+{
+    auto tstr = string(*this);
+    tstr.reallocate_if_needed(tstr.m_size_reserved + sizeof(char));
+
+    [&](uint32_t str_len) {
+        tstr.m_ptr[str_len] = c;
+        tstr.m_ptr[str_len + 1] = '\0';
+    }(tstr.length());
+
+    return tstr;
+}
+
 string string::operator+(const std::string& other) const
 {
     auto tstr = string(length() + other.length());
@@ -250,12 +281,7 @@ bool string::reallocate_if_needed(uint32_t size)
     if (size > m_size_reserved)
     {
         m_size_reserved = size;
-        if (m_ptr == nullptr) {
-            m_ptr = (char*)calloc(size);
-        }
-        else {
-            m_ptr = (char*)realloc(m_ptr, size);
-        }
+        m_ptr = (char*)realloc(m_ptr, size);
         return true;
     }
 
