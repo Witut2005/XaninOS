@@ -13,11 +13,10 @@ extern "C" __STATUS __cpp_string_test(void)
     constexpr char* test_str = "nicho";
     constexpr char* reversed_test_str = "ohcin";
 
-    std::string nicho = test_str;
-    auto nicho2 = string(nicho.begin(), nicho.end());
-
     TEST_CASE(constructors)
     {
+        std::string nicho = test_str;
+        auto nicho2 = string(nicho.begin(), nicho.end());
         EXPECT_EQUAL(string(nicho), "nicho");
         EXPECT_EQUAL(string("nicho", 3), "nic");
         EXPECT_EQUAL(string("nicho"), "nicho");

@@ -600,6 +600,7 @@ extern "C"
         return true;
     }
 
+    #warning "TODO move creation to diffrent functions (__xin_create_file etc)";
     XIN_FS_RETURN_STATUSES __xin_entry_create(XinEntryCreateArgs* Args, XIN_FS_ENTRY_TYPES type)
     {
         char entrypath[XIN_MAX_PATH_LENGTH + 1] = { '\0' };
@@ -626,7 +627,6 @@ extern "C"
 
         else
         {
-
             CmosTime Time;
             time_get(&Time);
 
