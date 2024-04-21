@@ -177,13 +177,7 @@ const char& string::operator[](int index) const
 
 string& string::operator=(std::string const& other)
 {
-    if (m_ptr != nullptr) {
-        free(m_ptr);
-    }
-
-    m_size_reserved = other.m_size_reserved;
-    m_ptr = new char[other.m_size_reserved];
-
+    reallocate_if_needed(other.m_size_reserved);
     strcpy(m_ptr, other.m_ptr);
     return *this;
 }
