@@ -45,11 +45,18 @@ static constexpr XIN_FS_ENTRY_TYPES xin_entry_type(uint8_t type) { return (XIN_F
 
 using std::string;
 
+string __nxin_current_directory_get(void)
+{
+    return XinFsData.current_folder;
+}
+
 std::string __nxin_absolute_path_get(const std::string& name)
 {
     if (__xin_is_relative_path_used(name.c_str())) {
-        auto path = string(__xin_current_directory_get(std::UniquePtr((char*)kcalloc(XIN_MAX_PATH_LENGTH)).get()));
-        return path == "/" ? path + name : path + '/' + name;
+        auto path = __nxin_current_directory_get();
+        if (name.empty()) { return path; }
+        else if (path == "/") { return path + name; }
+        else { return path + '/' + name; }
     }
     return name;
 }
@@ -57,7 +64,7 @@ std::string __nxin_absolute_path_get(const std::string& name)
 string __nxin_entry_name_extern(const string& path)
 {
     if (auto delim_index = path.last_of("/"); delim_index != -1) {
-        return std::string(path.cbegin(), path.cbegin() + delim_index);
+        return std::string(path.cbegin() + delim_index + 1, path.cend());
     }
     return path;
 }
@@ -68,7 +75,7 @@ string __nxin_path_parse(string path)
     auto conditional_goto_to_parent_folder = [](bool cond, string& path, int start_index) -> void {
         if (cond) {
             if (auto delim_index = path.last_of("/", start_index); delim_index != string::npos) {
-                path = path.substr(0, delim_index + 1); //we dont want to delete '/' char
+                path = std::move(path.substr(0, delim_index + 1)); //we dont want to delete '/' char
             }
             else {
                 path = "/";
@@ -76,7 +83,8 @@ string __nxin_path_parse(string path)
         }
     };
 
-    path = __nxin_absolute_path_get(path);
+    if (path.empty()) return __nxin_absolute_path_get(path);
+    path = std::move(__nxin_absolute_path_get(path));
 
     std::BaseLexer lexer(path);
     path.clear();
@@ -106,19 +114,13 @@ string __nxin_parent_folder_get(string path)
         path = path.substr(0, path.length() - 1);
     }
 
-    return string(path.begin(), path.begin() + path.last_of("/") + 1);
+    auto parent_path = string(path.begin(), path.begin() + path.last_of("/"));
+    return parent_path.empty() ? "/" : parent_path;
 }
 
-XinEntry* __nxin_parent_folder_entry_get(string path)
+XinEntry* __nxin_parent_folder_entry_get(const char* path)
 {
-    path = __nxin_path_parse(path);
-    if (path == "/") return __xin_find_entry("/");
-
-    if (*path.rbegin() == '/') {
-        path = path.substr(0, path.length() - 1);
-    }
-
-    return __xin_find_entry(path.c_str());
+    return __xin_find_entry(__nxin_parent_folder_get(path).c_str());
 }
 
 extern "C"
@@ -464,37 +466,9 @@ extern "C"
         return buf;
     }
 
-
-
     XinEntry* __xin_entry_pf_get(const char* name) // pf = parent folder
     {
-        // return __nxin_parent_folder_entry_get(name);
-        if (bstrcmp(name, XIN_SYSTEM_FOLDER_STR)) {
-            return __xin_find_entry("/");
-        }
-
-        XinEntry* Entry = __xin_find_entry(name);
-
-        if (__xin_entry_validation_check(Entry) == false) {
-            return NULL;
-        }
-
-        if (bstrcmp(Entry->path, XIN_SYSTEM_FOLDER_STR)) {
-            return Entry;
-        }
-
-        char parent_folder[XIN_MAX_PATH_LENGTH + 1] = { 0 };
-
-        int i;
-        for (i = strlen(Entry->path) - 1 - (Entry->type == XIN_DIRECTORY ? 1 : 0); Entry->path[i] != '/'; i--)
-            ;
-
-        for (int j = 0; j <= i; j++)
-            parent_folder[j] = Entry->path[j];
-
-        XinEntry* ParentEntry = __xin_find_entry(parent_folder);
-
-        return ParentEntry != NULL ? ParentEntry : NULL;
+        return __nxin_parent_folder_entry_get(name);
     }
 
     XinChildrenEntries* xin_children_entries_get(char* folder, bool get_hidden)

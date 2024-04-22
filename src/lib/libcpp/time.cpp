@@ -1,5 +1,6 @@
 
 #include "./time.hpp"
+#include <lib/libc/memory.h>
 
 namespace std
 {

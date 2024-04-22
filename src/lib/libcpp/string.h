@@ -1,10 +1,7 @@
 
 #pragma once
 
-#include <lib/libc/stdiox.h>
-#include <lib/libc/stdlibx.h>
 #include <lib/libc/string.h>
-#include <lib/libcpp/algorithm.h>
 #include <lib/libcpp/type_traits.h>
 #include <lib/libcpp/container/iterator.hpp>
 
@@ -47,6 +44,7 @@ public:
     void reserve(uint32_t size);   // reserves to hold size characters
     void resize(uint32_t size, char c);
     char const* c_str(void) const;
+    bool empty(void) const { return length() == 0; }
     uint32_t length(void) const;
     uint32_t size(void) const;
     void clear(void);

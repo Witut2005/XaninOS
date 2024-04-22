@@ -1,6 +1,7 @@
 
-#include <lib/libcpp/lexer.hpp>
+#include <lib/libc/stdiox.h>
 #include <lib/libcpp/string.h>
+#include <lib/libcpp/lexer.hpp>
 #include <lib/libcpp/utility.h>
 
 extern "C" __STATUS __cpp_lexer_test(void)

@@ -1,5 +1,7 @@
 
 #include "./string.h"
+#include <lib/libc/stdiox.h>
+#include <lib/libc/stdlibx.h>
 #include <lib/libcpp/new.hpp>
 #include <lib/libc/stdlibx.h>
 #include <lib/libcpp/memory.hpp>
@@ -46,9 +48,7 @@ string::string(string const& other)
 
 string::~string()
 {
-    char buf[50] = { 0 };
     if (m_ptr != nullptr) {
-        dbg_warning("FREE", xsprintf(buf, "0x%x", m_ptr));
         free(m_ptr);
     }
 }

@@ -12,14 +12,7 @@
 #define VAL(x) (*x)
 
 #ifdef __cplusplus
-// #include <lib/libcpp/string.h>
-
-// class XinPath
-// {
-// public:
-//     XinPath(const std::string_view& path);
-
-// };
+#include <lib/libcpp/string.h>
 
 extern "C" {
 #endif

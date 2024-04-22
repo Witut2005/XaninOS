@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <lib/libc/time.h>
+#include <lib/libc/stdiox.h>
 #include <lib/libcpp/string.h>
 
 namespace std
