@@ -22,7 +22,7 @@ int xin_list_files_app(char** argv)
     bool show_hidden_files = bstrcmp(options, "-la");
 
     char path[XIN_MAX_PATH_LENGTH + 1] = { 0 };
-    __xin_absolute_path_get(name, path, XIN_DIRECTORY);
+    __xin_absolute_path_get(name, path);
 
     xprintf("Searching: %s\n", path);
 

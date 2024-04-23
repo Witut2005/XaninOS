@@ -224,81 +224,6 @@ extern "C"
         return path[0] != XIN_SYSTEM_FOLDER;
     }
 
-    // in buf we have abs path
-    // in ret we have parsed abs path
-    char* __xin_absolute_path_get(const char* rpath, char* buf, XIN_FS_ENTRY_TYPES type)
-    {
-        EFlags Flags;
-        INTERRUPTS_OFF(&Flags)
-
-            if (strlen(rpath) == 0)
-            {
-                INTERRUPTS_ON(&Flags);
-                return __xin_current_directory_get(buf);
-            }
-
-        strcpy(buf, rpath);
-
-        if (__xin_is_relative_path_used(rpath)) {
-            strcat(STRCAT_SRC_FIRST, buf, XinFsData.current_folder);
-        }
-
-        char ret[XIN_MAX_PATH_LENGTH + 1] = { '\0' };
-
-        int ret_index = 0;
-        int buf_index = 0;
-
-        while (buf[buf_index] != '\0')
-        {
-            if (bmemcmp(&buf[buf_index], "./", 2)) {
-                buf_index += 2;
-            }
-
-            if (bmemcmp(&buf[buf_index], "../", 3))
-            {
-                __xin_path_pf_extern(ret, ret);
-                buf_index += 3;
-                ret_index = strlen(ret);
-            }
-            else
-            {
-                ret[ret_index] = buf[buf_index];
-
-                ret_index++;
-                buf_index++;
-            }
-        }
-
-        ret[ret_index] = '\0';
-
-        memcpy(buf, ret, XIN_MAX_PATH_LENGTH);
-        uint32_t buf_len = strlen(buf);
-
-        if (type == XIN_DIRECTORY && rpath[strlen(rpath) - 1] != '/') {
-            buf[buf_len] = '/'; // append at the end, so buf must be a little bit bigger
-            buf[buf_len + 1] = '\0';
-        }
-
-        INTERRUPTS_ON(&Flags);
-        return buf;
-    }
-
-    char* __xin_entry_name_extern(char* path, char* buf)
-    {
-        if (path[0] == '/' && strlen(path) == 1) {
-            return XIN_SYSTEM_FOLDER_STR;
-        }
-
-        if (!strlen(path)) {
-            return NULL;
-        }
-
-        char* pathptr = char_find_from_end(path, path[strlen(path) - 1] == '/' ? 1 : 0, '/');
-        memcpy(buf, pathptr, XIN_MAX_PATH_LENGTH - (pointers_offset_get(pathptr, path)));
-
-        return buf;
-    }
-
     int __xin_entry_descriptor_get(const XinEntry* Entry)
     {
         if (__xin_entry_validation_check(Entry) == false)
@@ -336,27 +261,6 @@ extern "C"
 
     /* -------------------------------------------------------------------------------------- */
 
-
-
-    XinEntry* __nxin_find_entry(const char* entryname)
-    {
-        if (strlen(entryname) == 0) {
-            return nullptr;
-        }
-
-        auto path = __nxin_path_parse(entryname);
-        if (path.length() == 0) return nullptr;
-
-        XIN_FS_ITERATE_OVER_ENTRY_TABLE(i)
-        {
-            if (bstrcmp(path.c_str(), i->path)) {
-                return i;
-            }
-        }
-
-        return nullptr;
-    }
-
     XinEntry* __xin_find_free_entry(void)
     {
         XIN_FS_ITERATE_OVER_ENTRY_TABLE(i)
@@ -371,7 +275,6 @@ extern "C"
     //in the good old times __xin_find_entry returned nullptr on strlen(name) == 0
     XinEntry* __xin_find_entry(const char* entryname)
     {
-        if (strlen(entryname) == 0) return nullptr;
         auto path = __nxin_path_parse(entryname);
 
         XIN_FS_ITERATE_OVER_ENTRY_TABLE(i)
@@ -421,6 +324,11 @@ extern "C"
         }
 
         return NULL;
+    }
+
+    char* __xin_absolute_path_get(const char* name, char* buf)
+    {
+        return strcpy(buf, __nxin_absolute_path_get(name).c_str());
     }
 
     char* __xin_path_pf_extern(char* abspath, char* buf) // pf = parent folder
@@ -585,13 +493,10 @@ extern "C"
     #warning "TODO move creation to diffrent functions (__xin_create_file etc)";
     XIN_FS_RETURN_STATUSES __xin_entry_create(XinEntryCreateArgs* Args, XIN_FS_ENTRY_TYPES type)
     {
-        char entrypath[XIN_MAX_PATH_LENGTH + 1] = { '\0' };
-
         XinEntry* Entry = __xin_find_free_entry();
+        auto path = __nxin_absolute_path_get(Args->entryname);
 
-        __xin_absolute_path_get(Args->entryname, entrypath, type);
-
-        if (__xin_find_entry(entrypath) != NULL)
+        if (__xin_find_entry(path.c_str()) != nullptr)
             return XIN_ENTRY_EXISTS;
 
         if (type == XIN_HARD_LINK)
@@ -603,7 +508,7 @@ extern "C"
 
             memcpy((uint8_t*)Entry, (uint8_t*)File, sizeof(XinEntry));
 
-            strncpy(Entry->path, entrypath, XIN_MAX_PATH_LENGTH);
+            strncpy(Entry->path, path.c_str(), XIN_MAX_PATH_LENGTH);
             Entry->type = XIN_HARD_LINK;
         }
 
@@ -612,7 +517,7 @@ extern "C"
             CmosTime Time;
             time_get(&Time);
 
-            memcpy(Entry->path, entrypath, XIN_MAX_PATH_LENGTH);
+            memcpy(Entry->path, path.c_str(), XIN_MAX_PATH_LENGTH);
             Entry->creation_date = Entry->modification_date = time_extern_date(&Time);
             Entry->creation_time = Entry->modification_time = time_extern_time(&Time);
             Entry->FileInfo = NULL;
@@ -694,53 +599,19 @@ extern "C"
 
     XIN_FS_RETURN_STATUSES __xin_folder_change(const char* foldername)
     {
+        XinEntry* folder = __xin_find_entry(__nxin_path_parse(foldername).c_str());
+        dbg_info(DEBUG_LABEL_XIN_FS, folder->path);
 
-        if (strlen(foldername) > XIN_MAX_PATH_LENGTH) {
-            return XIN_ERROR;
+        if (folder != nullptr && folder->type == XIN_DIRECTORY) {
+            strcpy(XinFsData.current_folder, folder->path);
         }
-
-        else if (bstrcmp(foldername, ".")) {
-            return XIN_OK;
-        }
-
-        else if (bstrcmp(foldername, "..")) {
-            XinEntry* CurrentFolderParent = __xin_entry_pf_get(XinFsData.current_folder);
-            __xin_folder_change(CurrentFolderParent != NULL ? CurrentFolderParent->path : "/");
-            return XIN_OK;
-        }
-
-        while (bmemcmp(foldername, "../", 3))
-        {
-            if (bstrcmp(XinFsData.current_folder, XIN_SYSTEM_FOLDER_STR))
-                return XIN_ERROR;
-            else
-            {
-                XinEntry* CurrentFolderParent = __xin_entry_pf_get(XinFsData.current_folder);
-                if (CurrentFolderParent != NULL)
-                    strncpy(XinFsData.current_folder, CurrentFolderParent->path, XIN_MAX_PATH_LENGTH);
-                else
-                    __xin_folder_change(XIN_SYSTEM_FOLDER_STR);
-            }
-            foldername = foldername + 3;
-        }
-
-        #warning "TODO I think xin_find_entry can handle this";
-        while (bmemcmp(foldername, "./", 2)) {
-            foldername += 2;
-        }
-
-        XinEntry* NewFolder = __xin_find_entry(foldername);
-        dbg_info(DEBUG_LABEL_XIN_FS, NewFolder->path);
-
-        if (NewFolder != NULL && NewFolder->type == XIN_DIRECTORY) {
-            strcpy(XinFsData.current_folder, NewFolder->path);
-        }
-
-        else {
-            return XIN_ERROR;
-        }
-
+        else { return XIN_ERROR; }
         return XIN_OK;
+    }
+
+    char* __xin_entry_name_extern(char* path, char* buf)
+    {
+        return strcpy(buf, __nxin_entry_name_extern(path).c_str());
     }
 
     XIN_FS_RETURN_STATUSES __xin_file_remove(char* entryname)
@@ -812,20 +683,13 @@ extern "C"
 
     XIN_FS_RETURN_STATUSES __xin_entry_move(char* entryname, char* destname)
     {
-
         XinEntry* Entry = __xin_find_entry(entryname);
-        char destpath[XIN_MAX_PATH_LENGTH + 1] = { 0 };
-        memset(destpath, 0, XIN_MAX_PATH_LENGTH + 1);
-        __xin_absolute_path_get(destname, destpath, xin_entry_type(Entry->type));
+        auto destpath = __nxin_absolute_path_get(destname);
 
-        xprintf("src: %s\n", Entry->path);
-        xprintf("abs: %s\n", destpath);
-        xprintf("pf: 0x%x\n", __xin_entry_pf_get(destpath));
-
-        if ((__xin_entry_pf_get(destpath) == NULL) || (Entry == NULL))
+        if ((__xin_entry_pf_get(destpath.c_str()) == nullptr) || (Entry == nullptr))
             return XIN_ENTRY_NOT_FOUND;
 
-        memcpy(Entry->path, destpath, XIN_MAX_PATH_LENGTH);
+        memcpy(Entry->path, destpath.c_str(), XIN_MAX_PATH_LENGTH);
 
         return XIN_OK;
     }

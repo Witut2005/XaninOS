@@ -3,13 +3,13 @@
 #include <lib/libc/stdiox.h>
 #include <lib/libc/string.h>
 
-int xin_check(char *path)
+int xin_check(char* path)
 {
 
-    char buf[XIN_MAX_PATH_LENGTH + 1] = {'\0'};
+    char buf[XIN_MAX_PATH_LENGTH + 1] = { '\0' };
 
     // xprintf("xin pf extern: %s\n", __xin_path_pf_extern("/f/o/../../", pfbuf));
-    xprintf("xin abs extern: %s\n", __xin_absolute_path_get(path, buf, path[strlen(path) - 1] == '/' ? XIN_DIRECTORY : XIN_FILE));
+    xprintf("xin abs extern: %s\n", __xin_absolute_path_get(path, buf));
     // xprintf("xin path pf extern: %s\n", __xin_path_pf_extern(path, buf));
 
     // XinEntry *ParentEntry = __xin_entry_pf_get(path);

@@ -42,7 +42,7 @@ extern "C" {
     [[nodiscard]] bool __xin_entry_address_check(XinEntry const* Entry);
     [[nodiscard]] bool __xin_entry_validation_check(XinEntry const* Entry);
     [[nodiscard]] bool __xin_is_relative_path_used(char const* path);
-    char* __xin_absolute_path_get(char const* rpath, char* buf, XIN_FS_ENTRY_TYPES type);
+    char* __xin_absolute_path_get(char const* rpath, char* buf);
 
     [[nodiscard]] char* __xin_entry_name_extern(char* path, char* buf);
 

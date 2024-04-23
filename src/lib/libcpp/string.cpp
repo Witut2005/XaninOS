@@ -88,11 +88,6 @@ void string::resize(uint32_t size, char c)
     }
 }
 
-char const* string::c_str(void) const
-{
-    return m_ptr;
-}
-
 uint32_t string::length(void) const
 {
     if (m_size_reserved == 0) return 0;
