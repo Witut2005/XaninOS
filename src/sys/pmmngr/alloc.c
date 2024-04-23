@@ -150,23 +150,26 @@ void mmngr_block_free(uint8_t mode, void* ptr)
 
     if (mode == KERNEL_HEAP)
     {
-        if ((uint32_t)ptr < (uint32_t)kernel_heap_base)
+        if (((uint32_t)ptr < (uint32_t)kernel_heap_base) || ((uint32_t)ptr > (uint32_t)(kernel_heap_base + (kernel_heap_blocks * PMMNGR_BLOCK_SIZE))))
+        {
+            dbg_warning(DEBUG_LABEL_PMMNGR, "Invalid free heap. High risk of memory leak");
             return;
-
-        else if ((uint32_t)ptr > (uint32_t)(kernel_heap_base + (kernel_heap_blocks * PMMNGR_BLOCK_SIZE)))
-            return;
+        }
 
         else
+        {
             index = ((uint32_t)((uint32_t)ptr - (uint32_t)kernel_heap_base) / PMMNGR_BLOCK_SIZE);
+        }
     }
 
     else // USER HEAP
     {
-        if ((uint32_t)ptr < (uint32_t)user_heap_base)
+        if (((uint32_t)ptr < (uint32_t)user_heap_base) || ((uint32_t)ptr > (uint32_t)(user_heap_base + (user_heap_blocks * PMMNGR_BLOCK_SIZE))))
+        {
+            dbg_warning(DEBUG_LABEL_PMMNGR, "Invalid free heap. High risk of memory leak");
             return;
+        }
 
-        else if ((uint32_t)ptr > (uint32_t)(user_heap_base + (user_heap_blocks * PMMNGR_BLOCK_SIZE)))
-            return;
         else
             index = ((uint32_t)((uint32_t)ptr - (uint32_t)user_heap_base) / PMMNGR_BLOCK_SIZE);
     }

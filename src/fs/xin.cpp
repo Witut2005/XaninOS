@@ -43,6 +43,7 @@ static XinFileSystemData XinFsData; // XinFS DATA SINGLETONE
 
 static constexpr XIN_FS_ENTRY_TYPES xin_entry_type(uint8_t type) { return (XIN_FS_ENTRY_TYPES)type; }
 
+using std::move;
 using std::string;
 
 string __nxin_current_directory_get(void)
@@ -74,7 +75,7 @@ string __nxin_path_parse(string path)
     auto conditional_goto_to_parent_folder = [](bool cond, string& path, int start_index) -> void {
         if (cond) {
             if (auto delim_index = path.last_of("/", start_index); delim_index != string::npos) {
-                path = std::move(path.substr(0, delim_index + 1)); //we dont want to delete '/' char
+                path = (path.substr(0, delim_index + 1)); //we dont want to delete '/' char
             }
             else {
                 path = "/";
@@ -83,9 +84,8 @@ string __nxin_path_parse(string path)
     };
 
     if (path.empty()) return __nxin_absolute_path_get(path);
-    path = std::move(__nxin_absolute_path_get(path));
 
-    std::BaseLexer lexer(path);
+    std::BaseLexer lexer(__nxin_absolute_path_get(path));
     path.clear();
 
     while (lexer.all_parsed() == false)
@@ -367,34 +367,6 @@ extern "C"
 
         return NULL;
     }
-
-    // XinEntry* __xin_find_entry(const char* entryname)
-    // {
-    //     char entrypath[XIN_MAX_PATH_LENGTH + 1] = { 0 };
-
-    //     // if path is empty 
-    //     if (!strlen(entryname)) {
-    //         return NULL;
-    //     }
-
-    //     if (entryname[0] == XIN_SYSTEM_FOLDER && entryname[1] == XIN_SYSTEM_FOLDER) {
-    //         return __xin_find_entry(XIN_SYSTEM_FOLDER_STR);
-    //     }
-
-    //     __xin_absolute_path_get(entryname, entrypath, XIN_FILE); // treat all Entries as directories
-
-    //     // dbg_info(DEBUG_LABEL_XIN_FS, entrypath);
-
-    //     XIN_FS_ITERATE_OVER_ENTRY_TABLE(i)
-    //     {
-    //         // check if given folder exists
-    //         if (bstrcmp(entrypath, i->path)) {
-    //             return i;
-    //         }
-    //     }
-
-    //     return NULL;
-    // }
 
     //in the good old times __xin_find_entry returned nullptr on strlen(name) == 0
     XinEntry* __xin_find_entry(const char* entryname)

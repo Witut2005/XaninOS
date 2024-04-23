@@ -37,7 +37,7 @@ public:
     string(char const* str);
     string(string const& str);
     string(string&& str);
-    ~string(void);
+    ~string();
 
     int index_serialize(int index) const;
     uint32_t capacity(void) const; // returns m_size_reserved - sizeof('\0')
@@ -50,8 +50,8 @@ public:
     void clear(void);
 
     string substr(int start_index, size_t len = npos) const;
-    int last_of(std::string to_find, int start_index = -1) const;
-    int first_of(std::string to_find, int start_index = 0) const;
+    int last_of(const string& to_find, int start_index = -1) const;
+    int first_of(const string& to_find, int start_index = 0) const;
 
     operator bool() const;
     int operator<=>(string const& other) const { return strcmp(m_ptr, other.m_ptr); }
@@ -59,9 +59,9 @@ public:
     char const& operator[](int index) const;
 
     string& operator=(string const& other);
-    string& operator=(std::string&& other);
+    string& operator=(string&& other);
     string operator+(char c) const;
-    string operator+(std::string const& other) const;
+    string operator+(string const& other) const;
     bool operator==(string const& other) const;
     bool operator!=(string const& other) const;
 

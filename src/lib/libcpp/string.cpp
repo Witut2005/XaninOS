@@ -15,26 +15,26 @@ string::string(void) {
     m_ptr = (char*)calloc(1);
 }
 
-string::string(uint32_t size) : m_size_reserved(size + 1), m_ptr(new char[size + 2]) {}
+string::string(uint32_t size) : m_size_reserved(size + 1), m_ptr((char*)calloc(size + 2)) {}
 
 string::string(char const* other)
 {
     auto otherlen = strlen(other) + 1;
-    m_ptr = new char[otherlen];
+    m_ptr = (char*)calloc(otherlen);
     m_size_reserved = otherlen;
     strcpy(m_ptr, other);
 }
 
 string::string(char const* other, uint32_t size) : m_size_reserved(size + 1)
 {
-    m_ptr = new char[m_size_reserved];
+    m_ptr = (char*)calloc(m_size_reserved);
     strncpy(m_ptr, other, size);
 }
 
 string::string(string const& other)
     : m_size_reserved(other.m_size_reserved)
 {
-    m_ptr = new char[other.m_size_reserved];
+    m_ptr = (char*)calloc(m_size_reserved);
     strcpy(m_ptr, other.m_ptr);
 }
 
@@ -49,6 +49,7 @@ string::string(string&& other)
 string::~string()
 {
     if (m_ptr != nullptr) {
+        // dbg_success("string", "omg i am used");
         free(m_ptr);
     }
 }
@@ -122,7 +123,7 @@ string string::substr(int start_index, size_t len) const
         (begin_it + len >= cend() ? cend() : begin_it + len));
 }
 
-int string::last_of(std::string to_find, int start_index) const
+int string::last_of(const string& to_find, int start_index) const
 {
     auto to_find_length = to_find.length();
     start_index = index_serialize(start_index) - to_find_length + 1;
@@ -141,7 +142,7 @@ int string::last_of(std::string to_find, int start_index) const
     return npos;
 }
 
-int string::first_of(std::string to_find, int start_index) const
+int string::first_of(const string& to_find, int start_index) const
 {
     auto to_find_length = to_find.length();
     auto start = cbegin() + index_serialize(start_index);
@@ -175,15 +176,17 @@ const char& string::operator[](int index) const
     return m_ptr[index_serialize(index)];
 }
 
-string& string::operator=(std::string const& other)
+string& string::operator=(string const& other)
 {
     reallocate_if_needed(other.m_size_reserved);
     strcpy(m_ptr, other.m_ptr);
     return *this;
 }
 
-string& string::operator=(std::string&& other)
+string& string::operator=(string&& other)
 {
+    free(m_ptr);
+
     m_ptr = other.m_ptr;
     m_size_reserved = other.m_size_reserved;
 
@@ -265,11 +268,6 @@ string::ConstReversedIterator string::crend() const
 {
     return m_ptr - 1;
 }
-
-
-// uint32_t string::reserved_space_size_get(void) const {
-//     return size_to_mmngr_blocks(m_size_reserved) * XANIN_PMMNGR_BLOCK_SIZE;
-// }
 
 bool string::reallocate_if_needed(uint32_t size)
 {
