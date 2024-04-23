@@ -12,9 +12,9 @@
 #include <lib/libc/stdiox_legacy.h>
 #include <lib/libc/stdlibx.h>
 #include <lib/libc/string.h>
-#include <lib/libc/system.h>
 #include <lib/libc/xanin_state.h>
 #include <lib/screen/screen.h>
+#include <lib/system/system.h>
 #include <stdint.h>
 #include <sys/devices/acpi/acpi.h>
 #include <sys/devices/acpi/fadt/fadt.h>
@@ -121,8 +121,18 @@ void kernel_loop(void)
         char* username = system_variable_get("USERNAME");
         char* hostname = system_variable_get("HOSTNAME");
 
-        xprintf("%z%s@%s%z:%z%s", OUTPUT_COLOR_SET(black, green), username != NULL ? username : "xanin",
-            hostname != NULL ? hostname : "plumieria", OUTPUT_COLOR_SET(black, white),
+        if (username == NULL)
+        {
+            dbg_warning("SYSTEM", "username not defined");
+        }
+
+        if (hostname == NULL)
+        {
+            dbg_warning("SYSTEM", "hostname not defined");
+        }
+
+        xprintf("%z%s@%s%z:%z%s", OUTPUT_COLOR_SET(black, green), username != NULL ? username : "xaninn",
+            hostname != NULL ? hostname : "plumieriaa", OUTPUT_COLOR_SET(black, white),
             OUTPUT_COLOR_SET(black, lblue), &xin_current_directory_buf[1]);
 
         free(username);

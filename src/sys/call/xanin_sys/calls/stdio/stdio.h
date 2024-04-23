@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include <lib/libc/system.h>
+#include <lib/system/system.h>
 #include <sys/call/xanin_sys/ids/xanin_syscalls.h>
 
 typedef uint8_t stdio_mode_t;

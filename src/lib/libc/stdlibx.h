@@ -2,8 +2,8 @@
 #pragma once
 
 #include <fs/xin.h>
-#include <lib/libc/system.h>
 #include <lib/libc/time.h>
+#include <lib/system/system.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>

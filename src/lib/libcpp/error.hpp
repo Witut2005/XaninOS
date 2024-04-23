@@ -3,7 +3,7 @@
 
 
 // you can pass lambda as value_on_error
-#define TRY(variable, error_or_obj, value_on_error) \ 
+#define TRY(variable, error_or_obj, value_on_error) \
 if (error_or_obj.valid() == false) return value_on_error; variable = error_or_obj.value()
 
 typedef int error_code_t;

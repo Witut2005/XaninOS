@@ -699,22 +699,24 @@ extern "C"
         return str;
     }
 
+    #warning "TODO what if not opened";
     char* getline(XinEntry* File, int line_id)
     {
-
+        if (File == nullptr) return nullptr;
         fread(File, NULL, File->size); // loads all data to buffer
 
         char* file_data = (char*)(File->FileInfo->buffer);
-        char* line = (char*)calloc(XANIN_PMMNGR_BLOCK_SIZE);
         int current_line = 0;
+        int line_size = 0;
 
         for (; *file_data != '\0'; file_data++)
         {
             if (current_line == line_id)
             {
-                for (int i = 0; file_data[i] != '\n' && file_data[i] != '\0'; i++) {
-                    line[i] = file_data[i];
-                }
+                for (int i = 0; file_data[i] != '\n' && file_data[i] != '\0'; i++, line_size++);
+
+                char* line = (char*)calloc(line_size + sizeof('\0'));
+                memcpy(line, file_data, line_size);
                 return line;
             }
             if (*file_data == '\n') {
@@ -722,7 +724,6 @@ extern "C"
             }
         }
 
-        free(line);
         return NULL;
     }
 

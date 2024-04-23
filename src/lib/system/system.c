@@ -1,22 +1,23 @@
+#include "./system.h"
+#include <lib/libc/file.h>
+#include <lib/libc/stdiox.h>
 #include <lib/libc/stdlibx.h>
 #include <lib/libc/string.h>
-#include <lib/libc/stdiox.h>
-#include <lib/libc/file.h>
-#include "./system.h"
+
+#warning "TODO put every __sys like function to this folder";
 
 char* system_variable_get(char* variable)
 {
     XinEntry* File = fopen("/etc/var/variables.conf", "r");
     char* line = getline(File, 0);
+    uint32_t var_len = strlen(variable);
 
     for (int i = 0; line != NULL;)
     {
-        if (bstrncmp(line, variable, strlen(variable) - 1))
+        if (bstrncmp(line, variable, var_len - 1))
         {
-            char* buf = calloc(strlen(line) - strlen(variable));
-            strcpy(buf, &line[strlen(variable) + 1]);
-            free(line);
-            return buf;
+            strcpy(line, &line[var_len + 1]);
+            return line;
         }
         line = getline(File, ++i);
     }
@@ -50,16 +51,16 @@ uint32_t xanin_syscall4(uint32_t syscall_id, uint32_t arg1, uint32_t arg2, uint3
 {
     uint32_t ret;
     // Wywołanie syscalla za pomocą inline assemblera w składni Intel
-    asm volatile (
-        "mov eax, %1\n\t"   // Przypisanie numeru syscall do rejestru EAX
-        "mov ecx, %2\n\t"   // Pierwszy argument do rejestru ECX
-        "mov edx, %3\n\t"   // Drugi argument do rejestru EDX
-        "mov ebx, %4\n\t"   // Trzeci argument do rejestru EBX
-        "int 0x81\n\t"       // Wywołanie syscalla
-        "mov %0, eax"       // Zapisanie wyniku syscalla
-        : "=r"(ret)         // Wyjściowy argument (wynik syscalla) - zapisany w ret
+    asm volatile(
+        "mov eax, %1\n\t"                                  // Przypisanie numeru syscall do rejestru EAX
+        "mov ecx, %2\n\t"                                  // Pierwszy argument do rejestru ECX
+        "mov edx, %3\n\t"                                  // Drugi argument do rejestru EDX
+        "mov ebx, %4\n\t"                                  // Trzeci argument do rejestru EBX
+        "int 0x81\n\t"                                     // Wywołanie syscalla
+        "mov %0, eax"                                      // Zapisanie wyniku syscalla
+        : "=r"(ret)                                        // Wyjściowy argument (wynik syscalla) - zapisany w ret
         : "g"(syscall_id), "g"(arg1), "g"(arg2), "g"(arg3) //, "g"(arg4) // Wejściowe argumenty
-        : "eax", "ecx", "edx", "ebx"  // Rejestry używane przez syscall
-        );
-    return ret;  // Zwracanie wyniku syscalla
+        : "eax", "ecx", "edx", "ebx"                       // Rejestry używane przez syscall
+    );
+    return ret; // Zwracanie wyniku syscalla
 }

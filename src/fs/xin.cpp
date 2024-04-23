@@ -71,7 +71,6 @@ string __nxin_entry_name_extern(const string& path)
 
 string __nxin_path_parse(string path)
 {
-
     auto conditional_goto_to_parent_folder = [](bool cond, string& path, int start_index) -> void {
         if (cond) {
             if (auto delim_index = path.last_of("/", start_index); delim_index != string::npos) {
@@ -369,33 +368,49 @@ extern "C"
         return NULL;
     }
 
+    // XinEntry* __xin_find_entry(const char* entryname)
+    // {
+    //     char entrypath[XIN_MAX_PATH_LENGTH + 1] = { 0 };
+
+    //     // if path is empty 
+    //     if (!strlen(entryname)) {
+    //         return NULL;
+    //     }
+
+    //     if (entryname[0] == XIN_SYSTEM_FOLDER && entryname[1] == XIN_SYSTEM_FOLDER) {
+    //         return __xin_find_entry(XIN_SYSTEM_FOLDER_STR);
+    //     }
+
+    //     __xin_absolute_path_get(entryname, entrypath, XIN_FILE); // treat all Entries as directories
+
+    //     // dbg_info(DEBUG_LABEL_XIN_FS, entrypath);
+
+    //     XIN_FS_ITERATE_OVER_ENTRY_TABLE(i)
+    //     {
+    //         // check if given folder exists
+    //         if (bstrcmp(entrypath, i->path)) {
+    //             return i;
+    //         }
+    //     }
+
+    //     return NULL;
+    // }
+
+    //in the good old times __xin_find_entry returned nullptr on strlen(name) == 0
     XinEntry* __xin_find_entry(const char* entryname)
     {
-        char entrypath[XIN_MAX_PATH_LENGTH + 1] = { 0 };
-
-        // if path is empty 
-        if (!strlen(entryname)) {
-            return NULL;
-        }
-
-        if (entryname[0] == XIN_SYSTEM_FOLDER && entryname[1] == XIN_SYSTEM_FOLDER) {
-            return __xin_find_entry(XIN_SYSTEM_FOLDER_STR);
-        }
-
-        __xin_absolute_path_get(entryname, entrypath, XIN_FILE); // treat all Entries as directories
-        uint32_t entrypath_len = strlen(entrypath);
-
-        // dbg_info(DEBUG_LABEL_XIN_FS, entrypath);
+        if (strlen(entryname) == 0) return nullptr;
+        auto path = __nxin_path_parse(entryname);
 
         XIN_FS_ITERATE_OVER_ENTRY_TABLE(i)
         {
             // check if given folder exists
-            if (bstrcmp(entrypath, i->path)) {
+            if (bstrcmp(path.c_str(), i->path)) {
                 return i;
             }
         }
 
-        return NULL;
+        return nullptr;
     }
 
     uint8_t* __xin_find_free_pointer(void)
@@ -777,7 +792,6 @@ extern "C"
 
     XIN_FS_RETURN_STATUSES __xin_folder_remove(char* foldername)
     {
-
         XinEntry* Folder = __xin_find_entry(foldername);
 
         if (__xin_entry_validation_check(Folder) == false)
@@ -968,7 +982,7 @@ extern "C"
         return NULL;
     }
 
-    size_t __xin_fread(XinEntry* Entry, void* buf, size_t count)
+    size_t __xin_fread(XinEntry* Entry, void* vbuf, size_t count)
     {
 
         //////////////////VALIDATION///////////////////
@@ -993,6 +1007,8 @@ extern "C"
 
         if (__xin_is_entry_rwable_check(Entry) == false)
             return 0;
+
+        uint8_t* buf = (uint8_t*)vbuf;
 
         uint32_t initial_position = __xin_ftell(Entry);
 
@@ -1035,7 +1051,7 @@ extern "C"
         return count;
     }
 
-    size_t __xin_fwrite(XinEntry* Entry, void* buf, size_t count)
+    size_t __xin_fwrite(XinEntry* Entry, void* vbuf, size_t count)
     {
         //////////////////VALIDATION///////////////////
 
@@ -1049,6 +1065,7 @@ extern "C"
             return 0;
 
         //////////////////////////////////////////////////
+        uint8_t* buf = (uint8_t*)vbuf;
 
         uint32_t initial_position = __xin_ftell(Entry);
 

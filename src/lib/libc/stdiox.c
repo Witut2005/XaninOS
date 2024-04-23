@@ -5,9 +5,9 @@
 #include <lib/libc/stdiox_legacy.h>
 #include <lib/libc/stdlibx.h>
 #include <lib/libc/string.h>
-#include <lib/libc/system.h>
 #include <lib/libc/time.h>
 #include <lib/screen/screen.h>
+#include <lib/system/system.h>
 #include <stdarg.h>
 #include <sys/devices/keyboard/scan_codes.h>
 #include <sys/terminal/backend/backend.h>
