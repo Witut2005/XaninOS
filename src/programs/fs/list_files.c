@@ -33,9 +33,9 @@ int xin_list_files_app(char** argv)
         if ((substr_find(i->path, "/.") && show_hidden_files == false)) // skip if hidden files should not be displayed
             continue;
 
-        if (strlen(i->path) && __xin_entry_pf_get(i->path) != NULL)
+        if (strlen(i->path) && __xin_parent_folder_entry_get(i->path) != NULL)
         {
-            if (bstrcmp(__xin_entry_pf_get(i->path)->path, path))
+            if (bstrcmp(__xin_parent_folder_entry_get(i->path)->path, path))
             {
                 xprintf("%z%s", OUTPUT_COLOR_SET(black, i->type + 0x2), i);
                 xprintf("   ");

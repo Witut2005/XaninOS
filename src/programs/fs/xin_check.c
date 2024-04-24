@@ -12,7 +12,7 @@ int xin_check(char* path)
     xprintf("xin abs extern: %s\n", __xin_absolute_path_get(path, buf));
     // xprintf("xin path pf extern: %s\n", __xin_path_pf_extern(path, buf));
 
-    // XinEntry *ParentEntry = __xin_entry_pf_get(path);
+    // XinEntry *ParentEntry = __xin_parent_folder_entry_get(path);
 
     // if (ParentEntry != NULL)
     //     xprintf("parent folder: %s\n", ParentEntry->path);

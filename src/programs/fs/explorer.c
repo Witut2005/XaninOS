@@ -1,22 +1,21 @@
 
 
-#include <lib/tui/tui.h>
-#include <lib/libc/colors.h>
 #include <fs/xin.h>
+#include <lib/libc/canvas.h>
+#include <lib/libc/colors.h>
+#include <lib/libc/data_structures.h>
 #include <lib/libc/file.h>
 #include <lib/libc/process.h>
-#include <lib/libc/data_structures.h>
-#include <sys/input/input.h>
 #include <lib/libc/string.h>
-#include <lib/libc/canvas.h>
+#include <lib/tui/tui.h>
+#include <sys/input/input.h>
 
 // CANVAS_APP
 
 extern int edit(char* file_name);
 extern int xin_info(char* entry_name);
 
-struct ExplorerInfo
-{
+struct ExplorerInfo {
     char* current_folder;
     bool exit_tui_app;
     char* selected_file;
@@ -135,7 +134,7 @@ void hfs(char* omg, ExplorerInfo* AppInfo)
     else if (bstrcmp(omg, ".."))
     {
         __xin_current_directory_get(AppInfo->current_folder);
-        __xin_folder_change(__xin_entry_pf_get(AppInfo->current_folder)->path);
+        __xin_folder_change(__xin_parent_folder_entry_get(AppInfo->current_folder)->path);
         return;
     }
 

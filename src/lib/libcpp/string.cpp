@@ -73,12 +73,12 @@ void string::reserve(uint32_t size)
     }
 }
 
-void string::resize(uint32_t size, char c)
+const string& string::resize(uint32_t size, char c)
 {
     auto str_len = length();
-    reallocate_if_needed(size);
 
     if (size > str_len) {
+        reallocate_if_needed(size);
         memset(end().data(), c, size - str_len);
         m_ptr[size] = '\0';
     }
@@ -86,6 +86,7 @@ void string::resize(uint32_t size, char c)
     else {
         m_ptr[size] = '\0';
     }
+    return *this;
 }
 
 uint32_t string::length(void) const

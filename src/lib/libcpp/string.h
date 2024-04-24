@@ -42,7 +42,7 @@ public:
     int index_serialize(int index) const;
     uint32_t capacity(void) const; // returns m_size_reserved - sizeof('\0')
     void reserve(uint32_t size);   // reserves to hold size characters
-    void resize(uint32_t size, char c);
+    const string& resize(uint32_t size, char c = '\0');
     constexpr char const* c_str(void) const { return m_ptr; }
     bool empty(void) const { return length() == 0; }
     uint32_t length(void) const;

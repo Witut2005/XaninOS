@@ -14,6 +14,13 @@
 #ifdef __cplusplus
 #include <lib/libcpp/string.h>
 
+std::string __nxin_current_directory_get(void);
+std::string __nxin_absolute_path_get(const std::string& name);
+std::string __nxin_entry_name_extern(const std::string& path);
+std::string __nxin_path_parse(std::string path);
+std::string __nxin_parent_folder_path_get(std::string path);
+XinEntry* __nxin_parent_folder_entry_get(const char* path);
+
 extern "C" {
 #endif
     /* ------------------------------------------------ */
@@ -56,9 +63,9 @@ extern "C" {
     [[nodiscard]] XinEntry* __xin_find_free_entry(void);
     [[nodiscard]] uint8_t* __xin_find_free_pointer(void);
     [[nodiscard]] uint8_t* __xin_find_free_pointer_with_given_size(uint32_t size);
-    char* __xin_path_pf_extern(char* absname, char* buf);      // pf = parent folder
+    char* __xin_path_pf_extern(char* name, char* buf);      // pf = parent folder
     [[nodiscard]] XinEntry* __xin_entry_pf_extern(char* name); // pf = parent folder
-    [[nodiscard]] XinEntry* __xin_entry_pf_get(const char* path);    // pf = parent folder
+    [[nodiscard]] XinEntry* __xin_parent_folder_entry_get(const char* path);    // pf = parent folder
 
     [[nodiscard]] XinChildrenEntries* xin_children_entries_get(char* folder, bool show_hidden);
     [[nodiscard]] XinChildrenEntries* xin_children_entries_type_get(char* folder, uint8_t type);
