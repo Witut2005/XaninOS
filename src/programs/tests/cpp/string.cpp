@@ -1,4 +1,5 @@
 
+
 #include <lib/libcpp/ostream.h>
 #include <lib/libcpp/string.h>
 #include <lib/libcpp/utility.h>
@@ -26,6 +27,16 @@ extern "C" __STATUS __cpp_string_test(void)
         EXPECT_EQUAL(string(nicho.rbegin(), nicho.rend()), "ohcin");
         EXPECT_EQUAL(string(nicho.rbegin() + 1, nicho.rend() - 1), "hci");
     }
+
+    TEST_CASE(size modification)
+    {
+        std::string nicho = test_str;
+        nicho.push_back('o');
+        EXPECT_EQUAL(string(nicho), "nichoo");
+        nicho.pop_back();
+        EXPECT_EQUAL(string(nicho), "nicho");
+    }
+
 
 
     // print("iterator constructor: {}\n", string(nicho.begin(), nicho.end() - 1));

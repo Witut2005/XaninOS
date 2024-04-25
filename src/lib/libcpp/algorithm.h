@@ -254,4 +254,12 @@ bool is_overflow(T a, T b)
     }
 }
 
+template <typename T>
+T get_and_set(T& val, T set)
+{
+    auto tmp = val;
+    val = set;
+    return tmp;
+};
+
 }

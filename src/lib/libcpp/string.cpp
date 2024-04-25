@@ -6,6 +6,7 @@
 #include <lib/libc/stdlibx.h>
 #include <lib/libcpp/memory.hpp>
 #include <sys/devices/com/com.h>
+#include <lib/libcpp/algorithm.h>
 
 //KERNEL ALLOCATION
 
@@ -108,6 +109,17 @@ void string::clear(void)
 
     m_size_reserved = 0;
     m_ptr = (char*)calloc(1);
+}
+
+void string::push_back(char c)
+{
+    reallocate_if_needed(m_size_reserved + sizeof(char));
+    *(uint16_t*)(end()).data() = c;
+}
+
+char string::pop_back(void)
+{
+    return std::get_and_set(*rbegin(), '\0');
 }
 
 string string::substr(int start_index, size_t len) const

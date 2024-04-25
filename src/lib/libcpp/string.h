@@ -45,9 +45,12 @@ public:
     const string& resize(uint32_t size, char c = '\0');
     constexpr char const* c_str(void) const { return m_ptr; }
     bool empty(void) const { return length() == 0; }
+
     uint32_t length(void) const;
     uint32_t size(void) const;
     void clear(void);
+    void push_back(char c);
+    char pop_back(void);
 
     string substr(int start_index, size_t len = npos) const;
     int last_of(const string& to_find, int start_index = -1) const;
