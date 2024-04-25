@@ -273,6 +273,7 @@ class ConstReversed##ItType;\
 template<class Cont>\
 class ItType { \
 public: \
+using value_type = Cont::value_type; \
 ItType(Cont::value_type* ptr) : m_ptr(ptr) {}; \
 ItType(ItType const& other) = default; \
 ItType(Const##ItType<Cont> const& other); \

@@ -217,6 +217,25 @@ bool is_in_range(T start, T end, T value)
     return false;
 }
 
+template <class Cont, typename InputIt>
+Cont unique_copy(InputIt beg, InputIt end, auto predicate)
+{
+    std::vector<typename InputIt::value_type> values_used;
+
+    auto first_arg = beg;
+    auto second_arg = ++beg;
+
+    for (; second_arg != end; first_arg++, second_arg++)
+    {
+        // if (find(values_used.begin(), values_used.end(), *beg).valid()) {
+        if (predicate(*first_arg, *second_arg) == false) {
+            values_used.push_back(*beg);
+        }
+    }
+
+    return Cont(values_used.begin(), values_used.end());
+}
+
 enum class OverflowCheck {
     Addition,
     Subtraction

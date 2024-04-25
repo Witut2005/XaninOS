@@ -10,6 +10,7 @@
 #include <lib/libc/stdiox.h>
 #include <lib/libc/stdlibx.h>
 #include <lib/libcpp/string.h>
+#include <lib/libcpp/algorithm.h>
 #include <lib/libcpp/lexer.hpp>
 #include <lib/libcpp/container/vector.hpp>
 #include <lib/libcpp/memory.hpp>
@@ -40,6 +41,8 @@ static XinFileSystemData XinFsData; // XinFS DATA SINGLETONE
 #define XIN_FS_ITERATE_OVER_PTRS_TABLE(iterator) for (xin_ptr_t *iterator = (xin_ptr_t *)XIN_FS_PTRS_TABLE_BEGIN; iterator < (xin_ptr_t *)XIN_FS_PTRS_TABLE_END; iterator++)
 
 /* -------------------------------------------------------------------------------------- */
+
+#warning "what if path have ///////////////?";
 
 static constexpr XIN_FS_ENTRY_TYPES xin_entry_type(uint8_t type) { return (XIN_FS_ENTRY_TYPES)type; }
 
@@ -93,7 +96,7 @@ string __nxin_path_parse(string path)
 
     while (lexer.all_parsed() == false)
     {
-        auto result = lexer.consume_until(std::vector<string>({ "../", "./" }), true);
+        auto result = lexer.consume_until(std::vector<string>({ "../", "./" }));
         path = path + result.first;// + std::string("/"); //TODO char + operator
 
         conditional_goto_to_parent_folder(result.second == "../", path, -2);
@@ -109,6 +112,8 @@ string __nxin_path_parse(string path)
         *path.rbegin() = '\0';
     }
 
+
+    // return std::unique_copy<string>(path.begin(), path.end(), [](char a, char b) { return a == '/' && b == '/'; });
     return path;
 }
 
