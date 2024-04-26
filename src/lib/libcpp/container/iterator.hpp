@@ -649,4 +649,18 @@ bool Class::ItType<Cont>::operator != (const ItType<Cont>& other) Functionality 
 template<class Cont>\
 bool Class::Const##ItType<Cont>::operator != (const Const##ItType<Cont>& other) Functionality 
 
+template <typename Cont>
+class back_inserter {
+public:
+    back_inserter(Cont& container) : m_container(container) {}
+
+    void operator()(typename Cont::value_type value)
+    {
+        m_container.push_back(value);
+    }
+
+private:
+    Cont& m_container;
+};
+
 } //namspace

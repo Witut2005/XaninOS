@@ -35,6 +35,9 @@ extern "C" __STATUS __cpp_string_test(void)
         EXPECT_EQUAL(string(nicho), "nichoo");
         nicho.pop_back();
         EXPECT_EQUAL(string(nicho), "nicho");
+        auto inserter = std::back_inserter(nicho);
+        inserter('c');
+        EXPECT_EQUAL(string(nicho), "nichoc");
     }
 
 
