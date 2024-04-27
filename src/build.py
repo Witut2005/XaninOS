@@ -403,6 +403,7 @@ objects_to_compile = {
         CompileObject('./programs/tests/cpp/lexer.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./programs/tests/cpp/xin.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./programs/tests/cpp/algo.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
+        CompileObject('./programs/tests/cpp/vector.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./programs/tests/c/alloc.c', builders['c'], builder_options['c']['default'], OBJECT),
 
         CompileObject('./programs/stdio/stdio_apply.c', builders['c'], builder_options['c']['default'], OBJECT),

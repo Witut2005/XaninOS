@@ -11,6 +11,15 @@
 
 #include "./iterator.hpp"
 
+#ifdef KERNEL_MODULE
+#include <sys/pmmngr/alloc.h>
+#define VECTOR_ALLOC(p) kcalloc(p)
+#define VECTOR_FREE(p) kfree(p)
+#else
+#define VECTOR_ALLOC(p) calloc(p)
+#define VECTOR_FREE(p) free(p)
+#endif
+
 namespace std
 {
 
@@ -284,25 +293,140 @@ bool vector<T>::valid_element(T& element) const
     return ((uint32_t)&element >= (uint32_t)this->ptr) & ((uint32_t)&element < (uint32_t)&this->ptr[this->v_size]);
 }
 
-// template <typename T>
-// void vector<T>::print(void)
-// {
-//     if (!this->v_size)
-//     {
-//         std::cout << "[]" << std::endl;
-//         return;
-//     }
+///////////////////////////////////////////////////////////////////////////////////////////////////
 
-//     std::cout << "[";
+template <typename T>
+class nvector
+{
 
-//     auto it = this->cbegin();
-//     for (; it != this->cend() - 1; it++)
-//     {
-//         auto tmp = *it;
-//     }
+public:
+    using value_type = T;
 
-//     std::cout << *it;
-//     std::cout << "]";
-// }
+    using Iterator = RandomAccessIterator<nvector<T>>;
+    using ConstIterator = ConstRandomAccessIterator<nvector<T>>;
+    // using ReversedIterator = ReversedNVectorIterator<vector<T>>;
+    // using ConstReversedIterator = ConstReversedNVectorIterator<vector<T>>;
 
+    nvector(void);
+    nvector(const nvector<T>& other);
+    nvector(nvector<T>&& other);                // move constructor
+    nvector(initializer_list<T> items);
+    ~nvector(void);
+
+    template <typename InputIt>
+    nvector(InputIt beg, InputIt end) : nvector()
+    {
+        for (; beg != end; beg++)
+            push_back(*beg);
+    }
+
+    int index_serialize(int index) const;
+    void push_back(const T& item);
+    T pop_back(void);
+
+    T& front(void);
+    T& back(void);
+    const T& front(void) const;
+    const T& back(void) const;
+
+    size_t size(void) const;
+    T& operator[](int index);
+    const T& operator[] (int index) const;
+
+    Iterator begin(void) { return Iterator(*this, 0); }
+    Iterator end(void) { return Iterator(*this, size()); }
+
+    ConstIterator cbegin(void) { return ConstIterator(*this, 0); }
+    ConstIterator cend(void) { return ConstIterator(*this, size()); }
+
+    static constexpr int npos = -1;
+
+private:
+    T* m_ptr{ nullptr };
+    size_t m_size{ 0 };
+    size_t m_capacity{ 1 };
+
+};
+
+template <typename T>
+nvector<T>::nvector()
+{
+    m_ptr = (T*)VECTOR_ALLOC(m_capacity * sizeof(T));
 }
+
+template <typename T>
+nvector<T>::nvector(const nvector<T>& other)
+{
+    m_size = other.m_size;
+    m_capacity = other.m_capacity;
+
+    m_ptr = (T*)VECTOR_ALLOC(m_capacity * sizeof(value_type));
+    memcpy(m_ptr, other.m_ptr, m_size * sizeof(value_type));
+}
+
+template <typename T>
+nvector<T>::nvector(nvector<T>&& other)
+{
+    m_ptr = other.m_ptr;
+    m_size = other.m_size;
+    m_capacity = other.m_capacity;
+
+    other.m_ptr = nullptr;
+    other.m_size = other.m_capacity = 0;
+}
+
+template <typename T>
+nvector<T>::nvector(initializer_list<T> items) : nvector()
+{
+    int index = 0;
+    for (auto it = items.begin(); it != items.end(); it++, index++)
+        memcpy((uint8_t*)&this->ptr[index], (uint8_t*)it, sizeof(T));
+
+    this->v_size = items.size();
+}
+
+template <typename T>
+nvector<T>::~nvector(void)
+{
+    if (m_ptr != nullptr) {
+        free(m_ptr);
+    }
+}
+
+template <typename T>
+int nvector<T>::index_serialize(int index) const
+{
+    return index < 0 ? (int)size() + index : index;
+}
+
+template <typename T>
+void nvector<T>::push_back(const T& item)
+{
+    m_ptr[m_size++] = item;
+}
+
+template <typename T>
+T nvector<T>::pop_back(void)
+{
+    // return std::get_and_set(*rbegin(), '\0');
+}
+
+template <typename T>
+size_t nvector<T>::size(void) const
+{
+    return m_size;
+}
+
+template <typename T>
+T& nvector<T>::operator[](int index)
+{
+    return m_ptr[index_serialize(index)];
+}
+
+template <typename T>
+const T& nvector<T>::operator[](int index) const
+{
+    return m_ptr[index_serialize(index)];
+}
+
+} //namespace

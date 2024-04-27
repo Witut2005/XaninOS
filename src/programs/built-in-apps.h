@@ -95,6 +95,7 @@ extern "C" {
     __STATUS __cpp_xin_test(void);
     __STATUS __cpp_array_test(void);
     __STATUS __cpp_algo_test(void);
+    __STATUS __cpp_vector_test(void);
     __STATUS __c_alloc_test(void);
 
 #ifdef __cplusplus

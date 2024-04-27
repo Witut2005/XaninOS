@@ -12,7 +12,6 @@ namespace std {
 class string {
 public:
     using value_type = char;
-    using Type = char;
 
     NRANDOM_ACCESS_ITERATORS_DECLARE(NStringIterator);
 
@@ -88,7 +87,6 @@ concept StringIt = requires() {
 class string_view {
 public:
     using value_type = char;
-    using Type = char;
     using Iterator = string::Iterator;
     using ReversedIterator = string::ConstReversedIterator;
     using ConstIterator = string::ConstIterator;

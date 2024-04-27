@@ -87,6 +87,7 @@ extern "C" {
 
         // XANIN_ADD_APP_ENTRY0("arrayt", __cpp_xin_test)
         XANIN_ADD_APP_ENTRY0("alloct", __c_alloc_test)
+            XANIN_ADD_APP_ENTRY0("vectort", __cpp_vector_test)
             XANIN_ADD_APP_ENTRY0("algot", __cpp_algo_test)
             XANIN_ADD_APP_ENTRY0("xint", __cpp_xin_test)
             XANIN_ADD_APP_ENTRY0("lexert", __cpp_lexer_test)
