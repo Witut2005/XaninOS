@@ -112,9 +112,10 @@ string __nxin_path_parse(string path)
         *path.rbegin() = '\0';
     }
 
-
-    // return std::unique_copy<string>(path.begin(), path.end(), [](char a, char b) { return a == '/' && b == '/'; });
-    return path;
+    string parsed_path;
+    std::unique_copy(path.begin(), path.end(), std::back_inserter(parsed_path), [](char a, char b) { return a == '/' && b == '/'; });
+    return parsed_path;
+    // return parsed_path;
 }
 
 string __nxin_parent_folder_path_get(string path)

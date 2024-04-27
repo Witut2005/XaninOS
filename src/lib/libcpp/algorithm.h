@@ -217,23 +217,23 @@ bool is_in_range(T start, T end, T value)
     return false;
 }
 
-template <class Cont, typename InputIt>
-Cont unique_copy(InputIt beg, InputIt end, auto predicate)
+template <typename InputIt, typename OutIt>
+OutIt unique_copy(InputIt beg, InputIt end, OutIt inserter, auto predicate)
 {
-    std::vector<typename InputIt::value_type> values_used;
-
     auto first_arg = beg;
     auto second_arg = ++beg;
 
-    for (; second_arg != end; first_arg++, second_arg++)
+    *inserter = *first_arg;
+    for (; second_arg != end; second_arg++)
     {
-        // if (find(values_used.begin(), values_used.end(), *beg).valid()) {
-        if (predicate(*first_arg, *second_arg) == false) {
-            values_used.push_back(*beg);
+        if (bool result = predicate(*first_arg, *second_arg); !result)
+        {
+            *(++inserter) = *second_arg;
+            first_arg = second_arg;
         }
     }
 
-    return Cont(values_used.begin(), values_used.end());
+    return ++inserter;
 }
 
 enum class OverflowCheck {

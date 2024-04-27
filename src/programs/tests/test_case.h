@@ -2,6 +2,7 @@
 #include <lib/libc/stdiox.h>
 
 #define TEST_CASE(LABEL)
+#define SUB_TEST_CASE(LABEL)
 
 #ifdef __cplusplus
 

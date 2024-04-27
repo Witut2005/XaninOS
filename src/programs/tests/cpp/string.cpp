@@ -3,6 +3,7 @@
 #include <lib/libcpp/ostream.h>
 #include <lib/libcpp/string.h>
 #include <lib/libcpp/utility.h>
+#include <lib/libcpp/algorithm.h>
 #include <programs/tests/test_case.h>
 #include <sys/devices/com/com.h>
 
@@ -35,12 +36,46 @@ extern "C" __STATUS __cpp_string_test(void)
         EXPECT_EQUAL(string(nicho), "nichoo");
         nicho.pop_back();
         EXPECT_EQUAL(string(nicho), "nicho");
+    }
+
+    TEST_CASE(inserter algorithms)
+    {
+        std::string nicho = test_str;
         auto inserter = std::back_inserter(nicho);
         inserter('c');
+
         EXPECT_EQUAL(string(nicho), "nichoc");
+
+        SUB_TEST_CASE()
+        {
+            std::string nicho2;
+            std::unique_copy(nicho.begin(), nicho.end(), std::back_inserter(nicho2), [](char a, char b) {return a == 'n';});
+            EXPECT_EQUAL(nicho2, "n");
+        }
+
+        SUB_TEST_CASE()
+        {
+            std::string nicho2;
+            std::unique_copy(nicho.begin(), nicho.end(), std::back_inserter(nicho2), [](char a, char b) {return b == 'i';});
+            EXPECT_EQUAL(nicho2, "nchoc");
+        }
+
+        SUB_TEST_CASE()
+        {
+            std::string nicho2;
+            std::unique_copy(nicho.begin(), nicho.end(), std::back_inserter(nicho2), [](char a, char b) {return b == 'i';});
+            EXPECT_EQUAL(nicho2, "nchoc");
+        }
     }
 
 
+    TEST_CASE(string path parse test)
+    {
+        std::string path = "skibidi/nicho///////////////////ble";
+        std::string nicho2;
+        std::unique_copy(path.begin(), path.end(), std::back_inserter(nicho2), [](char a, char b) {return a == '/' && b == '/';});
+        EXPECT_EQUAL(nicho2, "skibidi/nicho/ble");
+    }
 
     // print("iterator constructor: {}\n", string(nicho.begin(), nicho.end() - 1));
     // print("iterator constructor: {} {}\n", nicho, nicho == string(nicho.begin(), nicho.end()));

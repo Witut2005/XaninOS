@@ -650,13 +650,33 @@ template<class Cont>\
 bool Class::Const##ItType<Cont>::operator != (const Const##ItType<Cont>& other) Functionality 
 
 template <typename Cont>
-class back_inserter {
+class back_inserter
+{
 public:
     back_inserter(Cont& container) : m_container(container) {}
+
+    back_inserter& operator*(void)
+    {
+        return *this;
+    }
+
+    back_inserter& operator = (typename Cont::value_type value)
+    {
+        m_container.push_back(value);
+        return *this;
+    }
+
+    back_inserter& operator ++ (void) { return *this; }
+    back_inserter& operator ++ (int) { return *this; }
 
     void operator()(typename Cont::value_type value)
     {
         m_container.push_back(value);
+    }
+
+    const Cont& container(void)
+    {
+        return m_container;
     }
 
 private:
