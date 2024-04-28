@@ -653,12 +653,21 @@ private:
 };
 
 //inspired by SerenityOS -> AK/Iterator.h
+template <class Cont>
+class RandomAccessIterator;
+template <class Cont>
+class ConstRandomAccessIterator;
+template <class Cont>
+class RandomAccessReversedIterator;
+template <class Cont>
+class ConstRandomAccessReversedIterator;
 
 template <class Cont>
 class RandomAccessIterator
 {
 public:
     using value_type = typename Cont::value_type;
+    RandomAccessIterator(const RandomAccessReversedIterator<Cont>& other) : m_container(other.m_container), m_index(other.m_index) {}
 
     constexpr bool is_valid(void) { return m_index >= 0 && m_index < m_container.size(); }
     constexpr bool is_end(void) { return m_index == m_container.size(); }
@@ -697,6 +706,10 @@ class ConstRandomAccessIterator
 public:
     using value_type = typename Cont::value_type;
 
+    ConstRandomAccessIterator(const RandomAccessIterator<Cont>& other) : m_container(other.m_container), m_index(other.m_index) {}
+    ConstRandomAccessIterator(const RandomAccessReversedIterator<Cont>& other) : m_container(other.m_container), m_index(other.m_index) {}
+    ConstRandomAccessIterator(const ConstRandomAccessReversedIterator<Cont>& other) : m_container(other.m_container), m_index(other.m_index) {}
+
     constexpr bool is_valid(void) { return m_index >= 0 && m_index < m_container.size(); }
     constexpr bool is_end(void) { return m_index == m_container.size(); }
     constexpr bool is_rend(void) { return m_index == -1; }
@@ -733,6 +746,7 @@ class RandomAccessReversedIterator
 {
 public:
     using value_type = typename Cont::value_type;
+    RandomAccessReversedIterator(const RandomAccessIterator<Cont>& other) : m_container(other.m_container), m_index(other.m_index) {}
 
     constexpr bool is_valid(void) { return m_index >= 0 && m_index < m_container.size(); }
     constexpr bool is_end(void) { return m_index == m_container.size(); }
@@ -770,6 +784,9 @@ class ConstRandomAccessReversedIterator
 {
 public:
     using value_type = typename Cont::value_type;
+    ConstRandomAccessReversedIterator(const RandomAccessIterator<Cont>& other) : m_container(other.m_container), m_index(other.m_index) {}
+    ConstRandomAccessReversedIterator(const ConstRandomAccessIterator<Cont>& other) : m_container(other.m_container), m_index(other.m_index) {}
+    ConstRandomAccessReversedIterator(const RandomAccessReversedIterator<Cont>& other) : m_container(other.m_container), m_index(other.m_index) {}
 
     constexpr bool is_valid(void) { return m_index >= 0 && m_index < m_container.size(); }
     constexpr bool is_end(void) { return m_index == m_container.size(); }
