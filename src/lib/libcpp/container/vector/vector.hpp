@@ -302,10 +302,10 @@ class nvector
 public:
     using value_type = T;
 
-    using Iterator = RandomAccessIterator<nvector<T>>;
-    using ConstIterator = ConstRandomAccessIterator<nvector<T>>;
-    // using ReversedIterator = ReversedNVectorIterator<vector<T>>;
-    // using ConstReversedIterator = ConstReversedNVectorIterator<vector<T>>;
+    using iterator = RandomAccessIterator<nvector<T>>;
+    using const_iterator = ConstRandomAccessIterator<nvector<T>>;
+    using reversed_iterator = RandomAccessReversedIterator<nvector<T>>;
+    using const_reversed_iterator = ConstRandomAccessReversedIterator<nvector<T>>;
 
     nvector(void);
     nvector(const nvector<T>& other);
@@ -333,11 +333,15 @@ public:
     T& operator[](int index);
     const T& operator[] (int index) const;
 
-    Iterator begin(void) { return Iterator(*this, 0); }
-    Iterator end(void) { return Iterator(*this, size()); }
+    iterator begin(void) { return iterator(*this, 0); }
+    iterator end(void) { return iterator(*this, size()); }
+    const_iterator cbegin(void) { return const_iterator(*this, 0); }
+    const_iterator cend(void) { return const_iterator(*this, size()); }
 
-    ConstIterator cbegin(void) { return ConstIterator(*this, 0); }
-    ConstIterator cend(void) { return ConstIterator(*this, size()); }
+    reversed_iterator rbegin(void) { return reversed_iterator(*this, size() - 1); }
+    reversed_iterator rend(void) { return reversed_iterator(*this, -1); }
+    const_reversed_iterator crbegin(void) { return const_reversed_iterator(*this, size() - 1); }
+    const_reversed_iterator crend(void) { return const_reversed_iterator(*this, -1); }
 
     static constexpr int npos = -1;
 

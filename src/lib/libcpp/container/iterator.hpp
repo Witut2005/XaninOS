@@ -662,6 +662,8 @@ public:
 
     constexpr bool is_valid(void) { return m_index >= 0 && m_index < m_container.size(); }
     constexpr bool is_end(void) { return m_index == m_container.size(); }
+    constexpr bool is_rend(void) { return m_index == -1; }
+    constexpr value_type* data(void) { return &m_container[m_index]; }
 
     constexpr bool operator==(const RandomAccessIterator& other) { return m_index == other.m_index; }
     constexpr bool operator!=(const RandomAccessIterator& other) { return m_index != other.m_index; }
@@ -683,10 +685,10 @@ public:
 private:
     friend Cont;
     //Andreas Kling is a genius
-    RandomAccessIterator(Cont& container, uint32_t index) : m_container(container), m_index(index) {}
+    RandomAccessIterator(Cont& container, int index) : m_container(container), m_index(index) {}
 
     Cont& m_container;
-    uint32_t m_index;
+    int m_index;
 };
 
 template <class Cont>
@@ -697,6 +699,8 @@ public:
 
     constexpr bool is_valid(void) { return m_index >= 0 && m_index < m_container.size(); }
     constexpr bool is_end(void) { return m_index == m_container.size(); }
+    constexpr bool is_rend(void) { return m_index == -1; }
+    constexpr const value_type* data(void) { return &m_container[m_index]; }
 
     constexpr bool operator==(const ConstRandomAccessIterator& other) { return m_index == other.m_index; }
     constexpr bool operator!=(const ConstRandomAccessIterator& other) { return m_index != other.m_index; }
@@ -712,15 +716,16 @@ public:
     constexpr ConstRandomAccessIterator operator-(int offset) { return ConstRandomAccessIterator(m_container, m_index - offset); }
 
     constexpr const value_type& operator*(void) { return m_container[m_index]; }
-    constexpr value_type* const operator->(void) { return &m_container[m_index]; }
+    constexpr const value_type* operator->(void) { return &m_container[m_index]; }
+
 
 private:
     friend Cont;
     //Andreas Kling is a genius
-    ConstRandomAccessIterator(const Cont& container, uint32_t index) : m_container(container), m_index(index) {}
+    ConstRandomAccessIterator(const Cont& container, int index) : m_container(container), m_index(index) {}
 
     const Cont& m_container;
-    uint32_t m_index;
+    int m_index;
 };
 
 template <class Cont>
@@ -731,19 +736,21 @@ public:
 
     constexpr bool is_valid(void) { return m_index >= 0 && m_index < m_container.size(); }
     constexpr bool is_end(void) { return m_index == m_container.size(); }
+    constexpr bool is_rend(void) { return m_index == -1; }
+    constexpr value_type* data(void) { return &m_container[m_index]; }
 
     constexpr bool operator==(const RandomAccessReversedIterator& other) { return m_index == other.m_index; }
     constexpr bool operator!=(const RandomAccessReversedIterator& other) { return m_index != other.m_index; }
-    constexpr int operator<=>(const RandomAccessReversedIterator& other) { return m_index > other.m_index ? 1 : m_index < other.m_index ? -1 : 0; }
+    constexpr int operator<=>(const RandomAccessReversedIterator& other) { return m_index > other.m_index ? -1 : m_index < other.m_index ? 1 : 0; }
 
-    constexpr RandomAccessReversedIterator& operator++(void) { m_index++; return *this; }
-    constexpr RandomAccessReversedIterator operator++(int) { m_index++; return RandomAccessReversedIterator(m_container, m_index - 1); }
+    constexpr RandomAccessReversedIterator& operator++(void) { m_index--; return *this; }
+    constexpr RandomAccessReversedIterator operator++(int) { m_index--; return RandomAccessReversedIterator(m_container, m_index + 1); }
 
-    constexpr RandomAccessReversedIterator& operator--(void) { m_index--; return *this; }
-    constexpr RandomAccessReversedIterator operator--(int) { m_index--; return RandomAccessReversedIterator(m_container, m_index + 1); }
+    constexpr RandomAccessReversedIterator& operator--(void) { m_index++; return *this; }
+    constexpr RandomAccessReversedIterator operator--(int) { m_index++; return RandomAccessReversedIterator(m_container, m_index - 1); }
 
-    constexpr RandomAccessReversedIterator operator+(int offset) { return RandomAccessReversedIterator(m_container, m_index + offset); }
-    constexpr RandomAccessReversedIterator operator-(int offset) { return RandomAccessReversedIterator(m_container, m_index - offset); }
+    constexpr RandomAccessReversedIterator operator+(int offset) { return RandomAccessReversedIterator(m_container, m_index - offset); }
+    constexpr RandomAccessReversedIterator operator-(int offset) { return RandomAccessReversedIterator(m_container, m_index + offset); }
 
     constexpr value_type& operator*(void) { return m_container[m_index]; }
     constexpr value_type* operator->(void) { return &m_container[m_index]; }
@@ -752,10 +759,10 @@ public:
 private:
     friend Cont;
     //Andreas Kling is a genius
-    RandomAccessReversedIterator(Cont& container, uint32_t index) : m_container(container), m_index(index) {}
+    RandomAccessReversedIterator(Cont& container, int index) : m_container(container), m_index(index) {}
 
     Cont& m_container;
-    uint32_t m_index;
+    int m_index;
 };
 
 template <class Cont>
@@ -766,30 +773,33 @@ public:
 
     constexpr bool is_valid(void) { return m_index >= 0 && m_index < m_container.size(); }
     constexpr bool is_end(void) { return m_index == m_container.size(); }
+    constexpr bool is_rend(void) { return m_index == -1; }
+    constexpr const value_type* data(void) { return &m_container[m_index]; }
 
     constexpr bool operator==(const ConstRandomAccessReversedIterator& other) { return m_index == other.m_index; }
     constexpr bool operator!=(const ConstRandomAccessReversedIterator& other) { return m_index != other.m_index; }
-    constexpr int operator<=>(const ConstRandomAccessReversedIterator& other) { return m_index > other.m_index ? 1 : m_index < other.m_index ? -1 : 0; }
+    constexpr int operator<=>(const ConstRandomAccessReversedIterator& other) { return m_index > other.m_index ? -1 : m_index < other.m_index ? 1 : 0; }
 
-    constexpr ConstRandomAccessReversedIterator& operator++(void) { m_index++; return *this; }
-    constexpr ConstRandomAccessReversedIterator operator++(int) { m_index++; return ConstRandomAccessReversedIterator(m_container, m_index - 1); }
+    constexpr ConstRandomAccessReversedIterator& operator++(void) { m_index--; return *this; }
+    constexpr ConstRandomAccessReversedIterator operator++(int) { m_index--; return ConstRandomAccessReversedIterator(m_container, m_index + 1); }
 
-    constexpr ConstRandomAccessReversedIterator& operator--(void) { m_index--; return *this; }
-    constexpr ConstRandomAccessReversedIterator operator--(int) { m_index--; return ConstRandomAccessReversedIterator(m_container, m_index + 1); }
+    constexpr ConstRandomAccessReversedIterator& operator--(void) { m_index++; return *this; }
+    constexpr ConstRandomAccessReversedIterator operator--(int) { m_index++; return ConstRandomAccessReversedIterator(m_container, m_index - 1); }
 
-    constexpr ConstRandomAccessReversedIterator operator+(int offset) { return ConstRandomAccessReversedIterator(m_container, m_index + offset); }
-    constexpr ConstRandomAccessReversedIterator operator-(int offset) { return ConstRandomAccessReversedIterator(m_container, m_index - offset); }
+    constexpr ConstRandomAccessReversedIterator operator+(int offset) { return ConstRandomAccessReversedIterator(m_container, m_index - offset); }
+    constexpr ConstRandomAccessReversedIterator operator-(int offset) { return ConstRandomAccessReversedIterator(m_container, m_index + offset); }
 
     constexpr const value_type& operator*(void) { return m_container[m_index]; }
-    constexpr value_type* const operator->(void) { return &m_container[m_index]; }
+    constexpr const value_type* operator->(void) { return &m_container[m_index]; }
+
 
 private:
     friend Cont;
     //Andreas Kling is a genius
-    ConstRandomAccessReversedIterator(const Cont& container, uint32_t index) : m_container(container), m_index(index) {}
+    ConstRandomAccessReversedIterator(const Cont& container, int index) : m_container(container), m_index(index) {}
 
     const Cont& m_container;
-    uint32_t m_index;
+    int m_index;
 };
 
 
