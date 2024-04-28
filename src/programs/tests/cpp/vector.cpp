@@ -34,6 +34,11 @@ extern "C" __STATUS __cpp_vector_test(void)
 
             auto it3(it1);
 
+            it1.data();
+            it1.is_end();
+            it1.is_rend();
+            it1.is_valid();
+
             it1++;
             ++it1;
             it1--;
@@ -56,6 +61,11 @@ extern "C" __STATUS __cpp_vector_test(void)
             EXPECT_FALSE(v.begin().is_end());
 
             auto it3(it1);
+
+            it1.data();
+            it1.is_end();
+            it1.is_rend();
+            it1.is_valid();
 
             it1++;
             ++it1;
@@ -80,6 +90,11 @@ extern "C" __STATUS __cpp_vector_test(void)
 
             auto it3(it1);
 
+            it1.data();
+            it1.is_end();
+            it1.is_rend();
+            it1.is_valid();
+
             it1++;
             ++it1;
             it1--;
@@ -102,6 +117,11 @@ extern "C" __STATUS __cpp_vector_test(void)
             EXPECT_TRUE(v.crend().is_rend());
 
             auto it3(it1);
+
+            it1.data();
+            it1.is_end();
+            it1.is_rend();
+            it1.is_valid();
 
             it1++;
             ++it1;

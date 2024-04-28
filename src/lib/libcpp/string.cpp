@@ -237,46 +237,6 @@ bool string::operator != (string const& other) const
     return !(*this == other);
 }
 
-string::Iterator string::begin()
-{
-    return m_ptr;
-}
-
-string::Iterator string::end()
-{
-    return m_ptr + length();
-}
-
-string::ConstIterator string::cbegin() const
-{
-    return m_ptr;
-}
-
-string::ConstIterator string::cend() const
-{
-    return m_ptr + length();
-}
-
-string::ReversedIterator string::rbegin()
-{
-    return m_ptr + length() - 1;
-}
-
-string::ReversedIterator string::rend()
-{
-    return m_ptr - 1;
-}
-
-string::ConstReversedIterator string::crbegin() const
-{
-    return m_ptr + length() - 1;
-}
-
-string::ConstReversedIterator string::crend() const
-{
-    return m_ptr - 1;
-}
-
 bool string::reallocate_if_needed(uint32_t size)
 {
     size += 1;

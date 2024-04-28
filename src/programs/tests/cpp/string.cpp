@@ -25,7 +25,12 @@ extern "C" __STATUS __cpp_string_test(void)
         EXPECT_EQUAL(string("nicho"), "nicho");
         EXPECT_EQUAL(string(nicho.begin(), nicho.end()), "nicho");
         EXPECT_EQUAL(string(nicho.begin() + 1, nicho.end() - 1), "ich");
+
+        dbg_info("TEST", "");
         EXPECT_EQUAL(string(nicho.rbegin(), nicho.rend()), "ohcin");
+        EXPECT_EQUAL(*nicho.rbegin(), 'o');
+        EXPECT_EQUAL(*(nicho.rend() - 1), 'n');
+        dbg_info("END", "");
         EXPECT_EQUAL(string(nicho.rbegin() + 1, nicho.rend() - 1), "hci");
     }
 
