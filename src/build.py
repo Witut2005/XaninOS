@@ -395,7 +395,6 @@ objects_to_compile = {
         CompileObject('./programs/xagames/xagame_test.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./programs/xagames/tetris.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./programs/misc/screenshot.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
-        CompileObject('./programs/tests/cpp_test.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./programs/tests/elf_loader_test.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./programs/tests/c_test.c', builders['c'], builder_options['c']['default'], OBJECT),
 

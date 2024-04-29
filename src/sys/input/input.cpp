@@ -159,17 +159,15 @@ extern "C"
         return InputModuleHandlers.begin().pointer();
     }
 
+    //changed and not tested yet
     void __input_handle_observed_objects(const key_info_t* const KeyboardDriverKeyInfo)
     {
-        auto ObjectsToHandle = std::find(KeyboardModuleObservedObjects.begin(), KeyboardModuleObservedObjects.end(), [](const auto& a)
-        { return a.valid(); });
-
         bool break_code = is_break_code(KeyboardDriverKeyInfo->scan_code);
 
-        for (auto& it : ObjectsToHandle)
+        for (auto& it : KeyboardModuleObservedObjects)
         {
-            if (!((*it).Options.ignore_break_codes & break_code))
-                memcpy((uint8_t*)it.pointer()->KeyInfo, (uint8_t*)KeyboardDriverKeyInfo, sizeof(key_info_t));
+            if (!((it).Options.ignore_break_codes & break_code))
+                memcpy(it.KeyInfo, KeyboardDriverKeyInfo, sizeof(key_info_t));
         }
     }
 

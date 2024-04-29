@@ -38,7 +38,6 @@ extern "C" {
     __STATUS hexeditor(char*, char*);
     __STATUS run16(char*);
     __STATUS run(char*);
-    __STATUS cpp_test(void);
     __STATUS cpu_info(char*);
     __STATUS calc(char*);
     __STATUS xin_paint(char*);

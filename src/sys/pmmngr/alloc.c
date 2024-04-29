@@ -3,6 +3,7 @@
 
 #include <lib/libc/hal.h>
 #include <lib/libc/memory.h>
+#include <lib/libc/string.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -152,7 +153,9 @@ void mmngr_block_free(uint8_t mode, void* ptr)
     {
         if (((uint32_t)ptr < (uint32_t)kernel_heap_base) || ((uint32_t)ptr > (uint32_t)(kernel_heap_base + (kernel_heap_blocks * PMMNGR_BLOCK_SIZE))))
         {
-            dbg_warning(DEBUG_LABEL_PMMNGR, "Invalid free heap. High risk of memory leak");
+            char addr_buf[70] = { 0 };
+            int_to_string((uint32_t)ptr, addr_buf, 16);
+            dbg_warning(DEBUG_LABEL_PMMNGR, strcat(STRCAT_DEST_FIRST, addr_buf, " Invalid free heap. High risk of memory leak"));
             return;
         }
 
@@ -166,7 +169,9 @@ void mmngr_block_free(uint8_t mode, void* ptr)
     {
         if (((uint32_t)ptr < (uint32_t)user_heap_base) || ((uint32_t)ptr > (uint32_t)(user_heap_base + (user_heap_blocks * PMMNGR_BLOCK_SIZE))))
         {
-            dbg_warning(DEBUG_LABEL_PMMNGR, "Invalid free heap. High risk of memory leak");
+            char addr_buf[70] = { 0 };
+            int_to_string((uint32_t)ptr, addr_buf, 16);
+            dbg_warning(DEBUG_LABEL_PMMNGR, strcat(STRCAT_DEST_FIRST, addr_buf, " Invalid free heap. High risk of memory leak"));
             return;
         }
 
@@ -205,10 +210,16 @@ void kfree(void* ptr)
 void* krealloc(void* ptr, uint32_t size)
 {
     if (size == 0) size++;
+    EFlags Flags;
+    INTERRUPTS_OFF(&Flags);
+
+    interrupt_disable();
+
     uint8_t* tmp = mmngr_block_allocate(KERNEL_HEAP, size);
     memmove(tmp, ptr, size);
     mmngr_block_free(KERNEL_HEAP, ptr);
 
+    INTERRUPTS_ON(&Flags);
     return tmp;
 }
 
@@ -239,9 +250,6 @@ void* urealloc(void* ptr, uint32_t size)
     mmngr_block_free(USER_HEAP, (void*)ptr); // FIRST ALLOCATE THEN FREE (REVERSED ORDER MAKES WEIRD BUGS)
     uint8_t* tmp = (uint8_t*)mmngr_block_allocate(USER_HEAP, size);
     memmove(tmp, (uint8_t*)ptr, size);
-
-    if (Flags.intf)
-        interrupt_enable();
 
     INTERRUPTS_ON(&Flags);
     return tmp;

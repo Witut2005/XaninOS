@@ -91,6 +91,7 @@ std::vector<InputIt> find(InputIt beg, InputIt end, auto finder)
         if (finder(beg))
             results.push_back(beg);
     }
+
     return results;
 }
 

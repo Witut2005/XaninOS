@@ -184,8 +184,6 @@ string::string(It beg, It end) : string()
     if (beg < end)
     {
         uint32_t size_to_allocate = beg.data() - end.data();
-        dbg_warning("BLE", xsprintf("             ", "0x%x", end.data()));
-        dbg_warning("BLE", xsprintf("             ", "0x%x", beg.data()));
         reallocate_if_needed(size_to_allocate);
 
         int i = 0;

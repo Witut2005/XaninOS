@@ -7,7 +7,7 @@
 
 typedef void (*keyboard_handle_input)(void);
 
-uint8_t logo_front_color = yellow;
+uint8_t logo_front_color = lgray;
 uint8_t logo_back_color = black;
 
 screen_t Screen;

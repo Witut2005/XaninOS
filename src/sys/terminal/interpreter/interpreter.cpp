@@ -126,7 +126,6 @@ extern "C" {
             XANIN_ADD_APP_ENTRY2("hexeditor", hexeditor)
             XANIN_ADD_APP_ENTRY1("run16", run16)
             XANIN_ADD_APP_ENTRY1("run", run)
-            XANIN_ADD_APP_ENTRY0("cpptest", cpp_test)
             XANIN_ADD_APP_ENTRY0("ctest", c_test)
             XANIN_ADD_APP_ENTRY1("cpu_info", cpu_info)
             XANIN_ADD_APP_ENTRY1("calc", calc)

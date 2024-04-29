@@ -84,6 +84,19 @@
 |Ja, rok 2023, 31 grudzień, 17:38:50    |
 /--------------------------------------*/
 
+/*--------------------------------------/
+|Na 1000 commitów wypadałoby coś napisać|
+|Wiec coś piszę. Minęło 861 dni odkąd   |
+|Zacząłem pisać Xaninka. Tyle się       |
+|Zmieniło. Kiedy zaczynałem dałbym      |
+|Się pociąć na wstążki, żeby być na tym |
+|Miejscu w którym jestem aktualnie.     |
+|Pamiętaj, ile czasu poświęciłeś, żeby  |
+|Mieć to co masz. To jest Cud           |
+|Cud ten zobaczysz Babciu, obiecuję!    |
+|Ja, rok 2024, 29 kwiecień, 17:31:00    |
+/--------------------------------------*/
+
 uint32_t stdio_refresh_rate;
 interval_id stdio_refresh_interval_id;
 ElfInitArraySectionInfo XaninInitArrayInfo;
@@ -448,7 +461,7 @@ void kernel_start(void)
             OUTPUT_COLOR_SET(logo_back_color, logo_front_color));
         xprintf("%z      _/      _/    _/  _/    _/  _/  _/    _/  _/    _/    _/_/           \n",
             OUTPUT_COLOR_SET(logo_back_color, logo_front_color));
-        xprintf("%z   _/  _/    _/    _/  _/    _/  _/  _/    _/  _/    _/        _/%z   version 2.0v",
+        xprintf("%z   _/  _/    _/    _/  _/    _/  _/  _/    _/  _/    _/        _/%z   version Maca",
             OUTPUT_COLOR_SET(logo_back_color, logo_front_color), OUTPUT_COLOR_SET(black, white));
         xprintf("%z_/      _/    _/_/_/  _/    _/  _/  _/    _/    _/_/    _/_/_/     %z%s: %i:%i:%i\n",
             OUTPUT_COLOR_SET(logo_back_color, logo_front_color), OUTPUT_COLOR_SET(black, white),

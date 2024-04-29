@@ -1,7 +1,8 @@
 
 
-#include <lib/libcpp/container/vector.hpp>
 #include <programs/tests/test_case.h>
+#include <lib/libcpp/string.h>
+#include <lib/libcpp/container/vector.hpp>
 
 using namespace std;
 
@@ -10,18 +11,56 @@ extern "C" __STATUS __cpp_vector_test(void)
 
     TEST_CASE(vector constructors)
     {
-        nvector<int> v;
-        v.push_back(1);
-        v.push_back(10);
-        EXPECT_EQUAL(v[0], 1);
-        EXPECT_EQUAL(v[-1], 10);
+        SUB_TEST_CASE(void)
+        {
+            vector<int> v;
+            v.push_back(1);
+            v.push_back(10);
+            EXPECT_EQUAL(v[0], 1);
+            EXPECT_EQUAL(v[-1], 10);
+        }
+
+        SUB_TEST_CASE(initliazier list)
+        {
+            vector<int> v = { 0, 1, 2 };
+            for (int i = 0; i < 3; i++) {
+                EXPECT_EQUAL(v[i], i);
+            }
+        }
+
+        SUB_TEST_CASE(forward iterators)
+        {
+            string str = "abc";
+            vector<char> v(str.begin(), str.end());
+
+            for (int i = 0; i < 3; i++) {
+                EXPECT_EQUAL_FMT("%d", v[i], 'a' + i);
+            }
+        }
+
+        SUB_TEST_CASE(reversed iterators)
+        {
+            string str = "abc";
+            vector<char> v(str.rbegin(), str.rend());
+
+            for (int i = 0; i < 3; i++) {
+                EXPECT_EQUAL_FMT("%d", v[i], 'c' - i);
+            }
+        }
+    }
+
+    TEST_CASE(vector modification operations)
+    {
+        vector<int> v = { 1,2,3 };
+        v.pop_back();
+        EXPECT_EQUAL(*v.rbegin(), 2);
     }
 
     TEST_CASE(vector iterators)
     {
         SUB_TEST_CASE(iterator)
         {
-            nvector<int> v;
+            vector<int> v;
             v.push_back(1);
             v.push_back(10);
 
@@ -49,7 +88,7 @@ extern "C" __STATUS __cpp_vector_test(void)
 
         SUB_TEST_CASE(const iterator)
         {
-            nvector<int> v;
+            vector<int> v;
             v.push_back(1);
             v.push_back(10);
 
@@ -77,7 +116,7 @@ extern "C" __STATUS __cpp_vector_test(void)
 
         SUB_TEST_CASE(reversed iterator)
         {
-            nvector<int> v;
+            vector<int> v;
             v.push_back(1);
             v.push_back(10);
 
@@ -105,7 +144,7 @@ extern "C" __STATUS __cpp_vector_test(void)
 
         SUB_TEST_CASE(const reversed iterator)
         {
-            nvector<int> v;
+            vector<int> v;
             v.push_back(1);
             v.push_back(10);
 

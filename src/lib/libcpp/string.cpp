@@ -239,6 +239,8 @@ bool string::operator != (string const& other) const
 
 bool string::reallocate_if_needed(uint32_t size)
 {
+    if (m_ptr == nullptr) return false;
+
     size += 1;
     if (size > m_size_reserved)
     {
