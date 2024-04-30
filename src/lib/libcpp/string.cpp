@@ -14,9 +14,10 @@ namespace std {
 
 string::string(void) {
     m_ptr = (char*)calloc(1);
+    m_size_reserved = 1;
 }
 
-string::string(uint32_t size) : m_size_reserved(size + 1), m_ptr((char*)calloc(size + 2)) {}
+string::string(uint32_t size) : m_size_reserved(size + 1), m_ptr((char*)calloc(size + 1)) {}
 
 string::string(char const* other)
 {
@@ -50,7 +51,6 @@ string::string(string&& other)
 string::~string()
 {
     if (m_ptr != nullptr) {
-        // dbg_success("string", "omg i am used");
         free(m_ptr);
     }
 }
@@ -244,7 +244,7 @@ bool string::reallocate_if_needed(uint32_t size)
     size += 1;
     if (size > m_size_reserved)
     {
-        m_size_reserved = size;
+        m_size_reserved = size;// * 2;
         m_ptr = (char*)realloc(m_ptr, size);
         return true;
     }

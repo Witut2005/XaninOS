@@ -29,6 +29,13 @@ uint8_t* user_heap_base;
 uint32_t user_heap_offset;
 uint32_t user_heap_blocks; // 2/3 of allocated memory space belongs to user heap
 
+void log_invalid_heap(void* ptr)
+{
+    char addr_buf[70] = { 0 };
+    xsprintf(addr_buf, "0x%x", ptr);
+    dbg_warning(DEBUG_LABEL_PMMNGR, strcat(STRCAT_DEST_FIRST, addr_buf, " Invalid free heap. High risk of memory leak"));
+}
+
 bool mmngr_is_initialized(void)
 {
     return mmngr_initalized;
@@ -75,7 +82,6 @@ uint32_t mmngr_mmap_free_block_find(uint8_t mode, uint32_t blocks)
         {
             if (mmngr_mmap[i] == MEMORY_UNALLOCATED)
             {
-
                 if (i + blocks > user_heap_offset + user_heap_blocks)
                     return UINT32_MAX;
 
@@ -127,8 +133,7 @@ void* mmngr_block_allocate(uint8_t mode, uint32_t size)
 
     if (mmap_index == UINT32_MAX) // NO AVAILABLE MEMORY
     {
-        printk("HEAP FULL");
-        dbg_error(DEBUG_LABEL_PMMNGR, "HEAD FULL");
+        dbg_error(DEBUG_LABEL_PMMNGR, "HEAP FULL");
         return (void*)NULL;
     }
 
@@ -153,9 +158,7 @@ void mmngr_block_free(uint8_t mode, void* ptr)
     {
         if (((uint32_t)ptr < (uint32_t)kernel_heap_base) || ((uint32_t)ptr > (uint32_t)(kernel_heap_base + (kernel_heap_blocks * PMMNGR_BLOCK_SIZE))))
         {
-            char addr_buf[70] = { 0 };
-            int_to_string((uint32_t)ptr, addr_buf, 16);
-            dbg_warning(DEBUG_LABEL_PMMNGR, strcat(STRCAT_DEST_FIRST, addr_buf, " Invalid free heap. High risk of memory leak"));
+            log_invalid_heap(ptr);
             return;
         }
 
@@ -169,9 +172,7 @@ void mmngr_block_free(uint8_t mode, void* ptr)
     {
         if (((uint32_t)ptr < (uint32_t)user_heap_base) || ((uint32_t)ptr > (uint32_t)(user_heap_base + (user_heap_blocks * PMMNGR_BLOCK_SIZE))))
         {
-            char addr_buf[70] = { 0 };
-            int_to_string((uint32_t)ptr, addr_buf, 16);
-            dbg_warning(DEBUG_LABEL_PMMNGR, strcat(STRCAT_DEST_FIRST, addr_buf, " Invalid free heap. High risk of memory leak"));
+            log_invalid_heap(ptr);
             return;
         }
 

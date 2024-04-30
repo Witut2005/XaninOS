@@ -27,9 +27,8 @@ int xin_list_files_app(char** argv)
     xprintf("Searching: %s\n", path);
 
     XinEntry* End = __xin_fs_entries_end_get();
-    for (XinEntry* i = (XinEntry*)__xin_fs_entries_get(); (uint32_t)i < (uint32_t)End; i++)
+    for (XinEntry* i = (XinEntry*)__xin_fs_entries_get(); i < End; i++)
     {
-
         if ((substr_find(i->path, "/.") && show_hidden_files == false)) // skip if hidden files should not be displayed
             continue;
 

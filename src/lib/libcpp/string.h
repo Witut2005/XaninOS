@@ -8,8 +8,6 @@
 
 namespace std {
 
-// RANDOM_ACCESS_ITERATORS_DECLARE(NStringIterator, char);
-
 class string {
 public:
     using value_type = char;
@@ -159,6 +157,7 @@ public:
     // const_reversed_iterator crend(void) { return const_reversed_iterator(m_ptr - 1); }
 
 private:
+    // use here std::string instead of ptr
     char const* m_ptr;
     size_t m_size;
 };

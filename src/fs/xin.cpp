@@ -54,6 +54,7 @@ string __nxin_current_directory_get(void)
     return XinFsData.current_folder;
 }
 
+//returns absolute path to entry but NOT parse it !!!
 string __nxin_absolute_path_get(const string& name)
 {
 
@@ -76,6 +77,7 @@ string __nxin_entry_name_extern(const string& path)
     return path;
 }
 
+//returns absolute path to entry and parse it !!!
 string __nxin_path_parse(string path)
 {
     auto conditional_goto_to_parent_folder = [](bool cond, string& path, int start_index) -> void {
@@ -115,7 +117,6 @@ string __nxin_path_parse(string path)
     string parsed_path;
     std::unique_copy(path.begin(), path.end(), std::back_inserter(parsed_path), [](char a, char b) { return a == '/' && b == '/'; });
     return parsed_path;
-    // return parsed_path;
 }
 
 string __nxin_parent_folder_path_get(string path)
@@ -131,7 +132,7 @@ string __nxin_parent_folder_path_get(string path)
     return parent_path.empty() ? "/" : parent_path;
 }
 
-XinEntry* __nxin_parent_folder_entry_get(const char* path)
+XinEntry* __xin_parent_folder_entry_get(const char* path)
 {
     return __xin_find_entry(__nxin_parent_folder_path_get(path).c_str());
 }
@@ -350,11 +351,6 @@ extern "C"
         return strcpy(buf, __nxin_parent_folder_path_get(name).c_str());
     }
 
-    XinEntry* __xin_parent_folder_entry_get(const char* name) // pf = parent folder
-    {
-        return __nxin_parent_folder_entry_get(name);
-    }
-
     XinChildrenEntries* xin_children_entries_get(char* folder, bool get_hidden)
     {
 
@@ -552,7 +548,7 @@ extern "C"
         auto path = __nxin_path_parse(foldername);
 
         if (__xin_find_entry(path.c_str()) != nullptr) return XIN_ENTRY_EXISTS;
-        if (__nxin_parent_folder_entry_get(foldername) == nullptr) return XIN_ERROR;
+        if (__xin_parent_folder_entry_get(foldername) == nullptr) return XIN_ERROR;
 
         auto entry = __xin_find_free_entry();
 

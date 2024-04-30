@@ -26,9 +26,14 @@ extern "C" __STATUS __cpp_xin_test(void)
     TEST_CASE(XinFs functions test)
     {
         EXPECT_EQUAL(__nxin_parent_folder_path_get("/nicho/fro/ble"), "/nicho/fro");
-        EXPECT_EQUAL_FMT("0x%x", __nxin_parent_folder_entry_get("/nicho"), __xin_find_entry("/"));
+        EXPECT_EQUAL_FMT("0x%x", __xin_parent_folder_entry_get("/nicho"), __xin_find_entry("/"));
         EXPECT_EQUAL(__nxin_entry_name_extern("/ugabuga/fromini/dupa"), "dupa");
         EXPECT_NOT_EQUAL_FMT("0x%x", __xin_find_entry("/etc/var/variables.conf"), nullptr);
+    }
+
+    TEST_CASE(XinFs parent operations)
+    {
+        __xin_parent_folder_entry_get("/");
     }
 
     return XANIN_OK;
