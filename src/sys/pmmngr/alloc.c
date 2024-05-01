@@ -29,11 +29,18 @@ uint8_t* user_heap_base;
 uint32_t user_heap_offset;
 uint32_t user_heap_blocks; // 2/3 of allocated memory space belongs to user heap
 
-void log_invalid_heap(void* ptr)
+static inline void log_invalid_heap(void* ptr)
 {
-    char addr_buf[70] = { 0 };
+    char addr_buf[100];
     xsprintf(addr_buf, "0x%x", ptr);
     dbg_warning(DEBUG_LABEL_PMMNGR, strcat(STRCAT_DEST_FIRST, addr_buf, " Invalid free heap. High risk of memory leak"));
+}
+
+static inline void log_outside_heap(void* ptr)
+{
+    char addr_buf[100];
+    xsprintf(addr_buf, "0x%x", ptr);
+    dbg_warning(DEBUG_LABEL_PMMNGR, strcat(STRCAT_DEST_FIRST, addr_buf, " Memory outside the heap. Are you trying to free stack-allocated memory?"));
 }
 
 bool mmngr_is_initialized(void)
@@ -150,34 +157,44 @@ void* mmngr_block_allocate(uint8_t mode, uint32_t size)
     return user_heap_base + (mmap_index * PMMNGR_BLOCK_SIZE);
 }
 
-void mmngr_block_free(uint8_t mode, void* ptr)
+#warning "log invalid heap when kfree on user heap or free on kernel heap";
+void mmngr_block_free(uint8_t mode, void* vptr)
 {
     uint32_t index;
+    uint8_t* ptr = vptr;
 
     if (mode == KERNEL_HEAP)
     {
-        if (((uint32_t)ptr < (uint32_t)kernel_heap_base) || ((uint32_t)ptr > (uint32_t)(kernel_heap_base + (kernel_heap_blocks * PMMNGR_BLOCK_SIZE))))
+        if (ptr >= user_heap_base && ptr < (user_heap_base + (user_heap_blocks * PMMNGR_BLOCK_SIZE)))
         {
             log_invalid_heap(ptr);
             return;
         }
 
-        else
+        else if ((ptr < kernel_heap_base) || (ptr > (kernel_heap_base + (kernel_heap_blocks * PMMNGR_BLOCK_SIZE))))
         {
-            index = ((uint32_t)((uint32_t)ptr - (uint32_t)kernel_heap_base) / PMMNGR_BLOCK_SIZE);
+            log_outside_heap(ptr);
+            return;
         }
+
+        index = ((uint32_t)(ptr - kernel_heap_base) / PMMNGR_BLOCK_SIZE);
     }
 
     else // USER HEAP
     {
-        if (((uint32_t)ptr < (uint32_t)user_heap_base) || ((uint32_t)ptr > (uint32_t)(user_heap_base + (user_heap_blocks * PMMNGR_BLOCK_SIZE))))
+        if (ptr >= kernel_heap_base && ptr < (kernel_heap_base + (kernel_heap_blocks * PMMNGR_BLOCK_SIZE)))
         {
             log_invalid_heap(ptr);
             return;
         }
 
-        else
-            index = ((uint32_t)((uint32_t)ptr - (uint32_t)user_heap_base) / PMMNGR_BLOCK_SIZE);
+        else if ((ptr < user_heap_base) || (ptr > (user_heap_base + (user_heap_blocks * PMMNGR_BLOCK_SIZE))))
+        {
+            log_outside_heap(ptr);
+            return;
+        }
+
+        index = ((uint32_t)(ptr - user_heap_base) / PMMNGR_BLOCK_SIZE);
     }
 
     if (mmngr_mmap[index] == MEMORY_UNALLOCATED) // already freed

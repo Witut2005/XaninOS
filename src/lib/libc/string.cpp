@@ -129,6 +129,7 @@ extern "C"
         return dest;
     }
 
+    //normal strncpy doesnt put '\0' at the end
     char* strncpy(char* dest, const char* src, size_t size)
     {
         EXIT_ON_EQUALS_ZERO(size, NULL);
@@ -612,7 +613,7 @@ extern "C"
     {
         //dest = dest + src
         if (dest_first) {
-            memmove(&dest[strlen(dest)], src, strlen(src)); //include '\0' too
+            memmove(&dest[strlen(dest)], src, strlen(src) + 1); //include '\0' too
         }
 
         //dest = src + dest
@@ -738,10 +739,6 @@ extern "C"
 
     char* xvsnprintf(char* str, size_t n, char* fmt, va_list args)
     {
-        #warning "TO DO finish sprintf";
-
-        // va_list args;
-        // va_start(args, fmt);
 
         SPrintfExpect expect = SPrintfExpect::NormalChar;
         char filler = ' ';
@@ -815,7 +812,6 @@ extern "C"
 
             case SPrintfExpect::FillerCounter:
             {
-                // dbg_info(DEBUG_LABEL_LIBC, "Expecting filler counter");
                 char counter_str[64] = { 0 };
                 for (int j = 0; fmt[si + j] != '\0'; j++)
                 {

@@ -28,7 +28,7 @@ __STATUS __c_alloc_test(void)
 
         EXPECT_ABOVE_FMT("0x%x", uptr, kptr);
 
-        free(kptr);
+        kfree(kptr);
         free(uptr);
     }
 
