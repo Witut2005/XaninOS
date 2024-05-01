@@ -1,5 +1,6 @@
 
 #include <lib/libcpp/string.h>
+#include <lib/libcpp/limits.hpp>
 #include <lib/libcpp/container/vector.hpp>
 
 namespace std {
@@ -31,17 +32,27 @@ public:
 
     void ignore_until(std::string end);
 
-    std::string str_get(void);
-    uint32_t index_get(void);
+    void exception_add(uint32_t number) { m_exceptions += number; if (m_exceptions < 0) m_exceptions = 0; }
+    // void exception_consume(uint32_t number = 1) { m_exceptions -= number; if (m_exceptions < 0) m_exceptions = 0; }
+    bool exception_consume(bool cond); //returns true if cond && !m_execeptions
+    void exeception_reset(void) { m_exceptions = 0; }
+
+    uint32_t count_number_of_continuous_chars(int pos, uint32_t max_count = INT32_MAX); // doesnt change m_index position
+
+    std::string str_get(void) { return m_input; }
+    constexpr uint32_t index_get(void) { return m_index; }
     void index_set(uint32_t new_index);
 
-    bool all_parsed(void);
+    bool all_parsed(void) { return !(m_index < m_input.length()); }
 private:
     std::string m_input;
     uint32_t m_index{ 0 };
+    int m_exceptions{ 0 };
 };
 
 ////////////////////Methods definitions//////////////////////////
+
+
 
 template <typename T>
 std::string BaseLexer::consume_until(std::string end, bool ignore_end, T predicate)
@@ -55,7 +66,13 @@ std::string BaseLexer::consume_until(std::string end, bool ignore_end, T predica
 
     for (auto it = start; it != m_input.cend(); it++, m_index++)
     {
-        if (std::string(it, it + endlen) == end) {
+        if (std::string(it, it + endlen) == end)
+        {
+            if (m_exceptions > 0) {
+                m_exceptions--;
+                continue;
+            }
+
             if (ignore_end) {
                 ignore(endlen);
             }

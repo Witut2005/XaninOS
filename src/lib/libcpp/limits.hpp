@@ -1,4 +1,6 @@
 
+#pragma once
+
 #include <float.h>
 #include <limits.h>
 #include <stdint.h>
@@ -67,8 +69,13 @@ struct numeric_limits<unsigned int>
     static constexpr value_type max(void) { return UINT_MAX; }
 };
 
-template<>
-struct numeric_limits<uint32_t> : numeric_limits<unsigned int> {};
+// template<>
+// struct numeric_limits<uint32_t>
+// {
+//     using value_type = uint32_t;
+//     static constexpr value_type min(void) { return 0; }
+//     static constexpr value_type max(void) { return UINT_MAX; }
+// };
 
 template<>
 struct numeric_limits<int64_t>

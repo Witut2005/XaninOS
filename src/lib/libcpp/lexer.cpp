@@ -44,21 +44,41 @@ void BaseLexer::ignore(uint32_t count)
 void BaseLexer::ignore_until(std::string end)
 {
     auto endlen = end.length();
-    auto start = m_input.cbegin() + m_index;
 
-    for (auto it = start; it != m_input.cend(); it++, m_index++) {
-        if (std::string(it, it + endlen) == end) return;
+    for (auto it = m_input.cbegin() + m_index; it != m_input.cend(); it++, m_index++)
+    {
+        if (exception_consume(std::string(it, it + endlen) == end)) return;
     }
 }
 
-std::string BaseLexer::str_get(void)
+bool BaseLexer::exception_consume(bool cond)
 {
-    return m_input;
+    if (cond && m_exceptions) { m_exceptions--; return false; }
+    else if (cond == true && m_exceptions == false) { return true; }
+    else { return false; }
 }
 
-uint32_t BaseLexer::index_get(void)
+uint32_t BaseLexer::count_number_of_continuous_chars(int pos, uint32_t max_count)
 {
-    return m_index;
+    pos = m_input.index_serialize(pos);
+
+    #warning "TODO uint32_t instead of unsigned int";
+    auto tmp = std::string(m_input.cbegin() + pos, m_input.length() > pos + max_count ? m_input.cbegin() + pos + max_count : m_input.cend());
+    //std::is_overflow<OverflowCheck::Addition, unsigned int>(pos, max_count) ? m_input.cend() : m_input.cbegin() + pos + max_count);
+
+    if (tmp.empty()) return 0;
+
+    dbg_info("LEXER", tmp.c_str());
+
+    char char_to_count = tmp[0];
+    uint32_t count = 1;
+
+    for (int i = 1; i < tmp.length(); i++)
+    {
+        if (char_to_count == tmp[i]) count++;
+        else break;
+    }
+    return count;
 }
 
 void BaseLexer::index_set(uint32_t new_index)
@@ -67,9 +87,5 @@ void BaseLexer::index_set(uint32_t new_index)
     m_index = new_index > input_len ? input_len : new_index;
 }
 
-bool BaseLexer::all_parsed(void)
-{
-    return !(m_index < m_input.length());
-}
 
 } // namespace
