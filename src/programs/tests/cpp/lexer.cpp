@@ -1,4 +1,5 @@
 
+#include <lib/libc/hal.h>
 #include <lib/libc/stdiox.h>
 #include <lib/libcpp/string.h>
 #include <lib/libcpp/lexer.hpp>
@@ -38,30 +39,35 @@ extern "C" __STATUS __cpp_lexer_test(void)
 
     TEST_CASE(counting continous chars)
     {
+        std::BaseLexer lexer("abbbccc");
+        EXPECT_EQUAL(lexer.count_number_of_continuous_chars(1), 3);
+    }
 
+    #warning TODO very weird thigs happens when EXPECT_EQUAL(lexer.consume_until("d"), "abb");
+    TEST_CASE(BaseLexer exceptions)
+    {
         std::BaseLexer lexer("abbbccc");
 
-        EXPECT_EQUAL(lexer.count_number_of_continuous_chars(1), 3);
-
-        SUB_TEST_CASE(BaseLexer exceptions)
-        {
-            lexer.exception_add(1);
-            lexer.ignore_until("b");
-            EXPECT_EQUAL(lexer.index_get(), 2);
+        if (lexer.count_number_of_continuous_chars(1) > 1) {
+            lexer.exception_add();
         }
 
+        EXPECT_EQUAL(lexer.exceptions_get(), 1);
+        dbg_info("nicho", "");
+        auto tmp = lexer.consume_until("bb");
+        EXPECT_EQUAL(tmp, "ab");
+        dbg_info("nicho2", "");
+    }
+
+    TEST_CASE(base lexer weird bug)
+    {
+        std::BaseLexer lexer("abbbccc");
+        EXPECT_EQUAL(lexer.index_get(), 0);
+        // EXPECT_EQUAL(lexer.consume_until("bb"), "ab");
+        auto tmp = lexer.consume_until("bb");
+        EXPECT_EQUAL(tmp, "a");
     }
 
     return XANIN_OK;
 
-    // if (result.second == "../") {
-    //     result.first = std::string(result.first.begin(), result.first.begin() + result.first.last_of("/", -2));
-    // }
-
-    // xprintf("stage2: %s\n", result.first.c_str());
-
-    // result.first = result.first + lexer.consume_until(std::vector<std::string>({ "../", "./" }), true).first;
-    // xprintf("stage3: %s\n", result.first.c_str());
-
-    // xprintf("result: %d\n", bstrcmp(lexer.consume_until("cho").c_str(), str));
 }
