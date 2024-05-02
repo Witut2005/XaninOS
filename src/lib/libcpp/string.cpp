@@ -193,7 +193,9 @@ string& string::operator=(string const& other)
 
 string& string::operator=(string&& other)
 {
-    free(m_ptr);
+    if (m_ptr != nullptr) {
+        free(m_ptr);
+    }
 
     m_ptr = other.m_ptr;
     m_size_reserved = other.m_size_reserved;
@@ -239,7 +241,9 @@ bool string::operator != (string const& other) const
 
 bool string::reallocate_if_needed(uint32_t size)
 {
-    if (m_ptr == nullptr) return false;
+    if (m_ptr == nullptr) {
+        m_ptr = (char*)calloc(size);
+    }
 
     size += 1;
     if (size > m_size_reserved)
