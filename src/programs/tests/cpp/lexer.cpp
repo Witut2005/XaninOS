@@ -54,8 +54,9 @@ extern "C" __STATUS __cpp_lexer_test(void)
 
         EXPECT_EQUAL(lexer.exceptions_get(), 1);
         dbg_info("nicho", "");
-        auto tmp = lexer.consume_until("bb");
-        EXPECT_EQUAL(tmp, "ab");
+        // auto tmp = lexer.consume_until("bb");
+        // EXPECT_EQUAL(tmp, "ab");
+        EXPECT_EQUAL(lexer.consume_until("bb"), "ab");
         dbg_info("nicho2", "");
     }
 
@@ -63,9 +64,7 @@ extern "C" __STATUS __cpp_lexer_test(void)
     {
         std::BaseLexer lexer("abbbccc");
         EXPECT_EQUAL(lexer.index_get(), 0);
-        // EXPECT_EQUAL(lexer.consume_until("bb"), "ab");
-        auto tmp = lexer.consume_until("bb");
-        EXPECT_EQUAL(tmp, "a");
+        EXPECT_EQUAL(lexer.consume_until("bb"), "a");
     }
 
     return XANIN_OK;

@@ -54,7 +54,6 @@ void BaseLexer::ignore_until(std::string end)
 std::string BaseLexer::consume_until(std::string end, bool ignore_end)
 {
     if (m_index == m_input.length()) {
-        dbg_error("what1", "");
         return "";
     }
 
@@ -74,38 +73,38 @@ std::string BaseLexer::consume_until(std::string end, bool ignore_end)
         }
     }
 
-    dbg_error("what3", string(start, m_input.cend()).c_str());
     return std::string(start, m_input.cend());
 }
 
-std::pair<std::string, std::string> BaseLexer::consume_until(std::vector<std::string> ends, bool ignore_end)
-{
-    if (m_index == m_input.length()) {
-        return { "", "" };
-    }
+// std::pair<std::string, std::string> BaseLexer::consume_until(std::vector<std::string> ends, bool ignore_end)
+// {
+//     if (m_index == m_input.length()) {
+//         return { "", "" };
+//     }
 
-    auto start = m_input.cbegin() + m_index;
+//     auto start = m_input.cbegin() + m_index;
 
-    for (auto it = start; it != m_input.cend(); it++, m_index++)
-    {
-        if (m_index == m_input.length()) {
-            break;
-        }
+//     for (auto it = start; it != m_input.cend(); it++, m_index++)
+//     {
+//         if (m_index == m_input.length()) {
+//             break;
+//         }
 
-        for (const auto& end : ends) {
-            auto endlen = end.length();
+//         for (const auto& end : ends) {
+//             auto endlen = end.length();
 
-            if (std::string(it, it + endlen) == end) {
-                if (ignore_end) {
-                    ignore(endlen);
-                }
-                return { std::string(start, it), end };
-            }
-        }
-    }
+//             if (std::string(it, it + endlen) == end)
+//             {
+//                 if (ignore_end) {
+//                     ignore(endlen);
+//                 }
+//                 return { std::string(start, it), end };
+//             }
+//         }
+//     }
 
-    return { std::string(start, m_input.cend()), "" };
-}
+//     return { std::string(start, m_input.cend()), "" };
+// }
 
 bool BaseLexer::exception_consume(bool cond)
 {

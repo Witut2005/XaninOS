@@ -6,6 +6,7 @@
 #include <lib/libcpp/algorithm.h>
 #include <programs/tests/test_case.h>
 #include <sys/devices/com/com.h>
+#include <sys/pmmngr/alloc.h>
 
 using namespace std;
 using namespace std::literals;
@@ -23,8 +24,12 @@ extern "C" __STATUS __cpp_string_test(void)
         EXPECT_EQUAL(string(nicho), "nicho");
         EXPECT_EQUAL(string("nicho", 3), "nic");
         EXPECT_EQUAL(string("nicho"), "nicho");
+
         EXPECT_EQUAL(string(nicho.begin(), nicho.end()), "nicho");
+        EXPECT_EQUAL(string(nicho.begin(), nicho.begin() + 1), "n");
         EXPECT_EQUAL(string(nicho.begin() + 1, nicho.end() - 1), "ich");
+
+        EXPECT_EQUAL(string(".").length(), 1);
 
         EXPECT_EQUAL(string(nicho.rbegin(), nicho.rend()), "ohcin");
         EXPECT_EQUAL(*nicho.rbegin(), 'o');
@@ -78,6 +83,21 @@ extern "C" __STATUS __cpp_string_test(void)
         std::string nicho2;
         std::unique_copy(path.begin(), path.end(), std::back_inserter(nicho2), [](char a, char b) {return a == '/' && b == '/';});
         EXPECT_EQUAL(nicho2, "skibidi/nicho/ble");
+    }
+
+    TEST_CASE(string array)
+    {
+        string* ptr = (string*)kcalloc(2 * sizeof(std::string));
+        ptr[0] = "abc";
+        ptr[1] = "cba";
+        // ptr = (string*)realloc(ptr, 3 * sizeof(std::string));
+
+        EXPECT_NOT_EQUAL_FMT("0x%x", ptr, NULL);
+        EXPECT_NOT_EQUAL_FMT("0x%x", ptr[0].c_str(), NULL);
+        EXPECT_NOT_EQUAL_FMT("0x%x", ptr[1].c_str(), NULL);
+
+        EXPECT_EQUAL(ptr[0], "abc");
+        EXPECT_EQUAL(ptr[1], "cba");
     }
 
     // print("iterator constructor: {}\n", string(nicho.begin(), nicho.end() - 1));

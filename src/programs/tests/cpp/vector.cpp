@@ -5,9 +5,29 @@
 #include <lib/libcpp/container/vector.hpp>
 
 using namespace std;
+using namespace std::literals;
+
+#warning VECTOR uses = instaed of memcpy function !!!!!!!!!!!!!!!1
 
 extern "C" __STATUS __cpp_vector_test(void)
 {
+
+    TEST_CASE(oj ja tak łatwo się nie poddam)
+    {
+        // std::vector<std::string> v = { "a", ".." };
+        std::vector<std::string> v;// = { "..", ".." };
+        dbg_error("aaa", "");
+        v.push_back("a");
+        v.push_back("..");
+        dbg_error("aaa", "");
+
+        EXPECT_EQUAL(v[0], "a");
+        dbg_info("hm?", v[0].c_str());
+        dbg_info("hm?", v[1].c_str());
+        EXPECT_EQUAL(v[0].length(), 1);
+        EXPECT_EQUAL(v.begin()->length(), 1);
+        EXPECT_EQUAL((v.begin() + 1)->length(), 2);
+    }
 
     TEST_CASE(vector constructors)
     {

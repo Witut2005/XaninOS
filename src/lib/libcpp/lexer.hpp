@@ -15,19 +15,22 @@ class BaseLexer {
 public:
     static constexpr int npos = -1;
 
-    BaseLexer(const std::string& input) : m_input(input) {}
+    BaseLexer(const string& input) : m_input(input) {}
+    BaseLexer(const BaseLexer&) = default;
 
-    void reassign(const std::string& input);
-    std::string rest(bool to_right = true);
+    void reassign(const string& input);
+    string rest(bool to_right = true);
 
     char peek(void);
-    std::string consume(uint32_t count = 1);
+    string consume(uint32_t count = 1);
     void ignore(uint32_t count = 1);
 
     std::string consume_until(std::string end, bool ignore_end = true);
-    std::pair<std::string, std::string> consume_until(std::vector<std::string> ends, bool ignore_end = true);
 
-    void ignore_until(std::string end);
+    template<typename T = bool(*)(const string&) >
+    std::pair<string, string> consume_until(std::vector<string> ends, bool ignore_end = true, T exception = [](const string&) {return true;});
+
+    void ignore_until(string end);
 
     void exception_add(uint32_t number = 1) { m_exceptions += number; if (m_exceptions < 0) m_exceptions = 0; }
     // void exception_consume(uint32_t number = 1) { m_exceptions -= number; if (m_exceptions < 0) m_exceptions = 0; }
@@ -50,56 +53,35 @@ private:
 
 ////////////////////Methods definitions//////////////////////////
 
-// std::string BaseLexer::conditional_consume_until(auto predicate, std::string end, bool ignore_end)
-// {
-//     if (m_index == m_input.length()) {
-//         return "";
-//     }
+template<typename T>
+std::pair<string, string> BaseLexer::consume_until(std::vector<string> ends, bool ignore_end, T exception)
+{
+    if (m_index == m_input.length()) {
+        return { "", "" };
+    }
 
-//     auto endlen = end.length();
-//     auto start = m_input.cbegin() + m_index;
+    auto start = m_input.cbegin() + m_index;
 
-//     for (auto it = start; it != m_input.cend(); it++, m_index++)
-//     {
-//         if (std::string(it, it + endlen) == end) {
-//             if (ignore_end) {
-//                 ignore(endlen);
-//             }
-//             return std::string(start, it);
-//         }
-//     }
+    for (auto it = start; it != m_input.cend(); it++, m_index++)
+    {
+        for (const auto& end : ends) {
+            auto endlen = end.length();
+            // dbg_info("HUJ", xsprintf("             ", "%d", endlen));
 
-//     return std::string(start, m_input.cend());
-// }
+            auto str2chk = string(it, it + endlen);
+            // dbg_info("HUJ", str2chk.c_str());
 
-// std::pair<std::string, std::string> BaseLexer::conditional_consume_until(auto predicate, std::vector<std::string> ends, bool ignore_end)
-// {
-//     if (m_index == m_input.length()) {
-//         return { "", "" };
-//     }
+            if (exception_consume(str2chk == end) && exception(str2chk))
+            {
+                if (ignore_end) {
+                    ignore(endlen);
+                }
+                return { string(start, it), end };
+            }
+        }
+    }
 
-//     auto start = m_input.cbegin() + m_index;
-
-//     for (auto it = start; it != m_input.cend(); it++, m_index++)
-//     {
-//         if (m_index == m_input.length()) {
-//             break;
-//         }
-
-//         for (const auto& end : ends) {
-//             auto endlen = end.length();
-
-//             if (std::string(it, it + endlen) == end) {
-//                 if (ignore_end) {
-//                     ignore(endlen);
-//                 }
-//                 return { std::string(start, it), end };
-//             }
-//         }
-//     }
-
-//     return { std::string(start, m_input.cend()), "" };
-// }
-
+    return { string(start, m_input.cend()), "" };
+}
 
 } // namespace
