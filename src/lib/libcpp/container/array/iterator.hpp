@@ -10,6 +10,7 @@ template <class Arr>
 class ForwardArrayIterator : public std::ForwardIterator<Arr>
 {
 public:
+    ForwardArrayIterator() = default;
     using this_type = ForwardArrayIterator<Arr>;
 
     using value_type = typename ConditionalConst<typename Arr::value_type, false>::type;

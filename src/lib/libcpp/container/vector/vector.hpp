@@ -11,16 +11,16 @@
 
 #include "./iterator.hpp"
 
-#ifdef KERNEL_MODULE
-#include <sys/pmmngr/alloc.h>
-#define VECTOR_ALLOC(p) kcalloc(p)
-#define VECTOR_REALLOC(p, s) krealloc(p, s)
-#define VECTOR_FREE(p) kfree(p)
-#else
-#define VECTOR_ALLOC(p) calloc(p)
-#define VECTOR_REALLOC(p, s) realloc(p, s)
-#define VECTOR_FREE(p) free(p)
-#endif
+// #ifdef KERNEL_MODULE
+// #include <sys/pmmngr/alloc.h>
+// #define VECTOR_ALLOC(p) kcalloc(p)
+// #define VECTOR_REALLOC(p, s) krealloc(p, s)
+// #define VECTOR_FREE(p) kfree(p)
+// #else
+// #define VECTOR_ALLOC(p) calloc(p)
+// #define VECTOR_REALLOC(p, s) realloc(p, s)
+// #define VECTOR_FREE(p) free(p)
+// #endif
 
 namespace std
 {
@@ -101,7 +101,8 @@ private:
 template <typename T>
 vector<T>::vector()
 {
-    m_ptr = (T*)VECTOR_ALLOC(m_capacity * sizeof(T));
+    // m_ptr = (T*)VECTOR_ALLOC(m_capacity * sizeof(T));
+    m_ptr = new T[m_capacity];
 }
 
 template <typename T>
@@ -110,7 +111,8 @@ vector<T>::vector(const vector<T>& other)
     m_size = other.m_size;
     m_capacity = other.m_capacity;
 
-    m_ptr = (T*)VECTOR_ALLOC(m_capacity * sizeof(value_type));
+    // m_ptr = (T*)VECTOR_ALLOC(m_capacity * sizeof(value_type));
+    m_ptr = new T[m_capacity];
     memcpy(m_ptr, other.m_ptr, m_size * sizeof(value_type));
 }
 
@@ -139,7 +141,8 @@ template <typename T>
 vector<T>::~vector(void)
 {
     if (m_ptr != nullptr) {
-        VECTOR_FREE(m_ptr);
+        // VECTOR_FREE(m_ptr);
+        delete m_ptr;
     }
 }
 
@@ -162,13 +165,15 @@ template <typename T>
 T& vector<T>::operator = (const vector<T>& other)
 {
     if (m_ptr != nullptr) {
-        VECTOR_FREE(m_ptr);
+        // VECTOR_FREE(m_ptr);
+        delete m_ptr;
     }
 
     m_size = other.m_size;
     m_capacity = other.m_capacity;
 
-    m_ptr = VECTOR_ALLOC(m_size * sizeof(T));
+    // m_ptr = VECTOR_ALLOC(m_size * sizeof(T));
+    m_ptr = new T[m_size];
     memcpy(m_ptr, other.m_ptr, m_size * sizeof(T));
 }
 
@@ -176,7 +181,8 @@ template <typename T>
 T& vector<T>::operator = (vector<T>&& other)
 {
     if (m_ptr != nullptr) {
-        VECTOR_FREE(m_ptr);
+        // VECTOR_FREE(m_ptr);
+        delete m_ptr;
     }
 
     m_size = other.m_size;
@@ -192,8 +198,13 @@ bool vector<T>::reallocate_if_needed(uint32_t size)
 {
     if (size > m_capacity)
     {
+        // m_ptr = (T*)VECTOR_REALLOC(m_ptr, m_capacity * sizeof(T));
+        m_ptr = (T*)realloc(m_ptr, size * 2 * sizeof(T));
+        for (int i = m_size; i < size * 2; i++)
+        {
+            // new (&m_ptr[i])T();
+        }
         m_capacity = size * 2;
-        m_ptr = (T*)VECTOR_REALLOC(m_ptr, m_capacity * sizeof(T));
         return true;
     }
 

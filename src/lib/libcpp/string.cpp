@@ -12,12 +12,18 @@
 
 namespace std {
 
-string::string(void) {
+string::string(void)
+{
+    // dbg_info("string void", "");
     m_ptr = (char*)calloc(1);
     m_size_reserved = 1;
 }
 
-string::string(uint32_t size) : m_size_reserved(size + 1), m_ptr((char*)calloc(size + 1)) {}
+string::string(uint32_t size)
+{
+    m_size_reserved = size + 1;
+    m_ptr = (char*)calloc(size + 1);
+}
 
 string::string(char const* other)
 {
@@ -27,23 +33,25 @@ string::string(char const* other)
     strcpy(m_ptr, other);
 }
 
-string::string(char const* other, uint32_t size) : m_size_reserved(size + 1)
+string::string(char const* other, uint32_t size)
 {
-    m_ptr = (char*)calloc(m_size_reserved);
+    m_size_reserved = size + 1;
+    m_ptr = (char*)calloc(size + 1);
     strncpy(m_ptr, other, size);
 }
 
 string::string(string const& other)
-    : m_size_reserved(other.m_size_reserved)
 {
-    m_ptr = (char*)calloc(m_size_reserved);
+    m_size_reserved = other.m_size_reserved;
+    m_ptr = (char*)calloc(other.m_size_reserved);
     strcpy(m_ptr, other.m_ptr);
 }
 
 string::string(string&& other)
-    : m_size_reserved(other.m_size_reserved)
-    , m_ptr(other.m_ptr)
 {
+    m_size_reserved = other.m_size_reserved;
+    m_ptr = other.m_ptr;
+
     other.m_size_reserved = 0;
     other.m_ptr = nullptr;
 }
@@ -78,8 +86,9 @@ const string& string::resize(uint32_t size, char c)
 {
     auto str_len = length();
 
-    if (size > str_len) {
-        reallocate_if_needed(size);
+    if (size > str_len)
+    {
+        m_size_reserved = reallocate_if_needed(size);
         memset(end().data(), c, size - str_len);
         m_ptr[size] = '\0';
     }
@@ -186,6 +195,7 @@ const char& string::operator[](int index) const
 
 string& string::operator=(string const& other)
 {
+    // dbg_info("copy operator =", "");
     reallocate_if_needed(other.m_size_reserved);
     strcpy(m_ptr, other.m_ptr);
     return *this;
@@ -209,7 +219,7 @@ string& string::operator=(string&& other)
 string string::operator+(char c) const
 {
     auto tstr = string(*this);
-    tstr.reallocate_if_needed(tstr.m_size_reserved + sizeof(char));
+    tstr.m_size_reserved = tstr.reallocate_if_needed(tstr.m_size_reserved + sizeof(char));
 
     [&](uint32_t str_len) {
         tstr.m_ptr[str_len] = c;
@@ -239,21 +249,23 @@ bool string::operator != (string const& other) const
     return !(*this == other);
 }
 
-bool string::reallocate_if_needed(uint32_t size)
+uint32_t string::reallocate_if_needed(uint32_t size)
 {
-    if (m_ptr == nullptr) {
-        m_ptr = (char*)calloc(size);
-    }
-
     size += 1;
-    if (size > m_size_reserved)
-    {
-        m_size_reserved = size;// * 2;
-        m_ptr = (char*)realloc(m_ptr, size);
-        return true;
+
+    // if (m_ptr == nullptr) {
+    //     m_ptr = (char*)calloc(size);
+    //     return size;
+    // }
+
+    if (size > m_size_reserved) {
+        m_ptr = (char*)realloc(m_ptr, size * 2);
+        return size * 2;
     }
 
-    return false;
+    else {
+        return m_size_reserved;
+    }
 }
 
 ///////////////////////ITERATORS////////////////////////////

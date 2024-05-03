@@ -82,9 +82,9 @@ public:
     static constexpr int npos = -1;
 
 private:
-    bool reallocate_if_needed(uint32_t size); // returns true when data was reallocted
+    uint32_t reallocate_if_needed(uint32_t size); // returns true when data was reallocted
 
-    char* m_ptr;
+    char* m_ptr{ nullptr };
     uint32_t m_size_reserved{ 0 };
 };
 

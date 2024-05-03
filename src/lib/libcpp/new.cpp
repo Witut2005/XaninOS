@@ -11,11 +11,20 @@ void* operator new(size_t size) noexcept
     return p;
 }
 
+void* operator new(size_t size, void* ptr) noexcept
+{
+    return ptr;
+}
+
 void* operator new[](size_t size) noexcept
 {
-    // dbg_info(DEBUG_LABEL_LIBCPP, xsprintf(std::UniquePtr<char>((char*)calloc(50)).get(), "size: %d", size));
     void* p = calloc(size);
     return p;
+}
+
+void* operator new[](size_t size, void* ptr) noexcept
+{
+    return ptr;
 }
 
 void operator delete(void* ptr) noexcept

@@ -7,6 +7,8 @@
 #include <programs/tests/test_case.h>
 #include <sys/devices/com/com.h>
 #include <sys/pmmngr/alloc.h>
+#include <lib/libcpp/new.hpp>
+
 
 using namespace std;
 using namespace std::literals;
@@ -90,7 +92,9 @@ extern "C" __STATUS __cpp_string_test(void)
         string* ptr = (string*)kcalloc(2 * sizeof(std::string));
         ptr[0] = "abc";
         ptr[1] = "cba";
-        // ptr = (string*)realloc(ptr, 3 * sizeof(std::string));
+
+        string* ptr2 = (string*)kcalloc(2 * sizeof(std::string));
+        new (&ptr[0])std::string();
 
         EXPECT_NOT_EQUAL_FMT("0x%x", ptr, NULL);
         EXPECT_NOT_EQUAL_FMT("0x%x", ptr[0].c_str(), NULL);
