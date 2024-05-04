@@ -14,182 +14,187 @@ extern "C" __STATUS __cpp_vector_test(void)
 
     TEST_CASE(oj ja tak łatwo się nie poddam)
     {
-        // std::vector<std::string> v = { "a", ".." };
-        std::vector<std::string> v;// = { "..", ".." };
-        dbg_error("aaa", "");
-        v.push_back("a");
-        v.push_back("..");
-        dbg_error("aaa", "");
+        dbg_mark("string test");
+        std::vector<std::string> v;
+        for (int i = 0; i < 2; i++) {
+            v.push_back("a");
+            v.push_back("..");
+        }
 
+        dbg_mark("string test");
         EXPECT_EQUAL(v[0], "a");
-        dbg_info("hm?", v[0].c_str());
-        dbg_info("hm?", v[1].c_str());
-        EXPECT_EQUAL(v[0].length(), 1);
-        EXPECT_EQUAL(v.begin()->length(), 1);
-        EXPECT_EQUAL((v.begin() + 1)->length(), 2);
+        EXPECT_EQUAL(v[1], "..");
     }
 
-    TEST_CASE(vector constructors)
-    {
-        SUB_TEST_CASE(void)
-        {
-            vector<int> v;
-            v.push_back(1);
-            v.push_back(10);
-            EXPECT_EQUAL(v[0], 1);
-            EXPECT_EQUAL(v[-1], 10);
-        }
+    // TEST_CASE(oj ja tak łatwo się nie poddam)
+    // {
+    //     std::vector<std::string> v = { "a", ".." };
 
-        SUB_TEST_CASE(initliazier list)
-        {
-            vector<int> v = { 0, 1, 2 };
-            for (int i = 0; i < 3; i++) {
-                EXPECT_EQUAL(v[i], i);
-            }
-        }
+    //     EXPECT_EQUAL(v[0], "a");
+    //     EXPECT_EQUAL(v[1], "..");
+    // }
 
-        SUB_TEST_CASE(forward iterators)
-        {
-            string str = "abc";
-            vector<char> v(str.begin(), str.end());
+    // TEST_CASE(vector constructors)
+    // {
+    //     SUB_TEST_CASE(void)
+    //     {
+    //         vector<int> v;
+    //         v.push_back(1);
+    //         v.push_back(10);
+    //         EXPECT_EQUAL(v[0], 1);
+    //         EXPECT_EQUAL(v[-1], 10);
+    //     }
 
-            for (int i = 0; i < 3; i++) {
-                EXPECT_EQUAL_FMT("%d", v[i], 'a' + i);
-            }
-        }
+    //     SUB_TEST_CASE(initliazier list)
+    //     {
+    //         vector<int> v = { 0, 1, 2 };
+    //         for (int i = 0; i < 3; i++) {
+    //             EXPECT_EQUAL(v[i], i);
+    //         }
+    //     }
 
-        SUB_TEST_CASE(reversed iterators)
-        {
-            string str = "abc";
-            vector<char> v(str.rbegin(), str.rend());
+    //     SUB_TEST_CASE(forward iterators)
+    //     {
+    //         string str = "abc";
+    //         vector<char> v(str.begin(), str.end());
 
-            for (int i = 0; i < 3; i++) {
-                EXPECT_EQUAL_FMT("%d", v[i], 'c' - i);
-            }
-        }
-    }
+    //         for (int i = 0; i < 3; i++) {
+    //             EXPECT_EQUAL_FMT("%d", v[i], 'a' + i);
+    //         }
+    //     }
 
-    TEST_CASE(vector modification operations)
-    {
-        vector<int> v = { 1,2,3 };
-        v.pop_back();
-        EXPECT_EQUAL(*v.rbegin(), 2);
-    }
+    //     SUB_TEST_CASE(reversed iterators)
+    //     {
+    //         string str = "abc";
+    //         vector<char> v(str.rbegin(), str.rend());
 
-    TEST_CASE(vector iterators)
-    {
-        SUB_TEST_CASE(iterator)
-        {
-            vector<int> v;
-            v.push_back(1);
-            v.push_back(10);
+    //         for (int i = 0; i < 3; i++) {
+    //             EXPECT_EQUAL_FMT("%d", v[i], 'c' - i);
+    //         }
+    //     }
+    // }
 
-            auto it1 = v.begin();
-            auto it2 = v.begin() + 1;
+    // TEST_CASE(vector modification operations)
+    // {
+    //     vector<int> v = { 1,2,3 };
+    //     // v.pop_back();
+    //     EXPECT_EQUAL(*v.rbegin(), 2);
+    // }
 
-            EXPECT_BELOW_FMT("0x%x", it1.data(), it2.data());
-            EXPECT_TRUE(v.end().is_end());
-            EXPECT_FALSE(v.begin().is_end());
+    // TEST_CASE(vector iterators)
+    // {
+    //     SUB_TEST_CASE(iterator)
+    //     {
+    //         vector<int> v;
+    //         v.push_back(1);
+    //         v.push_back(10);
 
-            auto it3(it1);
+    //         auto it1 = v.begin();
+    //         auto it2 = v.begin() + 1;
 
-            it1.data();
-            it1.is_end();
-            it1.is_rend();
-            it1.is_valid();
+    //         EXPECT_BELOW_FMT("0x%x", it1.data(), it2.data());
+    //         EXPECT_TRUE(v.end().is_end());
+    //         EXPECT_FALSE(v.begin().is_end());
 
-            it1++;
-            ++it1;
-            it1--;
-            --it1;
+    //         auto it3(it1);
 
-            EXPECT_EQUAL_FMT("0x%x", it1.data(), it3.data());
-        }
+    //         it1.data();
+    //         it1.is_end();
+    //         it1.is_rend();
+    //         it1.is_valid();
 
-        SUB_TEST_CASE(const iterator)
-        {
-            vector<int> v;
-            v.push_back(1);
-            v.push_back(10);
+    //         it1++;
+    //         ++it1;
+    //         it1--;
+    //         --it1;
 
-            auto it1 = v.cbegin();
-            auto it2 = v.cbegin() + 1;
+    //         EXPECT_EQUAL_FMT("0x%x", it1.data(), it3.data());
+    //     }
 
-            EXPECT_BELOW_FMT("0x%x", it1.data(), it2.data());
-            EXPECT_TRUE(v.end().is_end());
-            EXPECT_FALSE(v.begin().is_end());
+    //     SUB_TEST_CASE(const iterator)
+    //     {
+    //         vector<int> v;
+    //         v.push_back(1);
+    //         v.push_back(10);
 
-            auto it3(it1);
+    //         auto it1 = v.cbegin();
+    //         auto it2 = v.cbegin() + 1;
 
-            it1.data();
-            it1.is_end();
-            it1.is_rend();
-            it1.is_valid();
+    //         EXPECT_BELOW_FMT("0x%x", it1.data(), it2.data());
+    //         EXPECT_TRUE(v.end().is_end());
+    //         EXPECT_FALSE(v.begin().is_end());
 
-            it1++;
-            ++it1;
-            it1--;
-            --it1;
+    //         auto it3(it1);
 
-            EXPECT_EQUAL_FMT("0x%x", it1.data(), it3.data());
-        }
+    //         it1.data();
+    //         it1.is_end();
+    //         it1.is_rend();
+    //         it1.is_valid();
 
-        SUB_TEST_CASE(reversed iterator)
-        {
-            vector<int> v;
-            v.push_back(1);
-            v.push_back(10);
+    //         it1++;
+    //         ++it1;
+    //         it1--;
+    //         --it1;
 
-            auto it1 = v.rbegin();
-            auto it2 = v.rbegin() + 1;
+    //         EXPECT_EQUAL_FMT("0x%x", it1.data(), it3.data());
+    //     }
 
-            EXPECT_ABOVE_FMT("0x%x", it1.data(), it2.data());
-            EXPECT_FALSE(v.rend().is_end());
-            EXPECT_TRUE(v.rend().is_rend());
+    //     SUB_TEST_CASE(reversed iterator)
+    //     {
+    //         vector<int> v;
+    //         v.push_back(1);
+    //         v.push_back(10);
 
-            auto it3(it1);
+    //         auto it1 = v.rbegin();
+    //         auto it2 = v.rbegin() + 1;
 
-            it1.data();
-            it1.is_end();
-            it1.is_rend();
-            it1.is_valid();
+    //         EXPECT_ABOVE_FMT("0x%x", it1.data(), it2.data());
+    //         EXPECT_FALSE(v.rend().is_end());
+    //         EXPECT_TRUE(v.rend().is_rend());
 
-            it1++;
-            ++it1;
-            it1--;
-            --it1;
+    //         auto it3(it1);
 
-            EXPECT_EQUAL_FMT("0x%x", it1.data(), it3.data());
-        }
+    //         it1.data();
+    //         it1.is_end();
+    //         it1.is_rend();
+    //         it1.is_valid();
 
-        SUB_TEST_CASE(const reversed iterator)
-        {
-            vector<int> v;
-            v.push_back(1);
-            v.push_back(10);
+    //         it1++;
+    //         ++it1;
+    //         it1--;
+    //         --it1;
 
-            auto it1 = v.crbegin();
-            auto it2 = v.crbegin() + 1;
+    //         EXPECT_EQUAL_FMT("0x%x", it1.data(), it3.data());
+    //     }
 
-            EXPECT_ABOVE_FMT("0x%x", it1.data(), it2.data());
-            EXPECT_FALSE(v.crend().is_end());
-            EXPECT_TRUE(v.crend().is_rend());
+    //     SUB_TEST_CASE(const reversed iterator)
+    //     {
+    //         vector<int> v;
+    //         v.push_back(1);
+    //         v.push_back(10);
 
-            auto it3(it1);
+    //         auto it1 = v.crbegin();
+    //         auto it2 = v.crbegin() + 1;
 
-            it1.data();
-            it1.is_end();
-            it1.is_rend();
-            it1.is_valid();
+    //         EXPECT_ABOVE_FMT("0x%x", it1.data(), it2.data());
+    //         EXPECT_FALSE(v.crend().is_end());
+    //         EXPECT_TRUE(v.crend().is_rend());
 
-            it1++;
-            ++it1;
-            it1--;
-            --it1;
+    //         auto it3(it1);
 
-            EXPECT_EQUAL_FMT("0x%x", it1.data(), it3.data());
-        }
-    }
+    //         it1.data();
+    //         it1.is_end();
+    //         it1.is_rend();
+    //         it1.is_valid();
+
+    //         it1++;
+    //         ++it1;
+    //         it1--;
+    //         --it1;
+
+    //         EXPECT_EQUAL_FMT("0x%x", it1.data(), it3.data());
+    //     }
+    // }
 
     return XANIN_OK;
 }

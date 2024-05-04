@@ -59,6 +59,7 @@ string::string(string&& other)
 string::~string()
 {
     if (m_ptr != nullptr) {
+        // dbg_info("ok", "string");
         free(m_ptr);
     }
 }
@@ -252,11 +253,6 @@ bool string::operator != (string const& other) const
 uint32_t string::reallocate_if_needed(uint32_t size)
 {
     size += 1;
-
-    // if (m_ptr == nullptr) {
-    //     m_ptr = (char*)calloc(size);
-    //     return size;
-    // }
 
     if (size > m_size_reserved) {
         m_ptr = (char*)realloc(m_ptr, size * 2);

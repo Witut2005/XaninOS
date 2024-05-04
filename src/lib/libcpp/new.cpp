@@ -5,34 +5,43 @@
 #include <lib/libc/string.h>
 #include <sys/devices/com/com.h>
 
-void* operator new(size_t size) noexcept
+void* operator new(size_t size)
 {
     void* p = calloc(size);
     return p;
 }
 
-void* operator new(size_t size, void* ptr) noexcept
+void* operator new(size_t size, void* ptr) //placment new
 {
     return ptr;
 }
 
-void* operator new[](size_t size) noexcept
+void* operator new[](size_t size)
 {
-    void* p = calloc(size);
-    return p;
+    return calloc(size);
 }
 
-void* operator new[](size_t size, void* ptr) noexcept
+void* operator new[](size_t size, void* ptr)
 {
     return ptr;
 }
 
-void operator delete(void* ptr) noexcept
+void operator delete(void* ptr)
 {
     free(ptr);
 }
 
-void operator delete[](void* ptr) noexcept
+void operator delete(void* ptr, size_t size)
+{
+    free(ptr);
+}
+
+void operator delete[](void* ptr)
+{
+    free(ptr);
+}
+
+void operator delete[](void* ptr, size_t size)
 {
     free(ptr);
 }

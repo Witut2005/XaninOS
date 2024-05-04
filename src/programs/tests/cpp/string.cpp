@@ -89,12 +89,10 @@ extern "C" __STATUS __cpp_string_test(void)
 
     TEST_CASE(string array)
     {
-        string* ptr = (string*)kcalloc(2 * sizeof(std::string));
+        string* ptr = new string[2];
         ptr[0] = "abc";
         ptr[1] = "cba";
 
-        string* ptr2 = (string*)kcalloc(2 * sizeof(std::string));
-        new (&ptr[0])std::string();
 
         EXPECT_NOT_EQUAL_FMT("0x%x", ptr, NULL);
         EXPECT_NOT_EQUAL_FMT("0x%x", ptr[0].c_str(), NULL);

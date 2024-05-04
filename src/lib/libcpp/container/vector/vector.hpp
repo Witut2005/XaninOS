@@ -8,7 +8,7 @@
 #include <lib/libcpp/initializer_list.hpp>
 #include <lib/libcpp/utility.h>
 #include <lib/libcpp/type_traits.h>
-
+#include <lib/libcpp/new.hpp>
 #include "./iterator.hpp"
 
 // #ifdef KERNEL_MODULE
@@ -60,8 +60,9 @@ public:
     constexpr bool valid(void) const { return m_ptr != nullptr; }
     constexpr bool empty(void) const { return m_size > 0; }
 
+    void clear(void);
     void push_back(const T& item);
-    T pop_back(void);
+    void pop_back(void);
 
     T& front(void) { return *begin(); }
     T& back(void) { return *rbegin(); }
@@ -113,7 +114,10 @@ vector<T>::vector(const vector<T>& other)
 
     // m_ptr = (T*)VECTOR_ALLOC(m_capacity * sizeof(value_type));
     m_ptr = new T[m_capacity];
-    memcpy(m_ptr, other.m_ptr, m_size * sizeof(value_type));
+
+    for (int i = 0; i < m_size; i++) {
+        m_ptr[i] = other.m_ptr[i];
+    }
 }
 
 template <typename T>
@@ -140,49 +144,62 @@ vector<T>::vector(initializer_list<T> items) : vector()
 template <typename T>
 vector<T>::~vector(void)
 {
-    if (m_ptr != nullptr) {
-        // VECTOR_FREE(m_ptr);
-        delete m_ptr;
+    clear();
+}
+
+template <typename T>
+void vector<T>::clear(void)
+{
+    if (m_ptr != nullptr)
+    {
+        for (int i = 0; i < m_size; i++) {
+            m_ptr[i].~T();
+        }
+        free(m_ptr);
     }
+
+    m_size = m_capacity = 0;
+    m_ptr = nullptr;
 }
 
 template <typename T>
 void vector<T>::push_back(const T& item)
 {
-    reallocate_if_needed(m_capacity + 1);
-    m_ptr[m_size++] = item;
+    reallocate_if_needed(m_size + 1);
+    new(&m_ptr[m_size]) T(item);
+    m_size++;
 }
 
 template <typename T>
-T vector<T>::pop_back(void)
+void vector<T>::pop_back(void)
 {
-    auto tmp = *rbegin();
+    if (!m_size) return;
+
+    *rbegin().~T();
     m_size--;
-    return tmp;
 }
 
 template <typename T>
 T& vector<T>::operator = (const vector<T>& other)
 {
     if (m_ptr != nullptr) {
-        // VECTOR_FREE(m_ptr);
-        delete m_ptr;
+        clear();
     }
 
     m_size = other.m_size;
     m_capacity = other.m_capacity;
 
-    // m_ptr = VECTOR_ALLOC(m_size * sizeof(T));
-    m_ptr = new T[m_size];
-    memcpy(m_ptr, other.m_ptr, m_size * sizeof(T));
+    m_ptr = new T[other.m_size];
+    for (int i = 0; i < other.m_size; i++) {
+        push_back(other.m_ptr[i]);
+    }
 }
 
 template <typename T>
 T& vector<T>::operator = (vector<T>&& other)
 {
     if (m_ptr != nullptr) {
-        // VECTOR_FREE(m_ptr);
-        delete m_ptr;
+        clear();
     }
 
     m_size = other.m_size;
@@ -196,19 +213,12 @@ T& vector<T>::operator = (vector<T>&& other)
 template <typename T>
 bool vector<T>::reallocate_if_needed(uint32_t size)
 {
-    if (size > m_capacity)
-    {
-        // m_ptr = (T*)VECTOR_REALLOC(m_ptr, m_capacity * sizeof(T));
-        m_ptr = (T*)realloc(m_ptr, size * 2 * sizeof(T));
-        for (int i = m_size; i < size * 2; i++)
-        {
-            // new (&m_ptr[i])T();
-        }
-        m_capacity = size * 2;
-        return true;
-    }
+    if (size <= m_capacity) return false;
 
-    return false;
+    m_ptr = (T*)realloc(m_ptr, size * 2 * sizeof(T));
+    m_capacity = size * 2;
+    return true;
+
 }
 
 } //namespace

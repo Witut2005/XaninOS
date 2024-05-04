@@ -169,4 +169,13 @@ extern "C"
         serial_port_string_send(msg);
         serial_port_byte_send('\n');
     }
+
+    void dbg_mark(const char* label)
+    {
+        serial_port_string_send("\033[35m[");
+        serial_port_string_send(label);
+        serial_port_string_send("] ");
+        serial_port_string_send("\033[0m");
+        serial_port_byte_send('\n');
+    }
 }
