@@ -2,7 +2,6 @@
 #include "./string.h"
 #include <lib/libc/stdiox.h>
 #include <lib/libc/stdlibx.h>
-#include <lib/libcpp/new.hpp>
 #include <lib/libc/stdlibx.h>
 #include <lib/libcpp/memory.hpp>
 #include <sys/devices/com/com.h>

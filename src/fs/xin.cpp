@@ -1,4 +1,6 @@
 
+#define KERNEL_MODULE
+
 #include <fs/xin.h>
 #include <stddef.h>
 #include <lib/libc/hal.h>
@@ -18,6 +20,8 @@
 #include <sys/devices/hda/disk.h>
 #include <sys/call/xanin_sys/handler/xanin_sys.h>
 #include <sys/pmmngr/alloc.h>
+
+#undef KERNEL_MODULE
 
 #define XIN_OPENED_FILES_COUNTER 100
 

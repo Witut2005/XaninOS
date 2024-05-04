@@ -7,7 +7,7 @@
 #include <programs/tests/test_case.h>
 #include <sys/devices/com/com.h>
 #include <sys/pmmngr/alloc.h>
-#include <lib/libcpp/new.hpp>
+#include <sys/pmmngr/alloc.h>
 
 
 using namespace std;

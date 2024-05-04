@@ -1,6 +1,8 @@
 
 #pragma once
 
+#define KERNEL_MODULE
+
 #include <stdint.h>
 #include <lib/elf/elf.h>
 #include <lib/libcpp/class.hpp>
@@ -8,6 +10,8 @@
 #include <lib/libcpp/error.hpp>
 #include <lib/libcpp/container/array.hpp>
 #include <lib/libcpp/container/vector.hpp>
+
+#undef KERNEL_MODULE
 
 struct ElfMainHeaders
 {

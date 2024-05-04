@@ -2,7 +2,7 @@
 #include <stdint.h>
 #include <lib/game_engine/xagame.hpp>
 #include <lib/libc/colors.h>
-#include <lib/libcpp/new.hpp>
+#include <sys/pmmngr/alloc.h>
 #include <lib/libc/canvas.h>
 
 //CANVAS_APP
@@ -21,7 +21,7 @@ extern "C" int xagame_test(void)
     rectangle* y = new rectangle(4);
 
     GeometryObject* ptr = y;
-    ptr->create(20,5,10,5, yellow);
+    ptr->create(20, 5, 10, 5, yellow);
 
     // ScreenManager manager;
     // manager[2] = xgm::color::red | xgm::color::green_text;
@@ -30,11 +30,11 @@ extern "C" int xagame_test(void)
     key_info_t KeyInfo;
     __sys_keyinfo_get(&KeyInfo);
 
-    while(KeyInfo.scan_code != ENTER)
+    while (KeyInfo.scan_code != ENTER)
     {
         __sys_keyinfo_get(&KeyInfo);
         msleep(1000);
-        ptr->move(0,1);
+        ptr->move(0, 1);
     }
     return 0;
 

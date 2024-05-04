@@ -311,7 +311,7 @@ objects_to_compile = {
     ],
 
     'kmodules': [
-        CompileObject('./sys/pmmngr/alloc.c', builders['c'], builder_options['c']['default'], OBJECT),
+        CompileObject('./sys/pmmngr/alloc.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./sys/input/input.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./sys/log/syslog.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./sys/lock/lock.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
@@ -345,7 +345,6 @@ objects_to_compile = {
     ],
 
     'libcpp': [
-        CompileObject('./lib/libcpp/new.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./lib/libcpp/lexer.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./lib/libcpp/regex.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./lib/libcpp/istream.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),

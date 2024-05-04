@@ -8,19 +8,15 @@
 #include <lib/libcpp/initializer_list.hpp>
 #include <lib/libcpp/utility.h>
 #include <lib/libcpp/type_traits.h>
-#include <lib/libcpp/new.hpp>
 #include "./iterator.hpp"
 
-// #ifdef KERNEL_MODULE
-// #include <sys/pmmngr/alloc.h>
-// #define VECTOR_ALLOC(p) kcalloc(p)
-// #define VECTOR_REALLOC(p, s) krealloc(p, s)
-// #define VECTOR_FREE(p) kfree(p)
-// #else
-// #define VECTOR_ALLOC(p) calloc(p)
-// #define VECTOR_REALLOC(p, s) realloc(p, s)
-// #define VECTOR_FREE(p) free(p)
-// #endif
+#ifdef KERNEL_MODULE
+#include <sys/pmmngr/alloc.h>
+#define VECTOR_REALLOC(p, s) krealloc(p, s)
+#else
+#include <lib/libcpp/alloc.hpp>
+#define VECTOR_REALLOC(p, s) realloc(p, s)
+#endif
 
 namespace std
 {
@@ -155,7 +151,7 @@ void vector<T>::clear(void)
         for (int i = 0; i < m_size; i++) {
             m_ptr[i].~T();
         }
-        free(m_ptr);
+        delete[] m_ptr;
     }
 
     m_size = m_capacity = 0;
@@ -215,10 +211,12 @@ bool vector<T>::reallocate_if_needed(uint32_t size)
 {
     if (size <= m_capacity) return false;
 
-    m_ptr = (T*)realloc(m_ptr, size * 2 * sizeof(T));
+    m_ptr = (T*)VECTOR_REALLOC(m_ptr, size * 2 * sizeof(T));
     m_capacity = size * 2;
     return true;
 
 }
 
 } //namespace
+
+// #undef __cplusplus

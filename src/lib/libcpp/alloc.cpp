@@ -7,8 +7,7 @@
 
 void* operator new(size_t size)
 {
-    void* p = calloc(size);
-    return p;
+    return calloc(size);
 }
 
 void* operator new(size_t size, void* ptr) //placment new
