@@ -23,10 +23,10 @@ bool Intel8254xDriver::probe(const pci_device& device)
     return device.vendor_id == INTEL_VENDOR_ID && device.device_id == INTEL_8254X_VENDOR_ID;
 }
 
-NetworkDevice* Intel8254xDriver::create(const pci_device& device)
-{
+// NetworkDevice* Intel8254xDriver::create(const pci_device& device)
+// {
 
-}
+// }
 
 void Intel8254xDriver::write(uint32_t reg, uint32_t value)
 {
@@ -109,7 +109,7 @@ void Intel8254xDriver::receive_init(void)
     if (!this->is_present)
         return;
 
-    this->receive_descriptors_buffer = (i8254xReceiveDescriptor*)kmalloc(SIZE_OF(i8254xReceiveDescriptor) * INTEL_8254X_DESCRIPTORS);
+    this->receive_descriptors_buffer = (i8254xReceiveDescriptor*)kmalloc(sizeof(i8254xReceiveDescriptor) * INTEL_8254X_DESCRIPTORS);
     const auto receive_buffer_size = 4096;
     this->receive_buffer = (uint8_t*)kmalloc(receive_buffer_size * INTEL_8254X_DESCRIPTORS);
 
@@ -129,7 +129,7 @@ void Intel8254xDriver::receive_init(void)
     this->write(nic::RDBAH, 0x0);
 
 
-    this->write(nic::RDLEN, INTEL_8254X_DESCRIPTORS * SIZE_OF(i8254xReceiveDescriptor));
+    this->write(nic::RDLEN, INTEL_8254X_DESCRIPTORS * sizeof(i8254xReceiveDescriptor));
 
     /* set head and tail to proper values */
     this->write(nic::RDH, 0x0);
@@ -160,9 +160,9 @@ void Intel8254xDriver::transmit_init(void)
 
 
     /* transmit buffer allocation */
-    // auto AHA = (i8254xTransmitDescriptor*)malloc(SIZE_OF(i8254xTransmitDescriptor) * INTEL_8254X_DESCRIPTORS); //+ 16);
+    // auto AHA = (i8254xTransmitDescriptor*)malloc(sizeof(i8254xTransmitDescriptor) * INTEL_8254X_DESCRIPTORS); //+ 16);
 
-    auto transmit_descriptors_buffer_region = kmalloc(SIZE_OF(i8254xTransmitDescriptor) * INTEL_8254X_DESCRIPTORS); // kompilator zawsze ma racje, prawda? 
+    auto transmit_descriptors_buffer_region = kmalloc(sizeof(i8254xTransmitDescriptor) * INTEL_8254X_DESCRIPTORS); // kompilator zawsze ma racje, prawda? 
     this->transmit_descriptors_buffer = (i8254xTransmitDescriptor*)transmit_descriptors_buffer_region;
 
     // const auto TRANSMIT_BUFFER_SIZE = 4096;
@@ -193,7 +193,7 @@ void Intel8254xDriver::transmit_init(void)
     this->write(nic::TDT, INTEL_8254X_DESCRIPTORS);
 
     /* set buffer length */
-    this->write(nic::TDLEN, INTEL_8254X_DESCRIPTORS * SIZE_OF(i8254xTransmitDescriptor));
+    this->write(nic::TDLEN, INTEL_8254X_DESCRIPTORS * sizeof(i8254xTransmitDescriptor));
 
     this->txd_current = 0x0;
 
@@ -282,7 +282,7 @@ void Intel8254xDriver::init()
     this->receive_init();
     this->transmit_init();
 
-    this->last_packet = (uint8_t*)kcalloc(SIZE_OF(uint8_t) * XANIN_PMMNGR_BLOCK_SIZE);
+    this->last_packet = (uint8_t*)kcalloc(sizeof(uint8_t) * XANIN_PMMNGR_BLOCK_SIZE);
 
     /* enabling interrupts */
     this->write(nic::IMS, this->read(nic::IMS) | nic::ims::RXT | nic::ims::RXO |

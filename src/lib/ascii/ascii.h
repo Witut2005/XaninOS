@@ -111,7 +111,7 @@ enum AsciiTable
 	//misc characters				                 
 
 	ASCII_BRACKET_OPEN,                                    // [
-	ASCII_SLASH_BACKWARD,                                  // \ 
+	ASCII_SLASH_BACKWARD,                                  // 
 	ASCII_BRACKET_CLOSE,                                   // ]
 	ASCII_CARET,                                           // ^
 	ASCII_UNDERSCORE,                                      // _
@@ -155,7 +155,7 @@ enum AsciiTable
 
 	ASCII_DEL,                                             // Delete
 
-	//===================[extended ASCII]===================\\	                 
+	//===================[extended ASCII]===================
 
 	//misc letters					                 
 

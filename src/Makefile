@@ -1,8 +1,10 @@
 C = i386-elf-gcc
 
 build_kernel:
-	python3 build.py 
-	@# --dwarf
+	python3 build.py --dont_print_xin_info
+
+build_all:
+	python3 build.py --build_all --dont_print_xin_info
 
 gcc_obj:
 	CRTBEGIN_PATH := $(shell i386-elf-gcc -print-file-name=crtbegin.o)
@@ -11,7 +13,7 @@ gcc_obj:
 	echo CRTBEGIN_PATH CRTEND_PATH
 
 burun:
-	python3 build.py
+	python3 build.py --dont_print_xin_info
 	@sudo qemu-system-i386 -m 2048 -drive file=../bin/xanin.img,cache=unsafe -net nic -net tap,ifname=tap0,script=no,downscript=no -serial stdio
 
 run:

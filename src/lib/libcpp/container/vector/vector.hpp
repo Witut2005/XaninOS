@@ -4,305 +4,219 @@
 #include <stdint.h>
 #include <lib/libc/stdlibx.h>
 #include <lib/libc/math.h>
+#include <lib/libc/memory.h>
 #include <lib/libcpp/initializer_list.hpp>
 #include <lib/libcpp/utility.h>
-#include <lib/libcpp/ostream.h>
 #include <lib/libcpp/type_traits.h>
-
 #include "./iterator.hpp"
+
+#ifdef KERNEL_MODULE
+#include <sys/pmmngr/alloc.h>
+#define VECTOR_REALLOC(p, s) krealloc(p, s)
+#else
+#include <lib/libcpp/alloc.hpp>
+#define VECTOR_REALLOC(p, s) realloc(p, s)
+#endif
 
 namespace std
 {
 
-    template <typename T>
-    class vector
+template <typename T>
+class vector
+{
+
+public:
+    using value_type = T;
+
+    using iterator = RandomAccessIterator<vector<T>>;
+    using const_iterator = ConstRandomAccessIterator<vector<T>>;
+    using reversed_iterator = RandomAccessReversedIterator<vector<T>>;
+    using const_reversed_iterator = ConstRandomAccessReversedIterator<vector<T>>;
+
+    vector(void);
+    vector(const vector<T>& other);
+    vector(vector<T>&& other);
+    vector(initializer_list<T> items);
+    ~vector(void);
+
+    constexpr T* data(void) { return m_ptr; }
+    constexpr const T* data(void) const { return m_ptr; }
+
+    template <typename InputIt>
+    vector(InputIt beg, InputIt end) : vector()
     {
+        if (beg >= end) return;
 
-    private:
-        T *ptr;
-        uint32_t v_size = 0;
+        for (; beg != end; beg++)
+            push_back(*beg);
+    }
 
-    public:
-        using value_type = T;
-        using iterable_type = T *;
+    constexpr int index_serialize(int index) const { return index < 0 ? (int)size() + index : index; }
 
-        using lreference = T &;
-        using rreference = T &&;
+    constexpr bool valid(void) const { return m_ptr != nullptr; }
+    constexpr bool empty(void) const { return m_size > 0; }
 
-        using const_lreference = const T &;
-        using const_rreference = const T &&;
+    void clear(void);
+    void push_back(const T& item);
+    void pop_back(void);
 
-        using forward_iterator = ForwardVectorIterator<vector<T>>;
-        using reversed_iterator = ReversedVectorIterator<vector<T>>;
+    T& front(void) { return *begin(); }
+    T& back(void) { return *rbegin(); }
+    const T& front(void) const { return *cbegin(); }
+    const T& back(void) const { return *crbegin(); }
 
-        using const_forward_iterator = ConstForwardVectorIterator<vector<T>>;
-        using const_reversed_iterator = ConstReversedVectorIterator<vector<T>>;
+    constexpr size_t size(void) const { return m_size; }
+    constexpr size_t capacity(void) const { return m_capacity; }
 
-        vector();
-        vector(const vector<T> &other) = default; // copy constructor
-        vector(vector<T> &&other);                // move constructor
-        vector(std::initializer_list<T> items);
+    T& operator = (const vector<T>& other);
+    T& operator = (vector<T>&& other);
 
-        template <typename InputIt>
-        vector(InputIt beg, InputIt end) : vector()
-        {
-            for (; beg != end; beg++)
-                this->push_back(*beg);
+    T& operator[](int index) { return m_ptr[index_serialize(index)]; }
+    const T& operator[](int index) const { return m_ptr[index_serialize(index)]; }
+
+    iterator begin(void) { return iterator(*this, 0); }
+    iterator end(void) { return iterator(*this, size()); }
+    const_iterator cbegin(void) const { return const_iterator(*this, 0); }
+    const_iterator cend(void) const { return const_iterator(*this, size()); }
+
+    reversed_iterator rbegin(void) { return reversed_iterator(*this, m_size > 0 ? m_size - 1 : 0); }
+    reversed_iterator rend(void) { return reversed_iterator(*this, -1); }
+    const_reversed_iterator crbegin(void) const { return const_reversed_iterator(*this, m_size > 0 ? m_size - 1 : 0); }
+    const_reversed_iterator crend(void) const { return const_reversed_iterator(*this, -1); }
+
+    static constexpr int npos = -1;
+
+private:
+    bool reallocate_if_needed(uint32_t size); // returns true when data was reallocted
+
+    T* m_ptr{ nullptr };
+    size_t m_size{ 0 };
+    size_t m_capacity{ 1 };
+
+};
+
+template <typename T>
+vector<T>::vector()
+{
+    // m_ptr = (T*)VECTOR_ALLOC(m_capacity * sizeof(T));
+    m_ptr = new T[m_capacity];
+}
+
+template <typename T>
+vector<T>::vector(const vector<T>& other)
+{
+    m_size = other.m_size;
+    m_capacity = other.m_capacity;
+
+    // m_ptr = (T*)VECTOR_ALLOC(m_capacity * sizeof(value_type));
+    m_ptr = new T[m_capacity];
+
+    for (int i = 0; i < m_size; i++) {
+        m_ptr[i] = other.m_ptr[i];
+    }
+}
+
+template <typename T>
+vector<T>::vector(vector<T>&& other)
+{
+    m_ptr = other.m_ptr;
+    m_size = other.m_size;
+    m_capacity = other.m_capacity;
+
+    other.m_ptr = nullptr;
+    other.m_size = other.m_capacity = 0;
+}
+
+template <typename T>
+vector<T>::vector(initializer_list<T> items) : vector()
+{
+    for (auto it = items.begin(); it != items.end(); it++) {
+        push_back(*it);
+    }
+
+    this->m_size = items.size();
+}
+
+template <typename T>
+vector<T>::~vector(void)
+{
+    clear();
+}
+
+template <typename T>
+void vector<T>::clear(void)
+{
+    if (m_ptr != nullptr)
+    {
+        for (int i = 0; i < m_size; i++) {
+            m_ptr[i].~T();
         }
-
-        ~vector();
-
-        std::vector<T> &operator=(const vector<T> &other) = default; // copy assigment operator
-        std::vector<T> &operator=(vector<T> &&other);                // move assigment operator
-
-        T *pointer(void); // override;
-
-        inline iterable_type begin_ptr()
-        {
-            return ptr;
-        }
-        inline iterable_type end_ptr()
-        {
-            return ptr + this->v_size;
-        }
-        inline iterable_type rbegin_ptr()
-        {
-            return ptr + this->v_size - 1;
-        }
-        inline iterable_type rend_ptr()
-        {
-            return ptr - 1;
-        }
-
-        inline const iterable_type cbegin_ptr()
-        {
-            return ptr;
-        }
-        inline const iterable_type cend_ptr()
-        {
-            return ptr + this->v_size;
-        }
-        inline const iterable_type crbegin_ptr()
-        {
-            return ptr + this->v_size - 1;
-        }
-        inline const iterable_type crend_ptr()
-        {
-            return ptr - 1;
-        }
-
-        forward_iterator begin(void);
-        forward_iterator end(void);
-        reversed_iterator rbegin(void);
-        reversed_iterator rend(void);
-
-        const_forward_iterator cbegin(void);
-        const_forward_iterator cend(void);
-        const_reversed_iterator crbegin(void);
-        const_reversed_iterator crend(void);
-
-        void push_back(T item);
-        void pop_back(void);
-
-        T &front(void);           // override;
-        T &back(void);            // override;
-        T &operator[](int index); // override;
-
-        int size(void); // override;
-
-        bool valid_element(T &element) const;
-
-        template <typename Cont>
-        friend class ForwardVectorIterator;
-
-        template <typename Cont>
-        friend class ReversedVectorIterator;
-
-        template <typename Cont>
-        friend class ConstForwardVectorIterator;
-
-        template <typename Cont>
-        friend class ConstReversedVectorIterator;
-
-        // void print(void) override;
-    };
-
-    template <typename T>
-    vector<T>::vector()
-    {
-        this->ptr = (T *)calloc(SIZE_OF(T));
+        delete[] m_ptr;
     }
 
-    template <typename T>
-    vector<T>::vector(vector<T> &&other)
-    {
-        *this = (const vector<T> &)other;
+    m_size = m_capacity = 0;
+    m_ptr = nullptr;
+}
 
-        other.ptr = NULL;
-        other.v_size = 0;
+template <typename T>
+void vector<T>::push_back(const T& item)
+{
+    reallocate_if_needed(m_size + 1);
+    new(&m_ptr[m_size]) T(item);
+    m_size++;
+}
+
+template <typename T>
+void vector<T>::pop_back(void)
+{
+    if (!m_size) return;
+
+    *rbegin().~T();
+    m_size--;
+}
+
+template <typename T>
+T& vector<T>::operator = (const vector<T>& other)
+{
+    if (m_ptr != nullptr) {
+        clear();
     }
 
-    template <typename T>
-    vector<T>::vector(std::initializer_list<T> items) : vector()
-    {
-        int index = 0;
-        for (auto it = items.begin(); it != items.end(); it++, index++)
-            memcpy((uint8_t *)&this->ptr[index], (uint8_t *)it, SIZE_OF(T));
+    m_size = other.m_size;
+    m_capacity = other.m_capacity;
 
-        this->v_size = items.size();
+    m_ptr = new T[other.m_size];
+    for (int i = 0; i < other.m_size; i++) {
+        push_back(other.m_ptr[i]);
+    }
+}
+
+template <typename T>
+T& vector<T>::operator = (vector<T>&& other)
+{
+    if (m_ptr != nullptr) {
+        clear();
     }
 
-    template <typename T>
-    vector<T>::~vector()
-    {
-        free(this->ptr);
-    }
+    m_size = other.m_size;
+    m_capacity = other.m_capacity;
+    m_ptr = other.m_ptr;
 
-    template <typename T>
-    vector<T> &vector<T>::operator=(std::vector<T> &&other)
-    {
-        if (this == &other)
-            return *this;
+    other.m_ptr = nullptr;
+    other.m_size = other.m_capacity = 0;
+}
 
-        *this = (const vector<T> &)other;
+template <typename T>
+bool vector<T>::reallocate_if_needed(uint32_t size)
+{
+    if (size <= m_capacity) return false;
 
-        other.ptr = NULL;
-        other.v_size = 0;
-    }
-
-    template <typename T>
-    T *vector<T>::pointer(void)
-    {
-        return this->ptr;
-    }
-
-    template <typename T>
-    typename vector<T>::forward_iterator vector<T>::begin(void)
-    {
-        return vector<T>::forward_iterator(this->ptr, *this);
-    }
-
-    template <typename T>
-    typename vector<T>::forward_iterator vector<T>::end(void)
-    {
-        return vector<T>::forward_iterator(this->ptr + this->v_size, *this);
-    }
-
-    template <typename T>
-    typename vector<T>::reversed_iterator vector<T>::rbegin(void)
-    {
-        return vector<T>::reversed_iterator(this->ptr + this->v_size - 1, *this);
-    }
-
-    template <typename T>
-    typename vector<T>::reversed_iterator vector<T>::rend(void)
-    {
-        return vector<T>::reversed_iterator(this->ptr - 1, *this);
-    }
-
-    template <typename T>
-    typename vector<T>::const_forward_iterator vector<T>::cbegin(void)
-    {
-        return vector<T>::const_forward_iterator(this->ptr, *this);
-    }
-
-    template <typename T>
-    typename vector<T>::const_forward_iterator vector<T>::cend(void)
-    {
-        return vector<T>::const_forward_iterator(this->ptr + this->v_size, *this);
-    }
-
-    template <typename T>
-    typename vector<T>::const_reversed_iterator vector<T>::crbegin(void)
-    {
-        return vector<T>::const_reversed_iterator(this->ptr + this->v_size - 1, *this);
-    }
-
-    template <typename T>
-    typename vector<T>::const_reversed_iterator vector<T>::crend(void)
-    {
-        return vector<T>::const_reversed_iterator(this->ptr - 1, *this);
-    }
-
-    template <typename T>
-    void vector<T>::push_back(T item)
-    {
-        this->ptr = (T *)realloc(this->ptr, SIZE_OF(T) * (this->v_size + 1));
-        // YOU MUST USE MEMCPY (= operator can be overloaded)
-        memcpy((uint8_t *)&ptr[this->v_size++], (uint8_t *)&item, sizeof(T));
-    }
-
-    template <typename T>
-    void vector<T>::pop_back(void)
-    {
-        if (!this->v_size)
-            return;
-
-        this->ptr = (T *)realloc(this->ptr, SIZE_OF(T) * (--this->v_size));
-    }
-
-    template <typename T>
-    T &vector<T>::front(void)
-    {
-        return this->ptr[0];
-    }
-
-    template <typename T>
-    T &vector<T>::back(void)
-    {
-        return this->ptr[this->v_size - 1];
-    }
-
-    template <typename T>
-    T &vector<T>::operator[](int index)
-    {
-
-        if (index < 0)
-        {
-            if (abs(index) > this->v_size)
-                return *ptr;
-
-            return *(this->end() + index);
-        }
-
-        else if (index >= this->v_size)
-            return *this->end();
-
-        return *(this->ptr + index);
-    }
-
-    template <typename T>
-    int vector<T>::size(void)
-    {
-        return this->v_size;
-    }
-
-    // DOESNT WORK + CONSTS
-    template <typename T>
-    bool vector<T>::valid_element(T &element) const
-    {
-        return ((uint32_t)&element >= (uint32_t)this->ptr) & ((uint32_t)&element < (uint32_t) & this->ptr[this->v_size]);
-    }
-
-    // template <typename T>
-    // void vector<T>::print(void)
-    // {
-    //     if (!this->v_size)
-    //     {
-    //         std::cout << "[]" << std::endl;
-    //         return;
-    //     }
-
-    //     std::cout << "[";
-
-    //     auto it = this->cbegin();
-    //     for (; it != this->cend() - 1; it++)
-    //     {
-    //         auto tmp = *it;
-    //     }
-
-    //     std::cout << *it;
-    //     std::cout << "]";
-    // }
+    m_ptr = (T*)VECTOR_REALLOC(m_ptr, size * 2 * sizeof(T));
+    m_capacity = size * 2;
+    return true;
 
 }
+
+} //namespace
+
+// #undef __cplusplus

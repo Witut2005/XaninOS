@@ -16,3 +16,5 @@
 #define DEBUG_LABEL_IRQ "IRQ"
 #define DEBUG_LABEL_SYSCALL "Syscall"
 #define DEBUG_LABEL_PROCESS "Process"
+#define DEBUG_LABEL_ELF_LOADER "ELF Loader"
+#define DEBUG_LABEL_LEXER "LEXER"

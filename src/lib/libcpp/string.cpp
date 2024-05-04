@@ -1,135 +1,268 @@
 
 #include "./string.h"
+#include <lib/libc/stdiox.h>
+#include <lib/libc/stdlibx.h>
+#include <lib/libc/stdlibx.h>
+#include <lib/libcpp/memory.hpp>
+#include <sys/devices/com/com.h>
+#include <lib/libcpp/algorithm.h>
 
-namespace std
+//KERNEL ALLOCATION
+
+namespace std {
+
+string::string(void)
 {
-
-    string::string(StringIterator beg, StringIterator end)
-    {
-        this->string_data = (char *)calloc(4096);
-        int i = 0;
-        for (auto it = beg; it != end; it++, i++)
-            this->string_data[i] = *it;
-    }
-
-    string::string(ReversedStringIterator rbeg, ReversedStringIterator rend)
-    {
-        this->string_data = (char *)calloc(4096);
-
-        int i = 0;
-        for (auto it = rbeg; it != rend; it++, i++)
-            this->string_data[i] = *it;
-    }
-
-    string::string(char *str)
-    {
-        this->string_data = (char *)calloc(SIZE_OF(char) * strlen(str) + 1);
-        strcpy(this->string_data, str);
-    }
-
-    string::string(const char *str)
-    {
-        this->string_data = (char *)calloc(SIZE_OF(char) * strlen(str) + 1);
-        strcpy(this->string_data, str);
-    }
-
-    string::string(const string &str)
-    {
-        this->string_data = (char *)calloc(SIZE_OF(char) * strlen((char *)str.c_str()) + 1);
-        strcpy(this->string_data, str.c_str());
-    }
-
-    string::string(string &&str)
-    {
-        this->string_data = str.string_data;
-        str.string_data = NULL;
-    }
-
-    string string::operator=(const char *x)
-    {
-        realloc(string_data, strlen(x));
-        strcpy(string_data, x);
-        return *this;
-    }
-
-    string string::operator=(std::string x)
-    {
-        realloc(string_data, strlen(x.c_str()));
-        strcpy(string_data, x.c_str());
-        return *this;
-    }
-
-    string string::operator+(char character)
-    {
-        this->string_data[strlen(this->string_data)] = character;
-        return *this;
-    }
-
-    string string::operator+(std::string second)
-    {
-
-        char *c = (char *)malloc(second.length() + this->length());
-
-        int i = 0;
-        for (; this->c_str()[i] != '\0'; i++)
-            c[i] = this->c_str()[i];
-
-        int j = 0;
-        for (; second.c_str()[j] != '\0'; i++, j++)
-            c[i] = second.c_str()[j];
-
-        std::string result(c);
-        return result;
-    }
-
-    string string::operator+(const char *second)
-    {
-        char *c = (char *)malloc(strlen(second) + this->length());
-
-        int i = 0;
-        for (; this->c_str()[i] != '\0'; i++)
-            c[i] = this->c_str()[i];
-
-        int j = 0;
-        for (; second[j] != '\0'; i++, j++)
-            c[i] = second[j];
-
-        std::string result(c);
-        return result;
-    }
-
-    StringIterator string::begin() const
-    {
-        return string_data;
-    }
-
-    ReversedStringIterator string::rbegin() const
-    {
-        return string_data + strlen(string_data) - 1;
-    }
-
-    StringIterator string::end() const
-    {
-        return string_data + strlen(string_data);
-    }
-
-    ReversedStringIterator string::rend() const
-    {
-        return string_data - 1;
-    }
-
-    uint32_t string::size()
-    {
-        char *tmp = this->c_str();
-        uint32_t size = 0;
-
-        while (*tmp != '\0')
-        {
-            size++;
-            tmp++;
-        }
-
-        return size;
-    }
-
+    // dbg_info("string void", "");
+    m_ptr = (char*)calloc(1);
+    m_size_reserved = 1;
 }
+
+string::string(uint32_t size)
+{
+    m_size_reserved = size + 1;
+    m_ptr = (char*)calloc(size + 1);
+}
+
+string::string(char const* other)
+{
+    auto otherlen = strlen(other) + 1;
+    m_ptr = (char*)calloc(otherlen);
+    m_size_reserved = otherlen;
+    strcpy(m_ptr, other);
+}
+
+string::string(char const* other, uint32_t size)
+{
+    m_size_reserved = size + 1;
+    m_ptr = (char*)calloc(size + 1);
+    strncpy(m_ptr, other, size);
+}
+
+string::string(string const& other)
+{
+    m_size_reserved = other.m_size_reserved;
+    m_ptr = (char*)calloc(other.m_size_reserved);
+    strcpy(m_ptr, other.m_ptr);
+}
+
+string::string(string&& other)
+{
+    m_size_reserved = other.m_size_reserved;
+    m_ptr = other.m_ptr;
+
+    other.m_size_reserved = 0;
+    other.m_ptr = nullptr;
+}
+
+string::~string()
+{
+    if (m_ptr != nullptr) {
+        // dbg_info("ok", "string");
+        free(m_ptr);
+    }
+}
+
+int string::index_serialize(int index) const
+{
+    return index < 0 ? (int)length() + index : index;
+}
+
+uint32_t string::capacity(void) const
+{
+    return m_size_reserved > 0 ? m_size_reserved - sizeof('\0') : 0; // null char
+}
+
+void string::reserve(uint32_t size)
+{
+    size += 1;
+    if (size > m_size_reserved) {
+        m_size_reserved = size;
+        m_ptr = (char*)realloc(m_ptr, m_size_reserved);
+    }
+}
+
+const string& string::resize(uint32_t size, char c)
+{
+    auto str_len = length();
+
+    if (size > str_len)
+    {
+        m_size_reserved = reallocate_if_needed(size);
+        memset(end().data(), c, size - str_len);
+        m_ptr[size] = '\0';
+    }
+
+    else {
+        m_ptr[size] = '\0';
+    }
+    return *this;
+}
+
+uint32_t string::length(void) const
+{
+    if (m_size_reserved == 0) return 0;
+    return strlen(m_ptr);
+}
+
+uint32_t string::size(void) const
+{
+    return length();
+}
+
+void string::clear(void)
+{
+    if (m_ptr != nullptr) {
+        free(m_ptr);
+    }
+
+    m_size_reserved = 0;
+    m_ptr = (char*)calloc(1);
+}
+
+void string::push_back(char c)
+{
+    reallocate_if_needed(m_size_reserved + sizeof(char));
+    *(uint16_t*)(end()).data() = c;
+}
+
+char string::pop_back(void)
+{
+    return std::get_and_set(*rbegin(), '\0');
+}
+
+string string::substr(int start_index, size_t len) const
+{
+    if (length() == 0) return "";
+    auto begin_it = cbegin() + index_serialize(start_index);
+
+    return string(begin_it, len == npos ? cend() :
+        (begin_it + len >= cend() ? cend() : begin_it + len));
+}
+
+int string::last_of(const string& to_find, int start_index) const
+{
+    auto to_find_length = to_find.length();
+    start_index = index_serialize(start_index) - to_find_length + 1;
+    auto start = cbegin() + start_index;
+
+    if (start < cbegin() || start >= cend()) return npos;
+
+    int i = start_index;
+    for (auto it = start; i != -1; it--, i--)
+    {
+        if (string(it, it + to_find_length) == to_find) {
+            return i;
+        }
+    }
+
+    return npos;
+}
+
+int string::first_of(const string& to_find, int start_index) const
+{
+    auto to_find_length = to_find.length();
+    auto start = cbegin() + index_serialize(start_index);
+
+    if (start < cbegin() || start >= cend()) return npos;
+    if (start + to_find_length >= cend()) return npos;
+
+    int i = 0;
+    for (auto it = start; it != cend(); it++, i++)
+    {
+        if (string(it, it + to_find_length) == to_find) {
+            return i;
+        }
+    }
+
+    return npos;
+}
+
+string::operator bool(void) const
+{
+    return m_size_reserved != 0;
+}
+
+char& string::operator[](int index)
+{
+    return m_ptr[index_serialize(index)];
+}
+
+const char& string::operator[](int index) const
+{
+    return m_ptr[index_serialize(index)];
+}
+
+string& string::operator=(string const& other)
+{
+    // dbg_info("copy operator =", "");
+    reallocate_if_needed(other.m_size_reserved);
+    strcpy(m_ptr, other.m_ptr);
+    return *this;
+}
+
+string& string::operator=(string&& other)
+{
+    if (m_ptr != nullptr) {
+        free(m_ptr);
+    }
+
+    m_ptr = other.m_ptr;
+    m_size_reserved = other.m_size_reserved;
+
+    other.m_ptr = nullptr;
+    other.m_size_reserved = 0;
+
+    return *this;
+}
+
+string string::operator+(char c) const
+{
+    auto tstr = string(*this);
+    tstr.m_size_reserved = tstr.reallocate_if_needed(tstr.m_size_reserved + sizeof(char));
+
+    [&](uint32_t str_len) {
+        tstr.m_ptr[str_len] = c;
+        tstr.m_ptr[str_len + 1] = '\0';
+    }(tstr.length());
+
+    return tstr;
+}
+
+string string::operator+(const std::string& other) const
+{
+    auto tstr = string(length() + other.length());
+
+    memcpy(tstr.m_ptr, m_ptr, length());
+    memcpy(&tstr.m_ptr[tstr.length()], other.m_ptr, other.length());
+
+    return tstr;
+}
+
+bool string::operator == (string const& other) const
+{
+    return bstrcmp(m_ptr, other.m_ptr);
+}
+
+bool string::operator != (string const& other) const
+{
+    return !(*this == other);
+}
+
+uint32_t string::reallocate_if_needed(uint32_t size)
+{
+    size += 1;
+
+    if (size > m_size_reserved) {
+        m_ptr = (char*)realloc(m_ptr, size * 2);
+        return size * 2;
+    }
+
+    else {
+        return m_size_reserved;
+    }
+}
+
+///////////////////////ITERATORS////////////////////////////
+
+} // namespace

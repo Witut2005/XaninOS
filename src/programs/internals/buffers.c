@@ -2,7 +2,7 @@
 
 #include <fs/xin.h>
 #include <lib/libc/stdiox.h>
-#include <sys/call/xanin_sys/calls/pmmngr/alloc.h>
+#include <sys/pmmngr/alloc.h>
 
 // TERMINAL_APP
 
@@ -17,10 +17,10 @@ int buffers_view(void)
     // float xin_fs_space_total = (SECTOR_SIZE * XIN_ENTRY_POINTERS_SECTORS);
     float xin_fs_space_total = (SECTOR_SIZE * (uint32_t)__xin_fs_entries_get());
 
-    uint8_t *xin_ptrs = __xin_fs_ptrs_get();
+    uint8_t* xin_ptrs = __xin_fs_ptrs_get();
     uint32_t xin_ptrs_size_in_bytes = __xin_fs_ptrs_size_get() * SECTOR_SIZE;
 
-    for (xin_ptr_t *sector = __xin_fs_ptrs_get(); sector < (uint8_t *)(xin_ptrs + xin_ptrs_size_in_bytes); sector++)
+    for (xin_ptr_t* sector = __xin_fs_ptrs_get(); sector < (uint8_t*)(xin_ptrs + xin_ptrs_size_in_bytes); sector++)
     {
         if (*sector != XIN_UNALLOCATED)
             xin_fs_space_used++;
@@ -47,7 +47,7 @@ int buffers_view(void)
     float heap_space_used = 0;
     float heap_space_total = PMMNGR_MEMORY_BLOCKS;
 
-    for (uint8_t *block = kernel_mmngr_mmap; (uint32_t)block < (uint32_t)&kernel_mmngr_mmap[PMMNGR_MEMORY_BLOCKS]; block++)
+    for (uint8_t* block = kernel_mmngr_mmap; (uint32_t)block < (uint32_t)&kernel_mmngr_mmap[PMMNGR_MEMORY_BLOCKS]; block++)
     {
         if (*block != MEMORY_UNALLOCATED)
             heap_space_used++;

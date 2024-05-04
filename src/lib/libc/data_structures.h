@@ -19,13 +19,13 @@ typedef struct stack_t stack_t;
 extern "C" {
 #endif
 
-void stack_create(stack_t** Stack);
-void stack_push(stack_t* Stack, const address_t const value);
-address_t stack_pop(stack_t* Stack);
-bool stack_is_empty(stack_t* Stack);
-void queue_create(void);
-void binary_tree_create(void);
-void tree_create(void);
+    void stack_create(stack_t** Stack);
+    void stack_push(stack_t* Stack, const address_t value);
+    address_t stack_pop(stack_t* Stack);
+    bool stack_is_empty(stack_t* Stack);
+    void queue_create(void);
+    void binary_tree_create(void);
+    void tree_create(void);
 
 #ifdef __cplusplus
 }

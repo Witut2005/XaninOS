@@ -14,7 +14,7 @@ __STATUS disk_func(void)
     for (int i = 0; i < 16; i++)
         buf[i] = i;
 
-    __disk_read_bytes(ATA_FIRST_BUS, ATA_MASTER, 0, 1, 15, buf);
+    disk_read_bytes(ATA_FIRST_BUS, ATA_MASTER, 0, 1, 15, (uint8_t*)buf);
 
     for (int i = 0; i < 16; i++)
         xprintf("%mx ", buf[i]);

@@ -8,7 +8,7 @@ typedef struct {
     uint32_t ebx;
     uint32_t ecx;
     uint32_t edx;
-}__attribute__((packed)) CPUIDResult;
+} CPUIDResult;
 
 struct EFlags
 {

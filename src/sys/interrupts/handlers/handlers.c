@@ -22,7 +22,7 @@ void exception_print(const char* message)
         Screen.y = VGA_MAX_Y;
 
     Screen.x = 0;
-    xprintf("%zERROR: %s\n", stderr, message);
+    xprintf("%zERROR: %s\n", OUTPUT_COLOR_ERROR_SET, message);
     __xtb_flush(__vty_get());
     interrupt_enable();
     while (__inputg().scan_code != ENTER);

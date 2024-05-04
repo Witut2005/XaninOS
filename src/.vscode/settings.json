@@ -118,9 +118,17 @@
         "key_map.h": "c",
         "math.h": "c",
         "keyboard.h": "c",
-        "assert.h": "c"
+        "assert.h": "c",
+        "syscall.h": "c",
+        "com.h": "c",
+        "ip.h": "c",
+        "csignal": "cpp",
+        "valarray": "cpp"
     },
-    "C_Cpp.errorSquiggles": "disabled",
-    "C_Cpp.clang_format_sortIncludes": "true",
-    "C_Cpp.clang_format_style": "Microsoft",
+
+    "editor.formatOnSave": true,
+    "clang-format.executable": "/usr/bin/clang-format",
+    // "C_Cpp.errorSquiggles": "disabled",
+    // "C_Cpp.clang_format_sortIncludes": "true",
+    // "C_Cpp.clang_format_style": "Microsoft",
 }

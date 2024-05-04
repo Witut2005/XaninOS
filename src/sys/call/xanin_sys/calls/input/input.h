@@ -18,9 +18,9 @@ extern "C"
 
     static inline bool input_is_nonprintable_scan_code(uint8_t scan_code)
     {
-        return scan_code == KBP_LEFT_ALT | scan_code == KBSP_RIGHT_ALT |
-               scan_code == KBP_LEFT_SHIFT | scan_code == KBP_RIGHT_SHIFT |
-               scan_code == KBP_LEFT_CONTROL | scan_code == KBSP_RIGHT_CONTROL;
+        return (scan_code == KBP_LEFT_ALT) | (scan_code == KBSP_RIGHT_ALT) |
+               (scan_code == KBP_LEFT_SHIFT) | (scan_code == KBP_RIGHT_SHIFT) |
+               (scan_code == KBP_LEFT_CONTROL) | (scan_code == KBSP_RIGHT_CONTROL);
     }
 
     static inline KeyboardModuleObservedObjectOptions input_observed_object_options_create(bool ignore_break_codes)

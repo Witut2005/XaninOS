@@ -11,7 +11,7 @@ uint32_t bootio_offset = 0;
 
 void putchar(char c, color_t color)
 {
-    if(c == '\n')
+    if (c == '\n')
         bootio_offset = bootio_offset + (VGA_WIDTH - (bootio_offset % 80));
 
     else
@@ -25,50 +25,50 @@ void print(const char* format, ...)
     va_list args;
     va_start(args, format);
 
-    while(*format != '\0')
+    while (*format != '\0')
     {
 
-        if(*format == '%')
+        if (*format == '%')
         {
-           format++;
+            format++;
             switch (*format)
             {
 
-                case 'h':
-                {
-                    color = (color_t)va_arg(args, int);
-                    break;
-                }
+            case 'h':
+            {
+                color = (color_t)va_arg(args, int);
+                break;
+            }
 
-                case 's':
-                {
-                    char* str = (char*)va_arg(args, int);
+            case 's':
+            {
+                char* str = (char*)va_arg(args, int);
 
-                    while(*str != '\0')
-                    {
-                        putchar(*str, color);
-                        str++;
-                    }
-                    break;
-                }
-
-                case 'd': 
+                while (*str != '\0')
                 {
-                    print_decimal((uint32_t)va_arg(args, int), color);
-                    break;
+                    putchar(*str, color);
+                    str++;
                 }
+                break;
+            }
 
-                case 'x':
-                {
-                    print_hex((uint32_t)va_arg(args, int), color);
-                    break;
-                }
-                
-                default:
-                    break;
+            case 'd':
+            {
+                print_decimal((uint32_t)va_arg(args, int), color);
+                break;
+            }
+
+            case 'x':
+            {
+                print_hex((uint32_t)va_arg(args, int), color);
+                break;
+            }
+
+            default:
+                break;
             }
         }
-    
+
         else
             putchar(*format, color);
 
@@ -78,20 +78,20 @@ void print(const char* format, ...)
 
 void print_decimal(uint32_t value, color_t color)
 {
-    char buf[20] = {0};
-    print(int_to_str(value, buf), color);
+    char buf[20] = { 0 };
+    print(int_to_string(value, buf, 10), color);
 }
 
 void print_hex(uint32_t value, color_t color)
 {
-    char buf[20] = {0};
-    print(int_to_hex_str(value, buf), color);
+    char buf[20] = { 0 };
+    print(int_to_string(value, buf, 16), color);
 }
 
 void vga_screen_buffer_clear(void)
 {
     vga_cell_t* screen_cleaner = (uint16_t*)0xb8000;
-    for(int i = 0; i < (VGA_HEIGHT * VGA_WIDTH); i++)
+    for (int i = 0; i < (VGA_HEIGHT * VGA_WIDTH); i++)
     {
         *screen_cleaner = '\0';
         screen_cleaner++;

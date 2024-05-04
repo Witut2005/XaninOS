@@ -64,8 +64,7 @@ bool SerialPortManager::initialize(uint16_t default_divisor)
     if (m_initialized)
         return is_functional();
 
-    ITERATE_OVER(i, s_max_amount_of_ports)
-    {
+    ITERATE_OVER(i, s_max_amount_of_ports) {
         m_ports[i] = SerialPort::try_to_create(s_addresses[i], default_divisor);
     }
 
@@ -73,7 +72,7 @@ bool SerialPortManager::initialize(uint16_t default_divisor)
     return is_functional();
 }
 
-uint8_t SerialPortManager::receive(void) {}
+// uint8_t SerialPortManager::receive(void) {}
 
 void SerialPortManager::send(uint8_t val)
 {
@@ -168,6 +167,15 @@ extern "C"
         serial_port_string_send("] ");
         serial_port_string_send("\033[0m");
         serial_port_string_send(msg);
+        serial_port_byte_send('\n');
+    }
+
+    void dbg_mark(const char* label)
+    {
+        serial_port_string_send("\033[35m[");
+        serial_port_string_send(label);
+        serial_port_string_send("] ");
+        serial_port_string_send("\033[0m");
         serial_port_byte_send('\n');
     }
 }

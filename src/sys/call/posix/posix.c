@@ -61,7 +61,7 @@ uint32_t syscall_handle(void)
 
     case __NR_lseek:
     {
-        lseek(ebx, ecx);
+        __xin_lseek(ebx, ecx);
         break;
     }
 

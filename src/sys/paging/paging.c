@@ -1,7 +1,7 @@
 
 #include "./paging.h"
 
-uint32_t page_directory[4096] __attribute__((aligned(4096)));
+uint32_t page_directory[XANIN_NUMBER_OF_PAGE_DIRECTORIES] __attribute__((aligned(4096)));
 
 #warning "TO DO PAGING"
 

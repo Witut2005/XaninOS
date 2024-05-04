@@ -8,10 +8,11 @@ const SystemAcpiFADT* const acpi_fadt_find(void)
 {
     const uint32_t* const sdt_pointers = (const uint32_t* const)(acpi_rsdt_get()->pointer_to_sdt);
 
-    for(int i = 0; i < 10; i++)
+    for (int i = 0; i < 10; i++)
     {
-        if(bstrncmp((char*)sdt_pointers[i], "FACP", 4))
+        if (bstrncmp((char*)sdt_pointers[i], "FACP", 4)) {
             return (const SystemAcpiFADT* const)sdt_pointers[i];
+        }
     }
     return NULL;
 }

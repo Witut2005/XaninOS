@@ -1,48 +1,49 @@
 
-#include <sys/paging/paging.h>
 #include "devices/com/labels.h"
 #include "paging/paging.h"
-#include <sys/net/network_protocols/internet_protocol/ipv4/ip.h>
-#include <lib/ascii/ascii.h>
-#include <sys/devices/pit/pit.h>
-#include <lib/libc/data_structures.h>
-#include <stdint.h>
-#include <sys/interrupts/idt/idt.h>
-#include <lib/libc/stdlibx.h>
-#include <lib/screen/screen.h>
-#include <sys/terminal/interpreter/interpreter.c>
-#include <lib/libc/math.h>
-#include <sys/devices/pci/pci.h>
-#include <sys/devices/acpi/acpi.h>
-#include <sys/devices/usb/usb.h>
-#include <sys/devices/hda/disk.h>
-#include <sys/devices/vga/vga.h>
 #include <fs/xin.h>
+#include <lib/ascii/ascii.h>
+#include <lib/cpu/headers/cpu_state_info.h>
 #include <lib/libc/assert.h>
-#include <sys/pmmngr/alloc.h>
-#include <sys/devices/apic/apic_registers.h>
-#include <sys/devices/apic/apic.h>
-#include <sys/devices/ioapic/ioapic.h>
-#include <fs/loaders/elf/elf_loader.h>
-#include <sys/log/syslog.h>
-#include <sys/devices/nic/8254x.h>
-#include <sys/devices/pcspk/pc_speaker.h>
+#include <lib/libc/data_structures.h>
+#include <lib/libc/file.h>
+#include <lib/libc/math.h>
+#include <lib/libc/stdiox.h>
+#include <lib/libc/stdiox_legacy.h>
+#include <lib/libc/stdlibx.h>
+#include <lib/libc/string.h>
+#include <lib/libc/xanin_state.h>
+#include <lib/screen/screen.h>
+#include <lib/system/system.h>
+#include <stdint.h>
+#include <sys/devices/acpi/acpi.h>
 #include <sys/devices/acpi/fadt/fadt.h>
+#include <sys/devices/apic/apic.h>
+#include <sys/devices/apic/apic_registers.h>
+#include <sys/devices/com/com.h>
+#include <sys/devices/hda/disk.h>
+#include <sys/devices/ioapic/ioapic.h>
+#include <sys/devices/keyboard/keyboard.h>
+#include <sys/devices/nic/8254x.h>
+#include <sys/devices/pci/pci.h>
+#include <sys/devices/pcspk/pc_speaker.h>
+#include <sys/devices/pit/pit.h>
+#include <sys/devices/usb/usb.h>
+#include <sys/devices/vga/vga.h>
+#include <sys/init/kernel_init.h>
+#include <sys/input/input.h>
+#include <sys/interrupts/handlers/handlers.h>
+#include <sys/interrupts/idt/idt.h>
+#include <sys/log/syslog.h>
+#include <sys/macros.h>
 #include <sys/net/netapi/network_device.h>
 #include <sys/net/network_protocols/arp/arp.h>
-#include <lib/libc/xanin_state.h>
-#include <lib/libc/system.h>
-#include <sys/interrupts/handlers/handlers.h>
-#include <sys/call/xanin_sys/calls/pmmngr/alloc.h>
+#include <sys/net/network_protocols/internet_protocol/ipv4/ip.h>
+#include <sys/paging/paging.h>
+#include <sys/pmmngr/alloc.h>
 #include <sys/terminal/backend/backend.h>
 #include <sys/terminal/frontend/frontend.h>
-#include <lib/cpu/headers/cpu_state_info.h>
-#include <sys/macros.h>
-#include <lib/libc/stdiox_legacy.h>
-#include <sys/call/xanin_sys/calls/input/input.h>
-#include <sys/init/kernel_init.h>
-#include <sys/devices/com/com.h>
-#include <sys/devices/keyboard/keyboard.h>
+#include <sys/terminal/interpreter/interpreter.h>
 
 /*--------------------------------------/
 |wesolego nowego roku :))               |
@@ -83,7 +84,18 @@
 |Ja, rok 2023, 31 grudzień, 17:38:50    |
 /--------------------------------------*/
 
-uint8_t* const zeros;
+/*--------------------------------------/
+|Na 1000 commitów wypadałoby coś napisać|
+|Wiec coś piszę. Minęło 861 dni odkąd   |
+|Zacząłem pisać Xaninka. Tyle się       |
+|Zmieniło. Kiedy zaczynałem dałbym      |
+|Się pociąć na wstążki, żeby być na tym |
+|Miejscu w którym jestem aktualnie.     |
+|Pamiętaj, ile czasu poświęciłeś, żeby  |
+|Mieć to co masz. To jest Cud           |
+|Cud ten zobaczysz Babciu, obiecuję!    |
+|Ja, rok 2024, 29 kwiecień, 17:31:00    |
+/--------------------------------------*/
 
 uint32_t stdio_refresh_rate;
 interval_id stdio_refresh_interval_id;
@@ -92,7 +104,9 @@ ElfInitArraySectionInfo XaninInitArrayInfo;
 void stdio_refresh(address_t* args)
 {
     if ((stdio_mode_get() == STDIO_MODE_TERMINAL) && (__xtb_get()->is_flushable))
+    {
         __sys_xtb_flush(__sys_vty_get());
+    }
 }
 
 void kernel_loop(void)
@@ -120,8 +134,18 @@ void kernel_loop(void)
         char* username = system_variable_get("USERNAME");
         char* hostname = system_variable_get("HOSTNAME");
 
-        xprintf("%z%s@%s%z:%z%s", OUTPUT_COLOR_SET(black, green), username != NULL ? username : "xanin", hostname != NULL ? hostname : "plumieria",
-            OUTPUT_COLOR_SET(black, white),
+        if (username == NULL)
+        {
+            dbg_warning("SYSTEM", "username not defined");
+        }
+
+        if (hostname == NULL)
+        {
+            dbg_warning("SYSTEM", "hostname not defined");
+        }
+
+        xprintf("%z%s@%s%z:%z%s", OUTPUT_COLOR_SET(black, green), username != NULL ? username : "xaninn",
+            hostname != NULL ? hostname : "plumieriaa", OUTPUT_COLOR_SET(black, white),
             OUTPUT_COLOR_SET(black, lblue), &xin_current_directory_buf[1]);
 
         free(username);
@@ -153,13 +177,20 @@ uint8_t kernel_mmngr_mmap[PMMNGR_MEMORY_BLOCKS];
 
 void kernel_init(void)
 {
-    for (int i = 0; i < XANIN_NUMBER_OF_PAGE_DIRECTORIES; i++) {
-        page_directory_entry_set(i, i * (1 << 22)); // (shift to determine which directory to use)
+    for (int i = 0; i < XANIN_NUMBER_OF_PAGE_DIRECTORIES; i++)
+    {
+        page_directory_entry_set(
+            i, i * (1 << PAGE_FRAME_UPPER_BITS_OFFSET)); // (shift to determine which directory to use)
     }
 
-    for (int i = 0; i < XANIN_NUMBER_OF_KERNEL_PAGE_DIRECTORIES; i++) {
-        page_directory_entry_set(XANIN_KERNEL_PAGE_DIRECTORIES_INDEX + i, i * (1 << 22));
-    }
+    // for (int i = 0; i < 16; i++) {
+    //     page_directory_entry_set(5 + i, 0x1400000); // (shift to determine which directory to use)
+    // }
+
+    // page_directory_entry_set(0, 20 * (1 << PAGE_FRAME_UPPER_BITS_OFFSET)); // (shift to determine which directory to
+    // use) for (int i = 0; i < 5; i++) {
+    //     page_directory_entry_set(XANIN_KERNEL_PAGE_DIRECTORIES_INDEX + i, i * (1 << PAGE_FRAME_UPPER_BITS_OFFSET));
+    // }
 
     paging_enable();
 
@@ -196,12 +227,13 @@ void kernel_init(void)
     INTERRUPT_REGISTER(31, general_protection_exception_entry);
     INTERRUPT_REGISTER(32, general_protection_exception_entry);
 
-    mmngr_init(kernel_mmngr_mmap, (uint8_t*)0x100000, PMMNGR_MEMORY_BLOCKS);
+    mmngr_init(kernel_mmngr_mmap, (uint8_t*)0x1400000, PMMNGR_MEMORY_BLOCKS);
     serial_port_initialize(1);
-    dbg_info(DEBUG_LABEL_IRQ, "Processor IRQs registered");
+    dbg_success(DEBUG_LABEL_IRQ, "Processor IRQs registered");
 
     vga_disable_cursor();
 
+#warning TODO set vga size with functions(singletone);
     vga_text_mode_height = 25;
     vga_text_mode_width = 80;
 
@@ -221,7 +253,9 @@ void kernel_init(void)
 
     SystemAcpiRSDP* rsdp = acpi_rsdp_find();
 
-    1 == acpi_rsdp_checksum_check(rsdp) ? xprintf("%zVALID", OUTPUT_COLOR_SET(green, white)) : xprintf("%zINVALID", OUTPUT_COLOR_SET(red, white));
+    1 == acpi_rsdp_checksum_check(rsdp) ? xprintf("%zVALID", OUTPUT_COLOR_SET(green, white))
+                                        : xprintf("%zINVALID", OUTPUT_COLOR_SET(red, white));
+
     xprintf("\nRSDP address: 0x%x\n", rsdp);
 
     acpi_rsdt_set((SystemAcpiRSDT*)rsdp->rsdt_address);
@@ -229,21 +263,27 @@ void kernel_init(void)
     xprintf("%z----------------------------\n", OUTPUT_COLOR_SET(black, green));
 
     puts("CHECKSUM CHECK RSDT: ");
-    const SystemAcpiRSDT* const rsdt = acpi_rsdt_get();
-    acpi_rsdt_checksum_check(rsdt) == 1 ? xprintf("%zVALID", OUTPUT_COLOR_SET(green, white)) : xprintf("%zINVALID", OUTPUT_COLOR_SET(red, white));
+    SystemAcpiRSDT const* const rsdt = acpi_rsdt_get();
+    acpi_rsdt_checksum_check(rsdt) == 1 ? xprintf("%zVALID", OUTPUT_COLOR_SET(green, white))
+                                        : xprintf("%zINVALID", OUTPUT_COLOR_SET(red, white));
     xprintf("\nRSDT address: 0x%x\n", rsdt);
 
-    const SystemAcpiSDT* const AcpiApicSDT = apic_sdt_find();
+    SystemAcpiSDT const* const AcpiApicSDT = apic_sdt_find();
 
     xprintf("%z----------------------------\n", OUTPUT_COLOR_SET(black, green));
 
-    const SystemAcpiFADT* const AcpiFADT = acpi_fadt_find();
+    SystemAcpiFADT const* const AcpiFADT = acpi_fadt_find();
 
     puts("FADT address: ");
-    xprintf("%z0x%x\n", OUTPUT_COLOR_SET(black, acpi_sdt_checksum_check((uint8_t*)AcpiFADT, AcpiFADT->length) == true ? green : red), AcpiFADT);
+    xprintf(
+        "%z0x%x\n",
+        OUTPUT_COLOR_SET(black, acpi_sdt_checksum_check((uint8_t*)AcpiFADT, AcpiFADT->length) == true ? green : red),
+        AcpiFADT);
 
     puts("MADT address: ");
-    xprintf("%z0x%x\n", OUTPUT_COLOR_SET(black, acpi_sdt_checksum_check((uint8_t*)AcpiApicSDT, AcpiApicSDT->length) == true ? green : red), AcpiApicSDT);
+    xprintf("%z0x%x\n",
+        OUTPUT_COLOR_SET(black, acpi_sdt_checksum_check((uint8_t*)AcpiApicSDT, AcpiApicSDT->length) == true ? green : red),
+        AcpiApicSDT);
 
     xprintf("MADT entries: 0x%x\n", (uint8_t*)AcpiApicSDT + 0x28);
 
@@ -297,9 +337,9 @@ void kernel_init(void)
         }
     }
 
-    const SystemAcpiMADT2* apic_keyboard_redirect = NULL;
-    const SystemAcpiMADT2* apic_pit_redirect = NULL;
-    const SystemAcpiMADT2* apic_nic_redirect = NULL;
+    SystemAcpiMADT2 const* apic_keyboard_redirect = NULL;
+    SystemAcpiMADT2 const* apic_pit_redirect = NULL;
+    SystemAcpiMADT2 const* apic_nic_redirect = NULL;
     // SystemAcpiMADT2 *apic_mouse_redirect = NULL;
 
     for (int i = 0; (*AcpiMADT2Pointers[i]).entry_type == 2; i++)
@@ -316,43 +356,51 @@ void kernel_init(void)
 
     interrupt_disable();
 
-    ioapic_ioredtbl_configure((apic_keyboard_redirect != NULL ? apic_keyboard_redirect->global_system_int_table + APIC_IRQ_BASE : PIC_KEYBOARD_VECTOR)
-        << APIC_VECTOR |
-        0x0 << APIC_DELIVERY_MODE | 0x0 << APIC_DESTINATION_MODE | 0x0 << APIC_INT_PIN_POLARITY | 0x0 << APIC_INT_MASK,
+    ioapic_ioredtbl_configure((apic_keyboard_redirect != NULL
+                                      ? apic_keyboard_redirect->global_system_int_table + APIC_IRQ_BASE
+                                      : PIC_KEYBOARD_VECTOR)
+                << APIC_VECTOR
+            | 0x0 << APIC_DELIVERY_MODE | 0x0 << APIC_DESTINATION_MODE | 0x0 << APIC_INT_PIN_POLARITY | 0x0 << APIC_INT_MASK,
         ioapic_id_get());
 
-    ioapic_ioredtbl_configure((apic_pit_redirect != NULL ? apic_pit_redirect->global_system_int_table + APIC_IRQ_BASE : PIC_PIT_VECTOR)
-        << APIC_VECTOR |
-        0x0 << APIC_DELIVERY_MODE | 0x0 << APIC_DESTINATION_MODE | 0x0 << APIC_INT_PIN_POLARITY | 0x0 << APIC_INT_MASK,
+    ioapic_ioredtbl_configure(
+        (apic_pit_redirect != NULL ? apic_pit_redirect->global_system_int_table + APIC_IRQ_BASE : PIC_PIT_VECTOR)
+                << APIC_VECTOR
+            | 0x0 << APIC_DELIVERY_MODE | 0x0 << APIC_DESTINATION_MODE | 0x0 << APIC_INT_PIN_POLARITY | 0x0 << APIC_INT_MASK,
         ioapic_id_get());
 
-    ioapic_ioredtbl_configure((apic_nic_redirect != NULL ? apic_nic_redirect->global_system_int_table + APIC_IRQ_BASE : PIC_NIC_VECTOR)
-        << APIC_VECTOR |
-        0x0 << APIC_DELIVERY_MODE | 0x0 << APIC_DESTINATION_MODE | 0x0 << APIC_INT_PIN_POLARITY | 0x0 << APIC_INT_MASK,
+    ioapic_ioredtbl_configure(
+        (apic_nic_redirect != NULL ? apic_nic_redirect->global_system_int_table + APIC_IRQ_BASE : PIC_NIC_VECTOR)
+                << APIC_VECTOR
+            | 0x0 << APIC_DELIVERY_MODE | 0x0 << APIC_DESTINATION_MODE | 0x0 << APIC_INT_PIN_POLARITY | 0x0 << APIC_INT_MASK,
         ioapic_id_get());
 
     // COS NIE DZIALA SYSCALL
     __input_scan_code_mapper_set(xanin_default_character_mapper);
 
     pit_init(apic_pit_redirect != NULL ? apic_pit_redirect->global_system_int_table + APIC_IRQ_BASE : PIC_PIT_VECTOR);
-    keyboard_init(apic_keyboard_redirect != NULL ? apic_keyboard_redirect->global_system_int_table + APIC_IRQ_BASE : PIC_KEYBOARD_VECTOR);
-    i8254x_init(apic_nic_redirect != NULL ? apic_nic_redirect->global_system_int_table + APIC_IRQ_BASE : PIC_NIC_VECTOR);
+    keyboard_init(apic_keyboard_redirect != NULL ? apic_keyboard_redirect->global_system_int_table + APIC_IRQ_BASE
+                                                 : PIC_KEYBOARD_VECTOR);
+    i8254x_init(apic_nic_redirect != NULL ? apic_nic_redirect->global_system_int_table + APIC_IRQ_BASE
+                                          : PIC_NIC_VECTOR);
 
     xprintf("\n%z----------------------------\n", OUTPUT_COLOR_SET(black, green));
-    xprintf("NIC interrupt line: 0x%x", (apic_nic_redirect != NULL ? apic_nic_redirect->global_system_int_table + APIC_IRQ_BASE : PIC_NIC_VECTOR));
+    xprintf("NIC interrupt line: 0x%x",
+        (apic_nic_redirect != NULL ? apic_nic_redirect->global_system_int_table + APIC_IRQ_BASE : PIC_NIC_VECTOR));
 
     xprintf("\n%z----------------------------\n", OUTPUT_COLOR_SET(black, green));
 
     __xin_init();
-    FileDescriptorTable = (XinFileDescriptor*)kcalloc(SIZE_OF(XinFileDescriptor) * 200); // 200 = number o entries
+    FileDescriptorTable = (XinFileDescriptor*)kcalloc(sizeof(XinFileDescriptor) * 200); // 200 = number o entries
 
-    dbg_success(DEBUG_LABEL_XANIN, "Babciu zobacz to wszystko jest dla ciebie ❤️");
+    dbg_success(DEBUG_LABEL_XANIN, "Babciu, zobacz to wszystko jest dla ciebie ❤️");
 
     xprintf("XinFs tables: 0x%x\n", __xin_fs_entries_get());
+    // xprintf("CPUID: 0x%x\n", cpu_pse36_supported());
+    // xprintf("CPUID: %d\n", cpu_maxphyaddr_get());
 
-    xprintf("CPUID: 0x%x\n", cpu_pse36_supported());
-    xprintf("CPUID: %d\n", cpu_maxphyaddr_get());
-    // xprintf("DIR ENTRY: 0x%x\n", page_dir_entry.fields);
+    // new_xprintf("nowy xprintf ugabuga:0x%02X\n", 10);
+
     puts("Press ENTER to continue...\n");
 
     srand(SystemTime.seconds);
@@ -363,8 +411,9 @@ void kernel_init(void)
     argv[3] = (char*)calloc(XANIN_PMMNGR_BLOCK_SIZE * 2);
     argv[4] = (char*)calloc(XANIN_PMMNGR_BLOCK_SIZE * 2);
 
-    __disk_sectors_write(ATA_FIRST_BUS, ATA_MASTER, __xin_find_entry("/ivt")->first_sector, 2, 0x0); // load ivt to /ivt file
-    memset((uint8_t*)ArpTable, 0xFF, SIZE_OF(ArpTable[0]));
+    disk_sectors_write(ATA_FIRST_BUS, ATA_MASTER, __xin_find_entry("/ivt")->first_sector, 2,
+        0x0); // load ivt to /ivt file
+    memset((uint8_t*)ArpTable, 0xFF, sizeof(ArpTable[0]));
 
     __xin_file_create("/syslog");
     syslog_enable();
@@ -375,10 +424,9 @@ void kernel_init(void)
 
     interrupt_enable();
     char mbuf[50] = { 0 };
-    memcpy_with_skip(mbuf, "fromini", ARRAY_LENGTH("fromini"), 1);
     dbg_info(DEBUG_LABEL_LIBC, mbuf);
 
-    char* buffer = (char*)kcalloc(100 * SIZE_OF(char));
+    char* buffer = (char*)kcalloc(100 * sizeof(char));
     stdio_refresh_rate = 50;
 
     kfree(buffer);
@@ -407,24 +455,31 @@ void kernel_start(void)
 
     if (vga_text_mode_width == 80)
     {
-        xprintf("%z    _/      _/                      _/              _/_/      _/_/_/       \n", OUTPUT_COLOR_SET(logo_back_color, logo_front_color));
-        xprintf("%z     _/  _/      _/_/_/  _/_/_/        _/_/_/    _/    _/  _/              \n", OUTPUT_COLOR_SET(logo_back_color, logo_front_color));
-        xprintf("%z      _/      _/    _/  _/    _/  _/  _/    _/  _/    _/    _/_/           \n", OUTPUT_COLOR_SET(logo_back_color, logo_front_color));
-        xprintf("%z   _/  _/    _/    _/  _/    _/  _/  _/    _/  _/    _/        _/%z   version 2.0v", OUTPUT_COLOR_SET(logo_back_color, logo_front_color), OUTPUT_COLOR_SET(black, white));
-        xprintf("%z_/      _/    _/_/_/  _/    _/  _/  _/    _/    _/_/    _/_/_/     %z%s: %i:%i:%i\n", OUTPUT_COLOR_SET(logo_back_color, logo_front_color), OUTPUT_COLOR_SET(black, white), daysLUT[SystemTime.weekday], SystemTime.hour, SystemTime.minutes, SystemTime.seconds);
+        xprintf("%z    _/      _/                      _/              _/_/      _/_/_/       \n",
+            OUTPUT_COLOR_SET(logo_back_color, logo_front_color));
+        xprintf("%z     _/  _/      _/_/_/  _/_/_/        _/_/_/    _/    _/  _/              \n",
+            OUTPUT_COLOR_SET(logo_back_color, logo_front_color));
+        xprintf("%z      _/      _/    _/  _/    _/  _/  _/    _/  _/    _/    _/_/           \n",
+            OUTPUT_COLOR_SET(logo_back_color, logo_front_color));
+        xprintf("%z   _/  _/    _/    _/  _/    _/  _/  _/    _/  _/    _/        _/%z   version Maca",
+            OUTPUT_COLOR_SET(logo_back_color, logo_front_color), OUTPUT_COLOR_SET(black, white));
+        xprintf("%z_/      _/    _/_/_/  _/    _/  _/  _/    _/    _/_/    _/_/_/     %z%s: %i:%i:%i\n",
+            OUTPUT_COLOR_SET(logo_back_color, logo_front_color), OUTPUT_COLOR_SET(black, white),
+            daysLUT[SystemTime.weekday], SystemTime.hour, SystemTime.minutes, SystemTime.seconds);
     }
 
     char stdio_legacy_config_buf[6] = { 0 };
     XinEntry* StdioLegacyConfig = fopen("/etc/help/stdio_legacy.conf", "rw");
-    fseek(StdioLegacyConfig, ARRAY_LENGTH("PRINT_LEGACY_STDIO_INFO: ") - 1);
+    __xin_fseek(StdioLegacyConfig, ARRAY_LENGTH("PRINT_LEGACY_STDIO_INFO: ") - 1);
     fread(StdioLegacyConfig, stdio_legacy_config_buf, 5);
 
     if (bstrncmp(stdio_legacy_config_buf, "TRUE", 4))
     {
-        fseek(StdioLegacyConfig, 25);
+        __xin_fseek(StdioLegacyConfig, 25);
         fwrite(StdioLegacyConfig, "FALSE", 6);
 
-        puts_warning("SINCE V1.8, XANIN USES TWO DIFFERENT GRAPHIC MODES. IF YOU WANT\nTO RUN THE PROGRAM IN A GIVEN MODE, HOLD CTRL WHILE SUBMITTING A COMMAND\n");
+        puts_warning("SINCE V1.8, XANIN USES TWO DIFFERENT GRAPHIC MODES. IF YOU WANT\nTO RUN THE PROGRAM IN A GIVEN "
+                     "MODE, HOLD CTRL WHILE SUBMITTING A COMMAND\n");
     }
 
     stdio_init();

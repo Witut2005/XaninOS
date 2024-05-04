@@ -1,5 +1,6 @@
 
 #include "./time.hpp"
+#include <lib/libc/memory.h>
 
 namespace std
 {
@@ -9,21 +10,21 @@ namespace chrono
 
 CmosTime system_clock::now()
 {
-    time_get(&system_clock::time);       
+    time_get(&system_clock::time);
     return system_clock::time;
 }
 
 bcd system_clock::year()
 {
     time_get(&system_clock::time);
-    bcd x = {uint32_t(time.century * 0x100 + time.year)};
+    bcd x = { uint32_t(time.century * 0x100 + time.year) };
     return x;
 }
 
 std::string time_to_string(CmosTime x)
 {
     char str[50];
-    memset((uint8_t*)str, 0, SIZE_OF(str));
+    memset((uint8_t*)str, 0, sizeof(str));
 
     str[0] = x.hour / 0x10 + '0';
     str[1] = x.hour % 0x10 + '0';

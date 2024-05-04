@@ -3,10 +3,7 @@
 import os
 import argparse
 import sys
-import subprocess
-from colorama import init
 from termcolor import colored
-import datetime
 
 OBJECT = 1
 BINARY = 2
@@ -77,11 +74,6 @@ def create_c_library(objpath, libpath, objs=[]):
         f"{args.linker} -r {' '.join(objs)} -o {objpath}",
         f"{args.archive} rsc {libpath} {objpath} ./lib/libc/crt0.o", 
         'cp ./lib/libc/libc.a ./external_apps/libc.a',
-        'cp ./lib/libc/libc.o ./external_apps/libc.o',
-        'cp ./lib/libc/crt0.o ./external_apps/crt0.o',
-        'cd ./external_apps/',
-        'make ./external_apps/',
-        'cd ..'
     ]
 
     for command in commands:
@@ -140,7 +132,7 @@ def compile_kernel(*kargs):
         'dd if=xanin.bin of=xanin.img',
         'python3 ./build/align_file.py -f ./xanin.img -size 400000',
 
-        f'{("python3 ./build/app_preinstall2.py --files external_apps/ etc/ --image xanin.img")}',
+        f'python3 ./build/app_preinstall2.py --files external_apps/ etc/ --image xanin.img {"--dont_print_xin_info" if args.dont_print_xin_info == True else ""}',
 
         'mv xanin.img -f ../bin',
         'mv xanin.bin -f ../bin'
@@ -151,6 +143,7 @@ def compile_kernel(*kargs):
 
 parser = argparse.ArgumentParser()
 
+parser.add_argument('--dont_print_xin_info', action='store_true')
 parser.add_argument('--srcpath', type=str)
 parser.add_argument('--binpath', type=str)
 
@@ -162,6 +155,7 @@ parser.add_argument('--archive', type=str, default='i386-elf-ar')
 parser.add_argument('--dwarf', action='store_true', default=False)
 
 parser.add_argument('--long', action='store_true')
+parser.add_argument('--build_all', action='store_true')
 
 args = parser.parse_args()
 
@@ -171,7 +165,26 @@ builders = {
     'cc': args.ccbuilder,
 }
 
-c_compilation_options = '-O0 -Wall -Werror=unused-result -Werror-implicit-function-declaration -Wno-parentheses -Wno-comment -Wno-address-of-packed-member -Wno-duplicate-decl-specifier -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding  -Wno-unused-function -I ./'
+c_compilation_options = '-O0 -Wall -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -I ./'
+cc_compilation_options = '-O0 -std=c++2a -fno-exceptions -masm=intel -Wno-builtin-declaration-mismatch -Wno-unused-function -Wno-write-strings -fno-rtti -fconcepts-ts -nostdlib -ffreestanding -I ./ -c'
+
+def compiler_cast_given_warning(warning):
+    return f'-Werror={warning}'
+
+def compiler_ignore_given_warning(warning):
+    return f'-Wno-{warning}'
+
+c_compiler_ignored_warnings_li = ['unused-function', 'address-of-packed-member']
+c_compiler_ignored_warnings = ' '.join([compiler_ignore_given_warning(warning) for warning in c_compiler_ignored_warnings_li])
+
+cpp_compiler_ignored_warnings_li = ['unused-function', 'address-of-packed-member', 'literal-suffix']
+cpp_compiler_ignored_warnings = ' '.join([compiler_ignore_given_warning(warning) for warning in cpp_compiler_ignored_warnings_li])
+
+c_compiler_casted_warnings_li = ['int-conversion', 'implicit-function-declaration', 'return-type']
+c_compiler_casted_warnings = ' '.join([compiler_cast_given_warning(warning) for warning in c_compiler_casted_warnings_li])
+
+cpp_compiler_casted_warnings_li = ['return-type']
+cpp_compiler_casted_warnings = ' '.join([compiler_cast_given_warning(warning) for warning in cpp_compiler_casted_warnings_li])
 
 builder_options = {
     'asm': {
@@ -180,12 +193,14 @@ builder_options = {
     },
 
     'c':{
-        'default': f"{c_compilation_options} -c",
-        'kernel': f"{c_compilation_options} -Ttext 0xF00000"
+        'default': f"{c_compilation_options} {c_compiler_casted_warnings} {c_compiler_ignored_warnings} -c",
+        'lib': f"{c_compilation_options} {c_compiler_casted_warnings} {c_compiler_ignored_warnings} -fpic -c",
+        'kernel': f"{c_compilation_options} {c_compiler_casted_warnings} {c_compiler_ignored_warnings} -Ttext 0xF00000"
     },
 
     'cc':{
-        'default': '-O0 -fno-exceptions -masm=intel -std=c++17 -Wno-return-type -Wno-builtin-declaration-mismatch -nostdlib -Wno-unused-function -Wno-write-strings -fno-rtti -fconcepts-ts -I ./ -c'
+        'default': f"{cc_compilation_options} {cpp_compiler_casted_warnings} {cpp_compiler_ignored_warnings} -c",
+        'lib': f"{cc_compilation_options} {cpp_compiler_casted_warnings} {cpp_compiler_ignored_warnings} -fpic -c"
     }
 }
 
@@ -210,7 +225,7 @@ objects_to_compile = {
     'filesystem': [
         CompileObject('./fs/xin_pointers.asm', builders['asm'], builder_options['asm']['bin'], BINARY),
         CompileObject('./fs/entries_table.asm', builders['asm'], builder_options['asm']['bin'], BINARY),
-        CompileObject('./fs/xin.c', builders['c'], builder_options['c']['default'], OBJECT),
+        CompileObject('./fs/xin.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./fs/xin_extended_table.asm', builders['asm'], builder_options['asm']['bin'], BINARY),
         # CompileObject('./fs/xanin_apps_space.asm', builders['asm'], builder_options['asm']['bin'], BINARY),
     ],
@@ -246,12 +261,9 @@ objects_to_compile = {
     'syscalls': [
         CompileObject('./sys/call/posix/syscall_entry.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
         CompileObject('./sys/call/xanin_sys/handler/xanin_sys_entry.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
-        CompileObject('./sys/call/xanin_sys/calls/devices/disk.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
-        CompileObject('./sys/call/xanin_sys/calls/stdio/stdio.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
         CompileObject('./sys/call/xanin_sys/calls/terminal/terminal.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
         CompileObject('./sys/call/xanin_sys/calls/vga/vga.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
         CompileObject('./sys/call/xanin_sys/calls/input/input.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
-        # CompileObject('./sys/call/xanin_sys/calls/xanin_calls.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
         CompileObject('./sys/call/xanin_sys/handler/xanin_sys.c', builders['c'], builder_options['c']['default'], OBJECT),
     ],
 
@@ -299,16 +311,12 @@ objects_to_compile = {
     ],
 
     'kmodules': [
-        CompileObject('./sys/pmmngr/alloc.c', builders['c'], builder_options['c']['default'], OBJECT),
+        CompileObject('./sys/pmmngr/alloc.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./sys/input/input.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./sys/log/syslog.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./sys/lock/lock.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./sys/paging/paging.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./sys/paging/paging.asm', builders['asm'], builder_options['asm']['elf32'], './sys/paging/paging_asm.o'),
-    ],
-
-    'xanin_sys': [
-        CompileObject('./sys/call/xanin_sys/calls/pmmngr/alloc.c', builders['c'], builder_options['c']['default'], OBJECT),
     ],
 
     'compiler': [
@@ -319,29 +327,25 @@ objects_to_compile = {
 
     'libc':[
         # CompileObject('./lib/libc/real_mode_fswitch.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
-        CompileObject('./lib/libc/file.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
-        CompileObject('./lib/libc/crt0.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
-        CompileObject('./lib/libc/alloc.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
-        CompileObject('./lib/cpu/code/cpu_state_info.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
         # CompileObject('./lib/libc/real_mode_fswitch.c', builders['c'], builder_options['c']['default'], OBJECT),
-        CompileObject('./lib/libc/hal.c', builders['c'], builder_options['c']['default'], OBJECT),
-        CompileObject('./lib/libc/math.c', builders['c'], builder_options['c']['default'], OBJECT),
-        CompileObject('./lib/libc/memory.c', builders['c'], builder_options['c']['default'], OBJECT),
+        CompileObject('./lib/cpu/code/cpu_state_info.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
+        CompileObject('./lib/libc/hal.c', builders['c'], builder_options['c']['lib'], OBJECT),
+        CompileObject('./lib/libc/math.c', builders['c'], builder_options['c']['lib'], OBJECT),
+        CompileObject('./lib/libc/memory.c', builders['c'], builder_options['c']['lib'], OBJECT),
         CompileObject('./lib/libc/stdiox.c', builders['c'], builder_options['c']['default'], OBJECT),
-        CompileObject('./lib/libc/stdlibx.c', builders['c'], builder_options['c']['default'], OBJECT),
-        CompileObject('./lib/libc/string.c', builders['c'], builder_options['c']['default'], OBJECT),
-        CompileObject('./lib/libc/data_structures.c', builders['c'], builder_options['c']['default'], OBJECT),
-        CompileObject('./lib/libc/system.c', builders['c'], builder_options['c']['default'], OBJECT),
-        CompileObject('./lib/libc/algorithm.c', builders['c'], builder_options['c']['default'], OBJECT),
-        CompileObject('./lib/libc/time.c', builders['c'], builder_options['c']['default'], OBJECT),
-        CompileObject('./lib/libc/process.c', builders['c'], builder_options['c']['default'], OBJECT),
-        CompileObject('./lib/libc/stdiox_legacy.c', builders['c'], builder_options['c']['default'], OBJECT),
-        CompileObject('./lib/libc/canvas.c', builders['c'], builder_options['c']['default'], OBJECT),
-        CompileObject('./lib/libc/hash.c', builders['c'], builder_options['c']['default'], OBJECT),
+        CompileObject('./lib/libc/stdlibx.c', builders['c'], builder_options['c']['lib'], OBJECT),
+        CompileObject('./lib/libc/string.cpp', builders['cc'], builder_options['cc']['lib'], OBJECT),
+        CompileObject('./lib/libc/data_structures.c', builders['c'], builder_options['c']['lib'], OBJECT),
+        CompileObject('./lib/libc/algorithm.c', builders['c'], builder_options['c']['lib'], OBJECT),
+        CompileObject('./lib/libc/time.c', builders['c'], builder_options['c']['lib'], OBJECT),
+        CompileObject('./lib/libc/process.c', builders['c'], builder_options['c']['lib'], OBJECT),
+        CompileObject('./lib/libc/stdiox_legacy.c', builders['c'], builder_options['c']['lib'], OBJECT),
+        CompileObject('./lib/libc/canvas.c', builders['c'], builder_options['c']['lib'], OBJECT),
+        CompileObject('./lib/libc/hash.c', builders['c'], builder_options['c']['lib'], OBJECT),
     ],
 
     'libcpp': [
-        CompileObject('./lib/libcpp/command_parser.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
+        CompileObject('./lib/libcpp/lexer.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./lib/libcpp/regex.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./lib/libcpp/istream.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./lib/libcpp/ostream.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
@@ -351,11 +355,19 @@ objects_to_compile = {
         CompileObject('./lib/libcpp/hash.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
     ],
 
+    'system': [
+        CompileObject('./lib/system/system.c', builders['c'], builder_options['c']['default'], OBJECT)
+    ],
+
     'vty': [
         CompileObject('./lib/screen/screen.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./sys/terminal/frontend/frontend.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./sys/terminal/backend/backend.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./sys/terminal/handlers/handlers.c', builders['c'], builder_options['c']['default'], OBJECT),
+    ],
+
+    'shell': [
+        CompileObject('./sys/terminal/interpreter/interpreter.cpp', builders['cc'], builder_options['cc']['default'], OBJECT)
     ],
 
     'tui': [
@@ -382,8 +394,15 @@ objects_to_compile = {
         CompileObject('./programs/xagames/xagame_test.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./programs/xagames/tetris.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./programs/misc/screenshot.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
-        CompileObject('./programs/tests/cpp_test.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
+        CompileObject('./programs/tests/elf_loader_test.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./programs/tests/c_test.c', builders['c'], builder_options['c']['default'], OBJECT),
+
+        CompileObject('./programs/tests/cpp/string.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
+        CompileObject('./programs/tests/cpp/lexer.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
+        CompileObject('./programs/tests/cpp/xin.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
+        CompileObject('./programs/tests/cpp/algo.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
+        CompileObject('./programs/tests/cpp/vector.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
+        CompileObject('./programs/tests/c/alloc.c', builders['c'], builder_options['c']['default'], OBJECT),
 
         CompileObject('./programs/stdio/stdio_apply.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./programs/file_format_tools/bmp_info.c', builders['c'], builder_options['c']['default'], OBJECT),
@@ -420,6 +439,8 @@ objects_to_compile = {
         CompileObject('./programs/misc/tetris/tetris.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./programs/misc/start_screen.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./programs/tests/timer_test.c', builders['c'], builder_options['c']['default'], OBJECT),
+        CompileObject('./programs/tests/sprintf_test.c', builders['c'], builder_options['c']['default'], OBJECT),
+        CompileObject('./programs/tests/paging_test.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./programs/fs/cat.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./programs/misc/zsk.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./programs/misc/epilepsy.c', builders['c'], builder_options['c']['default'], OBJECT),
@@ -446,7 +467,7 @@ objects_to_compile = {
         CompileObject('./programs/fs/move.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./programs/fs/link_create.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./programs/fs/xin_info.c', builders['c'], builder_options['c']['default'], OBJECT),
-        CompileObject('./programs/fs/xin_note.c', builders['c'], builder_options['c']['default'], OBJECT),
+        # CompileObject('./programs/fs/xin_note.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./programs/fs/list_files.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./programs/misc/logo.c', builders['c'], builder_options['c']['default'], OBJECT),
     ],
@@ -464,7 +485,8 @@ objects_to_compile = {
         CompileObject('./fs/loaders/bin/bit32/execute_addr.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./fs/loaders/bin/bit32/run.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./fs/loaders/bin/bit16/run16.c', builders['c'], builder_options['c']['default'], OBJECT),
-        CompileObject('./fs/loaders/elf/elf_loader.c', builders['c'], builder_options['c']['default'], OBJECT),
+        CompileObject('./fs/loaders/elf/elf_loader.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
+        CompileObject('./lib/libc/crt0.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
         CompileObject('./fs/loaders/elf/elfdump.c', builders['c'], builder_options['c']['default'], OBJECT),
     ],
 
@@ -478,7 +500,7 @@ for os_module, objects in objects_to_compile.items():
     print(colored('\ncompling {} module'.format(os_module).upper(), 'green'))
     for object in objects:
 
-        if object.needs_to_be_recompiled():
+        if object.needs_to_be_recompiled() or args.build_all: 
             status = os.system(object.command())
             if status != 0:
                 sys.exit(1)
@@ -494,22 +516,11 @@ print(colored('\nXANIN OS MODULES BUILDED\n', 'green'))
     
 create_c_library('./lib/libc/libc.o', './lib/libc/libc.a', [obj.output_name for obj in objects_to_compile['libc']] + [
         './lib/screen/screen.o', 
-        './sys/call/xanin_sys/calls/devices/disk.o', 
-        './sys/call/xanin_sys/calls/stdio/stdio.o', 
+        './lib/system/system.o', 
         './sys/call/xanin_sys/calls/terminal/terminal.o', 
         './sys/call/xanin_sys/calls/vga/vga.o', 
         './sys/call/xanin_sys/calls/input/input.o', 
                 ])
-
-# create_kernel_c_library('./lib/libc/kernel_libc.o', './lib/libc/kernel_libc.a', [obj.output_name for obj in objects_to_compile['libc']] + [
-#         './sys/log/syslog.o',
-#         './lib/screen/screen.o', 
-#         './sys/devices/hda/disk.o', 
-#         './fs/xin.o', './sys/call/xanin_sys/calls/devices/disk.o', './sys/call/xanin_sys/calls/stdio/stdio.o', 
-#         './sys/call/xanin_sys/calls/terminal/terminal.o', 
-#         './sys/call/xanin_sys/calls/vga/vga.o', 
-#         './sys/call/xanin_sys/calls/input/input.o', 
-#     ])
 
 compile_boot2()
 compile_kernel(objects_to_compile)

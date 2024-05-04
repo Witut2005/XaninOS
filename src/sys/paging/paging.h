@@ -10,12 +10,13 @@
 #define CPUID_PAE (1 << 6)
 #define CPUID_PSE36 (1 << 17)
 #define PAGE_DIRECTORY4MB_CREATE(addr)(0x001E7 | (addr & 0xFFC00000))
+#define PAGE_FRAME_UPPER_BITS_OFFSET 22
 
-#define XANIN_NUMBER_OF_PAGE_DIRECTORIES 4096 
-#define XANIN_KERNEL_PAGE_DIRECTORIES_INDEX 0xF
+#define XANIN_NUMBER_OF_PAGE_DIRECTORIES 1024 
+#define XANIN_KERNEL_PAGE_DIRECTORIES_INDEX 0x3
 #define XANIN_NUMBER_OF_KERNEL_PAGE_DIRECTORIES 32
 
-#if XANIN_NUMBER_OF_PAGE_DIRECTORIES != 4096
+#if XANIN_NUMBER_OF_PAGE_DIRECTORIES != 1024 
 #error  "Number of pages must be equal to 4096"
 #endif
 
@@ -23,8 +24,8 @@
 #error "Number of XaninPageDirectories must be greater of equal to 32"
 #endif
 
-#if XANIN_KERNEL_PAGE_DIRECTORIES_INDEX != 0xF
-#error "XaninPAgeDirectories index must be equal to 0xF" 
+#if XANIN_KERNEL_PAGE_DIRECTORIES_INDEX != 0x3
+#error "XaninPAgeDirectories index must be equal to 0x3"
 #endif 
 
 enum PAGE_DIRECTORY_ENTRY_4MB

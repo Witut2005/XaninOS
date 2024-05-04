@@ -2,38 +2,33 @@
 
 #pragma once
 
-#include <stddef.h>
-#include <stdbool.h>
-#include <stdint.h>
-#include <sys/macros.h>
 #include <fs/xin_structures.h>
 #include <lib/libc/file.h>
+#include <lib/libc/time.h>
+#include <stdarg.h>
+#include <stdbool.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <sys/macros.h>
 
 #define BAD_IP_ADDRESS 0xFFFFFFFF
 
-#define STRING_UNSIGNED 1
+#define STRING_UNSIGNED 0
 #define STRING_SIGNED 1
 
-enum STRTOI_OPTIONS
-{
+enum CHAR_FIND_OPTIONS {
+    CHAR_FIND_DIGITS = 0xFE,
+    CHAR_FIND_LETTERS = 0xFF
+};
+
+enum STRTOI_OPTIONS {
     BINARY = 2,
     OCTAL = 8,
     DECIMAL = 10,
     HEXADECIMAL = 16
 };
 
-struct StringRectangle
-{
-    uint32_t size_x;
-    uint32_t size_y;
-    uint32_t position_x;
-    uint32_t position_y;
-};
-
-typedef struct StringRectangle StringRectangle;
-
-enum STRING_ERNNO_VALUES
-{
+enum STRING_ERNNO_VALUES {
     IPV4_ERRNO = 0x1
 };
 
@@ -41,52 +36,64 @@ enum STRING_ERNNO_VALUES
 #define STRCAT_SRC_FIRST false
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
-    int char_find(const char* str, char c);
-    uint32_t strlen(const char* a);
-    char* strcpy(char* dest, const char* src);
-    char* strncpy(char* x, const char* y, size_t size);
-    char* strrev(char* str);
-    char* float_to_string(float number, char* str);
-    int32_t strcmp(char* a, const char* b);
-    bool bstrcmp(char* a, const char* b);
-    bool bstrncmp(char* a, const char* b, size_t string_size);
+[[nodiscard]] bool is_digit(char c);
+[[nodiscard]] bool is_in_char_range(char r1, char r2, char c);
+[[nodiscard]] bool is_char(char c);
 
-    char* int_to_decimal_string(int32_t value, char* buf);
-    char* int_to_string(uint32_t value, char* buf, const uint8_t base);
-    char* bin_to_string(int x, char* buf);
-    char* bcd_to_string(uint8_t x, char* buf);
+[[nodiscard]] char* char_find(char* str, char c);
+[[nodiscard]] char* char_find_from_end(char* str, uint32_t offset, char c);
 
-    void erase_spaces(char* str);
+[[nodiscard]] uint32_t strlen(char const* a);
+char* strcpy(char* dest, char const* src);
+char* strncpy(char* x, char const* y, size_t size);
+char* strrev(char* str);
+[[nodiscard]] int32_t strcmp(char const* a, char const* b);
+[[nodiscard]] bool bstrcmp(char const* a, char const* b);
+[[nodiscard]] bool bstrncmp(char const* a, char const* b, size_t string_size);
 
-    char* toupper(char* str);
-    char* tolower(char* str);
+char* int_to_decimal_string(bool _signed, int32_t value, char* buf);
+char* int_to_string(uint32_t value, char* buf, const uint8_t base);
 
-    uint32_t hex_str_to_int(char* str);
-    char* xint_to_hex_str(uint32_t x, char* buf, uint8_t how_many_chars);
-    uint32_t atoi(char* str);
-    uint32_t strtoi(const char* str, uint8_t format);
-    uint32_t str2ipv4(char* str);
+char* bcd_to_string(uint8_t value, char* buf);
+char* bcd_stream_to_string(uint8_t* value, uint32_t value_size, char* buf);
+char* time_to_string(bcd_time_t time, char* buf);
+char* date_to_string(bcd_date_t date, char* buf);
 
-    char* substr_find(char* str, const char* substr);
-    char* substr_last_find(char* str, const char* substr);
+void erase_spaces(char* str);
 
-    [[nodiscard]] char* strdup(char* str); //allocates memory
-    char* strcat(bool dest_first, char* dest, char* src);
+char* toupper(char* str);
+char* tolower(char* str);
 
-    uint32_t check_string_errors(uint32_t mask);
-    uint32_t number_of_lines_get(const char* str);
-    char* string_align_end(char* const str, char filler, uint32_t count);   // puts NULL at end of string
-    char* string_align_begin(char* const str, char filler, uint32_t count); // puts NULL at end of string
+[[nodiscard]] uint32_t atoi(char* str);
+[[nodiscard]] uint32_t strtoi(char const* str, uint8_t format);
+[[nodiscard]] uint32_t str2ipv4(char const* str);
 
-    uint32_t number_of_lines_get(const char* str);
-    uint32_t size_of_biggest_line_get(const char* str);
-    StringRectangle* const string_rectangle_create(const char* buf, uint32_t position_x, uint32_t position_y);
+[[nodiscard]] char* substr_find(char* str, char const* substr);
+[[nodiscard]] char* substr_last_find(char* str, char const* substr);
 
-    char* getline(XinEntry* File, int line_id);
+[[nodiscard]] char* strdup(char const* str);          // allocates memory
+char* strcat(bool dest_first, char* dest, char* src); // dest is buffer
+
+uint32_t check_string_errors(uint32_t mask);
+[[nodiscard]] uint32_t number_of_lines_get(char const* str);
+char* string_align_end(char* const str, char filler, uint32_t count);   // puts NULL at end of string
+char* string_align_begin(char* const str, char filler, uint32_t count); // puts NULL at end of string
+
+[[nodiscard]] uint32_t number_of_lines_get(char const* str);
+[[nodiscard]] uint32_t size_of_biggest_line_get(char const* str);
+
+[[nodiscard]] char* getline(XinEntry* File, int line_id);
+
+char* xvsnprintf(char* str, size_t n, char* fmt, va_list args);
+char* xsnprintf(char* str, size_t n, char* fmt, ...);
+char* xsprintf(char* str, char* fmt, ...);
+
+int vsnprintf(char* str, size_t n, char* fmt, va_list args);
+int snprintf(char* str, size_t n, char* fmt, ...);
+int sprintf(char* str, char* fmt, ...);
 
 #ifdef __cplusplus
 }

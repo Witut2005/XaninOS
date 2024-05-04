@@ -18,6 +18,7 @@ Keyboard& Keyboard::the(void)
 
 bool Keyboard::init(interrupt_vector_t vector)
 {
+    reset();
     bool ok = test();
     if (ok)
     {
@@ -91,7 +92,9 @@ void Keyboard::handle(void)
     __input_handle_observed_objects(&KeyInfo);
 
     __input_call_handlers(KeyInfo);
-    __xtb_flush_all(__vty_get());
+
+    if (stdio_mode_get() == STDIO_MODE_TERMINAL)
+        __xtb_flush_all(__vty_get());
 
     // if (__input_is_ctrl_pressed() && KeyInfo.keys_pressed[KBP_C])
     //     exit();
@@ -108,11 +111,12 @@ void Keyboard::write(ControllerPort reg, uint8_t data)
     outbIO(reg, data);
 }
 
+#warning "TODO sus";
 uint8_t Keyboard::read(ControllerPort reg)
 {
     if (reg == ControllerPort::KeyboardEncoder) // wait for Buffer being not empty
         ((inbIO(ControllerPort::OnboardKeyboardController) & StatusRegisterMask::OutputBufferStatus) == BufferStatus::Empty);
-    inbIO(reg);
+    return inbIO(reg);
 }
 
 void Keyboard::leds_set(Keyboard::leds_mask_t mask)

@@ -1,32 +1,31 @@
 
 
-#include <lib/tui/tui.h>
-#include <lib/libc/colors.h>
 #include <fs/xin.h>
+#include <lib/libc/canvas.h>
+#include <lib/libc/colors.h>
+#include <lib/libc/data_structures.h>
 #include <lib/libc/file.h>
 #include <lib/libc/process.h>
-#include <lib/libc/data_structures.h>
-#include <sys/input/input.h>
 #include <lib/libc/string.h>
-#include <lib/libc/canvas.h>
+#include <lib/tui/tui.h>
+#include <sys/input/input.h>
 
 // CANVAS_APP
 
-extern int edit(char *file_name);
-extern int xin_info(char *entry_name);
+extern int edit(char* file_name);
+extern int xin_info(char* entry_name);
 
-struct ExplorerInfo
-{
-    char *current_folder;
+struct ExplorerInfo {
+    char* current_folder;
     bool exit_tui_app;
-    char *selected_file;
-    table_t *MainTable;
+    char* selected_file;
+    table_t* MainTable;
 };
 typedef struct ExplorerInfo ExplorerInfo;
 
 #define TUI_TEST_SITES 2
 
-void handle_selected_option(char *option, ExplorerInfo *AppInfo)
+void handle_selected_option(char* option, ExplorerInfo* AppInfo)
 {
     if (bstrcmp(option, "remove"))
     {
@@ -36,7 +35,7 @@ void handle_selected_option(char *option, ExplorerInfo *AppInfo)
 
     else if (bstrcmp(option, "rename"))
     {
-        char *new_name = (char *)calloc(XIN_MAX_PATH_LENGTH);
+        char* new_name = (char*)calloc(XIN_MAX_PATH_LENGTH);
         stdio_canvas_move_to_y(stdio_canvas_get_last_valid_y());
 
         canvas_xprintf("New file name: ");
@@ -50,7 +49,7 @@ void handle_selected_option(char *option, ExplorerInfo *AppInfo)
 
     else if (bstrcmp(option, "link"))
     {
-        char *new_name = (char *)calloc(XIN_MAX_PATH_LENGTH);
+        char* new_name = (char*)calloc(XIN_MAX_PATH_LENGTH);
         stdio_canvas_move_to_y(stdio_canvas_get_last_valid_y());
 
         canvas_xprintf("where do you want to create a link entry: ");
@@ -70,7 +69,7 @@ void handle_selected_option(char *option, ExplorerInfo *AppInfo)
 
     else if (bstrcmp(option, "copy"))
     {
-        char *new_name = (char *)calloc(XIN_MAX_PATH_LENGTH);
+        char* new_name = (char*)calloc(XIN_MAX_PATH_LENGTH);
         stdio_canvas_move_to_y(stdio_canvas_get_last_valid_y());
 
         canvas_xprintf("where do you want to create a copy entry: ");
@@ -92,7 +91,7 @@ void handle_selected_option(char *option, ExplorerInfo *AppInfo)
 
     else if (bstrcmp(option, "create"))
     {
-        char *new_name = (char *)calloc(XIN_MAX_PATH_LENGTH);
+        char* new_name = (char*)calloc(XIN_MAX_PATH_LENGTH);
         stdio_canvas_move_to_y(stdio_canvas_get_last_valid_y());
 
         canvas_xprintf("New file name: ");
@@ -109,7 +108,7 @@ void handle_selected_option(char *option, ExplorerInfo *AppInfo)
     }
 }
 
-void hfs(char *omg, ExplorerInfo *AppInfo)
+void hfs(char* omg, ExplorerInfo* AppInfo)
 {
 
     if (bstrcmp(omg, "exit"))
@@ -120,7 +119,7 @@ void hfs(char *omg, ExplorerInfo *AppInfo)
 
     else if (bstrcmp(omg, ""))
     {
-        table_t *fro = table_create(0, 15, 1, 20, black, white, 1, NULL);
+        table_t* fro = table_create(0, 15, 1, 20, black, white, 1, NULL);
         table_insert(fro, 0, "create", black, white, 0);
         table_add_handler(fro, (tui_table_handler)handle_selected_option, (address_t)AppInfo);
         table_row_select(fro);
@@ -135,7 +134,7 @@ void hfs(char *omg, ExplorerInfo *AppInfo)
     else if (bstrcmp(omg, ".."))
     {
         __xin_current_directory_get(AppInfo->current_folder);
-        __xin_folder_change(__xin_entry_pf_get(AppInfo->current_folder)->path);
+        __xin_folder_change(__xin_parent_folder_entry_get(AppInfo->current_folder)->path);
         return;
     }
 
@@ -143,7 +142,7 @@ void hfs(char *omg, ExplorerInfo *AppInfo)
 
     if (status == XANIN_ERROR)
     {
-        table_t *fro = table_create(0, 15, 6, 20, black, white, 1, NULL);
+        table_t* fro = table_create(0, 15, 6, 20, black, white, 1, NULL);
         table_insert(fro, 0, "remove", black, white, 0);
         table_insert(fro, 1, "rename", black, white, 0);
         table_insert(fro, 2, "link", black, white, 0);
@@ -165,18 +164,18 @@ void explorer_app_deconstructor(void)
     // free(explorer_main_table);
 }
 
-int explorer(char *parent_folder)
+int explorer(char* parent_folder)
 {
 
-    ExplorerInfo AppInfo = {NULL};
+    ExplorerInfo AppInfo = { NULL };
     tui_init();
 
     app_process_register(explorer_app_deconstructor, 2, AppInfo.current_folder, AppInfo.selected_file);
 
-    char *initial_folder = (char *)calloc(XIN_MAX_PATH_LENGTH);
+    char* initial_folder = (char*)calloc(XIN_MAX_PATH_LENGTH);
     __xin_current_directory_get(initial_folder);
 
-    AppInfo.current_folder = (char *)calloc(XIN_MAX_PATH_LENGTH);
+    AppInfo.current_folder = (char*)calloc(XIN_MAX_PATH_LENGTH);
 
     if (!strlen(parent_folder)) // no path given
         __xin_current_directory_get(AppInfo.current_folder);
@@ -189,7 +188,7 @@ int explorer(char *parent_folder)
 
     else // no such directory
     {
-        canvas_xprintf("%zNo such directory: %s\n", stderr, parent_folder);
+        canvas_xprintf("%zNo such directory: %s\n", OUTPUT_COLOR_ERROR_SET, parent_folder);
         strcpy(AppInfo.current_folder, "/");
         while (getxchar().scan_code != ENTER)
             ;
@@ -203,7 +202,7 @@ int explorer(char *parent_folder)
         canvas_screen_clear();
         __xin_current_directory_get(AppInfo.current_folder);
         canvas_xprintf("CURRENT DIRECTORY: %s\n", AppInfo.current_folder);
-        XinChildrenEntries *hoho = xin_children_entries_get(AppInfo.current_folder, false);
+        XinChildrenEntries* hoho = xin_children_entries_get(AppInfo.current_folder, false);
         AppInfo.MainTable = table_create(0, 1, 10, 80, black, white, TUI_TEST_SITES, NULL);
 
         if (AppInfo.MainTable == NULL)

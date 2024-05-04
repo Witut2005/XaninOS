@@ -10,9 +10,7 @@
 #include <lib/libc/canvas.h>
 
 // CANVAS_APP
-
-#define VGA_WIDTH 80
-// #define VGA_HEIGHT 25
+// #define VGA_WIDTH 80
 
 int8_t first_nonempty_row_get(void)
 {
@@ -33,8 +31,8 @@ int8_t first_nonempty_row_get(void)
 void row_down(int row)
 {
 
-    uint8_t *vram_copy = (uint8_t *)calloc(VGA_SCREEN_RESOLUTION);
-    memcpy(vram_copy, (uint8_t *)VGA_TEXT_MEMORY, VGA_SCREEN_RESOLUTION);
+    uint8_t* vram_copy = (uint8_t*)calloc(VGA_SCREEN_RESOLUTION);
+    memcpy(vram_copy, (uint8_t*)VGA_TEXT_MEMORY, VGA_SCREEN_RESOLUTION);
 
     xgm::Renderer::ScreenManager TetrisScreen;
 
@@ -43,12 +41,12 @@ void row_down(int row)
 
     if (!row)
     {
-        memset((uint8_t *)VGA_TEXT_MEMORY, 0, VGA_WIDTH * 2);
+        memset((uint8_t*)VGA_TEXT_MEMORY, 0, VGA_WIDTH * 2);
         free(vram_copy);
         return;
     }
 
-    memcpy((uint8_t *)VGA_TEXT_MEMORY + (VGA_WIDTH * 2), (uint8_t *)vram_copy, row * VGA_WIDTH * 2);
+    memcpy((uint8_t*)VGA_TEXT_MEMORY + (VGA_WIDTH * 2), (uint8_t*)vram_copy, row * VGA_WIDTH * 2);
 
     for (int i = 0; i < VGA_HEIGHT; i++)
     {

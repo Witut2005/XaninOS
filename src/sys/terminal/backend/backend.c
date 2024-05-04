@@ -1,8 +1,9 @@
 
-#include <sys/macros.h>
 #include <lib/libc/memory.h>
 #include <lib/libc/stdlibx.h>
 #include <lib/screen/screen.h>
+#include <sys/macros.h>
+#include <sys/pmmngr/alloc.h>
 #include <sys/terminal/backend/backend.h>
 #include <sys/terminal/handlers/handlers.h>
 
@@ -15,19 +16,18 @@ Xtb* __xtb_get(void)
 
 void __xtb_init(uint32_t vga_width, uint32_t vga_height, uint16_t* vram)
 {
-    XtBackend = (Xtb*)kcalloc(SIZE_OF(Xtb));
+    XtBackend = (Xtb*)kcalloc(sizeof(Xtb));
     XtBackend->vga_width = vga_width;
     XtBackend->vga_height = vga_height;
     XtBackend->vram = vram;
     XtBackend->is_flushable = true;
 }
 
-
 // CURSOR DISABLED GLOBALLY
-void __xtb_scroll_up(Xtf *XtFrontend)
+void __xtb_scroll_up(Xtf* XtFrontend)
 {
 
-    Xtb *XtBackend = __xtb_get();
+    Xtb* XtBackend = __xtb_get();
 
     if ((!XtFrontend->scrolling_enabled) || (!XtBackend->is_flushable) || (!XtFrontend->y_begin))
         return;
@@ -44,20 +44,19 @@ void __xtb_scroll_up(Xtf *XtFrontend)
 
     xtb_disable_flushing(); // mutex like
 
-    memmove((uint8_t *)VGA_TEXT_MEMORY + (XtBackend->vga_width * SIZE_OF(XtCell)), (uint8_t *)VGA_TEXT_MEMORY, XtBackend->vga_width * XtBackend->vga_height * SIZE_OF(XtCell)); // move terminal data
+    memmove((uint8_t*)VGA_TEXT_MEMORY + (XtBackend->vga_width * sizeof(XtCell)), (uint8_t*)VGA_TEXT_MEMORY, XtBackend->vga_width * XtBackend->vga_height * sizeof(XtCell)); // move terminal data
 
-    memset((uint8_t *)VGA_TEXT_MEMORY, BLANK_SCREEN_CELL, XtBackend->vga_width * SIZE_OF(XtCell)); // clear row
-    
-    memcpy((uint8_t *)VGA_TEXT_MEMORY, (uint8_t *)&XtFrontend->buffer[start_index],               // display new line
-           number_of_bytes_to_copy * SIZE_OF(XtCell));
+    memset((uint8_t*)VGA_TEXT_MEMORY, BLANK_SCREEN_CELL, XtBackend->vga_width * sizeof(XtCell)); // clear row
+
+    memcpy((uint8_t*)VGA_TEXT_MEMORY, (uint8_t*)&XtFrontend->buffer[start_index], // display new line
+        number_of_bytes_to_copy * sizeof(XtCell));
 
     xtb_enable_flushing();
-
 }
 
-void __xtb_scroll_down(Xtf *XtFrontend)
+void __xtb_scroll_down(Xtf* XtFrontend)
 {
-    Xtb *XtBackend = __xtb_get();
+    Xtb* XtBackend = __xtb_get();
 
     if ((!XtFrontend->scrolling_enabled) || (!XtBackend->is_flushable))
         return;
@@ -74,26 +73,26 @@ void __xtb_scroll_down(Xtf *XtFrontend)
 
         XtFrontend->y_begin++;
 
-        memmove((uint8_t *)VGA_TEXT_MEMORY, (uint8_t *)VGA_TEXT_MEMORY + (__xtb_get()->vga_width * SIZE_OF(XtCell)), __xtb_get()->vga_width * (__xtb_get()->vga_height - 1) * SIZE_OF(XtCell)); // move terminal data
+        memmove((uint8_t*)VGA_TEXT_MEMORY, (uint8_t*)VGA_TEXT_MEMORY + (__xtb_get()->vga_width * sizeof(XtCell)), __xtb_get()->vga_width * (__xtb_get()->vga_height - 1) * sizeof(XtCell)); // move terminal data
 
-        memset((uint8_t *)VGA_TEXT_MEMORY + ((XtBackend->vga_height - 1) * XtBackend->vga_width * SIZE_OF(XtCell)), BLANK_SCREEN_CELL, XtBackend->vga_width * SIZE_OF(XtCell)); // clear row
+        memset((uint8_t*)VGA_TEXT_MEMORY + ((XtBackend->vga_height - 1) * XtBackend->vga_width * sizeof(XtCell)), BLANK_SCREEN_CELL, XtBackend->vga_width * sizeof(XtCell)); // clear row
 
-        memcpy((uint8_t *)VGA_TEXT_MEMORY + ((XtBackend->vga_height - 1) * XtBackend->vga_width * SIZE_OF(XtCell)),                                                            // display new line
-               (uint8_t *)&XtFrontend->buffer[start_index], number_of_cells_to_copy * SIZE_OF(XtCell));
+        memcpy((uint8_t*)VGA_TEXT_MEMORY + ((XtBackend->vga_height - 1) * XtBackend->vga_width * sizeof(XtCell)), // display new line
+            (uint8_t*)&XtFrontend->buffer[start_index], number_of_cells_to_copy * sizeof(XtCell));
 
         xtb_enable_flushing();
     }
 }
 
-void __xtb_flush(Xtf *XtFrontend)
+void __xtb_flush(Xtf* XtFrontend)
 {
 
-    Xtb *XtBackend = __xtb_get();
+    Xtb* XtBackend = __xtb_get();
 
     if (!XtBackend->is_flushable)
         return;
 
-    if(XtBackend->is_currently_flushing) // is already flushing (probably it is interval)
+    if (XtBackend->is_currently_flushing) // is already flushing (probably it is interval)
         return;
 
     if (!XtFrontend->size) // empty buffer
@@ -109,17 +108,17 @@ void __xtb_flush(Xtf *XtFrontend)
     uint32_t current_row_to_display = XtFrontend->y_begin; // first row to display on screen
     bool row_cleared = false;
 
-    uint16_t *vram = (uint16_t *)VGA_TEXT_MEMORY;
+    uint16_t* vram = (uint16_t*)VGA_TEXT_MEMORY;
 
     for (int i = __xtf_buffer_nth_line_index_get(XtFrontend, XtFrontend->y_begin); i < XtFrontend->vheight * XtFrontend->vwidth; i++)
     {
 
-        if(i >= XtFrontend->size_allocated)
+        if (i >= XtFrontend->size_allocated)
             break;
 
-        if(xt_is_special_character(XtFrontend->buffer[i].character))
+        if (xt_is_special_character(XtFrontend->buffer[i].character))
             xt_flush_special_characters_handle(XtFrontend->buffer[i].character, XtFrontend->buffer[i].color, &current_row_to_display, &row_cleared, &vram_index);
-        
+
         else
         {
             if (XtFrontend->rows_changed[current_row_to_display])
@@ -134,21 +133,21 @@ void __xtb_flush(Xtf *XtFrontend)
             }
             vram_index++;
         }
-
     }
 
     vram_index++;
 
-    X86_POINTER vram_to_clear;
+#warning "I am not sure if __vga_buffer_segment_get should be used here";
+    X86_POINTER vram_to_clear = (X86_POINTER)__vga_buffer_segment_get();
 
-    for (; vram_index < XtBackend->vga_height * XtBackend->vga_width * SIZE_OF(XtCell) / (X86_POINTER_SIZE / SIZE_OF(XtCell)); vram_index++)
+    for (; vram_index < XtBackend->vga_height * XtBackend->vga_width * sizeof(XtCell) / (X86_POINTER_SIZE / sizeof(XtCell)); vram_index++)
         vram_to_clear[vram_index] = BLANK_SCREEN_CELL;
 
-    memset((uint8_t *)XtFrontend->rows_changed, XTF_ROW_NOT_CHANGED, XtFrontend->current_height * SIZE_OF_POINTED_TYPE(XtFrontend->rows_changed));
+    memset((uint8_t*)XtFrontend->rows_changed, XTF_ROW_NOT_CHANGED, XtFrontend->current_height * SIZE_OF_POINTED_TYPE(XtFrontend->rows_changed));
     XtBackend->is_currently_flushing = false;
 }
 
-void __xtb_flush_all(Xtf *XtFrontend)
+void __xtb_flush_all(Xtf* XtFrontend)
 {
     memset(XtFrontend->rows_changed, XTF_ROW_CHANGED, XtFrontend->current_height * SIZE_OF_POINTED_TYPE(XtFrontend->rows_changed));
     __xtb_flush(XtFrontend);

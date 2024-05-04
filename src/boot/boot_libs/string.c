@@ -15,7 +15,7 @@ uint32_t strlen(const char* a)
     return length;
 }
 
-bool bstrcmp(char* a, const char* b)
+bool bstrcmp(const char* a, const char* b)
 {
 
     uint32_t lengtha = strlen(a);
@@ -24,7 +24,7 @@ bool bstrcmp(char* a, const char* b)
     if (lengtha != lengthb)
         return 0;
 
-    for (char* i = a; *i != '\0'; i++)
+    while (*a != '\0')
     {
         if (*a != *b)
             return 0;
@@ -48,49 +48,28 @@ char* strrev(char* str)
     }
     return str;
 }
-
-char* int_to_str(int x, char* buf)
+char* int_to_string(uint32_t value, char* buf, const uint8_t base)
 {
-    int i = 0;
+    char digits[] = { '0','1','2','3','4','5','6','7','8', '9', 'a', 'b', 'c', 'd', 'e', 'f',
+                        'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's',
+                        't', 'u', 'v', 'w' };
 
-    if (!x)
-    {
+    if (base > 32)
+        return NULL;
+
+    if (value == 0) {
         buf[0] = '0';
         buf[1] = '\0';
         return buf;
     }
 
-    for (i = 0; x != 0; i++)
-    {
-        buf[i] = (x % 10) + '0';
-        x = x / 10;
-    }
-
-    buf[i] = '\0';
-    buf = strrev(buf);
-    return buf;
-}
-
-char* int_to_hex_str(uint32_t x, char* buf)
-{
-    char hex_values[16] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
-
     int i = 0;
+    while (value) {
+        buf[i++] = digits[value % base];
+        value = value / base;
+    };
+    buf[i] = '\0';
 
-    if (!x)
-    {
-        buf[0] = '0';
-        buf[1] = '0';
-        buf[2] = '\0';
-        return buf;
-    }
-
-    for (i = 0; x != 0; i++)
-    {
-        buf[i] = hex_values[x % 16];
-        x = x / 16;
-    }
-
-    buf = strrev(buf);
+    strrev(buf);
     return buf;
 }

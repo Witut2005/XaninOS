@@ -1,5 +1,6 @@
 
 #include <lib/libc/canvas.h>
+#include <lib/libc/string.h>
 
 void canvas_putchar(char character)
 {
@@ -71,27 +72,26 @@ void canvas_xprintf(char* str, ...)
     while (str[string_counter])
     {
 
-        for (int i = 0; i < SIZE_OF(tmp); i++)
+        for (int i = 0; i < sizeof(tmp); i++)
             tmp[i] = '\0';
 
         if (str[string_counter] == '%')
         {
             switch (str[++string_counter])
             {
-            case 'd':
-            {
+            case 'd': {
 
                 number = va_arg(args, int);
                 int_to_string(number, temporary_pointer, DECIMAL);
 
                 for (int i = 0; temporary_pointer[i] != '\0'; i++)
-                    stdio_legacy_cell_put_with_interpretation(temporary_pointer[i], OUTPUT_COLOR_SET(background_color, font_color), &Screen.y, &Screen.x);
+                    stdio_legacy_cell_put_with_interpretation(
+                        temporary_pointer[i], OUTPUT_COLOR_SET(background_color, font_color), &Screen.y, &Screen.x);
 
                 break;
             }
 
-            case 'y':
-            {
+            case 'y': {
                 uint32_t time = va_arg(args, int);
 
                 uint32_t time_mask = 0xF0000000;
@@ -100,16 +100,18 @@ void canvas_xprintf(char* str, ...)
                 for (int i = 0; i < 8; i++, time_mask = time_mask >> 4, time_shift -= 4)
                 {
                     if (i == 2 || i == 4)
-                        stdio_legacy_cell_put_with_interpretation('-', OUTPUT_COLOR_SET(background_color, font_color), &Screen.y, &Screen.x);
+                        stdio_legacy_cell_put_with_interpretation('-', OUTPUT_COLOR_SET(background_color, font_color),
+                            &Screen.y, &Screen.x);
 
-                    stdio_legacy_cell_put_with_interpretation(((time & time_mask) >> time_shift) + '0', OUTPUT_COLOR_SET(background_color, font_color), &Screen.y, &Screen.x);
+                    stdio_legacy_cell_put_with_interpretation(((time & time_mask) >> time_shift) + '0',
+                        OUTPUT_COLOR_SET(background_color, font_color), &Screen.y,
+                        &Screen.x);
                 }
 
                 break;
             }
 
-            case 't':
-            {
+            case 't': {
 
                 uint16_t time = va_arg(args, int);
 
@@ -119,26 +121,28 @@ void canvas_xprintf(char* str, ...)
                 for (int i = 0; i < 4; i++, time_mask = time_mask >> 4, time_shift -= 4)
                 {
                     if (i == 2)
-                        stdio_legacy_cell_put_with_interpretation(':', OUTPUT_COLOR_SET(background_color, font_color), &Screen.y, &Screen.x);
+                        stdio_legacy_cell_put_with_interpretation(':', OUTPUT_COLOR_SET(background_color, font_color),
+                            &Screen.y, &Screen.x);
 
-                    stdio_legacy_cell_put_with_interpretation(((time & time_mask) >> time_shift) + '0', OUTPUT_COLOR_SET(background_color, font_color), &Screen.y, &Screen.x);
+                    stdio_legacy_cell_put_with_interpretation(((time & time_mask) >> time_shift) + '0',
+                        OUTPUT_COLOR_SET(background_color, font_color), &Screen.y,
+                        &Screen.x);
                 }
                 break;
             }
 
-            case 'b':
-            {
+            case 'b': {
                 number = va_arg(args, int);
                 temporary_pointer = int_to_string(number, tmp, BINARY);
 
                 for (int i = 0; temporary_pointer[i] != '\0'; i++)
-                    stdio_legacy_cell_put_with_interpretation(temporary_pointer[i], OUTPUT_COLOR_SET(background_color, font_color), &Screen.y, &Screen.x);
+                    stdio_legacy_cell_put_with_interpretation(
+                        temporary_pointer[i], OUTPUT_COLOR_SET(background_color, font_color), &Screen.y, &Screen.x);
 
                 break;
             }
 
-            case 's':
-            {
+            case 's': {
 
                 stringPtr = va_arg(args, char*);
 
@@ -146,66 +150,67 @@ void canvas_xprintf(char* str, ...)
                     break;
 
                 for (int i = 0; stringPtr[i] != '\0'; i++)
-                    stdio_legacy_cell_put_with_interpretation(stringPtr[i], OUTPUT_COLOR_SET(background_color, font_color), &Screen.y, &Screen.x);
+                    stdio_legacy_cell_put_with_interpretation(
+                        stringPtr[i], OUTPUT_COLOR_SET(background_color, font_color), &Screen.y, &Screen.x);
 
                 break;
             }
 
-            case 'i':
-            {
+            case 'i': {
                 uint8_t number = (uint8_t)va_arg(args, uint32_t);
 
-                stdio_legacy_cell_put_with_interpretation(((number & 0xF0) >> 4) + '0', OUTPUT_COLOR_SET(background_color, font_color), &Screen.y, &Screen.x);
-                stdio_legacy_cell_put_with_interpretation((number & 0x0F) + '0', OUTPUT_COLOR_SET(background_color, font_color), &Screen.y, &Screen.x);
+                stdio_legacy_cell_put_with_interpretation(
+                    ((number & 0xF0) >> 4) + '0', OUTPUT_COLOR_SET(background_color, font_color), &Screen.y, &Screen.x);
+                stdio_legacy_cell_put_with_interpretation(
+                    (number & 0x0F) + '0', OUTPUT_COLOR_SET(background_color, font_color), &Screen.y, &Screen.x);
 
                 break;
             }
 
-            case 'c':
-            {
-                stdio_legacy_cell_put_with_interpretation((char)va_arg(args, int), OUTPUT_COLOR_SET(background_color, font_color), &Screen.y, &Screen.x);
+            case 'c': {
+                stdio_legacy_cell_put_with_interpretation(
+                    (char)va_arg(args, int), OUTPUT_COLOR_SET(background_color, font_color), &Screen.y, &Screen.x);
                 break;
             }
 
-            case 'z':
-            {
+            case 'z': {
                 font_color = (uint8_t)va_arg(args, int);
                 background_color = (font_color & 0xf0) >> 4;
                 font_color = font_color & 0x0f;
                 break;
             }
 
-            case 'x':
-            {
+            case 'x': {
                 uint32_t number = va_arg(args, uint32_t);
                 int_to_string(number, temporary_pointer, HEXADECIMAL);
 
                 for (int i = 0; temporary_pointer[i] != '\0'; i++)
-                    stdio_legacy_cell_put_with_interpretation(temporary_pointer[i], OUTPUT_COLOR_SET(background_color, font_color), &Screen.y, &Screen.x);
+                    stdio_legacy_cell_put_with_interpretation(
+                        temporary_pointer[i], OUTPUT_COLOR_SET(background_color, font_color), &Screen.y, &Screen.x);
 
                 break;
             }
 
-            case 'X':
-            {
+            case 'X': {
                 uint32_t number = va_arg(args, uint32_t);
                 int_to_string(number, temporary_pointer, HEXADECIMAL);
 
                 // toupper(temporary_pointer);
 
                 for (int i = 0; temporary_pointer[i] != '\0'; i++)
-                    stdio_legacy_cell_put_with_interpretation(temporary_pointer[i], OUTPUT_COLOR_SET(background_color, font_color), &Screen.y, &Screen.x);
+                    stdio_legacy_cell_put_with_interpretation(
+                        temporary_pointer[i], OUTPUT_COLOR_SET(background_color, font_color), &Screen.y, &Screen.x);
 
                 break;
             }
 
-            case 'o':
-            {
+            case 'o': {
                 number = va_arg(args, int);
                 int_to_string(number, temporary_pointer, OCTAL);
 
                 for (int i = 0; temporary_pointer[i] != '\0'; i++)
-                    stdio_legacy_cell_put_with_interpretation(temporary_pointer[i], OUTPUT_COLOR_SET(background_color, font_color), &Screen.y, &Screen.x);
+                    stdio_legacy_cell_put_with_interpretation(
+                        temporary_pointer[i], OUTPUT_COLOR_SET(background_color, font_color), &Screen.y, &Screen.x);
                 break;
             }
 
@@ -219,34 +224,32 @@ void canvas_xprintf(char* str, ...)
                 break;
             }
 
-            case 'm':
-            {
+            case 'm': {
 
                 string_counter++;
                 switch (str[string_counter])
                 {
-                case 'x':
-                {
+                case 'x': {
 
                     uint8_t number_hex = (uint8_t)va_arg(args, uint32_t);
-                    xint_to_hex_str(number_hex, temporary_pointer, SIZE_OF(uint8_t));
+                    xsprintf(temporary_pointer, "%02x", number_hex);
 
                     for (int i = 0; temporary_pointer[i] != '\0'; i++)
-                        stdio_legacy_cell_put_with_interpretation(temporary_pointer[i], OUTPUT_COLOR_SET(background_color, font_color), &Screen.y, &Screen.x);
+                        stdio_legacy_cell_put_with_interpretation(
+                            temporary_pointer[i], OUTPUT_COLOR_SET(background_color, font_color), &Screen.y, &Screen.x);
 
                     break;
                 }
 
-                case 'X':
-                {
+                case 'X': {
 
                     uint8_t number_hex = (uint8_t)va_arg(args, uint32_t);
 
-                    xint_to_hex_str(number_hex, temporary_pointer, SIZE_OF(uint8_t));
-                    toupper(temporary_pointer);
+                    xsprintf(temporary_pointer, "%02X", number_hex);
 
                     for (int i = 0; temporary_pointer[i] != '\0'; i++)
-                        stdio_legacy_cell_put_with_interpretation(temporary_pointer[i], OUTPUT_COLOR_SET(background_color, font_color), &Screen.y, &Screen.x);
+                        stdio_legacy_cell_put_with_interpretation(
+                            temporary_pointer[i], OUTPUT_COLOR_SET(background_color, font_color), &Screen.y, &Screen.x);
 
                     break;
                 }
@@ -259,7 +262,8 @@ void canvas_xprintf(char* str, ...)
         }
 
         else
-            stdio_legacy_cell_put_with_interpretation(str[string_counter++], OUTPUT_COLOR_SET(background_color, font_color), &Screen.y, &Screen.x);
+            stdio_legacy_cell_put_with_interpretation(
+                str[string_counter++], OUTPUT_COLOR_SET(background_color, font_color), &Screen.y, &Screen.x);
     }
 
     if (position_change_switch_used) // restore Screen.x and Screen.y
@@ -271,6 +275,31 @@ void canvas_xprintf(char* str, ...)
     va_end(args);
 }
 
+static inline void letters_refresh(uint16_t* cursor_current_positon)
+{
+    cursor_current_positon++;
+
+    for (uint16_t* i = cursor_current_positon; (uint32_t)i < (uint32_t)(VGA_TEXT_MEMORY + VGA_SCREEN_RESOLUTION * 2);
+         i++)
+        *(i - 1) = *i;
+}
+
+static inline void letters_refresh_add(uint16_t* cursor_current_positon, char character_saved)
+{
+    char tmp;
+
+    for (uint16_t* i = cursor_current_positon; (uint32_t)i < (uint32_t)(VGA_TEXT_MEMORY + VGA_SCREEN_RESOLUTION * 2);
+         i++)
+    {
+        tmp = *(char*)(i);
+        *i = (uint16_t)((char)(character_saved) + (((black << 4) | white) << 8));
+        character_saved = tmp;
+    }
+
+    *cursor_current_positon = (uint16_t)((char)(*cursor_current_positon) + (((black << 4) | white) << 8));
+}
+
+#warning "TODO DOESNT WORK";
 void canvas_xscanf(char* str, ...)
 {
     uint32_t str_counter = 0;
@@ -301,7 +330,8 @@ void canvas_xscanf(char* str, ...)
 
         if (Input.scan_code == BSPC)
         {
-            stdio_legacy_cell_put((char)Screen.cursor[Screen.y][Screen.x], OUTPUT_COLOR_SET(black, white), Screen.y, Screen.x);
+            stdio_legacy_cell_put((char)Screen.cursor[Screen.y][Screen.x], OUTPUT_COLOR_SET(black, white), Screen.y,
+                Screen.x);
 
             if ((InitialScreenPosition.first == Screen.y) && (InitialScreenPosition.second == Screen.x))
                 continue;
@@ -335,8 +365,7 @@ void canvas_xscanf(char* str, ...)
                     switch (str[str_counter])
                     {
 
-                    case 's':
-                    {
+                    case 's': {
                         char* string_pointer = va_arg(args, char*);
 
                         for (char* i = string_pointer; *i != '\0'; i++)
@@ -345,7 +374,8 @@ void canvas_xscanf(char* str, ...)
                         if (!strlen(string_typed_buffer))
                             break;
 
-                        for (int i = 0; string_typed_buffer[counter] != '\0' && string_typed_buffer[counter] != ' '; i++)
+                        for (int i = 0; string_typed_buffer[counter] != '\0' && string_typed_buffer[counter] != ' ';
+                             i++)
                         {
                             field_buffer[i] = string_typed_buffer[counter];
                             counter++;
@@ -366,12 +396,12 @@ void canvas_xscanf(char* str, ...)
                         break;
                     }
 
-                    case 'd':
-                    {
+                    case 'd': {
 
                         uint32_t* number = va_arg(args, uint32_t*);
 
-                        for (int i = 0; string_typed_buffer[counter] != '\0' && string_typed_buffer[counter] != ' '; i++)
+                        for (int i = 0; string_typed_buffer[counter] != '\0' && string_typed_buffer[counter] != ' ';
+                             i++)
                         {
                             field_buffer[i] = string_typed_buffer[counter];
                             counter++;
@@ -385,20 +415,19 @@ void canvas_xscanf(char* str, ...)
                         break;
                     }
 
-                    case 'c':
-                    {
+                    case 'c': {
 
                         char* number = va_arg(args, char*);
                         *number = string_typed_buffer[0];
                         break;
                     }
 
-                    case 'x':
-                    {
+                    case 'x': {
 
                         uint32_t* number = va_arg(args, uint32_t*);
 
-                        for (int i = 0; string_typed_buffer[counter] != '\0' && string_typed_buffer[counter] != ' '; i++)
+                        for (int i = 0; string_typed_buffer[counter] != '\0' && string_typed_buffer[counter] != ' ';
+                             i++)
                         {
                             field_buffer[i] = string_typed_buffer[counter];
                             counter++;
@@ -412,12 +441,12 @@ void canvas_xscanf(char* str, ...)
                         break;
                     }
 
-                    case 'b':
-                    {
+                    case 'b': {
 
                         uint32_t* number = va_arg(args, uint32_t*);
 
-                        for (int i = 0; string_typed_buffer[counter] != '\0' && string_typed_buffer[counter] != ' '; i++)
+                        for (int i = 0; string_typed_buffer[counter] != '\0' && string_typed_buffer[counter] != ' ';
+                             i++)
                         {
                             field_buffer[i] = string_typed_buffer[counter];
                             counter++;
@@ -439,8 +468,9 @@ void canvas_xscanf(char* str, ...)
             memset(field_buffer, 0, 1000);
             memset(string_typed_buffer, 0, 1000);
 
-            stdio_legacy_cell_put((char)Screen.cursor[Screen.y][Screen.x], OUTPUT_COLOR_SET(black, white), Screen.y, Screen.x);
-            xprintf("\n");
+            stdio_legacy_cell_put((char)Screen.cursor[Screen.y][Screen.x], OUTPUT_COLOR_SET(black, white), Screen.y,
+                Screen.x);
+            canvas_xprintf("\n");
             // free(field_buffer);
             break;
         }
@@ -449,11 +479,13 @@ void canvas_xscanf(char* str, ...)
         {
             char tmp = Input.character;
 
-            stdio_legacy_cell_put((char)Screen.cursor[Screen.y][Screen.x], OUTPUT_COLOR_SET(black, white), Screen.y, Screen.x);
+            stdio_legacy_cell_put((char)Screen.cursor[Screen.y][Screen.x], OUTPUT_COLOR_SET(black, white), Screen.y,
+                Screen.x);
 
-            xprintf("%c", tmp);
+            canvas_xprintf("%c", tmp);
 
-            stdio_legacy_cell_put((char)Screen.cursor[Screen.y][Screen.x], OUTPUT_COLOR_SET(white, white), Screen.y, Screen.x);
+            stdio_legacy_cell_put((char)Screen.cursor[Screen.y][Screen.x], OUTPUT_COLOR_SET(white, white), Screen.y,
+                Screen.x);
             string_typed_buffer[index] = tmp;
             index++;
         }
@@ -478,7 +510,7 @@ void canvas_xscan_range(char* string_buffer, uint32_t how_many_chars)
     if (stdio_mode_get() != STDIO_MODE_CANVAS)
         return;
 
-    memset(string_typed_buffer, '\0', SIZE_OF(string_typed_buffer));
+    memset(string_typed_buffer, '\0', sizeof(string_typed_buffer));
 
     while (1)
     {
@@ -511,9 +543,10 @@ void canvas_xscan_range(char* string_buffer, uint32_t how_many_chars)
 
             memset(field_buffer, 0, 1000);
 
-            stdio_legacy_cell_put((char)Screen.cursor[Screen.y][Screen.x], OUTPUT_COLOR_SET(black, white), Screen.y, Screen.x);
+            stdio_legacy_cell_put((char)Screen.cursor[Screen.y][Screen.x], OUTPUT_COLOR_SET(black, white), Screen.y,
+                Screen.x);
 
-            xprintf("\n");
+            canvas_xprintf("\n");
             return;
         }
 
@@ -522,7 +555,8 @@ void canvas_xscan_range(char* string_buffer, uint32_t how_many_chars)
             if (!index)
                 continue;
 
-            stdio_legacy_cell_put((char)Screen.cursor[Screen.y][Screen.x], OUTPUT_COLOR_SET(black, white), Screen.y, Screen.x);
+            stdio_legacy_cell_put((char)Screen.cursor[Screen.y][Screen.x], OUTPUT_COLOR_SET(black, white), Screen.y,
+                Screen.x);
 
             if (!Screen.x)
             {
@@ -536,7 +570,8 @@ void canvas_xscan_range(char* string_buffer, uint32_t how_many_chars)
             index--;
 
             string_typed_buffer[index] = '\0';
-            stdio_legacy_cell_put((char)Screen.cursor[Screen.y][Screen.x], OUTPUT_COLOR_SET(white, white), Screen.y, Screen.x);
+            stdio_legacy_cell_put((char)Screen.cursor[Screen.y][Screen.x], OUTPUT_COLOR_SET(white, white), Screen.y,
+                Screen.x);
 
             letters_refresh(&Screen.cursor[Screen.y][Screen.x]);
         }
@@ -547,7 +582,7 @@ void canvas_xscan_range(char* string_buffer, uint32_t how_many_chars)
             if (index == how_many_chars)
                 continue;
 
-            xprintf("%c", Input.character);
+            canvas_xprintf("%c", Input.character);
             string_typed_buffer[index] = Input.character;
             index++;
         }

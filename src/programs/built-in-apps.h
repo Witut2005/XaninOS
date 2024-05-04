@@ -5,10 +5,10 @@
 #include <sys/flow/exit_codes.h>
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
+    __STATUS paging_test(void);
     __STATUS xin_check(char* path);
     __STATUS stdio_apply(void);
     __STATUS screen_saver(char*);
@@ -34,12 +34,10 @@ extern "C"
     __STATUS cat(char*);
     __STATUS zsk(char*);
     __STATUS epilepsy(void);
-    __STATUS elfreader(char*);
     __STATUS elfdump(char*);
     __STATUS hexeditor(char*, char*);
     __STATUS run16(char*);
     __STATUS run(char*);
-    __STATUS cpp_test(void);
     __STATUS cpu_info(char*);
     __STATUS calc(char*);
     __STATUS xin_paint(char*);
@@ -88,6 +86,16 @@ extern "C"
     __STATUS xin_create_file_app(char*);
     __STATUS disk_func(void);
     __STATUS c_test(void);
+    __STATUS sprintf_test(void);
+    __STATUS elf_loader_test(char*);
+
+    __STATUS __cpp_string_test(void);
+    __STATUS __cpp_lexer_test(void);
+    __STATUS __cpp_xin_test(void);
+    __STATUS __cpp_array_test(void);
+    __STATUS __cpp_algo_test(void);
+    __STATUS __cpp_vector_test(void);
+    __STATUS __c_alloc_test(void);
 
 #ifdef __cplusplus
 }

@@ -192,7 +192,9 @@ _GDT_ADDR:
     dd _GDT                  ; GDT beginning
 
 
+
 _GDT:
+
     ;0x0
     ;null segment
     dd 0x0
@@ -200,7 +202,7 @@ _GDT:
 
     ;0x8
     ;code segment
-    dd 0x0000fff0 
+    dd 0x0000ffff 
     db 0x0
     db 10011110b
     db 11001111b
@@ -208,7 +210,7 @@ _GDT:
 
     ;0x10
     ;data segment
-    dd 0x0000fff0 
+    dd 0x0000ffff 
     db 0x0
     db 10010010b
     db 11001111b
@@ -217,7 +219,7 @@ _GDT:
     ;0x18
     ;stack segment
     dw 0
-    dw 0xfff0   
+    dw 0xffff   
     db 0
     db 10010110b
     db 01000000b
@@ -225,7 +227,7 @@ _GDT:
 
     ;0x20
     ;16bit code segment
-    dd 0x0000fff0 
+    dd 0x0000ffff 
     db 0x0
     db 10011000b
     db 00001111b
@@ -233,7 +235,7 @@ _GDT:
     
     ;0x28
     ;16bit data segment
-    dd 0x0000fff0 
+    dd 0x0000ffff 
     db 0x0
     db 10010010b
     db 00001111b
@@ -241,37 +243,11 @@ _GDT:
 
     ;0x30     
     ;XaninOS Task State Segment
-    dd 0x0000fff0 
+    dd 0xffffffff 
     db 0x0
     db 10001001b
     db 00001111b
     db 0x0
-
-    ;0x38
-    ;External Tasks Code Segment
-    dd 0xfffffff0 
-    db 0x0
-    db 10011110b
-    db 11001111b
-    db 0x0
-
-    ;0x40
-    ;External Tasks Data Segment
-    dd 0xfffffff0 
-    db 0x0
-    db 10010010b
-    db 11001111b
-    db 0x0
-
-    ;0x48
-    ;External Tasks Stack Segment
-    ; dw 0
-    ; dw 0xffff   
-    ; db 0
-    ; db 10010110b
-    ; db 01000000b
-    ; db 0xff
-
 
 _GDT_END:
 

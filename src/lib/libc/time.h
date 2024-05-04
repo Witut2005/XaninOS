@@ -3,19 +3,22 @@
 
 #include <stdint.h>
 
+typedef uint32_t bcd_date_t;
+typedef uint16_t bcd_time_t;
+
 struct time_t
 {
 
     uint32_t time_t_sec : 6;
     uint32_t time_t_min : 6;
-    uint32_t time_t_hs  : 5;
-    uint32_t time_t_mday: 5;
+    uint32_t time_t_hs : 5;
+    uint32_t time_t_mday : 5;
     uint32_t time_t_mon : 4;
-    uint32_t time_t_year: 4;
-    uint32_t time_t_wday: 3;
-    uint32_t time_t_yday: 9;
+    uint32_t time_t_year : 4;
+    uint32_t time_t_wday : 3;
+    uint32_t time_t_yday : 9;
     uint32_t time_t_isdst;
-    
+
 };
 
 struct bcd
@@ -34,7 +37,7 @@ extern uint32_t cpu_mhz;
 extern uint32_t cpu_khz;
 
 #ifdef __cplusplus
-extern "C"{
+extern "C" {
 #endif
 
     void sleep(float seconds);

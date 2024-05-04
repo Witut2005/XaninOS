@@ -32,12 +32,12 @@ extern "C"
         {
             memset(Arp->source_hardware_address, 0, ARP_MAC_LENGTH);
             memset(Arp->destination_hardware_address, 0, ARP_MAC_LENGTH);
-            EthernetFrameInterface::send(Arp->destination_hardware_address, Arp->source_hardware_address, ARP_ETHER_TYPE, (uint8_t*)Arp, SIZE_OF(AddressResolutionProtocol), Response);
+            EthernetFrameInterface::send(Arp->destination_hardware_address, Arp->source_hardware_address, ARP_ETHER_TYPE, (uint8_t*)Arp, sizeof(AddressResolutionProtocol), Response);
             arp_reply_handle(Arp);
         }
 
         else
-            EthernetFrameInterface::send(Arp->destination_hardware_address, Arp->source_hardware_address, ARP_ETHER_TYPE, (uint8_t*)Arp, SIZE_OF(AddressResolutionProtocol), Response);
+            EthernetFrameInterface::send(Arp->destination_hardware_address, Arp->source_hardware_address, ARP_ETHER_TYPE, (uint8_t*)Arp, sizeof(AddressResolutionProtocol), Response);
     }
 
     AddressResolutionProtocol* prepare_arp_request(AddressResolutionProtocol* arp, uint16_t hardware_type, uint16_t protocol_type,
@@ -65,7 +65,7 @@ extern "C"
         if (ArpModule::PacketsInfo.exists(LITTLE_ENDIAN(ArpHeader->destination_protocol_address)))
         {
             (*ArpModule::PacketsInfo.find(LITTLE_ENDIAN(ArpHeader->destination_protocol_address))).second->success = true;
-            memcpy((uint8_t*)(*ArpModule::PacketsInfo.find(LITTLE_ENDIAN(ArpHeader->destination_protocol_address))).second->data, (uint8_t*)ArpHeader, SIZE_OF(AddressResolutionProtocol));
+            memcpy((uint8_t*)(*ArpModule::PacketsInfo.find(LITTLE_ENDIAN(ArpHeader->destination_protocol_address))).second->data, (uint8_t*)ArpHeader, sizeof(AddressResolutionProtocol));
         }
     }
 
@@ -85,7 +85,7 @@ extern "C"
                     if (ArpModule::PacketsInfo.exists(LITTLE_ENDIAN(ArpHeader->source_protocol_address)))
                     {
                         ArpModule::PacketsInfo[LITTLE_ENDIAN(ArpHeader->source_protocol_address)]->success = true;
-                        memcpy((uint8_t*)ArpModule::PacketsInfo[LITTLE_ENDIAN(ArpHeader->source_protocol_address)]->data, (uint8_t*)ArpHeader, SIZE_OF(AddressResolutionProtocol));
+                        memcpy((uint8_t*)ArpModule::PacketsInfo[LITTLE_ENDIAN(ArpHeader->source_protocol_address)]->data, (uint8_t*)ArpHeader, sizeof(AddressResolutionProtocol));
                     }
                 }
 

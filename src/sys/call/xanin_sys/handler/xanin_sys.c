@@ -3,6 +3,7 @@
 #include <sys/call/xanin_sys/ids/xanin_syscalls.h>
 #include <lib/libc/stdlibx.h>
 #include <lib/libc/stdiox.h>
+#include <lib/libc/string.h>
 #include <lib/libc/canvas.h>
 #include <lib/libc/memory.h>
 
@@ -12,16 +13,18 @@
 #include <sys/terminal/interpreter/interpreter.h>
 #include <lib/libc/hal.h>
 
+#include <sys/pmmngr/alloc.h>
+#include <sys/devices/com/com.h>
+
 // SYSCALLS FUNCTIONS
-#include <sys/call/xanin_sys/calls/pmmngr/alloc.h>
 #include <sys/call/xanin_sys/calls/vga/vga.h>
 #include <sys/devices/vga/vga.h>
 #include <sys/terminal/frontend/frontend.h>
 #include <sys/terminal/backend/backend.h>
 
-#include <sys/devices/com/com.h>
 
 stdio_mode_t stdio_current_mode;
+uint32_t stdeio_counter = 0;
 
 uint32_t xanin_sys_handle(void)
 {
@@ -37,13 +40,11 @@ uint32_t xanin_sys_handle(void)
         : "eax", "ecx", "edx", "ebx");
 
     interrupt_enable();
-    // xprintf("eax: %d ", eax);
 
     switch (eax)
     {
 
         // XinFs
-
     case XANIN_FOPEN:
     {
         // ECX = file name, EDX = options_str
@@ -99,36 +100,56 @@ uint32_t xanin_sys_handle(void)
         break;
     }
 
-    // Memory Allocation
+    case XANIN_FSEEK:
+    {
+        __xin_fseek((XinEntry*)ecx, edx);
+        break;
+    }
 
+    case XANIN_FTELL:
+    {
+        eax = __xin_ftell((XinEntry*)ecx);
+        break;
+    }
+
+    case XANIN_SEEK:
+    {
+        __xin_fseek((XinEntry*)ecx, edx);
+        break;
+    }
+
+    case XANIN_TELL:
+    {
+        eax = __xin_ltell(ecx);
+        break;
+    }
+
+    // Memory Allocation
     case XANIN_ALLOCATE:
     {
         // ECX = SIZE
-        eax = (uint32_t)__sys_malloc(ecx);
+        eax = (uint32_t)umalloc((uint32_t)ecx);
         break;
     }
 
     case XANIN_CALLOCATE:
     {
         // ECX = SIZE
-        eax = (uint32_t)__sys_calloc(ecx);
+        eax = (uint32_t)ucalloc((uint32_t)ecx);
         break;
     }
 
     case XANIN_FREE:
     {
         // ECX = PTR
-        // xprintf("0x%x\n", ecx);
-        interrupt_disable();
-        mmngr_block_free(USER_HEAP, (void*)ecx);
-        interrupt_enable();
+        ufree((void*)ecx);
         break;
     }
 
     case XANIN_REALLOCATE:
     {
         // ECX = ptr, EDX = size
-        eax = (uint32_t)__sys_realloc((void*)ecx, edx);
+        eax = (uint32_t)urealloc((void*)ecx, edx);
         break;
     }
 
@@ -234,7 +255,7 @@ uint32_t xanin_sys_handle(void)
     case XANIN_DISK_READ:
     {
         // ECX = sector_id, EDX = how_many, EBX = where to load
-        __disk_sectors_read(ATA_FIRST_BUS, ATA_MASTER, ecx, edx, (uint16_t*)ebx);
+        disk_sectors_read(ATA_FIRST_BUS, ATA_MASTER, ecx, edx, (uint16_t*)ebx);
         eax = (uint32_t)ebx;
         break;
     }
@@ -242,7 +263,7 @@ uint32_t xanin_sys_handle(void)
     case XANIN_DISK_WRITE:
     {
         // ECX = sector_id, EDX = how_many, EBX = from where to load
-        __disk_sectors_write(ATA_FIRST_BUS, ATA_MASTER, ecx, edx, (uint16_t*)ebx);
+        disk_sectors_write(ATA_FIRST_BUS, ATA_MASTER, ecx, edx, (uint16_t*)ebx);
         break;
     }
 
@@ -443,6 +464,30 @@ uint32_t xanin_sys_handle(void)
         eax = vga_text_mode_height;
         break;
     }
+
+    #warning "Create new folder"
+
+    case XANIN_SHELL_STDEIO_CREATE:
+    {
+        char buf[32] = { 0 };
+        char path[32] = "/proc/";
+        __xin_folder_create(path);
+
+        int_to_string(stdeio_counter, buf, HEXADECIMAL);
+        memcpy(&buf[strlen(buf)], "/", 2);
+
+        strcat(STRCAT_DEST_FIRST, path, buf);
+        __xin_folder_create(path);
+
+        strcat(STRCAT_DEST_FIRST, path, "stderr");
+        __xin_file_create(path);
+
+        dbg_info(DEBUG_LABEL_SYSCALL, path);
+
+        stdeio_counter++;
+        break;
+    }
+
     default:
     {
         dbg_error(DEBUG_LABEL_SYSCALL, "Unknown syscall");

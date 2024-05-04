@@ -1,5 +1,7 @@
 
 #pragma once
+
+#include <stdbool.h>
 #include <stdint.h>
 
 #define XIN_SYSTEM_FOLDER_STR "/"

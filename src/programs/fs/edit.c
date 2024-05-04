@@ -26,18 +26,18 @@
 struct EditInfo
 {
     uint32_t file_position;
-    uint16_t *cursor;
+    uint16_t* cursor;
     uint32_t column;
     uint32_t current_line;
     uint32_t total_lines;
     uint32_t number_of_sectors;
-    char *program_buffer;
-    char *begin_of_current_text;
+    char* program_buffer;
+    char* begin_of_current_text;
 };
 
 typedef struct EditInfo EditInfo;
 
-int edit_get_begin_of_printed_text(EditInfo *EditState)
+int edit_get_begin_of_printed_text(EditInfo* EditState)
 {
     int tmp = EditState->current_line - (VGA_HEIGHT - 1);
     int j = 0;
@@ -52,7 +52,8 @@ int edit_get_begin_of_printed_text(EditInfo *EditState)
     return j;
 }
 
-void edit_input(xchar Input, XinEntry *File, EditInfo *EditState)
+#warning "TODO i need mmap no much here";
+void edit_input(xchar Input, XinEntry* File, EditInfo* EditState)
 {
 
     File->FileInfo->tmp_size = strlen(EditState->program_buffer);
@@ -62,7 +63,8 @@ void edit_input(xchar Input, XinEntry *File, EditInfo *EditState)
     {
         EditState->number_of_sectors++;
         // bug should be realloc
-        EditState->program_buffer = File->FileInfo->buffer = realloc(File->FileInfo->buffer, EditState->number_of_sectors * SECTOR_SIZE);
+        File->FileInfo->buffer = realloc(File->FileInfo->buffer, EditState->number_of_sectors * SECTOR_SIZE);
+        EditState->program_buffer = (char*)File->FileInfo->buffer;
     }
 
     if (__input_is_normal_key_pressed(KBP_LEFT_CONTROL) | __input_is_normal_key_pressed(KBSP_RIGHT_CONTROL))
@@ -86,7 +88,7 @@ void edit_input(xchar Input, XinEntry *File, EditInfo *EditState)
 
     else if (__input_is_normal_key_pressed(KBP_ENTER))
     {
-        char *tmp = (char *)calloc(strlen(EditState->program_buffer)) + 1;
+        char* tmp = (char*)calloc(strlen(EditState->program_buffer)) + 1;
         memcpy(tmp, EditState->program_buffer, strlen(EditState->program_buffer) + 1);
 
         int i = EditState->file_position;
@@ -113,7 +115,7 @@ void edit_input(xchar Input, XinEntry *File, EditInfo *EditState)
 
     else if (__input_is_normal_key_pressed(KBP_TAB))
     {
-        char *tmp = (char *)calloc(strlen(EditState->program_buffer)) + 3;
+        char* tmp = (char*)calloc(strlen(EditState->program_buffer)) + 3;
         memcpy(tmp, EditState->program_buffer, strlen(EditState->program_buffer) + 3);
 
         int i = EditState->file_position;
@@ -252,7 +254,7 @@ void edit_input(xchar Input, XinEntry *File, EditInfo *EditState)
 
         CURSOR_NORMAL_MODE_SET(EditState);
 
-        char *tmp = (char *)calloc(strlen(EditState->program_buffer)) + 1;
+        char* tmp = (char*)calloc(strlen(EditState->program_buffer)) + 1;
         memcpy(tmp, EditState->program_buffer, strlen(EditState->program_buffer) + 1);
 
         int i = EditState->file_position;
@@ -269,13 +271,13 @@ void edit_input(xchar Input, XinEntry *File, EditInfo *EditState)
     }
 }
 
-int edit(char *filename)
+int edit(char* filename)
 {
 
     stdio_mode_set(STDIO_MODE_CANVAS);
 
     canvas_screen_clear();
-    XinEntry *file = __xin_find_entry(filename);
+    XinEntry* file = __xin_find_entry(filename);
 
     if (file == NULL)
     {
@@ -293,8 +295,8 @@ int edit(char *filename)
 
     fread(file, NULL, file->size);
 
-    EditInfo EditState = {0, (uint16_t *)VGA_TEXT_MEMORY, 0, 0, 0, int_to_sectors(file->size),
-                          file->FileInfo->buffer, file->FileInfo->buffer};
+    EditInfo EditState = { 0, (uint16_t*)VGA_TEXT_MEMORY, 0, 0, 0, int_to_sectors(file->size),
+                          (char*)file->FileInfo->buffer, (char*)file->FileInfo->buffer };
 
     canvas_xprintf("%s", EditState.program_buffer);
 

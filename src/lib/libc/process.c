@@ -1,7 +1,7 @@
 
-#include <stdint.h>
-#include <stdarg.h>
 #include <lib/libc/stdlibx.h>
+#include <stdarg.h>
+#include <stdint.h>
 
 // static int process_id = 0;
 static uint32_t number_of_pointers_to_clear = 0;
@@ -13,9 +13,9 @@ void app_process_register(void (*deconstructor)(void), uint32_t number_of_pointe
     va_list args;
     va_start(args, number_of_pointers);
 
-    process_pointers = (uint8_t**)calloc(number_of_pointers * SIZE_OF(uint8_t*));
+    process_pointers = (uint8_t**)calloc(number_of_pointers * sizeof(uint8_t*));
 
-    for(int i = 0; i < number_of_pointers; i++)
+    for (int i = 0; i < number_of_pointers; i++)
         process_pointers[i] = va_arg(args, uint8_t*);
 
     process_deconstructor = deconstructor;
@@ -25,7 +25,7 @@ void app_process_register(void (*deconstructor)(void), uint32_t number_of_pointe
 
 void app_process_unregister(void)
 {
-    for(int i = 0; number_of_pointers_to_clear; i++)
+    for (int i = 0; number_of_pointers_to_clear; i++)
         free(process_pointers[i]);
     process_deconstructor();
 }
