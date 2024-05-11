@@ -40,16 +40,16 @@ public:
     array(const array& arr) = default;
     array(std::initializer_list<T> a);
 
-    template <typename InputIt>
-    array(InputIt beg, InputIt end)
-    {
-        int i = 0;
+    // template <typename InputIt>
+    // array(InputIt beg, InputIt end)
+    // {
+    //     int i = 0;
 
-        for (; (beg != end) & (i < SIZE); beg++, i++)
-        {
-            memcpy((uint8_t*)&this->ptr[i], (uint8_t*)beg.pointer(), sizeof(T));
-        }
-    }
+    //     for (; (beg != end) & (i < SIZE); beg++, i++)
+    //     {
+    //         memcpy((uint8_t*)&this->ptr[i], (uint8_t*)beg.pointer(), sizeof(T));
+    //     }
+    // }
 
     inline constexpr iterable_type
         begin_ptr()
@@ -317,44 +317,86 @@ std::array<T, SIZE> to_array(T* ptr)
         arr[i] = ptr[i];
 }
 
-// template<typename T, int Size>
-// class narray {
-// public:
-//     using value_type = T;
-//     using Iterator = NArrayIterator<value_type>;
-//     using ReversedIterator = ConstReversedNArrayIterator<value_type>;
-//     using ConstIterator = ConstNArrayIterator<value_type>;
-//     using ConstReversedIterator = ConstReversedNArrayIterator<value_type>;
+template <typename T, size_t Size>
+class narray
+{
 
-//     array(void) = default;
+public:
+    using value_type = T;
 
-//     // string(const NStringIterator beg, const NStringIterator end);
-//     template <typename It>
-//     array(It beg);
+    using iterator = RandomAccessIterator<narray<T, Size>>;
+    using const_iterator = ConstRandomAccessIterator<narray<T, Size>>;
+    using reversed_iterator = RandomAccessReversedIterator<narray<T, Size>>;
+    using const_reversed_iterator = ConstRandomAccessReversedIterator<narray<T, Size>>;
 
-//     int index_serialize(int index) const;
-//     constexpr const char* data(void) { return m_ptr; }
-//     constexpr const char* data(void) const { return m_ptr; }
-//     constexpr uint32_t size(void) const { return Size; }
+    narray(void);
+    narray(const narray<T, Size>& other);
+    narray(initializer_list<T> items)
+    {
+        int i = 0;
+        for (auto beg = items.begin(); beg != items.end(); beg++) {
+            m_array[i] = *beg;
+        }
+    }
 
-//     // int last_of(std::string to_find, int start_index = -1) const;
-//     // int first_of(std::string to_find, int start_index = 0) const;
+    constexpr T* data(void) { return m_array; }
+    constexpr const T* data(void) const { return m_array; }
 
-//     char& operator[](int index) { return m_ptr[index_serialize(index)]; }
-//     const char& operator[](int index) const { return m_ptr[index_serialize(index)]; }
+    template <typename InputIt>
+    narray(InputIt beg, InputIt end)
+    {
+        int i = 0;
+        if (beg >= end) return;
 
-//     narray& operator=(narray const& other);
-//     bool operator == (narray const& other) const;
-//     bool operator != (narray const& other) const;
+        for (; beg != end; beg++) {
+            m_array[i] = *beg;
+        }
+    }
 
-//     DEFINE_CLASS_RANGE_OPERATIONS(NArrayIterator);
+    constexpr int index_serialize(int index) const { return index < 0 ? (int)Size + index : index; }
 
-//     static constexpr int npos = -1;
+    T& front(void) { return *begin(); }
+    T& back(void) { return *rbegin(); }
+    const T& front(void) const { return *cbegin(); }
+    const T& back(void) const { return *crbegin(); }
 
-// private:
-//     T m_ptr[Size];
-// };
+    constexpr size_t size(void) const { return Size; }
 
-// RANDOM_ACCESS_ITERATORS_DECLARE(NArrayIterator, narray)
+    narray<T, Size> operator = (const narray<T, Size>& other);
+
+    T& operator[](int index) { return m_array[index_serialize(index)]; }
+    const T& operator[](int index) const { return m_array[index_serialize(index)]; }
+
+    iterator begin(void) { return iterator(*this, 0); }
+    iterator end(void) { return iterator(*this, Size); }
+    const_iterator cbegin(void) const { return const_iterator(*this, 0); }
+    const_iterator cend(void) const { return const_iterator(*this, Size); }
+
+    reversed_iterator rbegin(void) { return reversed_iterator(*this, Size - 1); }
+    reversed_iterator rend(void) { return reversed_iterator(*this, -1); }
+    const_reversed_iterator crbegin(void) const { return const_reversed_iterator(*this, Size - 1); }
+    const_reversed_iterator crend(void) const { return const_reversed_iterator(*this, -1); }
+
+    uint32_t find(const T& value, uint32_t pos = 0) const
+    {
+        for (int i = pos; i < Size; i++) {
+            if (m_array[i] == value) return i;
+        }
+        return npos;
+    }
+
+    uint32_t find_first_not_of(const T& value, uint32_t pos = 0) const
+    {
+        for (int i = pos; i < Size; i++) {
+            if (m_array[i] != value) return i;
+        }
+        return npos;
+    }
+
+    static constexpr int npos = -1;
+
+private:
+    T m_array[Size];
+};
 
 } // namespace

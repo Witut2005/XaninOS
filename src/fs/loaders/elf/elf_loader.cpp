@@ -4,6 +4,10 @@
 #include "elf_loader.hpp"
 #include <lib/libcpp/memory.hpp>
 #include <lib/libcpp/error.hpp>
+#include <lib/libcpp/algorithm.h>
+
+#undef KERNEL_MODULE 
+// #define ELF_LOADER_DEBUG_PIE_ADDRESSES
 
 ElfLoader::ElfLoader(const char* path)
 {
@@ -105,6 +109,7 @@ bool ElfLoader::load_segment(const ElfProgramHeaderAuto& pheader) const
     if (is_loadable_segment(pheader) == false) { return false; }
 
     __xin_fseek(file, pheader.p_offset);
+    uint32_t pie_loadable_memory = find_loadable_memory_location(file->size);
 
     switch (pheader.p_type)
     {
@@ -113,36 +118,35 @@ bool ElfLoader::load_segment(const ElfProgramHeaderAuto& pheader) const
 
         if (is_pie == false)
         {
-            dbg_info(DEBUG_LABEL_ELF_LOADER, "Loading LOAD segment (no pie)");
+            // dbg_info(DEBUG_LABEL_ELF_LOADER, "Loading LOAD segment (no pie)");
             fread(file, (uint8_t*)pheader.p_vaddr, pheader.p_filesz);
             memset((uint8_t*)(pheader.p_paddr + pheader.p_filesz), 0, bss_section_size_get(pheader)); //initialize bss section
         }
 
         else
         {
-            dbg_info(DEBUG_LABEL_ELF_LOADER, "Loading LOAD segment (with pie)");
-            fread(file, (uint8_t*)s_pie_load_address + pheader.p_vaddr, pheader.p_filesz);
-            memset((uint8_t*)(s_pie_load_address + pheader.p_paddr + pheader.p_filesz), 0, bss_section_size_get(pheader)); //initialize bss section
+            // dbg_info(DEBUG_LABEL_ELF_LOADER, "Loading LOAD segment (with pie)");
+            fread(file, (uint8_t*)pie_loadable_memory + pheader.p_vaddr, pheader.p_filesz);
+            memset((uint8_t*)(pie_loadable_memory + pheader.p_paddr + pheader.p_filesz), 0, bss_section_size_get(pheader)); //initialize bss section
         }
         break;
     }
 
     case PT_DYNAMIC:
     {
-        dbg_info(DEBUG_LABEL_ELF_LOADER, "Loading DYNAMIC segment");
-        fread(file, (uint8_t*)(s_pie_load_address + pheader.p_vaddr), pheader.p_filesz);
-        memset((uint8_t*)(s_pie_load_address + pheader.p_paddr + pheader.p_filesz), 0, bss_section_size_get(pheader)); //initialize bss section
+        // dbg_info(DEBUG_LABEL_ELF_LOADER, "Loading DYNAMIC segment");
+        fread(file, (uint8_t*)(pie_loadable_memory + pheader.p_vaddr), pheader.p_filesz);
+        memset((uint8_t*)(pie_loadable_memory + pheader.p_paddr + pheader.p_filesz), 0, bss_section_size_get(pheader)); //initialize bss section
         break;
     }
 
     }
 
     fclose(&file);
-
     return true;
 }
 
-bool ElfLoader::execute(void) const
+bool ElfLoader::execute(void)
 {
     TRY(auto header, header_get(), {});
     auto pheaders = program_headers_get();
@@ -156,8 +160,34 @@ bool ElfLoader::execute(void) const
         load_segment(pheader);
     }
 
-    ((void(*)(void))(header.e_entry + (is_pie ? s_pie_load_address : 0x0)))();
+    uint32_t entry_point = header.e_entry + (is_pie ? find_loadable_memory_location(file->size) : 0x0);
+
+    s_pie_load_addresses_used.push_back({ entry_point, file->size });
+
+#ifdef ELF_LOADER_DEBUG_PIE_ADDRESSES
+    for (const auto a : s_pie_load_addresses_used) {
+        dbg_warning(DEBUG_LABEL_ELF_LOADER, xsprintf(std::UniquePtr<char>((char*)calloc(50)).get(), "[0x%x, 0x%x]", a.begin, a.begin + a.size));
+    }
+#endif
+
+    ((void(*)(void))(entry_point))(); // jump to entry point
     return true;
 }
 
-#undef KERNEL_MODULE
+uint32_t ElfLoader::find_loadable_memory_location(uint32_t size) const
+{
+    uint32_t begin = s_pie_load_addresses_begin;
+
+    for (auto a : s_pie_load_addresses_used)
+    {
+        if (std::have_intersection<uint32_t>({ begin, begin + size }, { a.begin, a.begin + a.size })) {
+            begin = a.begin + a.size;
+        }
+        else {
+            break;
+        }
+    }
+    return begin;
+}
+
+std::vector<ElfLoader::ElfExecutableMemoryInfo> ElfLoader::s_pie_load_addresses_used; //TODO problems with global constructor

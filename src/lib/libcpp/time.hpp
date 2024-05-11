@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <lib/libc/time.h>
 #include <lib/libc/stdlibx.h>
+#include <lib/libcpp/string.h>
 
 namespace std
 {

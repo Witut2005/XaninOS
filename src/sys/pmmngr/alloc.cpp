@@ -10,6 +10,7 @@
 #include <sys/devices/com/com.h>
 #include <sys/log/syslog.h>
 #include <sys/pmmngr/alloc.h>
+#include <sys/panic/panic.h>
 
 typedef uint32_t physical_addr;
 
@@ -18,18 +19,27 @@ typedef uint32_t physical_addr;
 
 static bool mmngr_initalized;
 
-uint8_t* mmngr_mmap;        // mmap address
-uint32_t mmngr_heap_blocks; // sizeof mmngr available memory space
+static uint8_t* mmngr_mmap;        // mmap address
+static uint32_t mmngr_heap_blocks; // sizeof mmngr available memory space
 
-uint8_t* kernel_heap_base;
-uint32_t kernel_heap_offset;
-uint32_t kernel_heap_blocks; // 1/3 of allocated memory space belongs to kernel heap
+static uint8_t* kernel_heap_base;
+static uint32_t kernel_heap_offset;
+static uint32_t kernel_heap_blocks; // 1/3 of allocated memory space belongs to kernel heap
 
-uint8_t* user_heap_base;
-uint32_t user_heap_offset;
-uint32_t user_heap_blocks; // 2/3 of allocated memory space belongs to user heap
+static uint8_t* user_heap_base;
+static uint32_t user_heap_offset;
+static uint32_t user_heap_blocks; // 2/3 of allocated memory space belongs to user heap
 
 extern "C" {
+    uint8_t* user_heap_base_get(void)
+    {
+        return user_heap_base;
+    }
+
+    uint8_t* kernel_heap_base_get(void)
+    {
+        return kernel_heap_base;
+    }
 
     static inline void log_invalid_heap(void* ptr)
     {
@@ -143,6 +153,7 @@ extern "C" {
         if (mmap_index == UINT32_MAX) // NO AVAILABLE MEMORY
         {
             dbg_error(DEBUG_LABEL_PMMNGR, "HEAP FULL");
+            kernel_panic(XANIN_PANIC_PMMNGR);
             return (void*)NULL;
         }
 
@@ -233,11 +244,9 @@ extern "C" {
         EFlags Flags;
         INTERRUPTS_OFF(&Flags);
 
-        interrupt_disable();
-
-        uint8_t* tmp = (uint8_t*)mmngr_block_allocate(KERNEL_HEAP, size);
-        memmove(tmp, ptr, size);
         mmngr_block_free(KERNEL_HEAP, ptr);
+        uint8_t* tmp = (uint8_t*)kmalloc(size);
+        memmove(tmp, ptr, size);
 
         INTERRUPTS_ON(&Flags);
         return tmp;
@@ -251,7 +260,7 @@ extern "C" {
     void* ucalloc(uint32_t size)
     {
         if (size == 0) size++;
-        uint8_t* tmp = (uint8_t*)mmngr_block_allocate(USER_HEAP, size);
+        uint8_t* tmp = (uint8_t*)umalloc(size);
         memset(tmp, 0, size);
 
         return tmp;
@@ -264,10 +273,8 @@ extern "C" {
         EFlags Flags;
         INTERRUPTS_OFF(&Flags);
 
-        interrupt_disable();
-
         mmngr_block_free(USER_HEAP, (void*)ptr); // FIRST ALLOCATE THEN FREE (REVERSED ORDER MAKES WEIRD BUGS)
-        uint8_t* tmp = (uint8_t*)mmngr_block_allocate(USER_HEAP, size);
+        uint8_t* tmp = (uint8_t*)umalloc(size);
         memmove(tmp, (uint8_t*)ptr, size);
 
         INTERRUPTS_ON(&Flags);

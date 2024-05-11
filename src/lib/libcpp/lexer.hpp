@@ -13,6 +13,10 @@ namespace std {
 
 class BaseLexer {
 public:
+    enum class IgnoreEnd {
+        No,
+        Yes
+    };
     static constexpr int npos = -1;
 
     BaseLexer(const string& input) : m_input(input) {}
@@ -25,10 +29,10 @@ public:
     string consume(uint32_t count = 1);
     void ignore(uint32_t count = 1);
 
-    std::string consume_until(std::string end, bool ignore_end = true);
+    std::string consume_until(std::string end, IgnoreEnd ignore_end = IgnoreEnd::Yes);
 
-    template<typename T = bool(*)(const string&) >
-    std::pair<string, string> consume_until(std::vector<string> ends, bool ignore_end = true, T exception = [](const string&) {return true;});
+    template<typename T = bool(*)(const string&, uint32_t) >
+    std::pair<string, string> consume_until(std::vector<string> ends, IgnoreEnd ignore_end = IgnoreEnd::Yes, T exception = [](const string&, uint32_t) {return true;});
 
     void ignore_until(string end);
 
@@ -39,6 +43,7 @@ public:
     auto exceptions_get(void) { return m_exceptions; }
 
     uint32_t count_number_of_continuous_chars(int pos, uint32_t max_count = INT32_MAX); // doesnt change m_index position
+    uint32_t count_number_of_continuous_chars(char char_expected, int pos, uint32_t max_count = INT32_MAX); // doesnt change m_index position
 
     std::string str_get(void) { return m_input; }
     constexpr uint32_t index_get(void) { return m_index; }
@@ -54,7 +59,7 @@ private:
 ////////////////////Methods definitions//////////////////////////
 
 template<typename T>
-std::pair<string, string> BaseLexer::consume_until(std::vector<string> ends, bool ignore_end, T exception)
+std::pair<string, string> BaseLexer::consume_until(std::vector<string> ends, IgnoreEnd ignore_end, T exception)
 {
     if (m_index == m_input.length()) {
         return { "", "" };
@@ -71,9 +76,9 @@ std::pair<string, string> BaseLexer::consume_until(std::vector<string> ends, boo
             auto str2chk = string(it, it + endlen);
             // dbg_info("HUJ", str2chk.c_str());
 
-            if (exception_consume(str2chk == end) && exception(str2chk))
+            if (exception_consume(str2chk == end) && exception(string(it, m_input.cend()), endlen))
             {
-                if (ignore_end) {
+                if (ignore_end == IgnoreEnd::Yes) {
                     ignore(endlen);
                 }
                 return { string(start, it), end };

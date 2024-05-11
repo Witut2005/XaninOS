@@ -86,7 +86,8 @@ extern "C" {
         }
 
         // XANIN_ADD_APP_ENTRY0("arrayt", __cpp_xin_test)
-        XANIN_ADD_APP_ENTRY0("alloct", __c_alloc_test)
+        XANIN_ADD_APP_ENTRY0("construt", __cpp_global_constructors_test)
+            XANIN_ADD_APP_ENTRY0("alloct", __c_alloc_test)
             XANIN_ADD_APP_ENTRY0("vectort", __cpp_vector_test)
             XANIN_ADD_APP_ENTRY0("algot", __cpp_algo_test)
             XANIN_ADD_APP_ENTRY0("xint", __cpp_xin_test)
@@ -105,7 +106,6 @@ extern "C" {
             XANIN_ADD_APP_ENTRY0("buffers", buffers_view)
             XANIN_ADD_APP_ENTRY1("netapi_check", netapi_check)
             XANIN_ADD_APP_ENTRY0("usb_info", usb_controller_info)
-            XANIN_ADD_APP_ENTRY0("memtest", memory_test)
             XANIN_ADD_APP_ENTRY0("grapher", grapher)
             XANIN_ADD_APP_ENTRY0("petris", ptetris)
             XANIN_ADD_APP_ENTRY0("ptetris", ptetris)

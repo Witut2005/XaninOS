@@ -40,6 +40,7 @@
 #include <sys/net/network_protocols/arp/arp.h>
 #include <sys/net/network_protocols/internet_protocol/ipv4/ip.h>
 #include <sys/paging/paging.h>
+#include <sys/panic/panic.h>
 #include <sys/pmmngr/alloc.h>
 #include <sys/terminal/backend/backend.h>
 #include <sys/terminal/frontend/frontend.h>
@@ -227,7 +228,7 @@ void kernel_init(void)
     INTERRUPT_REGISTER(31, general_protection_exception_entry);
     INTERRUPT_REGISTER(32, general_protection_exception_entry);
 
-    mmngr_init(kernel_mmngr_mmap, (uint8_t*)0x1400000, PMMNGR_MEMORY_BLOCKS);
+    mmngr_init(kernel_mmngr_mmap, (uint8_t*)0x200000, PMMNGR_MEMORY_BLOCKS);
     serial_port_initialize(1);
     dbg_success(DEBUG_LABEL_IRQ, "Processor IRQs registered");
 

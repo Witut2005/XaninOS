@@ -51,60 +51,26 @@ void BaseLexer::ignore_until(std::string end)
     }
 }
 
-std::string BaseLexer::consume_until(std::string end, bool ignore_end)
+std::string BaseLexer::consume_until(std::string end, IgnoreEnd ignore_end)
 {
-    if (m_index == m_input.length()) {
-        return "";
-    }
+    if (m_index == m_input.length()) return "";
 
     auto endlen = end.length();
     auto start = m_input.cbegin() + m_index;
 
     for (auto it = start; it != m_input.cend(); it++, m_index++)
     {
-        // if ((std::string(it, it + endlen) == end))
         if (exception_consume(std::string(it, it + endlen) == end))
         {
-            if (ignore_end) {
+            if (ignore_end == IgnoreEnd::Yes) {
                 ignore(endlen);
             }
-            dbg_error("what2", string(start, it).c_str());
             return std::string(start, it);
         }
     }
 
     return std::string(start, m_input.cend());
 }
-
-// std::pair<std::string, std::string> BaseLexer::consume_until(std::vector<std::string> ends, bool ignore_end)
-// {
-//     if (m_index == m_input.length()) {
-//         return { "", "" };
-//     }
-
-//     auto start = m_input.cbegin() + m_index;
-
-//     for (auto it = start; it != m_input.cend(); it++, m_index++)
-//     {
-//         if (m_index == m_input.length()) {
-//             break;
-//         }
-
-//         for (const auto& end : ends) {
-//             auto endlen = end.length();
-
-//             if (std::string(it, it + endlen) == end)
-//             {
-//                 if (ignore_end) {
-//                     ignore(endlen);
-//                 }
-//                 return { std::string(start, it), end };
-//             }
-//         }
-//     }
-
-//     return { std::string(start, m_input.cend()), "" };
-// }
 
 bool BaseLexer::exception_consume(bool cond)
 {
@@ -115,20 +81,25 @@ bool BaseLexer::exception_consume(bool cond)
 
 uint32_t BaseLexer::count_number_of_continuous_chars(int pos, uint32_t max_count)
 {
+    return count_number_of_continuous_chars(m_input[pos], pos, max_count);
+}
+
+uint32_t BaseLexer::count_number_of_continuous_chars(char char_expected, int pos, uint32_t max_count)
+{
+    if (m_input[pos] != char_expected) return 0;
     pos = m_input.index_serialize(pos);
 
-    #warning "TODO uint32_t instead of unsigned int";
-    auto tmp = std::string(m_input.cbegin() + pos, m_input.length() > pos + max_count ? m_input.cbegin() + pos + max_count : m_input.cend());
+    auto str = std::string(m_input.cbegin() + pos, m_input.length() > pos + max_count ? m_input.cbegin() + pos + max_count : m_input.cend());
     //std::is_overflow<OverflowCheck::Addition, unsigned int>(pos, max_count) ? m_input.cend() : m_input.cbegin() + pos + max_count);
 
-    if (tmp.empty()) return 0;
+    if (str.empty()) return 0;
 
-    char char_to_count = tmp[0];
     uint32_t count = 1;
-
-    for (int i = 1; i < tmp.length(); i++)
+    for (int i = 1; i < str.length(); i++)
     {
-        if (char_to_count == tmp[i]) count++;
+        if (char_expected == str[i]) {
+            count++;
+        }
         else break;
     }
     return count;

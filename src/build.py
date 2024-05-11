@@ -311,6 +311,7 @@ objects_to_compile = {
     ],
 
     'kmodules': [
+        CompileObject('./sys/panic/panic.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./sys/pmmngr/alloc.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./sys/input/input.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./sys/log/syslog.c', builders['c'], builder_options['c']['default'], OBJECT),
@@ -388,6 +389,15 @@ objects_to_compile = {
         CompileObject('./lib/game_engine/xagame.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
     ],
 
+    'Tests Cpp': [
+        CompileObject('./programs/tests/cpp/string.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
+        CompileObject('./programs/tests/cpp/lexer.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
+        CompileObject('./programs/tests/cpp/xin.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
+        CompileObject('./programs/tests/cpp/algo.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
+        CompileObject('./programs/tests/cpp/vector.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
+        CompileObject('./programs/tests/cpp/global_constructors.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
+    ],
+
     'built-in programs': [
         CompileObject('./programs/fs/edit.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./programs/fs/xin_check.c', builders['c'], builder_options['c']['default'], OBJECT),
@@ -397,11 +407,6 @@ objects_to_compile = {
         CompileObject('./programs/tests/elf_loader_test.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./programs/tests/c_test.c', builders['c'], builder_options['c']['default'], OBJECT),
 
-        CompileObject('./programs/tests/cpp/string.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
-        CompileObject('./programs/tests/cpp/lexer.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
-        CompileObject('./programs/tests/cpp/xin.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
-        CompileObject('./programs/tests/cpp/algo.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
-        CompileObject('./programs/tests/cpp/vector.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./programs/tests/c/alloc.c', builders['c'], builder_options['c']['default'], OBJECT),
 
         CompileObject('./programs/stdio/stdio_apply.c', builders['c'], builder_options['c']['default'], OBJECT),
@@ -409,7 +414,6 @@ objects_to_compile = {
         CompileObject('./programs/network/netplan_apply.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./programs/network/netapi_check.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./programs/usb/usb_controller_info.c', builders['c'], builder_options['c']['default'], OBJECT),
-        CompileObject('./programs/tests/memory_allocator_test.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./programs/tests/disk_func.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./programs/misc/grapher/grapher.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./programs/fs/explorer.c', builders['c'], builder_options['c']['default'], OBJECT),

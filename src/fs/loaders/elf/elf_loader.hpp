@@ -24,6 +24,11 @@ class ElfLoader {
 
 public:
 
+    struct ElfExecutableMemoryInfo {
+        uint32_t begin;
+        uint32_t size;
+    };
+
     enum class Archtecture {
         bit32 = 1,
         bit64 = 2
@@ -42,14 +47,14 @@ public:
     static constexpr Archtecture s_xanin_native_arch = Archtecture::bit32;
 #endif
 
-    static constexpr uint32_t s_pie_load_address = 0x800000;
+    // static constexpr uint32_t s_pie_load_address = 0x1400000;
+    static constexpr uint32_t s_pie_load_addresses_begin = 0x1400000;
 
     static constexpr char s_valid_magic[4] = { 0x7f, 0x45, 0x4c, 0x46 };
 
     constexpr bool is_valid_arch(Archtecture arch) const {
         return  s_xanin_native_arch == arch;
     }
-
 
     ElfLoader(const char* path);
     ~ElfLoader(void);
@@ -63,11 +68,14 @@ public:
 
     bool is_loadable_segment(const ElfProgramHeaderAuto& pheader) const;
     bool load_segment(const ElfProgramHeaderAuto& pheader) const;
-    bool execute(void) const;
+    bool execute(void);
 
 private:
 
     static constexpr enum ELF_PROGRAM_HEADER_TYPE s_ignored_segments[] = { PT_PHDR };
+
+    uint32_t find_loadable_memory_location(uint32_t size) const;
+    static std::vector<ElfExecutableMemoryInfo> s_pie_load_addresses_used;
 
     bool m_loaded{ false };
     uint8_t* m_elf_location{ nullptr };

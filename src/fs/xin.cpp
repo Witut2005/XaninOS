@@ -52,6 +52,7 @@ static constexpr XIN_FS_ENTRY_TYPES xin_entry_type(uint8_t type) { return (XIN_F
 
 using std::move;
 using std::string;
+using std::BaseLexer;
 
 string __nxin_current_directory_get(void)
 {
@@ -86,6 +87,9 @@ string __nxin_path_parse(string path)
 {
     auto conditional_goto_to_parent_folder = [](bool cond, string& path, int start_index) -> void {
         if (cond) {
+
+            if (path.index_serialize(start_index) < 0) path = "/";
+
             if (auto delim_index = path.last_of("/", start_index); delim_index != string::npos) {
                 path = (path.substr(0, delim_index + 1)); //we dont want to delete '/' char
             }
@@ -97,24 +101,34 @@ string __nxin_path_parse(string path)
 
     if (path.empty() || path == "." || path == "./") return __nxin_absolute_path_get(path);
 
-    std::BaseLexer lexer(__nxin_absolute_path_get(path));
+    BaseLexer lexer(__nxin_absolute_path_get(path));
     path.clear();
 
     while (lexer.all_parsed() == false)
     {
-        auto result = lexer.consume_until(std::vector<string>({ "../", "./" }));
-        path = path + result.first;// + std::string("/"); //TODO char + operator
+        auto result = lexer.consume_until({ "../", "./" }, BaseLexer::IgnoreEnd::No, [](const string& str, uint32_t len) {
 
-        conditional_goto_to_parent_folder(result.second == "../", path, -2);
+            if (str[0] != '.') return true;
+            if (BaseLexer(str).count_number_of_continuous_chars(0) > 2) return false;
+            else return true;
+        });
+
+        path = path + result.first;
+        lexer.ignore(result.second);
+
+        conditional_goto_to_parent_folder(result.second == "../", path, -4);
     }
 
-    if (*path.rbegin() == '.') {
-        path.resize(path.length() - 1);
+    if (lexer.count_number_of_continuous_chars(-3) <= 2)
+    {
+        conditional_goto_to_parent_folder(path.substr(-2) == "..", path, -4); // check if path ends with .. 
+
+        if (*path.rbegin() == '.') {
+            path.resize(path.length() - 1);
+        }
     }
 
-    conditional_goto_to_parent_folder(path.substr(-2) == "..", path, -4); // check if path ends with .. (nicho/ble/ble/..)
-
-    if (*path.rbegin() == '/' && path.length() != sizeof('\0')) {
+    if (*path.rbegin() == '/' && path.length() != sizeof('\0')) { //delete trailing /
         *path.rbegin() = '\0';
     }
 

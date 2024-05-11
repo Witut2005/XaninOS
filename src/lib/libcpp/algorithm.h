@@ -77,6 +77,25 @@ constexpr void swap(T& x, T& y)
     y = tmp;
 }
 
+
+template <typename InputIt>
+InputIt find_if(InputIt beg, InputIt end, auto predicate)
+{
+    for (; beg != end; beg++) {
+        if (predicate(*beg)) return beg;
+    }
+    return end;
+}
+
+// template <typename Cont>
+// Cont::forward_iterator find_if(Cont container, auto predicate)
+// {
+//     for (auto beg = container.begin(); beg != container.end(); beg++) {
+//         if (predicate(*beg)) return beg;
+//     }
+//     return container.end();
+// }
+
 // IN ITERATOR MAKE PTR TO CONTAINER OBJECT
 template <typename InputIt>
 std::vector<InputIt> find(InputIt beg, InputIt end, auto finder)
@@ -262,5 +281,19 @@ T get_and_set(T& val, T set)
     val = set;
     return tmp;
 };
+
+template<typename T>
+constexpr bool bclamp(const T& v, const T& lo, const T& hi)
+{
+    return v >= lo && v <= hi;
+}
+
+//TODO check if can be faster
+template <typename T>
+bool have_intersection(std::pair<T, T> v1, std::pair<T, T> v2) // pair.first must be smaller than pair.second
+{
+    return bclamp(v1.first, v2.first, v2.second) || bclamp(v1.second, v2.first, v2.second) ||
+        bclamp(v2.first, v1.first, v1.second) || bclamp(v2.second, v1.first, v1.second);
+}
 
 }

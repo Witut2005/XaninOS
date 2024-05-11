@@ -14,6 +14,7 @@
 
 #define XANIN_PMMNGR_BLOCK_SIZE 4096
 #define ARRAY_LENGTH(x) (sizeof(x) / sizeof(x[0]))
+#define STRING_CHARS(x) (sizeof(x) - sizeof('\0'))
 
 typedef uint8_t* address_t;
 typedef uint8_t* object_t;
@@ -73,48 +74,48 @@ extern seg_t SegmentRegister;
 extern "C" {
 #endif
 
-extern float pit_time;
+    extern float pit_time;
 
-bcd_date_t time_extern_date(CmosTime* Time);
-bcd_time_t time_extern_time(CmosTime* Time);
-bool key_pressed(void);
-char getchar(void);
-char getscan(void);
-void keyboard_buffer_refresh(uint16_t* screen_buffer);
-CmosTime* time_get(CmosTime* Time);
-uint8_t floppy_type_get_cmos(void);
-void get_cpu_speed(void);
-void swap_int(int* xp, int* yp);
-void swap_char(char* xp, char* yp);
-void swap_short(uint16_t* xp, uint16_t* yp);
-void srand(uint32_t seed);
-uint32_t memory_map_get_cmos(void);
-void int_swap(int* xp, int* yp);
-void bubble_sort(int* array, int n);
-void merge(int* array, int first, int middle, int last);
-void merge_sort(int array[], int first, int last);
+    bcd_date_t time_extern_date(CmosTime* Time);
+    bcd_time_t time_extern_time(CmosTime* Time);
+    bool key_pressed(void);
+    char getchar(void);
+    char getscan(void);
+    void keyboard_buffer_refresh(uint16_t* screen_buffer);
+    CmosTime* time_get(CmosTime* Time);
+    uint8_t floppy_type_get_cmos(void);
+    void get_cpu_speed(void);
+    void swap_int(int* xp, int* yp);
+    void swap_char(char* xp, char* yp);
+    void swap_short(uint16_t* xp, uint16_t* yp);
+    void srand(uint32_t seed);
+    uint32_t memory_map_get_cmos(void);
+    void int_swap(int* xp, int* yp);
+    void bubble_sort(int* array, int n);
+    void merge(int* array, int first, int middle, int last);
+    void merge_sort(int array[], int first, int last);
 
-static inline void* malloc(uint32_t size) { return (void*)xanin_syscall1(XANIN_ALLOCATE, (uint32_t)size); }
-static inline void* calloc(uint32_t size) { return (void*)xanin_syscall1(XANIN_CALLOCATE, (uint32_t)size); }
-static inline void free(void* ptr) { xanin_syscall1(XANIN_FREE, (uint32_t)ptr); }
-static inline void* realloc(void* ptr, uint32_t size) { return (void*)xanin_syscall2(XANIN_REALLOCATE, (uint32_t)ptr, (uint32_t)size); }
+    static inline void* malloc(uint32_t size) { return (void*)xanin_syscall1(XANIN_ALLOCATE, (uint32_t)size); }
+    static inline void* calloc(uint32_t size) { return (void*)xanin_syscall1(XANIN_CALLOCATE, (uint32_t)size); }
+    static inline void free(void* ptr) { xanin_syscall1(XANIN_FREE, (uint32_t)ptr); }
+    static inline void* realloc(void* ptr, uint32_t size) { return (void*)xanin_syscall2(XANIN_REALLOCATE, (uint32_t)ptr, (uint32_t)size); }
 
-// void* kmalloc(uint32_t size);
-// void* kcalloc(uint32_t size);
-// void kfree(void* ptr);
-// void* krealloc(void* ptr, uint32_t size_new);
-uint32_t int_to_sectors(uint32_t num);
-static inline uint32_t size_to_mmngr_blocks(uint32_t size) { return int_to_sectors(size); }
+    // void* kmalloc(uint32_t size);
+    // void* kcalloc(uint32_t size);
+    // void kfree(void* ptr);
+    // void* krealloc(void* ptr, uint32_t size_new);
+    uint32_t int_to_sectors(uint32_t num);
+    static inline uint32_t size_to_mmngr_blocks(uint32_t size) { return int_to_sectors(size); }
 
-void exit(void);
-uint32_t rand(void);
-int reboot(void);
+    void exit(void);
+    uint32_t rand(void);
+    int reboot(void);
 
-char getchar(void);
-char getscan(void);
-xchar getxchar(void);
-xchar inputg(void);
-key_info_t keyinfo_get(void);
+    char getchar(void);
+    char getscan(void);
+    xchar getxchar(void);
+    xchar inputg(void);
+    key_info_t keyinfo_get(void);
 
 #ifdef __cplusplus
 }
@@ -156,10 +157,10 @@ extern IntervalEntry XaninIntervals[INTERVALS_MAX];
 extern "C" {
 #endif
 
-interval_id interval_set(interval_handler handler, float ms, address_t* args);
-void interval_clear(interval_id used_interval);
-void do_interval(interval_id interval);
-void all_intervals_clear(void);
+    interval_id interval_set(interval_handler handler, float ms, address_t* args);
+    void interval_clear(interval_id used_interval);
+    void do_interval(interval_id interval);
+    void all_intervals_clear(void);
 
 #ifdef __cplusplus
 }

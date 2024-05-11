@@ -2,13 +2,15 @@
 #pragma once
 
 #include <lib/libc/string.h>
+#include <lib/libcpp/alloc.hpp>
 #include <lib/libcpp/type_traits.h>
 #include <lib/libcpp/container/iterator.hpp>
 #include <sys/devices/com/com.h>
 
 namespace std {
 
-class string {
+class string
+{
 public:
     using value_type = char;
 
@@ -20,17 +22,40 @@ public:
     string(void);
     explicit string(uint32_t size);
 
+    // ITERATOR CONSTRUCTOR
     template<typename It>
         requires is_same<It, string::iterator>::value || is_same<It, string::const_iterator>::value
-    string(It beg, It end);
+    string(It beg, It end) : string()
+    {
+        if (beg < end)
+        {
+            uint32_t size_to_allocate = end.data() - beg.data();
+            reallocate_if_needed(size_to_allocate);
+            strncpy(m_ptr, beg.data(), size_to_allocate);
+        }
+    }
 
+    // RITERATOR CONSTRUCTOR
     template<typename It>
         requires is_same<It, string::reversed_iterator>::value || is_same<It, string::const_reversed_iterator>::value
-    string(It beg, It end);
+    string(It beg, It end) : string()
+    {
+        if (beg < end)
+        {
+            uint32_t size_to_allocate = beg.data() - end.data();
+            reallocate_if_needed(size_to_allocate);
+
+            int i = 0;
+            for (auto it = beg.data(); it != end.data(); it--, i++) {
+                m_ptr[i] = *it;
+            }
+            m_ptr[i] = '\0';
+        }
+    }
 
     string(char const* other, uint32_t size);
-
     string(char const* str);
+
     string(string const& str);
     string(string&& str);
     ~string();
@@ -162,37 +187,6 @@ private:
     size_t m_size;
 };
 
-// ITERATOR CONSTRUCTOR
-template<typename It>
-    requires is_same<It, string::iterator>::value || is_same<It, string::const_iterator>::value
-string::string(It beg, It end) : string()
-{
-    if (beg < end)
-    {
-        uint32_t size_to_allocate = end.data() - beg.data();
-        reallocate_if_needed(size_to_allocate);
-        strncpy(m_ptr, beg.data(), size_to_allocate);
-    }
-}
-
-// RITERATOR CONSTRUCTOR
-template<typename It>
-    requires is_same<It, string::reversed_iterator>::value || is_same<It, string::const_reversed_iterator>::value
-string::string(It beg, It end) : string()
-{
-    if (beg < end)
-    {
-        uint32_t size_to_allocate = beg.data() - end.data();
-        reallocate_if_needed(size_to_allocate);
-
-        int i = 0;
-        for (auto it = beg.data(); it != end.data(); it--, i++) {
-            m_ptr[i] = *it;
-        }
-        m_ptr[i] = '\0';
-    }
-}
-
 template<StringIt It>
 string_view::string_view(It beg)
     : m_ptr(beg.data())
@@ -207,12 +201,12 @@ namespace literals {
 
 static inline string operator""s(char const* str, size_t len)
 {
-    return std::string(str, len);
+    return string(str, len);
 }
 
 constexpr static inline string_view operator""sv(char const* str, size_t len)
 {
-    return std::string_view(str, len);
+    return string_view(str, len);
 }
 
 }

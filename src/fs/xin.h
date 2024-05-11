@@ -12,13 +12,14 @@
 #define VAL(x) (*x)
 
 #ifdef __cplusplus
-#include <lib/libcpp/string.h>
 
-std::string __nxin_current_directory_get(void);
-std::string __nxin_absolute_path_get(const std::string& name);
-std::string __nxin_entry_name_extern(const std::string& path);
-std::string __nxin_path_parse(std::string path);
-std::string __nxin_parent_folder_path_get(std::string path);
+// #include <lib/libcpp/string.h>
+
+// std::string __nxin_current_directory_get(void);
+// std::string __nxin_absolute_path_get(const std::string& name);
+// std::string __nxin_entry_name_extern(const std::string& path);
+// std::string __nxin_path_parse(std::string path);
+// std::string __nxin_parent_folder_path_get(std::string path);
 
 extern "C" {
 #endif

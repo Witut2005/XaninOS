@@ -42,3 +42,8 @@
 #define EXPECT_TRUE_FMT(format, lhs) \
         if (!(lhs)) xprintf("line {}: expected lhs == true. Failed with lhs=" format "\n", __LINE__, lhs);
 #define EXPECT_FALSE_FMT(format, lhs) if ((lhs)) xprintf("line {}: expected lhs == false. Failed with lhs=" format "\n", __LINE__, lhs);
+
+#define EXPECT_JUST_TRUE(lhs) \
+        if (!(lhs)) std::print("line {}: expected lhs == true.\n", __LINE__);
+#define EXPECT_JUST_FALSE(lhs) \
+        if ((lhs)) std::print("line {}: expected lhs == false.\n", __LINE__);

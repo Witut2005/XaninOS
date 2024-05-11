@@ -11,6 +11,12 @@
 
 using namespace std;
 
+std::string __nxin_current_directory_get(void);
+std::string __nxin_absolute_path_get(const std::string& name);
+std::string __nxin_entry_name_extern(const std::string& path);
+std::string __nxin_path_parse(std::string path);
+std::string __nxin_parent_folder_path_get(std::string path);
+
 extern "C" __STATUS __cpp_xin_test(void)
 {
 
@@ -18,7 +24,9 @@ extern "C" __STATUS __cpp_xin_test(void)
     {
         EXPECT_EQUAL(__nxin_path_parse("/"), "/");
         EXPECT_EQUAL(__nxin_path_parse("/."), "/");
+        EXPECT_EQUAL(__nxin_path_parse("/nicho/../"), "/");
         EXPECT_EQUAL(__nxin_path_parse("/..."), "/...");
+        // EXPECT_EQUAL(__nxin_path_parse("/.../..."), "/.../...");
         EXPECT_EQUAL(__nxin_path_parse("skibidi/nicho///////////////////ble"), "/skibidi/nicho/ble");
         EXPECT_EQUAL(__nxin_path_parse("/etc/var/variables.conf"), "/etc/var/variables.conf");
     }

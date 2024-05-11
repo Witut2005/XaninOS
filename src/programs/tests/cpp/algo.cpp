@@ -29,6 +29,13 @@ extern "C" __STATUS __cpp_algo_test(void)
         }
     }
 
+    TEST_CASE(have intersection)
+    {
+        EXPECT_TRUE(std::have_intersection<uint32_t>({ 1, 10 }, { 5, 6 }));
+        EXPECT_TRUE(std::have_intersection<uint32_t>({ 1, 5 }, { 4, 10 }));
+        EXPECT_FALSE(std::have_intersection<uint32_t>({ 1, 3 }, { 5, 6 }));
+        EXPECT_FALSE(std::have_intersection<uint32_t>({ 5, 6 }, { 1, 3 }));
+    }
 
     return XANIN_OK;
 }
