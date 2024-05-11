@@ -186,7 +186,7 @@ vector<T>& vector<T>::operator = (const vector<T>& other)
     m_size = other.m_size;
     m_capacity = other.m_capacity;
 
-    m_ptr = new T[other.m_size];
+    m_ptr = VECTOR_ALLOC(other.m_size * sizeof(T));
     for (int i = 0; i < other.m_size; i++) {
         push_back(other.m_ptr[i]);
     }
@@ -208,6 +208,11 @@ template <typename T>
 bool vector<T>::reallocate_if_needed(uint32_t size)
 {
     if (size <= m_capacity) return false;
+
+    if (m_ptr == nullptr) {
+        m_ptr = (T*)VECTOR_ALLOC(sizeof(T));
+        return true;
+    }
 
     m_ptr = (T*)VECTOR_REALLOC(m_ptr, size * 2 * sizeof(T));
     m_capacity = size * 2;

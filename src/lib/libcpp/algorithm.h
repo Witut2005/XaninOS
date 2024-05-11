@@ -87,14 +87,15 @@ InputIt find_if(InputIt beg, InputIt end, auto predicate)
     return end;
 }
 
-// template <typename Cont>
-// Cont::forward_iterator find_if(Cont container, auto predicate)
-// {
-//     for (auto beg = container.begin(); beg != container.end(); beg++) {
-//         if (predicate(*beg)) return beg;
-//     }
-//     return container.end();
-// }
+//TODO sus function 
+template <typename Cont>
+Cont::iterator find_if(Cont container, auto predicate)
+{
+    for (auto beg = container.begin(); beg != container.end(); beg++) {
+        if (predicate(*beg)) return beg;
+    }
+    return container.end();
+}
 
 // IN ITERATOR MAKE PTR TO CONTAINER OBJECT
 template <typename InputIt>

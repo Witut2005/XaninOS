@@ -1,6 +1,7 @@
 
 #include "devices/com/labels.h"
 #include "paging/paging.h"
+#include <fs/loaders/elf/elf_loader.h>
 #include <fs/xin.h>
 #include <lib/ascii/ascii.h>
 #include <lib/cpu/headers/cpu_state_info.h>
@@ -119,6 +120,7 @@ void kernel_loop(void)
         __xtb_flush_all(__vty_get());
 
         all_intervals_clear(); // clear all intervals added by apps during execution
+        elf_loader_loaded_addresses_clear();
 
         interval_set(stdio_refresh, stdio_refresh_rate, NULL); // refresh interval
 
