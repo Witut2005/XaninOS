@@ -26,12 +26,12 @@ extern "C"
     bool __input_is_normal_key_pressed(uint8_t scan_code);
     bool __input_is_special_key_pressed(uint8_t scan_code);
 
-    InputHandler *input_module_handlers_get();
-    bool __input_add_object_to_observe(KeyboardModuleObservedObject Object);
-    bool __input_remove_object_from_observe(const key_info_t *const KeyInfoToRemove);
-    void __input_handle_observed_objects(const key_info_t *const KeyboardDriverKeyInfo);
+    InputHandler* input_module_handlers_get();
+    bool __input_add_object_to_observe(InputObservable Object);
+    bool __input_remove_object_from_observe(const key_info_t* const KeyInfoToRemove);
+    void __input_handle_observed_objects(const key_info_t* const KeyboardDriverKeyInfo);
 
-    bool __input_add_handler(const InputHandler *const Handler);
+    bool __input_add_handler(const InputHandler* const Handler);
     bool __input_remove_handler(const input_handler_t Handler);
     bool __input_remove_user_handlers(void);
     void __input_call_handlers(key_info_t KeyboardDriverKeyInfo);

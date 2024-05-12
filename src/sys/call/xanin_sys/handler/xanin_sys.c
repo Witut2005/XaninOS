@@ -183,7 +183,7 @@ uint32_t xanin_sys_handle(void)
     }
 
     case XANIN_INPUT_ADD_OBJECT_TO_OBSERVE: {
-        __input_add_object_to_observe(*(KeyboardModuleObservedObject*)&ecx);
+        __input_add_object_to_observe(*(InputObservable*)&ecx);
         break;
     }
 

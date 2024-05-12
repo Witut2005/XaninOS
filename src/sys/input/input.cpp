@@ -5,13 +5,14 @@
 #include <lib/libcpp/container/array/array.hpp>
 #include <lib/libcpp/container/vector/vector.hpp>
 #include <sys/input/input.h>
+#include <sys/input/input.hpp>
 #include <lib/libcpp/algorithm.h>
 #include <lib/libc/stdiox.h>
 #include <sys/devices/keyboard/key_map.h>
 
 static key_info_t XaninGlobalKeyInfo;
 
-static std::array<KeyboardModuleObservedObject, 100> KeyboardModuleObservedObjects;
+static std::array<InputObservable, 100> InputObservables;
 static std::array<InputHandler, 100> InputModuleHandlers;
 
 static void (*input_character_mapper)(uint8_t scan_code);
@@ -164,7 +165,7 @@ extern "C"
     {
         bool break_code = is_break_code(KeyboardDriverKeyInfo->scan_code);
 
-        for (auto& it : KeyboardModuleObservedObjects)
+        for (auto& it : InputObservables)
         {
             if (!((it).Options.ignore_break_codes & break_code))
                 memcpy(it.KeyInfo, KeyboardDriverKeyInfo, sizeof(key_info_t));
@@ -173,12 +174,12 @@ extern "C"
 
     void __input_init(void)
     {
-        memset((uint8_t*)&KeyboardModuleObservedObjects, 0, sizeof(KeyboardModuleObservedObjects));
+        memset((uint8_t*)&InputObservables, 0, sizeof(InputObservables));
     }
 
-    bool __input_add_object_to_observe(KeyboardModuleObservedObject Object)
+    bool __input_add_object_to_observe(InputObservable Object)
     {
-        auto ObjectInserted = find_first(KeyboardModuleObservedObjects.begin(), KeyboardModuleObservedObjects.end(), [](const auto& a)
+        auto ObjectInserted = find_first(InputObservables.begin(), InputObservables.end(), [](const auto& a)
         { return !a.valid(); });
 
         if (!ObjectInserted.valid())
@@ -191,14 +192,14 @@ extern "C"
 
     bool __input_remove_object_from_observe(const key_info_t* const KeyInfoToRemove)
     {
-        auto ObjectsToRemove = std::find(KeyboardModuleObservedObjects.begin(), KeyboardModuleObservedObjects.end(), [=](auto a)
+        auto ObjectsToRemove = std::find(InputObservables.begin(), InputObservables.end(), [=](auto a)
         { return a.pointer()->KeyInfo == KeyInfoToRemove; });
 
         if (!ObjectsToRemove.size())
             return false;
 
         for (auto& it : ObjectsToRemove)
-            memset((uint8_t*)it.pointer()->KeyInfo, (uint8_t)NULL, sizeof(KeyboardModuleObservedObject));
+            memset((uint8_t*)it.pointer()->KeyInfo, (uint8_t)NULL, sizeof(InputObservable));
 
         return true;
     }
@@ -284,3 +285,7 @@ extern "C"
         return x;
     }
 }
+
+void InputManager::scan_code_mapper_set(void) {}
+
+InputManager InputManager::s_instance;

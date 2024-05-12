@@ -2,18 +2,16 @@
 
 #include <stdbool.h>
 
-struct KeyboardModuleObservedObjectOptions
+typedef struct
 {
     bool ignore_break_codes;
-};
-typedef struct KeyboardModuleObservedObjectOptions KeyboardModuleObservedObjectOptions;
+}InputObservableOptions;
 
-struct KeyboardModuleObservedObject
+typedef struct
 {
-    key_info_t *KeyInfo;
-    KeyboardModuleObservedObjectOptions Options;
-};
-typedef struct KeyboardModuleObservedObject KeyboardModuleObservedObject;
+    key_info_t* KeyInfo;
+    InputObservableOptions Options;
+}InputObservable;
 
 enum INPUT_HANDLER_TYPES
 {
@@ -21,29 +19,25 @@ enum INPUT_HANDLER_TYPES
     USER_INPUT_HANDLER
 };
 
-struct InputHandlerOptions
+typedef struct
 {
-    uint8_t **args;
+    uint8_t** args;
     bool type;
-};
+}InputHandlerOptions;
 
-typedef struct InputHandlerOptions InputHandlerOptions;
-typedef void (*input_handler_t)(key_info_t, uint8_t **);
+typedef void (*input_handler_t)(key_info_t, uint8_t**);
 
-struct InputHandler
+typedef struct
 {
     input_handler_t handler;
     InputHandlerOptions options;
-};
-typedef struct InputHandler InputHandler;
+}InputHandler;
 
-typedef void (*input_scan_code_mapper_handler_t)(void);
+typedef void (*input_scan_code_mapper_handler_t)(void); //TODO find better type name
 
-struct InputScanCodeMapperHandlers
+typedef struct
 {
     input_scan_code_mapper_handler_t prtsc;
     // input_scan_code_mapper_handler_t shift;
     // input_scan_code_mapper_handler_t alt;
-};
-
-typedef struct InputScanCodeMapperHandlers InputScanCodeMapperHandlers;
+}InputScanCodeMapperHandlers;

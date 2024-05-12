@@ -127,8 +127,8 @@ string __nxin_path_parse(string path)
         }
     }
 
-    if (*path.rbegin() == '/' && path.length() != STRING_CHARS("/")) { //delete trailing /
-        *path.rbegin() = '\0';
+    if (*path.rbegin() == '/' && path.length() != STRING_CHARS("/")) {
+        *path.rbegin() = '\0';  //delete trailing /
     }
 
     string parsed_path;
