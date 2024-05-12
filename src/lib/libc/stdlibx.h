@@ -14,7 +14,7 @@
 
 #define XANIN_PMMNGR_BLOCK_SIZE 4096
 #define ARRAY_LENGTH(x) (sizeof(x) / sizeof(x[0]))
-#define STRING_CHARS(x) (sizeof(x) - sizeof('\0'))
+#define STRING_CHARS(x) (int(sizeof(x) - sizeof('\0')))
 
 typedef uint8_t* address_t;
 typedef uint8_t* object_t;
