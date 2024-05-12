@@ -25,14 +25,6 @@ bool ElfLoader::loadability_check(uint32_t entry_point, uint32_t size) const
         [=](const ElfExecutableMemoryInfo& info) {
         return std::have_intersection<uint32_t>({ entry_point, entry_point + size }, { info.begin, info.begin + info.size });
     }) == s_loaded_addresses.end();
-
-    // for (auto a : s_loaded_addresses)
-    // {
-    //     if (std::have_intersection<uint32_t>({ entry_point, entry_point + size }, { a.begin, a.begin + a.size })) {
-    //         return false;
-    //     }
-    // }
-    // return true;
 }
 
 ErrorOr<ElfHeaderAuto> ElfLoader::header_get(void) const
@@ -168,6 +160,7 @@ bool ElfLoader::execute(void)
     if (file == nullptr) { return false; }
 
     uint32_t entry_point = header.e_entry + (is_pie ? find_loadable_memory_location(file->size) : 0x0);
+
     if (loadability_check(entry_point, file->size) == false) {
         dbg_error(DEBUG_LABEL_ELF_LOADER, "Cant load executable. Program memory space is already used");
         return false;

@@ -89,7 +89,7 @@ InputIt find_if(InputIt beg, InputIt end, auto predicate)
 
 //TODO sus function 
 template <typename Cont>
-Cont::iterator find_if(Cont container, auto predicate)
+Cont::iterator find_if(Cont& container, auto predicate)
 {
     for (auto beg = container.begin(); beg != container.end(); beg++) {
         if (predicate(*beg)) return beg;

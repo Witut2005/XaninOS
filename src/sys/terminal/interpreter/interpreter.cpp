@@ -38,9 +38,7 @@ extern "C" {
         std::string app_path = std::string("/external_apps/") + std::string(argv[0]);
 
         dbg_info(DEBUG_LABEL_XANIN, (std::string("Opening external file ") + app_path).c_str());
-        ElfLoader(app_path.c_str()).execute();
-
-        return true;
+        return ElfLoader(app_path.c_str()).execute();
     }
 
     extern uint32_t stdio_refresh_rate; // USE HERE SYSCALL
@@ -193,7 +191,7 @@ extern "C" {
 
         else
         {
-            if (check_external_apps())
+            if (check_external_apps() == false)
             {
                 xprintf("%zunknown command: %s\n", OUTPUT_COLOR_ERROR_SET, argv[0]);
                 last_command_exit_status = XANIN_ERROR;

@@ -108,11 +108,10 @@ vector<T>::vector()
 template <typename T>
 vector<T>::vector(const vector<T>& other)
 {
-    m_size = other.m_size;
     m_capacity = other.m_capacity;
     m_ptr = (T*)VECTOR_ALLOC(m_capacity * sizeof(T));
 
-    for (int i = 0; i < m_size; i++) {
+    for (int i = 0; i < other.m_size; i++) {
         push_back(other.m_ptr[i]);
     }
 }
