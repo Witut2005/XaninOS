@@ -316,6 +316,7 @@ public:
     constexpr bool is_end(void) { return m_index == m_container.get().size(); }
     constexpr bool is_rend(void) { return m_index == -1; }
     constexpr value_type* data(void) { return &m_container.get().data()[m_index]; }
+    constexpr int index(void) { return m_index; }
 
     constexpr RandomAccessIterator& operator=(const RandomAccessIterator& other) = default;
 
@@ -354,6 +355,7 @@ public:
     ConstRandomAccessIterator(const RandomAccessIterator<Cont>& other) : m_container(other.m_container), m_index(other.m_index) {}
     ConstRandomAccessIterator(const RandomAccessReversedIterator<Cont>& other) : m_container(other.m_container), m_index(other.m_index) {}
     ConstRandomAccessIterator(const ConstRandomAccessReversedIterator<Cont>& other) : m_container(other.m_container), m_index(other.m_index) {}
+    constexpr int index(void) { return m_index; }
 
     constexpr bool is_valid(void) { return m_index >= 0 && m_index < m_container.get().size(); }
     constexpr bool is_end(void) { return m_index == m_container.get().size(); }
@@ -399,6 +401,7 @@ public:
     constexpr bool is_end(void) { return m_index == m_container.get().size(); }
     constexpr bool is_rend(void) { return m_index == -1; }
     constexpr value_type* data(void) { return &m_container.get().data()[m_index]; }
+    constexpr int index(void) { return m_index; }
 
     constexpr RandomAccessReversedIterator& operator=(const RandomAccessReversedIterator& other) = default;
 
@@ -441,6 +444,7 @@ public:
     constexpr bool is_end(void) { return m_index == m_container.get().size(); }
     constexpr bool is_rend(void) { return m_index == -1; }
     constexpr const value_type* data(void) { return &m_container.get().data()[m_index]; }
+    constexpr int index(void) { return m_index; }
 
     constexpr ConstRandomAccessReversedIterator& operator=(const ConstRandomAccessReversedIterator& other) = default;
 

@@ -97,6 +97,33 @@ Cont::iterator find_if(Cont& container, auto predicate)
     return container.end();
 }
 
+template<typename Iterator, typename T = typename Iterator::value_type>
+Iterator remove(Iterator first, Iterator last, const T& value)
+{
+    first = find_if(first, last, [&value](const auto& a) { return a == value;});
+    for (Iterator it = first; it != last; it++)
+    {
+        if ((*it == value) == false) {
+            *first++ = std::move(*it);
+        }
+    }
+    return first;
+}
+
+template<class Cont>
+Cont::iterator remove(Cont container, const typename Cont::value_type& value)
+{
+    auto first = find_if(container, [&value](const auto& a) { return a == value;});
+    for (Iterator it = first; it != container.end(); it++)
+    {
+        if ((*it == value) == false) {
+            *first++ = std::move(*it);
+        }
+    }
+    return first;
+}
+
+
 // IN ITERATOR MAKE PTR TO CONTAINER OBJECT
 template <typename InputIt>
 std::vector<InputIt> find(InputIt beg, InputIt end, auto finder)

@@ -1,89 +1,93 @@
 
 #pragma once
 #include <sys/input/key_info.h>
+#include <lib/libcpp/algorithm.h>
 #include <lib/libcpp/container/vector.hpp>
+#include <lib/libcpp/class.hpp>
 
 class InputManager
 {
 public:
+    // MAKE_OBJECT_NON_COPYABLE(InputManager);
 
-    enum class ObservableType {
+    template<class T>
+    struct Table {
+        std::vector<T> kernel;
+        std::vector<T> user;
+    };
+
+    enum class EntryType {
         Kernel,
         User
     };
 
-    enum class HandlerType {
-        Kernel,
-        User
+    enum class TableTypes {
+        Observables,
+        Handlers
     };
+
+    static InputManager& the(void) { return s_instance; };
 
     void scan_code_mapper_set(void);
 
-    //returns observable id
-    template<ObservableType Type>
-    int observable_add(const InputObservable& observable);
+    template<InputManager::TableTypes T, InputManager::EntryType Type>
+    int add(const auto& entry);
 
-    template<ObservableType Type>
-    bool observable_remove(int observable_id);
+    template<InputManager::TableTypes T, InputManager::EntryType Type>
+    bool remove(int id);
 
-    template<HandlerType Type>
-    int handler_add(const InputHandler& handler); //returns handler_id
-
-    template<HandlerType Type>
-    bool handler_remove(int handler_id);
-
-    void handlers_call(void);
+    void handlers_call(key_info_t key_info);
+    void observables_update(key_info_t key_info);
 
 private:
-    template<ObservableType Type>
-    constexpr std::vector<InputObservable>& observables_get(void) { return Type == ObservableType::Kernel ? m_kernel_observables : m_user_observables; }
+    template<EntryType Type>
+    constexpr std::vector<InputObservable>& observables_get(void) { return Type == EntryType::Kernel ? m_observables.kernel : m_observables.user; }
 
-    template<HandlerType Type>
-    constexpr std::vector<InputHandler>& handlers_get(void) { return Type == HandlerType::Kernel ? m_kernel_handlers : m_user_handlers; }
+    template<EntryType Type>
+    constexpr std::vector<InputHandler>& handlers_get(void) { return Type == EntryType::Kernel ? m_handlers.kernel : m_handlers.user; }
+
+    template<TableTypes T, EntryType Type>
+    constexpr auto& tables_get(void) {
+        if constexpr (T == TableTypes::Observables) return observables_get<Type>();
+        else if (T == TableTypes::Handlers) return handlers_get<Type>();
+    }
+
+    template<TableTypes T>
+    void execute_on_tables(auto f);
 
     static InputManager s_instance;
 
-    std::vector<InputObservable> m_kernel_observables;
-    std::vector<InputObservable> m_user_observables;
-
-    std::vector<InputHandler> m_kernel_handlers;
-    std::vector<InputHandler> m_user_handlers;
+    Table<InputObservable> m_observables;
+    Table<InputHandler> m_handlers;
 };
 
-
-template<InputManager::ObservableType Type>
-int InputManager::observable_add(const InputObservable& observable)
+template<InputManager::TableTypes T, InputManager::EntryType Type>
+int InputManager::add(const auto& entry)
 {
-    auto& observables = observables_get <Type>();
-    observables.push_back(observable);
-    return observables.size();
+    auto& table = tables_get<T, Type>();
+    table.push_back(entry);
+    return table.size();
 }
 
-template<InputManager::ObservableType Type>
-bool InputManager::observable_remove(int observable_id)
+template<InputManager::TableTypes T, InputManager::EntryType Type>
+bool InputManager::remove(int id)
 {
-    return true;
-    // TODO std::remove like in vector
-    // if constexpr (Type == InputManager::ObservableType::Kernel) {
-    //     m_kernel_observables.push_back(observable);
-    // }
-    // else {
-    //     m_user_observables.push_back(observable);
-    // }
+    auto& table = tables_get <T, Type>();
+    auto it = std::remove(table, id);
+    auto end = table.end(); // must be done before resize
+
+    table.resize(it.index());
+    return it != end;
 }
 
-template<InputManager::HandlerType Type>
-int InputManager::handler_add(const InputHandler& handler)
+template<InputManager::TableTypes T>
+void InputManager::execute_on_tables(auto f)
 {
+    for (auto& a : tables_get<T, InputManager::EntryType::Kernel>()) {
+        f(a);
+    }
 
-    auto& handlers = handlers_get<Type>();
-    handlers.push_back(handler);
-    return handlers.size();
-}
-
-template<InputManager::HandlerType Type>
-bool InputManager::handler_remove(int handler_id)
-{
-    return true;
-    //TODO
+    for (auto& a : tables_get<T, InputManager::EntryType::User>()) {
+        f(a);
+    }
 }

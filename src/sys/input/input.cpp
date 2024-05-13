@@ -288,4 +288,18 @@ extern "C"
 
 void InputManager::scan_code_mapper_set(void) {}
 
+void InputManager::handlers_call(key_info_t key_info)
+{
+    execute_on_tables<InputManager::TableTypes::Handlers>([&key_info](const InputHandler& handler) {handler.handler(key_info, nullptr);});
+}
+
+void InputManager::observables_update(key_info_t key_info)
+{
+    execute_on_tables<InputManager::TableTypes::Observables>([&key_info](InputObservable& observable) {
+        if (observable.Options.ignore_break_codes && is_break_code(key_info.scan_code)) {
+            *observable.KeyInfo = key_info;
+        }
+    });
+}
+
 InputManager InputManager::s_instance;
