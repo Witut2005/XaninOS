@@ -15,8 +15,8 @@ extern "C"
     bool __input_is_shift_pressed(void);
     bool __input_is_alt_pressed(void);
 
-    key_info_t __input_global_key_info_get(void);
-    void __input_global_key_info_set(key_info_t KeyInfo);
+    KeyInfo __input_global_key_info_get(void);
+    void __input_global_key_info_set(KeyInfo KeyInfo);
 
     void __input_default_prtsc_handler(void);
     void __input_prtsc_handler_set(input_scan_code_mapper_handler_t handler);
@@ -28,15 +28,15 @@ extern "C"
 
     InputHandler* input_module_handlers_get();
     bool __input_add_object_to_observe(InputObservable Object);
-    bool __input_remove_object_from_observe(const key_info_t* const KeyInfoToRemove);
-    void __input_handle_observed_objects(const key_info_t* const KeyboardDriverKeyInfo);
+    bool __input_remove_object_from_observe(const KeyInfo* const KeyInfoToRemove);
+    void __input_handle_observed_objects(const KeyInfo* const KeyboardDriverKeyInfo);
 
-    bool __input_add_handler(const InputHandler* const Handler);
-    bool __input_remove_handler(const input_handler_t Handler);
-    bool __input_remove_user_handlers(void);
-    void __input_call_handlers(key_info_t KeyboardDriverKeyInfo);
+    bool __input_add_handler(const InputHandler* const Handler, enum INPUT_HANDLER_TYPES type);
+    bool __input_remove_handler(int id, enum INPUT_HANDLER_TYPES type);
+    void __input_remove_user_handlers(void);
+    void __input_call_handlers(KeyInfo KeyboardDriverKeyInfo);
 
-    key_info_t __keyinfo_get(void);
+    KeyInfo __keyinfo_get(void);
     char __inputc(void);
     xchar __inputg(void);
 
@@ -44,4 +44,4 @@ extern "C"
 }
 #endif
 
-extern key_info_t KeyInfo;
+extern KeyInfo key_info;

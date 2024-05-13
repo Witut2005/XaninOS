@@ -1,16 +1,17 @@
 
 #pragma once
 
-struct BallInfo
-{
+#include <lib/libc/pair.h>
+#include <stdint.h>
+
+struct BallInfo {
     int8_t y;
     int8_t x;
 };
 
 typedef struct BallInfo BallInfo;
 
-struct PongState
-{
+struct PongState {
     PairUInt8 Positions;
 
     PairUInt8 PlayersInput;
@@ -22,7 +23,7 @@ struct PongState
 
 typedef struct PongState PongState;
 
-// static inline void pong_get_input(key_info_t KeyboardInfo, uint8_t **args);
+// static inline void pong_get_input(KeyInfo KeyboardInfo, uint8_t **args);
 // static inline void player1_position_update(PongState *);
 // static inline void player2_position_update(PongState *);
 // static inline void result_screen(char *str);

@@ -36,8 +36,10 @@ public:
     template<InputManager::TableTypes T, InputManager::EntryType Type>
     bool remove(int id);
 
-    void handlers_call(key_info_t key_info);
-    void observables_update(key_info_t key_info);
+    void user_handlers_remove(void);
+
+    void handlers_call(KeyInfo key_info);
+    void observables_update(KeyInfo key_info);
 
 private:
     template<EntryType Type>

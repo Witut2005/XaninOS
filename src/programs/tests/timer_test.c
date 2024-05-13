@@ -1,10 +1,10 @@
-#include <lib/libc/time.h>
 #include <lib/libc/canvas.h>
 #include <lib/libc/stdiox.h>
 #include <lib/libc/stdlibx.h>
+#include <lib/libc/time.h>
 #include <sys/input/input.h>
 
-static void timer_handler(key_info_t ki, uint8_t **a)
+static void timer_handler(KeyInfo ki, uint8_t** a)
 {
     if (ki.scan_code == ENTER)
         exit();
@@ -19,7 +19,7 @@ int timer_test(void)
     uint32_t current_time = 0;
 
     canvas_screen_clear();
-    key_info_t k;
+    KeyInfo k;
 
     __sys_input_add_object_to_observe(input_observed_object_create(&k, input_observed_object_options_create(true)));
 

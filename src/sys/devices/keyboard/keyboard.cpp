@@ -51,7 +51,7 @@ void Keyboard::handle(void)
 
     #warning "TO DO exit on CTRL + C";
 
-    static key_info_t KeyInfo;
+    static KeyInfo KeyInfo;
     KeyInfo.scan_code = read(ControllerPort::KeyboardEncoder);
     // xprintf("%x ", KeyInfo.scan_code);
 

@@ -154,8 +154,9 @@ void vector<T>::clear(void)
         VECTOR_FREE(m_ptr);
     }
 
-    m_size = m_capacity = 0;
-    m_ptr = nullptr;
+    m_size = 0;
+    m_capacity = 1;
+    m_ptr = (T*)VECTOR_ALLOC(sizeof(T));
 }
 
 template <typename T>

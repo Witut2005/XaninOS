@@ -27,7 +27,7 @@ extern "C" int xagame_test(void)
     // manager[2] = xgm::color::red | xgm::color::green_text;
     // manager.vertical_line_create(5, xgm::color::yellow);
 
-    key_info_t KeyInfo;
+    KeyInfo KeyInfo;
     __sys_keyinfo_get(&KeyInfo);
 
     while (KeyInfo.scan_code != ENTER)

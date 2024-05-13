@@ -158,7 +158,7 @@ uint32_t xanin_sys_handle(void)
     }
 
     case XANIN_KEYINFO_GET: {
-        *(key_info_t*)ecx = __keyinfo_get();
+        *(KeyInfo*)ecx = __keyinfo_get();
         break;
     }
 
@@ -188,22 +188,23 @@ uint32_t xanin_sys_handle(void)
     }
 
     case XANIN_INPUT_REMOVE_OBJECT_FROM_OBSERVE: {
-        __input_remove_object_from_observe((key_info_t const* const)ecx);
+        __input_remove_object_from_observe((KeyInfo const* const)ecx);
         break;
     }
 
     case XANIN_INPUT_HANDLE_OBSERVED_OBJECTS: {
-        __input_handle_observed_objects((key_info_t const* const)ecx);
+        __input_handle_observed_objects((KeyInfo const* const)ecx);
         break;
     }
 
     case XANIN_INPUT_ADD_HANDLER: {
-        __input_add_handler((InputHandler const* const)ecx);
+        __input_add_handler((InputHandler const* const)ecx, USER_INPUT_HANDLER);
         break;
     }
 
     case XANIN_INPUT_REMOVE_HANDLER: {
-        __input_remove_handler(*((input_handler_t*)&ecx));
+#warning TODO use id here
+        // __input_remove_handler(*((input_handler_t*)&ecx));
         break;
     }
 
@@ -213,7 +214,7 @@ uint32_t xanin_sys_handle(void)
     }
 
     case XANIN_INPUT_CALL_HANDLERS: {
-        __input_call_handlers(*((key_info_t*)&ecx));
+        __input_call_handlers(*((KeyInfo*)&ecx));
         break;
     }
 

@@ -33,7 +33,7 @@ ESP_GET_NTH_ARGUMENT ecx, 1
 XANIN_INVOKE_SYSTEM_CALL
 ret
 
-__sys_keyinfo_get:          ;void __sys_keyinfo_get(key_info_t* ptr)
+__sys_keyinfo_get:          ;void __sys_keyinfo_get(KeyInfo* ptr)
 mov eax, XANIN_KEYINFO_GET  ;keyinfo_get syscall id
 ESP_GET_NTH_ARGUMENT ecx, 1
 XANIN_INVOKE_SYSTEM_CALL

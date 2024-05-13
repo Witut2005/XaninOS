@@ -4,16 +4,12 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-struct xchar
-{
+typedef struct {
     char character;
     uint8_t scan_code;
-};
+}xchar;
 
-typedef struct xchar xchar;
-
-struct key_info_t
-{
+typedef struct {
     uint8_t scan_code;
     char character;
 
@@ -21,6 +17,4 @@ struct key_info_t
     bool special_keys_pressed[0x80];
 
     uint8_t is_caps;
-};
-
-typedef struct key_info_t key_info_t;
+}KeyInfo;

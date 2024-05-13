@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdbool.h>
+#include <sys/input/key_info.h>
 
 typedef struct
 {
@@ -9,8 +10,8 @@ typedef struct
 
 typedef struct
 {
-    key_info_t* KeyInfo;
-    InputObservableOptions Options;
+    KeyInfo* key_info;
+    InputObservableOptions options;
 }InputObservable;
 
 enum INPUT_HANDLER_TYPES
@@ -25,7 +26,7 @@ typedef struct
     bool type;
 }InputHandlerOptions;
 
-typedef void (*input_handler_t)(key_info_t, uint8_t**);
+typedef void (*input_handler_t)(KeyInfo, uint8_t**);
 
 typedef struct
 {

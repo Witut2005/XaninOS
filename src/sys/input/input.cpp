@@ -10,7 +10,7 @@
 #include <lib/libc/stdiox.h>
 #include <sys/devices/keyboard/key_map.h>
 
-static key_info_t XaninGlobalKeyInfo;
+static KeyInfo XaninGlobalKeyInfo;
 
 static std::array<InputObservable, 100> InputObservables;
 static std::array<InputHandler, 100> InputModuleHandlers;
@@ -19,6 +19,12 @@ static void (*input_character_mapper)(uint8_t scan_code);
 static InputScanCodeMapperHandlers XaninScanCodeMapperHandlers;
 
 extern "C" int screenshot(void);
+
+constexpr auto Handlers = InputManager::TableTypes::Handlers;
+constexpr auto Observables = InputManager::TableTypes::Observables;
+
+constexpr auto TypeKernel = InputManager::EntryType::Kernel;
+constexpr auto TypeUser = InputManager::EntryType::User;
 
 extern "C"
 {
@@ -37,12 +43,12 @@ extern "C"
         return XaninGlobalKeyInfo.keys_pressed[KBP_LEFT_ALT] | XaninGlobalKeyInfo.keys_pressed[KBSP_RIGHT_ALT];
     }
 
-    key_info_t __input_global_key_info_get(void)
+    KeyInfo __input_global_key_info_get(void)
     {
         return XaninGlobalKeyInfo;
     }
 
-    void __input_global_key_info_set(key_info_t KeyInfo)
+    void __input_global_key_info_set(KeyInfo KeyInfo)
     {
         XaninGlobalKeyInfo = KeyInfo;
     }
@@ -161,14 +167,14 @@ extern "C"
     }
 
     //changed and not tested yet
-    void __input_handle_observed_objects(const key_info_t* const KeyboardDriverKeyInfo)
+    void __input_handle_observed_objects(const KeyInfo* const KeyboardDriverKeyInfo)
     {
         bool break_code = is_break_code(KeyboardDriverKeyInfo->scan_code);
 
         for (auto& it : InputObservables)
         {
-            if (!((it).Options.ignore_break_codes & break_code))
-                memcpy(it.KeyInfo, KeyboardDriverKeyInfo, sizeof(key_info_t));
+            if (!((it).options.ignore_break_codes & break_code))
+                memcpy(it.key_info, KeyboardDriverKeyInfo, sizeof(KeyInfo));
         }
     }
 
@@ -190,71 +196,41 @@ extern "C"
         return true;
     }
 
-    bool __input_remove_object_from_observe(const key_info_t* const KeyInfoToRemove)
+    bool __input_remove_object_from_observe(const KeyInfo* const KeyInfoToRemove)
     {
         auto ObjectsToRemove = std::find(InputObservables.begin(), InputObservables.end(), [=](auto a)
-        { return a.pointer()->KeyInfo == KeyInfoToRemove; });
+        { return a.pointer()->key_info == KeyInfoToRemove; });
 
         if (!ObjectsToRemove.size())
             return false;
 
         for (auto& it : ObjectsToRemove)
-            memset((uint8_t*)it.pointer()->KeyInfo, (uint8_t)NULL, sizeof(InputObservable));
+            memset((uint8_t*)it.pointer()->key_info, (uint8_t)NULL, sizeof(InputObservable));
 
         return true;
     }
 
-    bool __input_add_handler(const InputHandler* const Handler)
+    bool __input_add_handler(const InputHandler* const Handler, enum INPUT_HANDLER_TYPES type)
     {
-        auto HandlerToAdd = std::find_first(InputModuleHandlers.begin(), InputModuleHandlers.end(), [](auto& a)
-        { return a.pointer()->handler == NULL; });
+        return type == KERNEL_INPUT_HANDLER ? InputManager::the().add<InputManager::TableTypes::Handlers, InputManager::EntryType::Kernel>(*Handler) :
+            InputManager::the().add<InputManager::TableTypes::Handlers, InputManager::EntryType::User>(*Handler);
+    }
 
-        if (!HandlerToAdd.valid())
-            return false;
+    void __input_call_handlers(KeyInfo key_info)
+    {
+        return InputManager::the().handlers_call(key_info);
+    }
 
-        memcpy((uint8_t*)HandlerToAdd.pointer(), (uint8_t*)Handler, sizeof(InputHandler));
+    bool __input_remove_handler(int id, enum INPUT_HANDLER_TYPES type)
+    {
         return true;
+        // return type == KERNEL_INPUT_HANDLER ? InputManager::the().remove<InputManager::TableTypes::Handlers, InputManager::EntryType::Kernel>(id) :
+        //     InputManager::the().remove<InputManager::TableTypes::Handlers, InputManager::EntryType::User>(id);
     }
 
-    void __input_call_handlers(key_info_t KeyboardDriverKeyInfo)
+    void __input_remove_user_handlers(void)
     {
-        auto HandlersToCall = std::find(InputModuleHandlers.begin(), InputModuleHandlers.end(), [](auto& a)
-        { return a.pointer()->handler != NULL; });
-
-        for (auto& a : HandlersToCall)
-            a.pointer()->handler(KeyboardDriverKeyInfo, a.pointer()->options.args);
-    }
-
-    bool __input_remove_handler(const input_handler_t Handler)
-    {
-        auto HandlersToRemove = std::find(InputModuleHandlers.begin(), InputModuleHandlers.end(), [=](auto& a)
-        { return a.pointer()->handler == Handler; });
-
-        if (!HandlersToRemove.size())
-            return false;
-
-        for (auto& a : HandlersToRemove)
-            memset((uint8_t*)a.pointer(), (uint8_t)NULL, sizeof(InputHandler));
-        return true;
-    }
-
-    bool __input_remove_user_handlers(void)
-    {
-        auto HandlersToRemove = std::find(InputModuleHandlers.begin(), InputModuleHandlers.end(), [](auto& a)
-        { return a.pointer()->options.type == USER_INPUT_HANDLER; });
-
-        if (!HandlersToRemove.size())
-            return false;
-
-        for (auto& a : HandlersToRemove)
-            memset((uint8_t*)a.pointer(), (uint8_t)NULL, sizeof(InputHandler));
-
-        return true;
-    }
-
-    char __inputc(void)
-    {
-        return __inputg().character;
+        InputManager::the().user_handlers_remove();
     }
 
     void __keyinfo_clear(void)
@@ -262,18 +238,15 @@ extern "C"
         // memset((uint8_t*)&XaninGlobalKeyInfo, 0, sizeof(XaninGlobalKeyInfo));
     }
 
-    key_info_t __keyinfo_get(void)
+    KeyInfo __keyinfo_get(void)
     {
         return XaninGlobalKeyInfo;
     }
 
     xchar __inputg(void)
     {
-
-        key_info_t InputgKeyInfo;
-
+        KeyInfo InputgKeyInfo;
         InputgKeyInfo.scan_code = XaninGlobalKeyInfo.scan_code = 0;
-        // __keyinfo_clear();
 
         while ((InputgKeyInfo.scan_code == 0) || (InputgKeyInfo.scan_code >= 0x80))
             InputgKeyInfo = __keyinfo_get(); // break codes doesnt count
@@ -284,22 +257,32 @@ extern "C"
 
         return x;
     }
+
+    char __inputc(void)
+    {
+        return __inputg().character;
+    }
 }
 
 void InputManager::scan_code_mapper_set(void) {}
 
-void InputManager::handlers_call(key_info_t key_info)
+void InputManager::handlers_call(KeyInfo key_info)
 {
-    execute_on_tables<InputManager::TableTypes::Handlers>([&key_info](const InputHandler& handler) {handler.handler(key_info, nullptr);});
+    execute_on_tables<InputManager::TableTypes::Handlers>([&key_info](const InputHandler& handler) {handler.handler(key_info, handler.options.args);});
 }
 
-void InputManager::observables_update(key_info_t key_info)
+void InputManager::observables_update(KeyInfo key_info)
 {
     execute_on_tables<InputManager::TableTypes::Observables>([&key_info](InputObservable& observable) {
-        if (observable.Options.ignore_break_codes && is_break_code(key_info.scan_code)) {
-            *observable.KeyInfo = key_info;
+        if (observable.options.ignore_break_codes && is_break_code(key_info.scan_code)) {
+            *observable.key_info = key_info;
         }
     });
+}
+
+void InputManager::user_handlers_remove(void)
+{
+    m_handlers.user.clear();
 }
 
 InputManager InputManager::s_instance;

@@ -115,7 +115,7 @@ extern "C" {
     char getscan(void);
     xchar getxchar(void);
     xchar inputg(void);
-    key_info_t keyinfo_get(void);
+    KeyInfo keyinfo_get(void);
 
 #ifdef __cplusplus
 }
