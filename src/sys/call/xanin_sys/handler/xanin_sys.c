@@ -173,48 +173,48 @@ uint32_t xanin_sys_handle(void)
     }
 
     case XANIN_INPUT_CHARACTER_MAPPER_SET: {
-        __input_scan_code_mapper_set((void (*)(uint8_t))ecx);
+        input_scan_code_mapper_set((void (*)(uint8_t))ecx);
         break;
     }
 
     case XANIN_INPUT_CHARACTER_MAPPER_CALL: {
-        __input_scan_code_mapper_call(ecx);
+        input_scan_code_mapper_call(ecx);
         break;
     }
 
     case XANIN_INPUT_ADD_OBJECT_TO_OBSERVE: {
-        __input_add_object_to_observe(*(InputObservable*)&ecx);
+        input_observable_add((InputObservable*)ecx, INPUT_USER);
         break;
     }
 
     case XANIN_INPUT_REMOVE_OBJECT_FROM_OBSERVE: {
-        __input_remove_object_from_observe((KeyInfo const* const)ecx);
+        input_observable_remove((KeyInfo const* const)ecx);
         break;
     }
 
     case XANIN_INPUT_HANDLE_OBSERVED_OBJECTS: {
-        __input_handle_observed_objects((KeyInfo const* const)ecx);
+        input_obserables_update((KeyInfo const* const)ecx);
         break;
     }
 
     case XANIN_INPUT_ADD_HANDLER: {
-        __input_add_handler((InputHandler const* const)ecx, USER_INPUT_HANDLER);
+        input_handler_add((InputHandler const* const)ecx, INPUT_USER);
         break;
     }
 
     case XANIN_INPUT_REMOVE_HANDLER: {
 #warning TODO use id here
-        // __input_remove_handler(*((input_handler_t*)&ecx));
+        // input_handler_remove(*((input_handler_t*)&ecx));
         break;
     }
 
     case XANIN_INPUT_REMOVE_USER_HANDLERS: {
-        __input_remove_user_handlers();
+        input_user_handlers_remove();
         break;
     }
 
     case XANIN_INPUT_CALL_HANDLERS: {
-        __input_call_handlers(*((KeyInfo*)&ecx));
+        input_handlers_call(*((KeyInfo*)&ecx));
         break;
     }
 

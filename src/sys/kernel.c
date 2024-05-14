@@ -379,7 +379,7 @@ void kernel_init(void)
         ioapic_id_get());
 
     // COS NIE DZIALA SYSCALL
-    __input_scan_code_mapper_set(xanin_default_character_mapper);
+    input_scan_code_mapper_set(xanin_default_character_mapper);
 
     pit_init(apic_pit_redirect != NULL ? apic_pit_redirect->global_system_int_table + APIC_IRQ_BASE : PIC_PIT_VECTOR);
     keyboard_init(apic_keyboard_redirect != NULL ? apic_keyboard_redirect->global_system_int_table + APIC_IRQ_BASE
@@ -452,7 +452,7 @@ void kernel_start(void)
     stdio_refresh(NULL);
 
     // while (getxchar().scan_code != ENTER)
-    while (!__input_is_normal_key_pressed(KBP_ENTER))
+    while (!input_is_normal_key_pressed(KBP_ENTER))
         ;
     screen_clear();
 

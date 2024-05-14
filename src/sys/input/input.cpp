@@ -137,26 +137,27 @@ extern "C"
             KEYBOARD_DRIVER_KEY_REMAP(0x27, 0x22);
         }
 
-        if (is_break_code(XaninGlobalKeyInfo.scan_code))
+        if (is_break_code(XaninGlobalKeyInfo.scan_code)) {
             XaninGlobalKeyInfo.character = 0x0;
+        }
     }
 
-    void __input_scan_code_mapper_set(void (*mapper)(uint8_t scan_code))
+    void input_scan_code_mapper_set(void (*mapper)(uint8_t scan_code))
     {
         input_character_mapper = mapper;
     }
 
-    void __input_scan_code_mapper_call(uint8_t scan_code)
+    void input_scan_code_mapper_call(uint8_t scan_code)
     {
         return input_character_mapper(scan_code);
     }
 
-    bool __input_is_normal_key_pressed(uint8_t scan_code)
+    bool input_is_normal_key_pressed(uint8_t scan_code)
     {
         return XaninGlobalKeyInfo.keys_pressed[scan_code];
     }
 
-    bool __input_is_special_key_pressed(uint8_t scan_code)
+    bool input_is_special_key_pressed(uint8_t scan_code)
     {
         return XaninGlobalKeyInfo.special_keys_pressed[scan_code];
     }
@@ -167,7 +168,7 @@ extern "C"
     }
 
     //changed and not tested yet
-    void __input_handle_observed_objects(const KeyInfo* const KeyboardDriverKeyInfo)
+    void input_obserables_update(const KeyInfo* const KeyboardDriverKeyInfo)
     {
         bool break_code = is_break_code(KeyboardDriverKeyInfo->scan_code);
 
@@ -178,57 +179,36 @@ extern "C"
         }
     }
 
-    void __input_init(void)
+    bool input_observable_add(InputObservable* observable, INPUT_TABLE_TYPE type)
     {
-        memset((uint8_t*)&InputObservables, 0, sizeof(InputObservables));
+        return type == INPUT_KERNEL ? InputManager::the().add<InputManager::TableTypes::Observables, InputManager::EntryType::Kernel>(*observable) :
+            InputManager::the().add<InputManager::TableTypes::Observables, InputManager::EntryType::User>(*observable);
     }
 
-    bool __input_add_object_to_observe(InputObservable Object)
+    bool input_observable_remove(const KeyInfo* const KeyInfoToRemove)
     {
-        auto ObjectInserted = find_first(InputObservables.begin(), InputObservables.end(), [](const auto& a)
-        { return !a.valid(); });
-
-        if (!ObjectInserted.valid())
-            return false;
-
-        *ObjectInserted = Object;
-
         return true;
     }
 
-    bool __input_remove_object_from_observe(const KeyInfo* const KeyInfoToRemove)
+    bool input_handler_add(const InputHandler* Handler, INPUT_TABLE_TYPE type)
     {
-        auto ObjectsToRemove = std::find(InputObservables.begin(), InputObservables.end(), [=](auto a)
-        { return a.pointer()->key_info == KeyInfoToRemove; });
-
-        if (!ObjectsToRemove.size())
-            return false;
-
-        for (auto& it : ObjectsToRemove)
-            memset((uint8_t*)it.pointer()->key_info, (uint8_t)NULL, sizeof(InputObservable));
-
-        return true;
-    }
-
-    bool __input_add_handler(const InputHandler* const Handler, enum INPUT_HANDLER_TYPES type)
-    {
-        return type == KERNEL_INPUT_HANDLER ? InputManager::the().add<InputManager::TableTypes::Handlers, InputManager::EntryType::Kernel>(*Handler) :
+        return type == INPUT_KERNEL ? InputManager::the().add<InputManager::TableTypes::Handlers, InputManager::EntryType::Kernel>(*Handler) :
             InputManager::the().add<InputManager::TableTypes::Handlers, InputManager::EntryType::User>(*Handler);
     }
 
-    void __input_call_handlers(KeyInfo key_info)
+    void input_handlers_call(KeyInfo key_info)
     {
         return InputManager::the().handlers_call(key_info);
     }
 
-    bool __input_remove_handler(int id, enum INPUT_HANDLER_TYPES type)
+    bool input_handler_remove(int id, INPUT_TABLE_TYPE type)
     {
         return true;
-        // return type == KERNEL_INPUT_HANDLER ? InputManager::the().remove<InputManager::TableTypes::Handlers, InputManager::EntryType::Kernel>(id) :
+        // return type == INPUT_KERNEL ? InputManager::the().remove<InputManager::TableTypes::Handlers, InputManager::EntryType::Kernel>(id) :
         //     InputManager::the().remove<InputManager::TableTypes::Handlers, InputManager::EntryType::User>(id);
     }
 
-    void __input_remove_user_handlers(void)
+    void input_user_handlers_remove(void)
     {
         InputManager::the().user_handlers_remove();
     }

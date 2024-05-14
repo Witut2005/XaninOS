@@ -1,14 +1,14 @@
 
 #include "./hexeditor.h"
+#include <lib/libc/canvas.h>
 #include <lib/libc/file.h>
 #include <lib/libc/string.h>
-#include <lib/libc/canvas.h>
-#include <sys/input/input.h>
 #include <lib/screen/screen.h>
+#include <sys/input/input.h>
 
 // CANVAS_APP
 
-static char *data_pointer;
+static char* data_pointer;
 static uint32_t data_pointer_position;
 static uint8_t tmp;
 
@@ -192,15 +192,15 @@ void hexeditor_input(xchar UserInput)
     }
 }
 
-extern char *argv[5]; // USE HERE FUNC
+extern char* argv[5]; // USE HERE FUNC
 
-int hexeditor(char *file_name, char *options)
+int hexeditor(char* file_name, char* options)
 {
 
     stdio_mode_set(STDIO_MODE_CANVAS);
     canvas_screen_clear();
 
-    data_pointer = (char *)NULL;
+    data_pointer = (char*)NULL;
     data_pointer_position = 0;
     tmp = 0;
 
@@ -209,18 +209,18 @@ int hexeditor(char *file_name, char *options)
     if (bstrcmp(options, "-offset"))
         hexeditor_offset = strtoi(argv[3], HEXADECIMAL);
 
-    XinEntry *file = fopen(file_name, "rw");
+    XinEntry* file = fopen(file_name, "rw");
 
     if (file == NULL)
     {
         canvas_xprintf("Can't open file %s\n", file_name);
-        while (__input_is_normal_key_pressed(KBP_ENTER))
+        while (input_is_normal_key_pressed(KBP_ENTER))
             ;
 
         return XANIN_ERROR;
     }
 
-    data_pointer = (char *)calloc(VGA_SCREEN_RESOLUTION);
+    data_pointer = (char*)calloc(VGA_SCREEN_RESOLUTION);
 
     __xin_fseek(file, hexeditor_offset);
     fread(file, data_pointer, VGA_SCREEN_RESOLUTION);
@@ -241,7 +241,7 @@ int hexeditor(char *file_name, char *options)
     Screen.x = 0;
     Screen.y = 0;
 
-    while (!__input_is_normal_key_pressed(KBP_F4))
+    while (!input_is_normal_key_pressed(KBP_F4))
         hexeditor_input(getxchar());
 
     __xin_fseek(file, hexeditor_offset);

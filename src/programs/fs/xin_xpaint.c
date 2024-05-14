@@ -52,7 +52,7 @@ void xpaint_input(xchar Input)
         cursor = cursor - VGA_WIDTH;
     }
 
-    if (__input_is_normal_key_pressed(KBP_LEFT_CONTROL))
+    if (input_is_normal_key_pressed(KBP_LEFT_CONTROL))
     {
         if (Input.character)
         {
@@ -70,7 +70,7 @@ void xpaint_input(xchar Input)
         }
     }
 
-    else if (__input_is_normal_key_pressed(KBP_LEFT_ALT))
+    else if (input_is_normal_key_pressed(KBP_LEFT_ALT))
     {
         if (Input.character)
         {

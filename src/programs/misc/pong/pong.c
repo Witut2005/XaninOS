@@ -111,7 +111,7 @@ static inline void result_screen(char* str)
 
     canvas_xprintf("%s wins", str);
 
-    while (!__input_is_normal_key_pressed(KBP_ENTER))
+    while (!input_is_normal_key_pressed(KBP_ENTER))
         ;
 }
 
@@ -186,7 +186,7 @@ void pong_update(PongState* Pong)
 
     msleep(75);
 
-    if (__input_is_normal_key_pressed(KBP_R))
+    if (input_is_normal_key_pressed(KBP_R))
     {
         Pong->PlayersPoints.first = Pong->PlayersPoints.second = 0;
         pong_default_state_restore(Pong);
@@ -202,10 +202,10 @@ int pong(void)
     pong_default_state_restore(&Pong);
 
     PongState* PongPtr = &Pong;
-    InputHandler PongHandler = input_handler_create(pong_get_input, input_handler_options_create((uint8_t**)&PongPtr, USER_INPUT_HANDLER));
-    __input_add_handler(&PongHandler, USER_INPUT_HANDLER);
+    InputHandler PongHandler = input_handler_create(pong_get_input, input_handler_options_create((uint8_t**)&PongPtr, INPUT_USER));
+    input_handler_add(&PongHandler, INPUT_USER);
 
-    while (!__input_is_normal_key_pressed(KBP_F4))
+    while (!input_is_normal_key_pressed(KBP_F4))
     {
         pong_update(&Pong);
         if (Pong.PlayersPoints.first == 5)

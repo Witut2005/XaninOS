@@ -14,11 +14,11 @@ typedef struct
     InputObservableOptions options;
 }InputObservable;
 
-enum INPUT_HANDLER_TYPES
+typedef enum
 {
-    KERNEL_INPUT_HANDLER,
-    USER_INPUT_HANDLER
-};
+    INPUT_KERNEL,
+    INPUT_USER
+}INPUT_TABLE_TYPE;
 
 typedef struct
 {

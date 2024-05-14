@@ -26,7 +26,7 @@ public:
         Handlers
     };
 
-    static InputManager& the(void) { return s_instance; };
+    static constexpr InputManager& the(void) { return s_instance; };
 
     void scan_code_mapper_set(void);
 

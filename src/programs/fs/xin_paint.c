@@ -182,7 +182,7 @@ int xin_paint(char* file_name)
     if (xin_file == NULL)
     {
         canvas_xprintf("Could not open file %s\n", file_name);
-        while (!__input_is_normal_key_pressed(ENTER))
+        while (!input_is_normal_key_pressed(ENTER))
             ;
 
         return XANIN_ERROR;

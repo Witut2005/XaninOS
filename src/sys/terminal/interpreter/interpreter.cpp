@@ -54,7 +54,7 @@ extern "C" {
 
         bool stdio_mode_overriden = false;
 
-        if (__input_is_normal_key_pressed(KBP_LEFT_CONTROL))
+        if (input_is_normal_key_pressed(KBP_LEFT_CONTROL))
         {
             puts_warning("Stdio mode override: l(legacy)/t(terminal)\n");
             char stdio_selected_option = getchar();

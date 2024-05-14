@@ -23,7 +23,7 @@ int timer_test(void)
 
     __sys_input_add_object_to_observe(input_observed_object_create(&k, input_observed_object_options_create(true)));
 
-    InputHandler tmp = input_handler_create(timer_handler, input_handler_options_create(NULL, USER_INPUT_HANDLER));
+    InputHandler tmp = input_handler_create(timer_handler, input_handler_options_create(NULL, INPUT_USER));
     __sys_input_add_handler(&tmp);
 
     canvas_xprintf("nicho: 0x%x\n", timer_handler);

@@ -1,8 +1,7 @@
 
 #pragma once
 #include <sys/input/key_info.h>
-#include <sys/call/xanin_sys/calls/input/input.h>
-#include "./types.h"
+#include <sys/input/types.h>
 
 // MAPPER WSKAZNIK DO KEY INFO CONST
 
@@ -21,20 +20,20 @@ extern "C"
     void __input_default_prtsc_handler(void);
     void __input_prtsc_handler_set(input_scan_code_mapper_handler_t handler);
     void xanin_default_character_mapper(uint8_t scan_code);
-    void __input_scan_code_mapper_call(uint8_t scan_code);
-    void __input_scan_code_mapper_set(void (*mapper)(uint8_t scan_code));
-    bool __input_is_normal_key_pressed(uint8_t scan_code);
-    bool __input_is_special_key_pressed(uint8_t scan_code);
+    void input_scan_code_mapper_call(uint8_t scan_code);
+    void input_scan_code_mapper_set(void (*mapper)(uint8_t scan_code));
+    bool input_is_normal_key_pressed(uint8_t scan_code);
+    bool input_is_special_key_pressed(uint8_t scan_code);
 
     InputHandler* input_module_handlers_get();
-    bool __input_add_object_to_observe(InputObservable Object);
-    bool __input_remove_object_from_observe(const KeyInfo* const KeyInfoToRemove);
-    void __input_handle_observed_objects(const KeyInfo* const KeyboardDriverKeyInfo);
+    bool input_observable_add(InputObservable* Object, INPUT_TABLE_TYPE type);
+    bool input_observable_remove(const KeyInfo* const KeyInfoToRemove);
+    void input_obserables_update(const KeyInfo* const KeyboardDriverKeyInfo);
 
-    bool __input_add_handler(const InputHandler* const Handler, enum INPUT_HANDLER_TYPES type);
-    bool __input_remove_handler(int id, enum INPUT_HANDLER_TYPES type);
-    void __input_remove_user_handlers(void);
-    void __input_call_handlers(KeyInfo KeyboardDriverKeyInfo);
+    bool input_handler_add(const InputHandler* const Handler, INPUT_TABLE_TYPE type);
+    bool input_handler_remove(int id, INPUT_TABLE_TYPE type);
+    void input_user_handlers_remove(void);
+    void input_handlers_call(KeyInfo KeyboardDriverKeyInfo);
 
     KeyInfo __keyinfo_get(void);
     char __inputc(void);

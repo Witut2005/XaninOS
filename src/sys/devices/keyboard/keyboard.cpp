@@ -88,10 +88,10 @@ void Keyboard::handle(void)
         KeyInfo.is_caps = ~KeyInfo.is_caps;
 
     __input_global_key_info_set(KeyInfo);
-    __input_scan_code_mapper_call(KeyInfo.scan_code);
-    __input_handle_observed_objects(&KeyInfo);
+    input_scan_code_mapper_call(KeyInfo.scan_code);
+    input_obserables_update(&KeyInfo);
 
-    __input_call_handlers(KeyInfo);
+    input_handlers_call(KeyInfo);
 
     if (stdio_mode_get() == STDIO_MODE_TERMINAL)
         __xtb_flush_all(__vty_get());
