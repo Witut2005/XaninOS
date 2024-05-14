@@ -72,6 +72,10 @@ public:
     constexpr size_t size(void) const { return m_size; }
     constexpr size_t capacity(void) const { return m_capacity; }
 
+    void resize(size_t count);
+    void resize(size_t count, const T& value);
+    void reserve(size_t capacity);
+
     vector<T>& operator = (const vector<T>& other);
     vector<T>& operator = (vector<T>&& other);
 
@@ -171,9 +175,41 @@ template <typename T>
 void vector<T>::pop_back(void)
 {
     if (!m_size) return;
-
     *rbegin().~T();
     m_size--;
+}
+
+template <typename T>
+void vector<T>::resize(size_t count)
+{
+    resize(count, T());
+}
+
+template <typename T>
+void vector<T>::resize(size_t count, const T& value)
+{
+    if (count > m_size)
+    {
+        for (int i = 0; i < count - m_size; i++) {
+            push_back(value);
+        }
+    }
+    else
+    {
+        for (int i = 0; i < m_size - count; i++) {
+            pop_back();
+        }
+    }
+}
+
+template <typename T>
+void vector<T>::reserve(size_t capacity)
+{
+    if (capacity > m_capacity)
+    {
+        m_ptr = (T*)VECTOR_REALLOC(m_ptr, capacity * sizeof(T));
+        m_capacity = capacity;
+    }
 }
 
 template <typename T>
