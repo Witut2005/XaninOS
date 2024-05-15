@@ -75,6 +75,8 @@ public:
     void resize(size_t count);
     void resize(size_t count, const T& value);
     void reserve(size_t capacity);
+    iterator erase(iterator it);
+    iterator erase(iterator first, iterator last);
 
     vector<T>& operator = (const vector<T>& other);
     vector<T>& operator = (vector<T>&& other);
@@ -175,8 +177,8 @@ template <typename T>
 void vector<T>::pop_back(void)
 {
     if (!m_size) return;
-    *rbegin().~T();
-    m_size--;
+    m_ptr[m_size--].~T();
+    // rbegin()
 }
 
 template <typename T>
@@ -210,6 +212,22 @@ void vector<T>::reserve(size_t capacity)
         m_ptr = (T*)VECTOR_REALLOC(m_ptr, capacity * sizeof(T));
         m_capacity = capacity;
     }
+}
+
+template <typename T>
+vector<T>::iterator vector<T>::erase(vector<T>::iterator first, vector<T>::iterator last)
+{
+    if (first >= last)return last;
+    if (last > end()) last = end();
+
+    for (int i = 0; i < last.index() - first.index(); i++)
+    {
+        m_ptr[first.index() + i].~T();
+        memcpy(&m_ptr[first.index() + i], &m_ptr[last.index() + i], sizeof(T));
+    }
+
+    m_size = m_size - (last.index() - first.index());
+    return end();
 }
 
 template <typename T>
