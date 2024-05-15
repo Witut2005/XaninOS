@@ -8,7 +8,7 @@
 class InputManager
 {
 public:
-    // MAKE_OBJECT_NON_COPYABLE(InputManager);
+    MAKE_OBJECT_NON_COPYABLE(InputManager);
 
     template<class T>
     struct Table {
@@ -26,9 +26,12 @@ public:
         Handlers
     };
 
+    using mapper_t = void (*)(uint8_t);
+
     static constexpr InputManager& the(void) { return s_instance; };
 
-    void scan_code_mapper_set(void);
+    void mapper_set(mapper_t mapper) { m_mapper = mapper; }
+    mapper_t mapper_get(mapper_t mapper) { return m_mapper; }
 
     template<InputManager::TableTypes T, InputManager::EntryType Type>
     int add(const auto& entry);
@@ -36,12 +39,14 @@ public:
     template<InputManager::TableTypes T, InputManager::EntryType Type>
     bool remove(int id);
 
-    void user_handlers_remove(void);
+    void user_handlers_remove(void) { m_handlers.user.clear(); }
 
-    void handlers_call(KeyInfo key_info);
+    void handlers_call(KeyInfo key_info) { execute_on_tables<InputManager::TableTypes::Handlers>([&key_info](const InputHandler& handler) {handler.handler(key_info, handler.options.args);}); }
     void observables_update(KeyInfo key_info);
 
 private:
+    InputManager() = default;
+
     template<EntryType Type>
     constexpr std::vector<InputObservable>& observables_get(void) { return Type == EntryType::Kernel ? m_observables.kernel : m_observables.user; }
 
@@ -59,6 +64,7 @@ private:
 
     static InputManager s_instance;
 
+    mapper_t m_mapper;
     Table<InputObservable> m_observables;
     Table<InputHandler> m_handlers;
 };

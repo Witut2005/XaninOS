@@ -68,77 +68,77 @@ extern "C"
         XaninScanCodeMapperHandlers.prtsc = handler;
     }
 
-#define KEYBOARD_DRIVER_KEY_REMAP(from, to)   \
+#define INPUT_MODULE_KEY_REMAP_BEGIN(from, to)   \
     if (XaninGlobalKeyInfo.character == from) \
+    XaninGlobalKeyInfo.character = to
+
+#define INPUT_MODULE_KEY_REMAP(from, to)   \
+    else if (XaninGlobalKeyInfo.character == from) \
     XaninGlobalKeyInfo.character = to
 
     void xanin_default_character_mapper(uint8_t scan_code)
     {
-
         XaninGlobalKeyInfo.character = keyboard_map[scan_code];
 
-        switch (XaninGlobalKeyInfo.scan_code)
-        {
-        case PRINT_SCREEN_KEY:
-        {
-            XaninScanCodeMapperHandlers.prtsc();
-            break;
-        }
+        if (is_break_code(scan_code)) {
+            XaninGlobalKeyInfo.character = '\0';
+            return;
         }
 
-        if (XaninGlobalKeyInfo.is_caps)
-        {
-            if (XaninGlobalKeyInfo.character >= 'a' && XaninGlobalKeyInfo.character <= 'z')
-                XaninGlobalKeyInfo.character -= 32;
-        }
+        // switch (XaninGlobalKeyInfo.scan_code)
+        // {
+        // case PRINT_SCREEN_KEY:
+        // {
+        //     XaninScanCodeMapperHandlers.prtsc();
+        //     break;
+        // }
+        // }
+
+        // if (XaninGlobalKeyInfo.is_caps)
+        // {
+        //     if (XaninGlobalKeyInfo.character >= 'a' && XaninGlobalKeyInfo.character <= 'z')
+        //         XaninGlobalKeyInfo.character -= 32;
+        // }
 
         if (__input_is_shift_pressed())
         {
-            if (XaninGlobalKeyInfo.is_caps)
+            if (!XaninGlobalKeyInfo.is_caps)
             {
-                if (XaninGlobalKeyInfo.character >= 'A' && XaninGlobalKeyInfo.character <= 'Z')
-                {
-                    XaninGlobalKeyInfo.character += 32;
-                }
-            }
-
-            else
-            {
-                if (XaninGlobalKeyInfo.character >= 'a' && XaninGlobalKeyInfo.character <= 'z')
-                {
+                if (XaninGlobalKeyInfo.character >= 'a' && XaninGlobalKeyInfo.character <= 'z') {
                     XaninGlobalKeyInfo.character -= 32;
                 }
             }
-        }
 
-        if (__input_is_shift_pressed())
-        {
-            KEYBOARD_DRIVER_KEY_REMAP('-', '_');
-            KEYBOARD_DRIVER_KEY_REMAP('1', '!');
-            KEYBOARD_DRIVER_KEY_REMAP('2', '@');
-            KEYBOARD_DRIVER_KEY_REMAP('3', '#');
-            KEYBOARD_DRIVER_KEY_REMAP('4', '$');
-            KEYBOARD_DRIVER_KEY_REMAP('5', '%');
-            KEYBOARD_DRIVER_KEY_REMAP('6', '^');
-            KEYBOARD_DRIVER_KEY_REMAP('7', '&');
-            KEYBOARD_DRIVER_KEY_REMAP('8', '*');
-            KEYBOARD_DRIVER_KEY_REMAP('9', '(');
-            KEYBOARD_DRIVER_KEY_REMAP('0', ')');
-            KEYBOARD_DRIVER_KEY_REMAP('=', '+');
-            KEYBOARD_DRIVER_KEY_REMAP('[', '{');
-            KEYBOARD_DRIVER_KEY_REMAP(']', '}');
-            KEYBOARD_DRIVER_KEY_REMAP('/', '?');
-            KEYBOARD_DRIVER_KEY_REMAP(';', ':');
-            KEYBOARD_DRIVER_KEY_REMAP('`', '~');
-            KEYBOARD_DRIVER_KEY_REMAP(',', '<');
-            KEYBOARD_DRIVER_KEY_REMAP('.', '>');
-            KEYBOARD_DRIVER_KEY_REMAP('/', '?');
-            KEYBOARD_DRIVER_KEY_REMAP(0x5C, '|');
-            KEYBOARD_DRIVER_KEY_REMAP(0x27, 0x22);
+            //TODO działa tylko jak caps
+            else {
+                INPUT_MODULE_KEY_REMAP_BEGIN('-', '_');
+                INPUT_MODULE_KEY_REMAP('1', '!');
+                INPUT_MODULE_KEY_REMAP('2', '@');
+                INPUT_MODULE_KEY_REMAP('3', '#');
+                INPUT_MODULE_KEY_REMAP('4', '$');
+                INPUT_MODULE_KEY_REMAP('5', '%');
+                INPUT_MODULE_KEY_REMAP('6', '^');
+                INPUT_MODULE_KEY_REMAP('7', '&');
+                INPUT_MODULE_KEY_REMAP('8', '*');
+                INPUT_MODULE_KEY_REMAP('9', '(');
+                INPUT_MODULE_KEY_REMAP('0', ')');
+                INPUT_MODULE_KEY_REMAP('=', '+');
+                INPUT_MODULE_KEY_REMAP('[', '{');
+                INPUT_MODULE_KEY_REMAP(']', '}');
+                INPUT_MODULE_KEY_REMAP('/', '?');
+                INPUT_MODULE_KEY_REMAP(';', ':');
+                INPUT_MODULE_KEY_REMAP('`', '~');
+                INPUT_MODULE_KEY_REMAP(',', '<');
+                INPUT_MODULE_KEY_REMAP('.', '>');
+                INPUT_MODULE_KEY_REMAP('/', '?');
+                INPUT_MODULE_KEY_REMAP(0x5C, '|');
+                INPUT_MODULE_KEY_REMAP(0x27, 0x22);
+            }
         }
-
-        if (is_break_code(XaninGlobalKeyInfo.scan_code)) {
-            XaninGlobalKeyInfo.character = 0x0;
+        else if (XaninGlobalKeyInfo.is_caps) {
+            if (XaninGlobalKeyInfo.character >= 'a' && XaninGlobalKeyInfo.character <= 'z') {
+                XaninGlobalKeyInfo.character -= 32;
+            }
         }
     }
 
@@ -160,11 +160,6 @@ extern "C"
     bool input_is_special_key_pressed(uint8_t scan_code)
     {
         return XaninGlobalKeyInfo.special_keys_pressed[scan_code];
-    }
-
-    InputHandler* input_module_handlers_get()
-    {
-        return InputModuleHandlers.begin().pointer();
     }
 
     //changed and not tested yet
@@ -213,11 +208,6 @@ extern "C"
         InputManager::the().user_handlers_remove();
     }
 
-    void __keyinfo_clear(void)
-    {
-        // memset((uint8_t*)&XaninGlobalKeyInfo, 0, sizeof(XaninGlobalKeyInfo));
-    }
-
     KeyInfo __keyinfo_get(void)
     {
         return XaninGlobalKeyInfo;
@@ -244,13 +234,6 @@ extern "C"
     }
 }
 
-void InputManager::scan_code_mapper_set(void) {}
-
-void InputManager::handlers_call(KeyInfo key_info)
-{
-    execute_on_tables<InputManager::TableTypes::Handlers>([&key_info](const InputHandler& handler) {handler.handler(key_info, handler.options.args);});
-}
-
 void InputManager::observables_update(KeyInfo key_info)
 {
     execute_on_tables<InputManager::TableTypes::Observables>([&key_info](InputObservable& observable) {
@@ -258,11 +241,6 @@ void InputManager::observables_update(KeyInfo key_info)
             observable.key_info = key_info;
         }
     });
-}
-
-void InputManager::user_handlers_remove(void)
-{
-    m_handlers.user.clear();
 }
 
 InputManager InputManager::s_instance;

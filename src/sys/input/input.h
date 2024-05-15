@@ -25,7 +25,6 @@ extern "C"
     bool input_is_normal_key_pressed(uint8_t scan_code);
     bool input_is_special_key_pressed(uint8_t scan_code);
 
-    InputHandler* input_module_handlers_get();
     bool input_observable_add(InputObservable* Object, INPUT_TABLE_TYPE type);
     bool input_observable_remove(const KeyInfo* const KeyInfoToRemove);
     void input_obserables_update(const KeyInfo* const KeyboardDriverKeyInfo);

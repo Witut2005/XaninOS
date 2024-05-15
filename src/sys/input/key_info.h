@@ -16,5 +16,7 @@ typedef struct {
     bool keys_pressed[0x80];
     bool special_keys_pressed[0x80];
 
-    uint8_t is_caps;
+    bool is_caps;
+    bool is_shift;
+    bool is_ctrl;
 }KeyInfo;

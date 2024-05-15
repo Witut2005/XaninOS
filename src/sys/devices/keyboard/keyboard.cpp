@@ -84,8 +84,12 @@ void Keyboard::handle(void)
             KeyInfo.keys_pressed[KeyInfo.scan_code - KEYBOARD_KEYS_BREAK_CODES_OFFSET] = false;
     }
 
-    if (KeyInfo.scan_code == KBP_CAPSLOCK)
+    if (KeyInfo.scan_code == KBP_CAPSLOCK) {
         KeyInfo.is_caps = ~KeyInfo.is_caps;
+    }
+    // else if (KeyInfo.scan_code == KBP_LEFT_SHIFT || KeyInfo.scan_code == KBP_RIGHT_SHIFT) {
+    //     KeyInfo.is_shift = true;
+    // }
 
     __input_global_key_info_set(KeyInfo);
     input_scan_code_mapper_call(KeyInfo.scan_code);
