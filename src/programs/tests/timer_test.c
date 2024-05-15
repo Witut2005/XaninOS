@@ -21,7 +21,7 @@ int timer_test(void)
     canvas_screen_clear();
     KeyInfo k;
 
-    __sys_input_add_object_to_observe(input_observed_object_create(&k, input_observed_object_options_create(true)));
+    __sys_input_add_object_to_observe(input_observable_create(k, input_observed_object_options_create(true)));
 
     InputHandler tmp = input_handler_create(timer_handler, input_handler_options_create(NULL, INPUT_USER));
     __sys_input_add_handler(&tmp);

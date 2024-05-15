@@ -10,7 +10,7 @@ typedef struct
 
 typedef struct
 {
-    KeyInfo* key_info;
+    KeyInfo key_info;
     InputObservableOptions options;
 }InputObservable;
 

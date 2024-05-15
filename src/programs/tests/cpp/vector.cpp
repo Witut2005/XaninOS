@@ -196,12 +196,31 @@ extern "C" __STATUS __cpp_vector_test(void)
         }
     }
 
-    TEST_CASE(vector erase)
+    TEST_CASE(vector position erase)
+    {
+        std::vector<int> v = { 0,1,2,3,4,5,6,7,8,9 };
+
+        v.erase(v.begin() + 6);
+
+        EXPECT_EQUAL(v.size(), 9);
+
+        for (int i = 0; i < 6;i++) {
+            EXPECT_EQUAL(v[i], i);
+        }
+
+        for (int i = 6; i < 9; i++) {
+            EXPECT_EQUAL(v[i], i + 1);
+        }
+
+    }
+
+    TEST_CASE(vector range erase)
     {
         std::vector<int> v = { 0,1,2,3,4,5,6,7,8,9 };
 
         v.erase(v.begin() + 1, v.begin() + 6);
 
+        EXPECT_EQUAL(v.size(), 5);
         EXPECT_EQUAL(v[0], 0);
 
         for (int i = 6; i < 10;i++) {

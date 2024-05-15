@@ -168,14 +168,15 @@ extern "C"
     }
 
     //changed and not tested yet
-    void input_obserables_update(const KeyInfo* const KeyboardDriverKeyInfo)
+    void input_obserables_update(const KeyInfo* KeyboardDriverKeyInfo)
     {
         bool break_code = is_break_code(KeyboardDriverKeyInfo->scan_code);
 
-        for (auto& it : InputObservables)
+        for (auto& a : InputObservables)
         {
-            if (!((it).options.ignore_break_codes & break_code))
-                memcpy(it.key_info, KeyboardDriverKeyInfo, sizeof(KeyInfo));
+            if (!(a.options.ignore_break_codes & break_code)) {
+                a.key_info = *KeyboardDriverKeyInfo;
+            }
         }
     }
 
@@ -203,9 +204,8 @@ extern "C"
 
     bool input_handler_remove(int id, INPUT_TABLE_TYPE type)
     {
-        return true;
-        // return type == INPUT_KERNEL ? InputManager::the().remove<InputManager::TableTypes::Handlers, InputManager::EntryType::Kernel>(id) :
-        //     InputManager::the().remove<InputManager::TableTypes::Handlers, InputManager::EntryType::User>(id);
+        return type == INPUT_KERNEL ? InputManager::the().remove<InputManager::TableTypes::Handlers, InputManager::EntryType::Kernel>(id) :
+            InputManager::the().remove<InputManager::TableTypes::Handlers, InputManager::EntryType::User>(id);
     }
 
     void input_user_handlers_remove(void)
@@ -255,7 +255,7 @@ void InputManager::observables_update(KeyInfo key_info)
 {
     execute_on_tables<InputManager::TableTypes::Observables>([&key_info](InputObservable& observable) {
         if (observable.options.ignore_break_codes && is_break_code(key_info.scan_code)) {
-            *observable.key_info = key_info;
+            observable.key_info = key_info;
         }
     });
 }

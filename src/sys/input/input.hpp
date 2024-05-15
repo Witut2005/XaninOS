@@ -74,12 +74,12 @@ int InputManager::add(const auto& entry)
 template<InputManager::TableTypes T, InputManager::EntryType Type>
 bool InputManager::remove(int id)
 {
-    auto& table = tables_get <T, Type>();
-    auto it = std::remove(table, id);
-    auto end = table.end(); // must be done before resize
+    if (id < 0) return false;
 
-    table.resize(it.index());
-    return it != end;
+    auto& table = tables_get <T, Type>();
+    table.erase(table.begin() + id);
+
+    return true;
 }
 
 template<InputManager::TableTypes T>

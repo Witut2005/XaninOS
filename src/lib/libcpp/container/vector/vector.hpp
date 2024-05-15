@@ -75,7 +75,8 @@ public:
     void resize(size_t count);
     void resize(size_t count, const T& value);
     void reserve(size_t capacity);
-    iterator erase(iterator it);
+
+    iterator erase(iterator pos);
     iterator erase(iterator first, iterator last);
 
     vector<T>& operator = (const vector<T>& other);
@@ -215,10 +216,28 @@ void vector<T>::reserve(size_t capacity)
 }
 
 template <typename T>
+vector<T>::iterator vector<T>::erase(vector<T>::iterator pos)
+{
+    if (pos > end() || pos < begin()) return pos;
+    const auto pos_index = pos.index();
+
+    m_ptr[pos_index].~T();
+    m_size--;
+
+    for (int i = pos_index; i < m_size; i++) {
+        memcpy(&m_ptr[i], &m_ptr[i + 1], sizeof(T));
+    }
+
+    return end();
+}
+
+
+template <typename T>
 vector<T>::iterator vector<T>::erase(vector<T>::iterator first, vector<T>::iterator last)
 {
     if (first >= last)return last;
     if (last > end()) last = end();
+    if (first < begin()) first = begin();
 
     for (int i = 0; i < last.index() - first.index(); i++)
     {
