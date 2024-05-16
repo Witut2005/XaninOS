@@ -20,28 +20,14 @@ static InputScanCodeMapperHandlers XaninScanCodeMapperHandlers;
 
 extern "C" int screenshot(void);
 
-constexpr auto Handlers = InputManager::TableTypes::Handlers;
-constexpr auto Observables = InputManager::TableTypes::Observables;
+constexpr auto Handlers = InputManager::TableType::Handlers;
+constexpr auto Observables = InputManager::TableType::Observables;
 
 constexpr auto TypeKernel = InputManager::EntryType::Kernel;
 constexpr auto TypeUser = InputManager::EntryType::User;
 
 extern "C"
 {
-    bool __input_is_ctrl_pressed(void)
-    {
-        return XaninGlobalKeyInfo.keys_pressed[KBP_LEFT_CONTROL] | XaninGlobalKeyInfo.special_keys_pressed[KBSP_RIGHT_CONTROL];
-    }
-
-    bool __input_is_shift_pressed(void)
-    {
-        return XaninGlobalKeyInfo.keys_pressed[KBP_LEFT_SHIFT] | XaninGlobalKeyInfo.keys_pressed[KBP_RIGHT_SHIFT];
-    }
-
-    bool __input_is_alt_pressed(void)
-    {
-        return XaninGlobalKeyInfo.keys_pressed[KBP_LEFT_ALT] | XaninGlobalKeyInfo.keys_pressed[KBSP_RIGHT_ALT];
-    }
 
     KeyInfo __input_global_key_info_get(void)
     {
@@ -94,52 +80,49 @@ extern "C"
         // }
         // }
 
-        // if (XaninGlobalKeyInfo.is_caps)
-        // {
-        //     if (XaninGlobalKeyInfo.character >= 'a' && XaninGlobalKeyInfo.character <= 'z')
-        //         XaninGlobalKeyInfo.character -= 32;
-        // }
-
-        if (__input_is_shift_pressed())
+        if (XaninGlobalKeyInfo.functional_keys.caps)
         {
-            if (!XaninGlobalKeyInfo.is_caps)
-            {
-                if (XaninGlobalKeyInfo.character >= 'a' && XaninGlobalKeyInfo.character <= 'z') {
-                    XaninGlobalKeyInfo.character -= 32;
-                }
-            }
-
-            //TODO działa tylko jak caps
-            else {
-                INPUT_MODULE_KEY_REMAP_BEGIN('-', '_');
-                INPUT_MODULE_KEY_REMAP('1', '!');
-                INPUT_MODULE_KEY_REMAP('2', '@');
-                INPUT_MODULE_KEY_REMAP('3', '#');
-                INPUT_MODULE_KEY_REMAP('4', '$');
-                INPUT_MODULE_KEY_REMAP('5', '%');
-                INPUT_MODULE_KEY_REMAP('6', '^');
-                INPUT_MODULE_KEY_REMAP('7', '&');
-                INPUT_MODULE_KEY_REMAP('8', '*');
-                INPUT_MODULE_KEY_REMAP('9', '(');
-                INPUT_MODULE_KEY_REMAP('0', ')');
-                INPUT_MODULE_KEY_REMAP('=', '+');
-                INPUT_MODULE_KEY_REMAP('[', '{');
-                INPUT_MODULE_KEY_REMAP(']', '}');
-                INPUT_MODULE_KEY_REMAP('/', '?');
-                INPUT_MODULE_KEY_REMAP(';', ':');
-                INPUT_MODULE_KEY_REMAP('`', '~');
-                INPUT_MODULE_KEY_REMAP(',', '<');
-                INPUT_MODULE_KEY_REMAP('.', '>');
-                INPUT_MODULE_KEY_REMAP('/', '?');
-                INPUT_MODULE_KEY_REMAP(0x5C, '|');
-                INPUT_MODULE_KEY_REMAP(0x27, 0x22);
-            }
-        }
-        else if (XaninGlobalKeyInfo.is_caps) {
             if (XaninGlobalKeyInfo.character >= 'a' && XaninGlobalKeyInfo.character <= 'z') {
                 XaninGlobalKeyInfo.character -= 32;
             }
         }
+
+        if (XaninGlobalKeyInfo.functional_keys.shift)
+        {
+
+            if (XaninGlobalKeyInfo.character >= 'a' && XaninGlobalKeyInfo.character <= 'z') {
+                XaninGlobalKeyInfo.character -= 32;
+            }
+
+            //it will handle case when caps is true 
+            else if (XaninGlobalKeyInfo.character >= 'A' && XaninGlobalKeyInfo.character <= 'Z') {
+                XaninGlobalKeyInfo.character += 32;
+            }
+
+            INPUT_MODULE_KEY_REMAP_BEGIN('-', '_');
+            INPUT_MODULE_KEY_REMAP('1', '!');
+            INPUT_MODULE_KEY_REMAP('2', '@');
+            INPUT_MODULE_KEY_REMAP('3', '#');
+            INPUT_MODULE_KEY_REMAP('4', '$');
+            INPUT_MODULE_KEY_REMAP('5', '%');
+            INPUT_MODULE_KEY_REMAP('6', '^');
+            INPUT_MODULE_KEY_REMAP('7', '&');
+            INPUT_MODULE_KEY_REMAP('8', '*');
+            INPUT_MODULE_KEY_REMAP('9', '(');
+            INPUT_MODULE_KEY_REMAP('0', ')');
+            INPUT_MODULE_KEY_REMAP('=', '+');
+            INPUT_MODULE_KEY_REMAP('[', '{');
+            INPUT_MODULE_KEY_REMAP(']', '}');
+            INPUT_MODULE_KEY_REMAP('/', '?');
+            INPUT_MODULE_KEY_REMAP(';', ':');
+            INPUT_MODULE_KEY_REMAP('`', '~');
+            INPUT_MODULE_KEY_REMAP(',', '<');
+            INPUT_MODULE_KEY_REMAP('.', '>');
+            INPUT_MODULE_KEY_REMAP('/', '?');
+            INPUT_MODULE_KEY_REMAP(0x5C, '|');
+            INPUT_MODULE_KEY_REMAP(0x27, 0x22);
+        }
+
     }
 
     void input_scan_code_mapper_set(void (*mapper)(uint8_t scan_code))
@@ -163,33 +146,27 @@ extern "C"
     }
 
     //changed and not tested yet
-    void input_obserables_update(const KeyInfo* KeyboardDriverKeyInfo)
+    void input_obserables_update(KeyInfo key_info)
     {
-        bool break_code = is_break_code(KeyboardDriverKeyInfo->scan_code);
-
-        for (auto& a : InputObservables)
-        {
-            if (!(a.options.ignore_break_codes & break_code)) {
-                a.key_info = *KeyboardDriverKeyInfo;
-            }
-        }
+        InputManager::the().observables_update(key_info);
     }
 
     bool input_observable_add(InputObservable* observable, INPUT_TABLE_TYPE type)
     {
-        return type == INPUT_KERNEL ? InputManager::the().add<InputManager::TableTypes::Observables, InputManager::EntryType::Kernel>(*observable) :
-            InputManager::the().add<InputManager::TableTypes::Observables, InputManager::EntryType::User>(*observable);
+        return type == INPUT_KERNEL ? InputManager::the().add<InputManager::TableType::Observables, InputManager::EntryType::Kernel>(*observable) :
+            InputManager::the().add<InputManager::TableType::Observables, InputManager::EntryType::User>(*observable);
     }
 
-    bool input_observable_remove(const KeyInfo* const KeyInfoToRemove)
+    bool input_observable_remove(int id, INPUT_TABLE_TYPE type)
     {
-        return true;
+        return type == INPUT_KERNEL ? InputManager::the().remove<InputManager::TableType::Observables, InputManager::EntryType::Kernel>(id) :
+            InputManager::the().remove<InputManager::TableType::Observables, InputManager::EntryType::User>(id);
     }
 
-    bool input_handler_add(const InputHandler* Handler, INPUT_TABLE_TYPE type)
+    bool input_handler_add(InputHandler handler, INPUT_TABLE_TYPE type)
     {
-        return type == INPUT_KERNEL ? InputManager::the().add<InputManager::TableTypes::Handlers, InputManager::EntryType::Kernel>(*Handler) :
-            InputManager::the().add<InputManager::TableTypes::Handlers, InputManager::EntryType::User>(*Handler);
+        return type == INPUT_KERNEL ? InputManager::the().add<InputManager::TableType::Handlers, InputManager::EntryType::Kernel>(handler) :
+            InputManager::the().add<InputManager::TableType::Handlers, InputManager::EntryType::User>(handler);
     }
 
     void input_handlers_call(KeyInfo key_info)
@@ -199,8 +176,8 @@ extern "C"
 
     bool input_handler_remove(int id, INPUT_TABLE_TYPE type)
     {
-        return type == INPUT_KERNEL ? InputManager::the().remove<InputManager::TableTypes::Handlers, InputManager::EntryType::Kernel>(id) :
-            InputManager::the().remove<InputManager::TableTypes::Handlers, InputManager::EntryType::User>(id);
+        return type == INPUT_KERNEL ? InputManager::the().remove<InputManager::TableType::Handlers, InputManager::EntryType::Kernel>(id) :
+            InputManager::the().remove<InputManager::TableType::Handlers, InputManager::EntryType::User>(id);
     }
 
     void input_user_handlers_remove(void)
@@ -218,8 +195,9 @@ extern "C"
         KeyInfo InputgKeyInfo;
         InputgKeyInfo.scan_code = XaninGlobalKeyInfo.scan_code = 0;
 
-        while ((InputgKeyInfo.scan_code == 0) || (InputgKeyInfo.scan_code >= 0x80))
+        while ((InputgKeyInfo.scan_code == 0) || (InputgKeyInfo.scan_code >= 0x80)) {
             InputgKeyInfo = __keyinfo_get(); // break codes doesnt count
+        }
 
         xchar x;
         x.character = InputgKeyInfo.character;
@@ -236,7 +214,7 @@ extern "C"
 
 void InputManager::observables_update(KeyInfo key_info)
 {
-    execute_on_tables<InputManager::TableTypes::Observables>([&key_info](InputObservable& observable) {
+    execute_on_tables<InputManager::TableType::Observables>([&key_info](InputObservable& observable) {
         if (observable.options.ignore_break_codes && is_break_code(key_info.scan_code)) {
             observable.key_info = key_info;
         }

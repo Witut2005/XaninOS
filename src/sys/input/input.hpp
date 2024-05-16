@@ -21,7 +21,7 @@ public:
         User
     };
 
-    enum class TableTypes {
+    enum class TableType {
         Observables,
         Handlers
     };
@@ -33,15 +33,15 @@ public:
     void mapper_set(mapper_t mapper) { m_mapper = mapper; }
     mapper_t mapper_get(mapper_t mapper) { return m_mapper; }
 
-    template<InputManager::TableTypes T, InputManager::EntryType Type>
+    template<InputManager::TableType T, InputManager::EntryType Type>
     int add(const auto& entry);
 
-    template<InputManager::TableTypes T, InputManager::EntryType Type>
+    template<InputManager::TableType T, InputManager::EntryType Type>
     bool remove(int id);
 
     void user_handlers_remove(void) { m_handlers.user.clear(); }
 
-    void handlers_call(KeyInfo key_info) { execute_on_tables<InputManager::TableTypes::Handlers>([&key_info](const InputHandler& handler) {handler.handler(key_info, handler.options.args);}); }
+    void handlers_call(KeyInfo key_info) { execute_on_tables<InputManager::TableType::Handlers>([&key_info](const InputHandler& handler) {handler.handler(key_info, handler.options.args);}); }
     void observables_update(KeyInfo key_info);
 
 private:
@@ -53,13 +53,13 @@ private:
     template<EntryType Type>
     constexpr std::vector<InputHandler>& handlers_get(void) { return Type == EntryType::Kernel ? m_handlers.kernel : m_handlers.user; }
 
-    template<TableTypes T, EntryType Type>
+    template<TableType T, EntryType Type>
     constexpr auto& tables_get(void) {
-        if constexpr (T == TableTypes::Observables) return observables_get<Type>();
-        else if (T == TableTypes::Handlers) return handlers_get<Type>();
+        if constexpr (T == TableType::Observables) return observables_get<Type>();
+        else if (T == TableType::Handlers) return handlers_get<Type>();
     }
 
-    template<TableTypes T>
+    template<TableType T>
     void execute_on_tables(auto f);
 
     static InputManager s_instance;
@@ -69,7 +69,7 @@ private:
     Table<InputHandler> m_handlers;
 };
 
-template<InputManager::TableTypes T, InputManager::EntryType Type>
+template<InputManager::TableType T, InputManager::EntryType Type>
 int InputManager::add(const auto& entry)
 {
     auto& table = tables_get<T, Type>();
@@ -77,7 +77,7 @@ int InputManager::add(const auto& entry)
     return table.size();
 }
 
-template<InputManager::TableTypes T, InputManager::EntryType Type>
+template<InputManager::TableType T, InputManager::EntryType Type>
 bool InputManager::remove(int id)
 {
     if (id < 0) return false;
@@ -88,7 +88,7 @@ bool InputManager::remove(int id)
     return true;
 }
 
-template<InputManager::TableTypes T>
+template<InputManager::TableType T>
 void InputManager::execute_on_tables(auto f)
 {
     for (auto& a : tables_get<T, InputManager::EntryType::Kernel>()) {

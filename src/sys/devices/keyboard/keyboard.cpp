@@ -48,59 +48,36 @@ bool Keyboard::test(void)
 
 void Keyboard::handle(void)
 {
-
     #warning "TO DO exit on CTRL + C";
 
-    static KeyInfo KeyInfo;
-    KeyInfo.scan_code = read(ControllerPort::KeyboardEncoder);
-    // xprintf("%x ", KeyInfo.scan_code);
+    m_key_info.scan_code = read(ControllerPort::KeyboardEncoder);
 
     if (!m_special_key_pressed)
     {
-        if (KeyInfo.scan_code == KEYBOARD_SPECIAL_KEYS_PREFIX)
+        if (m_key_info.scan_code == KEYBOARD_SPECIAL_KEYS_PREFIX)
         {
             m_special_key_pressed = true;
             return;
         }
-        else
+        else {
             m_special_key_pressed = false;
+        }
     }
 
-    if (m_special_key_pressed)
-    {
-        if (!is_break_code(KeyInfo.scan_code))
-            KeyInfo.special_keys_pressed[KeyInfo.scan_code] = true;
-        else
-            KeyInfo.special_keys_pressed[KeyInfo.scan_code - KEYBOARD_KEYS_BREAK_CODES_OFFSET] = false;
+    update_key(m_special_key_pressed, m_key_info.scan_code);
 
-        m_special_key_pressed = false;
-    }
+    __input_global_key_info_set(m_key_info);
+    input_scan_code_mapper_call(m_key_info.scan_code);
+    input_obserables_update(m_key_info);
 
-    else
-    {
-        if (!is_break_code(KeyInfo.scan_code))
-            KeyInfo.keys_pressed[KeyInfo.scan_code] = true;
-        else
-            KeyInfo.keys_pressed[KeyInfo.scan_code - KEYBOARD_KEYS_BREAK_CODES_OFFSET] = false;
-    }
+    input_handlers_call(m_key_info);
 
-    if (KeyInfo.scan_code == KBP_CAPSLOCK) {
-        KeyInfo.is_caps = ~KeyInfo.is_caps;
-    }
-    // else if (KeyInfo.scan_code == KBP_LEFT_SHIFT || KeyInfo.scan_code == KBP_RIGHT_SHIFT) {
-    //     KeyInfo.is_shift = true;
-    // }
-
-    __input_global_key_info_set(KeyInfo);
-    input_scan_code_mapper_call(KeyInfo.scan_code);
-    input_obserables_update(&KeyInfo);
-
-    input_handlers_call(KeyInfo);
-
-    if (stdio_mode_get() == STDIO_MODE_TERMINAL)
+    //updates screen buffer on every key press
+    if (stdio_mode_get() == STDIO_MODE_TERMINAL) {
         __xtb_flush_all(__vty_get());
+    }
 
-    // if (__input_is_ctrl_pressed() && KeyInfo.keys_pressed[KBP_C])
+    // if (__input_is_ctrl_pressed() && m_key_info.keys_pressed[KBP_C])
     //     exit();
 }
 
@@ -127,6 +104,82 @@ void Keyboard::leds_set(Keyboard::leds_mask_t mask)
 {
     write(ControllerPort::KeyboardEncoder, Command::LEDset);
     write(ControllerPort::KeyboardEncoder, mask);
+}
+
+
+void Keyboard::update_key(bool is_special_key, uint8_t scan_code)
+{
+    bool* key_table = is_special_key ? m_key_info.special_keys_pressed : m_key_info.keys_pressed;
+    if (!is_break_code(scan_code)) {
+        key_table[scan_code] = true;
+    }
+    else {
+        key_table[m_key_info.scan_code - KEYBOARD_KEYS_BREAK_CODES_OFFSET] = false;
+    }
+
+    if (!is_special_key)
+    {
+        switch (scan_code)
+        {
+        case KBP_CAPSLOCK:
+            m_key_info.functional_keys.caps = !m_key_info.functional_keys.caps;
+            break;
+
+        case KBP_LEFT_SHIFT:
+        case KBP_RIGHT_SHIFT:
+            m_key_info.functional_keys.shift = true;
+            break;
+
+        case KBP_LEFT_ALT:
+            m_key_info.functional_keys.alt = true;
+            break;
+
+        case KBP_LEFT_CONTROL:
+            m_key_info.functional_keys.ctrl = true;
+            break;
+
+            /////////////////////////
+
+        case KBR_LEFT_SHIFT:
+        case KBR_RIGHT_SHIFT:
+            m_key_info.functional_keys.shift = false;
+            break;
+
+        case KBR_LEFT_ALT:
+            m_key_info.functional_keys.alt = false;
+            break;
+
+        case KBR_LEFT_CONTROL:
+            m_key_info.functional_keys.ctrl = false;
+            break;
+        }
+    }
+
+    else
+    {
+        switch (scan_code)
+        {
+        case KBSP_RIGHT_ALT:
+            m_key_info.functional_keys.alt = true;
+            break;
+
+        case KBSP_RIGHT_CONTROL:
+            m_key_info.functional_keys.ctrl = true;
+            break;
+
+            //////////////////////////////////////
+
+        case KBSR_RIGHT_ALT:
+            m_key_info.functional_keys.alt = false;
+            break;
+
+        case KBSR_RIGHT_CONTROL:
+            m_key_info.functional_keys.ctrl = false;
+            break;
+        }
+    }
+
+    m_special_key_pressed = false;
 }
 
 Keyboard Keyboard::s_instance;

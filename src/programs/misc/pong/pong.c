@@ -203,7 +203,7 @@ int pong(void)
 
     PongState* PongPtr = &Pong;
     InputHandler PongHandler = input_handler_create(pong_get_input, input_handler_options_create((uint8_t**)&PongPtr, INPUT_USER));
-    input_handler_add(&PongHandler, INPUT_USER);
+    input_handler_add(PongHandler, INPUT_USER);
 
     while (!input_is_normal_key_pressed(KBP_F4))
     {
