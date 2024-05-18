@@ -5,6 +5,7 @@
 #include <lib/libc/hal.h>
 #include <sys/devices/com/com.h>
 #include <sys/terminal/backend/backend.h>
+#include <sys/input/input.hpp>
 
 extern "C" void keyboard_handler_init(void);
 // extern "C" int exit(void);
@@ -49,6 +50,7 @@ bool Keyboard::test(void)
 void Keyboard::handle(void)
 {
     #warning "TO DO exit on CTRL + C";
+    auto& input = InputManager::the();
 
     m_key_info.scan_code = read(ControllerPort::KeyboardEncoder);
 
@@ -64,13 +66,13 @@ void Keyboard::handle(void)
         }
     }
 
-    update_key(m_special_key_pressed, m_key_info.scan_code);
+    key_state_update(m_special_key_pressed, m_key_info.scan_code);
 
-    __input_global_key_info_set(m_key_info);
-    input_scan_code_mapper_call(m_key_info.scan_code);
-    input_obserables_update(m_key_info);
+    input.key_info_update(m_key_info);
+    input.mapper_call(m_key_info.scan_code);
 
-    input_handlers_call(m_key_info);
+    input.observables_update();
+    input.handlers_call();
 
     //updates screen buffer on every key press
     if (stdio_mode_get() == STDIO_MODE_TERMINAL) {
@@ -107,7 +109,7 @@ void Keyboard::leds_set(Keyboard::leds_mask_t mask)
 }
 
 
-void Keyboard::update_key(bool is_special_key, uint8_t scan_code)
+void Keyboard::key_state_update(bool is_special_key, uint8_t scan_code)
 {
     bool* key_table = is_special_key ? m_key_info.special_keys_pressed : m_key_info.keys_pressed;
     if (!is_break_code(scan_code)) {

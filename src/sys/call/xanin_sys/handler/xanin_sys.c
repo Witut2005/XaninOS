@@ -158,17 +158,17 @@ uint32_t xanin_sys_handle(void)
     }
 
     case XANIN_KEYINFO_GET: {
-        *(KeyInfo*)ecx = __keyinfo_get();
+        *(KeyInfo*)ecx = __key_info_get();
         break;
     }
 
     case XANIN_IS_NORMAL_KEY_PRESSED: {
-        eax = __input_global_key_info_get().keys_pressed[ecx];
+        eax = __key_info_get().keys_pressed[ecx];
         break;
     }
 
     case XANIN_IS_SPECIAL_KEY_PRESSED: {
-        eax = __input_global_key_info_get().special_keys_pressed[ecx];
+        eax = __key_info_get().special_keys_pressed[ecx];
         break;
     }
 
@@ -193,7 +193,7 @@ uint32_t xanin_sys_handle(void)
     }
 
     case XANIN_INPUT_HANDLE_OBSERVED_OBJECTS: {
-        input_obserables_update(*(KeyInfo*)ecx);
+        input_observables_update();
         break;
     }
 
@@ -214,7 +214,7 @@ uint32_t xanin_sys_handle(void)
     }
 
     case XANIN_INPUT_CALL_HANDLERS: {
-        input_handlers_call(*((KeyInfo*)&ecx));
+        input_handlers_call();
         break;
     }
 

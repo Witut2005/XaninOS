@@ -10,13 +10,16 @@
 #include <lib/libc/stdiox.h>
 #include <sys/devices/keyboard/key_map.h>
 
-static KeyInfo XaninGlobalKeyInfo;
-
-static std::array<InputObservable, 100> InputObservables;
-static std::array<InputHandler, 100> InputModuleHandlers;
-
 static void (*input_character_mapper)(uint8_t scan_code);
-static InputScanCodeMapperHandlers XaninScanCodeMapperHandlers;
+static InputSpecialKeyHandlers xanin_special_key_handlers;
+
+#define INPUT_MODULE_KEY_REMAP_BEGIN(from, to)   \
+if (xanin_global_key_info.character == from) \
+xanin_global_key_info.character = to
+
+#define INPUT_MODULE_KEY_REMAP(from, to)   \
+else if (xanin_global_key_info.character == from) \
+xanin_global_key_info.character = to
 
 extern "C" int screenshot(void);
 
@@ -26,52 +29,48 @@ constexpr auto Observables = InputManager::TableType::Observables;
 constexpr auto TypeKernel = InputManager::EntryType::Kernel;
 constexpr auto TypeUser = InputManager::EntryType::User;
 
+void InputManager::observables_update(void)
+{
+    execute_on_tables<InputManager::TableType::Observables>([this](InputObservable& observable) {
+        if (observable.options.ignore_break_codes && is_break_code(m_key_info.scan_code)) {
+            observable.key_info = m_key_info;
+        }
+    });
+}
+
+InputManager InputManager::s_instance;
+
 extern "C"
 {
 
-    KeyInfo __input_global_key_info_get(void)
-    {
-        return XaninGlobalKeyInfo;
-    }
 
-    void __input_global_key_info_set(KeyInfo KeyInfo)
-    {
-        XaninGlobalKeyInfo = KeyInfo;
-    }
 
     void __input_default_prtsc_handler(void)
     {
         int x_tmp = Screen.x, y_tmp = Screen.y;
         screenshot();
 
-        XaninGlobalKeyInfo.character = 0x0;
         Screen.x = x_tmp;
         Screen.y = y_tmp;
     }
 
     void __input_prtsc_handler_set(input_scan_code_mapper_handler_t handler)
     {
-        XaninScanCodeMapperHandlers.prtsc = handler;
+        xanin_special_key_handlers.prtsc = handler;
     }
 
-#define INPUT_MODULE_KEY_REMAP_BEGIN(from, to)   \
-    if (XaninGlobalKeyInfo.character == from) \
-    XaninGlobalKeyInfo.character = to
-
-#define INPUT_MODULE_KEY_REMAP(from, to)   \
-    else if (XaninGlobalKeyInfo.character == from) \
-    XaninGlobalKeyInfo.character = to
 
     void xanin_default_character_mapper(uint8_t scan_code)
     {
-        XaninGlobalKeyInfo.character = keyboard_map[scan_code];
+        KeyInfo& xanin_global_key_info = InputManager::s_instance.m_key_info;
+        xanin_global_key_info.character = keyboard_map[scan_code];
 
         if (is_break_code(scan_code)) {
-            XaninGlobalKeyInfo.character = '\0';
+            xanin_global_key_info.character = '\0';
             return;
         }
 
-        // switch (XaninGlobalKeyInfo.scan_code)
+        // switch (xanin_global_key_info.scan_code)
         // {
         // case PRINT_SCREEN_KEY:
         // {
@@ -80,23 +79,23 @@ extern "C"
         // }
         // }
 
-        if (XaninGlobalKeyInfo.functional_keys.caps)
+        if (xanin_global_key_info.functional_keys.caps)
         {
-            if (XaninGlobalKeyInfo.character >= 'a' && XaninGlobalKeyInfo.character <= 'z') {
-                XaninGlobalKeyInfo.character -= 32;
+            if (xanin_global_key_info.character >= 'a' && xanin_global_key_info.character <= 'z') {
+                xanin_global_key_info.character -= 32;
             }
         }
 
-        if (XaninGlobalKeyInfo.functional_keys.shift)
+        if (xanin_global_key_info.functional_keys.shift)
         {
 
-            if (XaninGlobalKeyInfo.character >= 'a' && XaninGlobalKeyInfo.character <= 'z') {
-                XaninGlobalKeyInfo.character -= 32;
+            if (xanin_global_key_info.character >= 'a' && xanin_global_key_info.character <= 'z') {
+                xanin_global_key_info.character -= 32;
             }
 
             //it will handle case when caps is true 
-            else if (XaninGlobalKeyInfo.character >= 'A' && XaninGlobalKeyInfo.character <= 'Z') {
-                XaninGlobalKeyInfo.character += 32;
+            else if (xanin_global_key_info.character >= 'A' && xanin_global_key_info.character <= 'Z') {
+                xanin_global_key_info.character += 32;
             }
 
             INPUT_MODULE_KEY_REMAP_BEGIN('-', '_');
@@ -127,28 +126,28 @@ extern "C"
 
     void input_scan_code_mapper_set(void (*mapper)(uint8_t scan_code))
     {
-        input_character_mapper = mapper;
+        InputManager::the().mapper_set(mapper);
     }
 
     void input_scan_code_mapper_call(uint8_t scan_code)
     {
-        return input_character_mapper(scan_code);
+        InputManager::the().mapper_call(scan_code);
     }
 
     bool input_is_normal_key_pressed(uint8_t scan_code)
     {
-        return XaninGlobalKeyInfo.keys_pressed[scan_code];
+        return InputManager::the().is_key_pressed(scan_code, false);
     }
 
     bool input_is_special_key_pressed(uint8_t scan_code)
     {
-        return XaninGlobalKeyInfo.special_keys_pressed[scan_code];
+        return InputManager::the().is_key_pressed(scan_code, true);
     }
 
     //changed and not tested yet
-    void input_obserables_update(KeyInfo key_info)
+    void input_observables_update(void)
     {
-        InputManager::the().observables_update(key_info);
+        InputManager::the().observables_update();
     }
 
     bool input_observable_add(InputObservable* observable, INPUT_TABLE_TYPE type)
@@ -169,9 +168,9 @@ extern "C"
             InputManager::the().add<InputManager::TableType::Handlers, InputManager::EntryType::User>(handler);
     }
 
-    void input_handlers_call(KeyInfo key_info)
+    void input_handlers_call(void)
     {
-        return InputManager::the().handlers_call(key_info);
+        InputManager::the().handlers_call();
     }
 
     bool input_handler_remove(int id, INPUT_TABLE_TYPE type)
@@ -185,18 +184,34 @@ extern "C"
         InputManager::the().user_handlers_remove();
     }
 
-    KeyInfo __keyinfo_get(void)
+    KeyInfo __key_info_get(void)
     {
-        return XaninGlobalKeyInfo;
+        return InputManager::the().key_info_get();
     }
+
+    // xchar __inputg(void)
+    // {
+    //     // KeyInfo InputgKeyInfo;
+    //     // InputgKeyInfo.scan_code = xanin_global_key_info.scan_code = 0;
+    //     // InputManager::the().add<InputManager::TableType::Observables, InputManager::EntryType::Kernel>()
+    //     auto key_info = InputManager::the().key_info_get();
+    //     KeyInfo current_key_info;
+    //     current_key_info.scan_code = key_info.scan_code = 0;
+
+    //     do {
+    //         current_key_info = InputManager::the().key_info_get();
+    //     } while (current_key_info.scan_code == key_info.scan_code || is_break_code(current_key_info.scan_code));
+
+    //     return { current_key_info.character, current_key_info.scan_code };
+    // }
 
     xchar __inputg(void)
     {
         KeyInfo InputgKeyInfo;
-        InputgKeyInfo.scan_code = XaninGlobalKeyInfo.scan_code = 0;
+        InputgKeyInfo.scan_code = InputManager::the().m_key_info.scan_code = 0;
 
         while ((InputgKeyInfo.scan_code == 0) || (InputgKeyInfo.scan_code >= 0x80)) {
-            InputgKeyInfo = __keyinfo_get(); // break codes doesnt count
+            InputgKeyInfo = InputManager::the().m_key_info; // break codes doesnt count
         }
 
         xchar x;
@@ -206,19 +221,10 @@ extern "C"
         return x;
     }
 
+
     char __inputc(void)
     {
         return __inputg().character;
     }
-}
 
-void InputManager::observables_update(KeyInfo key_info)
-{
-    execute_on_tables<InputManager::TableType::Observables>([&key_info](InputObservable& observable) {
-        if (observable.options.ignore_break_codes && is_break_code(key_info.scan_code)) {
-            observable.key_info = key_info;
-        }
-    });
-}
-
-InputManager InputManager::s_instance;
+} //extern "C"

@@ -117,7 +117,7 @@ private:
 
     void write(ControllerPort, uint8_t);
     uint8_t read(ControllerPort);
-    void update_key(bool is_special_key, uint8_t scan_code);
+    void key_state_update(bool is_special_key, uint8_t scan_code);
 
     static Keyboard s_instance;
 

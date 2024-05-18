@@ -41,4 +41,4 @@ typedef struct
     input_scan_code_mapper_handler_t prtsc;
     // input_scan_code_mapper_handler_t shift;
     // input_scan_code_mapper_handler_t alt;
-}InputScanCodeMapperHandlers;
+}InputSpecialKeyHandlers;
