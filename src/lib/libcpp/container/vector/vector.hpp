@@ -14,14 +14,14 @@
 // #ifdef KERNEL_MODULE
 #include <sys/pmmngr/alloc.h>
 #include <sys/devices/com/com.hpp>
-// #define VECTOR_ALLOC(s) kcalloc(s)
-// #define VECTOR_REALLOC(p, s) krealloc(p, s)
-// #define VECTOR_FREE(p) kfree(p)
+#define VECTOR_ALLOC(s) kcalloc(s)
+#define VECTOR_REALLOC(p, s) krealloc(p, s)
+#define VECTOR_FREE(p) kfree(p)
 // #else
 // #include <lib/libcpp/alloc.hpp>
-#define VECTOR_ALLOC(s) calloc(s)
-#define VECTOR_REALLOC(p, s) realloc(p, s)
-#define VECTOR_FREE(p) free(p)
+// #define VECTOR_ALLOC(s) calloc(s)
+// #define VECTOR_REALLOC(p, s) realloc(p, s)
+// #define VECTOR_FREE(p) free(p)
 // #endif
 
 namespace std
@@ -144,7 +144,10 @@ vector<T>::vector(initializer_list<T> items) : vector()
 template <typename T>
 vector<T>::~vector(void)
 {
-    clear();
+    for (int i = 0; i < m_size; i++) {
+        m_ptr[i].~T();
+    }
+    VECTOR_FREE(m_ptr);
 }
 
 template <typename T>

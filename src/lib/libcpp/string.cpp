@@ -48,19 +48,13 @@ string::string(string const& other)
 
 string::string(string&& other)
 {
-    m_size_reserved = other.m_size_reserved;
-    m_ptr = other.m_ptr;
-
-    other.m_size_reserved = 0;
-    other.m_ptr = nullptr;
+    memcpy(this, &other, sizeof(string));
+    other.raw_clear();
 }
 
 string::~string()
 {
-    if (m_ptr != nullptr) {
-        // dbg_info("ok", "string");
-        free(m_ptr);
-    }
+    free(m_ptr);
 }
 
 int string::index_serialize(int index) const
@@ -101,7 +95,6 @@ const string& string::resize(uint32_t size, char c)
 
 uint32_t string::length(void) const
 {
-    if (m_size_reserved == 0) return 0;
     return strlen(m_ptr);
 }
 
@@ -110,13 +103,17 @@ uint32_t string::size(void) const
     return length();
 }
 
+void string::raw_clear(void)
+{
+    m_size_reserved = 1;
+    m_ptr = (char*)calloc(1);
+}
+
 void string::clear(void)
 {
-    if (m_ptr != nullptr) {
-        free(m_ptr);
-    }
+    free(m_ptr);
 
-    m_size_reserved = 0;
+    m_size_reserved = 1;
     m_ptr = (char*)calloc(1);
 }
 
@@ -203,16 +200,10 @@ string& string::operator=(string const& other)
 
 string& string::operator=(string&& other)
 {
-    if (m_ptr != nullptr) {
-        free(m_ptr);
-    }
+    free(m_ptr);
+    memcpy(this, &other, sizeof(string));
 
-    m_ptr = other.m_ptr;
-    m_size_reserved = other.m_size_reserved;
-
-    other.m_ptr = nullptr;
-    other.m_size_reserved = 0;
-
+    other.raw_clear();
     return *this;
 }
 

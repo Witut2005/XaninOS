@@ -7,8 +7,6 @@
 using namespace std;
 using namespace std::literals;
 
-#warning VECTOR uses = instaed of memcpy function !!!!!!!!!!!!!!!1
-
 extern "C" __STATUS __cpp_vector_test(void)
 {
 

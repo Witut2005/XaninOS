@@ -103,6 +103,8 @@ extern "C" __STATUS __cpp_string_test(void)
 
             EXPECT_EQUAL(ptr[0], "abc");
             EXPECT_EQUAL(ptr[1], "cba");
+
+            delete[]ptr;
         }
 
         // print("iterator constructor: {}\n", string(nicho.begin(), nicho.end() - 1));
