@@ -122,7 +122,7 @@ void string::clear(void)
 
 void string::push_back(char c)
 {
-    reallocate_if_needed(m_size_reserved + sizeof(char));
+    reallocate_if_needed(length() + sizeof(char));
     *(uint16_t*)(end()).data() = c;
 }
 

@@ -87,7 +87,6 @@ string __nxin_path_parse(string path)
 {
     auto conditional_goto_to_parent_folder = [](bool cond, string& path, int start_index) -> void {
         if (cond) {
-
             if (path.index_serialize(start_index) < 0) path = "/";
 
             if (auto delim_index = path.last_of("/", start_index); delim_index != string::npos) {

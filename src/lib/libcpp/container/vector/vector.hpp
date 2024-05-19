@@ -10,16 +10,18 @@
 #include <lib/libcpp/type_traits.h>
 #include <lib/libcpp/container/iterator.hpp>
 
+// TODO throws heap full error when using k-like allocation funciotns 
 // #ifdef KERNEL_MODULE
 #include <sys/pmmngr/alloc.h>
-#define VECTOR_ALLOC(s) kcalloc(s)
-#define VECTOR_REALLOC(p, s) krealloc(p, s)
-#define VECTOR_FREE(p) kfree(p)
+#include <sys/devices/com/com.hpp>
+// #define VECTOR_ALLOC(s) kcalloc(s)
+// #define VECTOR_REALLOC(p, s) krealloc(p, s)
+// #define VECTOR_FREE(p) kfree(p)
 // #else
 // #include <lib/libcpp/alloc.hpp>
-// #define VECTOR_ALLOC(s) calloc(s)
-// #define VECTOR_REALLOC(p, s) realloc(p, s)
-// #define VECTOR_FREE(p) free(p)
+#define VECTOR_ALLOC(s) calloc(s)
+#define VECTOR_REALLOC(p, s) realloc(p, s)
+#define VECTOR_FREE(p) free(p)
 // #endif
 
 namespace std
@@ -60,6 +62,7 @@ public:
     constexpr bool valid(void) const { return m_ptr != nullptr; }
     constexpr bool empty(void) const { return m_size > 0; }
 
+    void raw_clear(void); //clear without calling deconstructors
     void clear(void);
     void push_back(const T& item);
     void pop_back(void);
@@ -116,7 +119,7 @@ template <typename T>
 vector<T>::vector(const vector<T>& other)
 {
     m_capacity = other.m_capacity;
-    m_ptr = (T*)VECTOR_ALLOC(m_capacity * sizeof(T));
+    m_ptr = (T*)VECTOR_ALLOC(other.m_capacity * sizeof(T));
 
     for (int i = 0; i < other.m_size; i++) {
         push_back(other.m_ptr[i]);
@@ -126,12 +129,8 @@ vector<T>::vector(const vector<T>& other)
 template <typename T>
 vector<T>::vector(vector<T>&& other)
 {
-    m_ptr = other.m_ptr;
-    m_size = other.m_size;
-    m_capacity = other.m_capacity;
-
-    other.m_ptr = nullptr;
-    other.m_size = other.m_capacity = 0;
+    memcpy(this, &other, sizeof(vector<T>));
+    other.raw_clear();
 }
 
 template <typename T>
@@ -140,8 +139,6 @@ vector<T>::vector(initializer_list<T> items) : vector()
     for (auto it = items.begin(); it != items.end(); it++) {
         push_back(*it);
     }
-
-    this->m_size = items.size();
 }
 
 template <typename T>
@@ -151,27 +148,31 @@ vector<T>::~vector(void)
 }
 
 template <typename T>
+void vector<T>::raw_clear(void)
+{
+    m_size = 0;
+    m_capacity = 1;
+    m_ptr = (T*)VECTOR_ALLOC(sizeof(T) * m_capacity);
+}
+
+template <typename T>
 void vector<T>::clear(void)
 {
-    if (m_ptr != nullptr)
-    {
-        for (int i = 0; i < m_size; i++) {
-            m_ptr[i].~T();
-        }
-        VECTOR_FREE(m_ptr);
+    for (int i = 0; i < m_size; i++) {
+        m_ptr[i].~T();
     }
+    VECTOR_FREE(m_ptr);
 
     m_size = 0;
     m_capacity = 1;
-    m_ptr = (T*)VECTOR_ALLOC(sizeof(T));
+    m_ptr = (T*)VECTOR_ALLOC(sizeof(T) * m_capacity);
 }
 
 template <typename T>
 void vector<T>::push_back(const T& item)
 {
     reallocate_if_needed(m_size + 1);
-    new(&m_ptr[m_size]) T(item);
-    m_size++;
+    new(&m_ptr[m_size++]) T(item);
 }
 
 template <typename T>
@@ -179,7 +180,6 @@ void vector<T>::pop_back(void)
 {
     if (!m_size) return;
     m_ptr[m_size--].~T();
-    // rbegin()
 }
 
 template <typename T>
@@ -252,14 +252,10 @@ vector<T>::iterator vector<T>::erase(vector<T>::iterator first, vector<T>::itera
 template <typename T>
 vector<T>& vector<T>::operator = (const vector<T>& other)
 {
-    if (m_ptr != nullptr) {
-        clear();
-    }
-
-    m_size = other.m_size;
+    clear();
     m_capacity = other.m_capacity;
+    m_ptr = VECTOR_REALLOC(m_ptr, other.m_capacity * sizeof(T));
 
-    m_ptr = VECTOR_ALLOC(other.m_size * sizeof(T));
     for (int i = 0; i < other.m_size; i++) {
         push_back(other.m_ptr[i]);
     }
@@ -269,23 +265,16 @@ template <typename T>
 vector<T>& vector<T>::operator = (vector<T>&& other)
 {
     clear();
-    m_size = other.m_size;
-    m_capacity = other.m_capacity;
-    m_ptr = other.m_ptr;
+    memcpy(this, &other, sizeof(vector<T>));
 
-    other.m_ptr = nullptr;
-    other.m_size = other.m_capacity = 0;
+    other.raw_clear();
 }
 
 template <typename T>
 bool vector<T>::reallocate_if_needed(uint32_t size)
 {
+    if (m_ptr == nullptr) dbg_error("VECTOR", "M_PTR cannot be null");
     if (size <= m_capacity) return false;
-
-    if (m_ptr == nullptr) {
-        m_ptr = (T*)VECTOR_ALLOC(sizeof(T));
-        return true;
-    }
 
     m_ptr = (T*)VECTOR_REALLOC(m_ptr, size * 2 * sizeof(T));
     m_capacity = size * 2;
