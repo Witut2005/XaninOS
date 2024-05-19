@@ -71,7 +71,6 @@ void Keyboard::handle(void)
     input.key_info_update(m_key_info);
     input.mapper_call(m_key_info.scan_code);
 
-    input.observables_update();
     input.handlers_call();
 
     //updates screen buffer on every key press

@@ -24,19 +24,9 @@ xanin_global_key_info.character = to
 extern "C" int screenshot(void);
 
 constexpr auto Handlers = InputManager::TableType::Handlers;
-constexpr auto Observables = InputManager::TableType::Observables;
 
 constexpr auto TypeKernel = InputManager::EntryType::Kernel;
 constexpr auto TypeUser = InputManager::EntryType::User;
-
-void InputManager::observables_update(void)
-{
-    execute_on_tables<InputManager::TableType::Observables>([this](InputObservable& observable) {
-        if (observable.options.ignore_break_codes && is_break_code(m_key_info.scan_code)) {
-            observable.key_info = m_key_info;
-        }
-    });
-}
 
 InputManager InputManager::s_instance;
 
@@ -142,24 +132,6 @@ extern "C"
     bool input_is_special_key_pressed(uint8_t scan_code)
     {
         return InputManager::the().is_key_pressed(scan_code, true);
-    }
-
-    //changed and not tested yet
-    void input_observables_update(void)
-    {
-        InputManager::the().observables_update();
-    }
-
-    bool input_observable_add(InputObservable* observable, INPUT_TABLE_TYPE type)
-    {
-        return type == INPUT_KERNEL ? InputManager::the().add<InputManager::TableType::Observables, InputManager::EntryType::Kernel>(*observable) :
-            InputManager::the().add<InputManager::TableType::Observables, InputManager::EntryType::User>(*observable);
-    }
-
-    bool input_observable_remove(int id, INPUT_TABLE_TYPE type)
-    {
-        return type == INPUT_KERNEL ? InputManager::the().remove<InputManager::TableType::Observables, InputManager::EntryType::Kernel>(id) :
-            InputManager::the().remove<InputManager::TableType::Observables, InputManager::EntryType::User>(id);
     }
 
     bool input_handler_add(InputHandler handler, INPUT_TABLE_TYPE type)

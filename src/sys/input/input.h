@@ -22,16 +22,10 @@ extern "C"
     void input_scan_code_mapper_call(uint8_t scan_code);
     void input_scan_code_mapper_set(void (*mapper)(uint8_t scan_code));
 
-    bool input_observable_add(InputObservable* observable, INPUT_TABLE_TYPE type);
-    bool input_observable_remove(int id, INPUT_TABLE_TYPE type);
-
     bool input_handler_add(InputHandler handler, INPUT_TABLE_TYPE type);
     bool input_handler_remove(int id, INPUT_TABLE_TYPE type);
 
     void input_user_handlers_remove(void);
-    void input_user_observables_remove(void);
-
-    void input_observables_update(void);
     void input_handlers_call(void);
 
     char __inputc(void);

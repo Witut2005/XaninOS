@@ -182,21 +182,6 @@ uint32_t xanin_sys_handle(void)
         break;
     }
 
-    case XANIN_INPUT_ADD_OBJECT_TO_OBSERVE: {
-        input_observable_add((InputObservable*)ecx, INPUT_USER);
-        break;
-    }
-
-    case XANIN_INPUT_REMOVE_OBJECT_FROM_OBSERVE: {
-        input_observable_remove(ecx, INPUT_USER);
-        break;
-    }
-
-    case XANIN_INPUT_HANDLE_OBSERVED_OBJECTS: {
-        input_observables_update();
-        break;
-    }
-
     case XANIN_INPUT_ADD_HANDLER: {
         input_handler_add(*(InputHandler*)ecx, INPUT_USER);
         break;

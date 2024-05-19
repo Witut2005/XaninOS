@@ -23,7 +23,6 @@ public:
     };
 
     enum class TableType {
-        Observables,
         Handlers
     };
 
@@ -48,25 +47,18 @@ public:
     template<InputManager::TableType T, InputManager::EntryType Type>
     bool remove(int id);
 
-    void user_observables_remove(void) { m_observables.user.clear(); }
     void user_handlers_remove(void) { m_handlers.user.clear(); }
-
     void handlers_call(void) { execute_on_tables<InputManager::TableType::Handlers>([this](const InputHandler& handler) {handler.handler(m_key_info, handler.options.args);}); }
-    void observables_update(void);
 
 private:
     InputManager() = default;
-
-    template<EntryType Type>
-    constexpr std::vector<InputObservable>& observables_get(void) { return Type == EntryType::Kernel ? m_observables.kernel : m_observables.user; }
 
     template<EntryType Type>
     constexpr std::vector<InputHandler>& handlers_get(void) { return Type == EntryType::Kernel ? m_handlers.kernel : m_handlers.user; }
 
     template<TableType T, EntryType Type>
     constexpr auto& tables_get(void) {
-        if constexpr (T == TableType::Observables) return observables_get<Type>();
-        else if (T == TableType::Handlers) return handlers_get<Type>();
+        if (T == TableType::Handlers) return handlers_get<Type>();
     }
 
     template<TableType T>
@@ -76,7 +68,6 @@ private:
 
     KeyInfo m_key_info;
     mapper_t m_mapper;
-    Table<InputObservable> m_observables;
     Table<InputHandler> m_handlers;
 
     friend void xanin_default_character_mapper(uint8_t);
