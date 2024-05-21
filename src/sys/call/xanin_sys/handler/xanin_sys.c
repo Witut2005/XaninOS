@@ -158,17 +158,17 @@ uint32_t xanin_sys_handle(void)
     }
 
     case XANIN_KEYINFO_GET: {
-        *(KeyInfo*)ecx = __key_info_get();
+        *(KeyInfo*)ecx = input_key_info_get();
         break;
     }
 
     case XANIN_IS_NORMAL_KEY_PRESSED: {
-        eax = __key_info_get().keys_pressed[ecx];
+        eax = input_key_info_get().keys_pressed[ecx];
         break;
     }
 
     case XANIN_IS_SPECIAL_KEY_PRESSED: {
-        eax = __key_info_get().special_keys_pressed[ecx];
+        eax = input_key_info_get().special_keys_pressed[ecx];
         break;
     }
 

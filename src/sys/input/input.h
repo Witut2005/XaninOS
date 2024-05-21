@@ -12,7 +12,7 @@ extern "C"
 {
 #endif
 
-    KeyInfo __key_info_get(void);
+    KeyInfo input_key_info_get(void);
 
     bool input_is_normal_key_pressed(uint8_t scan_code);
     bool input_is_special_key_pressed(uint8_t scan_code);
@@ -24,12 +24,10 @@ extern "C"
 
     INPUT_DECLARE_CPP_WRAPPER(void, mapper_call, (uint8_t scan_code));
     INPUT_DECLARE_CPP_WRAPPER(void, mapper_set, (void(*mapper)(uint8_t scan_code)));
-
-    bool input_handler_add(InputHandler handler, INPUT_TABLE_TYPE type);
-    bool input_handler_remove(int id, INPUT_TABLE_TYPE type);
-
-    void input_user_handlers_remove(void);
-    void input_handlers_call(void);
+    INPUT_DECLARE_CPP_WRAPPER(bool, handler_add, (InputHandler handler, INPUT_TABLE_TYPE type));
+    INPUT_DECLARE_CPP_WRAPPER(bool, handler_remove, (int id, INPUT_TABLE_TYPE type));
+    INPUT_DECLARE_CPP_WRAPPER(void, user_handlers_remove, (void));
+    INPUT_DECLARE_CPP_WRAPPER(void, handlers_call, (void));
 
     char __inputc(void);
     xchar __inputg(void);

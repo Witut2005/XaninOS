@@ -59,7 +59,7 @@ extern "C"
 
     void xanin_default_character_mapper(uint8_t scan_code)
     {
-        KeyInfo& xanin_global_key_info = InputManager::s_instance.m_key_info;
+        KeyInfo& xanin_global_key_info = InputManager::the().key_info_ref_get();
         xanin_global_key_info.character = keyboard_map[scan_code];
 
         if (is_break_code(scan_code)) {
@@ -123,6 +123,9 @@ extern "C"
 
     INPUT_DEFINE_CPP_WRAPPER1(void, mapper_set, (void(*mapper)(uint8_t scan_code)), mapper);
     INPUT_DEFINE_CPP_WRAPPER1(void, mapper_call, (uint8_t scan_code), scan_code);
+    INPUT_DEFINE_CPP_WRAPPER1(void, handlers_call, (void), );
+    INPUT_DEFINE_CPP_WRAPPER1(void, user_handlers_remove, (void), );
+    INPUT_DEFINE_CPP_WRAPPER1(KeyInfo, key_info_get, (void), );
 
     bool input_is_normal_key_pressed(uint8_t scan_code)
     {
@@ -140,10 +143,6 @@ extern "C"
             InputManager::the().add<InputManager::TableType::Handlers, InputManager::EntryType::User>(handler);
     }
 
-    void input_handlers_call(void)
-    {
-        InputManager::the().handlers_call();
-    }
 
     bool input_handler_remove(int id, INPUT_TABLE_TYPE type)
     {
@@ -151,48 +150,17 @@ extern "C"
             InputManager::the().remove<InputManager::TableType::Handlers, InputManager::EntryType::User>(id);
     }
 
-    void input_user_handlers_remove(void)
-    {
-        InputManager::the().user_handlers_remove();
-    }
-
-    KeyInfo __key_info_get(void)
-    {
-        return InputManager::the().key_info_get();
-    }
-
-    // xchar __inputg(void)
-    // {
-    //     // KeyInfo InputgKeyInfo;
-    //     // InputgKeyInfo.scan_code = xanin_global_key_info.scan_code = 0;
-    //     // InputManager::the().add<InputManager::TableType::Observables, InputManager::EntryType::Kernel>()
-    //     auto key_info = InputManager::the().key_info_get();
-    //     KeyInfo current_key_info;
-    //     current_key_info.scan_code = key_info.scan_code = 0;
-
-    //     do {
-    //         current_key_info = InputManager::the().key_info_get();
-    //     } while (current_key_info.scan_code == key_info.scan_code || is_break_code(current_key_info.scan_code));
-
-    //     return { current_key_info.character, current_key_info.scan_code };
-    // }
-
     xchar __inputg(void)
     {
-        KeyInfo InputgKeyInfo;
-        InputgKeyInfo.scan_code = InputManager::the().m_key_info.scan_code = 0;
+        auto& input = InputManager::the();
+        auto scan_code = input.key_info_get().scan_code;
 
-        while ((InputgKeyInfo.scan_code == 0) || (InputgKeyInfo.scan_code >= 0x80)) {
-            InputgKeyInfo = InputManager::the().m_key_info; // break codes doesnt count
-        }
+        input.dirty_clear();
+        while (!input.dirty_get());
 
-        xchar x;
-        x.character = InputgKeyInfo.character;
-        x.scan_code = InputgKeyInfo.scan_code;
-
-        return x;
+        auto key_info = input.key_info_get();
+        return { key_info.character, key_info.scan_code };
     }
-
 
     char __inputc(void)
     {

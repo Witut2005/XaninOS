@@ -30,11 +30,17 @@ public:
 
     static constexpr InputManager& the(void) { return s_instance; };
 
+    bool dirty_get(void) { return m_dirty; }
+    void dirty_set(void) { m_dirty = true; }
+    void dirty_clear(void) { m_dirty = false; }
+    void dirty_toggle(void) { m_dirty = !m_dirty; }
+
     void mapper_set(mapper_t mapper) { m_mapper = mapper; }
     void mapper_call(uint8_t scan_code) { m_mapper(scan_code); }
 
-    void key_info_update(KeyInfo key_info) { m_key_info = key_info; } //is called by keyboard driver
+    void key_info_update(KeyInfo key_info) { m_key_info = key_info; dirty_set(); } //is called by keyboard driver
     KeyInfo key_info_get(void) { return m_key_info; }
+    KeyInfo& key_info_ref_get(void) { return m_key_info; } // use it carefully
 
     bool is_key_pressed(uint8_t scan_code, bool is_special) { return is_special ? m_key_info.special_keys_pressed[scan_code] : m_key_info.keys_pressed[scan_code]; }
 
@@ -66,12 +72,11 @@ private:
 
     static InputManager s_instance;
 
+    bool m_dirty; //set to true if key_info_update is called by driver
     KeyInfo m_key_info;
     mapper_t m_mapper;
     Table<InputHandler> m_handlers;
 
-    friend void xanin_default_character_mapper(uint8_t);
-    friend xchar __inputg(void);
 };
 
 
