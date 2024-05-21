@@ -30,11 +30,18 @@ constexpr auto TypeUser = InputManager::EntryType::User;
 
 InputManager InputManager::s_instance;
 
+#define INPUT_DEFINE_CPP_WRAPPER1(return_type, method_name, params, param_name1) \
+return_type input_##method_name params { \
+return InputManager::the().method_name(param_name1); \
+}
+
+#define INPUT_DEFINE_CPP_WRAPPER2(return_type, method_name, params, param_name1, param_name2) \
+return_type input_##method_name params { \
+return InputManager::the().method_name(param_name1, param_name2); \
+}
+
 extern "C"
 {
-
-
-
     void __input_default_prtsc_handler(void)
     {
         int x_tmp = Screen.x, y_tmp = Screen.y;
@@ -114,15 +121,8 @@ extern "C"
 
     }
 
-    void input_scan_code_mapper_set(void (*mapper)(uint8_t scan_code))
-    {
-        InputManager::the().mapper_set(mapper);
-    }
-
-    void input_scan_code_mapper_call(uint8_t scan_code)
-    {
-        InputManager::the().mapper_call(scan_code);
-    }
+    INPUT_DEFINE_CPP_WRAPPER1(void, mapper_set, (void(*mapper)(uint8_t scan_code)), mapper);
+    INPUT_DEFINE_CPP_WRAPPER1(void, mapper_call, (uint8_t scan_code), scan_code);
 
     bool input_is_normal_key_pressed(uint8_t scan_code)
     {

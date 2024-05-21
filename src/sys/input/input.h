@@ -4,6 +4,8 @@
 #include <sys/input/types.h>
 
 // MAPPER WSKAZNIK DO KEY INFO CONST
+#define INPUT_DECLARE_CPP_WRAPPER(return_type, method, params) \
+return_type input_##method params;
 
 #ifdef __cplusplus
 extern "C"
@@ -19,8 +21,9 @@ extern "C"
     void __input_prtsc_handler_set(input_scan_code_mapper_handler_t handler);
 
     void xanin_default_character_mapper(uint8_t scan_code);
-    void input_scan_code_mapper_call(uint8_t scan_code);
-    void input_scan_code_mapper_set(void (*mapper)(uint8_t scan_code));
+
+    INPUT_DECLARE_CPP_WRAPPER(void, mapper_call, (uint8_t scan_code));
+    INPUT_DECLARE_CPP_WRAPPER(void, mapper_set, (void(*mapper)(uint8_t scan_code)));
 
     bool input_handler_add(InputHandler handler, INPUT_TABLE_TYPE type);
     bool input_handler_remove(int id, INPUT_TABLE_TYPE type);

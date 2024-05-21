@@ -173,12 +173,12 @@ uint32_t xanin_sys_handle(void)
     }
 
     case XANIN_INPUT_CHARACTER_MAPPER_SET: {
-        input_scan_code_mapper_set((void (*)(uint8_t))ecx);
+        input_mapper_set((void (*)(uint8_t))ecx);
         break;
     }
 
     case XANIN_INPUT_CHARACTER_MAPPER_CALL: {
-        input_scan_code_mapper_call(ecx);
+        input_mapper_call(ecx);
         break;
     }
 
