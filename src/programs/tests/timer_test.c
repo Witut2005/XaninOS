@@ -4,7 +4,7 @@
 #include <lib/libc/time.h>
 #include <sys/input/input.h>
 
-static void timer_handler(KeyInfo ki, uint8_t** a)
+static void timer_handler(KeyInfo ki, void* args)
 {
     if (ki.scan_code == ENTER)
         exit();

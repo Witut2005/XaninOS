@@ -32,7 +32,7 @@ extern "C" {
         return obj;
     }
 
-    static inline InputHandlerOptions input_handler_options_create(uint8_t** args, bool type)
+    static inline InputHandlerOptions input_handler_options_create(void* args, bool type)
     {
         InputHandlerOptions options = { args, type };
         return options;
