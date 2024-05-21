@@ -23,12 +23,14 @@ public:
     using const_reversed_iterator = ConstRandomAccessReversedIterator<array<T, Size>>;
 
     array(void) = default;
+    array(const T& value) { for(int i = 0; i < Size; i++) {m_array[i] = value;}}
     array(const array<T, Size>& other) = default;
-    array(initializer_list<T> items)
+    array(const initializer_list<T>& items)
     {
-        int i = 0;
-        for (auto beg = items.begin(); beg != items.end(); beg++) {
-            m_array[i] = *beg;
+        // static_assert(Size >= items.size(), "initializer list size cannot be larger than array size");
+        T* m_ptr = m_array;
+        for (auto beg = items.begin(); beg != items.end(); beg++, m_ptr++) {
+            *m_ptr = *beg;
         }
     }
 
