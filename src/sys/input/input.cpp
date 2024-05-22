@@ -140,17 +140,8 @@ extern "C"
         return InputManager::the().is_key_pressed(scan_code, true);
     }
 
-    bool input_handler_add(InputHandler handler)
-    {
-        return handler.options.type == INPUT_KERNEL ? InputManager::the().add<InputManager::TableType::Handlers, InputManager::EntryType::Kernel>(handler) :
-            InputManager::the().add<InputManager::TableType::Handlers, InputManager::EntryType::User>(handler);
-    }
-
-    bool input_handler_remove(int id, INPUT_TABLE_TYPE type)
-    {
-        return type == INPUT_KERNEL ? InputManager::the().remove<InputManager::TableType::Handlers, InputManager::EntryType::Kernel>(id) :
-            InputManager::the().remove<InputManager::TableType::Handlers, InputManager::EntryType::User>(id);
-    }
+    INPUT_DEFINE_CPP_WRAPPER1(void, handler_add, (InputHandler handler), handler);
+    INPUT_DEFINE_CPP_WRAPPER2(bool, handler_remove, (int id, INPUT_TABLE_TYPE type), id, type);
 
     xchar __inputg(void)
     {

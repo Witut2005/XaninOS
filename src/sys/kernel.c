@@ -489,6 +489,5 @@ void kernel_start(void)
     fclose(&StdioLegacyConfig);
 
     xanin_syscall0(0x12345);
-
     kernel_loop();
 }

@@ -324,4 +324,11 @@ bool have_intersection(std::pair<T, T> v1, std::pair<T, T> v2) // pair.first mus
         bclamp(v2.first, v1.first, v1.second) || bclamp(v2.second, v1.first, v1.second);
 }
 
+template <typename T>
+T null_coalescing(const T& v, const T& on_null)
+{
+    return v ? v : on_null;
+}
+
+
 }

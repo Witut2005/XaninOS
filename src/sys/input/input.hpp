@@ -45,31 +45,24 @@ public:
     bool is_key_pressed(uint8_t scan_code, bool is_special) { return is_special ? m_key_info.special_keys_pressed[scan_code] : m_key_info.keys_pressed[scan_code]; }
     bool is_break_code(uint8_t scan_code) { return scan_code >= 0x80; }
 
-    template<InputManager::TableType T, InputManager::EntryType Type>
-    auto get(int id); //do not check if id is valid be careful :^)
 
-    template<InputManager::TableType T, InputManager::EntryType Type>
-    int add(const auto& entry);
+    void handler_add(InputHandler handler) { handlers_get(handler.options.type).push_back(handler); }
+    void handlers_call(void) { execute_on(m_handlers, [this](const InputHandler& handler) {handler.handler(m_key_info, handler.options.args);}); }
+    bool handler_remove(int id, INPUT_TABLE_TYPE type) {
+        auto& handlers = handlers_get(type);
 
-    template<InputManager::TableType T, InputManager::EntryType Type>
-    bool remove(int id);
-
+        if (id < 0 || id >= handlers.end().index()) return false;
+        handlers.erase(handlers.begin() + id);
+        return true;
+    }
     void user_handlers_remove(void) { m_handlers.user.clear(); }
-    void handlers_call(void) { execute_on_tables<InputManager::TableType::Handlers>([this](const InputHandler& handler) {handler.handler(m_key_info, handler.options.args);}); }
 
 private:
     InputManager() = default;
 
-    template<EntryType Type>
-    constexpr std::vector<InputHandler>& handlers_get(void) { return Type == EntryType::Kernel ? m_handlers.kernel : m_handlers.user; }
+    constexpr std::vector<InputHandler>& handlers_get(INPUT_TABLE_TYPE type) { return type == INPUT_KERNEL ? m_handlers.kernel : m_handlers.user; }
 
-    template<TableType T, EntryType Type>
-    constexpr auto& tables_get(void) {
-        if (T == TableType::Handlers) return handlers_get<Type>();
-    }
-
-    template<TableType T>
-    void execute_on_tables(auto f);
+    void execute_on(auto& table, auto f);
 
     static InputManager s_instance;
 
@@ -79,41 +72,13 @@ private:
     Table<InputHandler> m_handlers;
 };
 
-
-template<InputManager::TableType T, InputManager::EntryType Type>
-auto InputManager::get(int id)
+void InputManager::execute_on(auto& table, auto f)
 {
-    auto& table = tables_get<T, Type>();
-    return table[id];
-}
-
-template<InputManager::TableType T, InputManager::EntryType Type>
-int InputManager::add(const auto& entry)
-{
-    auto& table = tables_get<T, Type>();
-    table.push_back(entry);
-    return table.size();
-}
-
-template<InputManager::TableType T, InputManager::EntryType Type>
-bool InputManager::remove(int id)
-{
-    if (id < 0) return false;
-
-    auto& table = tables_get <T, Type>();
-    table.erase(table.begin() + id);
-
-    return true;
-}
-
-template<InputManager::TableType T>
-void InputManager::execute_on_tables(auto f)
-{
-    for (auto& a : tables_get<T, InputManager::EntryType::Kernel>()) {
+    for (auto& a : table.kernel) {
         f(a);
     }
 
-    for (auto& a : tables_get<T, InputManager::EntryType::User>()) {
+    for (auto& a : table.user) {
         f(a);
     }
 }
