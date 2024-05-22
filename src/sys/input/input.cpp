@@ -59,10 +59,11 @@ extern "C"
 
     void xanin_default_character_mapper(uint8_t scan_code)
     {
-        KeyInfo& xanin_global_key_info = InputManager::the().key_info_ref_get();
+        auto& input = InputManager::the();
+        KeyInfo& xanin_global_key_info = input.key_info_ref_get();
         xanin_global_key_info.character = keyboard_map[scan_code];
 
-        if (is_break_code(scan_code)) {
+        if (input.is_break_code(scan_code)) {
             xanin_global_key_info.character = '\0';
             return;
         }
@@ -118,14 +119,16 @@ extern "C"
             INPUT_MODULE_KEY_REMAP(0x5C, '|');
             INPUT_MODULE_KEY_REMAP(0x27, 0x22);
         }
-
     }
+
+    ///////////////////////C FUNCTIONS///////////////////////////
 
     INPUT_DEFINE_CPP_WRAPPER1(void, mapper_set, (void(*mapper)(uint8_t scan_code)), mapper);
     INPUT_DEFINE_CPP_WRAPPER1(void, mapper_call, (uint8_t scan_code), scan_code);
     INPUT_DEFINE_CPP_WRAPPER1(void, handlers_call, (void), );
     INPUT_DEFINE_CPP_WRAPPER1(void, user_handlers_remove, (void), );
     INPUT_DEFINE_CPP_WRAPPER1(KeyInfo, key_info_get, (void), );
+    INPUT_DEFINE_CPP_WRAPPER1(bool, is_break_code, (uint8_t scan_code), scan_code);
 
     bool input_is_normal_key_pressed(uint8_t scan_code)
     {
@@ -137,12 +140,11 @@ extern "C"
         return InputManager::the().is_key_pressed(scan_code, true);
     }
 
-    bool input_handler_add(InputHandler handler, INPUT_TABLE_TYPE type)
+    bool input_handler_add(InputHandler handler)
     {
-        return type == INPUT_KERNEL ? InputManager::the().add<InputManager::TableType::Handlers, InputManager::EntryType::Kernel>(handler) :
+        return handler.options.type == INPUT_KERNEL ? InputManager::the().add<InputManager::TableType::Handlers, InputManager::EntryType::Kernel>(handler) :
             InputManager::the().add<InputManager::TableType::Handlers, InputManager::EntryType::User>(handler);
     }
-
 
     bool input_handler_remove(int id, INPUT_TABLE_TYPE type)
     {

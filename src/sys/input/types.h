@@ -3,17 +3,6 @@
 #include <stdbool.h>
 #include <sys/input/key_info.h>
 
-typedef struct
-{
-    bool ignore_break_codes;
-} InputObservableOptions;
-
-typedef struct
-{
-    KeyInfo key_info;
-    InputObservableOptions options;
-} InputObservable;
-
 typedef enum {
     INPUT_KERNEL,
     INPUT_USER
@@ -22,7 +11,7 @@ typedef enum {
 typedef struct
 {
     void* args;
-    bool type;
+    INPUT_TABLE_TYPE type;
 } InputHandlerOptions;
 
 typedef void (*input_handler_t)(KeyInfo, void*);

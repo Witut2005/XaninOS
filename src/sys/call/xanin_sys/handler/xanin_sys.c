@@ -153,7 +153,7 @@ uint32_t xanin_sys_handle(void)
 
     case XANIN_INPUTG: {
         // ECX = PTR
-        *(xchar*)ecx = __inputg();
+        *(xchar*)&eax = __inputg();
         break;
     }
 
@@ -183,7 +183,9 @@ uint32_t xanin_sys_handle(void)
     }
 
     case XANIN_INPUT_ADD_HANDLER: {
-        input_handler_add(*(InputHandler*)ecx, INPUT_USER);
+        InputHandler* handler = (InputHandler*)ecx;
+        handler->options.type = INPUT_USER;
+        input_handler_add(*handler);
         break;
     }
 

@@ -117,7 +117,6 @@ extern "C" {
             XANIN_ADD_APP_ENTRY1("help", help)
             XANIN_ADD_APP_ENTRY1("printk", print_to_syslog)
             XANIN_ADD_APP_ENTRY1("h", help)
-            XANIN_ADD_APP_ENTRY0("timer_test", timer_test)
             XANIN_ADD_APP_ENTRY1("cat", cat)
             XANIN_ADD_APP_ENTRY1("zsk", zsk)
             XANIN_ADD_APP_ENTRY0("epilepsy", epilepsy)

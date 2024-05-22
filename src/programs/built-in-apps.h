@@ -30,7 +30,6 @@ extern "C" {
     __STATUS load_file(char*, char*);
     __STATUS help(char*);
     __STATUS print_to_syslog(char*);
-    __STATUS timer_test(void);
     __STATUS cat(char*);
     __STATUS zsk(char*);
     __STATUS epilepsy(void);

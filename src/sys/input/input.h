@@ -24,10 +24,11 @@ extern "C"
 
     INPUT_DECLARE_CPP_WRAPPER(void, mapper_call, (uint8_t scan_code));
     INPUT_DECLARE_CPP_WRAPPER(void, mapper_set, (void(*mapper)(uint8_t scan_code)));
-    INPUT_DECLARE_CPP_WRAPPER(bool, handler_add, (InputHandler handler, INPUT_TABLE_TYPE type));
+    INPUT_DECLARE_CPP_WRAPPER(bool, handler_add, (InputHandler handler));
     INPUT_DECLARE_CPP_WRAPPER(bool, handler_remove, (int id, INPUT_TABLE_TYPE type));
     INPUT_DECLARE_CPP_WRAPPER(void, user_handlers_remove, (void));
     INPUT_DECLARE_CPP_WRAPPER(void, handlers_call, (void));
+    INPUT_DECLARE_CPP_WRAPPER(bool, is_break_code, (uint8_t));
 
     char __inputc(void);
     xchar __inputg(void);

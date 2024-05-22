@@ -111,7 +111,7 @@ void Keyboard::leds_set(Keyboard::leds_mask_t mask)
 void Keyboard::key_state_update(bool is_special_key, uint8_t scan_code)
 {
     bool* key_table = is_special_key ? m_key_info.special_keys_pressed : m_key_info.keys_pressed;
-    if (!is_break_code(scan_code)) {
+    if (!InputManager::the().is_break_code(scan_code)) {
         key_table[scan_code] = true;
     }
     else {

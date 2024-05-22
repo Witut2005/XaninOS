@@ -263,7 +263,6 @@ objects_to_compile = {
         CompileObject('./sys/call/xanin_sys/handler/xanin_sys_entry.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
         CompileObject('./sys/call/xanin_sys/calls/terminal/terminal.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
         CompileObject('./sys/call/xanin_sys/calls/vga/vga.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
-        CompileObject('./sys/call/xanin_sys/calls/input/input.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
         CompileObject('./sys/call/xanin_sys/handler/xanin_sys.c', builders['c'], builder_options['c']['default'], OBJECT),
     ],
 
@@ -449,7 +448,6 @@ objects_to_compile = {
         CompileObject('./programs/internals/buffers.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./programs/misc/tetris/tetris.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./programs/misc/start_screen.c', builders['c'], builder_options['c']['default'], OBJECT),
-        CompileObject('./programs/tests/timer_test.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./programs/tests/sprintf_test.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./programs/tests/paging_test.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./programs/fs/cat.c', builders['c'], builder_options['c']['default'], OBJECT),
@@ -529,9 +527,8 @@ create_c_library('./lib/libc/libc.o', './lib/libc/libc.a', [obj.output_name for 
         './lib/screen/screen.o', 
         './lib/system/system.o', 
         './sys/call/xanin_sys/calls/terminal/terminal.o', 
-        './sys/call/xanin_sys/calls/vga/vga.o', 
-        './sys/call/xanin_sys/calls/input/input.o', 
-                ])
+        './sys/call/xanin_sys/calls/vga/vga.o']
+                )
 
 compile_boot2()
 compile_kernel(objects_to_compile)

@@ -199,8 +199,7 @@ int pong(void)
     stdio_mode_set(STDIO_MODE_CANVAS);
     pong_default_state_restore(&pong);
 
-    InputHandler PongHandler = input_handler_create((input_handler_t)pong_get_input, input_handler_options_create(&pong, INPUT_USER));
-    input_handler_add(PongHandler, INPUT_USER);
+    input_handler_add((InputHandler) { pong_get_input, (InputHandlerOptions) { &pong, INPUT_USER } });
 
     while (!input_is_normal_key_pressed(KBP_F4))
     {

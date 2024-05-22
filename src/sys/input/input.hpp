@@ -43,6 +43,7 @@ public:
     KeyInfo& key_info_ref_get(void) { return m_key_info; } // use it carefully
 
     bool is_key_pressed(uint8_t scan_code, bool is_special) { return is_special ? m_key_info.special_keys_pressed[scan_code] : m_key_info.keys_pressed[scan_code]; }
+    bool is_break_code(uint8_t scan_code) { return scan_code >= 0x80; }
 
     template<InputManager::TableType T, InputManager::EntryType Type>
     auto get(int id); //do not check if id is valid be careful :^)
@@ -76,7 +77,6 @@ private:
     KeyInfo m_key_info;
     mapper_t m_mapper;
     Table<InputHandler> m_handlers;
-
 };
 
 
