@@ -190,8 +190,7 @@ uint32_t xanin_sys_handle(void)
     }
 
     case XANIN_INPUT_REMOVE_HANDLER: {
-#warning TODO use id here
-        // input_handler_remove(*((input_handler_t*)&ecx));
+        input_handler_remove((int)ecx, INPUT_USER);
         break;
     }
 

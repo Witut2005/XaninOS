@@ -1,0 +1,22 @@
+
+#pragma once
+
+#define XANIN_FOPEN 10
+#define XANIN_FREAD 11
+#define XANIN_FWRITE 12
+#define XANIN_FCLOSE 13
+
+#define XANIN_OPEN 14
+#define XANIN_READ 15
+#define XANIN_WRITE 16
+#define XANIN_CLOSE 17
+
+#define XANIN_XIN_ENTRY_CREATE 18
+
+#define XANIN_FSEEK 19
+#define XANIN_FTELL 20
+#define XANIN_SEEK 21
+#define XANIN_TELL 22
+
+#define XANIN_CURRENT_DIRECTORY_SET 30
+#define XANIN_CURRENT_DIRECTORY_GET 31
