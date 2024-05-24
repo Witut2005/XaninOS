@@ -1,16 +1,17 @@
 
-#include <lib/libc/stdlibx.h>
-#include <lib/libc/stdiox.h>
-#include <lib/libc/time.h>
-#include <lib/xaninGraphics/xaninGraphics.h>
-#include <sys/input/input.h>
-#include <lib/screen/screen.h>
+#include "./pong.h"
 #include <lib/libc/canvas.h>
 #include <lib/libc/pair.h>
-#include "./pong.h"
+#include <lib/libc/stdiox.h>
+#include <lib/libc/stdlibx.h>
+#include <lib/libc/time.h>
+#include <lib/screen/screen.h>
+#include <lib/xaninGraphics/xaninGraphics.h>
+#include <sys/input/input.h>
 
 // CANVAS_APP
 
+#define PONG_POINTS_NEEDED_TO_WIN 5
 #define PONG_SIZE_Y 6
 
 #define PONG1_X 5
@@ -23,8 +24,7 @@
 #define PONG_CELL ((uint16_t)(' ' + (((lgray << 4) | lgray) << 8)))
 #define WALL_CELL ((uint16_t)('\0' + (((green << 4) | green) << 8)))
 
-enum PONG_BALL_DIRECTIONS
-{
+enum PONG_BALL_DIRECTIONS {
     BALL_DIRECTION_LEFT = -1,
     BALL_DIRECTION_RIGHT = 1,
     BALL_DIRECTION_UP = -1,
@@ -38,22 +38,19 @@ enum PONG_BALL_DIRECTIONS
 #define BALL_VECTOR_X_REVERSE(Pong) (Pong->BallVector.first = Pong->BallVector.first * -1)
 #define BALL_VECTOR_Y_REVERSE(Pong) (Pong->BallVector.second = Pong->BallVector.second * -1)
 
-static inline void pong_get_input(key_info_t KeyboardInfo, uint8_t **args)
+static inline void pong_get_input(KeyInfo key_info, PongState* pong)
 {
+    if (key_info.scan_code == KBP_W || key_info.scan_code == KBP_S)
+        pong->PlayersInput.first = key_info.scan_code;
 
-    PongState *Pong = (PongState *)*args;
+    else if (key_info.scan_code == KBP_P || key_info.scan_code == KBSP_ARROW_UP)
+        pong->PlayersInput.second = key_info.scan_code;
 
-    if ((KeyboardInfo.scan_code == KBP_W) | (KeyboardInfo.scan_code == KBP_S))
-        Pong->PlayersInput.first = KeyboardInfo.scan_code;
-
-    else if ((KeyboardInfo.scan_code == KBP_P) | (KeyboardInfo.scan_code == KBSP_ARROW_UP))
-        Pong->PlayersInput.second = KeyboardInfo.scan_code;
-
-    else if ((KeyboardInfo.scan_code == KBP_L) | (KeyboardInfo.scan_code == KBSP_ARROW_DOWN))
-        Pong->PlayersInput.second = KeyboardInfo.scan_code;
+    else if (key_info.scan_code == KBP_L || key_info.scan_code == KBSP_ARROW_DOWN)
+        pong->PlayersInput.second = key_info.scan_code;
 }
 
-static inline void player1_position_update(PongState *Pong)
+static inline void player1_position_update(PongState* Pong)
 {
 
     uint8_t pong1_y_tmp = Pong->Positions.first;
@@ -79,7 +76,7 @@ static inline void player1_position_update(PongState *Pong)
         stdio_canvas_cell_put(' ', OUTPUT_COLOR_SET(lgray, lgray), Pong->Positions.first + i, PONG1_X);
 }
 
-static inline void player2_position_update(PongState *Pong)
+static inline void player2_position_update(PongState* Pong)
 {
     uint8_t pong2_y_tmp = Pong->Positions.second;
 
@@ -104,7 +101,7 @@ static inline void player2_position_update(PongState *Pong)
         stdio_canvas_cell_put(' ', OUTPUT_COLOR_SET(lgray, lgray), Pong->Positions.second + i, PONG2_X);
 }
 
-static inline void result_screen(char *str)
+static inline void result_screen(char* str)
 {
     canvas_screen_clear();
     stdio_canvas_move_to_x(33);
@@ -112,11 +109,11 @@ static inline void result_screen(char *str)
 
     canvas_xprintf("%s wins", str);
 
-    while (!__input_is_normal_key_pressed(KBP_ENTER))
+    while (!input_is_normal_key_pressed(KBP_ENTER))
         ;
 }
 
-static inline void pong_default_state_restore(PongState *Pong)
+static inline void pong_default_state_restore(PongState* Pong)
 {
     canvas_screen_clear();
 
@@ -144,7 +141,7 @@ static inline void pong_default_state_restore(PongState *Pong)
     stdio_canvas_cell_put(' ', OUTPUT_COLOR_SET(lgray, lgray), Pong->Ball.y, Pong->Ball.x);
 }
 
-static inline void ball_update(PongState *Pong)
+static inline void ball_update(PongState* Pong)
 {
     stdio_canvas_cell_put(BLANK_SCREEN_CELL, 0, Pong->Ball.y, Pong->Ball.x);
 
@@ -157,20 +154,17 @@ static inline void ball_update(PongState *Pong)
     if (!(rand() % 4))
         Pong->Ball.x += BALL_VECTOR_X_GET(Pong);
 
-    if (stdio_canvas_cell_background_color_compare(Pong->Ball.y, Pong->Ball.x, lgray) |
-        stdio_canvas_cell_background_color_compare(Pong->Ball.y, Pong->Ball.x + BALL_VECTOR_X_GET(Pong), lgray))
+    if (stdio_canvas_cell_background_color_compare(Pong->Ball.y, Pong->Ball.x, lgray) | stdio_canvas_cell_background_color_compare(Pong->Ball.y, Pong->Ball.x + BALL_VECTOR_X_GET(Pong), lgray))
     {
         BALL_VECTOR_X_REVERSE(Pong);
     }
 
-    if (stdio_canvas_cell_background_color_compare(Pong->Ball.y + 1, Pong->Ball.x, lgreen) |
-        stdio_canvas_cell_background_color_compare(Pong->Ball.y - 1, Pong->Ball.x, lgreen))
+    if (stdio_canvas_cell_background_color_compare(Pong->Ball.y + 1, Pong->Ball.x, lgreen) | stdio_canvas_cell_background_color_compare(Pong->Ball.y - 1, Pong->Ball.x, lgreen))
     {
         BALL_VECTOR_Y_REVERSE(Pong);
     }
 
-    if (stdio_canvas_cell_background_color_compare(Pong->Ball.y, Pong->Ball.x, green) |
-        stdio_canvas_cell_background_color_compare(Pong->Ball.y, Pong->Ball.x + BALL_VECTOR_X_GET(Pong), green))
+    if (stdio_canvas_cell_background_color_compare(Pong->Ball.y, Pong->Ball.x, green) | stdio_canvas_cell_background_color_compare(Pong->Ball.y, Pong->Ball.x + BALL_VECTOR_X_GET(Pong), green))
     {
         if (BALL_VECTOR_X_GET(Pong) == BALL_DIRECTION_RIGHT)
             Pong->PlayersPoints.first++;
@@ -182,7 +176,7 @@ static inline void ball_update(PongState *Pong)
     stdio_canvas_cell_put(' ', OUTPUT_COLOR_SET(lgray, lgray), Pong->Ball.y, Pong->Ball.x);
 }
 
-void pong_update(PongState *Pong)
+void pong_update(PongState* Pong)
 {
     player1_position_update(Pong);
     player2_position_update(Pong);
@@ -190,7 +184,7 @@ void pong_update(PongState *Pong)
 
     msleep(75);
 
-    if (__input_is_normal_key_pressed(KBP_R))
+    if (input_is_normal_key_pressed(KBP_R))
     {
         Pong->PlayersPoints.first = Pong->PlayersPoints.second = 0;
         pong_default_state_restore(Pong);
@@ -200,28 +194,28 @@ void pong_update(PongState *Pong)
 int pong(void)
 {
 
-    PongState Pong = {{PONGS_BASE_Y, PONGS_BASE_Y}, {0, 0}, {0, 0}, {BALL_DIRECTION_RIGHT, BALL_DIRECTION_UP}, {10, 39}};
+    PongState pong = { { PONGS_BASE_Y, PONGS_BASE_Y }, { 0, 0 }, { 0, 0 }, { BALL_DIRECTION_RIGHT, BALL_DIRECTION_UP }, { 10, 39 } };
 
     stdio_mode_set(STDIO_MODE_CANVAS);
-    pong_default_state_restore(&Pong);
+    pong_default_state_restore(&pong);
 
-    PongState *PongPtr = &Pong;
-    InputHandler PongHandler = input_handler_create(pong_get_input, input_handler_options_create((uint8_t **)&PongPtr, USER_INPUT_HANDLER));
-    __input_add_handler(&PongHandler);
+    input_handler_add((InputHandler) { pong_get_input, (InputHandlerOptions) { &pong, INPUT_USER } });
 
-    while (!__input_is_normal_key_pressed(KBP_F4))
+    while (!input_is_normal_key_pressed(KBP_F4))
     {
-        pong_update(&Pong);
-        if (Pong.PlayersPoints.first == 5)
+        pong_update(&pong);
+        if (pong.PlayersPoints.first == PONG_POINTS_NEEDED_TO_WIN)
         {
             result_screen("LEFT PLAYER");
-            pong_default_state_restore(&Pong);
+            pong_default_state_restore(&pong);
+            pong.PlayersPoints.first = pong.PlayersPoints.second = 0;
         }
 
-        else if (Pong.PlayersPoints.second == 5)
+        else if (pong.PlayersPoints.second == PONG_POINTS_NEEDED_TO_WIN)
         {
             result_screen("RIGHT PLAYER");
-            pong_default_state_restore(&Pong);
+            pong_default_state_restore(&pong);
+            pong.PlayersPoints.first = pong.PlayersPoints.second = 0;
         }
     }
     return XANIN_OK;

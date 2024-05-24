@@ -87,7 +87,6 @@ string __nxin_path_parse(string path)
 {
     auto conditional_goto_to_parent_folder = [](bool cond, string& path, int start_index) -> void {
         if (cond) {
-
             if (path.index_serialize(start_index) < 0) path = "/";
 
             if (auto delim_index = path.last_of("/", start_index); delim_index != string::npos) {
@@ -107,7 +106,6 @@ string __nxin_path_parse(string path)
     while (lexer.all_parsed() == false)
     {
         auto result = lexer.consume_until({ "../", "./" }, BaseLexer::IgnoreEnd::No, [](const string& str, uint32_t len) {
-
             if (str[0] != '.') return true;
             if (BaseLexer(str).count_number_of_continuous_chars(0) > 2) return false;
             else return true;
@@ -119,17 +117,17 @@ string __nxin_path_parse(string path)
         conditional_goto_to_parent_folder(result.second == "../", path, -4);
     }
 
-    if (lexer.count_number_of_continuous_chars(-3) <= 2)
+    if (lexer.count_number_of_continuous_chars('.', -STRING_CHARS("...")) <= 2)
     {
-        conditional_goto_to_parent_folder(path.substr(-2) == "..", path, -4); // check if path ends with .. 
+        conditional_goto_to_parent_folder(path.substr(-STRING_CHARS("..")) == "..", path, -4); // check if path ends with .. 
 
         if (*path.rbegin() == '.') {
             path.resize(path.length() - 1);
         }
     }
 
-    if (*path.rbegin() == '/' && path.length() != sizeof('\0')) { //delete trailing /
-        *path.rbegin() = '\0';
+    if (*path.rbegin() == '/' && path.length() != STRING_CHARS("/")) {
+        *path.rbegin() = '\0';  //delete trailing /
     }
 
     string parsed_path;

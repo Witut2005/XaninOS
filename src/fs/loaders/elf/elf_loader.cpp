@@ -19,9 +19,12 @@ ElfLoader::~ElfLoader(void)
     free(m_exepath);
 }
 
-bool ElfLoader::magic_check(const ElfHeaderAuto& header)
+bool ElfLoader::loadability_check(uint32_t entry_point, uint32_t size) const
 {
-    return bmemcmp(&header, s_valid_magic, EI_MAG_SIZE);
+    return std::find_if(s_loaded_addresses,
+        [=](const ElfExecutableMemoryInfo& info) {
+        return std::have_intersection<uint32_t>({ entry_point, entry_point + size }, { info.begin, info.begin + info.size });
+    }) == s_loaded_addresses.end();
 }
 
 ErrorOr<ElfHeaderAuto> ElfLoader::header_get(void) const
@@ -156,16 +159,21 @@ bool ElfLoader::execute(void)
     auto file = fopen(m_exepath, "r");
     if (file == nullptr) { return false; }
 
+    uint32_t entry_point = header.e_entry + (is_pie ? find_loadable_memory_location(file->size) : 0x0);
+
+    if (loadability_check(entry_point, file->size) == false) {
+        dbg_error(DEBUG_LABEL_ELF_LOADER, "Cant load executable. Program memory space is already used");
+        return false;
+    }
+
     for (auto& pheader : pheaders) {
         load_segment(pheader);
     }
 
-    uint32_t entry_point = header.e_entry + (is_pie ? find_loadable_memory_location(file->size) : 0x0);
-
-    s_pie_load_addresses_used.push_back({ entry_point, file->size });
+    s_loaded_addresses.push_back({ entry_point, file->size });
 
 #ifdef ELF_LOADER_DEBUG_PIE_ADDRESSES
-    for (const auto a : s_pie_load_addresses_used) {
+    for (const auto a : s_loaded_addresses) {
         dbg_warning(DEBUG_LABEL_ELF_LOADER, xsprintf(std::UniquePtr<char>((char*)calloc(50)).get(), "[0x%x, 0x%x]", a.begin, a.begin + a.size));
     }
 #endif
@@ -178,7 +186,7 @@ uint32_t ElfLoader::find_loadable_memory_location(uint32_t size) const
 {
     uint32_t begin = s_pie_load_addresses_begin;
 
-    for (auto a : s_pie_load_addresses_used)
+    for (auto a : s_loaded_addresses)
     {
         if (std::have_intersection<uint32_t>({ begin, begin + size }, { a.begin, a.begin + a.size })) {
             begin = a.begin + a.size;
@@ -190,4 +198,9 @@ uint32_t ElfLoader::find_loadable_memory_location(uint32_t size) const
     return begin;
 }
 
-std::vector<ElfLoader::ElfExecutableMemoryInfo> ElfLoader::s_pie_load_addresses_used; //TODO problems with global constructor
+std::vector<ElfLoader::ElfExecutableMemoryInfo> ElfLoader::s_loaded_addresses; //TODO problems with global constructor
+
+extern "C"  void elf_loader_loaded_addresses_clear(void)
+{
+    ElfLoader::loaded_addresses_clear();
+}

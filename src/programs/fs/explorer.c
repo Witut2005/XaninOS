@@ -197,7 +197,7 @@ int explorer(char* parent_folder)
 
     __xin_folder_change(AppInfo.current_folder);
 
-    while (!__input_is_normal_key_pressed(KBP_F4))
+    while (!input_is_normal_key_pressed(KBP_F4))
     {
         canvas_screen_clear();
         __xin_current_directory_get(AppInfo.current_folder);

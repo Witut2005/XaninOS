@@ -1,6 +1,7 @@
 
 #include "devices/com/labels.h"
 #include "paging/paging.h"
+#include <fs/loaders/elf/elf_loader.h>
 #include <fs/xin.h>
 #include <lib/ascii/ascii.h>
 #include <lib/cpu/headers/cpu_state_info.h>
@@ -119,6 +120,7 @@ void kernel_loop(void)
         __xtb_flush_all(__vty_get());
 
         all_intervals_clear(); // clear all intervals added by apps during execution
+        // elf_loader_loaded_addresses_clear();
 
         interval_set(stdio_refresh, stdio_refresh_rate, NULL); // refresh interval
 
@@ -377,7 +379,7 @@ void kernel_init(void)
         ioapic_id_get());
 
     // COS NIE DZIALA SYSCALL
-    __input_scan_code_mapper_set(xanin_default_character_mapper);
+    input_mapper_set(xanin_default_character_mapper);
 
     pit_init(apic_pit_redirect != NULL ? apic_pit_redirect->global_system_int_table + APIC_IRQ_BASE : PIC_PIT_VECTOR);
     keyboard_init(apic_keyboard_redirect != NULL ? apic_keyboard_redirect->global_system_int_table + APIC_IRQ_BASE
@@ -450,7 +452,7 @@ void kernel_start(void)
     stdio_refresh(NULL);
 
     // while (getxchar().scan_code != ENTER)
-    while (!__input_is_normal_key_pressed(KBP_ENTER))
+    while (!input_is_normal_key_pressed(KBP_ENTER))
         ;
     screen_clear();
 
@@ -487,6 +489,5 @@ void kernel_start(void)
     fclose(&StdioLegacyConfig);
 
     xanin_syscall0(0x12345);
-
     kernel_loop();
 }

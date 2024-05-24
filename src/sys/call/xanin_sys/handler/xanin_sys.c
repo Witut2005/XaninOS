@@ -153,67 +153,54 @@ uint32_t xanin_sys_handle(void)
 
     case XANIN_INPUTG: {
         // ECX = PTR
-        *(xchar*)ecx = __inputg();
+        *(xchar*)&eax = __inputg();
         break;
     }
 
     case XANIN_KEYINFO_GET: {
-        *(key_info_t*)ecx = __keyinfo_get();
+        *(KeyInfo*)ecx = input_key_info_get();
         break;
     }
 
     case XANIN_IS_NORMAL_KEY_PRESSED: {
-        eax = __input_global_key_info_get().keys_pressed[ecx];
+        eax = input_key_info_get().keys_pressed[ecx];
         break;
     }
 
     case XANIN_IS_SPECIAL_KEY_PRESSED: {
-        eax = __input_global_key_info_get().special_keys_pressed[ecx];
+        eax = input_key_info_get().special_keys_pressed[ecx];
         break;
     }
 
     case XANIN_INPUT_CHARACTER_MAPPER_SET: {
-        __input_scan_code_mapper_set((void (*)(uint8_t))ecx);
+        input_mapper_set((void (*)(uint8_t))ecx);
         break;
     }
 
     case XANIN_INPUT_CHARACTER_MAPPER_CALL: {
-        __input_scan_code_mapper_call(ecx);
-        break;
-    }
-
-    case XANIN_INPUT_ADD_OBJECT_TO_OBSERVE: {
-        __input_add_object_to_observe(*(KeyboardModuleObservedObject*)&ecx);
-        break;
-    }
-
-    case XANIN_INPUT_REMOVE_OBJECT_FROM_OBSERVE: {
-        __input_remove_object_from_observe((key_info_t const* const)ecx);
-        break;
-    }
-
-    case XANIN_INPUT_HANDLE_OBSERVED_OBJECTS: {
-        __input_handle_observed_objects((key_info_t const* const)ecx);
+        input_mapper_call(ecx);
         break;
     }
 
     case XANIN_INPUT_ADD_HANDLER: {
-        __input_add_handler((InputHandler const* const)ecx);
+        InputHandler* handler = (InputHandler*)ecx;
+        handler->options.type = INPUT_USER;
+        input_handler_add(*handler);
         break;
     }
 
     case XANIN_INPUT_REMOVE_HANDLER: {
-        __input_remove_handler(*((input_handler_t*)&ecx));
+        input_handler_remove((int)ecx, INPUT_USER);
         break;
     }
 
     case XANIN_INPUT_REMOVE_USER_HANDLERS: {
-        __input_remove_user_handlers();
+        input_user_handlers_remove();
         break;
     }
 
     case XANIN_INPUT_CALL_HANDLERS: {
-        __input_call_handlers(*((key_info_t*)&ecx));
+        input_handlers_call();
         break;
     }
 

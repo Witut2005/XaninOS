@@ -5,250 +5,154 @@
 #include <lib/libcpp/container/array/array.hpp>
 #include <lib/libcpp/container/vector/vector.hpp>
 #include <sys/input/input.h>
+#include <sys/input/input.hpp>
 #include <lib/libcpp/algorithm.h>
 #include <lib/libc/stdiox.h>
 #include <sys/devices/keyboard/key_map.h>
 
-static key_info_t XaninGlobalKeyInfo;
-
-static std::array<KeyboardModuleObservedObject, 100> KeyboardModuleObservedObjects;
-static std::array<InputHandler, 100> InputModuleHandlers;
-
 static void (*input_character_mapper)(uint8_t scan_code);
-static InputScanCodeMapperHandlers XaninScanCodeMapperHandlers;
+static InputSpecialKeyHandlers xanin_special_key_handlers;
+
+#define INPUT_MODULE_KEY_REMAP_BEGIN(from, to)   \
+if (xanin_global_key_info.character == from) \
+xanin_global_key_info.character = to
+
+#define INPUT_MODULE_KEY_REMAP(from, to)   \
+else if (xanin_global_key_info.character == from) \
+xanin_global_key_info.character = to
 
 extern "C" int screenshot(void);
 
+constexpr auto Handlers = InputManager::TableType::Handlers;
+
+constexpr auto TypeKernel = InputManager::EntryType::Kernel;
+constexpr auto TypeUser = InputManager::EntryType::User;
+
+InputManager InputManager::s_instance;
+
+#define INPUT_DEFINE_CPP_WRAPPER1(return_type, method_name, params, param_name1) \
+return_type input_##method_name params { \
+return InputManager::the().method_name(param_name1); \
+}
+
+#define INPUT_DEFINE_CPP_WRAPPER2(return_type, method_name, params, param_name1, param_name2) \
+return_type input_##method_name params { \
+return InputManager::the().method_name(param_name1, param_name2); \
+}
+
 extern "C"
 {
-    bool __input_is_ctrl_pressed(void)
-    {
-        return XaninGlobalKeyInfo.keys_pressed[KBP_LEFT_CONTROL] | XaninGlobalKeyInfo.special_keys_pressed[KBSP_RIGHT_CONTROL];
-    }
-
-    bool __input_is_shift_pressed(void)
-    {
-        return XaninGlobalKeyInfo.keys_pressed[KBP_LEFT_SHIFT] | XaninGlobalKeyInfo.keys_pressed[KBP_RIGHT_SHIFT];
-    }
-
-    bool __input_is_alt_pressed(void)
-    {
-        return XaninGlobalKeyInfo.keys_pressed[KBP_LEFT_ALT] | XaninGlobalKeyInfo.keys_pressed[KBSP_RIGHT_ALT];
-    }
-
-    key_info_t __input_global_key_info_get(void)
-    {
-        return XaninGlobalKeyInfo;
-    }
-
-    void __input_global_key_info_set(key_info_t KeyInfo)
-    {
-        XaninGlobalKeyInfo = KeyInfo;
-    }
-
     void __input_default_prtsc_handler(void)
     {
         int x_tmp = Screen.x, y_tmp = Screen.y;
         screenshot();
 
-        XaninGlobalKeyInfo.character = 0x0;
         Screen.x = x_tmp;
         Screen.y = y_tmp;
     }
 
     void __input_prtsc_handler_set(input_scan_code_mapper_handler_t handler)
     {
-        XaninScanCodeMapperHandlers.prtsc = handler;
+        xanin_special_key_handlers.prtsc = handler;
     }
 
-#define KEYBOARD_DRIVER_KEY_REMAP(from, to)   \
-    if (XaninGlobalKeyInfo.character == from) \
-    XaninGlobalKeyInfo.character = to
 
     void xanin_default_character_mapper(uint8_t scan_code)
     {
+        auto& input = InputManager::the();
+        KeyInfo& xanin_global_key_info = input.key_info_ref_get();
+        xanin_global_key_info.character = keyboard_map[scan_code];
 
-        XaninGlobalKeyInfo.character = keyboard_map[scan_code];
-
-        switch (XaninGlobalKeyInfo.scan_code)
-        {
-        case PRINT_SCREEN_KEY:
-        {
-            XaninScanCodeMapperHandlers.prtsc();
-            break;
-        }
+        if (input.is_break_code(scan_code)) {
+            xanin_global_key_info.character = '\0';
+            return;
         }
 
-        if (XaninGlobalKeyInfo.is_caps)
-        {
-            if (XaninGlobalKeyInfo.character >= 'a' && XaninGlobalKeyInfo.character <= 'z')
-                XaninGlobalKeyInfo.character -= 32;
-        }
+        // switch (xanin_global_key_info.scan_code)
+        // {
+        // case PRINT_SCREEN_KEY:
+        // {
+        //     XaninScanCodeMapperHandlers.prtsc();
+        //     break;
+        // }
+        // }
 
-        if (__input_is_shift_pressed())
+        if (xanin_global_key_info.functional_keys.caps)
         {
-            if (XaninGlobalKeyInfo.is_caps)
-            {
-                if (XaninGlobalKeyInfo.character >= 'A' && XaninGlobalKeyInfo.character <= 'Z')
-                {
-                    XaninGlobalKeyInfo.character += 32;
-                }
-            }
-
-            else
-            {
-                if (XaninGlobalKeyInfo.character >= 'a' && XaninGlobalKeyInfo.character <= 'z')
-                {
-                    XaninGlobalKeyInfo.character -= 32;
-                }
+            if (xanin_global_key_info.character >= 'a' && xanin_global_key_info.character <= 'z') {
+                xanin_global_key_info.character -= 32;
             }
         }
 
-        if (__input_is_shift_pressed())
+        if (xanin_global_key_info.functional_keys.shift)
         {
-            KEYBOARD_DRIVER_KEY_REMAP('-', '_');
-            KEYBOARD_DRIVER_KEY_REMAP('1', '!');
-            KEYBOARD_DRIVER_KEY_REMAP('2', '@');
-            KEYBOARD_DRIVER_KEY_REMAP('3', '#');
-            KEYBOARD_DRIVER_KEY_REMAP('4', '$');
-            KEYBOARD_DRIVER_KEY_REMAP('5', '%');
-            KEYBOARD_DRIVER_KEY_REMAP('6', '^');
-            KEYBOARD_DRIVER_KEY_REMAP('7', '&');
-            KEYBOARD_DRIVER_KEY_REMAP('8', '*');
-            KEYBOARD_DRIVER_KEY_REMAP('9', '(');
-            KEYBOARD_DRIVER_KEY_REMAP('0', ')');
-            KEYBOARD_DRIVER_KEY_REMAP('=', '+');
-            KEYBOARD_DRIVER_KEY_REMAP('[', '{');
-            KEYBOARD_DRIVER_KEY_REMAP(']', '}');
-            KEYBOARD_DRIVER_KEY_REMAP('/', '?');
-            KEYBOARD_DRIVER_KEY_REMAP(';', ':');
-            KEYBOARD_DRIVER_KEY_REMAP('`', '~');
-            KEYBOARD_DRIVER_KEY_REMAP(',', '<');
-            KEYBOARD_DRIVER_KEY_REMAP('.', '>');
-            KEYBOARD_DRIVER_KEY_REMAP('/', '?');
-            KEYBOARD_DRIVER_KEY_REMAP(0x5C, '|');
-            KEYBOARD_DRIVER_KEY_REMAP(0x27, 0x22);
-        }
 
-        if (is_break_code(XaninGlobalKeyInfo.scan_code))
-            XaninGlobalKeyInfo.character = 0x0;
-    }
+            if (xanin_global_key_info.character >= 'a' && xanin_global_key_info.character <= 'z') {
+                xanin_global_key_info.character -= 32;
+            }
 
-    void __input_scan_code_mapper_set(void (*mapper)(uint8_t scan_code))
-    {
-        input_character_mapper = mapper;
-    }
+            //it will handle case when caps is true 
+            else if (xanin_global_key_info.character >= 'A' && xanin_global_key_info.character <= 'Z') {
+                xanin_global_key_info.character += 32;
+            }
 
-    void __input_scan_code_mapper_call(uint8_t scan_code)
-    {
-        return input_character_mapper(scan_code);
-    }
-
-    bool __input_is_normal_key_pressed(uint8_t scan_code)
-    {
-        return XaninGlobalKeyInfo.keys_pressed[scan_code];
-    }
-
-    bool __input_is_special_key_pressed(uint8_t scan_code)
-    {
-        return XaninGlobalKeyInfo.special_keys_pressed[scan_code];
-    }
-
-    InputHandler* input_module_handlers_get()
-    {
-        return InputModuleHandlers.begin().pointer();
-    }
-
-    //changed and not tested yet
-    void __input_handle_observed_objects(const key_info_t* const KeyboardDriverKeyInfo)
-    {
-        bool break_code = is_break_code(KeyboardDriverKeyInfo->scan_code);
-
-        for (auto& it : KeyboardModuleObservedObjects)
-        {
-            if (!((it).Options.ignore_break_codes & break_code))
-                memcpy(it.KeyInfo, KeyboardDriverKeyInfo, sizeof(key_info_t));
+            INPUT_MODULE_KEY_REMAP_BEGIN('-', '_');
+            INPUT_MODULE_KEY_REMAP('1', '!');
+            INPUT_MODULE_KEY_REMAP('2', '@');
+            INPUT_MODULE_KEY_REMAP('3', '#');
+            INPUT_MODULE_KEY_REMAP('4', '$');
+            INPUT_MODULE_KEY_REMAP('5', '%');
+            INPUT_MODULE_KEY_REMAP('6', '^');
+            INPUT_MODULE_KEY_REMAP('7', '&');
+            INPUT_MODULE_KEY_REMAP('8', '*');
+            INPUT_MODULE_KEY_REMAP('9', '(');
+            INPUT_MODULE_KEY_REMAP('0', ')');
+            INPUT_MODULE_KEY_REMAP('=', '+');
+            INPUT_MODULE_KEY_REMAP('[', '{');
+            INPUT_MODULE_KEY_REMAP(']', '}');
+            INPUT_MODULE_KEY_REMAP('/', '?');
+            INPUT_MODULE_KEY_REMAP(';', ':');
+            INPUT_MODULE_KEY_REMAP('`', '~');
+            INPUT_MODULE_KEY_REMAP(',', '<');
+            INPUT_MODULE_KEY_REMAP('.', '>');
+            INPUT_MODULE_KEY_REMAP('/', '?');
+            INPUT_MODULE_KEY_REMAP(0x5C, '|');
+            INPUT_MODULE_KEY_REMAP(0x27, 0x22);
         }
     }
 
-    void __input_init(void)
+    ///////////////////////C FUNCTIONS///////////////////////////
+
+    INPUT_DEFINE_CPP_WRAPPER1(void, mapper_set, (void(*mapper)(uint8_t scan_code)), mapper);
+    INPUT_DEFINE_CPP_WRAPPER1(void, mapper_call, (uint8_t scan_code), scan_code);
+    INPUT_DEFINE_CPP_WRAPPER1(void, handlers_call, (void), );
+    INPUT_DEFINE_CPP_WRAPPER1(void, user_handlers_remove, (void), );
+    INPUT_DEFINE_CPP_WRAPPER1(KeyInfo, key_info_get, (void), );
+    INPUT_DEFINE_CPP_WRAPPER1(bool, is_break_code, (uint8_t scan_code), scan_code);
+
+    bool input_is_normal_key_pressed(uint8_t scan_code)
     {
-        memset((uint8_t*)&KeyboardModuleObservedObjects, 0, sizeof(KeyboardModuleObservedObjects));
+        return InputManager::the().is_key_pressed(scan_code, false);
     }
 
-    bool __input_add_object_to_observe(KeyboardModuleObservedObject Object)
+    bool input_is_special_key_pressed(uint8_t scan_code)
     {
-        auto ObjectInserted = find_first(KeyboardModuleObservedObjects.begin(), KeyboardModuleObservedObjects.end(), [](const auto& a)
-        { return !a.valid(); });
-
-        if (!ObjectInserted.valid())
-            return false;
-
-        *ObjectInserted = Object;
-
-        return true;
+        return InputManager::the().is_key_pressed(scan_code, true);
     }
 
-    bool __input_remove_object_from_observe(const key_info_t* const KeyInfoToRemove)
+    INPUT_DEFINE_CPP_WRAPPER1(void, handler_add, (InputHandler handler), handler);
+    INPUT_DEFINE_CPP_WRAPPER2(bool, handler_remove, (int id, INPUT_TABLE_TYPE type), id, type);
+
+    xchar __inputg(void)
     {
-        auto ObjectsToRemove = std::find(KeyboardModuleObservedObjects.begin(), KeyboardModuleObservedObjects.end(), [=](auto a)
-        { return a.pointer()->KeyInfo == KeyInfoToRemove; });
+        auto& input = InputManager::the();
+        auto scan_code = input.key_info_get().scan_code;
 
-        if (!ObjectsToRemove.size())
-            return false;
+        input.dirty_clear();
+        while (!input.dirty_get());
 
-        for (auto& it : ObjectsToRemove)
-            memset((uint8_t*)it.pointer()->KeyInfo, (uint8_t)NULL, sizeof(KeyboardModuleObservedObject));
-
-        return true;
-    }
-
-    bool __input_add_handler(const InputHandler* const Handler)
-    {
-        auto HandlerToAdd = std::find_first(InputModuleHandlers.begin(), InputModuleHandlers.end(), [](auto& a)
-        { return a.pointer()->handler == NULL; });
-
-        if (!HandlerToAdd.valid())
-            return false;
-
-        memcpy((uint8_t*)HandlerToAdd.pointer(), (uint8_t*)Handler, sizeof(InputHandler));
-        return true;
-    }
-
-    void __input_call_handlers(key_info_t KeyboardDriverKeyInfo)
-    {
-        auto HandlersToCall = std::find(InputModuleHandlers.begin(), InputModuleHandlers.end(), [](auto& a)
-        { return a.pointer()->handler != NULL; });
-
-        for (auto& a : HandlersToCall)
-            a.pointer()->handler(KeyboardDriverKeyInfo, a.pointer()->options.args);
-    }
-
-    bool __input_remove_handler(const input_handler_t Handler)
-    {
-        auto HandlersToRemove = std::find(InputModuleHandlers.begin(), InputModuleHandlers.end(), [=](auto& a)
-        { return a.pointer()->handler == Handler; });
-
-        if (!HandlersToRemove.size())
-            return false;
-
-        for (auto& a : HandlersToRemove)
-            memset((uint8_t*)a.pointer(), (uint8_t)NULL, sizeof(InputHandler));
-        return true;
-    }
-
-    bool __input_remove_user_handlers(void)
-    {
-        auto HandlersToRemove = std::find(InputModuleHandlers.begin(), InputModuleHandlers.end(), [](auto& a)
-        { return a.pointer()->options.type == USER_INPUT_HANDLER; });
-
-        if (!HandlersToRemove.size())
-            return false;
-
-        for (auto& a : HandlersToRemove)
-            memset((uint8_t*)a.pointer(), (uint8_t)NULL, sizeof(InputHandler));
-
-        return true;
+        auto key_info = input.key_info_get();
+        return { key_info.character, key_info.scan_code };
     }
 
     char __inputc(void)
@@ -256,31 +160,4 @@ extern "C"
         return __inputg().character;
     }
 
-    void __keyinfo_clear(void)
-    {
-        // memset((uint8_t*)&XaninGlobalKeyInfo, 0, sizeof(XaninGlobalKeyInfo));
-    }
-
-    key_info_t __keyinfo_get(void)
-    {
-        return XaninGlobalKeyInfo;
-    }
-
-    xchar __inputg(void)
-    {
-
-        key_info_t InputgKeyInfo;
-
-        InputgKeyInfo.scan_code = XaninGlobalKeyInfo.scan_code = 0;
-        // __keyinfo_clear();
-
-        while ((InputgKeyInfo.scan_code == 0) || (InputgKeyInfo.scan_code >= 0x80))
-            InputgKeyInfo = __keyinfo_get(); // break codes doesnt count
-
-        xchar x;
-        x.character = InputgKeyInfo.character;
-        x.scan_code = InputgKeyInfo.scan_code;
-
-        return x;
-    }
-}
+} //extern "C"

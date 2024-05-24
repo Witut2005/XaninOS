@@ -73,7 +73,7 @@ extern "C" void tetris_keyboard_handler(void)
     if (CollisionStatus.down)
         return;
 
-    if (__input_is_normal_key_pressed(KBP_SPACE))
+    if (input_is_normal_key_pressed(KBP_SPACE))
     {
 
         // xgm::ColissionDetector tmp(object.positionx_get(), object.positiony_get(), object.sizey_get(), object.sizex_get());
@@ -96,22 +96,22 @@ extern "C" void tetris_keyboard_handler(void)
         // }
     }
 
-    else if (__input_is_special_key_pressed(KBSP_ARROW_LEFT))
+    else if (input_is_special_key_pressed(KBSP_ARROW_LEFT))
     {
         if (!CollisionStatus.left)
             object.move(-1, 0);
     }
 
-    else if (__input_is_special_key_pressed(KBSP_ARROW_RIGHT))
+    else if (input_is_special_key_pressed(KBSP_ARROW_RIGHT))
     {
         if (!CollisionStatus.right)
             object.move(1, 0);
     }
 
-    else if (__input_is_normal_key_pressed(KBP_S))
+    else if (input_is_normal_key_pressed(KBP_S))
         canvas_screen_clear();
 
-    else if (__input_is_special_key_pressed(KBSP_ARROW_DOWN))
+    else if (input_is_special_key_pressed(KBSP_ARROW_DOWN))
     {
         while (!object.collision_detect().down && ((object.positiony_get() + object.sizey_get()) < VGA_HEIGHT))
             object.move(0, 1);

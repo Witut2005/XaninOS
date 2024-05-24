@@ -2,6 +2,7 @@
 #include <stdint.h>
 #include <lib/libcpp/class.hpp>
 #include <sys/interrupts/idt/idt.h>
+#include <sys/input/types.h>
 
 namespace Device {
 
@@ -95,6 +96,13 @@ public:
 
     ////////////////////////////////////////////////////////////////
 
+    enum class KeyType {
+        Normal,
+        Special
+    };
+
+    ////////////////////////////////////////////////////////////////
+
     bool init(interrupt_vector_t vector);
     bool test(void);
     void reset(void);
@@ -109,8 +117,11 @@ private:
 
     void write(ControllerPort, uint8_t);
     uint8_t read(ControllerPort);
+    void key_state_update(bool is_special_key, uint8_t scan_code);
 
     static Keyboard s_instance;
+
+    KeyInfo m_key_info;
     bool m_initialized{ false };
     bool m_special_key_pressed{ false };
 };

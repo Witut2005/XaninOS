@@ -14,7 +14,7 @@ int ptetris(void)
     while (1)
     {
         update();
-        if (__input_is_normal_key_pressed(KBP_Q))
+        if (input_is_normal_key_pressed(KBP_Q))
         {
             app_exited = true;
             return XANIN_OK;

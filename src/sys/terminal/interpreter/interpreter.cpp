@@ -38,9 +38,7 @@ extern "C" {
         std::string app_path = std::string("/external_apps/") + std::string(argv[0]);
 
         dbg_info(DEBUG_LABEL_XANIN, (std::string("Opening external file ") + app_path).c_str());
-        ElfLoader(app_path.c_str()).execute();
-
-        return true;
+        return ElfLoader(app_path.c_str()).execute();
     }
 
     extern uint32_t stdio_refresh_rate; // USE HERE SYSCALL
@@ -56,7 +54,7 @@ extern "C" {
 
         bool stdio_mode_overriden = false;
 
-        if (__input_is_normal_key_pressed(KBP_LEFT_CONTROL))
+        if (input_is_normal_key_pressed(KBP_LEFT_CONTROL))
         {
             puts_warning("Stdio mode override: l(legacy)/t(terminal)\n");
             char stdio_selected_option = getchar();
@@ -88,6 +86,7 @@ extern "C" {
         // XANIN_ADD_APP_ENTRY0("arrayt", __cpp_xin_test)
         XANIN_ADD_APP_ENTRY0("construt", __cpp_global_constructors_test)
             XANIN_ADD_APP_ENTRY0("alloct", __c_alloc_test)
+            XANIN_ADD_APP_ENTRY0("arrayt", __cpp_array_test)
             XANIN_ADD_APP_ENTRY0("vectort", __cpp_vector_test)
             XANIN_ADD_APP_ENTRY0("algot", __cpp_algo_test)
             XANIN_ADD_APP_ENTRY0("xint", __cpp_xin_test)
@@ -118,7 +117,6 @@ extern "C" {
             XANIN_ADD_APP_ENTRY1("help", help)
             XANIN_ADD_APP_ENTRY1("printk", print_to_syslog)
             XANIN_ADD_APP_ENTRY1("h", help)
-            XANIN_ADD_APP_ENTRY0("timer_test", timer_test)
             XANIN_ADD_APP_ENTRY1("cat", cat)
             XANIN_ADD_APP_ENTRY1("zsk", zsk)
             XANIN_ADD_APP_ENTRY0("epilepsy", epilepsy)
@@ -193,7 +191,7 @@ extern "C" {
 
         else
         {
-            if (check_external_apps())
+            if (check_external_apps() == false)
             {
                 xprintf("%zunknown command: %s\n", OUTPUT_COLOR_ERROR_SET, argv[0]);
                 last_command_exit_status = XANIN_ERROR;

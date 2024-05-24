@@ -263,7 +263,6 @@ objects_to_compile = {
         CompileObject('./sys/call/xanin_sys/handler/xanin_sys_entry.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
         CompileObject('./sys/call/xanin_sys/calls/terminal/terminal.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
         CompileObject('./sys/call/xanin_sys/calls/vga/vga.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
-        CompileObject('./sys/call/xanin_sys/calls/input/input.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
         CompileObject('./sys/call/xanin_sys/handler/xanin_sys.c', builders['c'], builder_options['c']['default'], OBJECT),
     ],
 
@@ -390,6 +389,7 @@ objects_to_compile = {
     ],
 
     'Tests Cpp': [
+        CompileObject('./programs/tests/cpp/array.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./programs/tests/cpp/string.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./programs/tests/cpp/lexer.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./programs/tests/cpp/xin.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
@@ -398,6 +398,15 @@ objects_to_compile = {
         CompileObject('./programs/tests/cpp/global_constructors.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
     ],
 
+    'Tests C': [
+        CompileObject('./programs/tests/c_test.c', builders['c'], builder_options['c']['default'], OBJECT),
+        CompileObject('./programs/tests/c/alloc.c', builders['c'], builder_options['c']['default'], OBJECT),
+    ],
+
+    'Drivers test': [],
+    'Network test': [],
+    'System utils test': [],
+
     'built-in programs': [
         CompileObject('./programs/fs/edit.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./programs/fs/xin_check.c', builders['c'], builder_options['c']['default'], OBJECT),
@@ -405,9 +414,6 @@ objects_to_compile = {
         CompileObject('./programs/xagames/tetris.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./programs/misc/screenshot.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./programs/tests/elf_loader_test.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
-        CompileObject('./programs/tests/c_test.c', builders['c'], builder_options['c']['default'], OBJECT),
-
-        CompileObject('./programs/tests/c/alloc.c', builders['c'], builder_options['c']['default'], OBJECT),
 
         CompileObject('./programs/stdio/stdio_apply.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./programs/file_format_tools/bmp_info.c', builders['c'], builder_options['c']['default'], OBJECT),
@@ -442,7 +448,6 @@ objects_to_compile = {
         CompileObject('./programs/internals/buffers.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./programs/misc/tetris/tetris.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./programs/misc/start_screen.c', builders['c'], builder_options['c']['default'], OBJECT),
-        CompileObject('./programs/tests/timer_test.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./programs/tests/sprintf_test.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./programs/tests/paging_test.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./programs/fs/cat.c', builders['c'], builder_options['c']['default'], OBJECT),
@@ -522,9 +527,8 @@ create_c_library('./lib/libc/libc.o', './lib/libc/libc.a', [obj.output_name for 
         './lib/screen/screen.o', 
         './lib/system/system.o', 
         './sys/call/xanin_sys/calls/terminal/terminal.o', 
-        './sys/call/xanin_sys/calls/vga/vga.o', 
-        './sys/call/xanin_sys/calls/input/input.o', 
-                ])
+        './sys/call/xanin_sys/calls/vga/vga.o']
+                )
 
 compile_boot2()
 compile_kernel(objects_to_compile)

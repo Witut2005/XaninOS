@@ -87,14 +87,42 @@ InputIt find_if(InputIt beg, InputIt end, auto predicate)
     return end;
 }
 
-// template <typename Cont>
-// Cont::forward_iterator find_if(Cont container, auto predicate)
-// {
-//     for (auto beg = container.begin(); beg != container.end(); beg++) {
-//         if (predicate(*beg)) return beg;
-//     }
-//     return container.end();
-// }
+//TODO sus function 
+template <typename Cont>
+Cont::iterator find_if(Cont& container, auto predicate)
+{
+    for (auto beg = container.begin(); beg != container.end(); beg++) {
+        if (predicate(*beg)) return beg;
+    }
+    return container.end();
+}
+
+template<typename Iterator, typename T = typename Iterator::value_type>
+Iterator remove(Iterator first, Iterator last, const T& value)
+{
+    first = find_if(first, last, [&value](const auto& a) { return a == value;});
+    for (Iterator it = first; it != last; it++)
+    {
+        if ((*it == value) == false) {
+            *first++ = std::move(*it);
+        }
+    }
+    return first;
+}
+
+template<class Cont>
+Cont::iterator remove(Cont container, const typename Cont::value_type& value)
+{
+    auto first = find_if(container, [&value](const auto& a) { return a == value;});
+    for (Iterator it = first; it != container.end(); it++)
+    {
+        if ((*it == value) == false) {
+            *first++ = std::move(*it);
+        }
+    }
+    return first;
+}
+
 
 // IN ITERATOR MAKE PTR TO CONTAINER OBJECT
 template <typename InputIt>
@@ -295,5 +323,12 @@ bool have_intersection(std::pair<T, T> v1, std::pair<T, T> v2) // pair.first mus
     return bclamp(v1.first, v2.first, v2.second) || bclamp(v1.second, v2.first, v2.second) ||
         bclamp(v2.first, v1.first, v1.second) || bclamp(v2.second, v1.first, v1.second);
 }
+
+template <typename T>
+T null_coalescing(const T& v, const T& on_null)
+{
+    return v ? v : on_null;
+}
+
 
 }

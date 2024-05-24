@@ -30,7 +30,6 @@ extern "C" {
     __STATUS load_file(char*, char*);
     __STATUS help(char*);
     __STATUS print_to_syslog(char*);
-    __STATUS timer_test(void);
     __STATUS cat(char*);
     __STATUS zsk(char*);
     __STATUS epilepsy(void);
@@ -96,6 +95,7 @@ extern "C" {
     __STATUS __cpp_algo_test(void);
     __STATUS __cpp_vector_test(void);
     __STATUS __cpp_global_constructors_test(void);
+    __STATUS __cpp_array_test(void);
 
     __STATUS __c_alloc_test(void);
 

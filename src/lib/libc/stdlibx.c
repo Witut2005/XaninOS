@@ -69,7 +69,7 @@ xchar inputg(void)
     return __sys_inputg();
 }
 
-// key_info_t keyinfo_get(void)
+// KeyInfo keyinfo_get(void)
 // {
 //     return __sys_keyinfo_get();
 // }

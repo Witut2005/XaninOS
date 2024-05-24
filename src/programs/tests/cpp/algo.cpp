@@ -37,5 +37,20 @@ extern "C" __STATUS __cpp_algo_test(void)
         EXPECT_FALSE(std::have_intersection<uint32_t>({ 5, 6 }, { 1, 3 }));
     }
 
+    TEST_CASE(std::remove)
+    {
+        constexpr uint32_t value_to_remove = 4;
+        std::vector<uint32_t> v = { 0,1,2,3,4,5,6,7,8,9 };
+        std::remove(v.begin(), v.end(), value_to_remove);
+
+        for (int i = 0; i < value_to_remove; i++) {
+            EXPECT_EQUAL(v[i], i);
+        }
+
+        for (int i = value_to_remove; i < 9; i++) {
+            EXPECT_EQUAL(v[i], i + 1);
+        }
+    }
+
     return XANIN_OK;
 }

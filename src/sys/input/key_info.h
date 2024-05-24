@@ -4,23 +4,29 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-struct xchar
-{
+typedef struct {
     char character;
     uint8_t scan_code;
-};
+}xchar;
 
-typedef struct xchar xchar;
+typedef struct {
+    bool alt;
+    bool shift;
+    bool ctrl;
+    bool caps;
+} FunctionalKeysInfo;
 
-struct key_info_t
-{
+typedef struct {
     uint8_t scan_code;
     char character;
 
     bool keys_pressed[0x80];
     bool special_keys_pressed[0x80];
 
-    uint8_t is_caps;
-};
+    FunctionalKeysInfo functional_keys;
 
-typedef struct key_info_t key_info_t;
+    // bool is_caps;
+    // bool is_shift;
+    // bool is_ctrl;
+    // bool is_alt;
+}KeyInfo;

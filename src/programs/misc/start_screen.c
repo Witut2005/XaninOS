@@ -80,7 +80,7 @@ int start_screen(void)
 
     print_xanin_os_string();
 
-    while (!__input_is_normal_key_pressed(KBP_F4))
+    while (!input_is_normal_key_pressed(KBP_F4))
     {
 
         if (!if_down)

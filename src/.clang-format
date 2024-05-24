@@ -7,6 +7,7 @@ BasedOnStyle: WebKit
 AllowShortBlocksOnASingleLine: true
 AllowShortIfStatementsOnASingleLine: true
 BraceWrapping:
+    AfterExternBlock: false
     AfterFunction: true
     AfterControlStatement: true
 BreakBeforeBraces: Custom
@@ -27,6 +28,7 @@ SpaceAfterTemplateKeyword: false
 Language: ObjC
 BinPackParameters: false
 BraceWrapping:
+    AfterExternBlock: false
     AfterObjCDeclaration: true
 ObjCBinPackProtocolList: Never
 ObjCBlockIndentWidth: 4

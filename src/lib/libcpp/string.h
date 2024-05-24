@@ -73,6 +73,7 @@ public:
 
     uint32_t length(void) const;
     uint32_t size(void) const;
+    void raw_clear(void);
     void clear(void);
     void push_back(char c);
     char pop_back(void);
@@ -99,9 +100,9 @@ public:
     const_iterator cbegin(void) const { return const_iterator(*this, 0); }
     const_iterator cend(void) const { return const_iterator(*this, size()); }
 
-    reversed_iterator rbegin(void) { return reversed_iterator(*this, size() - 1); }
+    reversed_iterator rbegin(void) { return reversed_iterator(*this, size() == 0 ? 0 : size() - 1); }
     reversed_iterator rend(void) { return reversed_iterator(*this, -1); }
-    const_reversed_iterator crbegin(void) const { return const_reversed_iterator(*this, size() - 1); }
+    const_reversed_iterator crbegin(void) const { return const_reversed_iterator(*this, size() == 0 ? 0 : size() - 1); }
     const_reversed_iterator crend(void) const { return const_reversed_iterator(*this, -1); }
 
     static constexpr int npos = -1;

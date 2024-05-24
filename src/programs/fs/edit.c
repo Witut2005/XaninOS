@@ -1,11 +1,11 @@
 
 #include <lib/libc/canvas.h>
-#include <sys/devices/keyboard/scan_codes.h>
-#include <lib/screen/screen.h>
 #include <lib/libc/file.h>
+#include <lib/libc/memory.h>
 #include <lib/libc/stdlibx.h>
 #include <lib/libc/string.h>
-#include <lib/libc/memory.h>
+#include <lib/screen/screen.h>
+#include <sys/devices/keyboard/scan_codes.h>
 #include <sys/input/input.h>
 
 // CANVAS_APP
@@ -23,8 +23,7 @@
 #define CURSOR_SELECT_MODE_SET(EditState) *(EditState)->cursor = (uint16_t)((char)(*(EditState)->cursor) + (((white << 4) | black) << 8));
 #define CURSOR_NORMAL_MODE_SET(EditState) *(EditState)->cursor = (uint16_t)((char)(*(EditState)->cursor) + (((black << 4) | white) << 8));
 
-struct EditInfo
-{
+struct EditInfo {
     uint32_t file_position;
     uint16_t* cursor;
     uint32_t column;
@@ -67,7 +66,7 @@ void edit_input(xchar Input, XinEntry* File, EditInfo* EditState)
         EditState->program_buffer = (char*)File->FileInfo->buffer;
     }
 
-    if (__input_is_normal_key_pressed(KBP_LEFT_CONTROL) | __input_is_normal_key_pressed(KBSP_RIGHT_CONTROL))
+    if (input_is_normal_key_pressed(KBP_LEFT_CONTROL) | input_is_normal_key_pressed(KBSP_RIGHT_CONTROL))
     {
         if (Input.character == '$')
         {
@@ -86,7 +85,7 @@ void edit_input(xchar Input, XinEntry* File, EditInfo* EditState)
         }
     }
 
-    else if (__input_is_normal_key_pressed(KBP_ENTER))
+    else if (input_is_normal_key_pressed(KBP_ENTER))
     {
         char* tmp = (char*)calloc(strlen(EditState->program_buffer)) + 1;
         memcpy(tmp, EditState->program_buffer, strlen(EditState->program_buffer) + 1);
@@ -113,7 +112,7 @@ void edit_input(xchar Input, XinEntry* File, EditInfo* EditState)
         }
     }
 
-    else if (__input_is_normal_key_pressed(KBP_TAB))
+    else if (input_is_normal_key_pressed(KBP_TAB))
     {
         char* tmp = (char*)calloc(strlen(EditState->program_buffer)) + 3;
         memcpy(tmp, EditState->program_buffer, strlen(EditState->program_buffer) + 3);
@@ -132,7 +131,7 @@ void edit_input(xchar Input, XinEntry* File, EditInfo* EditState)
         EditState->cursor = EditState->cursor + 3;
     }
 
-    else if (__input_is_normal_key_pressed(KBP_BACKSPACE))
+    else if (input_is_normal_key_pressed(KBP_BACKSPACE))
     {
         if (!EditState->file_position)
             return;
@@ -160,7 +159,7 @@ void edit_input(xchar Input, XinEntry* File, EditInfo* EditState)
     }
 
     // else if (Input.scan_code == ARROW_LEFT)
-    else if (__input_is_special_key_pressed(KBSP_ARROW_LEFT))
+    else if (input_is_special_key_pressed(KBSP_ARROW_LEFT))
     {
 
         if (!EditState->file_position)
@@ -182,7 +181,7 @@ void edit_input(xchar Input, XinEntry* File, EditInfo* EditState)
         EditState->file_position--;
     }
 
-    else if (__input_is_special_key_pressed(KBSP_ARROW_RIGHT))
+    else if (input_is_special_key_pressed(KBSP_ARROW_RIGHT))
     {
 
         if (EditState->program_buffer[EditState->file_position] != '\0')
@@ -204,7 +203,7 @@ void edit_input(xchar Input, XinEntry* File, EditInfo* EditState)
         }
     }
 
-    else if (__input_is_special_key_pressed(KBSP_ARROW_UP))
+    else if (input_is_special_key_pressed(KBSP_ARROW_UP))
     {
 
         if (!EditState->current_line)
@@ -226,7 +225,7 @@ void edit_input(xchar Input, XinEntry* File, EditInfo* EditState)
         EditState->current_line--;
     }
 
-    else if (__input_is_special_key_pressed(KBSP_ARROW_DOWN))
+    else if (input_is_special_key_pressed(KBSP_ARROW_DOWN))
     {
 
         int i = EditState->file_position;
@@ -296,7 +295,7 @@ int edit(char* filename)
     fread(file, NULL, file->size);
 
     EditInfo EditState = { 0, (uint16_t*)VGA_TEXT_MEMORY, 0, 0, 0, int_to_sectors(file->size),
-                          (char*)file->FileInfo->buffer, (char*)file->FileInfo->buffer };
+        (char*)file->FileInfo->buffer, (char*)file->FileInfo->buffer };
 
     canvas_xprintf("%s", EditState.program_buffer);
 
@@ -308,7 +307,7 @@ int edit(char* filename)
 
     CURSOR_SELECT_MODE_SET(&EditState);
 
-    while (!__input_is_normal_key_pressed(KBP_F4))
+    while (!input_is_normal_key_pressed(KBP_F4))
     {
         edit_input(getxchar(), file, &EditState);
         EditState.begin_of_current_text = &EditState.program_buffer[edit_get_begin_of_printed_text(&EditState)];

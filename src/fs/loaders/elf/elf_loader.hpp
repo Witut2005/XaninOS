@@ -49,17 +49,19 @@ public:
 
     // static constexpr uint32_t s_pie_load_address = 0x1400000;
     static constexpr uint32_t s_pie_load_addresses_begin = 0x1400000;
-
     static constexpr char s_valid_magic[4] = { 0x7f, 0x45, 0x4c, 0x46 };
 
+    static void loaded_addresses_clear(void) { s_loaded_addresses.clear(); }
+
     constexpr bool is_valid_arch(Archtecture arch) const {
-        return  s_xanin_native_arch == arch;
+        return s_xanin_native_arch == arch;
     }
 
     ElfLoader(const char* path);
     ~ElfLoader(void);
 
-    [[nodiscard]] bool magic_check(const ElfHeaderAuto&);
+    [[nodiscard]] bool magic_check(const ElfHeaderAuto& header) { return bmemcmp(&header, s_valid_magic, EI_MAG_SIZE); }
+    [[nodiscard]] bool loadability_check(uint32_t entry_point, uint32_t size) const;
 
     [[nodiscard]] ErrorOr<ElfHeaderAuto> header_get(void) const;
     [[nodiscard]] std::vector<ElfProgramHeaderAuto> program_headers_get(void) const;
@@ -71,14 +73,18 @@ public:
     bool execute(void);
 
 private:
-
     static constexpr enum ELF_PROGRAM_HEADER_TYPE s_ignored_segments[] = { PT_PHDR };
+    [[nodiscard]] uint32_t find_loadable_memory_location(uint32_t size) const;
 
-    uint32_t find_loadable_memory_location(uint32_t size) const;
-    static std::vector<ElfExecutableMemoryInfo> s_pie_load_addresses_used;
+    static std::vector<ElfExecutableMemoryInfo> s_loaded_addresses;
 
     bool m_loaded{ false };
     uint8_t* m_elf_location{ nullptr };
     char* m_exepath;
 
 };
+
+extern "C"
+{
+    void elf_loader_loaded_addresses_clear(void);
+}
