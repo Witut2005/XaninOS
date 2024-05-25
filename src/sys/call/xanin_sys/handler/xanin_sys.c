@@ -293,6 +293,16 @@ uint32_t xanin_sys_handle(void)
         break;
     }
 
+    case XANIN_XTB_DISABLE_FLUSHING: {
+        xtb_disable_flushing();
+        break;
+    }
+
+    case XANIN_XTB_ENABLE_FLUSHING: {
+        xtb_enable_flushing();
+        break;
+    }
+
     case XANIN_XTF_INIT: {
         eax = (uint32_t)xtf_init(ecx);
         break;

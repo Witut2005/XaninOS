@@ -26,9 +26,6 @@ void __xtb_init(uint32_t vga_width, uint32_t vga_height, uint16_t* vram)
 // CURSOR DISABLED GLOBALLY
 void __xtb_scroll_up(Xtf* XtFrontend)
 {
-
-    Xtb* XtBackend = __xtb_get();
-
     if ((!XtFrontend->scrolling_enabled) || (!XtBackend->is_flushable) || (!XtFrontend->y_begin))
         return;
 
@@ -56,8 +53,6 @@ void __xtb_scroll_up(Xtf* XtFrontend)
 
 void __xtb_scroll_down(Xtf* XtFrontend)
 {
-    Xtb* XtBackend = __xtb_get();
-
     if ((!XtFrontend->scrolling_enabled) || (!XtBackend->is_flushable))
         return;
 
@@ -86,9 +81,6 @@ void __xtb_scroll_down(Xtf* XtFrontend)
 
 void __xtb_flush(Xtf* XtFrontend)
 {
-
-    Xtb* XtBackend = __xtb_get();
-
     if (!XtBackend->is_flushable)
         return;
 

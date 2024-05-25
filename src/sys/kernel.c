@@ -253,6 +253,8 @@ void kernel_init(void)
     __vty_set(xtf_init(100));
     stdio_mode_set(STDIO_MODE_TERMINAL);
 
+    xtb_disable_flushing();
+
     time_get(&SystemTime);
 
     null_memory_region = (uint8_t*)kcalloc(VGA_SCREEN_RESOLUTION);
@@ -409,7 +411,7 @@ void kernel_init(void)
     // xprintf("CPUID: %d\n", cpu_maxphyaddr_get());
 
     // new_xprintf("nowy xprintf ugabuga:0x%02X\n", 10);
-
+    xtb_enable_flushing();
     puts("Press ENTER to continue...\n");
 
     srand(SystemTime.seconds);
