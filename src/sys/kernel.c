@@ -162,15 +162,21 @@ void kernel_loop(void)
         __sys_input_remove_user_handlers();
 
         if (app_exited)
+        {
             app_exited = false;
+        }
 
         for (int i = 0; i < 5; i++)
+        {
             memset(argv[i], 0, XANIN_PMMNGR_BLOCK_SIZE * 2);
+        }
 
         xscanf("%s %s %s %s %s", argv[0], argv[1], argv[2], argv[3], argv[4]);
 
         for (int i = 0; i < 5; i++)
+        {
             erase_spaces(argv[i]);
+        }
 
         scan();
     }
@@ -466,7 +472,7 @@ void kernel_start(void)
             OUTPUT_COLOR_SET(logo_back_color, logo_front_color));
         xprintf("%z   _/  _/    _/    _/  _/    _/  _/  _/    _/  _/    _/        _/%z   version Maca",
             OUTPUT_COLOR_SET(logo_back_color, logo_front_color), OUTPUT_COLOR_SET(black, white));
-        xprintf("%z_/      _/    _/_/_/  _/    _/  _/  _/    _/    _/_/    _/_/_/     %z%s: %i:%i:%i\n",
+        xprintf("%z_/      _/    _/_/_/  _/    _/  _/  _/    _/    _/_/    _/_/_/     %z%s\n", // : %i:%i:%i\n",
             OUTPUT_COLOR_SET(logo_back_color, logo_front_color), OUTPUT_COLOR_SET(black, white),
             daysLUT[SystemTime.weekday], SystemTime.hour, SystemTime.minutes, SystemTime.seconds);
     }

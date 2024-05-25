@@ -129,7 +129,7 @@ extern "C"
         return dest;
     }
 
-    //normal strncpy doesnt put '\0' at the end
+    //this strncpy implemtation put '\0' at the end
     char* strncpy(char* dest, const char* src, size_t size)
     {
         EXIT_ON_EQUALS_ZERO(size, NULL);
