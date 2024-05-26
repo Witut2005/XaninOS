@@ -10,6 +10,8 @@
 #include <lib/libc/stdiox.h>
 #include <sys/devices/keyboard/key_map.h>
 
+#warning TODO ignore handler when option ignore_break_code is set
+
 static void (*input_character_mapper)(uint8_t scan_code);
 static InputSpecialKeyHandlers xanin_special_key_handlers;
 
@@ -86,7 +88,6 @@ extern "C"
 
         if (xanin_global_key_info.functional_keys.shift)
         {
-
             if (xanin_global_key_info.character >= 'a' && xanin_global_key_info.character <= 'z') {
                 xanin_global_key_info.character -= 32;
             }

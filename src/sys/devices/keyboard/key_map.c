@@ -6,8 +6,8 @@
   xaninOS uses Original XT Scan Code Set
 */
 
-#include <sys/devices/keyboard/scan_codes.h>
 #include <stdint.h>
+#include <sys/devices/keyboard/scan_codes.h>
 
 uint8_t keyboard_map[128] = {
     // -------- 0 to 9 --------
@@ -22,12 +22,12 @@ uint8_t keyboard_map[128] = {
     // -------- 20 to 29 --------
     't', 'y', 'u', 'i', 'o', 'p', '[', ']',
     '\0', // Enter
-    ' ',  // left Ctrl
+    '\0', // left Ctrl
     // -------- 30 to 39 --------
     'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';',
     // -------- 40 to 49 --------
     0x27, '`',
-    ' ', // left Shift
+    '\0', // left Shift
     0x5C, 'z', 'x', 'c', 'v', 'b', 'n',
     // -------- 50 to 59 --------
     'm', ',', '.',
