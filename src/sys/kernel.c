@@ -472,11 +472,15 @@ void kernel_start(void)
             OUTPUT_COLOR_SET(logo_back_color, logo_front_color));
         xprintf("%z      _/      _/    _/  _/    _/  _/  _/    _/  _/    _/    _/_/           \n",
             OUTPUT_COLOR_SET(logo_back_color, logo_front_color));
-        xprintf("%z   _/  _/    _/    _/  _/    _/  _/  _/    _/  _/    _/        _/%z   version Maca",
+        xprintf("%z   _/  _/    _/    _/  _/    _/  _/  _/    _/  _/    _/        _/%z   Version Maca",
             OUTPUT_COLOR_SET(logo_back_color, logo_front_color), OUTPUT_COLOR_SET(black, white));
-        xprintf("%z_/      _/    _/_/_/  _/    _/  _/  _/    _/    _/_/    _/_/_/     %z%s\n", // : %i:%i:%i\n",
+        xprintf("%z_/      _/    _/_/_/  _/    _/  _/  _/    _/    _/_/    _/_/_/      %zDay: %s\n", // : %i:%i:%i\n",
             OUTPUT_COLOR_SET(logo_back_color, logo_front_color), OUTPUT_COLOR_SET(black, white),
-            daysLUT[SystemTime.weekday], SystemTime.hour, SystemTime.minutes, SystemTime.seconds);
+            daysLUT[SystemTime.weekday]);
+
+        // xprintf("%z_/      _/    _/_/_/  _/    _/  _/  _/    _/    _/_/    _/_/_/     %z%s\n", // : %i:%i:%i\n",
+        //     OUTPUT_COLOR_SET(logo_back_color, logo_front_color), OUTPUT_COLOR_SET(black, white),
+        //     daysLUT[SystemTime.weekday], SystemTime.hour, SystemTime.minutes, SystemTime.seconds);
     }
 
     char stdio_legacy_config_buf[6] = { 0 };

@@ -9,6 +9,7 @@
 #include <lib/libc/stdlibx.h>
 #include <lib/screen/screen.h>
 #include <sys/devices/com/com.h>
+#include <lib/libcpp/container/vector/vector.hpp>
 
 #define ASCII_CASE_OFFSET 32 
 #define EXIT_ON_EQUALS_ZERO(val, return_value) if(val == 0) {return return_value;}
@@ -957,3 +958,91 @@ extern "C"
     }
 
 } //extern "C"
+
+///////////////////FUNCTIONS BELOW ARE USING C++ FUNCTION NAME MANGLING //////////////////
+
+enum class FmtParseExpect
+{
+    NormalChar,
+    Filler,
+    FillerCounter,
+    Format
+};
+
+std::vector <FmtParserInfo> fmt_parse(char* fmt)
+{
+    FmtParseExpect expect = FmtParseExpect::NormalChar;
+
+    std::vector <FmtParserInfo> entires_parsed;
+
+    constexpr char formats[] = { 'd', 'i', 'u', 'o', 'x', 'X', 'c', 's', 'p' , 'n', 'q', 'y', 't' };
+
+    auto is_format_char = [formats](char c) {
+        for (int i = 0; i < ARRAY_LENGTH(formats); i++) {
+            if (c == formats[i]) return true;
+        }
+        return false;
+    };
+
+    FmtParserInfo entry;
+    for (int si = 0; fmt[si] != '\0';)
+    {
+        switch (expect)
+        {
+
+        case FmtParseExpect::NormalChar: {
+            entry = { ' ', 0, '\0' };
+
+            if (fmt[si + 1] == '%' && fmt[si] == '%');
+            else if (fmt[si] == '%') {
+                expect = FmtParseExpect::Filler;
+            }
+
+            si++;
+            break;
+        }
+
+        case FmtParseExpect::Filler:
+        {
+            // dbg_info(DEBUG_LABEL_LIBC, "Expecting filler");
+            if (is_format_char(fmt[si])) {
+                expect = FmtParseExpect::Format;
+                break;
+            }
+
+            if (!(fmt[si] >= '1' && fmt[si] <= '9')) {
+                entry.alignment_char = fmt[si];
+                si++;
+            }
+            expect = FmtParseExpect::FillerCounter;
+            break;
+        }
+
+        case FmtParseExpect::FillerCounter:
+        {
+            char counter_str[64] = { 0 };
+            for (int j = 0; fmt[si + j] != '\0'; j++)
+            {
+                if (is_format_char(fmt[si + j])) {
+                    memcpy(counter_str, &fmt[si], j);
+                    entry.alignment_count = atoi(counter_str);
+                    si = si + j;
+                    expect = FmtParseExpect::Format;
+                    break;
+                }
+            }
+            break;
+        }
+
+        case FmtParseExpect::Format:
+        {
+            entry.fmt = fmt[si++];
+            expect = FmtParseExpect::NormalChar;
+            entires_parsed.push_back(entry);
+
+            break;
+        }
+        }
+    }
+    return entires_parsed;
+}
