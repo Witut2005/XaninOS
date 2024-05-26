@@ -991,7 +991,7 @@ std::vector <FmtParserInfo> fmt_parse(char* fmt)
         {
 
         case FmtParseExpect::NormalChar: {
-            entry = { ' ', 0, '\0' };
+            entry = { ' ', 0, '\0', 0 };
 
             if (fmt[si + 1] == '%' && fmt[si] == '%');
             else if (fmt[si] == '%') {
@@ -1014,6 +1014,8 @@ std::vector <FmtParserInfo> fmt_parse(char* fmt)
                 entry.alignment_char = fmt[si];
                 si++;
             }
+
+            entry.entry_lenght++;
             expect = FmtParseExpect::FillerCounter;
             break;
         }
@@ -1021,7 +1023,7 @@ std::vector <FmtParserInfo> fmt_parse(char* fmt)
         case FmtParseExpect::FillerCounter:
         {
             char counter_str[64] = { 0 };
-            for (int j = 0; fmt[si + j] != '\0'; j++)
+            for (int j = 0; fmt[si + j] != '\0'; j++, entry.entry_lenght++)
             {
                 if (is_format_char(fmt[si + j])) {
                     memcpy(counter_str, &fmt[si], j);
@@ -1037,6 +1039,7 @@ std::vector <FmtParserInfo> fmt_parse(char* fmt)
         case FmtParseExpect::Format:
         {
             entry.fmt = fmt[si++];
+            entry.entry_lenght++;
             expect = FmtParseExpect::NormalChar;
             entires_parsed.push_back(entry);
 

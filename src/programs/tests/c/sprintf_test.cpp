@@ -37,6 +37,8 @@ extern "C" __STATUS sprintf_test(void)
             EXPECT_EQUAL(v[0].alignment_char, '0');
             EXPECT_EQUAL(v[0].alignment_count, 11);
             EXPECT_EQUAL(v[0].fmt, 'x');
+            xprintf("entry len: %d\n", v[0].entry_lenght);
+            // EXPECT_EQUAL(v[0].entry_lenght, );
         }
 
         SUB_TEST_CASE(second)
@@ -44,6 +46,7 @@ extern "C" __STATUS sprintf_test(void)
             EXPECT_EQUAL(v[1].alignment_char, 'V');
             EXPECT_EQUAL(v[1].alignment_count, 10);
             EXPECT_EQUAL(v[1].fmt, 'c');
+            xprintf("entry len: %d\n", v[1].entry_lenght);
         }
 
         SUB_TEST_CASE(third)
@@ -51,8 +54,10 @@ extern "C" __STATUS sprintf_test(void)
             EXPECT_EQUAL(v[2].alignment_char, ' ');
             EXPECT_EQUAL(v[2].alignment_count, 0);
             EXPECT_EQUAL(v[2].fmt, 'd');
+            xprintf("entry len: %d\n", v[2].entry_lenght);
         }
     }
 
     return XANIN_OK;
+
 }

@@ -40,6 +40,7 @@ struct FmtParserInfo
     char alignment_char;
     uint32_t alignment_count;
     char fmt;
+    uint32_t entry_lenght;
 };
 
 // #ifdef __cplusplus
