@@ -166,7 +166,7 @@ builders = {
 }
 
 c_compilation_options = '-O0 -Wall -masm=intel -Wno-builtin-declaration-mismatch -nostdlib -ffreestanding -I ./'
-cc_compilation_options = '-O0 -std=c++2a -fno-exceptions -masm=intel -Wno-builtin-declaration-mismatch -Wno-unused-function -Wno-write-strings -fno-rtti -fconcepts-ts -nostdlib -ffreestanding -I ./ -c'
+cc_compilation_options = '-O0 -std=c++20 -fmodules-ts -fno-exceptions -masm=intel -Wno-builtin-declaration-mismatch -Wno-unused-function -Wno-write-strings -fno-rtti -fconcepts-ts -nostdlib -ffreestanding -I ./ -c'
 
 def compiler_cast_given_warning(warning):
     return f'-Werror={warning}'
@@ -332,7 +332,7 @@ objects_to_compile = {
         CompileObject('./lib/libc/hal.c', builders['c'], builder_options['c']['lib'], OBJECT),
         CompileObject('./lib/libc/math.c', builders['c'], builder_options['c']['lib'], OBJECT),
         CompileObject('./lib/libc/memory.c', builders['c'], builder_options['c']['lib'], OBJECT),
-        CompileObject('./lib/libc/stdiox.cpp', builders['c'], builder_options['c']['default'], OBJECT),
+        CompileObject('./lib/libc/stdiox.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./lib/libc/stdlibx.c', builders['c'], builder_options['c']['lib'], OBJECT),
         CompileObject('./lib/libc/string.cpp', builders['cc'], builder_options['cc']['lib'], OBJECT),
         CompileObject('./lib/libc/data_structures.c', builders['c'], builder_options['c']['lib'], OBJECT),

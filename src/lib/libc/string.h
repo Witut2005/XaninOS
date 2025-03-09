@@ -43,12 +43,11 @@ struct FmtParserInfo
     uint32_t entry_lenght;
 };
 
-// #ifdef __cplusplus
-// #include <lib/libcpp/container/vector/vector.hpp>
-// std::vector <FmtParserInfo> fmt_parse(char* fmt);
-// #endif
-
 #ifdef __cplusplus
+
+#include <lib/libcpp/container/vector/vector.hpp>
+std::vector <FmtParserInfo> fmt_parse(char* fmt);
+
 extern "C" {
 #endif
 
