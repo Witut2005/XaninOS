@@ -3,6 +3,16 @@
 #include <stdarg.h>
 #include <lib/libc/stdlibx.h>
 
+#include <lib/libc/math.h>
+#include <lib/libc/colors.h>
+#include <lib/libc/memory.h>
+#include <lib/libc/string.h>
+#include <lib/libc/stdlibx.h>
+#include <lib/screen/screen.h>
+#include <sys/devices/com/com.h>
+#include <lib/libcpp/container/vector/vector.hpp>
+
+
 enum class SPrintfExpect
 {
   NormalChar,
@@ -11,224 +21,226 @@ enum class SPrintfExpect
   Format
 };
 
-char* xvsnprintf(char* str, size_t n, char* fmt, va_list args)
-{
+extern "C" {
 
-  SPrintfExpect expect = SPrintfExpect::NormalChar;
-  char filler = ' ';
-  uint32_t filler_counter = 0;
-
-  constexpr char formats[] = { 'd', 'i', 'u', 'o', 'x', 'X', 'c', 's', 'p' , 'n', 'q', 'y', 't' };
-
-  auto is_format_char = [formats](char c) {
-    for (int i = 0; i < ARRAY_LENGTH(formats); i++) {
-      if (c == formats[i]) return true;
-    }
-    return false;
-  };
-
-  auto format_base_get = [](char c) -> uint8_t {
-    switch (c) {
-    case 'b': return BINARY;
-    case 'o': return OCTAL;
-    case 'd': return DECIMAL;
-    case 'x':
-    case 'X': return HEXADECIMAL;
-    default: return DECIMAL;
-    }};
-
-  auto toupper_if_needed = [](char c, char* str) -> char* {if (c >= 'A' && c <= 'Z') { toupper(str); } return str;};
-
-  n--; // last character cant be overriden
-
-  for (int si = 0, di = 0; fmt[si] != '\0' && di <= n; )
+  char* xvsnprintf(char* str, size_t n, char* fmt, va_list args)
   {
-    switch (expect)
+
+    SPrintfExpect expect = SPrintfExpect::NormalChar;
+    char filler = ' ';
+    uint32_t filler_counter = 0;
+
+    constexpr char formats[] = { 'd', 'i', 'u', 'o', 'x', 'X', 'c', 's', 'p' , 'n', 'q', 'y', 't' };
+
+    auto is_format_char = [formats](char c) {
+      for (int i = 0; i < ARRAY_LENGTH(formats); i++) {
+        if (c == formats[i]) return true;
+      }
+      return false;
+    };
+
+    auto format_base_get = [](char c) -> uint8_t {
+      switch (c) {
+      case 'b': return BINARY;
+      case 'o': return OCTAL;
+      case 'd': return DECIMAL;
+      case 'x':
+      case 'X': return HEXADECIMAL;
+      default: return DECIMAL;
+      }};
+
+    auto toupper_if_needed = [](char c, char* str) -> char* {if (c >= 'A' && c <= 'Z') { toupper(str); } return str;};
+
+    n--; // last character cant be overriden
+
+    for (int si = 0, di = 0; fmt[si] != '\0' && di <= n; )
     {
+      switch (expect)
+      {
 
-    case SPrintfExpect::NormalChar: {
+      case SPrintfExpect::NormalChar: {
 
-      if (fmt[si + 1] == '%' && fmt[si] == '%') {
+        if (fmt[si + 1] == '%' && fmt[si] == '%') {
 
-        if (fmt[si + 1] == '%') {
-          str[di++] = '%';
-          si++;
+          if (fmt[si + 1] == '%') {
+            str[di++] = '%';
+            si++;
+          }
         }
-      }
 
-      else if (fmt[si] == '%') {
-        expect = SPrintfExpect::Filler;
-      }
+        else if (fmt[si] == '%') {
+          expect = SPrintfExpect::Filler;
+        }
 
-      else {
-        str[di++] = fmt[si];
-      }
+        else {
+          str[di++] = fmt[si];
+        }
 
-      si++;
-      break;
-    }
-
-    case SPrintfExpect::Filler:
-    {
-      // dbg_info(DEBUG_LABEL_LIBC, "Expecting filler");
-      if (is_format_char(fmt[si])) {
-        expect = SPrintfExpect::Format;
+        si++;
         break;
       }
 
-      if (!(fmt[si] >= '1' && fmt[si] <= '9')) {
-        filler = fmt[si];
-        si++;
-      }
-      expect = SPrintfExpect::FillerCounter;
-      break;
-    }
-
-    case SPrintfExpect::FillerCounter:
-    {
-      char counter_str[64] = { 0 };
-      for (int j = 0; fmt[si + j] != '\0'; j++)
+      case SPrintfExpect::Filler:
       {
-        if (is_format_char(fmt[si + j])) {
-          memcpy(counter_str, &fmt[si], j);
-          filler_counter = atoi(counter_str);
-          si = si + j;
+        // dbg_info(DEBUG_LABEL_LIBC, "Expecting filler");
+        if (is_format_char(fmt[si])) {
           expect = SPrintfExpect::Format;
           break;
         }
+
+        if (!(fmt[si] >= '1' && fmt[si] <= '9')) {
+          filler = fmt[si];
+          si++;
+        }
+        expect = SPrintfExpect::FillerCounter;
+        break;
       }
-      break;
+
+      case SPrintfExpect::FillerCounter:
+      {
+        char counter_str[64] = { 0 };
+        for (int j = 0; fmt[si + j] != '\0'; j++)
+        {
+          if (is_format_char(fmt[si + j])) {
+            memcpy(counter_str, &fmt[si], j);
+            filler_counter = atoi(counter_str);
+            si = si + j;
+            expect = SPrintfExpect::Format;
+            break;
+          }
+        }
+        break;
+      }
+
+      case SPrintfExpect::Format:
+      {
+        char st[64] = { 0 };
+        memset(&str[di], filler, filler_counter); //fill with filler 
+
+        switch (fmt[si]) {
+
+        case '\0': {
+          break;
+        }
+
+        case 'c': {
+          str[di + (filler_counter > 1 ? filler_counter - 1 : 0)] = (char)va_arg(args, uint32_t);
+          di++;
+          break;
+        }
+
+        case 's': {
+          char* sa = va_arg(args, char*); // sa = string_argument
+          uint32_t sa_length = strlen(sa);
+          strncpy(&str[di + (sa_length >= filler_counter ? 0 : (filler_counter - sa_length))], sa, n - di);
+
+          di = di + (sa_length > filler_counter ? sa_length : filler_counter);
+          break;
+        }
+
+        case 'q': {
+          //%h is used to print BCD digits
+          constexpr uint32_t bcd_length = 2;
+          bcd_to_string((uint8_t)va_arg(args, int), st);
+
+          strncpy(&str[di + (bcd_length >= filler_counter ? 0 : (filler_counter - bcd_length))], st, n - di);
+
+          di = di + (bcd_length > filler_counter ? bcd_length : filler_counter);
+          break;
+        }
+
+        case 'u': {
+          int_to_decimal_string(STRING_UNSIGNED, va_arg(args, int), st);
+          uint32_t st_length = strlen(st);
+          strncpy(&str[di + (st_length >= filler_counter ? 0 : (filler_counter - st_length))], st, n - di);
+          di = di + (st_length > filler_counter ? st_length : filler_counter);
+          break;
+        }
+
+        case 'n': {
+          //weird character counter
+          *(va_arg(args, uint32_t*)) = di;
+          break;
+        }
+
+        case 'y': {
+          //date
+          constexpr uint32_t date_length = 10;
+          date_to_string(va_arg(args, bcd_date_t), st);
+
+          strncpy(&str[di + (date_length >= filler_counter ? 0 : (filler_counter - date_length))], st, n - di);
+
+          di = di + (date_length > filler_counter ? date_length : filler_counter);
+          break;
+        }
+
+        case 't': {
+          //time
+          constexpr uint32_t time_length = 5;
+          time_to_string((bcd_time_t)va_arg(args, int), st);
+
+          strncpy(&str[di + (time_length >= filler_counter ? 0 : (filler_counter - time_length))], st, n - di);
+
+          di = di + (time_length > filler_counter ? time_length : filler_counter);
+          break;
+        }
+
+        default: {
+          int_to_string(va_arg(args, int), st, format_base_get(fmt[si]));
+          uint32_t st_length = strlen(st);
+          toupper_if_needed(fmt[si], st);
+
+          strncpy(&str[di + (st_length >= filler_counter ? 0 : (filler_counter - st_length))], st, n - di);
+          di = di + (st_length > filler_counter ? st_length : filler_counter);
+        }
+        }
+
+        si++;
+        expect = SPrintfExpect::NormalChar;
+        filler = ' ';
+        filler_counter = 0;
+
+        break;
+      }
+      }
     }
-
-    case SPrintfExpect::Format:
-    {
-      char st[64] = { 0 };
-      memset(&str[di], filler, filler_counter); //fill with filler 
-
-      switch (fmt[si]) {
-
-      case '\0': {
-        break;
-      }
-
-      case 'c': {
-        str[di + (filler_counter > 1 ? filler_counter - 1 : 0)] = (char)va_arg(args, uint32_t);
-        di++;
-        break;
-      }
-
-      case 's': {
-        char* sa = va_arg(args, char*); // sa = string_argument
-        uint32_t sa_length = strlen(sa);
-        strncpy(&str[di + (sa_length >= filler_counter ? 0 : (filler_counter - sa_length))], sa, n - di);
-
-        di = di + (sa_length > filler_counter ? sa_length : filler_counter);
-        break;
-      }
-
-      case 'q': {
-        //%h is used to print BCD digits
-        constexpr uint32_t bcd_length = 2;
-        bcd_to_string((uint8_t)va_arg(args, int), st);
-
-        strncpy(&str[di + (bcd_length >= filler_counter ? 0 : (filler_counter - bcd_length))], st, n - di);
-
-        di = di + (bcd_length > filler_counter ? bcd_length : filler_counter);
-        break;
-      }
-
-      case 'u': {
-        int_to_decimal_string(STRING_UNSIGNED, va_arg(args, int), st);
-        uint32_t st_length = strlen(st);
-        strncpy(&str[di + (st_length >= filler_counter ? 0 : (filler_counter - st_length))], st, n - di);
-        di = di + (st_length > filler_counter ? st_length : filler_counter);
-        break;
-      }
-
-      case 'n': {
-        //weird character counter
-        *(va_arg(args, uint32_t*)) = di;
-        break;
-      }
-
-      case 'y': {
-        //date
-        constexpr uint32_t date_length = 10;
-        date_to_string(va_arg(args, bcd_date_t), st);
-
-        strncpy(&str[di + (date_length >= filler_counter ? 0 : (filler_counter - date_length))], st, n - di);
-
-        di = di + (date_length > filler_counter ? date_length : filler_counter);
-        break;
-      }
-
-      case 't': {
-        //time
-        constexpr uint32_t time_length = 5;
-        time_to_string((bcd_time_t)va_arg(args, int), st);
-
-        strncpy(&str[di + (time_length >= filler_counter ? 0 : (filler_counter - time_length))], st, n - di);
-
-        di = di + (time_length > filler_counter ? time_length : filler_counter);
-        break;
-      }
-
-      default: {
-        int_to_string(va_arg(args, int), st, format_base_get(fmt[si]));
-        uint32_t st_length = strlen(st);
-        toupper_if_needed(fmt[si], st);
-
-        strncpy(&str[di + (st_length >= filler_counter ? 0 : (filler_counter - st_length))], st, n - di);
-        di = di + (st_length > filler_counter ? st_length : filler_counter);
-      }
-      }
-
-      si++;
-      expect = SPrintfExpect::NormalChar;
-      filler = ' ';
-      filler_counter = 0;
-
-      break;
-    }
-    }
+    return str;
   }
-  return str;
-}
 
-char* xsnprintf(char* str, size_t n, char* fmt, ...)
-{
-  va_list args;
-  va_start(args, fmt);
+  char* xsnprintf(char* str, size_t n, char* fmt, ...)
+  {
+    va_list args;
+    va_start(args, fmt);
 
-  return xvsnprintf(str, n, fmt, args);
-}
+    return xvsnprintf(str, n, fmt, args);
+  }
 
 
-char* xsprintf(char* str, char* fmt, ...)
-{
-  va_list args;
-  va_start(args, fmt);
+  char* xsprintf(char* str, char* fmt, ...)
+  {
+    va_list args;
+    va_start(args, fmt);
 
-  return xvsnprintf(str, UINT32_MAX, fmt, args);
-}
+    return xvsnprintf(str, UINT32_MAX, fmt, args);
+  }
 
-int vsnprintf(char* str, size_t n, char* fmt, va_list args) {
-  return strlen(xvsnprintf(str, n, fmt, args));
-}
+  int vsnprintf(char* str, size_t n, char* fmt, va_list args) {
+    return strlen(xvsnprintf(str, n, fmt, args));
+  }
 
-int snprintf(char* str, size_t n, char* fmt, ...) {
-  va_list args;
-  va_start(args, fmt);
+  int snprintf(char* str, size_t n, char* fmt, ...) {
+    va_list args;
+    va_start(args, fmt);
 
-  return strlen(xvsnprintf(str, n, fmt, args));
-}
+    return strlen(xvsnprintf(str, n, fmt, args));
+  }
 
-int sprintf(char* str, char* fmt, ...) {
-  va_list args;
-  va_start(args, fmt);
+  int sprintf(char* str, char* fmt, ...) {
+    va_list args;
+    va_start(args, fmt);
 
-  return strlen(xvsnprintf(str, UINT32_MAX, fmt, args));
-}
+    return strlen(xvsnprintf(str, UINT32_MAX, fmt, args));
+  }
 
 } //extern "C"
 
