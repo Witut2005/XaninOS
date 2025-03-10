@@ -123,7 +123,8 @@
         "com.h": "c",
         "ip.h": "c",
         "csignal": "cpp",
-        "valarray": "cpp"
+        "valarray": "cpp",
+        "*.clang-format": "c"
     },
 
     "editor.formatOnSave": true,

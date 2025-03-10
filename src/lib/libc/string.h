@@ -11,15 +11,12 @@
 #include <stdint.h>
 #include <sys/macros.h>
 
+#include "./string/search/search.h"
+
 #define BAD_IP_ADDRESS 0xFFFFFFFF
 
 #define STRING_UNSIGNED 0
 #define STRING_SIGNED 1
-
-enum CHAR_FIND_OPTIONS {
-    CHAR_FIND_DIGITS = 0xFE,
-    CHAR_FIND_LETTERS = 0xFF
-};
 
 enum STRTOI_OPTIONS {
     BINARY = 2,
@@ -55,13 +52,11 @@ extern "C" {
     [[nodiscard]] bool is_in_char_range(char r1, char r2, char c);
     [[nodiscard]] bool is_char(char c);
 
-    [[nodiscard]] char* char_find(char* str, char c);
-    [[nodiscard]] char* char_find_from_end(char* str, uint32_t offset, char c);
-
     [[nodiscard]] uint32_t strlen(char const* a);
     char* strcpy(char* dest, char const* src);
     char* strncpy(char* x, char const* y, size_t size);
     char* strrev(char* str);
+
     [[nodiscard]] int32_t strcmp(char const* a, char const* b);
     [[nodiscard]] bool bstrcmp(char const* a, char const* b);
     [[nodiscard]] bool bstrncmp(char const* a, char const* b, size_t string_size);

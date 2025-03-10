@@ -1,3 +1,6 @@
+#include "../info/info.h"
+#include "../local_macros.h"
+#include <lib/libc/memory.h>
 #include <stddef.h>
 #include <stdint.h>
 
@@ -29,7 +32,7 @@ char* tolower(char* str)
 
 char* strcpy(char* dest, char const* src)
 {
-    EXIT_ON_EQUALS_ZERO(src, NULL);
+    LIBC_STR_EXIT_ON_EQUALS_ZERO(src, NULL);
     uint32_t length = strlen(src);
     memmove(dest, src, length);
     dest[length] = '\0';
@@ -39,7 +42,7 @@ char* strcpy(char* dest, char const* src)
 // this strncpy implemtation put '\0' at the end
 char* strncpy(char* dest, char const* src, size_t size)
 {
-    EXIT_ON_EQUALS_ZERO(size, NULL);
+    LIBC_STR_EXIT_ON_EQUALS_ZERO(size, NULL);
 
     uint32_t src_length = strlen(src);
     uint32_t length = src_length > size ? size : src_length;

@@ -330,7 +330,9 @@ objects_to_compile = {
         # CompileObject('./lib/libc/real_mode_fswitch.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./lib/libc/string.cpp', builders['cc'], builder_options['cc']['lib'], OBJECT),
         CompileObject('./lib/libc/string/manip/manip.c', builders['c'], builder_options['c']['lib'], OBJECT),
-        CompileObject('./lib/libc/string/compare/compare.c', builders['c'], builder_options['c']['lib'], OBJECT),
+        CompileObject('./lib/libc/string/search/search.c', builders['c'], builder_options['c']['lib'], OBJECT),
+        CompileObject('./lib/libc/string/info/info.c', builders['c'], builder_options['c']['lib'], OBJECT),
+
         CompileObject('./lib/libc/string/sprintf/sprintf.cpp', builders['cc'], builder_options['cc']['lib'], OBJECT),
 
         CompileObject('./lib/cpu/code/cpu_state_info.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),

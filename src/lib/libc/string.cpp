@@ -18,109 +18,10 @@ static uint32_t string_errno;
 
 extern "C"
 {
-    bool is_digit(char c)
-    {
-        return c >= '0' && c <= '9';
-    }
-
-    bool is_in_char_range(char r1, char r2, char c)
-    {
-        return  c > r1 && c < r2;
-    }
-
-    bool is_char(char c)
-    {
-        return c > '0' && c < '~';
-    }
-
-    char* char_find(char* str, char c)
-    {
-        if (c == CHAR_FIND_LETTERS)
-        {
-            for (int i = 0; str[i] != '\0'; i++)
-            {
-                if ((str[i] >= 'A' && str[i] <= 'Z') || (str[i] >= 'a' && str[i] <= 'z')) {
-                    return &str[i];
-                }
-            }
-        }
-
-        else if (c == CHAR_FIND_DIGITS)
-        {
-            for (int i = 0; str[i] != '\0'; i++)
-            {
-                if (str[i] >= '0' && str[i] <= '9') {
-                    return &str[i];
-                }
-            }
-        }
-
-        else
-        {
-            for (int i = 0; str[i] != '\0'; i++)
-            {
-                if (str[i] == c) {
-                    return &str[i];
-                }
-            }
-        }
-
-        return nullptr;
-    }
-
-    char* char_find_from_end(char* str, uint32_t offset, char c)
-    {
-        char* it = str + (strlen(str) - offset - 1);
-
-        if (c == CHAR_FIND_LETTERS)
-        {
-            for (;it >= str; it--)
-            {
-                if ((*it >= 'A' && *it <= 'Z') || (*it >= 'a' && *it <= 'z')) {
-                    return it;
-                }
-            }
-        }
-
-        else if (c == CHAR_FIND_DIGITS)
-        {
-            for (;it >= str; it--)
-            {
-                if (*it >= '0' && *it <= '9') {
-                    return it;
-                }
-            }
-        }
-
-        else
-        {
-            for (;it >= str; it--)
-            {
-                if (*it == c) {
-                    return it;
-                }
-            }
-        }
-
-        return nullptr;
-    }
-
-
     uint32_t check_string_errors(uint32_t mask)
     {
         return string_errno & mask;
     }
-
-    uint32_t strlen(const char* str)
-    {
-        EXIT_ON_EQUALS_ZERO(str, 0);
-
-        uint32_t length = 0;
-        for (int i = 0; str[i] != '\0'; i++, length++);
-
-        return length;
-    }
-
 
     char* time_to_string(bcd_time_t time, char* buf)
     {
