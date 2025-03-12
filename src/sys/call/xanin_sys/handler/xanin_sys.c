@@ -407,7 +407,7 @@ uint32_t xanin_sys_handle(void)
         char path[32] = "/proc/";
         __xin_folder_create(path);
 
-        int_to_string(stdeio_counter, buf, HEXADECIMAL);
+        int_to_string(stdeio_counter, buf, STRTOI_HEXADECIMAL);
         memcpy(&buf[strlen(buf)], "/", 2);
 
         strcat(STRCAT_DEST_FIRST, path, buf);

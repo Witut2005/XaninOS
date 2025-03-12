@@ -1,6 +1,7 @@
 #include "../info/info.h"
 #include "../local_macros.h"
 #include <lib/libc/memory.h>
+#include <lib/libc/stdlibx.h>
 #include <stddef.h>
 #include <stdint.h>
 
@@ -65,5 +66,66 @@ char* strrev(char* str)
         str[i] = str[j];
         str[j] = c;
     }
+    return str;
+}
+
+char* strdup(char const* str)
+{
+    char* ns = (char*)calloc(strlen(str) * sizeof(char));
+    strcpy(ns, str);
+    return ns;
+}
+
+char* strcat(bool dest_first, char* dest, char* src)
+{
+    // dest = dest + src
+    if (dest_first)
+    {
+        memmove(&dest[strlen(dest)], src, strlen(src) + 1); // include '\0' too
+    }
+
+    // dest = src + dest
+    else
+    {
+        char* ts = (char*)calloc(strlen(dest) + strlen(src));
+        strcpy(ts, src);
+        strcpy(&ts[strlen(ts)], dest);
+        strcpy(dest, ts);
+        free(ts);
+    }
+    return dest;
+}
+
+char* string_align_begin(char* const str, char filler, uint32_t count)
+{
+
+    uint32_t string_length = strlen(str);
+
+    if (string_length >= count)
+    {
+        return str;
+    }
+
+    memmove(str + (count - string_length), str, string_length);
+
+    int i;
+    for (i = 0; i < count - string_length; i++)
+        str[i] = filler;
+
+    str[count] = '\0'; // put NULL terminator
+
+    return str;
+}
+
+char* string_align_end(char* const str, char filler, uint32_t count)
+{
+    int i;
+    for (i = strlen(str); i < count; i++)
+    {
+        str[i] = filler;
+    }
+
+    str[i] = '\0'; // put NULL terminator
+
     return str;
 }

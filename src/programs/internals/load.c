@@ -9,14 +9,14 @@
 int load(char* address_string)
 {
 
-    char* data_pointer = (char*)strtoi(address_string, HEXADECIMAL);
+    char* data_pointer = (char*)strtoi(address_string, STRTOI_HEXADECIMAL);
 
     for (int i = 0; i < VGA_HEIGHT; i++)
     {
         char tmp[9] = { 0x0 };
         xprintf("0x%X:", data_pointer + i * 16);
 
-        for (int k = 0; k < 8 - strlen(int_to_string((uint32_t)(data_pointer + i * 16), tmp, HEXADECIMAL)); k++) // better address aligment (visually)
+        for (int k = 0; k < 8 - strlen(int_to_string((uint32_t)(data_pointer + i * 16), tmp, STRTOI_HEXADECIMAL)); k++) // better address aligment (visually)
             puts(" ");
 
         for (int j = 0; j < 16; j++)

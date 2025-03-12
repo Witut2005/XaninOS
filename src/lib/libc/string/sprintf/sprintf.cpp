@@ -41,12 +41,12 @@ extern "C" {
 
     auto format_base_get = [](char c) -> uint8_t {
       switch (c) {
-      case 'b': return BINARY;
-      case 'o': return OCTAL;
-      case 'd': return DECIMAL;
+      case 'b': return STRTOI_BINARY;
+      case 'o': return STRTOI_OCTAL;
+      case 'd': return STRTOI_DECIMAL;
       case 'x':
-      case 'X': return HEXADECIMAL;
-      default: return DECIMAL;
+      case 'X': return STRTOI_HEXADECIMAL;
+      default: return STRTOI_DECIMAL;
       }};
 
     auto toupper_if_needed = [](char c, char* str) -> char* {if (c >= 'A' && c <= 'Z') { toupper(str); } return str;};
@@ -246,14 +246,6 @@ extern "C" {
 
 ///////////////////FUNCTIONS BELOW ARE USING C++ FUNCTION NAME MANGLING //////////////////
 
-enum class FmtParseExpect
-{
-  NormalChar,
-  Filler,
-  FillerCounter,
-  Format
-};
-
 std::vector <FmtParserInfo> fmt_parse(char* fmt)
 {
   FmtParseExpect expect = FmtParseExpect::NormalChar;
@@ -357,12 +349,12 @@ char* new_xvsnprintf(char* str, size_t n, char* fmt, va_list args)
 
   auto format_base_get = [](char c) -> uint8_t {
     switch (c) {
-    case 'b': return BINARY;
-    case 'o': return OCTAL;
-    case 'd': return DECIMAL;
+    case 'b': return STRTOI_BINARY;
+    case 'o': return STRTOI_OCTAL;
+    case 'd': return STRTOI_DECIMAL;
     case 'x':
-    case 'X': return HEXADECIMAL;
-    default: return DECIMAL;
+    case 'X': return STRTOI_HEXADECIMAL;
+    default: return STRTOI_DECIMAL;
     }};
 
   auto toupper_if_needed = [](char c, char* str) -> char* {if (c >= 'A' && c <= 'Z') { toupper(str); } return str;};

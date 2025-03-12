@@ -2,8 +2,8 @@
 
 #include <fs/xin.h>
 #include <lib/libc/file.h>
-#include <lib/libc/string.h>
 #include <lib/libc/stdiox.h>
+#include <lib/libc/string.h>
 
 extern char* argv[5]; // USE HERE SYSCALL
 
@@ -15,7 +15,7 @@ int load_file(char* file_name, char* options)
     uint32_t offset = 0;
 
     if (bstrcmp(options, "-offset"))
-        offset = strtoi(argv[3], HEXADECIMAL);
+        offset = strtoi(argv[3], STRTOI_HEXADECIMAL);
 
     screen_clear();
 
@@ -33,7 +33,7 @@ int load_file(char* file_name, char* options)
         char tmp[9] = { 0x0 };
         xprintf("0x%X:", address + i * 16);
 
-        for (int k = 0; k < 8 - strlen(int_to_string(address + i * 16, tmp, HEXADECIMAL)); k++) // better address aligment (visually)
+        for (int k = 0; k < 8 - strlen(int_to_string(address + i * 16, tmp, STRTOI_HEXADECIMAL)); k++) // better address aligment (visually)
             xprintf(" ");
 
         for (int j = 0; j < 16; j++)

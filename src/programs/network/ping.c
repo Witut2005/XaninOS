@@ -26,7 +26,7 @@ int ping(char* ip_addr_str)
     uint32_t ip_dest = str2ipv4(ip_addr_str);
     uint8_t* tmp = (uint8_t*)&ip_dest;
 
-    if (check_string_errors(IPV4_ERRNO))
+    if (check_string_errors(LIBC_STR_IPV4_ERRNO))
     {
         xprintf("IP error (invalid ip given)\n");
         while (getxchar().scan_code != ENTER)

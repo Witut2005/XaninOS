@@ -51,7 +51,7 @@ int zsk(char* delay_str)
         delay = 100;
 
     else
-        delay = strtoi(delay_str, DECIMAL);
+        delay = strtoi(delay_str, STRTOI_DECIMAL);
 
     canvas_xprintf("delay: %d", delay);
     // fwhile(1);

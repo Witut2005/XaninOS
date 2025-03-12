@@ -30,10 +30,10 @@ uint32_t jhash(std::string str) {
 
 uint32_t jhash(int i) {
     char buf[20];
-    return jhash(int_to_string(i, buf, HEXADECIMAL));
+    return jhash(int_to_string(i, buf, STRTOI_HEXADECIMAL));
 }
 
 uint32_t jhash(uint32_t i) {
     char buf[20];
-    return jhash(int_to_string(i, buf, HEXADECIMAL));
+    return jhash(int_to_string(i, buf, STRTOI_HEXADECIMAL));
 }

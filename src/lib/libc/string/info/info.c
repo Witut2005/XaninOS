@@ -58,3 +58,48 @@ bool bstrncmp(char const* a, char const* b, size_t string_size)
     }
     return true;
 }
+
+uint32_t number_of_lines_get(char const* str)
+{
+    uint32_t lines = 0;
+
+    while (*str)
+    {
+        if (*str == '\n')
+        {
+            lines++;
+        }
+        str++;
+    }
+    return lines + 1;
+}
+
+uint32_t size_of_biggest_line_get(char const* str)
+{
+    int max_line_size = 0;
+    int current_line_size = 0;
+
+    while (*str)
+    {
+        if (*str == '\n') // do not include \x1e
+        {
+            if (current_line_size > max_line_size)
+            {
+                max_line_size = current_line_size;
+            }
+
+            current_line_size = 0;
+        } else
+        {
+            current_line_size++;
+        }
+        str++;
+    }
+
+    if (current_line_size > max_line_size)
+    {
+        max_line_size = current_line_size;
+    }
+
+    return max_line_size;
+}

@@ -82,7 +82,7 @@ void canvas_xprintf(char* str, ...)
             case 'd': {
 
                 number = va_arg(args, int);
-                int_to_string(number, temporary_pointer, DECIMAL);
+                int_to_string(number, temporary_pointer, STRTOI_DECIMAL);
 
                 for (int i = 0; temporary_pointer[i] != '\0'; i++)
                     stdio_legacy_cell_put_with_interpretation(
@@ -133,7 +133,7 @@ void canvas_xprintf(char* str, ...)
 
             case 'b': {
                 number = va_arg(args, int);
-                temporary_pointer = int_to_string(number, tmp, BINARY);
+                temporary_pointer = int_to_string(number, tmp, STRTOI_BINARY);
 
                 for (int i = 0; temporary_pointer[i] != '\0'; i++)
                     stdio_legacy_cell_put_with_interpretation(
@@ -182,7 +182,7 @@ void canvas_xprintf(char* str, ...)
 
             case 'x': {
                 uint32_t number = va_arg(args, uint32_t);
-                int_to_string(number, temporary_pointer, HEXADECIMAL);
+                int_to_string(number, temporary_pointer, STRTOI_HEXADECIMAL);
 
                 for (int i = 0; temporary_pointer[i] != '\0'; i++)
                     stdio_legacy_cell_put_with_interpretation(
@@ -193,7 +193,7 @@ void canvas_xprintf(char* str, ...)
 
             case 'X': {
                 uint32_t number = va_arg(args, uint32_t);
-                int_to_string(number, temporary_pointer, HEXADECIMAL);
+                int_to_string(number, temporary_pointer, STRTOI_HEXADECIMAL);
 
                 // toupper(temporary_pointer);
 
@@ -206,7 +206,7 @@ void canvas_xprintf(char* str, ...)
 
             case 'o': {
                 number = va_arg(args, int);
-                int_to_string(number, temporary_pointer, OCTAL);
+                int_to_string(number, temporary_pointer, STRTOI_OCTAL);
 
                 for (int i = 0; temporary_pointer[i] != '\0'; i++)
                     stdio_legacy_cell_put_with_interpretation(
@@ -407,7 +407,7 @@ void canvas_xscanf(char* str, ...)
                             counter++;
                         }
 
-                        *number = strtoi(field_buffer, DECIMAL);
+                        *number = strtoi(field_buffer, STRTOI_DECIMAL);
 
                         if (field_buffer[0] == '-')
                             *number = *number * (-1);
@@ -433,7 +433,7 @@ void canvas_xscanf(char* str, ...)
                             counter++;
                         }
 
-                        *number = strtoi(field_buffer, HEXADECIMAL);
+                        *number = strtoi(field_buffer, STRTOI_HEXADECIMAL);
 
                         if (field_buffer[0] == '-')
                             *number = *number * -1;
@@ -452,7 +452,7 @@ void canvas_xscanf(char* str, ...)
                             counter++;
                         }
 
-                        *number = strtoi(field_buffer, BINARY);
+                        *number = strtoi(field_buffer, STRTOI_BINARY);
 
                         break;
                     }

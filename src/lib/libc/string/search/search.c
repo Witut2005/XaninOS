@@ -85,3 +85,32 @@ char* char_find_from_end(char* str, uint32_t offset, char c)
 
     return NULL;
 }
+
+char* substr_find(char* str, char const* substr)
+{
+    while (*str != '\0')
+    {
+        if (bstrncmp(str, substr, strlen(substr)))
+        {
+            return str;
+        }
+        str++;
+    }
+    return NULL;
+}
+
+char* substr_last_find(char* str, char const* substr)
+{
+    int last_index = -1;
+
+    for (int i = 0; str[i] != '\0'; i++)
+    {
+        if (bstrncmp(&str[i], substr, strlen(substr)))
+        {
+            last_index = i;
+        }
+        str++;
+    }
+
+    return last_index != -1 ? &str[last_index] : NULL;
+}

@@ -234,7 +234,7 @@ extern "C" {
     //                             counter++;
     //                         }
 
-    //                         *number = strtoi(field_buffer, DECIMAL);
+    //                         *number = strtoi(field_buffer, STRTOI_DECIMAL);
 
     //                         if (field_buffer[0] == '-')
     //                             *number = *number * -1;
@@ -260,7 +260,7 @@ extern "C" {
     //                             counter++;
     //                         }
 
-    //                         *number = strtoi(field_buffer, HEXADECIMAL);
+    //                         *number = strtoi(field_buffer, STRTOI_HEXADECIMAL);
 
     //                         if (field_buffer[0] == '-')
     //                             *number = *number * -1;
@@ -279,7 +279,7 @@ extern "C" {
     //                             counter++;
     //                         }
 
-    //                         *number = strtoi(field_buffer, BINARY);
+    //                         *number = strtoi(field_buffer, STRTOI_BINARY);
 
     //                         break;
     //                     }
@@ -641,7 +641,7 @@ extern "C" {
     //                             counter++;
     //                         }
 
-    //                         *number = strtoi(field_buffer, DECIMAL);
+    //                         *number = strtoi(field_buffer, STRTOI_DECIMAL);
 
     //                         if (field_buffer[0] == '-')
     //                             *number = *number * -1;
@@ -667,7 +667,7 @@ extern "C" {
     //                             counter++;
     //                         }
 
-    //                         *number = strtoi(field_buffer, HEXADECIMAL);
+    //                         *number = strtoi(field_buffer, STRTOI_HEXADECIMAL);
 
     //                         if (field_buffer[0] == '-')
     //                             *number = *number * -1;
@@ -686,7 +686,7 @@ extern "C" {
     //                             counter++;
     //                         }
 
-    //                         *number = strtoi(field_buffer, BINARY);
+    //                         *number = strtoi(field_buffer, STRTOI_BINARY);
 
     //                         break;
     //                     }
