@@ -2,9 +2,12 @@
 #include <lib/libc/canvas.h>
 #include <lib/libc/file.h>
 #include <lib/libc/memory.h>
+#include <lib/libc/stdiox.h>
 #include <lib/libc/stdlibx.h>
 #include <lib/libc/string.h>
 #include <lib/screen/screen.h>
+#include <lib/tui/tui.h>
+#include <sys/call/xanin_sys/calls/stdio/stdio.h>
 #include <sys/devices/keyboard/scan_codes.h>
 #include <sys/input/input.h>
 
@@ -272,7 +275,6 @@ void edit_input(xchar Input, XinEntry* File, EditInfo* EditState)
 
 int edit(char* filename)
 {
-
     stdio_mode_set(STDIO_MODE_CANVAS);
 
     canvas_screen_clear();

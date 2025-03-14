@@ -10,7 +10,7 @@
 extern uint32_t stdio_refresh_rate;
 extern interval_id stdio_refresh_interval_id;
 
-__STATUS stdio_apply(void)
+STATUS stdio_apply(void)
 {
     char* buffer = (char*)calloc(100 * sizeof(char));
 

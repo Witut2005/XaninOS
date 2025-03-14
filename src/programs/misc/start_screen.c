@@ -4,8 +4,12 @@
 #include <lib/libc/canvas.h>
 #include <lib/libc/colors.h>
 #include <lib/libc/file.h>
+#include <lib/libc/stdiox.h>
 #include <lib/libc/stdlibx.h>
 #include <lib/libc/string.h>
+#include <lib/screen/screen.h>
+#include <lib/tui/tui.h>
+#include <sys/call/xanin_sys/calls/stdio/stdio.h>
 #include <sys/input/input.h>
 
 extern char* argv[5];

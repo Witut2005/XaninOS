@@ -1,30 +1,20 @@
 
-
 #pragma once
 
-#include <lib/libc/memory.h>
-#include <lib/libc/pair.h>
-#include <lib/libc/stdiox.h>
 #include <lib/libc/stdiox_legacy.h>
-#include <lib/libc/stdlibx.h>
-#include <lib/libc/time.h>
-#include <lib/screen/screen.h>
-#include <stdarg.h>
-#include <sys/devices/keyboard/scan_codes.h>
-#include <sys/terminal/backend/backend.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "./canvas/in/in.h"
+#include "./canvas/out/out.h"
 
-void canvas_putchar(char character);                      // ONLY AVAILABLE IN CANVAS MODE
-void canvas_putchar_color(uint8_t color, char character); // ONLY AVAILABLE IN CANVAS MODE
-void canvas_screen_clear(void);
-void canvas_xprintf(char* str, ...);
-void canvas_screen_background_color_set(color_t color);
-void canvas_xscanf(char* str, ...);
-void canvas_xscan_range(char* string_buffer, uint32_t how_many_chars);
+#define stdio_canvas_cell_compare stdio_legacy_cell_compare
+#define stdio_canvas_cell_color_compare stdio_legacy_cell_color_compare
+#define stdio_canvas_cell_foreground_color_compare stdio_legacy_cell__foreground_color_compare
+#define stdio_canvas_cell_background_color_compare stdio_legacy_cell_background_color_compare
 
-#ifdef __cplusplus
-}
-#endif
+#define stdio_canvas_is_buffer_full stdio_legacy_canvas_is_buffer_full
+#define stdio_canvas_screen_object_restore_defaults stdio_legacy_screen_object_restore_defaults
+#define stdio_canvas_vga_position_get stdio_legacy_vga_position_get
+#define stdio_canvas_move_to_y stdio_legacy_move_to_y
+#define stdio_canvas_move_to_x stdio_legacy_move_to_x
+#define stdio_canvas_get_last_valid_y stdio_legacy_get_last_valid_y
+#define stdio_canvas_get_last_valid_x stdio_legacy_get_last_valid_x

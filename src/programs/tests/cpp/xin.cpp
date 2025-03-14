@@ -17,7 +17,7 @@ std::string __nxin_entry_name_extern(const std::string& path);
 std::string __nxin_path_parse(std::string path);
 std::string __nxin_parent_folder_path_get(std::string path);
 
-extern "C" __STATUS __cpp_xin_test(void)
+extern "C" STATUS __cpp_xin_test(void)
 {
 
     TEST_CASE(XinFs path parse)

@@ -1,6 +1,8 @@
 
 #include "./graphics.h"
 #include <lib/libc/canvas.h>
+#include <lib/tui/tui.h>
+#include <sys/call/xanin_sys/calls/stdio/stdio.h>
 #include <sys/input/input.h>
 
 // CANVAS_APP

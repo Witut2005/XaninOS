@@ -6,7 +6,7 @@
 
 extern "C" {
 
-    __STATUS elf_loader_test(char* path)
+    STATUS elf_loader_test(char* path)
     {
         ElfLoader loader(path);
 

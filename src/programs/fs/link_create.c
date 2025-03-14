@@ -4,7 +4,7 @@
 
 // TERMINAL_APP
 
-__STATUS xin_link_create_app(char* file_name, char* link_name)
+STATUS xin_link_create_app(char* file_name, char* link_name)
 {
     int status = __xin_link_create(file_name, link_name);
 

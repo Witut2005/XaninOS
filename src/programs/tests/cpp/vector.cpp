@@ -7,7 +7,7 @@
 using namespace std;
 using namespace std::literals;
 
-extern "C" __STATUS __cpp_vector_test(void)
+extern "C" STATUS __cpp_vector_test(void)
 {
 
     for (int i = 0; i < 1000;i++) {

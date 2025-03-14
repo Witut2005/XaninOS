@@ -1,8 +1,10 @@
 
 #include <lib/libc/canvas.h>
+#include <lib/libc/stdiox.h>
 #include <lib/libc/stdlibx.h>
 #include <lib/libc/string.h>
 #include <lib/libc/time.h>
+#include <lib/tui/tui.h>
 #include <sys/input/input.h>
 
 // CANVAS_APP

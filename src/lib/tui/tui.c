@@ -1,10 +1,32 @@
 
 #include <lib/libc/stdlibx.h>
+#include <lib/screen/screen.h>
 #include <lib/tui/tui.h>
 #include <stdarg.h>
+#include <sys/call/xanin_sys/calls/stdio/stdio.h>
 #include <sys/devices/keyboard/scan_codes.h>
 
 // DO NOT USE STDIOX FUNCTIONS
+
+uint8_t align_to_color_palette(uint8_t color)
+{
+    return color & 0xF;
+}
+
+uint8_t screen_cell_get_background_color(uint8_t x, uint8_t y)
+{
+    return (Screen.cursor[y][x] & 0xF000) >> 12;
+}
+
+uint8_t screen_cell_get_foreground_color(uint8_t x, uint8_t y)
+{
+    return (Screen.cursor[y][x] & 0x0F00) >> 8;
+}
+
+char screen_cell_get_character(uint8_t x, uint8_t y)
+{
+    return (char)Screen.cursor[y][x] & 0xFF;
+}
 
 void screen_cell_set(uint8_t x, uint8_t y, char character, uint8_t background_color, uint8_t foreground_color)
 {
@@ -264,4 +286,9 @@ void table_destroy(table_t* Table)
     free(Table->row_foreground_color);
 
     free(Table);
+}
+
+void tui_init(void)
+{
+    stdio_mode_set(STDIO_MODE_CANVAS);
 }

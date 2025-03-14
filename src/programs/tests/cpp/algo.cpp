@@ -5,7 +5,7 @@
 
 using namespace std;
 
-extern "C" __STATUS __cpp_algo_test(void)
+extern "C" STATUS __cpp_algo_test(void)
 {
 
     TEST_CASE(unique_copy)

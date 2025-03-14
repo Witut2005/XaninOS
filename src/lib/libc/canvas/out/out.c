@@ -1,4 +1,5 @@
 
+#include "./out.h"
 #include <lib/libc/stdiox_legacy.h>
 #include <lib/libc/string.h>
 #include <lib/screen/screen.h>

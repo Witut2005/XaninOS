@@ -6,7 +6,7 @@
 
 int xin_entry_remove_app(char* entry_name)
 {
-    __STATUS status = __xin_file_remove(entry_name);
+    STATUS status = __xin_file_remove(entry_name);
 
     if (status == XANIN_OK)
     {

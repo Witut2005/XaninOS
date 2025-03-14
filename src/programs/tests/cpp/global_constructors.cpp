@@ -37,7 +37,7 @@ static TestStaticConstructor nicho(static_constructor_initializer);
 
 
 // Global and Statis are basically the same in this context
-extern "C" __STATUS __cpp_global_constructors_test(void)
+extern "C" STATUS __cpp_global_constructors_test(void)
 {
     TEST_CASE(TestGlobalConstructor)
     {

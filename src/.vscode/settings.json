@@ -124,7 +124,8 @@
         "ip.h": "c",
         "csignal": "cpp",
         "valarray": "cpp",
-        "*.clang-format": "c"
+        "*.clang-format": "c",
+        "exit_codes.h": "c"
     },
 
     "editor.formatOnSave": true,

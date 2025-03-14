@@ -6,7 +6,7 @@
 
 // TERMINAL_APP
 
-__STATUS bmp_info(char const* filename)
+STATUS bmp_info(char const* filename)
 {
     XinEntry* File = fopen(filename, "r");
 

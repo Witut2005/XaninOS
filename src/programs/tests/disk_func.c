@@ -1,12 +1,12 @@
 
-#include <sys/devices/hda/disk.h>
-#include <sys/flow/exit_codes.h>
 #include <lib/libc/stdiox.h>
 #include <lib/libc/stdlibx.h>
+#include <sys/devices/hda/disk.h>
+#include <sys/flow/exit_codes.h>
 
 #define BYTES_TO_READ 15
 
-__STATUS disk_func(void)
+STATUS disk_func(void)
 {
     char buf[16];
     buf[BYTES_TO_READ] = 0xFF;

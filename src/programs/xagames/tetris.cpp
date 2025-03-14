@@ -8,6 +8,7 @@
 #include <lib/libcpp/algorithm.h>
 #include <sys/input/input.h>
 #include <lib/libc/canvas.h>
+#include <lib/tui/tui.h>
 
 // CANVAS_APP
 // #define VGA_WIDTH 80

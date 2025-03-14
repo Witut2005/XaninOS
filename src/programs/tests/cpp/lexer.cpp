@@ -6,7 +6,7 @@
 #include <lib/libcpp/utility.h>
 #include <programs/tests/test_case.h>
 
-extern "C" __STATUS __cpp_lexer_test(void)
+extern "C" STATUS __cpp_lexer_test(void)
 {
 
     constexpr const char* str = "nicho";

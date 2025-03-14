@@ -1,11 +1,13 @@
 
-#include <lib/tui/tui.h>
 #include <lib/libc/canvas.h>
+#include <lib/libc/stdlibx.h>
+#include <lib/tui/tui.h>
+#include <sys/call/xanin_sys/calls/stdio/stdio.h>
 #include <sys/flow/exit_codes.h>
 
-//CANVAS_APP
+// CANVAS_APP
 
-__STATUS xgl_mode_set(void)
+STATUS xgl_mode_set(void)
 {
     stdio_mode_set(STDIO_MODE_CANVAS);
     canvas_screen_clear();

@@ -1,6 +1,9 @@
 
 #include <lib/libc/canvas.h>
 #include <lib/libc/hal.h>
+#include <lib/libc/stdiox.h>
+#include <lib/tui/tui.h>
+#include <sys/call/xanin_sys/calls/stdio/stdio.h>
 
 void kernel_panic(uint32_t error_code)
 {

@@ -349,7 +349,6 @@ objects_to_compile = {
         CompileObject('./lib/libc/time.c', builders['c'], builder_options['c']['lib'], OBJECT),
         CompileObject('./lib/libc/process.c', builders['c'], builder_options['c']['lib'], OBJECT),
         CompileObject('./lib/libc/stdiox_legacy.c', builders['c'], builder_options['c']['lib'], OBJECT),
-        CompileObject('./lib/libc/canvas.c', builders['c'], builder_options['c']['lib'], OBJECT),
         CompileObject('./lib/libc/hash.c', builders['c'], builder_options['c']['lib'], OBJECT),
     ],
 

@@ -4,7 +4,7 @@
 #include <programs/tests/test_case.h>
 #include <sys/pmmngr/alloc.h>
 
-__STATUS __c_alloc_test(void)
+STATUS __c_alloc_test(void)
 {
     interrupt_disable();
 

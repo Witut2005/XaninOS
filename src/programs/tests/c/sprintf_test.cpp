@@ -12,7 +12,7 @@ using std::string;
 extern std::vector <FmtParserInfo> fmt_parse(char* fmt);
 extern char* new_xsprintf(char* str, char* fmt, ...);
 
-extern "C" __STATUS sprintf_test(void)
+extern "C" STATUS sprintf_test(void)
 {
     // TEST_CASE(sprintf functions)
     // {

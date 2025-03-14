@@ -6,6 +6,7 @@
 #include <lib/libc/data_structures.h>
 #include <lib/libc/file.h>
 #include <lib/libc/process.h>
+#include <lib/libc/stdiox.h>
 #include <lib/libc/string.h>
 #include <lib/tui/tui.h>
 #include <sys/input/input.h>

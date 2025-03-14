@@ -9,6 +9,7 @@
 #include <lib/libcpp/algorithm.h>
 #include <lib/libc/stdiox.h>
 #include <sys/devices/keyboard/key_map.h>
+#include <lib/screen/screen.h>
 
 #warning TODO ignore handler when option ignore_break_code is set
 
