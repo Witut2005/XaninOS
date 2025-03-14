@@ -343,7 +343,6 @@ objects_to_compile = {
         CompileObject('./lib/libc/stdiox.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./lib/libc/stdlibx.c', builders['c'], builder_options['c']['lib'], OBJECT),
         CompileObject('./lib/libc/data_structures.c', builders['c'], builder_options['c']['lib'], OBJECT),
-        CompileObject('./lib/libc/algorithm.c', builders['c'], builder_options['c']['lib'], OBJECT),
         CompileObject('./lib/libc/time.c', builders['c'], builder_options['c']['lib'], OBJECT),
         CompileObject('./lib/libc/process.c', builders['c'], builder_options['c']['lib'], OBJECT),
         CompileObject('./lib/libc/stdiox_legacy.c', builders['c'], builder_options['c']['lib'], OBJECT),
