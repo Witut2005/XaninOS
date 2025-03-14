@@ -1,8 +1,11 @@
 
+#include <lib/libc/stdiox_legacy.h>
 #include <lib/libc/string.h>
 #include <lib/screen/screen.h>
 #include <sys/call/xanin_sys/calls/stdio/stdio.h>
 #include <sys/call/xanin_sys/calls/vga/vga.h>
+
+#define OUTPUT_COLOR_SET(background, foreground) (((background)&0xF) << 4 | ((foreground)&0xF))
 
 void canvas_screen_background_color_set(uint8_t color)
 {
