@@ -76,23 +76,9 @@ char* strdup(char const* str)
     return ns;
 }
 
-char* strcat(bool dest_first, char* dest, char* src)
+char* strcat(char* dest, char* src)
 {
-    // dest = dest + src
-    if (dest_first)
-    {
-        memmove(&dest[strlen(dest)], src, strlen(src) + 1); // include '\0' too
-    }
-
-    // dest = src + dest
-    else
-    {
-        char* ts = (char*)calloc(strlen(dest) + strlen(src));
-        strcpy(ts, src);
-        strcpy(&ts[strlen(ts)], dest);
-        strcpy(dest, ts);
-        free(ts);
-    }
+    memmove(&dest[strlen(dest)], src, strlen(src) + 1); // include '\0' too
     return dest;
 }
 

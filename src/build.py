@@ -334,10 +334,11 @@ objects_to_compile = {
         CompileObject('./lib/libc/string/search/search.c', builders['c'], builder_options['c']['lib'], OBJECT),
         CompileObject('./lib/libc/string/sprintf/sprintf.cpp', builders['cc'], builder_options['cc']['lib'], OBJECT),
         CompileObject('./lib/libc/string/ip/ip.c', builders['c'], builder_options['c']['lib'], OBJECT),
-        CompileObject('./lib/libc/string.cpp', builders['cc'], builder_options['cc']['lib'], OBJECT),
 
         CompileObject('./lib/libc/canvas/out/out.c', builders['c'], builder_options['c']['lib'], OBJECT),
         CompileObject('./lib/libc/canvas/in/in.c', builders['c'], builder_options['c']['lib'], OBJECT),
+
+        CompileObject('./lib/libc/stdlibx/file/file.c', builders['c'], builder_options['c']['lib'], OBJECT),
 
         CompileObject('./lib/cpu/code/cpu_state_info.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
         CompileObject('./lib/libc/hal.c', builders['c'], builder_options['c']['lib'], OBJECT),

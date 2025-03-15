@@ -45,14 +45,14 @@ extern "C" {
     {
         char addr_buf[100];
         xsprintf(addr_buf, "0x%x", ptr);
-        dbg_warning(DEBUG_LABEL_PMMNGR, strcat(STRCAT_DEST_FIRST, addr_buf, " Invalid free heap. High risk of memory leak"));
+        dbg_warning(DEBUG_LABEL_PMMNGR, strcat(addr_buf, " Invalid free heap. High risk of memory leak"));
     }
 
     static inline void log_outside_heap(void* ptr)
     {
         char addr_buf[100];
         xsprintf(addr_buf, "0x%x", ptr);
-        dbg_warning(DEBUG_LABEL_PMMNGR, strcat(STRCAT_DEST_FIRST, addr_buf, " Memory outside the heap. Are you trying to free stack-allocated memory?"));
+        dbg_warning(DEBUG_LABEL_PMMNGR, strcat(addr_buf, " Memory outside the heap. Are you trying to free stack-allocated memory?"));
     }
 
     bool mmngr_is_initialized(void)

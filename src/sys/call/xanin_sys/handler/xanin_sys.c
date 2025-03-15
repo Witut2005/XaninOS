@@ -410,10 +410,10 @@ uint32_t xanin_sys_handle(void)
         int_to_string(stdeio_counter, buf, STRTOI_HEXADECIMAL);
         memcpy(&buf[strlen(buf)], "/", 2);
 
-        strcat(STRCAT_DEST_FIRST, path, buf);
+        strcat(path, buf);
         __xin_folder_create(path);
 
-        strcat(STRCAT_DEST_FIRST, path, "stderr");
+        strcat(path, "stderr");
         __xin_file_create(path);
 
         dbg_info(DEBUG_LABEL_SYSCALL, path);

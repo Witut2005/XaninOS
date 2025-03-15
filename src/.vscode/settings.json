@@ -125,7 +125,8 @@
         "csignal": "cpp",
         "valarray": "cpp",
         "*.clang-format": "c",
-        "exit_codes.h": "c"
+        "exit_codes.h": "c",
+        "manip.h": "c"
     },
 
     "editor.formatOnSave": true,

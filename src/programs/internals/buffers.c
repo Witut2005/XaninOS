@@ -26,8 +26,8 @@ int buffers_view(void)
             xin_fs_space_used++;
     }
 
-    xprintf("used: %d\n", (uint32_t)xin_fs_space_used);
-    xprintf("total: %d\n", (uint32_t)xin_fs_space_total);
+    xprintf("used: %u\n", (uint32_t)xin_fs_space_used);
+    xprintf("total: %u\n", (uint32_t)xin_fs_space_total);
 
     xprintf("XinFs space used:  [");
 

@@ -21,8 +21,8 @@
 #define STRING_UNSIGNED 0
 #define STRING_SIGNED 1
 
-#define STRCAT_DEST_FIRST true
-#define STRCAT_SRC_FIRST false
+#define LIBC_STRCAT_DEST_FIRST true
+#define LIBC_STRCAT_SRC_FIRST false
 
 #ifdef __cplusplus
 extern "C" {
