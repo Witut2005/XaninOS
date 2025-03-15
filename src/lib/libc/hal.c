@@ -7,6 +7,8 @@
 #include <sys/devices/apic/apic_registers.h>
 #include <sys/devices/hda/disk.h>
 
+#define CMOS_ADDR 0x70
+#define CMOS_DATA 0x71
 #define IVT_MEMORY_LOCATION NULL
 
 void eflags_get(EFlags* ptr)

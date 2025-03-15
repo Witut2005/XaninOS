@@ -20,6 +20,7 @@
 #include <sys/devices/hda/disk.h>
 #include <sys/call/xanin_sys/handler/xanin_sys.h>
 #include <sys/pmmngr/alloc.h>
+#include <lib/libc/time.h>
 
 #undef KERNEL_MODULE
 

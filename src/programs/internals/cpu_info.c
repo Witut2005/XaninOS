@@ -3,7 +3,7 @@
 #include <lib/libc/time.h>
 #include <sys/paging/paging.h>
 
-//TERMINAL_APP
+// TERMINAL_APP
 
 enum {
     CPUID_ECX_SSE3 = 1 << 0,
@@ -73,7 +73,6 @@ enum {
 int cpu_info(char* options)
 {
 
-
     unsigned int ecx, edx, ebx;
     char cpu_vendor_string[12];
     char cpu_brand_string[48];
@@ -86,7 +85,6 @@ int cpu_info(char* options)
     __get_cpuid(0x80000003, (unsigned int*)(cpu_brand_string + 16), (unsigned int*)(cpu_brand_string + 20), (unsigned int*)(cpu_brand_string + 24), (unsigned int*)(cpu_brand_string + 28));
     __get_cpuid(0x80000004, (unsigned int*)(cpu_brand_string + 32), (unsigned int*)(cpu_brand_string + 36), (unsigned int*)(cpu_brand_string + 40), (unsigned int*)(cpu_brand_string + 44));
 
-
     xprintf("CPU vendor string: ");
     for (int i = 0; i < 12; i++)
         putchar(cpu_vendor_string[i]);
@@ -94,8 +92,6 @@ int cpu_info(char* options)
     xprintf("\n");
 
     xprintf("CPU brand: %s\n", cpu_brand_string);
-
-    xprintf("CPU speed: %dMHz\n\n", cpu_mhz);
 
     __get_cpuid(0, (unsigned int*)1, &ebx, &ecx, &edx);
 
@@ -106,7 +102,6 @@ int cpu_info(char* options)
     char* cpu_state[2] = { "NOT PRESENT", "PRESENT" };
     bool is_present;
     uint8_t cpu_state_color[2] = { red, green };
-
 
     is_present = (edx & CPUID_EDX_IA64) >> 30;
     xprintf("64-bit:               %z%s\n", OUTPUT_COLOR_SET(cpu_state_color[is_present], white), cpu_state[is_present]);
@@ -129,20 +124,17 @@ int cpu_info(char* options)
     is_present = (edx & CPUID_EDX_APIC) >> 9;
     xprintf("APIC:                 %z%s\n", OUTPUT_COLOR_SET(cpu_state_color[is_present], white), cpu_state[is_present]);
 
-
     is_present = (ecx & CPUID_ECX_X2APIC) >> 21;
     xprintf("x2APIC:               %z%s\n", OUTPUT_COLOR_SET(cpu_state_color[is_present], white), cpu_state[is_present]);
 
     is_present = (edx & CPUID_EDX_ACPI) >> 22;
     xprintf("ACPI:                 %z%s\n", OUTPUT_COLOR_SET(cpu_state_color[is_present], white), cpu_state[is_present]);
 
-
     is_present = (ecx & CPUID_ECX_AVX) >> 28;
     xprintf("AVX:                  %z%s\n", OUTPUT_COLOR_SET(cpu_state_color[is_present], white), cpu_state[is_present]);
 
     is_present = (ecx & CPUID_ECX_RDRAND) >> 30;
     xprintf("RDRAND Instruction:   %z%s\n", OUTPUT_COLOR_SET(cpu_state_color[is_present], white), cpu_state[is_present]);
-
 
     is_present = (edx & CPUID_EDX_SSE2) >> 26;
     xprintf("SSE2:                 %z%s\n", OUTPUT_COLOR_SET(cpu_state_color[is_present], white), cpu_state[is_present]);

@@ -1,4 +1,5 @@
 
+#include <lib/libc/hal.h>
 #include <lib/libc/stdiox.h>
 #include <lib/libc/stdlibx.h>
 #include <sys/devices/keyboard/scan_codes.h>

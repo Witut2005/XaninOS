@@ -478,10 +478,6 @@ void kernel_start(void)
         xprintf("%z_/      _/    _/_/_/  _/    _/  _/  _/    _/    _/_/    _/_/_/      %zDay: %s\n", // : %i:%i:%i\n",
             OUTPUT_COLOR_SET(logo_back_color, logo_front_color), OUTPUT_COLOR_SET(black, white),
             daysLUT[SystemTime.weekday]);
-
-        // xprintf("%z_/      _/    _/_/_/  _/    _/  _/  _/    _/    _/_/    _/_/_/     %z%s\n", // : %i:%i:%i\n",
-        //     OUTPUT_COLOR_SET(logo_back_color, logo_front_color), OUTPUT_COLOR_SET(black, white),
-        //     daysLUT[SystemTime.weekday], SystemTime.hour, SystemTime.minutes, SystemTime.seconds);
     }
 
     char stdio_legacy_config_buf[6] = { 0 };
