@@ -102,6 +102,27 @@ extern "C" {
         puts(str);
     }
 
+    char getchar(void)
+    {
+        return __sys_getchar();
+    }
+
+    char getscan(void)
+    {
+        return __sys_getscan();
+    }
+
+    xchar getxchar(void)
+    {
+        return __sys_getxchar();
+    }
+
+    xchar inputg(void)
+    {
+        return __sys_inputg();
+    }
+
+
 #define XSCANF_FIELD_BUFFER_SIZE XANIN_PMMNGR_BLOCK_SIZE * 2 * 5
 #define XSCANF_STRING_TYPED_BUFFER_SIZE XANIN_PMMNGR_BLOCK_SIZE * 2 * 5
 
@@ -720,4 +741,5 @@ extern "C" {
     //     free(field_buffer);
     //     free(string_typed_buffer);
     // }
+
 } // extern "C"

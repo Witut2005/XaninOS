@@ -40,15 +40,3 @@ void stack_remove(stack_t** Stack)
     *Stack = NULL;
     return;
 }
-
-void queue_create(void)
-{
-}
-
-void binary_tree_create(void)
-{
-}
-
-void tree_create(void)
-{
-}

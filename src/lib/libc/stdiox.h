@@ -27,27 +27,31 @@ typedef uint8_t* object_t;
 extern "C" {
 #endif
 
-void stdio_init(void);
-int screen_clear(void);
-int vga_screen_buffer_clear(void);
+    void stdio_init(void);
+    int screen_clear(void);
+    int vga_screen_buffer_clear(void);
 
-void putchar(char c);
-void putchar_color(char c, color_t color);
+    void putchar(char c);
+    void putchar_color(char c, color_t color);
+    char getchar(void);
+    char getscan(void);
+    xchar getxchar(void);
+    xchar inputg(void);
 
-void xprintf(char* str, ...);
-void new_xprintf(char* fmt, ...);
-void xscanf(char* str, ...);
-void xscan_range(char* string_buffer, uint32_t how_many_chars);
-void stdio_vty_set(Xtf* Front);
-Xtf* stdio_vty_get(void);
+    void xprintf(char* str, ...);
+    void new_xprintf(char* fmt, ...);
+    void xscanf(char* str, ...);
+    void xscan_range(char* string_buffer, uint32_t how_many_chars);
+    void stdio_vty_set(Xtf* Front);
+    Xtf* stdio_vty_get(void);
 
-void putc(char* str, uint32_t count);
-void putsc(char const* str, color_t color);
-void puts(char const* str);
-void puts_warning(char const* str);
-void puts_error(char const* str);
+    void putc(char* str, uint32_t count);
+    void putsc(char const* str, color_t color);
+    void puts(char const* str);
+    void puts_warning(char const* str);
+    void puts_error(char const* str);
 
-void stdio_refresh(address_t* args);
+    void stdio_refresh(address_t* args);
 
 #ifdef __cplusplus
 }
