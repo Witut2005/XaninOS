@@ -2,7 +2,16 @@
 #include <lib/libc/file.h>
 #include <lib/libc/memory.h>
 
-#warning "TODO what if not opened";
+uint32_t int_to_sectors(uint32_t num)
+{
+    uint32_t size = num / SECTOR_SIZE;
+    if (num % SECTOR_SIZE)
+    {
+        size++;
+    }
+    return size;
+}
+
 char* getline(XinEntry* File, int line_id)
 {
     if (File == NULL) return NULL;

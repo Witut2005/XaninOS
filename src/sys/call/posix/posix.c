@@ -40,7 +40,6 @@ uint32_t syscall_handle(void)
 
     case __NR_exit: {
         last_command_exit_status = ebx;
-        // kernel_loop();
         break;
     }
 

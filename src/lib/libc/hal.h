@@ -80,6 +80,8 @@ void pic_mask_set(uint16_t port, uint8_t value);
 void pic_disable(void);
 void sse_enable(void);
 void pic_mode_disable(void);
+uint8_t cmos_floppy_type_get(void);
+uint32_t cmos_memory_map_get(void);
 
 #ifdef __cplusplus
 }

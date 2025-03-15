@@ -1,4 +1,26 @@
 #include <stdbool.h>
+#include <stdint.h>
+
+void swap_int(int* xp, int* yp)
+{
+    int temp = *xp;
+    *xp = *yp;
+    *yp = temp;
+}
+
+void swap_char(char* xp, char* yp)
+{
+    char temp = *xp;
+    *xp = *yp;
+    *yp = temp;
+}
+
+void swap_short(uint16_t* xp, uint16_t* yp)
+{
+    uint16_t temp = *xp;
+    *xp = *yp;
+    *yp = temp;
+}
 
 void int_swap(int* xp, int* yp)
 {

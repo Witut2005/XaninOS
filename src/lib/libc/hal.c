@@ -1,11 +1,11 @@
 
 #include <cpuid.h>
+#include <fs/xin.h>
+#include <lib/libc/hal.h>
+#include <lib/libc/stdiox.h>
 #include <stdint.h>
 #include <sys/devices/apic/apic_registers.h>
 #include <sys/devices/hda/disk.h>
-#include <fs/xin.h>
-#include <lib/libc/stdiox.h>
-#include <lib/libc/hal.h>
 
 #define IVT_MEMORY_LOCATION NULL
 
@@ -16,7 +16,7 @@ void eflags_get(EFlags* ptr)
         "pushf;"       // Push the EFLAGS register onto the stack
         "pop %0;"      // Pop the value from the stack into the variable 'eflags'
         : "=r"(eflags) // Output constraint specifying that 'eflags' is an output operand
-        );
+    );
     *ptr = *(EFlags*)&eflags;
 }
 
@@ -164,12 +164,16 @@ void real_mode_enter_no_return(uint16_t segment, uint16_t offset)
 
 void rdmsr(uint32_t msr_id, uint32_t low, uint32_t high)
 {
-    asm("rdmsr" : "=a"(low), "=d"(high) : "c"(msr_id));
+    asm("rdmsr"
+        : "=a"(low), "=d"(high)
+        : "c"(msr_id));
 }
 
 void wrmsr(uint32_t msr_id, uint32_t low, uint32_t high)
 {
-    asm("wrmsr" : "=a"(low), "=d"(high) : "c"(msr_id));
+    asm("wrmsr"
+        : "=a"(low), "=d"(high)
+        : "c"(msr_id));
 }
 
 void pic_mask_set(uint16_t port, uint8_t value)
@@ -212,4 +216,21 @@ CPUIDResult cpuid(uint32_t leaf, uint32_t eax)
     __get_cpuid(leaf, (unsigned int*)&eax, (unsigned int*)&cpuid_result.ebx, (unsigned int*)&cpuid_result.ecx, (unsigned int*)&cpuid_result.edx);
     cpuid_result.eax = eax;
     return cpuid_result;
+}
+
+uint8_t cmos_floppy_type_get(void)
+{
+    outbIO(CMOS_ADDR, 0x10);
+    return inbIO(CMOS_DATA);
+}
+
+uint32_t cmos_memory_map_get(void)
+{
+    outbIO(0x70, 0x30);
+    uint32_t low_memory = inbIO(0x71);
+
+    outbIO(0x70, 0x31);
+    uint32_t high_memory = inbIO(0x71);
+
+    return low_memory | (high_memory << 8);
 }
