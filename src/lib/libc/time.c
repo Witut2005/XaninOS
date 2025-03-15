@@ -7,7 +7,7 @@
 uint32_t cpu_mhz = 0x0;
 uint32_t cpu_khz = 0x0;
 
-extern float pit_time;
+float pit_time;
 
 void sleep(float seconds)
 {
@@ -36,8 +36,5 @@ time_offset_t* start(void)
 
 void stop(time_offset_t* time)
 {
-    // time_offset_t tmp = pit_time;
     *time = pit_time - *time;
 }
-
-// void msleep_

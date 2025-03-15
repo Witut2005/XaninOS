@@ -339,6 +339,8 @@ objects_to_compile = {
         CompileObject('./lib/libc/canvas/in/in.c', builders['c'], builder_options['c']['lib'], OBJECT),
 
         CompileObject('./lib/libc/stdlibx/file/file.c', builders['c'], builder_options['c']['lib'], OBJECT),
+        CompileObject('./lib/libc/stdlibx/algo/algo.c', builders['c'], builder_options['c']['lib'], OBJECT),
+        CompileObject('./lib/libc/interval.c', builders['c'], builder_options['c']['lib'], OBJECT),
 
         CompileObject('./lib/cpu/code/cpu_state_info.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
         CompileObject('./lib/libc/hal.c', builders['c'], builder_options['c']['lib'], OBJECT),

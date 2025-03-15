@@ -1,5 +1,6 @@
 
 #include <lib/libc/file.h>
+#include <lib/libc/interval.h>
 #include <lib/libc/stdiox.h>
 #include <lib/libc/stdlibx.h>
 #include <lib/libc/string.h>
@@ -24,7 +25,9 @@ STATUS stdio_apply(void)
     interval_clear(stdio_refresh_interval_id);
 
     if (stdio_refresh_rate <= 100)
+    {
         xprintf("Stdio new refresh rate: %d\n", stdio_refresh_rate);
+    }
 
     else
     {

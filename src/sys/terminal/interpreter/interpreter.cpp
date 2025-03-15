@@ -2,6 +2,7 @@
 #include <fs/loaders/elf/elf_loader.hpp>
 #include <programs/built-in-apps.h>
 #include <sys/input/input.h>
+#include <lib/libc/interval.h>
 
 extern "C" {
 

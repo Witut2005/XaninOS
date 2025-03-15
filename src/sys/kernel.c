@@ -8,6 +8,7 @@
 #include <lib/libc/assert.h>
 #include <lib/libc/data_structures.h>
 #include <lib/libc/file.h>
+#include <lib/libc/interval.h>
 #include <lib/libc/math.h>
 #include <lib/libc/stdiox.h>
 #include <lib/libc/stdiox_legacy.h>

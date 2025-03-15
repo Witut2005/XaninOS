@@ -1,13 +1,14 @@
 
 
-#include <stdint.h>
 #include <lib/libc/hal.h>
-#include <sys/devices/apic/apic_registers.h>
-#include <stdbool.h>
-#include <sys/interrupts/idt/idt.h>
-#include <sys/devices/pit/pit.h>
+#include <lib/libc/interval.h>
 #include <lib/libc/stdlibx.h>
+#include <stdbool.h>
+#include <stdint.h>
+#include <sys/devices/apic/apic_registers.h>
 #include <sys/devices/com/com.h>
+#include <sys/devices/pit/pit.h>
+#include <sys/interrupts/idt/idt.h>
 
 #define PIT_CHANNEL0 0x40
 #define PIT_CHANNEL1 0x41
@@ -16,10 +17,9 @@
 
 #define PIT_BASE_FREQUENCY 1193182
 #define PIT_XANIN_FREQUENCY 10000
-#define PIC1_DATA_REG 0x21   
+#define PIC1_DATA_REG 0x21
 
-//https://www.youtube.com/watch?v=aK4paXV1XfM <-- USEFUL
-
+// https://www.youtube.com/watch?v=aK4paXV1XfM <-- USEFUL
 
 void pit_divisor_set(uint16_t divisor_value)
 {
@@ -44,7 +44,9 @@ void pit_init(uint8_t vector)
     dbg_info(DEBUG_LABEL_KERNEL_DEVICE, "PIT successufly initialized");
 
     if (flags.intf)
+    {
         interrupt_enable();
+    }
 }
 
 void pit_tick(void)
@@ -52,8 +54,9 @@ void pit_tick(void)
     pit_time = pit_time + 0.0001;
 
     for (int i = 0; i < INTERVALS_MAX; i++)
+    {
         do_interval(i);
-
+    }
 }
 
 void pit_handler(void)
