@@ -1,4 +1,5 @@
 
+#include <sys/call/xanin_sys/calls/vga/vga.h>
 #include <sys/terminal/backend/backend.h>
 #include <sys/terminal/handlers/handlers.h>
 
@@ -8,7 +9,6 @@ bool xtf_overflow_x_detect(Xtf* XtFrontend)
         return true;
     return false;
 }
-
 
 bool xt_cell_put_line_modifiers_handler(Xtf* XtFrontend, char c, color_t color) // also handles x overflow
 {
@@ -21,10 +21,10 @@ bool xt_cell_put_line_modifiers_handler(Xtf* XtFrontend, char c, color_t color) 
         if (XtFrontend->y > XtFrontend->current_height)
         {
             XtFrontend->current_height = XtFrontend->y;
-            XtFrontend->rows_changed = (uint8_t *)realloc(XtFrontend->rows_changed, XtFrontend->y * SIZE_OF_POINTED_TYPE(XtFrontend->rows_changed));
+            XtFrontend->rows_changed = (uint8_t*)realloc(XtFrontend->rows_changed, XtFrontend->y * SIZE_OF_POINTED_TYPE(XtFrontend->rows_changed));
         }
 
-        if (XtFrontend->y >= __xtb_get()->vga_height) 
+        if (XtFrontend->y >= __xtb_get()->vga_height)
             __xtb_scroll_down(XtFrontend);
 
         return true;
@@ -55,35 +55,35 @@ bool xt_cell_put_special_characters_handler(Xtf* XtFrontend, char c, color_t col
         if (XtFrontend->y >= XtFrontend->current_height)
         {
             XtFrontend->current_height = XtFrontend->y + 1;
-            XtFrontend->rows_changed = (uint8_t *)realloc(XtFrontend->rows_changed, XtFrontend->y * SIZE_OF_POINTED_TYPE(XtFrontend->rows_changed));
+            XtFrontend->rows_changed = (uint8_t*)realloc(XtFrontend->rows_changed, XtFrontend->y * SIZE_OF_POINTED_TYPE(XtFrontend->rows_changed));
         }
 
-        if (XtFrontend->y >= __xtb_get()->vga_height) 
+        if (XtFrontend->y >= __xtb_get()->vga_height)
             __xtb_scroll_down(XtFrontend);
 
         return true;
     }
 
-    else if(c == ASCII_CR)
-    { 
+    else if (c == ASCII_CR)
+    {
         XtFrontend->x = 0;
-        XtFrontend->size = __xtf_buffer_nth_line_index_get(XtFrontend, __xtf_line_number_from_position_get(XtFrontend, XtFrontend->size)); 
+        XtFrontend->size = __xtf_buffer_nth_line_index_get(XtFrontend, __xtf_line_number_from_position_get(XtFrontend, XtFrontend->size));
         return true;
     }
 
-    else if(c == ASCII_VT)
+    else if (c == ASCII_VT)
     {
-        for(int i = 0; i < 3; i++)
+        for (int i = 0; i < 3; i++)
             __xtf_cell_put(XtFrontend, '\n', color);
 
         return true;
     }
 
-    else if(c == ASCII_TAB)
+    else if (c == ASCII_TAB)
     {
-        for(int i = 0; i < 3; i++)
+        for (int i = 0; i < 3; i++)
             __xtf_cell_put(XtFrontend, ' ', color);
-        
+
         return true;
     }
 
@@ -92,7 +92,7 @@ bool xt_cell_put_special_characters_handler(Xtf* XtFrontend, char c, color_t col
 
 void xt_flush_special_characters_handle(char character, color_t color, uint32_t* current_row_to_display, bool* row_cleared, uint32_t* vram_index)
 {
-    
+
     Xtb* XtBackend = __xtb_get();
     vga_screen_cell_t* vram = (vga_screen_cell_t*)VGA_TEXT_MEMORY;
 
@@ -104,7 +104,7 @@ void xt_flush_special_characters_handle(char character, color_t color, uint32_t*
         if (!(*vram_index % XtBackend->vga_width))
             return;
 
-        for(int start_vram_index = *vram_index; *vram_index < start_vram_index + (XtBackend->vga_width - (start_vram_index % XtBackend->vga_width)); *vram_index += 1)
+        for (int start_vram_index = *vram_index; *vram_index < start_vram_index + (XtBackend->vga_width - (start_vram_index % XtBackend->vga_width)); *vram_index += 1)
             vram[*vram_index] = BLANK_SCREEN_CELL;
 
     }
@@ -114,28 +114,26 @@ void xt_flush_special_characters_handle(char character, color_t color, uint32_t*
         *current_row_to_display += 1;
         *row_cleared = false;
 
-        for(int start_vram_index = *vram_index; *vram_index < start_vram_index + (XtBackend->vga_width - (start_vram_index % XtBackend->vga_width)); *vram_index += 1)
+        for (int start_vram_index = *vram_index; *vram_index < start_vram_index + (XtBackend->vga_width - (start_vram_index % XtBackend->vga_width)); *vram_index += 1)
             vram[*vram_index] = BLANK_SCREEN_CELL;
 
     }
 
-    else if(character == ASCII_TAB)
+    else if (character == ASCII_TAB)
     {
-        for(int i = 0; i < 3; i++, *vram_index += 1)
+        for (int i = 0; i < 3; i++, *vram_index += 1)
             vram[*vram_index] = ' ' | AS_COLOR(color);
     }
 
-    else if(character == ASCII_VT)
+    else if (character == ASCII_VT)
     {
         *current_row_to_display += 3;
         *row_cleared = false;
 
-        for(int i = 0; i < 3; i++)
+        for (int i = 0; i < 3; i++)
         {
-            for(int start_vram_index = *vram_index; *vram_index < start_vram_index + (XtBackend->vga_width - (start_vram_index % XtBackend->vga_width)); *vram_index += 1)
+            for (int start_vram_index = *vram_index; *vram_index < start_vram_index + (XtBackend->vga_width - (start_vram_index % XtBackend->vga_width)); *vram_index += 1)
                 vram[*vram_index] = BLANK_SCREEN_CELL;
         }
-
     }
-
 }

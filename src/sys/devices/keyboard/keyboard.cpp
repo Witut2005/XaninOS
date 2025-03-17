@@ -6,6 +6,7 @@
 #include <sys/devices/com/com.h>
 #include <sys/terminal/backend/backend.h>
 #include <sys/input/input.hpp>
+#include <sys/call/xanin_sys/calls/stdio/stdio.h>
 
 extern "C" void keyboard_handler_init(void);
 // extern "C" int exit(void);

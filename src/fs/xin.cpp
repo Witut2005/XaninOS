@@ -9,7 +9,6 @@
 #include <lib/libc/memory.h>
 #include <lib/libc/string.h>
 #include <lib/libc/colors.h>
-#include <lib/libc/stdiox.h>
 #include <lib/libc/stdlibx.h>
 #include <lib/libcpp/string.h>
 #include <lib/libcpp/algorithm.h>

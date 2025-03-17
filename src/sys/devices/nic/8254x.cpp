@@ -1,17 +1,18 @@
 #include <sys/devices/nic/8254x.hpp>
-#include <lib/libc/stdiox.h>
 #include <lib/libcpp/hal.h>
 #include <lib/libc/hal.h>
 #include <sys/log/syslog.h>
 #include <lib/libc/memory.h>
 #include <sys/devices/apic/apic_registers.h>
-#include <sys/net/network_protocols/ethernet_frame/ethernet_frame.hpp>
 #include <lib/libcpp/utility.h>
 #include <limits.h>
 #include <sys/interrupts/idt/idt.h>
 #include <sys/pmmngr/alloc.h>
 #include <sys/devices/vendor.h>
 #include <sys/devices/com/com.h>
+#include <lib/libc/stdlibx.h>
+#include <lib/libc/string.h>
+#include <sys/net/network_protocols/ethernet_frame/ethernet_frame.hpp>
 
 #define INTEL_8254X_DESCRIPTORS 256
 #define reset() write(0x0, 0x80000000)

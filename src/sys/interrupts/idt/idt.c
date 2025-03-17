@@ -1,12 +1,11 @@
 
 #include <stdint.h>
-#include <sys/interrupts/handlers/handlers.c>
-#include <sys/devices/keyboard/key_map.h>
 #include <sys/call/posix/posix.c>
-#include <sys/devices/mouse/mouse.h>
+#include <sys/devices/keyboard/key_map.h>
+#include <sys/interrupts/handlers/handlers.c>
 #include <sys/interrupts/idt/idt.h>
 
-//extern void mouse_handler(void);
+// extern void mouse_handler(void);
 
 extern void mouse_handler_init(void);
 extern void i8254x_interrupt_handler_entry(void);
@@ -16,26 +15,24 @@ extern void syscall_entry(void);
 #define IDT_HANDLERS 256
 #define IDT_SIZE 256 * 8 - 1
 
-
 #define NULL_SEGMENT 0
 #define CODE_SEGMENT 0x8
 
 /* configure interrupt descriptor table entry */
 
 /* configure interrupt descriptor table entry */
-#define configure_idt_entry(idt_entry,off,seg)\
-    idtEntries[idt_entry].off_0_15 = (uint16_t)(((uint32_t)off & 0x0000ffff));\
-    idtEntries[idt_entry].off_16_31 = (uint16_t)((uint32_t)off >> 16);\
-    idtEntries[idt_entry].segment = seg;\
-    idtEntries[idt_entry].res = 0x0;\
+#define configure_idt_entry(idt_entry, off, seg)                               \
+    idtEntries[idt_entry].off_0_15 = (uint16_t)(((uint32_t)off & 0x0000ffff)); \
+    idtEntries[idt_entry].off_16_31 = (uint16_t)((uint32_t)off >> 16);         \
+    idtEntries[idt_entry].segment = seg;                                       \
+    idtEntries[idt_entry].res = 0x0;                                           \
     idtEntries[idt_entry].P_DPL = 0x8e
 
 /* IDT Register */
-struct idt_register
-{
+struct idt_register {
     uint16_t limit;
     uint32_t base;
-}__attribute__((packed));
+} __attribute__((packed));
 
 /* IDT entry structure */
 typedef struct
@@ -45,11 +42,9 @@ typedef struct
     uint8_t res;
     uint8_t P_DPL;
     uint16_t off_16_31;
-}__attribute__((packed)) IDT;
-
+} __attribute__((packed)) IDT;
 
 __attribute__((aligned(0x8))) IDT idtEntries[IDT_HANDLERS];
-
 
 irq_handler interrupt_handlers[0x100];
 
@@ -68,8 +63,8 @@ void set_idt(void)
     configure_idt_entry(8, interrupt_handlers[8], CODE_SEGMENT);
     // configure_idt_entry(0x8, NULL, 0);
     configure_idt_entry(9, interrupt_handlers[9], CODE_SEGMENT);
-    configure_idt_entry(10, interrupt_handlers[10],CODE_SEGMENT);
-    configure_idt_entry(11, interrupt_handlers[11],CODE_SEGMENT);
+    configure_idt_entry(10, interrupt_handlers[10], CODE_SEGMENT);
+    configure_idt_entry(11, interrupt_handlers[11], CODE_SEGMENT);
     configure_idt_entry(12, interrupt_handlers[12], CODE_SEGMENT);
     configure_idt_entry(13, interrupt_handlers[13], CODE_SEGMENT);
     // configure_idt_entry(13, NULL, 0);
@@ -91,18 +86,18 @@ void set_idt(void)
     configure_idt_entry(30, interrupt_handlers[30], CODE_SEGMENT);
     configure_idt_entry(31, interrupt_handlers[31], CODE_SEGMENT);
     configure_idt_entry(32, interrupt_handlers[32], CODE_SEGMENT);
-    
+
     configure_idt_entry(0x21, interrupt_handlers[0x21], CODE_SEGMENT);
     configure_idt_entry(0x22, interrupt_handlers[0x22], CODE_SEGMENT);
     configure_idt_entry(0x26, interrupt_handlers[0x26], CODE_SEGMENT);
 
     configure_idt_entry(0x2B, interrupt_handlers[0x2B], CODE_SEGMENT);
-    configure_idt_entry(0x2B+2, interrupt_handlers[0x2B+2], CODE_SEGMENT);
-    configure_idt_entry(0x2B+3, interrupt_handlers[0x2B+3], CODE_SEGMENT);
-    configure_idt_entry(0x2B+4, interrupt_handlers[0x2B+4], CODE_SEGMENT);
-    configure_idt_entry(0x2B+5, interrupt_handlers[0x2B+5], CODE_SEGMENT);
-    configure_idt_entry(0x2B+6, interrupt_handlers[0x2B+6], CODE_SEGMENT);
-    configure_idt_entry(0x2B+7, interrupt_handlers[0x2B+7], CODE_SEGMENT);
+    configure_idt_entry(0x2B + 2, interrupt_handlers[0x2B + 2], CODE_SEGMENT);
+    configure_idt_entry(0x2B + 3, interrupt_handlers[0x2B + 3], CODE_SEGMENT);
+    configure_idt_entry(0x2B + 4, interrupt_handlers[0x2B + 4], CODE_SEGMENT);
+    configure_idt_entry(0x2B + 5, interrupt_handlers[0x2B + 5], CODE_SEGMENT);
+    configure_idt_entry(0x2B + 6, interrupt_handlers[0x2B + 6], CODE_SEGMENT);
+    configure_idt_entry(0x2B + 7, interrupt_handlers[0x2B + 7], CODE_SEGMENT);
 
     configure_idt_entry(0x2C, interrupt_handlers[0x2C], CODE_SEGMENT);
     configure_idt_entry(0x50, interrupt_handlers[0x50], CODE_SEGMENT);
@@ -118,7 +113,7 @@ void set_idt(void)
 
     // configure_idt_entry(0x21, keyboard_handler_init,CODE_SEGMENT);
     // configure_idt_entry(0x22, pit_handler_init,CODE_SEGMENT);
-    
+
     // configure_idt_entry(0x26, floppy_interrupt,CODE_SEGMENT);
     // configure_idt_entry(0x2B, i8254x_interrupt_handler_entry, CODE_SEGMENT);
     // configure_idt_entry(0x2B + 1, gowno, CODE_SEGMENT);
@@ -141,5 +136,5 @@ void set_idt(void)
     };
 
     /* load IDT Register with proper struct */
-    asm("lidt %0" :: "m"(idtr));
+    asm("lidt %0" ::"m"(idtr));
 }

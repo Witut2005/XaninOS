@@ -8,6 +8,7 @@
 
 // TERMINAL_APP
 
+extern void stdio_refresh(address_t* args);
 extern uint32_t stdio_refresh_rate;
 extern interval_id stdio_refresh_interval_id;
 

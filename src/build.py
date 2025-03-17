@@ -235,8 +235,6 @@ objects_to_compile = {
         CompileObject('./sys/devices/keyboard/keyboard_entry.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
         CompileObject('./sys/devices/pit/pit.asm', builders['asm'], builder_options['asm']['elf32'], './sys/devices/pit/pit_entry.o'),
         CompileObject('./sys/devices/pcspk/pc_speaker.c', builders['c'], builder_options['c']['default'], OBJECT),
-        CompileObject('./sys/devices/mouse/mouse.c', builders['c'], builder_options['c']['default'], OBJECT),
-        CompileObject('./sys/devices/mouse/mouse.asm', builders['asm'], builder_options['asm']['elf32'], './sys/devices/mouse/mouse_init.o'),
         CompileObject('./sys/devices/com/com.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./sys/devices/ioapic/ioapic.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./sys/devices/nic/8254x_int_handler.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
@@ -338,6 +336,9 @@ objects_to_compile = {
         CompileObject('./lib/libc/canvas/out/out.c', builders['c'], builder_options['c']['lib'], OBJECT),
         CompileObject('./lib/libc/canvas/in/in.c', builders['c'], builder_options['c']['lib'], OBJECT),
 
+        CompileObject('./lib/libc/stdiox/in/in.cpp', builders['cc'], builder_options['cc']['lib'], OBJECT),
+        CompileObject('./lib/libc/stdiox/out/out.cpp', builders['cc'], builder_options['cc']['lib'], OBJECT),
+
         CompileObject('./lib/libc/stdlibx/file/file.c', builders['c'], builder_options['c']['lib'], OBJECT),
         CompileObject('./lib/libc/stdlibx/algo/algo.c', builders['c'], builder_options['c']['lib'], OBJECT),
         CompileObject('./lib/libc/stdlibx/random/random.c', builders['c'], builder_options['c']['lib'], OBJECT),
@@ -350,7 +351,6 @@ objects_to_compile = {
         CompileObject('./lib/libc/hal.c', builders['c'], builder_options['c']['lib'], OBJECT),
         CompileObject('./lib/libc/math.c', builders['c'], builder_options['c']['lib'], OBJECT),
         CompileObject('./lib/libc/memory.c', builders['c'], builder_options['c']['lib'], OBJECT),
-        CompileObject('./lib/libc/stdiox.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./lib/libc/stdlibx.c', builders['c'], builder_options['c']['lib'], OBJECT),
         CompileObject('./lib/libc/time.c', builders['c'], builder_options['c']['lib'], OBJECT),
         CompileObject('./lib/libc/process.c', builders['c'], builder_options['c']['lib'], OBJECT),

@@ -3,7 +3,6 @@
 #include <lib/libc/hal.h>
 #include <stdint.h>
 #include <sys/devices/com/com.hpp>
-#include <lib/libc/stdiox.h>
 #include <lib/libc/string.h>
 #include <lib/libc/loop.h>
 #include <lib/libcpp/algorithm.h>

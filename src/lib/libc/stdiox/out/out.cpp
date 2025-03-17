@@ -2,7 +2,10 @@
 #include <lib/libc/string.h>
 #include <lib/libc/time.h>
 #include <sys/terminal/backend/backend.h>
-
+#include "./out.h"
+#include <sys/call/xanin_sys/calls/stdio/stdio.h>
+#include <sys/call/xanin_sys/calls/vga/vga.h>
+#include <lib/libc/colors.h>
 
 void putchar(char c)
 {

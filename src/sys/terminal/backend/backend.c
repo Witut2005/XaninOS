@@ -1,10 +1,13 @@
 
 #include <lib/libc/memory.h>
+#include <lib/libc/stdiox.h>
 #include <lib/libc/stdlibx.h>
 #include <lib/screen/screen.h>
+#include <sys/call/xanin_sys/calls/vga/vga.h>
 #include <sys/macros.h>
 #include <sys/pmmngr/alloc.h>
 #include <sys/terminal/backend/backend.h>
+#include <sys/terminal/frontend/frontend.h>
 #include <sys/terminal/handlers/handlers.h>
 
 static Xtb* XtBackend;
