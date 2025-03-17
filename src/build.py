@@ -344,13 +344,14 @@ objects_to_compile = {
         CompileObject('./lib/libc/stdlibx/flow/flow.c', builders['c'], builder_options['c']['lib'], OBJECT),
         CompileObject('./lib/libc/interval.c', builders['c'], builder_options['c']['lib'], OBJECT),
 
+        CompileObject('./lib/libc/data_structures/stack/stack.c', builders['c'], builder_options['c']['lib'], OBJECT),
+
         CompileObject('./lib/cpu/code/cpu_state_info.asm', builders['asm'], builder_options['asm']['elf32'], OBJECT),
         CompileObject('./lib/libc/hal.c', builders['c'], builder_options['c']['lib'], OBJECT),
         CompileObject('./lib/libc/math.c', builders['c'], builder_options['c']['lib'], OBJECT),
         CompileObject('./lib/libc/memory.c', builders['c'], builder_options['c']['lib'], OBJECT),
         CompileObject('./lib/libc/stdiox.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
         CompileObject('./lib/libc/stdlibx.c', builders['c'], builder_options['c']['lib'], OBJECT),
-        CompileObject('./lib/libc/data_structures.c', builders['c'], builder_options['c']['lib'], OBJECT),
         CompileObject('./lib/libc/time.c', builders['c'], builder_options['c']['lib'], OBJECT),
         CompileObject('./lib/libc/process.c', builders['c'], builder_options['c']['lib'], OBJECT),
         CompileObject('./lib/libc/stdiox_legacy.c', builders['c'], builder_options['c']['lib'], OBJECT),

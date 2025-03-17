@@ -3,7 +3,6 @@
 #include <fs/xin.h>
 #include <lib/libc/canvas.h>
 #include <lib/libc/colors.h>
-#include <lib/libc/data_structures.h>
 #include <lib/libc/file.h>
 #include <lib/libc/process.h>
 #include <lib/libc/stdiox.h>

@@ -6,7 +6,6 @@
 #include <lib/ascii/ascii.h>
 #include <lib/cpu/headers/cpu_state_info.h>
 #include <lib/libc/assert.h>
-#include <lib/libc/data_structures.h>
 #include <lib/libc/file.h>
 #include <lib/libc/interval.h>
 #include <lib/libc/math.h>

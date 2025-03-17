@@ -1,5 +1,5 @@
 
-#include <lib/libc/data_structures.h>
+#include "./stack.h"
 #include <lib/libc/stdlibx.h>
 
 void stack_create(stack_t** Stack)
