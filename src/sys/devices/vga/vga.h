@@ -6,6 +6,7 @@
 enum VGA_REGISTERS
 {
 
+
     VGA_MISC_REGISTER =  0x3c2,
     VGA_CRTC_INDEX_REGISTER = 0x3d4,
     VGA_CRTC_DATA_REGISTER = 0x3d5,
@@ -22,13 +23,15 @@ enum VGA_REGISTERS
     VGA_ATTRIBUTE_RESET_REGISTER = 0x3da,
 
 	VGA_MISC_OUTPUT_REGISTER = 0x3C2,
-	VGA_GRAPHICS_MODE_REGISTER = 0x3CE
+	VGA_GRAPHICS_MODE_REGISTER = 0x3CE,
 
+    VGA_DAC_WRITE_INDEX = 0x3C8,
+    VGA_DAC_DATA = 0x3C9
 };
 
 enum VGA_STATES
 {
-    VGA_TEXT_90x60,
+    // VGA_TEXT_90x60,
     VGA_TEXT_80x25,
     VGA_GRAPHICS_320x200x4, 
     VGA_GRAPHICS_640x480x16,
@@ -43,16 +46,6 @@ extern uint32_t vga_text_mode_width, vga_text_mode_height;
 //these resources helped me a lot!!!
 //https://www.youtube.com/watch?v=N68cYNWZgy8&list=PLHh55M_Kq4OApWScZyPl5HhgsTJS9MZ6M&index=13
 //https://files.osdev.org/mirrors/geezer/osd/graphics/modes.c
-
-
-
-
-// extern unsigned char g_90x60_text[];
-// extern unsigned char g_80x25_text[];
-// extern unsigned char g_720x480x16[];
-// extern unsigned char g_320x200x256[];
-// extern unsigned char g_8x8_font[];
-// extern unsigned char g_8x16_font[];
 
 #ifdef __cplusplus
 extern "C" {

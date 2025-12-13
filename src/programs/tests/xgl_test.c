@@ -1,21 +1,23 @@
 
 #include <lib/xgl/xgl.h>
 #include <lib/libc/stdiox.h>
+#include <sys/devices/com/com.h>
 
 //CANVAS_APP
 
 int xgl_test(void)
 {
-
     stdio_mode_set(STDIO_MODE_CANVAS);
-    // xprintf("rgb2vga: %d\n", rgb2vga(0xFF, 0, 0));
-    xgl_init(VGA_GRAPHICS_320x200x256_MODEX);
+    xgl_init(VGA_GRAPHICS_320x200x256);
 
-    // for(int i = 0; i < 320 * 100; i++)
-    pixel_set(0, 0, 14);
+    uint8_t* vga_buf = (uint8_t*)0xA0000;
     
-    getchar();
+    for(int i = 0; i < 128; i++) {
+        memset(vga_buf + (i * 320), i, 320);
+    }
+    
+    dbg_info("XGL_TEST", "jeden");
+    while(1);
+    dbg_info("XGL_TEST", "ugabgua");
     return XANIN_OK;
-    // while(1);
-
 }

@@ -9,13 +9,13 @@ static uint8_t *vga_buffer;
 void xgl_init(xgm_t mode)
 {
     vga_mode_set(mode);
-    vga_buffer = (uint8_t *)0xA0000;
+    // vga_buffer = (uint8_t *)0xA0000;
 
-    for (int i = 0; i < 200; i++)
-    {
-        for (int j = 0; j < 320; j++)
-            pixel_set(j, i, 0);
-    }
+    // for (int i = 0; i < 200; i++)
+    // {
+    //     for (int j = 0; j < 320; j++)
+    //         pixel_set(j, i, 0);
+    // }
 }
 
 uint8_t color(uint8_t given_color)
