@@ -115,6 +115,7 @@ void kernel_loop(void)
 {
     while (1)
     {
+        vga_mode_set(VGA_TEXT_80x25);
         xtb_enable_flushing();
         stdio_mode_set(STDIO_MODE_TERMINAL);
         __xtb_flush_all(__vty_get());

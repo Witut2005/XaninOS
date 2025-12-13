@@ -6,39 +6,38 @@
 
 static uint8_t *vga_buffer;
 
-void xgl_init(xgm_t mode)
+void xgl_init(xgm_t mode, VGA_COLOR_PALETTE pallete)
 {
     vga_mode_set(mode);
-    // vga_buffer = (uint8_t *)0xA0000;
+    // uint8_t* buf = vga_get_buffer_segment();
 
-    // for (int i = 0; i < 200; i++)
-    // {
-    //     for (int j = 0; j < 320; j++)
-    //         pixel_set(j, i, 0);
+    // //TODO
+    // for(int i = 0; i < 200; i++) {
+    //     for(int j = 0; j < 320; j++) {
+    //         pixel_linear_set(i * 320 + j, 0);
+    //     }
     // }
+
+    vga_load_palette(pallete);
 }
 
-uint8_t color(uint8_t given_color)
-{
-    return given_color >> 2;
-}
-
+//TODO
 void pixel_set(uint32_t x, uint32_t y, uint8_t given_color)
 {
-    // uint8_t plane = given_color & 0x3;
-    uint8_t first = given_color & 0x4;
-    // uint8_t second = given_color >> 4;
+    // uint8_t* buf = vga_get_buffer_segment();
 
-    set_plane(0);
-    vga_buffer[y * 320 + x] = first >> 2;
-
-    set_plane(1);
-    vga_buffer[y * 320 + x] = first & 3;
 }
 
-void pixel_set_rgb(uint32_t x, uint32_t y, uint8_t r, uint8_t g, uint8_t b)
+void pixel_linear_set(uint32_t offset, uint8_t color)
 {
-    pixel_set(x, y, rgb2vga(r, g, b));
+    // Używamy wskaźnika 32-bitowego, aby zagwarantować poprawną arytmetykę
+    // Adres docelowy to 32-bitowy adres fizyczny
+    volatile uint8_t *vram_ptr = (volatile uint8_t*)0xA0000; 
+    
+    // Zapisujemy pod adresem VRAM_BASE + offset
+    // To wymaga, aby kompilator poprawnie używał adresowania 32-bitowego 
+    // dla *vram_ptr
+    vram_ptr[offset] = color;
 }
 
 void rectangle_create(uint32_t x, uint32_t y, uint32_t x_size, uint32_t y_size, uint8_t given_color)
@@ -114,25 +113,3 @@ void line_horizontal_create(uint32_t x, uint32_t y, uint16_t lenght, uint8_t giv
 //     }
 // }
 
-// orignal code
-// https://gist.github.com/harieamjari/509f665081f52b3dbdfc892b39cc3eab
-
-uint8_t rgb2vga(int r, int g, int b)
-{
-
-    uint32_t best_value = UINT32_MAX;
-    uint8_t best_index = 0;
-
-    for (int i = 0; i < 256; i++)
-    {
-        uint32_t current_value = abs(r - vga_rgb_palette[i][0]) + abs(g - vga_rgb_palette[i][1]) + abs(b - vga_rgb_palette[i][2]);
-
-        if (best_value > current_value)
-        {
-            best_value = current_value;
-            best_index = i;
-        }
-    }
-
-    return best_index;
-}

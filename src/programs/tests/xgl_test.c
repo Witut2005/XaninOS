@@ -8,12 +8,12 @@
 int xgl_test(void)
 {
     stdio_mode_set(STDIO_MODE_CANVAS);
-    xgl_init(VGA_GRAPHICS_320x200x256);
+    xgl_init(VGA_GRAPHICS_320x200x256, VGA_PALETTE_GRAYSCALE);
 
-    uint8_t* vga_buf = (uint8_t*)0xA0000;
+    uint8_t* vga_buf = (uint8_t*)vga_get_buffer_segment();
     
-    for(int i = 0; i < 128; i++) {
-        memset(vga_buf + (i * 320), i, 320);
+    for(int i = 0; i < 200; i++) {
+        memset(vga_buf + (i * 320), i, 160);
     }
     
     dbg_info("XGL_TEST", "jeden");

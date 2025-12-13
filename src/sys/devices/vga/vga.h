@@ -6,6 +6,7 @@
 enum VGA_REGISTERS
 {
 
+    VGA_CRTC_VERTICAL_RETRACE_END_INDEX = 0x11,
 
     VGA_MISC_REGISTER =  0x3c2,
     VGA_CRTC_INDEX_REGISTER = 0x3d4,
@@ -40,6 +41,15 @@ enum VGA_STATES
     VGA_GRAPHICS_320x200x256_MODEX
 };
 
+
+enum VGA_COLOR_PALETTE {
+    VGA_PALETTE_GRAYSCALE,
+    VGA_PALETTE_DEFAULT
+};
+
+typedef enum VGA_COLOR_PALETTE VGA_COLOR_PALETTE;
+
+
 typedef uint8_t xgm_t;
 extern uint32_t vga_text_mode_width, vga_text_mode_height;
 
@@ -61,6 +71,9 @@ void writeRegVGA(unsigned short reg, unsigned char idx, unsigned char val);
 void setFontVGA(const unsigned char * buffer, int h);
 void vga_mode_set(uint8_t vga_mode);
 uint8_t* vga_get_buffer_segment(void);
+void vga_load_bmp_palette(const uint8_t *bmp_palette, int num_colors);
+void vga_load_palette(VGA_COLOR_PALETTE palette);
+void vga_load_custom_palette(const uint8_t *palette_data);
 
 //https://wiki.osdev.org/Text_Mode_Cursor
 void vga_enable_cursor(uint8_t cursor_start, uint8_t cursor_end);

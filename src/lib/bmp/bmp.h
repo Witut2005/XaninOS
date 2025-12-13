@@ -2,6 +2,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <lib/libc/file.h>
 
 struct BitMapHeader {
     char signature[2];
@@ -29,12 +30,13 @@ typedef struct BitMapHeader BitMapHeader;
 typedef struct BitMapInfoHeader BitMapInfoHeader;
 #endif
 
-
 struct BitMapFileStructure
 {
     BitMapHeader Header;
     BitMapInfoHeader InfoHeader;
 }__attribute__((packed));
+
+BitMapHeader* bmp_header_get(XinEntry* bmp, BitMapHeader* buf);
 
 #ifndef __cplusplus
 typedef struct BitMapFileStructure BitMapFileStructure;
