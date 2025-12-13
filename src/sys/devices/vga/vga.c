@@ -96,6 +96,27 @@ const uint8_t vga_grayscale_palette_256[768] = {
     0x3C, 0x3C, 0x3C, 0x3D, 0x3D, 0x3D, 0x3E, 0x3E, 0x3E, 0x3F, 0x3F, 0x3F
 };
 
+const uint8_t vga_text_palette[48] = {
+    // R,  G,  B
+    0x00, 0x00, 0x00, // 0: Black
+    0x00, 0x00, 0x2A, // 1: Blue
+    0x00, 0x2A, 0x00, // 2: Green
+    0x00, 0x2A, 0x2A, // 3: Cyan
+    0x2A, 0x00, 0x00, // 4: Red
+    0x2A, 0x00, 0x2A, // 5: Magenta
+    0x2A, 0x15, 0x00, // 6: Brown (Dark Yellow)
+    0x2A, 0x2A, 0x2A, // 7: Light Gray
+
+    0x15, 0x15, 0x15, // 8: Dark Gray (Bright Black)
+    0x15, 0x15, 0x3F, // 9: Light Blue
+    0x15, 0x3F, 0x15, // 10: Light Green
+    0x15, 0x3F, 0x3F, // 11: Light Cyan
+    0x3F, 0x15, 0x15, // 12: Light Red
+    0x3F, 0x15, 0x3F, // 13: Light Magenta
+    0x3F, 0x3F, 0x15, // 14: Yellow
+    0xFF, 0xFF, 0xFF  // 15: White
+};
+
 const uint8_t vga_std_palette_256[768] = {
     /* 000-015: Podstawowe kolory VGA (standardowe 16) */
     0x00, 0x00, 0x00,  /* 00 - Czarny */
@@ -841,7 +862,8 @@ unsigned char g_320x200x256_modex[] =
 		/* AC */
 		0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
 		0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F,
-		0x41, 0x00, 0x0F, 0x00, 0x00};
+		0x41, 0x00, 0x0F, 0x00, 0x00
+};
 
 
 void vga_registers_write(uint8_t *registers)
@@ -904,6 +926,18 @@ void vga_load_palette(VGA_COLOR_PALETTE palette) {
 	}
 }
 
+void vga_load_text_palette(const uint8_t* palette)
+{
+    // Ustawia indeks pierwszego koloru (0) do zapisu w DAC
+    outbIO(VGA_DAC_WRITE_INDEX, 0); 
+    
+    // Zapisuje 16 trójek RGB (łącznie 48 bajtów)
+    for (int i = 0; i < 16 * 3; i++) {
+        // Zapisuje R, potem G, potem B dla każdego z 16 indeksów
+        outbIO(VGA_DAC_DATA, palette[i]);
+    }
+}
+
 void vga_load_custom_palette(const uint8_t *palette_data)
 {
     // Krok 1: Wpisz 0 do rejestru indeksu, aby zacząć od koloru 0
@@ -917,104 +951,6 @@ void vga_load_custom_palette(const uint8_t *palette_data)
         outbIO(VGA_DAC_DATA, palette_data[i]);
     }
 }
-
-void set_plane(unsigned p)
-{
-
-	unsigned char pmask;
-
-	p &= 3;
-	pmask = 1 << p;
-
-	/* set read plane */
-	outbIO(VGA_GRAPHICS_INDEX_REGISTER, 4);
-	outbIO(VGA_GRAPHICS_DATA_REGISTER, p);
-
-	/* set write plane */
-	outbIO(VGA_SEQUENCER_INDEX_REGISTER, 2);
-	outbIO(VGA_GRAPHICS_DATA_REGISTER, pmask);
-}
-
-unsigned get_fb_seg(void)
-{
-	unsigned seg;
-
-	outbIO(VGA_GRAPHICS_INDEX_REGISTER, 6);
-	seg = inbIO(VGA_GRAPHICS_DATA_REGISTER);
-	seg >>= 2;
-	seg &= 3;
-	switch (seg)
-	{
-	case 0:
-	case 1:
-		seg = 0xA000;
-		break;
-	case 2:
-		seg = 0xB000;
-		break;
-	case 3:
-		seg = 0xB800;
-		break;
-	}
-	return seg;
-}
-
-#define _vmemwr(DS, DO, S, N) memcpy((uint8_t *)((DS) * 16 + (DO)), S, N)
-
-void vmemwr(unsigned dst_off, unsigned char *src, unsigned count)
-{
-	_vmemwr(get_fb_seg(), dst_off, src, count);
-}
-
-void vga_font_write(char *buf, unsigned font_height)
-{
-
-	unsigned char seq2, seq4, gc4, gc5, gc6;
-
-	/* save registers
-	set_plane() modifies GC 4 and SEQ 2, so save them as well */
-
-	outbIO(VGA_SEQUENCER_INDEX_REGISTER, 2);
-	seq2 = inbIO(VGA_SEQUENCER_DATA_REGISTER);
-
-	outbIO(VGA_SEQUENCER_INDEX_REGISTER, 4);
-	seq4 = inbIO(VGA_SEQUENCER_DATA_REGISTER);
-
-	/* turn off even-odd addressing (set flat addressing)
-	assume: chain-4 addressing already off */
-	outbIO(VGA_SEQUENCER_DATA_REGISTER, 0x04);
-
-	outbIO(VGA_GRAPHICS_INDEX_REGISTER, 4);
-	gc4 = inbIO(VGA_GRAPHICS_DATA_REGISTER);
-
-	outbIO(VGA_GRAPHICS_INDEX_REGISTER, 5);
-	gc5 = inbIO(VGA_GRAPHICS_DATA_REGISTER);
-	/* turn off even-odd addressing */
-	outbIO(VGA_GRAPHICS_DATA_REGISTER, gc5 & ~0x10);
-
-	outbIO(VGA_GRAPHICS_INDEX_REGISTER, 6);
-	gc6 = inbIO(VGA_GRAPHICS_DATA_REGISTER);
-	/* turn off even-odd addressing */
-	outbIO(VGA_GRAPHICS_DATA_REGISTER, gc6 & ~0x02);
-
-	/* write font to plane P4 */
-	set_plane(2);
-
-	/* restore registers */
-	outbIO(VGA_SEQUENCER_INDEX_REGISTER, 2);
-	outbIO(VGA_SEQUENCER_DATA_REGISTER, seq2);
-	outbIO(VGA_SEQUENCER_INDEX_REGISTER, 4);
-	outbIO(VGA_SEQUENCER_DATA_REGISTER, seq4);
-	outbIO(VGA_GRAPHICS_INDEX_REGISTER, 4);
-	outbIO(VGA_GRAPHICS_DATA_REGISTER, gc4);
-	outbIO(VGA_GRAPHICS_INDEX_REGISTER, 5);
-	outbIO(VGA_GRAPHICS_DATA_REGISTER, gc5);
-	outbIO(VGA_GRAPHICS_INDEX_REGISTER, 6);
-	outbIO(VGA_GRAPHICS_DATA_REGISTER, gc6);
-}
-
-#define pokeb(S, O, V) *(unsigned char *)(16uL * (S) + (O)) = (V)
-#define pokew(S, O, V) *(unsigned short *)(16uL * (S) + (O)) = (V)
 
 #define VGA_GFX_REG 0x3CE
 #define VGA_SEQ_REG 0x3C4
@@ -1051,38 +987,49 @@ void writeRegVGA(unsigned short reg, unsigned char idx, unsigned char val)
 
 void setFontVGA(const unsigned char *buffer, int h)
 {
-	unsigned char seq2, seq4, gfx6;
-	int i, j;
-	unsigned char *mem;
+    unsigned char seq2, seq4;
+    unsigned char gfx4, gfx5, gfx6;
+    int i, j;
+    unsigned char *mem;
 
-	seq2 = readRegVGA(VGA_SEQ_REG, VGA_SEQ_I_MAPMASK);
-	writeRegVGA(VGA_SEQ_REG, VGA_SEQ_I_MAPMASK, 0x04);
+    // --- save ---
+    seq2 = readRegVGA(VGA_SEQ_REG, VGA_SEQ_I_MAPMASK);
+    seq4 = readRegVGA(VGA_SEQ_REG, VGA_SEQ_I_MEMMODE);
 
-	seq4 = readRegVGA(VGA_SEQ_REG, VGA_SEQ_I_MEMMODE);
-	writeRegVGA(VGA_SEQ_REG, VGA_SEQ_I_MEMMODE, 0x06);
+    gfx4 = readRegVGA(VGA_GFX_REG, VGA_GFX_I_READMAP);
+    gfx5 = readRegVGA(VGA_GFX_REG, VGA_GFX_I_MODE);
+    gfx6 = readRegVGA(VGA_GFX_REG, VGA_GFX_I_MISC);
 
-	writeRegVGA(VGA_SEQ_REG, VGA_SEQ_I_CHARMAP, 0x00);
+    // --- set up for font plane access ---
+    writeRegVGA(VGA_SEQ_REG, VGA_SEQ_I_MAPMASK, 0x04);   // write plane 2
+    writeRegVGA(VGA_SEQ_REG, VGA_SEQ_I_MEMMODE, 0x06);   // disable odd/even
+    writeRegVGA(VGA_SEQ_REG, VGA_SEQ_I_CHARMAP, 0x00);   // (opcjonalne) map select
 
-	gfx6 = readRegVGA(VGA_GFX_REG, VGA_GFX_I_MISC);
-	writeRegVGA(VGA_SEQ_REG, VGA_GFX_I_MISC, 0x00);
+    writeRegVGA(VGA_GFX_REG, VGA_GFX_I_READMAP, 0x02);   // read plane 2
+    writeRegVGA(VGA_GFX_REG, VGA_GFX_I_MODE, 0x00);      // graphics mode config for linear writes
+    writeRegVGA(VGA_GFX_REG, VGA_GFX_I_MISC, 0x00);      // map A0000
 
-	mem = (unsigned char *)0xB0000;
+    mem = (unsigned char *)0xA0000;
 
-	for (i = 0; i < 256; i++)
-	{
-		for (j = 0; j < h; j++)
-			mem[j] = buffer[h * i + j];
+    for (i = 0; i < 256; i++) {
+        unsigned char *glyph = mem + i * 32;
 
-		mem += 32;
-	}
+        for (j = 0; j < h; j++)
+            glyph[j] = buffer[h * i + j];
 
-	writeRegVGA(VGA_GFX_REG, VGA_GFX_I_MISC, gfx6);
-	writeRegVGA(VGA_SEQ_REG, VGA_SEQ_I_MEMMODE, seq4);
-	writeRegVGA(VGA_SEQ_REG, VGA_SEQ_I_MAPMASK, seq2);
+        for (j = h; j < 32; j++)
+            glyph[j] = 0x00;
+    }
 
-	writeRegVGA(VGA_GFX_REG, VGA_GFX_I_MODE, 0x10);
-	writeRegVGA(VGA_GFX_REG, VGA_GFX_I_BITMASK, 0xFF);
+    // --- restore ---
+    writeRegVGA(VGA_GFX_REG, VGA_GFX_I_MISC, gfx6);
+    writeRegVGA(VGA_GFX_REG, VGA_GFX_I_MODE, gfx5);
+    writeRegVGA(VGA_GFX_REG, VGA_GFX_I_READMAP, gfx4);
+
+    writeRegVGA(VGA_SEQ_REG, VGA_SEQ_I_MEMMODE, seq4);
+    writeRegVGA(VGA_SEQ_REG, VGA_SEQ_I_MAPMASK, seq2);
 }
+
 
 uint32_t vga_text_mode_width, vga_text_mode_height;
 
@@ -1102,9 +1049,10 @@ void vga_mode_set(xgm_t mode)
 
 	case VGA_TEXT_80x25:
 	{
-		vga_registers_write(g_80x25_text);
 		vga_text_mode_height = 25;
 		vga_text_mode_width = 80;
+		vga_load_text_palette(vga_text_palette);
+		vga_registers_write(g_80x25_text);
 		setFontVGA(g_8x16_font, 16);
 		break;
 	}
