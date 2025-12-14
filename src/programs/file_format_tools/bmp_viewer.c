@@ -11,8 +11,7 @@ STATUS bmp_viewer(char const* filename)
 
     if (File == NULL)
     {
-        xprintf("ERROR: Could not open\n");
-        getchar();
+        xprintf("ERROR: Could not open %s\n", filename);
         return XANIN_ERROR;
     }
 
