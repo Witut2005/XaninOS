@@ -100,7 +100,7 @@ extern "C" {
             XANIN_ADD_APP_ENTRY0("paging_test", paging_test)
             XANIN_ADD_APP_ENTRY0("stdio_apply", stdio_apply)
             XANIN_ADD_APP_ENTRY0("ssaver", start_screen)
-            XANIN_ADD_APP_ENTRY1("bmp_info", bmp_info)
+            XANIN_ADD_APP_ENTRY1("bmp_viewer", bmp_viewer)
             XANIN_ADD_APP_ENTRY0("netplan_apply", netplan_apply)
             XANIN_ADD_APP_ENTRY0("xgl_mode_set", xgl_mode_set)
             XANIN_ADD_APP_ENTRY0("buffers", buffers_view)

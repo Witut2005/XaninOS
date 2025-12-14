@@ -12,7 +12,7 @@ extern "C" {
   STATUS xin_check(char* path);
   STATUS stdio_apply(void);
   STATUS screen_saver(char*);
-  STATUS bmp_info(char*);
+  STATUS bmp_viewer(char*);
   STATUS netplan_apply(void);
 
   STATUS xgl_mode_set(void);

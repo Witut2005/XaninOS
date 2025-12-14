@@ -430,7 +430,7 @@ objects_to_compile = {
         CompileObject('./programs/tests/elf_loader_test.cpp', builders['cc'], builder_options['cc']['default'], OBJECT),
 
         CompileObject('./programs/stdio/stdio_apply.c', builders['c'], builder_options['c']['default'], OBJECT),
-        CompileObject('./programs/file_format_tools/bmp_info.c', builders['c'], builder_options['c']['default'], OBJECT),
+        CompileObject('./programs/file_format_tools/bmp_viewer.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./programs/network/netplan_apply.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./programs/network/netapi_check.c', builders['c'], builder_options['c']['default'], OBJECT),
         CompileObject('./programs/usb/usb_controller_info.c', builders['c'], builder_options['c']['default'], OBJECT),
